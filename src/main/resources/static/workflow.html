@@ -1,0 +1,228 @@
+<div class="page-header">
+    <h1>{{ 'Requests' | translate }}</h1>
+</div>
+<div ng-show="!authenticated">
+<div class="alert alert-danger" role="alert">
+    {{ 'Not logged in' | translate }}
+</div>
+</div>
+
+<div ng-if="authenticated">
+
+
+<div ng-controller="TaskController">
+
+    <h2>{{ 'Tasks' | translate }}</h2>
+    <hr />
+    
+    <div class="alert alert-info" role="alert" ng-hide="tasks.length">
+        {{ 'No pending tasks' | translate }}
+    </div>
+
+    <div class="panel panel-default" ng-repeat="task in tasks" id="task_{{task.id}}">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'Task' | translate }} {{task.id}}: {{task.name}}</h3>
+            <p>
+            ({{ 'Request' | translate }} {{task.processInstanceId}})
+            </p>
+            <p style="font-size: 90%">Created: {{ task.createTime  | date: 'EEE dd MMMM yyyy' }}
+            &nbsp;&nbsp;
+            <span style="font-size: 90%">{{ task.createTime  | date: 'HH:mm' }}</span>
+            </p>
+            <p>
+            <span class="glyphicon glyphicon-user"></span> {{ task.assignee }}
+            </p>
+        </div>
+        <div class="panel-body">
+            <p>
+                <em>{{ 'Description' | translate }}</em>:
+                {{task.description}}
+            </p>
+            
+            <div ng-controller="FormDataController">
+            <div class="form-group" ng-repeat="(i, element) in task.formData.formProperties">
+                <label>
+                   {{element.name}}:
+                   <input type="text" ng-model="task.formData.formProperties[i].value" 
+                   ng-change="updateFormData(element)" 
+                   ng-disabled="task.completed" />
+                </label>
+            </div>
+            </div>
+            
+            <p>
+                <em>{{ 'Attachments' | translate }}</em>:
+                <ol>
+                <li ng-repeat="file in task.attachments">
+                    <a ng-href="/tasks/{{task.id}}/files/{{file.id}}">{{file.name}}</a>
+                </li>
+                </ol>
+            </p>
+  
+	        <div flow-init="flow_options({target:'/tasks/'+task.id+'/files'})"
+	               flow-files-submitted="$flow.upload()"
+	               flow-file-success="$file.id = $message; $file.msg = 'Succes!'">
+               <input type="file" flow-btn />
+                <span flow-btn>Upload File</span>
+                
+                <div class="alert" flow-drop 
+                        flow-drag-enter="style={border:'4px solid green'}" 
+                        flow-drag-leave="style={}"
+                        ng-style="style">
+                    Drag and drop your file here
+                </div>
+                
+                <ul>
+                <li ng-repeat="file in $flow.files">
+                    <tt>{{file.name}}</tt> 
+                    <span>{{file.msg}}</span>
+                    [<span>{{file.id}}</span>]
+                </li>
+                </ul>
+	        </div>
+
+            <form class="form-vertical" role="form" ng-submit="complete(task)">	        
+	        <div class="input-group">
+                <div class="input-group-btn">
+                    <button class="btn btn-info" type="submit" title="{{'Complete task'|translate}}"
+                        ng-disabled="task.completed">
+                        <span class="glyphicon glyphicon-check"></span> {{'done'|translate}}
+                    </button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <div ng-if="false">
+    <h2>{{ 'Completed_tasks' | translate }}</h2>
+    <hr />
+    
+    <div class="alert alert-info" role="alert" ng-hide="completed_tasks.length">
+        {{ 'No_completed_tasks' | translate }}
+    </div>
+
+    <div class="panel panel-default" ng-repeat="task in completed_tasks" id="task_{{task.id}}">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'Task' | translate }} {{task.id}}: {{task.name}}</h3>
+            <p>
+            ({{ 'Request' | translate }} {{task.processInstanceId}})
+            </p>
+            <p style="font-size: 90%">Created: {{ task.createTime  | date: 'EEE dd MMMM yyyy' }}
+            &nbsp;&nbsp;
+            <span style="font-size: 90%">{{ task.createTime  | date: 'HH:mm' }}</span>
+            </p>
+            <p style="font-size: 90%">Ended: {{ task.endTime  | date: 'EEE dd MMMM yyyy' }}
+            &nbsp;&nbsp;
+            <span style="font-size: 90%">{{ task.endTime  | date: 'HH:mm' }}</span>
+            </p>
+            <p>
+            <span class="glyphicon glyphicon-user"></span> {{ task.assignee }}
+            </p>
+            
+        </div>
+        <div class="panel-body">
+            <p>
+                {{task.description}}
+            </p>
+  
+            <div class="form-group" ng-repeat="(i, element) in task.formData.formProperties">
+                <label>
+                   {{element.name}}:
+                   {{task.formData.formProperties[i].value}}
+                </label>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    
+</div>
+
+
+<div ng-controller="ProcessController">
+
+    <h2>{{ 'Requests' | translate }}</h2>
+    <hr />
+    
+    <form class="form-horizontal" role="form" ng-submit="start()">
+    
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button class="btn btn-info" type="submit" title="{{'Start new request'|translate}}">
+                <span class="glyphicon glyphicon-plus"></span> {{'new request'|translate}}
+            </button>
+        </span>
+    </div>
+    
+    </form>
+
+    <p></p>
+
+    <div class="alert alert-info" role="alert" ng-hide="processes.length">
+        {{ 'No_requests_yet' | translate }}
+    </div>
+
+    <ul class="list-group">
+    <li class="list-group-item {{process.suspended ? 'disabled' : ''}}" ng-repeat="process in processes" id="process_{{process.id}}">
+        <h4 class="list-group-item-heading">
+            {{ 'Request' | translate }} {{process.id}}: {{process.activityId}}
+	        <span class="pull-right">
+	        <span ng-if="!process.ended" class="btn-group">
+	            <button ng-if="!process.suspended" class="btn btn-default" type="button" title="Suspend"
+	                    ng-click="suspend(process)">
+	                <span class="glyphicon glyphicon-pause"></span>
+	            </button>
+                <button ng-if="process.suspended" class="btn btn-default" type="button" title="Resume"
+                        ng-click="resume(process)">
+                    <span class="glyphicon glyphicon-play"></span>
+                </button>
+		        <button class="btn btn-default" type="button" title="Stop"
+		                ng-click="stop(process)">
+		            <span class="glyphicon glyphicon-stop"></span>
+		        </button>
+	        </span>
+	        </span>
+        </h4>
+        <ul>
+        <li class="list-group-item-text" ng-repeat="task in process.tasks">
+            {{'Task'|translate}} {{task.id}}: {{task.name}} ({{task.assignee == null ? "not assigned" : "assigned to: " + task.assignee}})
+        </li>
+        <li class="list-group-item-text" ng-repeat="(name, value) in process.processVariables">
+            {{name}}: {{value}}
+        </li>
+        </ul>
+    </li>
+    </ul>
+    
+
+    <h2>{{'Completed requests'|translate}}</h2>
+    <hr />
+
+    <p></p>
+
+    <div class="alert alert-info" role="alert" ng-hide="completed_processes.length">
+        {{'There are no completed requests'|translate}}.
+    </div>
+
+    <ul class="list-group">
+    <li class="list-group-item {{process.suspended ? 'disabled' : ''}}" ng-repeat="process in completed_processes" id="process_{{process.id}}">
+        <h4 class="list-group-item-heading">
+            {{'Request'|translate}} {{process.id}}: {{process.activityId}}
+        </h4>
+        <ul>
+        <li class="list-group-item-text" ng-repeat="task in process.tasks">
+            {{'Task'|translate}} {{task.id}}: {{task.name}} ({{task.assignee == null ? "not assigned" : "assigned to: " + task.assignee}})
+        </li>
+        <li class="list-group-item-text" ng-repeat="(name, value) in process.processVariables">
+            {{name}}: {{value}}
+        </li>
+        </ul>
+    </li>
+    </ul>
+    
+</div>
+    
+    
+</div>

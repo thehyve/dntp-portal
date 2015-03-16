@@ -19,3 +19,14 @@ git clone git@github.com:thehyve/dntp-portal.git
 cd dntp-portal
 ...
 ```
+
+Configure PostgreSQL database:
+```
+sudo su - postgres
+psql 
+create user thehyve with password 'thehyve';
+create database dntp_portal;
+grant all privileges on database dntp_portal to thehyve;
+```
+or edit `src/main/resources/application.properties` to change
+the database settings.

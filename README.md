@@ -31,11 +31,20 @@ grant all privileges on database dntp_portal to thehyve;
 or edit `src/main/resources/application.properties` to change
 the database settings.
 
+Run `bower` to install the required Javascript and CSS libraries:
+```
+bower install
+```
+
 Then run the application:
 ```
 mvn spring-boot:run
 ```
-or create war:
+There should now be an application running at [http://localhost:8092/](http://localhost:8092/).
+
+
+Or create a `war`:
 ```
 mvn package 
 ```
+There should now be a `.war`-file in `target/dntp-portal-0.0.1-SNAPSHOT.war`.

@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>Spring Boot Activiti</name>
-	<description>Skeleton project for Spring Boot and Activiti</description>
+	<name>DNTP portal</name>
+	<description>Portal application for pathology sample exchange.</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -84,6 +84,12 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1200-jdbc41</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>			
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>

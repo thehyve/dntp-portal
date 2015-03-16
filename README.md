@@ -30,3 +30,12 @@ grant all privileges on database dntp_portal to thehyve;
 ```
 or edit `src/main/resources/application.properties` to change
 the database settings.
+
+Then run the application:
+```
+mvn spring-boot:run
+```
+or create war:
+```
+mvn package 
+```

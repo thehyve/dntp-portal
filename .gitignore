@@ -1,0 +1,5 @@
+/src/main/resources/static/bower_components/
+/target/
+/.settings/
+/.classpath
+/.project

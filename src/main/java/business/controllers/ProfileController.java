@@ -18,21 +18,33 @@ public class ProfileController {
 
         // Query its profile
 
-        // Take the values into the representation
+        // Return the representation
         return new ProfileRepresentation();
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ProfileRepresentation postOwnProfile(Principal user) {
+    public ProfileRepresentation putOwnProfile(Principal user) {
         // Authenticate user
 
-        // Validate posted data (password requirements, no html tags, etc)
+        // Validate data (password requirements, no html tags, etc)
 
         // Update its profile
 
         // Return the updated profile
         // FIXME probably we should return an error message in case validation fails
         return new ProfileRepresentation();
+    }
+
+    @RequestMapping(value = "/profile/password", method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void changePassword(Principal user) {
+        // Authenticate user (including old password)
+
+        // Validate data (password requirements)
+
+        // Update its profile
+
+        // FIXME probably we should return an error message in case validation fails
     }
 }

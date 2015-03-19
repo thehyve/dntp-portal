@@ -61,7 +61,7 @@ public class RoleController {
         LogFactory.getLog(getClass()).info("DELETE /admin/roles/" + userid + "/" + roleid);
         User user = userRepository.getOne(Long.valueOf(userid));
         Role role = roleRepository.getOne(Long.valueOf(roleid));
-        if (user.getUsername().equals("admin") && role.getName().equals("admin"))
+        if (user.getEmail().equals("admin@dntp.nl") && role.getName().equals("admin"))
         {
             //throw new RuntimeException("Invalid: cannot remove admin rights from user admin.");
             return new ResponseEntity<Object>(HttpStatus.FORBIDDEN);

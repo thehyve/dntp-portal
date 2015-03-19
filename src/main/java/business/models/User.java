@@ -4,14 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "appUser")
@@ -23,7 +16,7 @@ public class User implements Serializable {
     @GeneratedValue
     private Long id;    
     @Column(unique = true)
-    private String username;
+    private String email;
     private String password;
     private boolean active = true;
     private boolean deleted = false;
@@ -32,7 +25,7 @@ public class User implements Serializable {
     private Lab lab;
     @ManyToOne(optional = true)
     private Institution institution;
-    @ManyToOne(optional = true)
+    @OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ContactData contactData;
     
     @ManyToMany(fetch = FetchType.EAGER)
@@ -42,10 +35,10 @@ public class User implements Serializable {
         
     }
     
-    public User(String username, String password, boolean active,
+    public User(String email, String password, boolean active,
             Set<Role> roles) {
         super();
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.active = active;
         this.roles = roles;
@@ -53,10 +46,6 @@ public class User implements Serializable {
     
     public Long getId() {
         return id;
-    }
-    
-    public String getUsername() {
-        return username;
     }
     
     public String getPassword() {
@@ -117,7 +106,18 @@ public class User implements Serializable {
     }
  
     public String toString() {
-        return username;
+        return this.email;
     }
-    
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

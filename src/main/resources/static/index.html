@@ -50,10 +50,10 @@
 				            {{ 'Language' | translate }}: {{currentLanguage}}
 				        </label>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="" ng-click="changeLanguage('en')"  ng-disabled="{{currentLanguage=='en'}}">
+                            <li><a ng-click="changeLanguage('en')"  ng-disabled="{{currentLanguage=='en'}}">
                                 {{ 'English' | translate }} (en)
                             </a></li>
-                            <li><a href="" ng-click="changeLanguage('nl')"  ng-disabled="{{currentLanguage=='nl'}}">
+                            <li><a ng-click="changeLanguage('nl')"  ng-disabled="{{currentLanguage=='nl'}}">
                                 {{ 'Dutch' | translate }} (nl)
                             </a></li>
                         </ul>
@@ -66,13 +66,13 @@
                             class="glyphicon glyphicon-user"></span> {{username}}</li>
                     <li ng-show="authenticated"><a href="" ng-click="logout()"><span
                             class="glyphicon glyphicon-log-out"></span> logout</a></li>
-					<li class="dropdown">
-					   <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
-					       <span class="glyphicon glyphicon-menu-hamburger"></span> 
-					   </label>
+					<li ng-show="authenticated" class="dropdown">
+					    <a class="dropdown-toggle" role="button" data-toggle="dropdown">
+					        <span class="glyphicon glyphicon-menu-hamburger"></span> 
+					    </a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="" ng-click="changeLanguage('en')">{{ 'English' | translate }}</a></li>
-							<li><a href="" ng-click="changeLanguage('nl')">{{ 'Dutch' | translate }}</a></li>
+							<li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
+							<li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>
 						</ul>
 				    </li>
 				</ul>
@@ -89,6 +89,7 @@
     <script type="text/javascript" src="./bower_components/lodash/dist/lodash.min.js"></script>
     <script type="text/javascript" src="./bower_components/angular-cookies/angular-cookies.min.js"></script>
     <script type="text/javascript" src="./bower_components/ng-flow/dist/ng-flow-standalone.min.js"></script>
+    <script type="text/javascript" src="./bower_components/restangular/dist/restangular.min.js"></script>
     <script type="text/javascript" src="./messages/messages_en.js"></script>
     <script type="text/javascript" src="./messages/messages_nl.js"></script>
     <script type="text/javascript" src="./bower_components/angular-translate/angular-translate.min.js"></script>
@@ -99,6 +100,10 @@
     <script type="text/javascript" src="./app/components/admin/AdminServices.js"></script>
     <script type="text/javascript" src="./app/components/admin/AdminController.js"></script>
     <script type="text/javascript" src="./app/components/registration/RegistrationController.js"></script>
+    <script type="text/javascript" src="./app/components/profile/ProfileController.js"></script>
+    <script type="text/javascript" src="./app/components/profile/PasswordController.js"></script>
+    <script type="text/javascript" src="./app/components/forgot-password/ForgotPasswordController.js"></script>
+    <script type="text/javascript" src="./app/components/forgot-password/ResetPasswordController.js"></script>
 
   </body>
 </html>

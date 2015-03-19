@@ -1,5 +1,7 @@
 /src/main/resources/static/bower_components/
 /target/
+/.idea/
 /.settings/
 /.classpath
 /.project
+*.iml

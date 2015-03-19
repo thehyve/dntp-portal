@@ -1,4 +1,4 @@
-package business;
+package business.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import business.representation.FormPropertyRepresentation;
+import business.representation.TaskFormDataRepresentation;
+import business.representation.TaskRepresentation;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -136,7 +139,7 @@ public class TaskController {
         Task task = taskService.createTaskQuery().taskId(id).singleResult();
         // Update form data from task representation
         Map<String, String> properties = new HashMap<String, String>();
-        for (FormPropertyRepresentation property : 
+        for (FormPropertyRepresentation property :
             representation.getFormData().getFormProperties()) {
             properties.put(property.getId(), property.getValue());
         }

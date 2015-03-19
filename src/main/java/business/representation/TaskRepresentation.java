@@ -1,4 +1,4 @@
-package business;
+package business.representation;
 
 import java.util.Date;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.activiti.engine.task.Task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-class TaskRepresentation {
+public class TaskRepresentation {
 
     private String id;
     private String name;

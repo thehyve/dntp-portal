@@ -1,5 +1,6 @@
-package business.security;
+package business.models;
 
+import business.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {

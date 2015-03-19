@@ -1,4 +1,4 @@
-package business;
+package business.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import business.representation.ProcessInstanceRepresentation;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;

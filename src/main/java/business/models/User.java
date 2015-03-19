@@ -24,8 +24,8 @@ public class User implements Serializable {
     @Column(unique = true)
     private String username;
     private String password;
-    @Column
-    private boolean enabled;
+    private boolean active = true;
+    private boolean deleted = false;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<Role>();
     
@@ -33,12 +33,12 @@ public class User implements Serializable {
         
     }
     
-    public User(String username, String password, boolean enabled,
+    public User(String username, String password, boolean active,
             Set<Role> roles) {
         super();
         this.username = username;
         this.password = password;
-        this.enabled = enabled;
+        this.active = active;
         this.roles = roles;
     }
     
@@ -54,8 +54,24 @@ public class User implements Serializable {
         return password;
     }
     
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isActive() {
+        return active;
+    }
+    
+    public void activate() {
+        this.active = true; 
+    }
+    
+    public void deactivate() {
+        this.active = false;
+    }
+    
+    public boolean isDeleted() {
+        return deleted;
+    }
+    
+    public void markDeleted() {
+        this.deleted = true;
     }
     
     public Set<Role> getRoles() {

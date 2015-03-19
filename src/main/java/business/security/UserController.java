@@ -28,14 +28,14 @@ public class UserController {
 
     @RequestMapping(value = "/admin/user", method = RequestMethod.GET)
     public User get(@RequestParam String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameAndDeletedFalse(username);
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public List<User> getAll(Principal principal) {
         LogFactory.getLog(getClass()).info("GET /admin/users (for user: " + principal.getName() + ")");
         List<User> users = new ArrayList<User>();
-        for(User user: userRepository.findAll()) {
+        for(User user: userRepository.findByActiveTrueAndDeletedFalse()) {
             user.clearPassword();
             users.add(user);
         }
@@ -48,12 +48,31 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/admin/users/{id}/activate", method = RequestMethod.PUT)
+    public void activate(Principal principal, @PathVariable String id) {
+        LogFactory.getLog(getClass()).info("ACTIVATE /admin/users/" + id);
+        Long userId = Long.valueOf(id);
+        User user = userRepository.getOne(userId);
+        user.activate();
+        userRepository.save(user);
+    }
+
+    @RequestMapping(value = "/admin/users/{id}/inactivate", method = RequestMethod.PUT)
+    public void inactivate(Principal principal, @PathVariable String id) {
+        LogFactory.getLog(getClass()).info("DELETE /admin/users/" + id);
+        Long userId = Long.valueOf(id);
+        User user = userRepository.getOne(userId);
+        user.deactivate();
+        userRepository.save(user);
+    }
+    
+    @RequestMapping(value = "/admin/users/{id}/delete", method = RequestMethod.PUT)
     public void delete(Principal principal, @PathVariable String id) {
         LogFactory.getLog(getClass()).info("DELETE /admin/users/" + id);
         Long userId = Long.valueOf(id);
         User user = userRepository.getOne(userId);
-        userRepository.delete(user);
+        user.markDeleted();
+        userRepository.save(user);
     }
     
 }

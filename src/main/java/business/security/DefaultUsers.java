@@ -29,13 +29,13 @@ public class DefaultUsers {
     @PostConstruct
     private void initDatabase() {
         LogFactory.getLog(getClass()).info("Create default users and roles.");
-        String[] defaultRoles = new String[]{"admin", "user", "backoffice"};
+        String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
         for (String r: defaultRoles) {
             Role role = roleRepository.findByName(r);
             if (role == null) {
                 role = roleRepository.save(new Role(r));
             }
-            if (userRepository.findByUsername(r) == null) {
+            if (userRepository.findByUsernameAndDeletedFalse(r) == null) {
                 Set<Role> roles = Collections.singleton(role);
                 String password = r; //passwordEncoder.encode("admin");
                 userRepository.save(new User(r, password, true, roles));

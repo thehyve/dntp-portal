@@ -3,6 +3,10 @@ package business.security;
 import java.security.Principal;
 import java.util.List;
 
+import business.models.Role;
+import business.models.RoleRepository;
+import business.models.User;
+import business.models.UserRepository;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

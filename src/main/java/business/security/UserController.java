@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import business.models.User;
+import business.models.UserRepository;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

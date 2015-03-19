@@ -1,4 +1,4 @@
-package business;
+package business.representation;
 
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.history.HistoricFormProperty;

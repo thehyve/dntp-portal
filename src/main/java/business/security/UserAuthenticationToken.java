@@ -2,6 +2,7 @@ package business.security;
 
 import java.util.Collection;
 
+import business.models.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 

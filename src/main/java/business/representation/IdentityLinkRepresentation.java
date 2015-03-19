@@ -1,4 +1,4 @@
-package business;
+package business.representation;
 
 import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.task.IdentityLink;

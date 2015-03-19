@@ -1,4 +1,4 @@
-package business;
+package business.representation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.activiti.engine.history.HistoricData;
 import org.activiti.engine.history.HistoricFormProperty;
 import org.activiti.engine.history.HistoricVariableInstance;
 
-class TaskFormDataRepresentation {
+public class TaskFormDataRepresentation {
     
     private String deploymentId;
     private String formKey;

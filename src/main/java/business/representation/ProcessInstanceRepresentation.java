@@ -1,4 +1,4 @@
-package business;
+package business.representation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.activiti.engine.task.Event;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 
-class ProcessInstanceRepresentation {
+public class ProcessInstanceRepresentation {
     
     private String id;
     private String activityId;

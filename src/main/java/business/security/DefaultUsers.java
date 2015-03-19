@@ -5,6 +5,10 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import business.models.Role;
+import business.models.RoleRepository;
+import business.models.User;
+import business.models.UserRepository;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

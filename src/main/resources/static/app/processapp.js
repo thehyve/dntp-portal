@@ -12,6 +12,9 @@
 			}).when('/login', {
 				templateUrl : 'login.html',
 				controller : 'NavigationController'
+			}).when('/register', {
+			    templateUrl : 'app/components/registration/registration.html',
+                controller : 'RegistrationController'
 			}).when('/admin', {
 			    templateUrl : 'admin.html'
 			}).otherwise('/');

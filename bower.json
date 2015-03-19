@@ -1,6 +1,7 @@
 {
   "name": "ng-spring-boot",
   "dependencies": {
+    "lodash": "~3.5.0",
     "bootstrap": "~3.3.0",
     "jquery": "~2.1",
     "angular": "~1.3",

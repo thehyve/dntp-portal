@@ -1,0 +1,105 @@
+<div ng-controller="RegistrationController">
+<div class="container">
+
+    <h2>{{ 'Registration' | translate }}</h2>
+    <hr>
+    <form class="form-horizontal" role="form" name="registrationForm" ng-submit="submitRequestForm()" novalidate>
+
+        <!-- First Name -->
+        <div class="form-group" ng-class="{ 'has-error' : (registrationForm.firstName.$invalid || registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
+            <label class="control-label col-sm-2" for="firstName">{{ 'First name' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="{{ 'First name' | translate }}"
+                       ng-model="user.firstName" ng-maxlength="50" required>
+                <!-- errors -->
+                <span class="help-block" ng-show="registrationForm.firstName.$error.required && registrationForm.firstName.$dirty">{{ 'Required field' | translate }}</span>
+                <span class="help-block" ng-show="registrationForm.firstName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+            </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="lastName">{{ 'Last name' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="lastName" placeholder="{{ 'Last name' | translate }}">
+            </div>
+        </div>
+
+        <!-- E-mail -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">{{ 'E-mail' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="email" placeholder="{{ 'E-mail' | translate }}">
+            </div>
+        </div>
+
+        <!-- Telephone -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="telephone">{{ 'Telephone' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="telephone" placeholder="{{ 'Telephone' | translate }}">
+            </div>
+        </div>
+
+        <!-- Institution -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="institution">{{ 'Institution' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="institution" placeholder="{{ 'Institution' | translate }}">
+            </div>
+        </div>
+
+        <!-- Specialism -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="specialism">{{ 'Specialism' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="specialism" placeholder="{{ 'Specialism' | translate }}">
+            </div>
+        </div>
+
+        <!-- Pathology Dept. Member -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="isPathologyLabMember">
+                &nbsp;
+            </label>
+            <div class="col-sm-10">
+                <input type="checkbox" id="isPathologyLabMember"> &nbsp; {{ 'I am member of pathology department' | translate }}
+            </div>
+            <div class="col-sm-10">
+                <br>
+                <select type="text" class="form-control" id="lab">
+                    <option>AMC, afd. Pathologie</option>
+                    <option>Meander Medisch Centrum, afd. Klinische Pathologie</option>
+                    <option>Canisius-Wilhelmina Ziekenhuis, afd. Pathologie</option>
+                    <option>Laboratorium voor Pathologie (PAL), Dordrecht</option>
+                    <option>Stichting PAMM vakgroep pathologie</option>
+                </select>
+            </div>
+        </div>
+        <br>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="password">{{ 'Password' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="password" placeholder="{{ 'Password' | translate }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="repeatPassword">{{ 'Repeat Password' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="repeatPassword" placeholder="{{ 'Repeat Password' | translate }}">
+            </div>
+        </div>
+        <br>
+
+        <!-- Submit -->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary"  ng-disabled="registrationForm.$invalid">{{ 'Request Account' | translate }}</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</div>

@@ -7,9 +7,19 @@
         var authenticate = function(callback) {
             $http.get('user').success(function(data) {
                 if (data.name) {
+
                     $rootScope.username = data.name;
                     $rootScope.authenticated = true;
-                    $rootScope.roles = []
+                    $rootScope.roles = [];
+
+
+                    $rootScope.globals = {
+                        currentUser: {
+                            username: username,
+                            credentials: $scope.credentials
+                        }
+                    };
+
                     if (data.authorities) {
                         for(i in data.authorities) {
                             $rootScope.roles.push(data.authorities[i].authority);
@@ -58,7 +68,7 @@
         $scope.logout = function() {
             $http.post('logout', {}).success(function() {
                 $rootScope.authenticated = false;
-                $location.path("/");
+                $location.path("/login");
             }).error(function(data) {
                 $rootScope.authenticated = false;
             });

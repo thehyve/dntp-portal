@@ -1,26 +1,22 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('RegistrationController',['$scope', function ($scope) {
+    .controller('RegistrationController',['$scope', 'User', function ($scope, User) {
 
-        $scope.user = {
-            firstName : "",
-            lastName : "",
-            email : "",
-            telephone : "",
-            institution : "",
-            specialism : "",
-            isPathologyLabMember : "",
-            lab : "",
-            password : "",
-            repeatPassword : ""
-        };
-
-        $scope.submitRequestForm = function () {
+        $scope.submit = function () {
             if ($scope.registrationForm.$valid) {
-                alert("Valid inputs");
+                var user = new User(
+                    $scope.registrationForm.email,
+                    $scope.registrationForm.password,
+                    false,
+                    null
+                );
+                user.$register().then(function () {
+                    console.log("register success");
+                }, function (err) {
+                    console.log("register error");
+                });
             }
         };
-
 
 }]);

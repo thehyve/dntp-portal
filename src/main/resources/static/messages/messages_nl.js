@@ -27,10 +27,10 @@ messages_nl =
     'First name': 'Voornaam',
     'Last name': 'Achternaam',
     'E-mail': 'E-mail',
-    'Telephone': 'Telefoonummer',
+    'Telephone': 'Telefoonnummer',
     'Institution': 'Instelling',
-    'Specialism': 'Specialisme',
-    'Department': 'Department',
+    'Specialism': 'Specialiteit',
+    'Department': 'Afdeling',
     'I am member of pathology department': 'Ik ben lid van pathologie afdeling',
     'Password': 'Wachtwoord',
     'Repeat Password': 'Herhaal wachtwoord',
@@ -38,5 +38,22 @@ messages_nl =
     'Required field': 'Veld is verplicht',
     'Input value is too long': 'Invoerwaarde is te lang',
 
+    /* ================= */
+    /* Profile           */
+    /* ================= */
+
+    'Profile': 'Profiel',
+    'Update profile': 'Profiel bijwerken',
+    'Change password': 'Wachtwoord wijzigen',
+    'Update': 'Bijwerken',
+    
+    /* ================= */
+    /* Change password   */
+    /* ================= */
+    
+    'Old password': 'Oud wachtwoord',
+    'New password': 'Nieuw wachtwoord',
+    'New password (again)': 'Nieuw wachtwoord (weer)',
+    
     null : null
 }

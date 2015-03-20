@@ -1,51 +1,58 @@
 package business.representation;
 
 
+
 public class ProfileRepresentation {
 
     private String id;
-    private String name;
-    private String phone;
-    private String lab;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String telephone;
+    private String institution;
+    private String specialism;
     private boolean isPathologist;
+
+    public ProfileRepresentation() {
+        this.id = "1";
+        this.firstName = "John";
+        this.lastName = "Doe";
+        this.email = "john@doe.com";
+        this.telephone = "+31611100222";
+        this.institution = "UMC Utrecht";
+        this.specialism = "None";
+        this.isPathologist = true;
+    }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getName() {
-        return name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getEmail() {
+        return email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public String getInstitution() {
+        return institution;
     }
 
-    public String getLab() {
-        return lab;
-    }
-
-    public void setLab(String lab) {
-        this.lab = lab;
+    public String getSpecialism() {
+        return specialism;
     }
 
     public boolean isPathologist() {
         return isPathologist;
-    }
-
-    public void setPathologist(boolean isPathologist) {
-        this.isPathologist = isPathologist;
     }
 }

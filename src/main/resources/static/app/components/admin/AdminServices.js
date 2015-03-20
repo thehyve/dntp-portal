@@ -18,6 +18,10 @@
             remove : {
                 url : '/admin/users/:id/delete',
                 method : "PUT"
+            },
+            register : {
+                url : '/register',
+                method : 'POST'
             }
         });
     };

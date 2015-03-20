@@ -68,7 +68,7 @@ public class SecurityConfiguration extends
                     "username: " + authentication.getName() + ", " +
                     "password: " + authentication.getCredentials().toString()
                     );
-                User user = userRepository.findByUsername(authentication.getName());
+                User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(authentication.getName());
                 if (user != null 
                         && user.getPassword().equals(
                                 authentication.getCredentials().toString())) {
@@ -97,7 +97,7 @@ public class SecurityConfiguration extends
                     throws UsernameNotFoundException {
                 LogFactory.getLog(getClass()).info(
                         "loadUserByUsername: " + username);
-                User user = userRepository.findByUsername(username);
+                User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(username);
                 if (user != null) {
                     List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
                     for (Role r : user.getRoles()) {

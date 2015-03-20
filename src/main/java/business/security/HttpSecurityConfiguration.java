@@ -72,7 +72,7 @@ public class HttpSecurityConfiguration extends
             .logoutSuccessUrl("/#/login")
         .and()
             .authorizeRequests()
-            .antMatchers("/admin/**").access("hasRole('admin')")
+            .antMatchers("/admin/**").access("hasRole('palga')")
             .antMatchers(
                     "/workflow.html", 
                     "/index.html",
@@ -104,7 +104,7 @@ public class HttpSecurityConfiguration extends
                     throws UsernameNotFoundException {
                 LogFactory.getLog(getClass()).info(
                         "loadUserByUsername: " + username);
-                User user = userRepository.findByUsername(username);
+                User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(username);
                 if (user != null) {
                     List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
                     for (Role r : user.getRoles()) {

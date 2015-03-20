@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +27,14 @@ public class User implements Serializable {
     private String password;
     private boolean active = true;
     private boolean deleted = false;
+    
+    @ManyToOne(optional = true)
+    private Lab lab;
+    @ManyToOne(optional = true)
+    private Institution institution;
+    @ManyToOne(optional = true)
+    private ContactData contactData;
+    
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<Role>();
     
@@ -74,6 +83,30 @@ public class User implements Serializable {
         this.deleted = true;
     }
     
+    public Lab getLab() {
+        return lab;
+    }
+
+    public void setLab(Lab lab) {
+        this.lab = lab;
+    }
+
+    public Institution getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(Institution institution) {
+        this.institution = institution;
+    }
+
+    public ContactData getContactData() {
+        return contactData;
+    }
+
+    public void setContactData(ContactData contactData) {
+        this.contactData = contactData;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }

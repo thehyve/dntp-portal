@@ -1,0 +1,67 @@
+<div class="page-header">
+    <h2>{{'Labs'|translate}}</h2>
+</div>
+<div ng-show="!authenticated">
+<div class="alert alert-danger" role="alert">
+    {{'Not logged in'|translate}}.
+</div>
+</div>
+
+<div ng-if="authenticated">
+
+<div ng-controller="LabController" class="container">
+
+	<div class="alert alert-danger" role="alert" ng-show="error.length" id="error">
+	    {{error|translate}}.
+	</div>
+
+<div ng-hide="error">
+
+    <form class="form-horizontal" role="form" ng-submit="add(lab)">
+    
+    <div class="input-group">
+        <label for="lab_number">Lab number</label>:
+        <input id="lab_number" ng-model="lab.number" />
+        <label for="lab_name">Name</label>:
+        <input id="lab_name" ng-model="lab.name" />
+        <span class="input-group-btn pull-right">
+            <button class="btn btn-info" type="submit" title="Add lab">
+                <span class="glyphicon glyphicon-plus"></span> add lab
+            </button>
+        </span>
+    </div>
+
+    </form>
+
+    <p></p>
+
+    <div class="alert alert-info" role="alert" ng-hide="labs.length">
+        There are no labs yet.
+    </div>
+
+    <ul class="list-group">
+    <li class="list-group-item {{visibility[lab.id] ? 'list-group-item-info' : ''}}" ng-repeat="lab in labs" id="lab_{{lab.id}}">
+        <h4 class="list-group-item-heading" ng-click="toggleVisibility(lab)">
+            <label>Lab {{lab.number}}: {{lab.name}}</label>
+        </h4>
+        <p ng-show="visibility[lab.id]" ng-if="lab.contactData">
+            Contact info:
+            <address>
+            {{lab.contactData.address1}}<br/>
+            {{lab.contactData.address2}}<br/>
+            {{lab.contactData.postalCode}}
+            {{lab.contactData.city}}<br/>
+            {{lab.contactData.country}}<br/>
+            {{lab.contactData.email}}<br/>
+            {{lab.contactData.telephone}}
+            </address>
+        </p>
+    </li>
+    </ul>
+    
+</div>    
+    
+</div>
+    
+    
+</div>

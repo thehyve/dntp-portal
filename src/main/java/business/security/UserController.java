@@ -49,26 +49,26 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/users/{id}/activate", method = RequestMethod.PUT)
-    public void activate(Principal principal, @PathVariable String id) {
-        LogFactory.getLog(getClass()).info("ACTIVATE /admin/users/" + id);
+    public User activate(Principal principal, @PathVariable String id) {
+        LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/activate");
         Long userId = Long.valueOf(id);
         User user = userRepository.getOne(userId);
         user.activate();
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
-    @RequestMapping(value = "/admin/users/{id}/inactivate", method = RequestMethod.PUT)
-    public void inactivate(Principal principal, @PathVariable String id) {
-        LogFactory.getLog(getClass()).info("DELETE /admin/users/" + id);
+    @RequestMapping(value = "/admin/users/{id}/deactivate", method = RequestMethod.PUT)
+    public User deactivate(Principal principal, @PathVariable String id) {
+        LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/deactivate");
         Long userId = Long.valueOf(id);
         User user = userRepository.getOne(userId);
         user.deactivate();
-        userRepository.save(user);
+        return userRepository.save(user);
     }
     
     @RequestMapping(value = "/admin/users/{id}/delete", method = RequestMethod.PUT)
     public void delete(Principal principal, @PathVariable String id) {
-        LogFactory.getLog(getClass()).info("DELETE /admin/users/" + id);
+        LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/delete");
         Long userId = Long.valueOf(id);
         User user = userRepository.getOne(userId);
         user.markDeleted();

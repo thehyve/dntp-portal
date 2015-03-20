@@ -15,8 +15,12 @@
 			}).when('/register', {
 			    templateUrl : 'app/components/registration/registration.html',
                 controller : 'RegistrationController'
-			}).when('/admin', {
-			    templateUrl : 'admin.html'
+			}).when('/users', {
+			    templateUrl : 'app/components/admin/users.html'
+            }).when('/labs', {
+                templateUrl : 'app/components/admin/labs.html'
+            }).when('/institutions', {
+                templateUrl : 'app/components/admin/institutions.html'
 			}).otherwise('/');
 			
 			$translateProvider.translations('en', messages_en)

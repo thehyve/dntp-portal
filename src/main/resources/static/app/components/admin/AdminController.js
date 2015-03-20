@@ -47,10 +47,22 @@
     $scope.update = function(user) {
     	user.$update();
     };
+    
+    $scope.activate = function(user) {
+        user.$activate(function(result) {
+            $scope.users[$scope.users.indexOf(user)] = result;
+        });
+    }
 
+    $scope.deactivate = function(user) {
+        user.$deactivate(function(result) {
+            $scope.users[$scope.users.indexOf(user)] = result;
+        });
+    }
+    
     $scope.remove = function(user) {
     	user.$remove(function() {
-    	    $scope.users.splice($scope.users.indexOf(user));
+    	    $scope.users.splice($scope.users.indexOf(user), 1);
     	});    	
     };
     
@@ -111,11 +123,47 @@
 
       $scope.remove = function(user) {
           role.$remove(function() {
-              $scope.roles.splice($scope.roles.indexOf(role));
+              $scope.roles.splice($scope.roles.indexOf(role), 1);
           });     
       };
     };
-    	  
+
+    var LabController = function($scope, Lab) {
+        Lab.query(function(response) {
+          $scope.labs = response ? response : [];
+        });
+       
+        $scope.add = function(data) {
+            var lab = new Lab(data);
+          lab.$save(function(result) {
+            $scope.labs.push(result);
+          });
+        };
+       
+        $scope.update = function(update) {
+            lab.$update();
+        };
+
+      };
+
+      var InstitutionController = function($scope, Institution) {
+          Institution.query(function(response) {
+            $scope.institutions = response ? response : [];
+          });
+         
+          $scope.add = function(data) {
+              var institution = new Institution(data);
+              institution.$save(function(result) {
+              $scope.institutions.push(result);
+            });
+          };
+         
+          $scope.update = function(institution) {
+              institution.$update();
+          };
+
+        };
+    
     UserController.$inject = [ '$scope', 'User', 'Role', 'UserRole' ];
     angular.module("ProcessApp.controllers").controller("UserController",
             UserController);
@@ -123,5 +171,13 @@
     RoleController.$inject = [ '$scope', 'Role' ];
     angular.module("ProcessApp.controllers").controller("RoleController",
             RoleController);
+
+    LabController.$inject = [ '$scope', 'Lab' ];
+    angular.module("ProcessApp.controllers").controller("LabController",
+            LabController);
+
+    InstitutionController.$inject = [ '$scope', 'Institution' ];
+    angular.module("ProcessApp.controllers").controller("InstitutionController",
+            InstitutionController);
 
 }(angular));

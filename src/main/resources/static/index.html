@@ -30,17 +30,25 @@
 				</div>
 				<ul class="nav navbar-nav">
 					<li class="{{$route.current.templateUrl=='workflow.html' ? 'active': ''}}">
-					   <a href="#/">workflow</a>
+					   <a href="#/">{{'Requests'|translate}}</a>
 					</li>
-					<li ng-show="authenticated" class="{{$route.current.templateUrl=='admin.html' ? 'active': ''}}">
-					   <a href="#/admin">admin</a>
+				</ul>
+				<ul class="nav navbar-nav" ng-if="roles.indexOf('palga') != -1">
+					<li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">
+					   <a href="#/users">{{'Users'|translate}}</a>
 					   </li>
+                    <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
+                       <a href="#/labs">{{'Labs'|translate}}</a>
+                       </li>
+                    <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/institutions.html' ? 'active': ''}}">
+                       <a href="#/institutions">{{'Institutions'|translate}}</a>
+                       </li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 				    <li class="dropdown">
-				        <a href="#/" class="dropdown-toggle" role="button" data-toggle="dropdown">
+				        <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
 				            {{ 'Language' | translate }}: {{currentLanguage}}
-				        </a>
+				        </label>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="" ng-click="changeLanguage('en')"  ng-disabled="{{currentLanguage=='en'}}">
                                 {{ 'English' | translate }} (en)
@@ -59,9 +67,9 @@
                     <li ng-show="authenticated"><a href="" ng-click="logout()"><span
                             class="glyphicon glyphicon-log-out"></span> logout</a></li>
 					<li class="dropdown">
-					   <a href="#/" class="dropdown-toggle" role="button" data-toggle="dropdown">
+					   <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
 					       <span class="glyphicon glyphicon-menu-hamburger"></span> 
-					   </a>
+					   </label>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="" ng-click="changeLanguage('en')">{{ 'English' | translate }}</a></li>
 							<li><a href="" ng-click="changeLanguage('nl')">{{ 'Dutch' | translate }}</a></li>
@@ -88,8 +96,8 @@
     <script type="text/javascript" src="./app/navigationcontroller.js"></script>
     <script type="text/javascript" src="./app/processservices.js"></script>
     <script type="text/javascript" src="./app/processcontrollers.js"></script>
-    <script type="text/javascript" src="./app/adminservices.js"></script>
-    <script type="text/javascript" src="./app/admincontrollers.js"></script>
+    <script type="text/javascript" src="./app/components/admin/AdminServices.js"></script>
+    <script type="text/javascript" src="./app/components/admin/AdminController.js"></script>
     <script type="text/javascript" src="./app/components/registration/RegistrationController.js"></script>
 
   </body>

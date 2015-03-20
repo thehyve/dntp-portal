@@ -9,6 +9,13 @@
                 if (data.name) {
                     $rootScope.username = data.name;
                     $rootScope.authenticated = true;
+                    $rootScope.roles = []
+                    if (data.authorities) {
+                        for(i in data.authorities) {
+                            $rootScope.roles.push(data.authorities[i].authority);
+                        }
+                    }
+                    console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
                 } else {
                     $rootScope.authenticated = false;
                 }
@@ -21,7 +28,7 @@
         }
 
         authenticate();
-
+        
         $scope.credentials = {};
 
         $('#username').focus();

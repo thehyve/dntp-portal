@@ -7,8 +7,17 @@
             update : {
                 method : "PUT"
             },
+            activate : {
+                url : '/admin/users/:id/activate',
+                method : "PUT"
+            },
+            deactivate : {
+                url : '/admin/users/:id/deactivate',
+                method : "PUT"
+            },
             remove : {
-                method : "DELETE"
+                url : '/admin/users/:id/delete',
+                method : "PUT"
             }
         });
     };
@@ -40,6 +49,32 @@
         });
     };
 
+    var LabFactory = function($resource) {
+        return $resource('/admin/labs/:id', {
+            id : '@id'
+        }, {
+            save : {
+                method : "POST"
+            },
+            update : {
+                method : "PUT"
+            }
+        });
+    };
+
+    var InstitutionFactory = function($resource) {
+        return $resource('/admin/institutions/:id', {
+            id : '@id'
+        }, {
+            save : {
+                method : "POST"
+            },
+            update : {
+                method : "PUT"
+            }
+        });
+    };
+    
     UserFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("User", UserFactory);
 
@@ -48,5 +83,11 @@
 
     UserRoleFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("UserRole", UserRoleFactory);    
-    
+
+    LabFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("Lab", LabFactory);    
+
+    InstitutionFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("Institution", InstitutionFactory);    
+
 }(angular));

@@ -74,5 +74,12 @@ public class UserController {
         user.markDeleted();
         userRepository.save(user);
     }
-    
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public User register(@RequestBody User user) {
+        LogFactory.getLog(getClass()).info("POST /register (for user: " + user.getUsername() + ")");
+        return userRepository.save(user);
+    }
+
+
 }

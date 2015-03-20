@@ -80,6 +80,7 @@ public class HttpSecurityConfiguration extends
                     "/login.html", 
                     "/",
                     "/register",
+                    "/registration.html",
                     "/bower_components/**",
                     "/app/**",
                     "/messages/**",

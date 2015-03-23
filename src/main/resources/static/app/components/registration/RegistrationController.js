@@ -2,7 +2,6 @@
 
 angular.module('ProcessApp.controllers')
     .controller('RegistrationController',['$scope', 'User', function ($scope, User) {
-
         $scope.submit = function () {
             if ($scope.registrationForm.$valid) {
                 var user = new User(
@@ -18,5 +17,4 @@ angular.module('ProcessApp.controllers')
                 });
             }
         };
-
 }]);

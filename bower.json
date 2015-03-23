@@ -1,7 +1,7 @@
 {
   "name": "ng-spring-boot",
   "dependencies": {
-    "lodash": "~3.5.0",
+    "lodash": "~2.4",
     "bootstrap": "~3.3.0",
     "jquery": "~2.1",
     "angular": "~1.3",
@@ -9,6 +9,7 @@
     "angular-route": "~1",
     "angular-cookies": "~1",
     "angular-translate": "",
+    "restangular": "~1.4",
     "ng-flow": "~2",
     "fusty-flow.js": "~1"
   }

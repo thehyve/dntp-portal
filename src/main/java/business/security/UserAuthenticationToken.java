@@ -34,8 +34,8 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
         return user;
     }
     
-    public String getName() {
-        return user.getUsername();
+    public Long getId() {
+        return user.getId();
     }
 
 }

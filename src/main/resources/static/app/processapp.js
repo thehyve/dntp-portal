@@ -1,17 +1,25 @@
 (function(angular) {
     angular.module("ProcessApp.services", []);
-    angular.module("ProcessApp.controllers", []);
-    angular.module('ProcessApp', [ "flow", 
+    angular.module("ProcessApp.directives", []);
+    angular.module("ProcessApp.controllers", ["restangular"]);
+    angular.module('ProcessApp', [ "flow",
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
-                                   "ProcessApp.services", "ProcessApp.controllers" ])
-        .config(['$routeProvider', '$translateProvider', function($routeProvider, $translateProvider) {
+                                   "ProcessApp.services", "ProcessApp.controllers",
+                                   "ProcessApp.directives"])
+        .config(function($routeProvider, $translateProvider) {
             $routeProvider.when('/', {
                 templateUrl : 'workflow.html',
                 controller : ''
             }).when('/login', {
                 templateUrl : 'app/components/login/login.html',
                 controller : 'NavigationController'
+            }).when('/login/forgot-password', {
+                templateUrl : 'app/components/forgot-password/forgot-password.html',
+                controller : 'ForgotPasswordController'
+            }).when('/login/reset-password/:token', {
+                templateUrl : 'app/components/forgot-password/reset-password.html',
+                controller : 'ResetPasswordController'
             }).when('/register', {
                 templateUrl : 'app/components/registration/registration.html',
                 controller : 'RegistrationController'
@@ -21,13 +29,18 @@
                 templateUrl : 'app/components/admin/labs.html'
             }).when('/institutions', {
                 templateUrl : 'app/components/admin/institutions.html'
+            }).when('/profile/password', {
+                templateUrl : 'app/components/profile/password.html',
+                controller : 'PasswordController'
+            }).when('/profile/', {
+                templateUrl : 'app/components/profile/profile.html',
+                controller : 'ProfileController'
             }).otherwise('/');
             
             $translateProvider.translations('en', messages_en)
                               .translations('nl', messages_nl);
             $translateProvider.preferredLanguage('en');
-
-        }])
+        })
 
         .run(['$rootScope', '$location', '$cookieStore', '$http',
             function ($rootScope, $location, $cookieStore, $http) {
@@ -41,7 +54,11 @@
 
                 $rootScope.$on('$locationChangeStart', function (event, next, current) {
                     // redirect to login page if not logged in
-                    if (($location.path() !== '/login' && $location.path() !== '/register') && !$rootScope.globals.currentUser) {
+                    if (($location.path() !== '/login'
+                        && $location.path() !== '/register'
+                        && $location.path() !== '/login/forgot-password'
+                        && $location.path() !== '/login/reset-password'
+                        ) && !$rootScope.globals.currentUser) {
                         $location.path('/login');
                     }
                 });

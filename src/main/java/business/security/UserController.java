@@ -28,7 +28,7 @@ public class UserController {
 
     @RequestMapping(value = "/admin/user", method = RequestMethod.GET)
     public User get(@RequestParam String username) {
-        return userRepository.findByUsernameAndDeletedFalse(username);
+        return userRepository.findByEmailAndDeletedFalse(username);
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)

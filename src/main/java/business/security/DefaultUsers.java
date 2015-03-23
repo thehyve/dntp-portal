@@ -35,10 +35,10 @@ public class DefaultUsers {
             if (role == null) {
                 role = roleRepository.save(new Role(r));
             }
-            if (userRepository.findByUsernameAndDeletedFalse(r) == null) {
+            if (userRepository.findByEmailAndDeletedFalse(r) == null) {
                 Set<Role> roles = Collections.singleton(role);
                 String password = r; //passwordEncoder.encode("admin");
-                userRepository.save(new User(r, password, true, roles));
+                userRepository.save(new User(r + "@dntp.nl", password, true, roles));
             }
         }
     }

@@ -72,12 +72,20 @@ public class HttpSecurityConfiguration extends
             .logoutSuccessUrl("/#/login")
         .and()
             .authorizeRequests()
-            .antMatchers("/admin/**").access("hasRole('palga')")
             .antMatchers(
-                    "/workflow.html", 
+                    "/password/request-new",
+                    "/password/reset"
+            ).permitAll()
+        .and()
+            .authorizeRequests()
+            .antMatchers("/admin/**").access("hasRole('palga')")
+        .and()
+            .authorizeRequests()
+            .antMatchers(
+                    "/workflow.html",
                     "/index.html",
                     //"/login",
-                    "/login.html", 
+                    "/login.html",
                     "/",
                     "/register",
                     "/registration.html",
@@ -85,7 +93,7 @@ public class HttpSecurityConfiguration extends
                     "/app/**",
                     "/messages/**",
                     "/images/**"
-                    ).permitAll()
+            ).permitAll()
             .anyRequest()
             .authenticated()
         .and()
@@ -106,7 +114,7 @@ public class HttpSecurityConfiguration extends
                     throws UsernameNotFoundException {
                 LogFactory.getLog(getClass()).info(
                         "loadUserByUsername: " + username);
-                User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(username);
+                User user = userRepository.findByEmailAndActiveTrueAndDeletedFalse(username);
                 if (user != null) {
                     List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
                     for (Role r : user.getRoles()) {
@@ -114,7 +122,7 @@ public class HttpSecurityConfiguration extends
                                 r.getName()).get(0));
                     }
                     return new org.springframework.security.core.userdetails.User(
-                            user.getUsername(), user.getPassword(), true, true,
+                            user.getEmail(), user.getPassword(), true, true,
                             true, true, authorityList);
                 } else {
                     throw new UsernameNotFoundException(

@@ -57,7 +57,7 @@ public class HttpSecurityConfiguration extends
                             + arg2.getMessage());
         }
     };
-    
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -65,40 +65,43 @@ public class HttpSecurityConfiguration extends
             .formLogin()
             .permitAll()
             .failureHandler(authenticationFailureHandler)
-            //.loginPage("/#/login")
         .and()
             .logout()
             .permitAll()
             .logoutSuccessUrl("/#/login")
         .and()
             .authorizeRequests()
-            .antMatchers(
-                    "/password/request-new",
-                    "/password/reset"
-            ).permitAll()
+                .antMatchers(
+                        "/public/labs/**",
+                        "/public/institutions/**"
+                ).permitAll()
         .and()
             .authorizeRequests()
+                .antMatchers(
+                        "/password/request-new",
+                        "/password/reset"
+                ).permitAll()
+        .and()
+                .authorizeRequests()
             .antMatchers("/admin/**").access("hasRole('palga')")
         .and()
-            .authorizeRequests()
-            .antMatchers(
-                    "/workflow.html",
-                    "/index.html",
-                    //"/login",
-                    "/login.html",
-                    "/",
-                    "/register",
-                    "/registration.html",
-                    "/bower_components/**",
-                    "/app/**",
-                    "/messages/**",
-                    "/images/**"
-            ).permitAll()
+                .authorizeRequests()
+                .antMatchers(
+                        "/workflow.html",
+                        "/index.html",
+                        "/login.html",
+                        "/",
+                        "/registration.html",
+                        "/bower_components/**",
+                        "/app/**",
+                        "/messages/**",
+                        "/images/**"
+                ).permitAll()
             .anyRequest()
-            .authenticated()
-        .and()
-            .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
-            .csrf().csrfTokenRepository(csrfTokenRepository())
+                .authenticated()
+                .and()
+                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+                .csrf().csrfTokenRepository(csrfTokenRepository())
         ;
     }
 
@@ -131,7 +134,7 @@ public class HttpSecurityConfiguration extends
             }
         };
     }
-        
+
     private CsrfTokenRepository csrfTokenRepository() {
         HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
         repository.setHeaderName("X-XSRF-TOKEN");

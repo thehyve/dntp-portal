@@ -139,13 +139,8 @@
                 </div>
                 <div class="col-sm-10" ng-show="user.isPathologyLabMember">
                     <br>
-                    <select type="text" class="form-control" id="lab" name="lab">
-                        <option value="0"> -- Please select associated lab --</option>
-                        <option value="lab001">AMC, afd. Pathologie</option>
-                        <option value="lab002">Meander Medisch Centrum, afd. Klinische Pathologie</option>
-                        <option value="lab003">Canisius-Wilhelmina Ziekenhuis, afd. Pathologie</option>
-                        <option value="lab004">Laboratorium voor Pathologie (PAL), Dordrecht</option>
-                        <option value="lab005">Stichting PAMM vakgroep pathologie</option>
+                    <select  class="form-control" name="lab">
+                        <option ng-repeat="labItem in labs" value="{{labItem.id}}">{{labItem.name}}</option>
                     </select>
                 </div>
             </div>

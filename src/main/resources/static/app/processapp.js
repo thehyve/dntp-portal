@@ -1,13 +1,17 @@
 (function(angular) {
     angular.module("ProcessApp.services", []);
     angular.module("ProcessApp.directives", []);
-    angular.module("ProcessApp.controllers", ["restangular"]);
+    angular.module("ProcessApp.controllers", ["restangular"])
+        .config(function(RestangularProvider) {
+            RestangularProvider.setBaseUrl('/');
+        });
     angular.module('ProcessApp', [ "flow",
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
                                    "ProcessApp.services", "ProcessApp.controllers",
                                    "ProcessApp.directives"])
         .config(function($routeProvider, $translateProvider) {
+
             $routeProvider.when('/', {
                 templateUrl : 'workflow.html',
                 controller : ''

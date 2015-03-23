@@ -15,7 +15,7 @@
 
                     $rootScope.globals = {
                         currentUser: {
-                            username: username,
+                            username: $rootScope.username,
                             credentials: $scope.credentials
                         }
                     };
@@ -39,7 +39,10 @@
 
         authenticate();
         
-        $scope.credentials = {};
+        $scope.credentials = {
+            username: 'palga@dntp.nl',
+            password: 'palga'
+        };
 
         $('#username').focus();
 

@@ -11,6 +11,8 @@
     "angular-translate": "",
     "restangular": "~1.4",
     "ng-flow": "~2",
-    "fusty-flow.js": "~1"
+    "fusty-flow.js": "~1",
+    "angular-smart-table": "~2",
+    "angular-strap": ""
   }
 }

@@ -19,33 +19,66 @@ public class User implements Serializable {
     private String username;
     private String firstname;
     private String lastname;
-    private String email;
     private String password;
     private boolean active = true;
     private boolean deleted = false;
+
+    private String firstName = "";
+    private String lastName = "";
+    boolean isPathologist = false;
     
     @ManyToOne(optional = true)
     private Lab lab;
     @ManyToOne(optional = true)
-    private Institution institution;
-    @OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Institute institute;
+    
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
     private ContactData contactData;
     
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity=Role.class)
     private Set<Role> roles = new HashSet<Role>();
     
     public User() {
         
     }
     
-    public User(String email, String password, boolean active,
+    public User(String username, String password, boolean active,
             Set<Role> roles) {
         super();
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.active = active;
         this.roles = roles;
     }
+    
+    public boolean isRequester() {
+        for (Role role: roles) {
+            if (role.isRequester()) return true;
+        }
+        return false;
+    }
+
+    public boolean isPalga() {
+        for (Role role: roles) {
+            if (role.isPalga()) return true;
+        }
+        return false;
+    }
+
+    public boolean isLabUser() {
+        for (Role role: roles) {
+            if (role.isLabUser()) return true;
+        }
+        return false;
+    }
+
+    public boolean isScientificCouncilMember() {
+        for (Role role: roles) {
+            if (role.isScientificCouncilMember()) return true;
+        }
+        return false;
+    }
+
     
     public Long getId() {
         return id;
@@ -55,25 +88,29 @@ public class User implements Serializable {
     public String getUsername() {
         return username;
     }
-
-    public void setUsername(String username) {
-        this.username = username;
+    
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public boolean isPathologist() {
+        return isPathologist;
+    }
+
+    public void setPathologist(boolean isPathologist) {
+        this.isPathologist = isPathologist;
     }
 
     public String getPassword() {
@@ -99,7 +136,7 @@ public class User implements Serializable {
     public void markDeleted() {
         this.deleted = true;
     }
-    
+
     public Lab getLab() {
         return lab;
     }
@@ -108,12 +145,12 @@ public class User implements Serializable {
         this.lab = lab;
     }
 
-    public Institution getInstitution() {
-        return institution;
+    public Institute getInstitution() {
+        return institute;
     }
 
-    public void setInstitution(Institution institution) {
-        this.institution = institution;
+    public void setInstitution(Institute institute) {
+        this.institute = institute;
     }
 
     public ContactData getContactData() {
@@ -141,11 +178,9 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getEmail() {
-        return this.email;
+    public void setUsername(String username) {
+        this.username = username;
+        
     }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import business.models.*;
+
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +25,7 @@ public class DefaultUsers {
     LabRepository labRepository;
 
     @Autowired
-    InstitutionRepository institutionRepository;
+    InstituteRepository instituteRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -40,10 +41,15 @@ public class DefaultUsers {
             if (role == null) {
                 role = roleRepository.save(new Role(r));
             }
-            if (userRepository.findByEmailAndDeletedFalse(r) == null) {
+            String username = r + "@dntp.thehyve.nl";
+            if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
                 Set<Role> roles = Collections.singleton(role);
                 String password = r; //passwordEncoder.encode("admin");
-                userRepository.save(new User(r + "@dntp.nl", password, true, roles));
+                User user = new User(username, password, true, roles);
+                ContactData contactData = new ContactData();
+                contactData.setEmail(username);
+                user.setContactData(contactData);
+                userRepository.save(user);
             }
         }
 
@@ -75,9 +81,9 @@ public class DefaultUsers {
         int iIdx = 99;
 
         for (String r: defaultInst) {
-            if (institutionRepository.findByName(r) == null) {
-                Institution institution = new Institution(new Long(iIdx++), r, null);
-                institutionRepository.save(institution);
+            if (instituteRepository.findByName(r) == null) {
+                Institute institute = new Institute(new Long(iIdx++), r, null);
+                instituteRepository.save(institute);
             }
         }
 

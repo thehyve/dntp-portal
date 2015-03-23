@@ -66,8 +66,8 @@
         });
     };
 
-    var InstitutionFactory = function($resource) {
-        return $resource('/admin/institutions/:id', {
+    var InstituteFactory = function($resource) {
+        return $resource('/admin/institutes/:id', {
             id : '@id'
         }, {
             save : {
@@ -91,7 +91,7 @@
     LabFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("Lab", LabFactory);    
 
-    InstitutionFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Institution", InstitutionFactory);    
+    InstituteFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("Institute", InstituteFactory);    
 
 }(angular));

@@ -1,8 +1,11 @@
 package business.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
 public class ContactData {
@@ -11,14 +14,22 @@ public class ContactData {
     @GeneratedValue
     private Long id;
     
+    @Column(nullable = true)
     private String telephone;
+    @Column(nullable = true)
     private String email;
     
+    @Column(nullable = true)
     private String address1;
+    @Column(nullable = true)
     private String address2;
+    @Column(nullable = true)
     private String postalCode;
+    @Column(nullable = true)
     private String city;
+    @Column(nullable = true)
     private String stateProvince;
+    @Column(nullable = true)
     private String country = "NL";
     
     public ContactData() {
@@ -39,6 +50,19 @@ public class ContactData {
         this.country = country;
     }
 
+    public void copy(ContactData other) {
+        if (other != null) {
+            this.telephone = other.telephone;
+            this.email = other.email;
+            this.address1 = other.address1;
+            this.address2 = other.address2;
+            this.postalCode = other.postalCode;
+            this.city = other.city;
+            this.stateProvince = other.stateProvince;
+            this.country = other.country;
+        }
+    }
+    
     public Long getId() {
         return id;
     }

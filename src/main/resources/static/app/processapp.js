@@ -6,6 +6,7 @@
             RestangularProvider.setBaseUrl('/');
         });
     angular.module('ProcessApp', [ "flow",
+                                   "mgcrea.ngStrap", 
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
                                    "ProcessApp.services", "ProcessApp.controllers",
@@ -31,8 +32,8 @@
                 templateUrl : 'app/components/admin/users.html'
             }).when('/labs', {
                 templateUrl : 'app/components/admin/labs.html'
-            }).when('/institutions', {
-                templateUrl : 'app/components/admin/institutions.html'
+            }).when('/institutes', {
+                templateUrl : 'app/components/admin/institutes.html'
             }).when('/profile/password', {
                 templateUrl : 'app/components/profile/password.html',
                 controller : 'PasswordController'

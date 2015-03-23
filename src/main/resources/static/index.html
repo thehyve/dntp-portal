@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">  
     <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./bower_components/angular-dialog-service/dist/dialogs.min.css" />
     
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -40,8 +41,8 @@
                     <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
                        <a href="#/labs">{{'Labs'|translate}}</a>
                        </li>
-                    <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/institutions.html' ? 'active': ''}}">
-                       <a href="#/institutions">{{'Institutions'|translate}}</a>
+                    <li ng-show="authenticated" class="{{$route.current.templateUrl=='app/components/admin/institutes.html' ? 'active': ''}}">
+                       <a href="#/institutes">{{'Institutes'|translate}}</a>
                        </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -91,9 +92,12 @@
     <script type="text/javascript" src="./bower_components/ng-flow/dist/ng-flow-standalone.min.js"></script>
     <script type="text/javascript" src="./bower_components/lodash/dist/lodash.min.js"></script>
     <script type="text/javascript" src="./bower_components/restangular/dist/restangular.min.js"></script>
+    <script type="text/javascript" src="./bower_components/angular-smart-table/dist/smart-table.min.js"></script>
     <script type="text/javascript" src="./messages/messages_en.js"></script>
     <script type="text/javascript" src="./messages/messages_nl.js"></script>
     <script type="text/javascript" src="./bower_components/angular-translate/angular-translate.min.js"></script>
+    <script type="text/javascript" src="./bower_components/angular-strap/dist/angular-strap.min.js"></script>
+    <script type="text/javascript" src="./bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
     <script type="text/javascript" src="./app/processapp.js"></script>
     <script type="text/javascript" src="./app/components/login/navigationcontroller.js"></script>
     <script type="text/javascript" src="./app/processservices.js"></script>

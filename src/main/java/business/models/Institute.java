@@ -1,26 +1,32 @@
 package business.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
-public class Institution {
+public class Institute {
 
     @Id
     @GeneratedValue
     private Long id;
     
     private String name;
-    @ManyToOne
+    
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
+    @RestResource(exported = false)
     private ContactData contactData;
     
-    public Institution() {
+    public Institute() {
         
     }
 
-    public Institution(Long id, String name, ContactData contactData) {
+    public Institute(Long id, String name, ContactData contactData) {
         this.id = id;
         this.name = name;
         this.contactData = contactData;

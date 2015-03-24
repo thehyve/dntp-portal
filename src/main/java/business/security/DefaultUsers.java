@@ -24,6 +24,9 @@ public class DefaultUsers {
     LabRepository labRepository;
 
     @Autowired
+    InstitutionRepository institutionRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
     
     @PostConstruct
@@ -61,6 +64,23 @@ public class DefaultUsers {
                 labRepository.save(l);
             }
         }
+
+        LogFactory.getLog(getClass()).info("Create default institutions");
+
+        String[] defaultInst = new String[] {
+                "UMC",
+                "AMC"
+        };
+
+        int iIdx = 99;
+
+        for (String r: defaultInst) {
+            if (institutionRepository.findByName(r) == null) {
+                Institution institution = new Institution(new Long(iIdx++), r, null);
+                institutionRepository.save(institution);
+            }
+        }
+
 
     }
 

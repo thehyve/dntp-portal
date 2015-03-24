@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('RegistrationController',['$scope', 'User', 'Lab', 'Restangular', function ($scope, User, Lab, Restangular) {
+    .controller('RegistrationController',['$scope', 'User', 'Restangular', '$q',
+        function ($scope, User, Restangular, $q) {
 
         $scope.labs = []; // init labs
 
@@ -19,7 +20,7 @@ angular.module('ProcessApp.controllers')
             lastName : 'Bar',
             email: 'foo@dntp.nl',
             telephone: '090000000',
-            institution : '15',
+            institution : '14',
             lab : '12',
             specialism : 'Phd Candidate',
             isPathologyLabMember : true,
@@ -31,34 +32,39 @@ angular.module('ProcessApp.controllers')
         // -*-*-*-*-*-*-*-*-*-*-*- //
 
         $scope.submit = function () {
+
             if ($scope.registrationForm.$valid) {
-                var user;
 
-                Restangular.one('public/labs', $scope.user.lab).get()
-                    .then (function (lab) {
+                var promises = [
+                    Restangular.one('public/labs', $scope.user.lab).get(),
+                    Restangular.one('public/institutions', $scope.user.institution).get()
+                ];
 
-                    console.log("selected lab is .. ", lab);
+                $q.all(promises).then(function (results) {
 
-                    user = new User({
+                    var lab = results[0],
+                        institution = results[1];
+
+                    var user = new User({
                         email:  $scope.user.email,
                         firstname: $scope.user.firstName,
                         lastname: $scope.user.lastName,
                         telephone: $scope.user.telephone,
-                        institution: $scope.user.institution,
+                        institution: institution,
                         lab: lab,
                         specialism: $scope.user.specialism,
                         isPathologyLabMember: $scope.user.isPathologyLabMember,
-                        password: $scope.user.password,
-                        null:null
+                        password: $scope.user.password
                     });
 
-                    // TODO register new user with restangular
-                    //user.$register(function(result) {
-                    //    console.log("success ... ", result);
+                    console.log("about to register new user");
+                    //Restangular.all('register/users').customPOST(user).then(function (data) {
+                    //    console.log("user " + data + " has just registered.");
                     //});
+                    user.$register(function(result) {
+                        console.log("success ... ", result);
+                    });
                 });
-
-
 
 
             }

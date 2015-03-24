@@ -1,5 +1,7 @@
 package business.representation;
 
+import java.util.Date;
+
 import business.models.ContactData;
 import javax.validation.constraints.NotNull;
 
@@ -19,13 +21,14 @@ public class ProfileRepresentation {
     private ContactData contactData;
     
     private Long labId;
-    private Long institutionId;
+    private Long instituteId;
     
     private boolean isPathologist;
+    
+    private Date created;
+    private Long createdTime;
 
     public ProfileRepresentation() {
-        this.labId = -1L;
-        this.institutionId = -1L;
     }
     
     public ProfileRepresentation(@NotNull User user) {
@@ -42,6 +45,9 @@ public class ProfileRepresentation {
         this.isPathologist = user.isPathologist();
         this.contactData = user.getContactData() == null ? new ContactData() : user.getContactData();
         this.labId = user.getLab() == null ? null : user.getLab().getId();
+        this.instituteId = user.getInstitute() == null ? -1 : user.getInstitute().getId();
+        this.created = user.getCreated();
+        this.createdTime = user.getCreated().getTime();
     }
 
     public boolean isActive() {
@@ -67,9 +73,17 @@ public class ProfileRepresentation {
     public String getPassword1() {
         return password1;
     }
-
+    
     public String getPassword2() {
         return password2;
+    }
+
+    public void setPassword1(String password1) {
+        this.password1 = password1;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 
     public String getFirstName() {
@@ -104,12 +118,12 @@ public class ProfileRepresentation {
         this.labId = labId;
     }
 
-    public Long getInstitutionId() {
-        return institutionId;
+    public Long getInstituteId() {
+        return instituteId;
     }
 
-    public void setInstitutionId(Long institutionId) {
-        this.institutionId = institutionId;
+    public void setInstitutionId(Long instituteId) {
+        this.instituteId = instituteId;
     }
 
     public String getInstitution() {
@@ -119,4 +133,19 @@ public class ProfileRepresentation {
     public String getSpecialism() {
         return specialism;
     }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+        this.createdTime = created.getTime();
+    }
+
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+    
+    
 }

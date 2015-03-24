@@ -9,6 +9,7 @@
                                    "mgcrea.ngStrap", 
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
+                                   "smart-table",
                                    "ProcessApp.services", "ProcessApp.controllers",
                                    "ProcessApp.directives"])
         .config(function($routeProvider, $translateProvider) {

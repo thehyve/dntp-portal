@@ -42,7 +42,7 @@ public class UserController {
     LabRepository labRepository;
 
     @Autowired
-    InstituteRepository institutionRepository;
+    InstituteRepository instituteRepository;
 
     @RequestMapping("/user")
     public Principal user(Principal user) {
@@ -70,12 +70,12 @@ public class UserController {
         user.setPathologist(body.isPathologist());
         Institute institute = null;
         if (user.isRequester()) {
-            institute = institutionRepository.findOne(body.getInstitutionId());
+            institute = instituteRepository.findOne(body.getInstituteId());
             if (institute == null) {
-                return new ResponseEntity<Object>("No institution selected.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<Object>("No institute selected.", HttpStatus.BAD_REQUEST);
             }
         }
-        user.setInstitution(institute);
+        user.setInstitute(institute);
         Lab lab = null;
         if (user.isLabUser()) {
             lab = labRepository.findOne(body.getLabId());
@@ -95,7 +95,10 @@ public class UserController {
 
         // copy email address
         String email = body.getContactData().getEmail();
-        if (!user.getUsername().equals(email)) {
+        if (email == null) {
+            return new ResponseEntity<Object>("No email address entered.", HttpStatus.BAD_REQUEST);
+        }
+        if (user.getUsername() == null || !user.getUsername().equals(email)) {
             // check for uniqueness (also enforced by database):
             User u = userRepository.findByUsernameAndDeletedFalse(email);
             if (u == null) {

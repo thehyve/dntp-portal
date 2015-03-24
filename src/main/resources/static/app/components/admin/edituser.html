@@ -17,9 +17,21 @@
      {{edituser.contactData.country}}<br/>
      {{edituser.contactData.email}}<br/>
      {{edituser.contactData.telephone}}
+     Role: {{edituser.currentRole}}
      </address>
 
         <input type="hidden" ng-model="edituser.contactData.id"/>
+
+        <!-- Role -->
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="currentRole">{{ 'Role' | translate }}</label>
+            <div class="col-sm-6">
+                <select ng-model="edituser.currentRole">
+                    <option ng-repeat="role in roles" value="{{role.name}}" ng-selected="role.name == edituser.currentRole">{{role.name}}</option>
+                </select>
+            </div>
+        </div>
+
 
         <!-- First Name -->
         <div class="form-group" ng-class="{ 'has-error' : (registrationForm.firstName.$invalid || registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
@@ -51,6 +63,17 @@
             </div>
         </div>
 
+        <!-- Password -->
+        <div class="form-group" ng-if="edituser.id == null">
+            <label class="control-label col-sm-4" for="password1">{{ 'Password' | translate }}</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="password1" placeholder="{{ 'Password' | translate }}"
+                ng-model="edituser.password1" >
+                <input type="text" class="form-control" id="password2" placeholder="{{ 'Repeat password' | translate }}"
+                ng-model="edituser.password2" >
+            </div>
+        </div>
+
         <!-- Telephone -->
         <div class="form-group">
             <label class="control-label col-sm-4" for="telephone">{{ 'Telephone' | translate }}</label>
@@ -65,19 +88,19 @@
             <label class="control-label col-sm-4" for="institute">{{ 'Institute' | translate }}</label>
             <div class="col-sm-6">
                 <select ng-model="edituser.instituteId">
-                    <option value="-1">None</option>
-                    <option ng-repeat="institute in institutes" value="{{institute.id}}">{{institute.name}}</option>
+                    <option value="" ng-selected="edituser.instituteId==''">None</option>
+                    <option ng-repeat="institute in institutes" ng-selected="edituser.instituteId==institute.id" value="{{institute.id}}">{{institute.name}}</option>
                 </select>
             </div>
         </div>
         
         <!-- Lab -->
-        <div class="form-group" ng-if="edituser.currentRole == 'labuser'">
-            <label class="control-label col-sm-4" for="lab">{{ 'Institution' | translate }}</label>
+        <div class="form-group" ng-if="edituser.currentRole == 'lab_user'">
+            <label class="control-label col-sm-4" for="lab">{{ 'Lab' | translate }}</label>
             <div class="col-sm-6">
                 <select ng-model="edituser.labId">
-                    <option value="-1">None</option>
-                    <option ng-repeat="lab in labs" value="{{lab.id}}">{{lab.name}}</option>
+                    <option value="" ng-selected="edituser.labId==''">None</option>
+                    <option ng-repeat="lab in labs" value="{{lab.id}}"  ng-selected="edituser.labId==lab.id">{{lab.name}}</option>
                 </select>
             </div>
         </div>

@@ -1,6 +1,7 @@
 package business.models;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +38,8 @@ public class User implements Serializable {
     
     @ManyToMany(fetch = FetchType.EAGER, targetEntity=Role.class)
     private Set<Role> roles = new HashSet<Role>();
+    
+    private Date created = new Date();
     
     public User() {
         
@@ -145,11 +148,11 @@ public class User implements Serializable {
         this.lab = lab;
     }
 
-    public Institute getInstitution() {
+    public Institute getInstitute() {
         return institute;
     }
 
-    public void setInstitution(Institute institute) {
+    public void setInstitute(Institute institute) {
         this.institute = institute;
     }
 
@@ -182,5 +185,14 @@ public class User implements Serializable {
         this.username = username;
         
     }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+    
     
 }

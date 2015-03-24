@@ -8,6 +8,7 @@
       
 	User.query().$promise.then(function(response) {
         $scope.users = response ? response : [];
+        $scope.displayedCollection = [].concat($scope.users);
     }, function(response) {
         $scope.error = $scope.error + response.data.message + "\n";
         if (response.data.error == 302) {
@@ -21,17 +22,37 @@
    
 	Lab.query(function(response) {
 	   $scope.labs = response ? response : []; 
+	   $scope.labmap = {};
+	   for(i in $scope.labs) {
+	       $scope.labmap[$scope.labs[i].id] = $scope.labs[i];
+	   }
 	});
 
 	Institute.query(function(response) {
        $scope.institutes = response ? response : []; 
+       $scope.institutemap = {};
+       for(i in $scope.institutes) {
+           $scope.institutemap[$scope.institutes[i].id] = 
+               $scope.institutes[i];
+       }
     });
 	
-    $scope.add = function(userdata) {
-        var user = new User(userdata);
-          user.$save(function(result) {
-              $scope.users = $scope.users.unshift(result);
-          });
+    $scope.update = function(userdata) {
+        if (userdata.id > 0) {
+            userdata.$update(function(result) {
+                $scope.editUserModal.hide();
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        } else {
+            var user = new User(userdata);
+            user.$save(function(result) {
+                $scope.editUserModal.hide();
+                $scope.users.unshift(result);
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        }
     };
    
     $scope.toggleVisibility = function(user) {
@@ -40,11 +61,6 @@
         }
         $scope.visibility[user.userId] = !$scope.visibility[user.userId];
     }
-    
-    $scope.update = function(user) {
-    	user.$update();
-    	$scope.editUserModal.hide();
-    };
     
     $scope.activate = function(user) {
         user.$activate(function(result) {
@@ -62,6 +78,10 @@
     	user.$remove(function() {
     	    $scope.users.splice($scope.users.indexOf(user), 1);
     	});    	
+    };
+    
+    $scope.add = function() {
+        $scope.edit(new User({'currentRole': 'requester'}));
     };
     
     $scope.edit = function(usr) {
@@ -107,14 +127,15 @@
             $scope.edit(new Lab());
         };
        
-        $scope.update = function(lab) {
-            if (lab.id > 0) {
-                lab.$update(function(result) {
+        $scope.update = function(labdata) {
+            if (labdata.id > 0) {
+                labdata.$update(function(result) {
                     $scope.editLabModal.hide();
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + "\n";
                 });
             } else {
+                var lab = new Lab(labdata);
                 lab.$save(function(result) {
                     $scope.editLabModal.hide();
                     $scope.labs.unshift(result);
@@ -158,14 +179,16 @@
               $scope.edit(new Institute());
           };
          
-          $scope.update = function(institute) {
-              if (institute.id > 0) {
+          $scope.update = function(institutedata) {
+              if (institutedata.id > 0) {
+                  var institute = institutedata;
                   institute.$update(function(result) {
                       $scope.editInstituteModal.hide();
                   }, function(response) {
                       $scope.error = $scope.error + response.data.message + "\n";
                   });
               } else {
+                  var institute = new Institute(institutedata);
                   institute.$save(function(result) {
                       $scope.editInstituteModal.hide();
                       $scope.institutes.unshift(result);

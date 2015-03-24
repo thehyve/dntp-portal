@@ -16,19 +16,12 @@
 	</div>
 
 <div ng-hide="error">
-
-    <form class="form-horizontal" role="form" ng-submit="add(user)">
     
     <div class="input-group">
-        <input ng-model="user.username" />
-        <span class="input-group-btn pull-right">
-            <button class="btn btn-info" type="submit" title="Add user">
-                <span class="glyphicon glyphicon-plus"></span> add user
-            </button>
-        </span>
+        <button class="btn btn-info" ng-click="add()" title="Add user">
+            <span class="glyphicon glyphicon-plus"></span> add user
+        </button>
     </div>
-
-    </form>
 
     <p></p>
 
@@ -36,21 +29,34 @@
         There are no users yet.
     </div>
 
-    <table>
-    
-    </table>
-
-    <ul class="list-group">
-    <li class="list-group-item {{visibility[user.id] ? 'list-group-item-info' : ''}}" ng-repeat="user in users" id="user_{{user.id}}">
-        <h4 class="list-group-item-heading" ng-click="toggleVisibility(user)">
-            <label>User {{user.id}}: {{user.username}}</label>
-            
-            (<em>role</em>: {{user.currentRole}})
-	        <span class="pull-right">
-	        <span class="btn-group">
-                <button class="btn btn-default" type="button" title="{{visibility[user.id] ? 'Collapse' :'Roles'}}">
-                <span class="glyphicon {{visibility[user.id] ? 'glyphicon-menu-up' :'glyphicon-menu-down'}}"></span>
-                </button>
+	<table st-table="displayedCollection" st-safe-src="users" class="table table-striped">
+	    <thead>
+	    <tr>
+	        <th st-sort="getters.lastName">{{'Name'|translate}}</th>
+	        <th st-sort="username">{{'Email'|translate}}</th>
+	        <th st-sort="currentRole">{{'Role'|translate}}</th>
+	        <th st-sort="instituteId">{{'Institute'|translate}}</th>
+	        <th st-sort="labId">{{'Lab'|translate}}</th>
+	        <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
+	    </tr>
+	    <tr>
+	        <th colspan="7"><input st-search="" class="form-control" placeholder="global search ..." type="text"/></th>
+	    </tr>
+	    </thead>
+	    <tbody>
+	    <tr ng-repeat="user in displayedCollection">
+	        <td>{{user.firstName}} {{user.lastName}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.currentRole}}</td>
+            <td>{{institutemap[user.instituteId].name}}</td>
+            <td>{{labmap[user.labId].name}}</td>
+            <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
+                &nbsp;&nbsp;
+                {{user.created | date: 'HH:mm'}}
+            </td>
+            <td>
+            <span class="pull-right">
+            <span class="btn-group">
                 <button class="btn btn-default" type="button" title="Edit" ng-click="edit(user)">
                     Edit
                 </button>
@@ -62,32 +68,16 @@
                     ng-click="deactivate(user)">
                     Deactivate
                 </button>
-				<button class="btn btn-default" type="button" title="Remove"
-	                ng-click="remove(user)">
-	            <span class="glyphicon glyphicon-trash"></span>
-		        </button>
-	        </span>
-	        </span>
-        </h4>
-        <div ng-show="visibility[user.id]">
-            <form class="form-horizontal" role="form" ng-submit="update(user)">
-                <input ng-model="user.firstName"></input>
-                <input ng-model="user.lastName"></input>
-                
-                <select ng-if="user.currentRole == 'requester'" ng-model="user.institution">
-                    <option value="-1">None</option>
-                    <option ng-repeat="institution in institutions">{{institution.name}}</option>
-                </select>
-
-                <select ng-if="user.currentRole == 'labuser'" ng-model="user.lab">
-                    <option value="-1">None</option>
-                    <option ng-repeat="lab in labs">{{lab.name}}</option>
-                </select>
-            
-            </form>
-        </div>
-    </li>
-    </ul>
+                <button class="btn btn-default" type="button" title="Remove"
+                    ng-click="remove(user)">
+                <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </span>
+            </span>            
+            </td>
+        </tr>
+        </tbody>
+    </table>
     
 </div>    
     

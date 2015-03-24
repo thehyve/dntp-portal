@@ -28,15 +28,6 @@
 	   }
 	});
 
-	Institute.query(function(response) {
-       $scope.institutes = response ? response : []; 
-       $scope.institutemap = {};
-       for(i in $scope.institutes) {
-           $scope.institutemap[$scope.institutes[i].id] = 
-               $scope.institutes[i];
-       }
-    });
-	
     $scope.update = function(userdata) {
         if (userdata.id > 0) {
             userdata.$update(function(result) {
@@ -165,61 +156,8 @@
         
       };
 
-      var InstituteController = function($scope, $modal, Institute) {
-          
-          $scope.error = "";
-          $scope.accessDenied = false;
-          $scope.visibility = {};
-          
-          Institute.query(function(response) {
-            $scope.institutes = response ? response : [];
-          });
-         
-          $scope.add = function() {
-              $scope.edit(new Institute());
-          };
-         
-          $scope.update = function(institutedata) {
-              if (institutedata.id > 0) {
-                  var institute = institutedata;
-                  institute.$update(function(result) {
-                      $scope.editInstituteModal.hide();
-                  }, function(response) {
-                      $scope.error = $scope.error + response.data.message + "\n";
-                  });
-              } else {
-                  var institute = new Institute(institutedata);
-                  institute.$save(function(result) {
-                      $scope.editInstituteModal.hide();
-                      $scope.institutes.unshift(result);
-                  }, function(response) {
-                      $scope.error = $scope.error + response.data.message + "\n";
-                  });
-              }
-          };
-
-          $scope.toggleVisibility = function(institute) {
-              if (!(institute.id in $scope.visibility)) {
-                  $scope.visibility[institute.id] = false;
-              }
-              $scope.visibility[institute.id] = !$scope.visibility[institute.id];
-          }
-          
-          $scope.remove = function(institute) {
-              institute.$remove(function() {
-                  $scope.institutes.splice($scope.institutes.indexOf(institute), 1);
-              });     
-          };
-          
-          $scope.edit = function(inst) {
-              $scope.editinstitute = inst;
-              $scope.editInstituteModal = $modal({scope: $scope, template: '/app/components/admin/editinstitute.html'});
-          };
-
-        };
-    
     UserController.$inject = [ '$scope', '$modal', 'User', 'Role', 'UserRole',
-                               'Lab', 'Institute'];
+                               'Lab'];
     angular.module("ProcessApp.controllers").controller("UserController",
             UserController);
  
@@ -230,9 +168,5 @@
     LabController.$inject = [ '$scope', '$modal', 'Lab' ];
     angular.module("ProcessApp.controllers").controller("LabController",
             LabController);
-
-    InstituteController.$inject = [ '$scope', '$modal', 'Institute' ];
-    angular.module("ProcessApp.controllers").controller("InstituteController",
-            InstituteController);
 
 }(angular));

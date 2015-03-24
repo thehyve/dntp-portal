@@ -18,8 +18,6 @@ public class User implements Serializable {
     private Long id;    
     @Column(unique = true)
     private String username;
-    private String firstname;
-    private String lastname;
     private String password;
     private boolean active = true;
     private boolean deleted = false;
@@ -27,12 +25,11 @@ public class User implements Serializable {
     private String firstName = "";
     private String lastName = "";
     boolean isPathologist = false;
+    private String institute;
     
     @ManyToOne(optional = true)
     private Lab lab;
-    @ManyToOne(optional = true)
-    private Institute institute;
-    
+   
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     private ContactData contactData;
     
@@ -148,11 +145,11 @@ public class User implements Serializable {
         this.lab = lab;
     }
 
-    public Institute getInstitute() {
+    public String getInstitute() {
         return institute;
     }
 
-    public void setInstitute(Institute institute) {
+    public void setInstitute(String institute) {
         this.institute = institute;
     }
 
@@ -169,12 +166,11 @@ public class User implements Serializable {
     }
 
     public void clearPassword() {
-        this.password = "";
-        
+        this.password = ""; 
     }
  
     public String toString() {
-        return this.email;
+        return this.username;
     }
 
     public void setPassword(String password) {
@@ -193,6 +189,5 @@ public class User implements Serializable {
     public void setCreated(Date created) {
         this.created = created;
     }
-    
-    
+
 }

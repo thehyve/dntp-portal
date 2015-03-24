@@ -25,9 +25,6 @@ public class DefaultUsers {
     LabRepository labRepository;
 
     @Autowired
-    InstituteRepository instituteRepository;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
     
     @PostConstruct
@@ -77,16 +74,6 @@ public class DefaultUsers {
                 "UMC",
                 "AMC"
         };
-
-        int iIdx = 99;
-
-        for (String r: defaultInst) {
-            if (instituteRepository.findByName(r) == null) {
-                Institute institute = new Institute(new Long(iIdx++), r, null);
-                instituteRepository.save(institute);
-            }
-        }
-
 
     }
 

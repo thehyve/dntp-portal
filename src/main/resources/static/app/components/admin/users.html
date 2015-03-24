@@ -35,7 +35,7 @@
 	        <th st-sort="getters.lastName">{{'Name'|translate}}</th>
 	        <th st-sort="username">{{'Email'|translate}}</th>
 	        <th st-sort="currentRole">{{'Role'|translate}}</th>
-	        <th st-sort="instituteId">{{'Institute'|translate}}</th>
+	        <th st-sort="institute">{{'Institute'|translate}}</th>
 	        <th st-sort="labId">{{'Lab'|translate}}</th>
 	        <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
 	    </tr>
@@ -48,7 +48,7 @@
 	        <td>{{user.firstName}} {{user.lastName}}</td>
             <td>{{user.username}}</td>
             <td>{{user.currentRole}}</td>
-            <td>{{institutemap[user.instituteId].name}}</td>
+            <td>{{user.institute}}</td>
             <td>{{labmap[user.labId].name}}</td>
             <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
                 &nbsp;&nbsp;

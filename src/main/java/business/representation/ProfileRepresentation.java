@@ -2,8 +2,10 @@ package business.representation;
 
 import java.util.Date;
 
-import business.models.ContactData;
 import javax.validation.constraints.NotNull;
+
+import business.models.ContactData;
+import business.models.User;
 
 
 public class ProfileRepresentation {
@@ -21,9 +23,10 @@ public class ProfileRepresentation {
     private ContactData contactData;
     
     private Long labId;
-    private Long instituteId;
     
     private boolean isPathologist;
+    private String institute;
+    private String specialism;
     
     private Date created;
     private Long createdTime;
@@ -42,10 +45,10 @@ public class ProfileRepresentation {
                             "";
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.isPathologist = user.isPathologist();
+        this.setPathologist(user.isPathologist());
         this.contactData = user.getContactData() == null ? new ContactData() : user.getContactData();
         this.labId = user.getLab() == null ? null : user.getLab().getId();
-        this.instituteId = user.getInstitute() == null ? -1 : user.getInstitute().getId();
+        this.institute = user.getInstitute();
         this.created = user.getCreated();
         this.createdTime = user.getCreated().getTime();
     }
@@ -118,16 +121,12 @@ public class ProfileRepresentation {
         this.labId = labId;
     }
 
-    public Long getInstituteId() {
-        return instituteId;
+    public String getInstitute() {
+        return institute;
     }
 
-    public void setInstitutionId(Long instituteId) {
-        this.instituteId = instituteId;
-    }
-
-    public String getInstitution() {
-        return institution;
+    public void setInstitute(String institute) {
+        this.institute = institute;
     }
 
     public String getSpecialism() {
@@ -145,6 +144,14 @@ public class ProfileRepresentation {
 
     public Long getCreatedTime() {
         return createdTime;
+    }
+
+    public boolean isPathologist() {
+        return isPathologist;
+    }
+
+    public void setPathologist(boolean isPathologist) {
+        this.isPathologist = isPathologist;
     }
     
     

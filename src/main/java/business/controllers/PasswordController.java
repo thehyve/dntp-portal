@@ -29,7 +29,7 @@ public class PasswordController {
         LogFactory.getLog(this.getClass()).info("PUT request-password/" + form.getEmail());
 
         // Authenticate user (maybe the email doesn't even exist!)
-        User user = this.userRepository.findByEmail(form.getEmail());
+        User user = this.userRepository.findByUsername(form.getEmail());
         if (user != null) {
             // Create a NewPasswordRequest for him
             NewPasswordRequest npr = new NewPasswordRequest(user);
@@ -44,7 +44,7 @@ public class PasswordController {
     }
 
     @RequestMapping(value = "/password/reset", method = RequestMethod.POST)
-    public ResponseEntity setPassword(@RequestBody NewPasswordRepresentation form) {
+    public ResponseEntity<Object> setPassword(@RequestBody NewPasswordRepresentation form) {
         LogFactory.getLog(this.getClass()).info("POST password/reset");
 
         // LATER: Check if the link was issued a couple of days ago
@@ -57,16 +57,16 @@ public class PasswordController {
             user.setPassword(form.getPassword());
             this.userRepository.save(user);
             this.nprRepo.delete(npr);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<Object>(HttpStatus.OK);
         } else {
             // The link doesn't exist!
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 
 
     @RequestMapping(value = "/password/change", method = RequestMethod.POST)
-    public ResponseEntity changePassword(UserAuthenticationToken user, @RequestBody PasswordChangeRepresentation form) {
+    public ResponseEntity<Object> changePassword(UserAuthenticationToken user, @RequestBody PasswordChangeRepresentation form) {
         LogFactory.getLog(this.getClass()).info("PUT /password/change");
 
         // LATER: Validate data (password requirements)
@@ -77,9 +77,9 @@ public class PasswordController {
         if (currentUser.getPassword().equals(form.getOldPassword())) {
             currentUser.setPassword(form.getNewPassword());
             this.userRepository.save(currentUser);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<Object>(HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 }

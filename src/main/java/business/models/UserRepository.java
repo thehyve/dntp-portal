@@ -12,10 +12,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     List<User> findByDeletedFalse();
     
-    User findByEmailAndDeletedFalse(String email);
+    User findByUsernameAndDeletedFalse(String username);
     
-    User findByEmailAndActiveTrueAndDeletedFalse(String email);
+    User findByUsernameAndActiveTrueAndDeletedFalse(String username);
 
-    User findByEmail(String email);
+    User findByUsername(String username);
 
 }

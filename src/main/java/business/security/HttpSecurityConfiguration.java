@@ -111,7 +111,7 @@ public class HttpSecurityConfiguration extends
                     throws UsernameNotFoundException {
                 LogFactory.getLog(getClass()).info(
                         "loadUserByUsername: " + username);
-                User user = userRepository.findByEmailAndActiveTrueAndDeletedFalse(username);
+                User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(username);
                 if (user != null) {
                     List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
                     for (Role r : user.getRoles()) {
@@ -119,7 +119,7 @@ public class HttpSecurityConfiguration extends
                                 r.getName()).get(0));
                     }
                     return new org.springframework.security.core.userdetails.User(
-                            user.getEmail(), user.getPassword(), true, true,
+                            user.getUsername(), user.getPassword(), true, true,
                             true, true, authorityList);
                 } else {
                     throw new UsernameNotFoundException(

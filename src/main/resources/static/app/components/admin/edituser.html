@@ -87,10 +87,8 @@
         <div class="form-group" ng-if="edituser.currentRole == 'requester'">
             <label class="control-label col-sm-4" for="institute">{{ 'Institute' | translate }}</label>
             <div class="col-sm-6">
-                <select ng-model="edituser.instituteId">
-                    <option value="" ng-selected="edituser.instituteId==''">None</option>
-                    <option ng-repeat="institute in institutes" ng-selected="edituser.instituteId==institute.id" value="{{institute.id}}">{{institute.name}}</option>
-                </select>
+                <input type="text" class="form-control" id="institute" placeholder="{{ 'Institute' | translate }}"
+                ng-model="edituser.institute">
             </div>
         </div>
         

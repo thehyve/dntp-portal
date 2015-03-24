@@ -33,8 +33,6 @@
                 templateUrl : 'app/components/admin/users.html'
             }).when('/labs', {
                 templateUrl : 'app/components/admin/labs.html'
-            }).when('/institutes', {
-                templateUrl : 'app/components/admin/institutes.html'
             }).when('/profile/password', {
                 templateUrl : 'app/components/profile/password.html',
                 controller : 'PasswordController'

@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import business.models.ContactData;
-import business.models.Institute;
-import business.models.InstituteRepository;
 import business.models.Lab;
 import business.models.LabRepository;
 import business.models.Role;
@@ -40,9 +38,6 @@ public class UserController {
 
     @Autowired
     LabRepository labRepository;
-
-    @Autowired
-    InstituteRepository instituteRepository;
 
     @RequestMapping("/user")
     public Principal user(Principal user) {
@@ -68,14 +63,7 @@ public class UserController {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());
         user.setPathologist(body.isPathologist());
-        Institute institute = null;
-        if (user.isRequester()) {
-            institute = instituteRepository.findOne(body.getInstituteId());
-            if (institute == null) {
-                return new ResponseEntity<Object>("No institute selected.", HttpStatus.BAD_REQUEST);
-            }
-        }
-        user.setInstitute(institute);
+        user.setInstitute(body.getInstitute());
         Lab lab = null;
         if (user.isLabUser()) {
             lab = labRepository.findOne(body.getLabId());
@@ -180,7 +168,7 @@ public class UserController {
 
     @RequestMapping(value = "/register/users", method = RequestMethod.POST)
     public User register(@RequestBody User user) {
-        LogFactory.getLog(getClass()).info("POST /register (for user: " + user.getEmail() + ")");
+        LogFactory.getLog(getClass()).info("POST /register (for user: " + user.getUsername() + ")");
         return userRepository.save(user);
     }
 

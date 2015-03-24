@@ -75,7 +75,7 @@ public class UserController {
         userRepository.save(user);
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/register/users", method = RequestMethod.POST)
     public User register(@RequestBody User user) {
         LogFactory.getLog(getClass()).info("POST /register (for user: " + user.getEmail() + ")");
         return userRepository.save(user);

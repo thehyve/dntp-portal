@@ -20,7 +20,7 @@
                 method : "PUT"
             },
             register : {
-                url : '/register',
+                url : '/register/users',
                 method : 'POST'
             }
         });

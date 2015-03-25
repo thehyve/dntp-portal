@@ -89,22 +89,22 @@
                 </div>
             </div>
 
-            <!-- Institution -->
+            <!-- Institute -->
             <div class="form-group"
-                 ng-class="{ 'has-error' : (registrationForm.institution.$invalid ||
-                    registrationForm.institution.$error.required) && registrationForm.institution.$dirty }">
-                <label class="control-label col-sm-2" for="institution">{{ 'Institution' | translate }}</label>
+                 ng-class="{ 'has-error' : (registrationForm.institute.$invalid ||
+                    registrationForm.institute.$error.required) && registrationForm.institute.$dirty }">
+                <label class="control-label col-sm-2" for="institute">{{ 'Institute' | translate }}</label>
 
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="institution" name="institution"
-                           placeholder="{{ 'Institution' | translate }}"
-                           ng-model="user.institution" ng-maxlength="50" required>
+                    <input type="text" class="form-control" id="institute" name="institute"
+                           placeholder="{{ 'Institute' | translate }}"
+                           ng-model="user.institute" ng-maxlength="50" required>
                     <!-- errors -->
                     <span class="help-block"
-                          ng-show="registrationForm.institution.$error.required && registrationForm.institution.$dirty">
+                          ng-show="registrationForm.institute.$error.required && registrationForm.institute.$dirty">
                         {{ 'Required field' | translate }}
                     </span>
-                    <span class="help-block" ng-show="registrationForm.institution.$error.maxlength">
+                    <span class="help-block" ng-show="registrationForm.institute.$error.maxlength">
                         {{ 'Input value is too long' | translate }}
                     </span>
                 </div>
@@ -127,7 +127,7 @@
             </div>
 
             <!-- Pathology Dept. Member -->
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required}">
                 <label class="control-label col-sm-2" for="isPathologyLabMember">
                     &nbsp;
                 </label>
@@ -139,9 +139,14 @@
                 </div>
                 <div class="col-sm-10" ng-show="user.isPathologyLabMember">
                     <br>
-                    <select  class="form-control" name="lab">
-                        <option ng-repeat="labItem in labs" value="{{labItem.id}}">{{labItem.name}}</option>
+                    <select class="form-control" name="lab" ng-model="user.lab" ng-options="lab.name for lab in labs"
+                             ng-required="user.isPathologyLabMember">
+                        <option value="" ng-selected="selected">-- Select lab --</option>
                     </select>
+                    <!-- errors -->
+                    <span ng-show="registrationForm.lab.$error.required" class="help-block">
+                        {{ 'Required field' | translate }}
+                    </span>
                 </div>
             </div>
             <br>
@@ -153,7 +158,7 @@
                 <label class="control-label col-sm-2" for="password">{{ 'Password' | translate }}</label>
 
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="password" name="password"
+                    <input type="password" class="form-control" id="password" name="password"
                            placeholder="{{ 'Enter 8 characters long password' | translate }}" ng-model="user.password"
                            ng-minlength="8" required >
                     <!-- errors -->
@@ -174,7 +179,7 @@
                 <label class="control-label col-sm-2" for="repeatPassword">{{ 'Repeat Password' | translate }}</label>
 
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="repeatPassword" name="repeatPassword"
+                    <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
                            ng-model="user.repeatPassword" placeholder="{{ 'Repeat Password' | translate }}"
                            compare-to="user.password" required>
                      <!-- errors -->

@@ -22,7 +22,6 @@ public class Role implements Serializable {
     }
     
     public Role(String name) {
-        super();
         this.name = name;
     }
 
@@ -38,4 +37,20 @@ public class Role implements Serializable {
         return name;
     }
     
+    public boolean isRequester() {
+        return name.equals("requester");
+    }
+
+    public boolean isPalga() {
+        return name.equals("palga");
+    }
+
+    public boolean isScientificCouncilMember() {
+        return name.equals("scientific_council");
+    }
+
+    public boolean isLabUser() {
+        return name.equals("lab_user");
+    }
+
 }

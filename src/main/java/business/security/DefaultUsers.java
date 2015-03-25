@@ -5,10 +5,8 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import business.models.Role;
-import business.models.RoleRepository;
-import business.models.User;
-import business.models.UserRepository;
+import business.models.*;
+
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,25 +20,61 @@ public class DefaultUsers {
 
     @Autowired
     RoleRepository roleRepository;
-    
+
+    @Autowired
+    LabRepository labRepository;
+
     @Autowired
     PasswordEncoder passwordEncoder;
     
     @PostConstruct
     private void initDatabase() {
         LogFactory.getLog(getClass()).info("Create default users and roles.");
+
         String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
+
         for (String r: defaultRoles) {
             Role role = roleRepository.findByName(r);
             if (role == null) {
                 role = roleRepository.save(new Role(r));
             }
-            if (userRepository.findByUsernameAndDeletedFalse(r) == null) {
+            String username = r + "@dntp.thehyve.nl";
+            if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
                 Set<Role> roles = Collections.singleton(role);
                 String password = r; //passwordEncoder.encode("admin");
-                userRepository.save(new User(r, password, true, roles));
+                User user = new User(username, password, true, roles);
+                ContactData contactData = new ContactData();
+                contactData.setEmail(username);
+                user.setContactData(contactData);
+                userRepository.save(user);
             }
         }
+
+        LogFactory.getLog(getClass()).info("Create default labs");
+
+        String[] defaultLabs = new String[] {
+                "AMC, afd. Pathologie",
+                "Meander Medisch Centrum, afd. Klinische Pathologie",
+                "Canisius-Wilhelmina Ziekenhuis, afd. Pathologie",
+                "Laboratorium voor Pathologie (PAL), Dordrecht"
+        };
+
+        int labIdx = 99;
+
+        for (String r: defaultLabs) {
+            if (labRepository.findByName(r) == null) {
+                Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
+                labRepository.save(l);
+            }
+        }
+
+        LogFactory.getLog(getClass()).info("Create default institutions");
+
+        String[] defaultInst = new String[] {
+                "UMC",
+                "AMC"
+        };
+
     }
 
 }

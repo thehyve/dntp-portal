@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -57,38 +58,45 @@ public class HttpSecurityConfiguration extends
                             + arg2.getMessage());
         }
     };
-    
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
         .userDetailsService(userDetailsService())
-            .formLogin()
-            .permitAll()
-            .failureHandler(authenticationFailureHandler)
-            //.loginPage("/#/login")
+                .formLogin()
+                .permitAll()
+                .failureHandler(authenticationFailureHandler)
         .and()
-            .logout()
-            .permitAll()
-            .logoutSuccessUrl("/#/login")
+                .logout()
+                .permitAll()
+                .logoutSuccessUrl("/#/login")
         .and()
-            .authorizeRequests()
-            .antMatchers("/admin/**").access("hasRole('palga')")
-            .antMatchers(
-                    "/workflow.html", 
-                    "/index.html",
-                    //"/login",
-                    "/login.html", 
-                    "/", 
-                    "/bower_components/**",
-                    "/app/**",
-                    "/messages/**",
-                    "/images/**"
-                    ).permitAll()
+                .authorizeRequests()
+                .antMatchers("/admin/**").access("hasRole('palga')")
+        .and()
+                .authorizeRequests()
+                .antMatchers(
+                        "/",
+                        "/public/labs/**",
+                        "/public/institutions/**",
+                        "/password/request-new",
+                        "/password/reset",
+                        "/workflow.html",
+                        "/index.html",
+                        "/login.html",
+                        "/registration.html",
+                        "/bower_components/**",
+                        "/app/**",
+                        "/messages/**",
+                        "/images/**"
+                ).permitAll()
+                .antMatchers(HttpMethod.POST, "/register/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/register/users/**").permitAll()
             .anyRequest()
-            .authenticated()
-        .and()
-            .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
-            .csrf().csrfTokenRepository(csrfTokenRepository())
+                .authenticated()
+                .and()
+                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+                .csrf().csrfTokenRepository(csrfTokenRepository())
         ;
     }
 
@@ -121,7 +129,7 @@ public class HttpSecurityConfiguration extends
             }
         };
     }
-        
+
     private CsrfTokenRepository csrfTokenRepository() {
         HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
         repository.setHeaderName("X-XSRF-TOKEN");

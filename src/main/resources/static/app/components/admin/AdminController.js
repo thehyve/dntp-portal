@@ -1,24 +1,14 @@
 (function(angular) {
 	
-  var UserController = function($scope, User, Role, UserRole) {
+  var UserController = function($scope, $modal, User, Role, UserRole, Lab, Institute) {
     
     $scope.error = "";
     $scope.accessDenied = false;
-    $scope.userRoles = {};
     $scope.visibility = {};
       
-    $scope.updateUserRoles = function(users) {
-        angular.forEach($scope.users, function(user) {
-            $scope.userRoles[user.id] = {};
-           angular.forEach(user.roles, function(role) {
-               $scope.userRoles[user.id][role.id] = true;
-           }) 
-        });
-    }
-    
 	User.query().$promise.then(function(response) {
         $scope.users = response ? response : [];
-        $scope.updateUserRoles($scope.users);
+        $scope.displayedCollection = [].concat($scope.users);
     }, function(response) {
         $scope.error = $scope.error + response.data.message + "\n";
         if (response.data.error == 302) {
@@ -30,23 +20,38 @@
 	    $scope.roles = response ? response : [];
 	});
    
-    $scope.add = function(userdata) {
-        var user = new User(userdata);
-          user.$save(function(result) {
-              $scope.users = [result].concat($scope.users);
-          });
+	Lab.query(function(response) {
+	   $scope.labs = response ? response : []; 
+	   $scope.labmap = {};
+	   for(i in $scope.labs) {
+	       $scope.labmap[$scope.labs[i].id] = $scope.labs[i];
+	   }
+	});
+
+    $scope.update = function(userdata) {
+        if (userdata.id > 0) {
+            userdata.$update(function(result) {
+                $scope.editUserModal.hide();
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        } else {
+            var user = new User(userdata);
+            user.$save(function(result) {
+                $scope.editUserModal.hide();
+                $scope.users.unshift(result);
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        }
     };
    
     $scope.toggleVisibility = function(user) {
-        if (!(user.id in $scope.visibility)) {
-            $scope.visibility[user.id] = false;
+        if (!(user.userId in $scope.visibility)) {
+            $scope.visibility[user.userId] = false;
         }
-        $scope.visibility[user.id] = !$scope.visibility[user.id];
+        $scope.visibility[user.userId] = !$scope.visibility[user.userId];
     }
-    
-    $scope.update = function(user) {
-    	user.$update();
-    };
     
     $scope.activate = function(user) {
         user.$activate(function(result) {
@@ -66,46 +71,17 @@
     	});    	
     };
     
-    $scope.hasRole = function(user, role) {
-        for (var i in user.roles) {
-            var r = user.roles[i];
-            if (role.id==r.id) {
-                return true;
-            }
-        }
-        return false;
+    $scope.add = function() {
+        $scope.edit(new User({'currentRole': 'requester'}));
     };
     
-    $scope.toggleRole = function(user, role) {
-        if ($scope.userRoles[user.id][role.id] === undefined) {
-            $scope.userRoles[user.id][role.id] = false;
-        }
-        $scope.userRoles[user.id][role.id] = !$scope.userRoles[user.id][role.id];
-        $scope.updateRole(user, role);
-    }
-    
-    $scope.updateRole = function(user, role) {
-        var userRole = new UserRole({userid: user.id, roleid: role.id});
-        if ($scope.userRoles[user.id][role.id]) {
-            userRole.$save();
-            user.roles[user.roles.length] = role;
-        } else {
-            userRole.$remove(function(result) {
-            }, function(response) {
-                alert(response);
-            });
-            var i = 0;
-            for (; i < user.roles.length; i++) {
-                if (user.roles[i].id == role.id) {
-                    break;
-                }
-            }
-            user.roles.splice(i, 1);
-        }
+    $scope.edit = function(usr) {
+        $scope.edituser = usr;
+        $scope.editUserModal = $modal({scope: $scope, template: '/app/components/admin/edituser.html'});
     }
   
   };
-
+  
   var RoleController = function($scope, User) {
       Role.query(function(response) {
         $scope.roles = response ? response : [];
@@ -128,56 +104,69 @@
       };
     };
 
-    var LabController = function($scope, Lab) {
+    var LabController = function($scope, $modal, Lab) {
+        
+        $scope.error = "";
+        $scope.accessDenied = false;
+        $scope.visibility = {};
+        
         Lab.query(function(response) {
           $scope.labs = response ? response : [];
         });
        
-        $scope.add = function(data) {
-            var lab = new Lab(data);
-          lab.$save(function(result) {
-            $scope.labs.push(result);
-          });
+        $scope.add = function() {
+            $scope.edit(new Lab());
         };
        
-        $scope.update = function(update) {
-            lab.$update();
+        $scope.update = function(labdata) {
+            if (labdata.id > 0) {
+                labdata.$update(function(result) {
+                    $scope.editLabModal.hide();
+                }, function(response) {
+                    $scope.error = $scope.error + response.data.message + "\n";
+                });
+            } else {
+                var lab = new Lab(labdata);
+                lab.$save(function(result) {
+                    $scope.editLabModal.hide();
+                    $scope.labs.unshift(result);
+                }, function(response) {
+                    $scope.error = $scope.error + response.data.message + "\n";
+                });
+            }
         };
 
+        $scope.toggleVisibility = function(lab) {
+            if (!(lab.id in $scope.visibility)) {
+                $scope.visibility[lab.id] = false;
+            }
+            $scope.visibility[lab.id] = !$scope.visibility[lab.id];
+        }
+        
+        $scope.remove = function(lab) {
+            lab.$remove(function() {
+                $scope.labs.splice($scope.labs.indexOf(lab), 1);
+            });     
+        };
+        
+        $scope.edit = function(lb) {
+            $scope.editlab = lb;
+            $scope.editLabModal = $modal({scope: $scope, template: '/app/components/admin/editlab.html'});
+        };        
+        
       };
 
-      var InstitutionController = function($scope, Institution) {
-          Institution.query(function(response) {
-            $scope.institutions = response ? response : [];
-          });
-         
-          $scope.add = function(data) {
-              var institution = new Institution(data);
-              institution.$save(function(result) {
-              $scope.institutions.push(result);
-            });
-          };
-         
-          $scope.update = function(institution) {
-              institution.$update();
-          };
-
-        };
-    
-    UserController.$inject = [ '$scope', 'User', 'Role', 'UserRole' ];
+    UserController.$inject = [ '$scope', '$modal', 'User', 'Role', 'UserRole',
+                               'Lab'];
     angular.module("ProcessApp.controllers").controller("UserController",
             UserController);
-
+ 
     RoleController.$inject = [ '$scope', 'Role' ];
     angular.module("ProcessApp.controllers").controller("RoleController",
             RoleController);
 
-    LabController.$inject = [ '$scope', 'Lab' ];
+    LabController.$inject = [ '$scope', '$modal', 'Lab' ];
     angular.module("ProcessApp.controllers").controller("LabController",
             LabController);
-
-    InstitutionController.$inject = [ '$scope', 'Institution' ];
-    angular.module("ProcessApp.controllers").controller("InstitutionController",
-            InstitutionController);
 
 }(angular));

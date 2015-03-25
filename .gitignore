@@ -1,7 +1,13 @@
 /src/main/resources/static/bower_components/
+/build/
+/classes/
+/out/
 /target/
 /.idea/
+/.gradle/
 /.settings/
 /.classpath
 /.project
 *.iml
+*.ipr
+*.iws

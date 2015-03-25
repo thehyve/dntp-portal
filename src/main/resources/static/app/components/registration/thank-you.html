@@ -1,0 +1,5 @@
+<div class="container" ng-controller="RegistrationController">
+    <h2>{{ 'Thank you' | translate }}!</h2>
+    {{ 'Registration is successful and confirmation email should be sent to ' | translate }}
+    <a href="mailto:{{registrant.contactData.email}}">{{registrant.contactData.email}}</a>.
+</div>

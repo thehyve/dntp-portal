@@ -1,10 +1,14 @@
 package business.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
 public class Lab {
@@ -18,7 +22,8 @@ public class Lab {
     
     private String name;
     
-    @ManyToOne
+    @OneToOne(optional = true, cascade = CascadeType.ALL)
+    @RestResource(exported = false)
     private ContactData contactData;
     
     public Lab() {

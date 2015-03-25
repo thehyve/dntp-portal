@@ -36,7 +36,9 @@ Run `bower` to install the required Javascript and CSS libraries:
 bower install
 ```
 
-Then run the application:
+## Build with Maven
+
+Make sure you have Maven installed, then run the application:
 ```
 mvn spring-boot:run
 ```
@@ -48,3 +50,16 @@ Or create a `war`:
 mvn package 
 ```
 There should now be a `.war`-file in `target/dntp-portal-0.0.1-SNAPSHOT.war`.
+
+## Build with Gradle
+
+Make sure you have [https://gradle.org/docs/current/userguide/installation.html](Gradle installed), then run the application:
+```
+gradle bootRun
+```
+There should now be an application running at [http://localhost:8092/](http://localhost:8092/).
+
+Run gradle tasks to view all tasks runnable from root project
+```
+gradle tasks
+```

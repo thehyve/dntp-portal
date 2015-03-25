@@ -16,19 +16,12 @@
 	</div>
 
 <div ng-hide="error">
-
-    <form class="form-horizontal" role="form" ng-submit="add(user)">
     
     <div class="input-group">
-        <input ng-model="user.username" />
-        <span class="input-group-btn pull-right">
-            <button class="btn btn-info" type="submit" title="Add user">
-                <span class="glyphicon glyphicon-plus"></span> add user
-            </button>
-        </span>
+        <button class="btn btn-info" ng-click="add()" title="Add user">
+            <span class="glyphicon glyphicon-plus"></span> add user
+        </button>
     </div>
-
-    </form>
 
     <p></p>
 
@@ -36,16 +29,36 @@
         There are no users yet.
     </div>
 
-    <ul class="list-group">
-    <li class="list-group-item {{visibility[user.id] ? 'list-group-item-info' : ''}}" ng-repeat="user in users" id="user_{{user.id}}">
-        <h4 class="list-group-item-heading" ng-click="toggleVisibility(user)">
-            <label>User {{user.id}}: {{user.username}}</label>
-            
-            (<em>roles: </em><span ng-repeat="role in user.roles">{{role.name}}{{$last ? '' : ', '}}</span>)
-	        <span class="pull-right">
-	        <span class="btn-group">
-                <button class="btn btn-default" type="button" title="{{visibility[user.id] ? 'Collapse' :'Roles'}}">
-                <span class="glyphicon {{visibility[user.id] ? 'glyphicon-menu-up' :'glyphicon-menu-down'}}"></span>
+	<table st-table="displayedCollection" st-safe-src="users" class="table table-striped">
+	    <thead>
+	    <tr>
+	        <th st-sort="getters.lastName">{{'Name'|translate}}</th>
+	        <th st-sort="username">{{'Email'|translate}}</th>
+	        <th st-sort="currentRole">{{'Role'|translate}}</th>
+	        <th st-sort="institute">{{'Institute'|translate}}</th>
+	        <th st-sort="labId">{{'Lab'|translate}}</th>
+	        <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
+	    </tr>
+	    <tr>
+	        <th colspan="7"><input st-search="" class="form-control" placeholder="global search ..." type="text"/></th>
+	    </tr>
+	    </thead>
+	    <tbody>
+	    <tr ng-repeat="user in displayedCollection">
+	        <td>{{user.firstName}} {{user.lastName}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.currentRole}}</td>
+            <td>{{user.institute}}</td>
+            <td>{{labmap[user.labId].name}}</td>
+            <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
+                &nbsp;&nbsp;
+                {{user.created | date: 'HH:mm'}}
+            </td>
+            <td>
+            <span class="pull-right">
+            <span class="btn-group">
+                <button class="btn btn-default" type="button" title="Edit" ng-click="edit(user)">
+                    Edit
                 </button>
                 <button class="btn btn-default {{user.active ? 'disabled' : ''}}" type="button" title="Activate"
                     ng-click="activate(user)">
@@ -55,25 +68,16 @@
                     ng-click="deactivate(user)">
                     Deactivate
                 </button>
-				<button class="btn btn-default" type="button" title="Remove"
-	                ng-click="remove(user)">
-	            <span class="glyphicon glyphicon-trash"></span>
-		        </button>
-	        </span>
-	        </span>
-        </h4>
-        <p ng-show="visibility[user.id]">
-            Edit user roles:
-            <ul class="list-group" ng-show="visibility[user.id]">
-            <li class="list-group-item" ng-repeat="role in roles">
-                <input type="checkbox" id="userRoles[{{user.id}}][{{role.id}}]"
-                ng-model="userRoles[user.id][role.id]" ng-change="updateRole(user, role)" />
-                <label for="userRoles[{{user.id}}][{{role.id}}]">{{role.name}}</label>
-            </li>
-            </ul>
-        </p>
-    </li>
-    </ul>
+                <button class="btn btn-default" type="button" title="Remove"
+                    ng-click="remove(user)">
+                <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </span>
+            </span>            
+            </td>
+        </tr>
+        </tbody>
+    </table>
     
 </div>    
     

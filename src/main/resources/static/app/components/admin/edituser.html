@@ -108,7 +108,8 @@
         <div class="form-group">
             <label class="control-label col-sm-4" for="specialism">{{ 'Specialism' | translate }}</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="specialism" placeholder="{{ 'Specialism' | translate }}">
+                <input type="text" class="form-control" id="specialism" placeholder="{{ 'Specialism' | translate }}" 
+                ng-model="edituser.specialism">
             </div>
         </div>
 
@@ -118,8 +119,17 @@
                 &nbsp;
             </label>
             <div class="col-sm-6">
-                <input type="checkbox" id="isPathologyLabMember"> &nbsp; {{ 'I am member of pathology department' | translate }}
+                <input type="checkbox" id="isPathologyLabMember"
+                ng-model="edituser.pathologist"> &nbsp; {{ 'I am member of pathology department' | translate }}
             </div>
+            <div class="col-sm-6" ng-show="edituser.pathologist">
+                <br>
+                <select class="form-control" name="lab" ng-model="edituser.labId" ng-options="lab.id as lab.name for lab in labs"
+                         ng-required="edituser.pathologist">
+                    <option value="test" ng-selected="selected">-- Select lab --</option>
+                </select>
+            </div>
+            
         </div>
         <br>
 </div>

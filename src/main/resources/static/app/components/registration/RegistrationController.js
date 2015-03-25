@@ -12,30 +12,15 @@ angular.module('ProcessApp.controllers')
                 $scope.labs = labs;
             });
 
-        $scope.submit = function () {
+        $scope.submit = function (user) {
             if ($scope.registrationForm.$valid) {
 
-                // collect inputs as profile
-                var profile = {
-                    username:  $scope.user.email,
-                    firstName: $scope.user.firstName,
-                    lastName: $scope.user.lastName,
-                    contactData: {
-                        email: $scope.user.email,
-                        telephone: $scope.user.email
-                    },
-                    institute: $scope.user.institute,
-                    labId: $scope.user.lab.id,
-                    specialism: $scope.user.specialism,
-                    currentRole: "requester",
-                    isPathologist: $scope.user.isPathologyLabMember,
-                    password1: $scope.user.password,
-                    password2: $scope.user.repeatPassword
-                };
+                user.currentRole = "requester";
+                user.username = user.contactData.email;
 
-                $rootScope.registrant = profile;
+                $rootScope.registrant = user;
 
-                Restangular.all('register/users').post(profile)
+                Restangular.all('register/users').post(user)
                     .then(function (data) {
                         $location.path('/register/success');
                     }, function (response) {

@@ -34,7 +34,7 @@ messages_nl =
     'Last name': 'Achternaam',
     'E-mail': 'E-mail',
     'Telephone': 'Telefoonnummer',
-    'Institution': 'Instelling',
+    'Institute': 'Instelling',
     'Specialism': 'Specialisme',
     'Department': 'Afdeling',
     'I am member of pathology department': 'Ik ben lid van pathologie afdeling',

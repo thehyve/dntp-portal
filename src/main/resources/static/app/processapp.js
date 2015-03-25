@@ -29,6 +29,9 @@
             }).when('/register', {
                 templateUrl : 'app/components/registration/registration.html',
                 controller : 'RegistrationController'
+            }).when('/register/success', {
+                templateUrl : 'app/components/registration/thank-you.html',
+                controller : 'RegistrationController'
             }).when('/users', {
                 templateUrl : 'app/components/admin/users.html'
             }).when('/labs', {
@@ -60,6 +63,7 @@
                     // redirect to login page if not logged in
                     if (($location.path() !== '/login'
                         && $location.path() !== '/register'
+                        && $location.path() !== '/register/success'
                         && $location.path() !== '/login/forgot-password'
                         && $location.path() !== '/login/reset-password'
                         ) && !$rootScope.globals.currentUser) {

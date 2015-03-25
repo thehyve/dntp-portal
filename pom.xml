@@ -11,6 +11,22 @@
 	<name>DNTP portal</name>
 	<description>Portal application for pathology sample exchange.</description>
 
+    <profiles>
+    <profile>
+      <id>dev</id>
+      <activation><activeByDefault>true</activeByDefault></activation>
+    </profile>
+    <profile>
+      <id>test</id>
+    </profile>
+    <profile>
+      <id>acc</id>
+    </profile>
+    <profile>
+      <id>prod</id>
+    </profile>
+    </profiles>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -83,9 +99,6 @@
 		      <version>1.2.3</version>
 		      <scope>test</scope>
 		</dependency>
-		<dependency> <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId> 
-	   </dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -127,5 +140,17 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
+    <distributionManagement>
+        <repository>
+	        <id>nl.thehyve.nexus</id>
+	        <name>The Hyve - Nexus repository</name>
+	        <url>https://repo.thehyve.nl/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nl.thehyve.nexus</id>
+            <name>The Hyve - Nexus repository</name>
+            <url>https://repo.thehyve.nl/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

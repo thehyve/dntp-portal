@@ -91,6 +91,7 @@ public class HttpSecurityConfiguration extends
                         "/images/**"
                 ).permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/register/users/**").permitAll()
             .anyRequest()
                 .authenticated()
                 .and()

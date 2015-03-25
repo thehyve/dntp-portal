@@ -20,7 +20,7 @@ public class RegistrationFormRepresentation {
 
     String telephone;
 
-    String institution;
+    String institute;
 
     String specialism;
 
@@ -62,12 +62,12 @@ public class RegistrationFormRepresentation {
         this.telephone = telephone;
     }
 
-    public String getInstitution() {
-        return institution;
+    public String getInstitute() {
+        return institute;
     }
 
-    public void setInstitution(String institution) {
-        this.institution = institution;
+    public void setInstitute(String institute) {
+        this.institute = institute;
     }
 
     public String getSpecialism() {

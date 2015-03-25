@@ -68,7 +68,7 @@ public class DefaultUsers {
             }
         }
 
-        LogFactory.getLog(getClass()).info("Create default institutions");
+        LogFactory.getLog(getClass()).info("Create default institutes");
 
         String[] defaultInst = new String[] {
                 "UMC",

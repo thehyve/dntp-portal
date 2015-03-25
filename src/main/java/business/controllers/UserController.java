@@ -66,7 +66,7 @@ public class UserController {
         user.setInstitute(body.getInstitute());
         user.setSpecialism(body.getSpecialism());
         Lab lab = null;
-        if (user.isLabUser()) {
+        if (user.isLabUser() || user.isPathologist()) {
             lab = labRepository.findOne(body.getLabId());
             if (lab == null) {
                 return new ResponseEntity<Object>("No lab selected.", HttpStatus.BAD_REQUEST);

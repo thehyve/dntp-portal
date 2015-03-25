@@ -78,7 +78,6 @@ public class HttpSecurityConfiguration extends
                 .antMatchers(
                         "/",
                         "/public/labs/**",
-                        "/public/institutions/**",
                         "/password/request-new",
                         "/password/reset",
                         "/workflow.html",

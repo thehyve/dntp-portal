@@ -40,7 +40,7 @@
         authenticate();
         
         $scope.credentials = {
-            username: 'palga@dntp.nl',
+            username: 'palga@dntp.thehyve.nl',
             password: 'palga'
         };
 

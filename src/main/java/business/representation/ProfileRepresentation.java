@@ -26,6 +26,7 @@ public class ProfileRepresentation {
     
     private boolean isPathologist;
     private String institute;
+
     private String specialism;
     
     private Date created;
@@ -49,6 +50,7 @@ public class ProfileRepresentation {
         this.contactData = user.getContactData() == null ? new ContactData() : user.getContactData();
         this.labId = user.getLab() == null ? null : user.getLab().getId();
         this.institute = user.getInstitute();
+        this.specialism = user.getSpecialism();
         this.created = user.getCreated();
         this.createdTime = user.getCreated().getTime();
     }
@@ -132,6 +134,10 @@ public class ProfileRepresentation {
     public String getSpecialism() {
         return specialism;
     }
+    public void setSpecialism(String specialism) {
+        this.specialism = specialism;
+    }
+
 
     public Date getCreated() {
         return created;

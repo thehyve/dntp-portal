@@ -26,7 +26,8 @@ public class User implements Serializable {
     private String lastName = "";
     boolean isPathologist = false;
     private String institute;
-    
+    private String specialism;
+
     @ManyToOne(optional = true)
     private Lab lab;
    
@@ -151,6 +152,13 @@ public class User implements Serializable {
 
     public void setInstitute(String institute) {
         this.institute = institute;
+    }
+    public String getSpecialism() {
+        return specialism;
+    }
+
+    public void setSpecialism(String specialism) {
+        this.specialism = specialism;
     }
 
     public ContactData getContactData() {

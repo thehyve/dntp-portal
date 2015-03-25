@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('RegistrationController',['$scope', 'User', 'Restangular', '$q',
-        function ($scope, User, Restangular, $q) {
+    .controller('RegistrationController',['$scope', 'User', 'Restangular', '$rootScope', '$location',
+        function ($scope, User, Restangular, $rootScope, $location) {
 
         $scope.labs = []; // init labs
 
@@ -12,61 +12,37 @@ angular.module('ProcessApp.controllers')
                 $scope.labs = labs;
             });
 
-        // -*-*-*-*-*-*-*-*-*-*-*- //
-        // START DUMMY  //
-        // -*-*-*-*-*-*-*-*-*-*-*- //
-        $scope.user = {
-            firstName :'Foo',
-            lastName : 'Bar',
-            email: 'foo@dntp.nl',
-            telephone: '090000000',
-            institution : '14',
-            lab : '12',
-            specialism : 'Phd Candidate',
-            isPathologyLabMember : true,
-            password : '12345678',
-            repeatPassword : '12345678'
-        };
-        // -*-*-*-*-*-*-*-*-*-*-*- //
-        // END TOO LAZY TO TYPE    //
-        // -*-*-*-*-*-*-*-*-*-*-*- //
-
         $scope.submit = function () {
-
             if ($scope.registrationForm.$valid) {
 
-                var promises = [
-                    Restangular.one('public/labs', $scope.user.lab).get(),
-                    Restangular.one('public/institutions', $scope.user.institution).get()
-                ];
+                // collect inputs as profile
+                var profile = {
+                    username:  $scope.user.email,
+                    firstName: $scope.user.firstName,
+                    lastName: $scope.user.lastName,
+                    contactData: {
+                        email: $scope.user.email,
+                        telephone: $scope.user.email
+                    },
+                    institute: $scope.user.institute,
+                    labId: $scope.user.lab.id,
+                    specialism: $scope.user.specialism,
+                    currentRole: "requester",
+                    isPathologist: $scope.user.isPathologyLabMember,
+                    password1: $scope.user.password,
+                    password2: $scope.user.repeatPassword
+                };
 
-                $q.all(promises).then(function (results) {
+                $rootScope.registrant = profile;
 
-                    var lab = results[0],
-                        institution = results[1];
-
-                    var user = new User({
-                        email:  $scope.user.email,
-                        firstname: $scope.user.firstName,
-                        lastname: $scope.user.lastName,
-                        telephone: $scope.user.telephone,
-                        institution: institution,
-                        lab: lab,
-                        specialism: $scope.user.specialism,
-                        isPathologyLabMember: $scope.user.isPathologyLabMember,
-                        password: $scope.user.password
+                Restangular.all('register/users').post(profile)
+                    .then(function (data) {
+                        $location.path('/register/success');
+                    }, function (response) {
+                        // Fixme : change to proper bootstraped alert
+                        alert(response.data.message);
+                        console.log(response.data.message);
                     });
-
-                    console.log("about to register new user");
-                    //Restangular.all('register/users').customPOST(user).then(function (data) {
-                    //    console.log("user " + data + " has just registered.");
-                    //});
-                    user.$register(function(result) {
-                        console.log("success ... ", result);
-                    });
-                });
-
-
             }
         };
 }]);

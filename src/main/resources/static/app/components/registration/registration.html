@@ -139,7 +139,7 @@
                 </div>
                 <div class="col-sm-10" ng-show="user.pathologist">
                     <br>
-                    <select class="form-control" name="lab" ng-model="user.lab" ng-options="lab.name for lab in labs"
+                    <select class="form-control" name="lab" ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
                              ng-required="user.pathologist">
                         <option value="" ng-selected="selected">-- Select lab --</option>
                     </select>

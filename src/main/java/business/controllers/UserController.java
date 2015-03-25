@@ -64,6 +64,7 @@ public class UserController {
         user.setLastName(body.getLastName());
         user.setPathologist(body.isPathologist());
         user.setInstitute(body.getInstitute());
+        user.setSpecialism(body.getSpecialism());
         Lab lab = null;
         if (user.isLabUser()) {
             lab = labRepository.findOne(body.getLabId());
@@ -97,12 +98,14 @@ public class UserController {
         }
         return null;
     }
-    
-    @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
-    public ResponseEntity<Object> create(Principal principal, @RequestBody ProfileRepresentation body) {
-        LogFactory.getLog(getClass()).info("POST /admin/users (for user: " + principal.getName() + ")");
+
+    private ResponseEntity<Object> createNewUser(ProfileRepresentation body) {
         if (body.getPassword1() != null && body.getPassword1().equals(body.getPassword2()))
         {
+            if (userRepository.findByUsername(body.getUsername()) != null ) {
+                throw new IllegalArgumentException("Credentials already exist in our system.");
+            }
+
             Role role = roleRepository.findByName(body.getCurrentRole());
             Set<Role> roles;
             if (role == null) {
@@ -110,8 +113,9 @@ public class UserController {
             } else {
                 roles = Collections.singleton(role);
             }
+
             User user = new User(body.getUsername(), body.getPassword1(), true, roles);
-            
+
             ResponseEntity<Object> result = transferUserData(body, user);
             if (result != null) {
                 return result;
@@ -122,6 +126,12 @@ public class UserController {
         {
             return new ResponseEntity<Object>("Passwords do not match.", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
+    public ResponseEntity<Object> create(Principal principal, @RequestBody ProfileRepresentation body) {
+        LogFactory.getLog(getClass()).info("POST /admin/users (for user: " + principal.getName() + ")");
+        return createNewUser(body);
     }
 
     @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.PUT,
@@ -167,10 +177,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register/users", method = RequestMethod.POST)
-    public User register(@RequestBody User user) {
-        LogFactory.getLog(getClass()).info("POST /register (for user: " + user.getUsername() + ")");
-        return userRepository.save(user);
+    public ResponseEntity<Object> register(@RequestBody ProfileRepresentation body) {
+        LogFactory.getLog(getClass()).info("POST /register new user");
+        return createNewUser(body);
     }
-
 
 }

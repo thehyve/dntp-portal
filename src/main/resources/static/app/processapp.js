@@ -15,7 +15,7 @@
         .config(function($routeProvider, $translateProvider) {
 
             $routeProvider.when('/', {
-                templateUrl : 'workflow.html',
+                templateUrl : 'app/dashboard/dashboard.html',
                 controller : ''
             }).when('/login', {
                 templateUrl : 'app/components/login/login.html',

@@ -6,7 +6,7 @@
             RestangularProvider.setBaseUrl('/');
         });
     angular.module('ProcessApp', [ "flow",
-                                   "mgcrea.ngStrap", 
+                                   "mgcrea.ngStrap",
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
                                    "smart-table",
@@ -19,7 +19,7 @@
                 controller : ''
             }).when('/login', {
                 templateUrl : 'app/components/login/login.html',
-                controller : 'NavigationController'
+                controller : 'LoginController'
             }).when('/login/forgot-password', {
                 templateUrl : 'app/components/forgot-password/forgot-password.html',
                 controller : 'ForgotPasswordController'
@@ -43,7 +43,7 @@
                 templateUrl : 'app/components/profile/profile.html',
                 controller : 'ProfileController'
             }).otherwise('/');
-            
+
             $translateProvider.translations('en', messages_en)
                               .translations('nl', messages_nl);
             $translateProvider.preferredLanguage('en');

@@ -1,11 +1,20 @@
-messages_nl = 
+messages_nl =
 {
     /* ========= */
     /* Shared    */
     /* ========= */
 
     'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
-    
+
+    /* ========= */
+    /* Login     */
+    /* ========= */
+
+    Username: 'Gebruikersnaam',
+    Login: 'Aanmelden',
+    'Forget Password' : 'Wachwoord vergeten',
+    'Create an account' : 'Een account maken',
+
     /* ========= */
     /* Main page */
     /* ========= */
@@ -53,14 +62,14 @@ messages_nl =
     'Change password': 'Wachtwoord wijzigen',
     'Update': 'Bijwerken',
     'Some information cannot be updated by using this form. If you would like to change it please contact op met PALGA': 'Sommige velden in dit formulier kunnen niet aangepast worden. Als u ze toch wil bijwerken neem contact met PALGA',
-    
+
     /* ================= */
     /* Change password   */
     /* ================= */
-    
+
     'Old password': 'Oud wachtwoord',
     'New password': 'Nieuw wachtwoord',
     'New password (again)': 'Nieuw wachtwoord (weer)',
-    
+
     null : null
 }

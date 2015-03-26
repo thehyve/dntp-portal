@@ -3,17 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./bower_components/angular-dialog-service/dist/dialogs.min.css" />
-    
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-        
+
     <style type="text/css">
         [ng\:cloak], [ng-cloak], .ng-cloak {
           display: none !important;
@@ -21,62 +20,10 @@
     </style>
   </head>
   <body ng-app="ProcessApp"> <!-- flow-prevent-drop -->
-    <div ng-controller="NavigationController" class="container">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#/"  style="padding-top: 3px; margin-bottom: 0;"> 
-                       <img alt="The Hyve" src="/images/thehyve_green.png">
-                    </a>
-                </div>
-                <ul class="nav navbar-nav" ng-if="roles.indexOf('palga') != -1">
-                    <li ng-show="authenticated" class="{{$route.current.templateUrl=='workflow.html' ? 'active': ''}}">
-                       <a href="#/">{{'Requests'|translate}}</a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav" ng-if="roles.indexOf('palga') != -1">
-                    <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">
-                       <a href="#/users">{{'Users'|translate}}</a>
-                       </li>
-                    <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
-                       <a href="#/labs">{{'Labs'|translate}}</a>
-                       </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
-                            {{ 'Language' | translate }}: {{currentLanguage}}
-                        </label>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a ng-click="changeLanguage('en')"  ng-disabled="{{currentLanguage=='en'}}">
-                                {{ 'English' | translate }} (en)
-                            </a></li>
-                            <li><a ng-click="changeLanguage('nl')"  ng-disabled="{{currentLanguage=='nl'}}">
-                                {{ 'Dutch' | translate }} (nl)
-                            </a></li>
-                        </ul>
-                    </li>
-                    <li ng-show="!authenticated" class="{{$route.current.templateUrl=='login.html' ? 'active': ''}}">
-                       <a href="#/login"><span
-                            class="glyphicon glyphicon-log-in"></span> login</a>
-                    </li>
-                    <li ng-show="authenticated"   class="navbar-text"><span
-                            class="glyphicon glyphicon-user"></span> {{username}}</li>
-                    <li ng-show="authenticated"><a href="" ng-click="logout()"><span
-                            class="glyphicon glyphicon-log-out"></span> logout</a></li>
-                    <li ng-show="authenticated" class="dropdown">
-                        <a class="dropdown-toggle" role="button" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-menu-hamburger"></span> 
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
-                            <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+
+    <!-- Navigator -->
+    <div ng-include="'app/components/navbar/navbar.html'"></div>
+
     <div ng-view class="container"></div>
 
     <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
@@ -96,7 +43,8 @@
     <script type="text/javascript" src="./bower_components/angular-strap/dist/angular-strap.min.js"></script>
     <script type="text/javascript" src="./bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
     <script type="text/javascript" src="./app/processapp.js"></script>
-    <script type="text/javascript" src="./app/components/login/navigationcontroller.js"></script>
+    <script type="text/javascript" src="./app/components/navbar/NavigationController.js"></script>
+    <script type="text/javascript" src="./app/components/login/LoginController.js"></script>
     <script type="text/javascript" src="./app/processservices.js"></script>
     <script type="text/javascript" src="./app/processcontrollers.js"></script>
     <script type="text/javascript" src="./app/components/admin/AdminServices.js"></script>

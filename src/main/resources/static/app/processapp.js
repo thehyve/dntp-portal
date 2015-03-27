@@ -56,6 +56,7 @@
                 $rootScope.globals = $cookieStore.get('globals') || {};
 
                 if ($rootScope.globals.currentUser) {
+                    $rootScope.authenticated = true;
                     $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.credentials;
                 }
 

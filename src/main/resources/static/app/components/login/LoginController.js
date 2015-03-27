@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('LoginController',['$scope', '$http', '$rootScope', '$location',
-        function ($scope, $http, $rootScope, $location) {
+    .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookieStore',
+        function ($scope, $http, $rootScope, $location, $cookieStore) {
 
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
@@ -18,6 +18,8 @@ angular.module('ProcessApp.controllers')
                                 credentials: $scope.credentials
                             }
                         };
+
+                        $cookieStore.put('globals', $rootScope.globals);
 
                         if (data.authorities) {
                             for(var i in data.authorities) {

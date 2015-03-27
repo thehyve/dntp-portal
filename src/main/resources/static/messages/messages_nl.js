@@ -5,6 +5,8 @@ messages_nl =
     /* ========= */
 
     'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
+    'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
+    'Loading': 'Laden',
 
     /* ========= */
     /* Login     */
@@ -61,7 +63,7 @@ messages_nl =
     'Update profile': 'Profiel bijwerken',
     'Change password': 'Wachtwoord wijzigen',
     'Update': 'Bijwerken',
-    'Some information cannot be updated by using this form. If you would like to change it please contact op met PALGA': 'Sommige velden in dit formulier kunnen niet aangepast worden. Als u ze toch wil bijwerken neem contact met PALGA',
+    'Some information cannot be updated by using this form. If you would like to change it please contact PALGA': 'Sommige velden in dit formulier kunnen niet aangepast worden. Als u ze toch wil bijwerken neem contact met PALGA',
 
     /* ================= */
     /* Change password   */
@@ -70,6 +72,9 @@ messages_nl =
     'Old password': 'Oud wachtwoord',
     'New password': 'Nieuw wachtwoord',
     'New password (again)': 'Nieuw wachtwoord (weer)',
+    'The old password is incorrect': 'Het oude wachtwoord is niet correct',
+    'Change': 'Wijzigen',
+    'Passwords cannot be empty': 'Wachtwoorden kunnen niet leeg zijn',
 
     null : null
 }

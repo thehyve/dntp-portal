@@ -15,7 +15,7 @@
         .config(function($routeProvider, $translateProvider) {
 
             $routeProvider.when('/', {
-                templateUrl : 'workflow.html',
+                templateUrl : 'app/dashboard/dashboard.html',
                 controller : ''
             }).when('/login', {
                 templateUrl : 'app/components/login/login.html',
@@ -56,6 +56,7 @@
                 $rootScope.globals = $cookieStore.get('globals') || {};
 
                 if ($rootScope.globals.currentUser) {
+                    $rootScope.authenticated = true;
                     $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.credentials;
                 }
 

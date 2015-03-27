@@ -1,13 +1,18 @@
-<div ng-controller="NavigationController" class="container">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#/"  style="padding-top: 3px; margin-bottom: 0;">
-                    <img alt="The Hyve" src="/images/thehyve_green.png">
-                </a>
-            </div>
+<nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationController">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/">DNTP Portal</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+
             <ul class="nav navbar-nav" ng-if="roles.indexOf('palga') != -1">
-                <li ng-show="authenticated" class="{{$route.current.templateUrl=='workflow.html' ? 'active': ''}}">
+                <li ng-show="authenticated" class="{{$route.current.templateUrl=='dashboard/workflow.html' ? 'active': ''}}">
                     <a href="#/">{{'Requests'|translate}}</a>
                 </li>
             </ul>
@@ -19,6 +24,7 @@
                     <a href="#/labs">{{'Labs'|translate}}</a>
                 </li>
             </ul>
+
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
@@ -32,10 +38,6 @@
                             {{ 'Dutch' | translate }} (nl)
                         </a></li>
                     </ul>
-                </li>
-                <li ng-show="!authenticated" class="{{$route.current.templateUrl=='login.html' ? 'active': ''}}">
-                    <a href="#/login"><span
-                            class="glyphicon glyphicon-log-in"></span> login</a>
                 </li>
                 <li ng-show="authenticated"   class="navbar-text"><span
                         class="glyphicon glyphicon-user"></span> {{username}}</li>
@@ -52,5 +54,6 @@
                 </li>
             </ul>
         </div>
-    </nav>
-</div>
+    </div>
+</nav>
+

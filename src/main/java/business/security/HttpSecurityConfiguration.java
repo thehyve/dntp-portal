@@ -80,7 +80,7 @@ public class HttpSecurityConfiguration extends
                         "/public/labs/**",
                         "/password/request-new",
                         "/password/reset",
-                        "/workflow.html",
+//                        "/dashboard/workflow.html",
                         "/index.html",
                         "/login.html",
                         "/registration.html",

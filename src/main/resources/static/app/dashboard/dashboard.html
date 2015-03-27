@@ -1,0 +1,105 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <!--Side Bar-->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#/">Overview <span class="sr-only">(current)</span></a></li>
+                <li><a href="#/">Sub Menu #1</a></li>
+                <li><a href="#/">Sub Menu #2</a></li>
+                <li><a href="#/">Sub Menu #3</a></li>
+            </ul>
+        </div>
+
+        <!--Main Content-->
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="ProcessController">
+
+            <h1>{{ 'Requests' | translate }}</h1>
+
+            <hr>
+
+            <div ng-show="!authenticated">
+                <div class="alert alert-danger" role="alert">
+                    {{ 'Not logged in' | translate }}
+                </div>
+            </div>
+
+            <button class="btn btn-info" type="submit" title="{{'Start new request'|translate}}" ng-click="start()">
+                <span class="glyphicon glyphicon-plus"></span> {{'new request'|translate}}
+            </button>
+
+
+            <div class="table-responsive" ng-if="authenticated">
+                <table st-table="displayedCollection" st-safe-src="processes" class="table">
+                    <thead>
+                    <tr>
+                        <th st-sort="id">No.</th>
+                        <th>Request</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="process in displayedCollection" id="process_{{process.id}}" class="{{process.suspended ? 'warning' : 'success'}}">
+                        <td>{{process.id}}</td>
+                        <td>Request {{process.id}}</td>
+                        <td>Materials</td>
+                        <td>New</td>
+                        <td>2-3-2015</td>
+                        <td>
+                    <span ng-if="!process.ended" class="btn-group  btn-group-xs" role="group">
+                        <button ng-if="!process.suspended" class="btn btn-default" type="button" title="Suspend"
+                                ng-click="suspend(process)">
+                            <span class="glyphicon glyphicon-pause"></span>
+                        </button>
+                        <button ng-if="process.suspended" class="btn btn-default" type="button" title="Resume"
+                                ng-click="resume(process)">
+                            <span class="glyphicon glyphicon-play"></span>
+                        </button>
+                        <button class="btn btn-default" type="button" title="Stop"
+                                ng-click="stop(process)">
+                            <span class="glyphicon glyphicon-stop"></span>
+                        </button>
+                    </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--=====================================================-->
+            <!--TODO: To reuse table just change the result instance -->
+            <!--=====================================================-->
+
+            <h2>{{'Completed Requests'|translate}}</h2>
+            <hr />
+
+            <p></p>
+
+            <div class="alert alert-info" role="alert" ng-hide="completed_processes.length">
+                {{'There are no completed requests'|translate}}.
+            </div>
+
+            <ul class="list-group">
+                <li class="list-group-item {{process.suspended ? 'disabled' : ''}}" ng-repeat="process in completed_processes" id="process_{{process.id}}">
+                    <h4 class="list-group-item-heading">
+                        {{'Request'|translate}} {{process.id}}: {{process.activityId}}
+                    </h4>
+                    <ul>
+                        <li class="list-group-item-text" ng-repeat="task in process.tasks">
+                            {{'Task'|translate}} {{task.id}}: {{task.name}} ({{task.assignee == null ? "not assigned" : "assigned to: " + task.assignee}})
+                        </li>
+                        <li class="list-group-item-text" ng-repeat="(name, value) in process.processVariables">
+                            {{name}}: {{value}}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+        </div> <!--end Main Content-->
+
+    </div>
+</div>

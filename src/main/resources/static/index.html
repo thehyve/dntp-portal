@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="./app/dashboard/dashboard.css" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,11 +26,13 @@
     <!-- Navigator -->
     <div ng-include="'app/components/navbar/navbar.html'"></div>
 
-    <div ng-view class="container"></div>
+    <div ng-view></div>
+
+    <!-- Footer -->
+    <div ng-include="'app/components/footer/footer.html'"></div>
 
     <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- <script type="text/javascript" src="./bower_components/bootstrap/js/dropdown.js"></script>-->
     <script type="text/javascript" src="./bower_components/angular/angular.min.js"></script>
     <script type="text/javascript" src="./bower_components/angular-resource/angular-resource.min.js"></script>
     <script type="text/javascript" src="./bower_components/angular-route/angular-route.min.js"></script>
@@ -37,6 +41,7 @@
     <script type="text/javascript" src="./bower_components/lodash/dist/lodash.min.js"></script>
     <script type="text/javascript" src="./bower_components/restangular/dist/restangular.min.js"></script>
     <script type="text/javascript" src="./bower_components/angular-smart-table/dist/smart-table.min.js"></script>
+    <script type="text/javascript" src="./bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
     <script type="text/javascript" src="./messages/messages_en.js"></script>
     <script type="text/javascript" src="./messages/messages_nl.js"></script>
     <script type="text/javascript" src="./bower_components/angular-translate/angular-translate.min.js"></script>

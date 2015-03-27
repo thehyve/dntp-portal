@@ -13,6 +13,7 @@
     "ng-flow": "~2",
     "fusty-flow.js": "~1",
     "angular-smart-table": "~2",
-    "angular-strap": ""
+    "angular-strap": "",
+    "oclazyload" : "~0"
   }
 }

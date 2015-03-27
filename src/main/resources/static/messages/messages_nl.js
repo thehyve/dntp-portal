@@ -15,7 +15,7 @@ messages_nl =
 
     Username: 'Gebruikersnaam',
     Login: 'Aanmelden',
-    'Forget Password' : 'Wachwoord vergeten',
+    'Forgot Password' : 'Wachwoord vergeten',
     'Create an account' : 'Een account maken',
 
     /* ========= */
@@ -64,7 +64,8 @@ messages_nl =
     'Update profile': 'Profiel bijwerken',
     'Change password': 'Wachtwoord wijzigen',
     'Update': 'Bijwerken',
-    'Some information cannot be updated by using this form. If you would like to change it please contact PALGA': 'Sommige velden in dit formulier kunnen niet aangepast worden. Als u ze toch wil bijwerken neem contact met PALGA',
+    'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA': 'Het bent alleen toegestaan om uw telefoonnummer aan te passen. Als u ook andere informatie wil bijwerken neem contact op met PALGA',
+    'Your profile has been updated': 'Uw profiel is bijgewerkt',
 
     /* ===================== */
     /* Change/reset password */

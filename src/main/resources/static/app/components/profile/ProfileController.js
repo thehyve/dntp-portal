@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('ProfileController', ['$scope', 'Restangular', function ($scope, Restangular) {
+    .controller('ProfileController', ['$scope', '$timeout', 'Restangular', function ($scope, $timeout, Restangular) {
         $scope.loaded = false;
         $scope.submitted = false;
 
@@ -19,6 +19,10 @@ angular.module('ProcessApp.controllers')
             // We need to use customPUT in order to avoid weird behavior of Restangular
             Restangular.one('profile').customPUT($scope.user).then(function () {
                 $scope.submitted = false;
+                $scope.success = true;
+                $timeout(function () {
+                    $scope.success = false;
+                }, 3000);
             }, function () {
                 alert('PUT error!');
             });

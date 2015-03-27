@@ -6,7 +6,7 @@
     <h2 ng-show="!loaded">Loading</h2>
     <form class="form-horizontal" role="form" name="profileForm" ng-show="loaded" novalidate>
         <div class="alert alert-success" role="alert">
-            {{ 'Some information cannot be updated by using this form. If you would like to change it please contact PALGA' | translate }}
+            {{ 'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA' | translate }}
         </div>
     
     
@@ -65,7 +65,7 @@
             </label>
             <div class="col-sm-10">
                 <input type="checkbox" id="isPathologyLabMember" ng-model="user.pathologist" disabled>
-                &nbsp; {{ 'I am member of pathology department' | translate }}
+                &nbsp; {{ 'I am member of a pathology department' | translate }}
             </div>
             <div class="col-sm-10">
                 <br>
@@ -77,6 +77,9 @@
                     <option>Stichting PAMM vakgroep pathologie</option>
                 </select>
             </div>
+        </div>
+        <div class="alert alert-success" ng-show="success">
+            {{ 'Your profile has been updated' | translate }}!
         </div>
         <br>
 

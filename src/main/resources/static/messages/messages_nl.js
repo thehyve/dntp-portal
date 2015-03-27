@@ -46,7 +46,7 @@ messages_nl =
     'Institute': 'Instelling',
     'Specialism': 'Specialisme',
     'Department': 'Afdeling',
-    'I am member of pathology department': 'Ik ben lid van pathologie afdeling',
+    'I am member of a pathology department': 'Ik ben lid van een pathologie afdeling',
     'Password': 'Wachtwoord',
     'Repeat Password': 'Herhaal wachtwoord',
     'Request Account': 'Account aanvragen',

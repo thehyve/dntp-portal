@@ -59,7 +59,7 @@ public class PasswordController {
             this.nprRepo.delete(npr);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } else {
-            // The link doesn't exist!
+            // The token doesn't exist!
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -67,7 +67,7 @@ public class PasswordController {
 
     @RequestMapping(value = "/password/change", method = RequestMethod.POST)
     public ResponseEntity<Object> changePassword(UserAuthenticationToken user, @RequestBody PasswordChangeRepresentation form) {
-        LogFactory.getLog(this.getClass()).info("PUT /password/change");
+        LogFactory.getLog(this.getClass()).info("POST /password/change");
 
         // LATER: Validate data (password requirements)
 

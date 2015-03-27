@@ -84,7 +84,7 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary" ng-disabled="registrationForm.$invalid || submitted" ng-click="submitForm()">{{ 'Update' | translate }}</button>
-                <span class="label label-success" ng-show="submitted">Updating...</span>
+                <span class="label label-success" ng-show="submitted">{{ 'Loading' | translate }}...</span>
             </div>
         </div>
     </form>

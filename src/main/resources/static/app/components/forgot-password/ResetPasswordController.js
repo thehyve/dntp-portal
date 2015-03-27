@@ -10,7 +10,7 @@ angular.module('ProcessApp.controllers')
         $scope.submitForm = function () {
             $scope.submitted = true;
 
-            // PUT to server (old and new password)
+            // PUT to server (token and new password)
             Restangular.one('password').post('reset', { token: $routeParams.token, password: $scope.password }).then(function () {
                 // Notify user
                 $scope.submitted = false;

@@ -14,5 +14,6 @@
     "fusty-flow.js": "~1",
     "angular-smart-table": "~2",
     "angular-strap": "~2.2.1"
+    "oclazyload" : "~0"
   }
 }

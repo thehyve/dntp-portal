@@ -1,24 +1,29 @@
-<div class="page-header">
-  <h1>{{'Login' | translate}}</h1>
-</div>
-<div class="alert alert-danger" ng-show="error">
-    {{'There was a problem logging in. Please try again.' | translate}}
-</div>
-<form role="form" ng-submit="login()">
-    <div class="form-group">
-        <label for="username">{{'Username' | translate}}:</label> <input type="text"
-            class="form-control" id="username" name="username" ng-model="credentials.username"/>
+<div class="container ">
+    <div class="page-header">
+        <h1>{{'Login' | translate}}</h1>
     </div>
-    <div class="form-group">
-        <label for="password">{{'Password' | translate}}:</label> <input type="password"
-            class="form-control" id="password" name="password" ng-model="credentials.password"/>
-    </div>
-    <button type="submit" class="btn btn-primary">
-          <span class="glyphicon glyphicon-user"></span> {{'Login' | translate}}
-    </button>
-    <a href="#/login/forgot-password" class="btn btn-success">
-        <span class="glyphicon glyphicon-envelope"></span> {{'Forgot Password' | translate}}
-    </a>
-    &nbsp;<a href="/#/register"> {{'Create an account' | translate}}.</a>
 
-</form>
+    <div class="alert alert-danger" ng-show="error">
+        {{'There was a problem logging in. Please try again.' | translate}}
+    </div>
+
+    <form role="form" ng-submit="login()">
+        <div class="form-group">
+            <label for="username">{{'Username' | translate}}:</label>
+            <input type="text" class="form-control" id="username" name="username" ng-model="credentials.username"/>
+        </div>
+        <div class="form-group">
+            <label for="password">{{'Password' | translate}}:</label>
+            <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password"/>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-user"></span> {{'Login' | translate}}
+        </button>
+        <a href="#/login/forgot-password">
+            <button class="btn btn-success">
+                <span class="glyphicon glyphicon-envelope"></span> {{'Forget Password' | translate}}
+            </button>
+        </a>
+        &nbsp;<a href="/#/register"> {{'Create an account' | translate}}.</a>
+    </form>
+</div>

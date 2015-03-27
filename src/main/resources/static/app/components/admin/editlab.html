@@ -11,9 +11,10 @@
 
         <!-- Number -->
         <div class="form-group">
-            <label class="control-label col-sm-4" for="labName">{{ 'Number' | translate }}</label>
+            <label class="control-label col-sm-4" for="labNumber">{{ 'Number' | translate }}</label>
             <div class="col-sm-6">
-                {{editlab.number}}
+                <input type="text" class="form-control" id="labNumber" placeholder="{{ 'Number' | translate }}"
+                    ng-model="editlab.number" ng-disabled="editlab.number">
             </div>
         </div>
 

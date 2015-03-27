@@ -7,6 +7,7 @@ messages_nl =
     'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
     'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
     'Loading': 'Laden',
+    'Passwords must be at least 8 characters long': 'Wachtwoorden moeten minstens 8 tekens lang zijn',
 
     /* ========= */
     /* Login     */
@@ -65,9 +66,9 @@ messages_nl =
     'Update': 'Bijwerken',
     'Some information cannot be updated by using this form. If you would like to change it please contact PALGA': 'Sommige velden in dit formulier kunnen niet aangepast worden. Als u ze toch wil bijwerken neem contact met PALGA',
 
-    /* ================= */
-    /* Change password   */
-    /* ================= */
+    /* ===================== */
+    /* Change/reset password */
+    /* ===================== */
 
     'Old password': 'Oud wachtwoord',
     'New password': 'Nieuw wachtwoord',
@@ -75,6 +76,15 @@ messages_nl =
     'The old password is incorrect': 'Het oude wachtwoord is niet correct',
     'Change': 'Wijzigen',
     'Passwords cannot be empty': 'Wachtwoorden kunnen niet leeg zijn',
+    'Reset': 'Resetten',
+    'Reset password': 'Wachtwoord resetten',
+    'The password reset link is invalid': 'De link om het wachtwoord te resetten is niet geldig',
+    'Click here to get a new one': 'Klik hier om een nieuwe te krijgen',
+    'Your password has been successfully reset': 'U wachtwoord is successvol gereset',
+    'Click here to log in': 'Klik hier om in te loggen',
+    'Send email': 'Stuur email',
+    'An email has been sent to': 'We hebben een email gestuurd naar',
+    'with instructions on how to reset your password': 'met instructies om uw wachtwoord te resetten',
 
     null : null
 }

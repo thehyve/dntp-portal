@@ -51,12 +51,17 @@ public class ProcessController {
     public List<ProcessInstanceRepresentation> get(UserAuthenticationToken user) {
         LogFactory.getLog(getClass()).info(
                 "GET /processes/ (for user: " + (user == null ? "null" : user.getId()) + ")");
-        List<ProcessInstance> processInstances = runtimeService
+        List<ProcessInstance> processInstances;
+        if (user == null) {
+            processInstances = new ArrayList<ProcessInstance>();
+        } else {
+            processInstances = runtimeService
                 .createProcessInstanceQuery()
                 .includeProcessVariables()
                 .involvedUser(user.getId().toString())
                 // .active()
                 .list();
+        }
         List<ProcessInstanceRepresentation> result = new ArrayList<ProcessInstanceRepresentation>();
         for (ProcessInstance instance : processInstances) {
             result.add(buildRepresentation(instance));

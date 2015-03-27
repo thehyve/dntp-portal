@@ -1,13 +1,23 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('ResetPasswordController', ['$scope', '$routeParams', 'Restangular', function ($scope, $routeParams, Restangular) {
+    .controller('ResetPasswordController', ['$scope', '$routeParams', '$timeout', 'Restangular', function ($scope, $routeParams, $timeout, Restangular) {
         $scope.submitted = false;
         $scope.done = false;
         
-        // This function will only be called if the form has been validated,
-        // because the button will be disabled otherwise.
         $scope.submitForm = function () {
+            // Validate
+            if ($scope.password !== $scope.repeatPassword) {
+                error("Passwords do not match");
+                return;
+            } else if ($scope.password === undefined || $scope.password === '') {
+                error('Passwords cannot be empty');
+                return;
+            } else if ($scope.password.length < 8) {
+                error('Passwords must be at least 8 characters long');
+                return;
+            }
+        
             $scope.submitted = true;
 
             // PUT to server (token and new password)
@@ -16,7 +26,15 @@ angular.module('ProcessApp.controllers')
                 $scope.submitted = false;
                 $scope.done = true;
             }, function restError() {
-                alert('Server error');
+                // Error, the token isn't valid!
+                $scope.error = true;
             });
         };
+        
+        function error(msg) {
+            $scope.validationError = msg;
+            $timeout(function () {
+                $scope.validationError = undefined;
+            }, 3000);
+        }
 }]);

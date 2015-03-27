@@ -8,10 +8,14 @@ import business.representation.EmailRepresentation;
 import business.representation.NewPasswordRepresentation;
 import business.representation.PasswordChangeRepresentation;
 import business.security.UserAuthenticationToken;
+import business.validation.PasswordValidator;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,6 +28,15 @@ public class PasswordController {
     @Autowired
     private NewPasswordRequestRepository nprRepo;
 
+    @Autowired
+    JavaMailSender mailSender;
+
+    @Value("${dntp.server-name}")
+    String serverName;
+
+    @Value("${server.port}")
+    String serverPort;
+
     @RequestMapping(value = "/password/request-new", method = RequestMethod.PUT)
     public void requestNewPassword(@RequestBody EmailRepresentation form) {
         LogFactory.getLog(this.getClass()).info("PUT request-password/" + form.getEmail());
@@ -35,7 +48,13 @@ public class PasswordController {
             NewPasswordRequest npr = new NewPasswordRequest(user);
             this.nprRepo.save(npr);
 
-            /// FIXME: Send the special link via email
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(user.getContactData().getEmail());
+            message.setFrom("no-reply@dntp.thehyve.nl");
+            message.setReplyTo("no-reply@dntp.thehyve.nl");
+            message.setSubject("Password recovery");
+            message.setText(String.format("Please follow this link to reset your password: http://%s:%s/#/login/reset-password/%s", serverName, serverPort, npr.getToken()));
+            mailSender.send(message);
             LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + npr.getToken());
         }
 
@@ -51,7 +70,7 @@ public class PasswordController {
         // LATER: Check that the new password meets the criteria
 
         NewPasswordRequest npr = this.nprRepo.findByToken(form.getToken());
-        if (npr != null) {
+        if (npr != null && PasswordValidator.validate(form.getPassword())) {
             // Update the password of the user and delete the npr
             User user = npr.getUser();
             user.setPassword(form.getPassword());
@@ -59,7 +78,8 @@ public class PasswordController {
             this.nprRepo.delete(npr);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } else {
-            // The token doesn't exist!
+            // The token doesn't exist or the password is invalid!
+            // Validation should never fail since there is client-side validation
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -74,11 +94,13 @@ public class PasswordController {
         // Update profile
         User currentUser = this.userRepository.getOne(user.getId());
 
-        if (currentUser.getPassword().equals(form.getOldPassword())) {
+        if (currentUser.getPassword().equals(form.getOldPassword()) && PasswordValidator.validate(form.getNewPassword())) {
             currentUser.setPassword(form.getNewPassword());
             this.userRepository.save(currentUser);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } else {
+            // Old password is incorrect or new password is invalid
+            // Validation should never fail since there is client-side validation
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }

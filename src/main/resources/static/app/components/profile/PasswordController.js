@@ -15,6 +15,9 @@ angular.module('ProcessApp.controllers')
             } else if ($scope.form.oldPassword === '' || $scope.form.newPassword === '') {
                 error('Passwords cannot be empty');
                 return;
+            } else if ($scope.form.newPassword.length < 8) {
+                error('Passwords must be at least 8 characters long');
+                return;
             }
         
             // Submission

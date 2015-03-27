@@ -39,6 +39,7 @@ dependencies {
     compile ("org.postgresql:postgresql:9.3-1100-jdbc41") {
         exclude module: 'org.slf4j:slf4j-simple'
     }
+    compile "org.springframework.boot:spring-boot-starter-mail:1.2.2.RELEASE"
     compile "org.apache.tomcat:tomcat-jdbc"
     compile "org.activiti:spring-boot-starter-basic:5.17.0"
     compile "org.activiti:spring-boot-starter-jpa:5.17.0"

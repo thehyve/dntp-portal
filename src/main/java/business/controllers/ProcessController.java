@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import business.representation.ProcessInstanceRepresentation;
+import business.security.UserAuthenticationToken;
+
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -46,12 +48,13 @@ public class ProcessController {
     private RepositoryService repositoryService;
 
     @RequestMapping(value = "/processes", method = RequestMethod.GET)
-    public List<ProcessInstanceRepresentation> get(Principal principal) {
+    public List<ProcessInstanceRepresentation> get(UserAuthenticationToken user) {
         LogFactory.getLog(getClass()).info(
-                "GET /processes/ (for user: " + (principal == null ? "null" : principal.getName()) + ")");
+                "GET /processes/ (for user: " + (user == null ? "null" : user.getId()) + ")");
         List<ProcessInstance> processInstances = runtimeService
                 .createProcessInstanceQuery()
                 .includeProcessVariables()
+                .involvedUser(user.getId().toString())
                 // .active()
                 .list();
         List<ProcessInstanceRepresentation> result = new ArrayList<ProcessInstanceRepresentation>();
@@ -62,9 +65,9 @@ public class ProcessController {
     }
 
     @RequestMapping(value = "/processes/completed", method = RequestMethod.GET)
-    public List<ProcessInstanceRepresentation> getCompleted(Principal principal) {
+    public List<ProcessInstanceRepresentation> getCompleted(UserAuthenticationToken user) {
         LogFactory.getLog(getClass()).info(
-                "GET /processes/completed (for user: " + principal.getName() + ")");
+                "GET /processes/completed (for user: " + user.getId() + ")");
         List<HistoricProcessInstance> processInstances = historyService
                 .createHistoricProcessInstanceQuery()
                 .includeProcessVariables()
@@ -78,14 +81,15 @@ public class ProcessController {
     
     @RequestMapping(value = "/processes", method = RequestMethod.POST)
     public ProcessInstanceRepresentation start(
+            UserAuthenticationToken user,
             @RequestBody ProcessInstanceRepresentation process) {
-        String assignee = "user"; // principal.getName();
+        String initiator = user.getId().toString(); // principal.getName();
         LogFactory.getLog(getClass()).info(
-                "POST /processes (assignee: " + assignee + ")");
+                "POST /processes (initiator: " + initiator + ")");
         Map<String, Object> values = new HashMap<String, Object>();
-        values.put("assignee", assignee);
+        values.put("initiator", initiator);
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
-                "example", values);
+                "dntp_request_001", values);
         return buildRepresentation(instance);
     }
 

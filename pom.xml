@@ -11,21 +11,23 @@
 	<name>DNTP portal</name>
 	<description>Portal application for pathology sample exchange.</description>
 
-    <profiles>
-    <profile>
-      <id>dev</id>
-      <activation><activeByDefault>true</activeByDefault></activation>
-    </profile>
-    <profile>
-      <id>test</id>
-    </profile>
-    <profile>
-      <id>acc</id>
-    </profile>
-    <profile>
-      <id>prod</id>
-    </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>test</id>
+		</profile>
+		<profile>
+			<id>acc</id>
+		</profile>
+		<profile>
+			<id>prod</id>
+		</profile>
+	</profiles>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -60,8 +62,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-jpa</artifactId> 
-			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -69,17 +69,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
-  <exclusions>
-    <exclusion>
-      <groupId>org.atteo</groupId>
-        <artifactId>evo-inflector</artifactId>
-    </exclusion>
-  </exclusions> 
+			<exclusions>
+				<exclusion>
+					<groupId>org.atteo</groupId>
+					<artifactId>evo-inflector</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-groovy-templates</artifactId> 
-			</dependency> -->
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-thymeleaf</artifactId> 
-			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
@@ -100,21 +96,21 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		      <groupId>org.skyscreamer</groupId>
-		      <artifactId>jsonassert</artifactId>
-		      <version>1.2.3</version>
-		      <scope>test</scope>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+			<version>1.2.3</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1200-jdbc41</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                </exclusion>
-            </exclusions>			
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -135,6 +131,10 @@
 			<artifactId>scala-library</artifactId>
 			<version>2.10.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+		</dependency>
 	</dependencies>
 
 
@@ -146,17 +146,17 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-    <distributionManagement>
-        <repository>
-	        <id>nl.thehyve.nexus</id>
-	        <name>The Hyve - Nexus repository</name>
-	        <url>https://repo.thehyve.nl/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nl.thehyve.nexus</id>
-            <name>The Hyve - Nexus repository</name>
-            <url>https://repo.thehyve.nl/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>nl.thehyve.nexus</id>
+			<name>The Hyve - Nexus repository</name>
+			<url>https://repo.thehyve.nl/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nl.thehyve.nexus</id>
+			<name>The Hyve - Nexus repository</name>
+			<url>https://repo.thehyve.nl/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://thehyve.nl/dntp">
+<process id="dntp_request_001" isExecutable="true" name="DNTP Request">
+    <documentation>Definition for a request process for pathology data and materials.</documentation>
+
+    <startEvent id="request_start" name="Start" activiti:initiator="initiator">
+        <documentation>Start a new request.
+        </documentation>
+    </startEvent>
+
+    <sequenceFlow id="start_to_open" sourceRef="request_start" targetRef="status_open"></sequenceFlow>
+
+    <scriptTask id="status_open" name="Update status to Open" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>
+        	execution.setVariable("status", "Open")
+        	execution.setVariable("requester_id", "${initiator}")
+        </script>
+    </scriptTask>
+
+    <sequenceFlow id="open_to_request_form" sourceRef="status_open" targetRef="request_form"></sequenceFlow>
+
+    <userTask id="request_form" name="Request form" activiti:assignee="${requester_id}">
+        <documentation>Request form filled in by the requester.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="pathologist_name" name="Pathologist" type="string" variable="pathologist_name" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+	<sequenceFlow id="request_form_to_request_review" sourceRef="request_form" targetRef="palga_request_review"></sequenceFlow>
+
+    <userTask id="palga_request_review" name="Request review" activiti:candidateGroups="palga">
+        <documentation>
+        Review if the request is valid and admissible.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="request_is_admissible" name="Is the request admissible?" type="boolean" variable="request_is_admissible" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+    <sequenceFlow id="review_to_approval" sourceRef="palga_request_review" targetRef="status_approval">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == true} ]]></conditionExpression>
+    </sequenceFlow>
+
+    <sequenceFlow id="review_to_closed" sourceRef="palga_request_review" targetRef="status_closed">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == false} ]]></conditionExpression>
+    </sequenceFlow>
+
+    <scriptTask id="status_approval" name="Update status to Approval" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "Approval")</script>
+    </scriptTask>
+
+    <sequenceFlow id="approval_to_approval_task" sourceRef="status_approval" targetRef="request_approval"></sequenceFlow>
+
+    <userTask id="request_approval" name="Request approval" activiti:candidateGroups="palga">
+        <documentation>
+        Approval by scientific council and privacy committee. Status updated by Palga.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+    <sequenceFlow id="approval_to_closed" sourceRef="request_approval" targetRef="status_closed"></sequenceFlow>
+    
+    <scriptTask id="status_closed" name="Update status to Closed" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "Closed")</script>
+    </scriptTask>
+
+    <sequenceFlow id="closed_to_end" sourceRef="status_closed" targetRef="request_end"></sequenceFlow>
+
+    <endEvent id="request_end" name="End"></endEvent>
+
+</process>
+</definitions>

@@ -134,7 +134,7 @@
 
                 <div class="col-sm-10">
                     <input type="checkbox" id="isPathologyLabMember" name="isPathologyLabMember" value="1"
-                           ng-model="user.pathologist"> &nbsp; {{ 'I am member of pathology department' |
+                           ng-model="user.pathologist"> &nbsp; {{ 'I am member of a pathology department' |
                     translate }}
                 </div>
                 <div class="col-sm-10" ng-show="user.pathologist">
@@ -175,7 +175,7 @@
 
             <!-- Repeat Password -->
             <div class="form-group"
-                 ng-class="{ 'has-error' : registrationForm.repeatPassword.$error.compareTo }">
+                 ng-class="{ 'has-error' : registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty }">
                 <label class="control-label col-sm-2" for="repeatPassword">{{ 'Repeat Password' | translate }}</label>
 
                 <div class="col-sm-10">
@@ -183,7 +183,7 @@
                            ng-model="user.password2" placeholder="{{ 'Repeat Password' | translate }}"
                            compare-to="user.password1" required>
                      <!-- errors -->
-                    <span class="help-block" ng-show="registrationForm.repeatPassword.$error.compareTo">
+                    <span class="help-block" ng-show="registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty">
                         {{ 'Password do not match! ' | translate }}
                     </span>
                 </div>

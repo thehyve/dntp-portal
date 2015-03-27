@@ -76,6 +76,13 @@
     
     // Checks if `string` starts with `start`
     function startsWith(string, start) {
+        console.log('startsWith: ' + string + ', ' + start);
+        if (typeof(string) !== 'string')
+            return false;
+            
+        if (string.length < start.length)
+            return false;
+    
         for (var i = 0; i < string.length && i < start.length; i++)
             if (string[i] !== start[i])
                 return false;

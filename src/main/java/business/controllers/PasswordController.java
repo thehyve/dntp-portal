@@ -10,8 +10,11 @@ import business.representation.PasswordChangeRepresentation;
 import business.security.UserAuthenticationToken;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,6 +27,15 @@ public class PasswordController {
     @Autowired
     private NewPasswordRequestRepository nprRepo;
 
+    @Autowired
+    JavaMailSender mailSender;
+
+    @Value("${dntp.server-name}")
+    String serverName;
+
+    @Value("${server.port}")
+    String serverPort;
+
     @RequestMapping(value = "/password/request-new", method = RequestMethod.PUT)
     public void requestNewPassword(@RequestBody EmailRepresentation form) {
         LogFactory.getLog(this.getClass()).info("PUT request-password/" + form.getEmail());
@@ -35,7 +47,13 @@ public class PasswordController {
             NewPasswordRequest npr = new NewPasswordRequest(user);
             this.nprRepo.save(npr);
 
-            /// FIXME: Send the special link via email
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(user.getContactData().getEmail());
+            message.setFrom("no-reply@dntp.thehyve.nl");
+            message.setReplyTo("no-reply@dntp.thehyve.nl");
+            message.setSubject("Password recovery");
+            message.setText(String.format("Please follow this link to reset your password: http://%s:%s/#/login/reset-password/%s", serverName, serverPort, npr.getToken()));
+            mailSender.send(message);
             LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + npr.getToken());
         }
 

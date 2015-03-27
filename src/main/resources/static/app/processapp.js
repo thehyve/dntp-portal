@@ -66,7 +66,7 @@
                         && $location.path() !== '/register'
                         && $location.path() !== '/register/success'
                         && $location.path() !== '/login/forgot-password'
-                        && $location.path() !== '/login/reset-password'
+                        && !_.startsWith($location.path(), '/login/reset-password')
                         ) && !$rootScope.globals.currentUser) {
                         $location.path('/login');
                     }

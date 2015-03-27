@@ -15,7 +15,7 @@ messages_nl =
 
     Username: 'Gebruikersnaam',
     Login: 'Aanmelden',
-    'Forget Password' : 'Wachwoord vergeten',
+    'Forgot Password' : 'Wachwoord vergeten',
     'Create an account' : 'Een account maken',
 
     /* ========= */

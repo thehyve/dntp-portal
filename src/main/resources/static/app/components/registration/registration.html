@@ -23,6 +23,9 @@
                     <span class="help-block" ng-show="registrationForm.firstName.$error.maxlength">
                         {{ 'Input value is too long' | translate }}
                     </span>
+                    <span ng-show="registrationForm.firstName.$error.required" class="help-block">
+                        {{ 'Required field' | translate }}
+                    </span>
                 </div>
             </div>
 
@@ -44,6 +47,9 @@
                     <span class="help-block" ng-show="registrationForm.lastName.$error.maxlength">
                         { 'Input value is too long' | translate }}
                     </span>
+                    <span ng-show="registrationForm.lastName.$error.required" class="help-block">
+                        {{ 'Required field' | translate }}
+                    </span>
                 </div>
             </div>
 
@@ -59,7 +65,7 @@
                            ng-model="user.contactData.email" required>
                     <!-- errors -->
                     <span class="help-block"
-                          ng-show="registrationForm.email.$error.required && registrationForm.email.$dirty">
+                          ng-show="registrationForm.email.$error.required">
                         {{ 'Required field' | translate }}
                     </span>
                     <span class="help-block" ng-show="registrationForm.email.$invalid && registrationForm.email.$dirty">
@@ -80,7 +86,7 @@
                            ng-model="user.contactData.telephone" ng-maxlength="50" required>
                     <!-- errors -->
                     <span class="help-block"
-                          ng-show="registrationForm.telephone.$error.required && registrationForm.telephone.$dirty">
+                          ng-show="registrationForm.telephone.$error.required">
                         {{ 'Required field' | translate }}
                     </span>
                     <span class="help-block" ng-show="registrationForm.telephone.$error.maxlength">
@@ -101,7 +107,7 @@
                            ng-model="user.institute" ng-maxlength="50" required>
                     <!-- errors -->
                     <span class="help-block"
-                          ng-show="registrationForm.institute.$error.required && registrationForm.institute.$dirty">
+                          ng-show="registrationForm.institute.$error.required">
                         {{ 'Required field' | translate }}
                     </span>
                     <span class="help-block" ng-show="registrationForm.institute.$error.maxlength">

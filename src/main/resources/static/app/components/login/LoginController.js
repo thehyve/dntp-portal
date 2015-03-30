@@ -26,7 +26,7 @@ angular.module('ProcessApp.controllers')
                                 $rootScope.roles.push(data.authorities[i].authority);
                             }
                         }
-                        console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
+                        //console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
                     } else {
                         $rootScope.authenticated = false;
                     }

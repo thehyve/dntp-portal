@@ -3,7 +3,8 @@
 <div class="modal-content">
 <form class="form-horizontal" role="form" name="labEditForm" ng-submit="update(editlab)" novalidate>
 <div class="modal-header">
-    <h3 class="modal-title">Edit lab</h3>
+    <h3 class="modal-title" ng-if="!editlab.id">{{'Add lab'|translate}}</h3>
+    <h3 class="modal-title" ng-if="editlab.id">{{'Edit lab'|translate}}</h3>
 </div>
 <div class="modal-body">
 
@@ -14,7 +15,7 @@
             <label class="control-label col-sm-4" for="labNumber">{{ 'Number' | translate }}</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="labNumber" placeholder="{{ 'Number' | translate }}"
-                    ng-model="editlab.number" ng-disabled="editlab.number">
+                    ng-model="editlab.number" ng-disabled="editlab.id">
             </div>
         </div>
 

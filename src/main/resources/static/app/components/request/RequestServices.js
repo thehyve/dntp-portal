@@ -1,15 +1,14 @@
 (function(angular) {
 
-    var ProcessFactory = function($resource) {
-        return $resource('/processes/:id', {
-            id : '@id'
+    RequestFactory = function($resource) {
+        return $resource('/requests/:id', {
+            id : '@processInstanceId'
         }, {
-            queryCompleted : {
-                url : '/processes/completed/',
-                method : "GET",
-                isArray : true
-            },
             update : {
+                method : "PUT"
+            },
+            submit : {
+                url : '/requests/:id/submit',
                 method : "PUT"
             },
             remove : {
@@ -17,8 +16,8 @@
             }
         });
     };
-    ProcessFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Process", ProcessFactory);
+    RequestFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("Request", RequestFactory);
     
     var TaskFactory = function($resource) {
         return $resource('/tasks/:id', {

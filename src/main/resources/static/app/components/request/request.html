@@ -1,0 +1,154 @@
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+    <h3 class="modal-title">Request</h3>
+</div>
+<div class="modal-body">
+	
+	 <!-- Title -->
+	 <div class="row">
+	     <label class="control-label col-sm-2">{{ 'Title' | translate }}</label>
+	     <p class="col-sm-8">
+	         {{request.title}}
+	     </p>
+	 </div>
+	
+	 <!-- Description -->
+	 <div class="row">
+	     <label class="control-label col-sm-2">{{ 'Description' | translate }}</label>
+	     <div class="col-sm-8">
+	         {{request.description}}
+	     </div>
+	 </div>
+	
+	 <!-- Motivation -->
+	 <div class="row">
+	     <label class="control-label col-sm-2">{{ 'Motivation' | translate }}</label>
+	     <div class="col-sm-8">
+	         {{request.motivation}}
+	     </div>
+	 </div>
+
+	 <!-- Is statistics request -->
+	 <div class="row">
+	     <label class="control-label col-sm-2">
+	         &nbsp;
+	     </label>
+	
+	     <div class="col-sm-8">
+	           <span><i class="glyphicon {{request.statisticsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                 &nbsp; {{ 'Request for information (statistics or Palga excerpts).' |
+	         translate }}
+	     </div>
+	 </div>
+
+     <!-- Is PA report request -->
+     <div class="row">
+         <label class="control-label col-sm-2">
+             &nbsp;
+         </label>
+    
+         <div class="col-sm-8">
+             <span><i class="glyphicon {{request.paReportRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+              &nbsp; {{ 'Request for PA reports (intermediate procedure).' |
+             translate }}
+         </div>
+     </div>
+
+	  <!-- Is PA materials request -->
+	  <div class="row">
+	      <label class="control-label col-sm-2">
+	          &nbsp;
+	      </label>
+	      <div class="col-sm-8">
+	      <span><i class="glyphicon {{request.materialsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+	           &nbsp; {{ 'Request for samples (ffpe/coupus) (intermediate procedure).' |
+	          translate }}
+	      </div>
+	      <div class="col-sm-8" ng-show="request.materialsRequest">
+	           <label class="control-label" for="returnDate">
+	               <span><i class="glyphicon glyphicon-calendar"></i></span>
+                    {{'Return date'|translate}}:
+                </label>
+                <br>
+                {{request.returnDate}}
+          </div>
+	  </div>
+
+     <!-- Is request limited to cohort-->
+     <div class="row">
+         <label class="control-label col-sm-2">
+             &nbsp;
+         </label>
+    
+         <div class="col-sm-8">
+         <span><i class="glyphicon {{request.limitedToCohort ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+              &nbsp; {{ 'The request is limited to a specific cohort.' |
+             translate }}
+         </div>
+     </div>
+     
+    <div ng-if="request.status='Review'">
+    
+    <h4>{{'Checks by Palga'|translate}}</h4>
+    <hr>
+     
+	<!-- Requester valid -->
+    <div class="row">
+        <label class="control-label col-sm-2">
+	    &nbsp;
+	    </label>
+		<div class="col-sm-8">
+		<span><i class="glyphicon {{request.requesterValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+	        &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
+	    </div>
+	</div>
+
+    <!-- Requester allowed -->
+    <div class="row">
+        <label class="control-label col-sm-2">
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+        <span><i class="glyphicon {{request.requesterAllowed ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+            &nbsp; {{ 'The requester is allowed to file the request.' | translate }}
+        </div>
+    </div>
+
+    <!-- Contact person allowed -->
+    <div class="row">
+        <label class="control-label col-sm-2">
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+        <span><i class="glyphicon {{request.contactPersonAllowed ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+            &nbsp; {{ 'The contact person been checked and is authorised to support the request.' | translate }}
+        </div>
+    </div>
+
+    <!-- Requester valid -->
+    <div class="row">
+        <label class="control-label col-sm-2">
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+            <strong>Lab</strong>: {{request.lab.number}}. {{request.lab.name}}
+            <br>
+            <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+            &nbsp; {{ 'The requester is indeed associated with the lab.' | translate }}
+        </div>
+    </div>
+     </div>
+
+</div>
+<div class="modal-footer">
+    <!-- <button type="button" 
+        class="btn btn-warning"
+        ng-disabled="request.status != 'Open' && roles.indexOf('palga') != -1"
+        ng-click="edit(request)">{{'Edit'|translate}}</button>-->
+    <button class="btn btn-default" ng-click="$hide()">{{'Close'|translate}}</button>
+</div>
+</div>
+</div>
+</div>

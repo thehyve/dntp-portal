@@ -15,6 +15,7 @@
         <script>
         	execution.setVariable("status", "Open")
         	execution.setVariable("requester_id", "${initiator}")
+        	execution.setVariable("date_created", new Date())
         </script>
     </scriptTask>
 
@@ -24,18 +25,44 @@
         <documentation>Request form filled in by the requester.
         </documentation>
         <extensionElements>
-            <activiti:formProperty id="pathologist_name" name="Pathologist" type="string" variable="pathologist_name" required="true"></activiti:formProperty>
+            <activiti:formProperty id="title" name="Title" type="string" variable="title" required="true"></activiti:formProperty>
+            <activiti:formProperty id="description" name="Description" type="string" variable="description" required="true"></activiti:formProperty>
+            <activiti:formProperty id="motivation" name="Motivation" type="string" variable="motivation" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_statistics_request" name="Request for information (statistics or Palga excerpts)" type="boolean" 
+                variable="is_statistics_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports (intermediate procedure)" type="boolean" 
+                variable="is_pa_report_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_materials_request" name="Request for samples (ffpe/coupus) (intermediate procedure)" type="boolean" 
+                variable="is_materials_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="return_date" name="Return date" type="date" 
+                variable="return date"></activiti:formProperty>
+            <activiti:formProperty id="limited_to_cohort" name="Is your request limited to a specific cohort?" type="boolean" 
+                variable="is_limited_to_cohort" required="true"></activiti:formProperty>
+            <activiti:formProperty id="contact_person_name" name="Contact person" type="string" variable="contact_person_name" required="true"></activiti:formProperty>
         </extensionElements>
     </userTask>
 
-	<sequenceFlow id="request_form_to_request_review" sourceRef="request_form" targetRef="palga_request_review"></sequenceFlow>
+	<sequenceFlow id="request_form_to_review" sourceRef="request_form" targetRef="status_review"></sequenceFlow>
+
+    <scriptTask id="status_review" name="Update status to Review" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>
+            execution.setVariable("status", "Review")
+        </script>
+    </scriptTask>
+
+    <sequenceFlow id="review_to_request_review" sourceRef="status_review" targetRef="palga_request_review"></sequenceFlow>
 
     <userTask id="palga_request_review" name="Request review" activiti:candidateGroups="palga">
         <documentation>
         Review if the request is valid and admissible.
         </documentation>
         <extensionElements>
-            <activiti:formProperty id="request_is_admissible" name="Is the request admissible?" type="boolean" variable="request_is_admissible" required="true"></activiti:formProperty>
+        <activiti:formProperty id="requester_is_valid" name="Is the requester valid?" type="boolean" variable="is_requester_validated" required="true"></activiti:formProperty>
+        <activiti:formProperty id="requester_is_allowed" name="Is the requester allowed?" type="boolean" variable="is_requester_allowed" required="true"></activiti:formProperty>
+        <activiti:formProperty id="contact_person_is_allowed" name="Is the contact person allowed?" type="boolean" variable="is_contact_person_allowed" required="true"></activiti:formProperty>
+        <activiti:formProperty id="requester_lab_is_valid" name="Is the requester lab valid?" type="boolean" variable="is_requester_lab_validated" required="true"></activiti:formProperty>
+        <activiti:formProperty id="request_is_admissible" name="Is the request admissible?" type="boolean" variable="request_is_admissible" required="true"></activiti:formProperty>
         </extensionElements>
     </userTask>
 

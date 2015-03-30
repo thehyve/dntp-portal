@@ -40,7 +40,7 @@
                     </ul>
                 </li>
                 <li ng-show="authenticated"   class="navbar-text"><span
-                        class="glyphicon glyphicon-user"></span> {{username}}</li>
+                        class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</li>
                 <li ng-show="authenticated"><a href="" ng-click="logout()"><span
                         class="glyphicon glyphicon-log-out"></span> logout</a></li>
                 <li ng-show="authenticated" class="dropdown">

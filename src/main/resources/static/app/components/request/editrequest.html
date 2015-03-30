@@ -1,0 +1,182 @@
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<form class="form-horizontal" role="form" name="requestEditForm" ng-submit="update(request)" novalidate>
+<div class="modal-header">
+    <h3 class="modal-title" ng-if="request.status=='Open'">New request</h3>
+    <h3 class="modal-title" ng-if="request.status!='Open'">Edit request</h3>
+</div>
+<div class="modal-body">
+	
+    <div class="alert alert-danger" role="alert" ng-show="error">
+        {{ error }}
+    </div>
+	
+	 <!-- Title -->
+	 <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.requestTitle.$invalid || requestEditForm.requestTitle.$error.required) && requestEditForm.requestTitle.$dirty }">
+	     <label class="control-label col-sm-2" for="requestTitle">{{ 'Title' | translate }}</label>
+	     <div class="col-sm-8">
+	         <input type="text" class="form-control" id="requestTitle" name="requestTitle" placeholder="{{ 'Title' | translate }}"
+	                ng-model="request.title" ng-maxlength="50" required>
+	         <!-- errors -->
+	         <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
+	         <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+	     </div>
+	 </div>
+	
+	 <!-- Description -->
+	 <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.description.$invalid || requestEditForm.description.$error.required) && requestEditForm.description.$dirty }">
+	     <label class="control-label col-sm-2" for="requestTitle">{{ 'Description' | translate }}</label>
+	     <div class="col-sm-8">
+	         <textarea type="text" class="form-control" id="description" name="description" placeholder="{{ 'Description' | translate }}"
+	                ng-model="request.description" required></textarea>
+	         <!-- errors -->
+	         <span class="help-block" ng-show="requestEditForm.description.$error.required">{{ 'Required field' | translate }}</span>
+	     </div>
+	 </div>
+	
+	 <!-- Motivation -->
+	 <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.motivation.$invalid || requestEditForm.motivation.$error.required) && requestEditForm.motivation.$dirty }">
+	     <label class="control-label col-sm-2" for="requestTitle">{{ 'Motivation' | translate }}</label>
+	     <div class="col-sm-8">
+	         <textarea type="text" class="form-control" id="motivation" name="motivation" placeholder="{{ 'Motivation' | translate }}"
+	                ng-model="request.motivation" required></textarea>
+	         <!-- errors -->
+	         <span class="help-block" ng-show="requestEditForm.motivation.$error.required">{{ 'Required field' | translate }}</span>
+	     </div>
+	 </div>
+
+	 <!-- Is statistics request -->
+	 <div class="form-group" ng-class="">
+	     <label class="control-label col-sm-2" for="statisticsRequest">
+	         &nbsp;
+	     </label>
+	
+	     <div class="col-sm-8">
+	         <input type="checkbox" id="statisticsRequest" name="statisticsRequest" value="1"
+	                ng-model="request.statisticsRequest"> &nbsp; {{ 'Request for information (statistics or Palga excerpts).' |
+	         translate }}
+	     </div>
+	 </div>
+
+     <!-- Is PA report request -->
+     <div class="form-group" ng-class="">
+         <label class="control-label col-sm-2" for="isPaReportRequest">
+             &nbsp;
+         </label>
+    
+         <div class="col-sm-8">
+             <input type="checkbox" id="paReportRequest" name="paReportRequest" value="1"
+                    ng-model="request.paReportRequest"> &nbsp; {{ 'Request for PA reports (intermediate procedure).' |
+             translate }}
+         </div>
+     </div>
+
+	  <!-- Is PA materials request -->
+	  <div class="form-group" ng-class="{ 'has-error' : requestEditForm.returnDate.$error.required}">
+	      <label class="control-label col-sm-2" for="materialsRequest">
+	          &nbsp;
+	      </label>
+	      <div class="col-sm-8">
+	          <input type="checkbox" id="materialsRequest" name="materialsRequest" value="1"
+	                 ng-model="request.materialsRequest"> &nbsp; {{ 'Request for samples (ffpe/coupus) (intermediate procedure).' |
+	          translate }}
+	      </div>
+	      <div class="col-sm-8" ng-show="request.materialsRequest">
+	           <label class="control-label" for="returnDate">
+	               <span><i class="glyphicon glyphicon-calendar"></i></span>
+                    {{'Return date'|translate}}:
+                </label>
+                <br>
+                <input type="text" class="form-control" name="returnDate" ng-model="request.returnDate"
+                   bs-datepicker
+                   data-date-format="yyyy-MM-dd"
+                   data-autoclose="1"
+                   ng-required="request.materialsRequest" />
+          </div>
+          <!-- errors -->
+          <span ng-show="requestEditForm.returnDate.$error.required" class="help-block">
+              {{ 'Required field' | translate }}
+          </span>
+	  </div>
+
+     <!-- Is request limited to cohort-->
+     <div class="form-group" ng-class="">
+         <label class="control-label col-sm-2" for="limitedToCohort">
+             &nbsp;
+         </label>
+    
+         <div class="col-sm-8">
+             <input type="checkbox" id="limitedToCohort" name="limitedToCohort" value="1"
+                    ng-model="request.limitedToCohort"> &nbsp; {{ 'The request is limited to a specific cohort.' |
+             translate }}
+         </div>
+     </div>
+     
+    <div ng-if="request.status='Review'">
+    <h4>{{'Checks by Palga'|translate}}</h4>
+    <hr>
+     
+	<!-- Requester valid -->
+    <div class="form-group" ng-class="">
+        <label class="control-label col-sm-2" for="requesterValid">
+	    &nbsp;
+	    </label>
+		<div class="col-sm-8">
+	       <input type="checkbox" id="requesterValid" name="requesterValid" value="1"
+	           ng-model="request.requesterValid"> &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
+	    </div>
+	</div>
+
+    <!-- Requester allowed -->
+    <div class="form-group" ng-class="">
+        <label class="control-label col-sm-2" for="requesterAllowed">
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+           <input type="checkbox" id="requesterAllowed" name="requesterAllowed" value="1"
+               ng-model="request.requesterAllowed"> &nbsp; {{ 'The requester is allowed to file the request.' | translate }}
+        </div>
+    </div>
+
+    <!-- Contact person allowed -->
+    <div class="form-group" ng-class="">
+        <label class="control-label col-sm-2" for="contactPersonAllowed">
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+           <input type="checkbox" id="contactPersonAllowed" name="contactPersonAllowed" value="1"
+               ng-model="request.contactPersonAllowed"> &nbsp; {{ 'The contact person been checked and is authorised to support the request.' | translate }}
+        </div>
+    </div>
+
+    <!-- Requester valid -->
+    <div class="form-group" ng-class="">
+        <label class="control-label col-sm-2" for="requesterLabValid">
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+            <strong>Lab</strong>: {{request.lab.number}}. {{request.lab.name}}
+            <br>
+           <input type="checkbox" id="requesterLabValid" name="requesterLabValid" value="1"
+               ng-model="request.requesterLabValid"> &nbsp; {{ 'The requester is indeed associated with the lab.' | translate }}
+        </div>
+    </div>
+     
+     
+     </div>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-warning" type="button" 
+        ng-if="request.status=='Open'"
+        ng-click="submitRequest(request)" 
+        ng-disabled="requestEditForm.$invalid">{{'Submit'|translate}}</button>
+    <button class="btn btn-info" type="submit" 
+        ng-disabled="requestEditForm.$invalid">{{'Save'|translate}}</button>
+    <button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>
+</div>
+</form>
+</div>
+</div>
+</div>

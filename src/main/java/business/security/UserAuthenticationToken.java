@@ -23,6 +23,10 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
         this.user = user;
         this.setAuthenticated(true);
     }
+    
+    public User getUser() {
+        return user;
+    }
 
     @Override
     public Object getCredentials() {

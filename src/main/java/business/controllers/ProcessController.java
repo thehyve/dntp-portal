@@ -54,6 +54,11 @@ public class ProcessController {
         List<ProcessInstance> processInstances;
         if (user == null) {
             processInstances = new ArrayList<ProcessInstance>();
+        } else if (user.getUser().isPalga()) {
+            processInstances = runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .list();
         } else {
             processInstances = runtimeService
                 .createProcessInstanceQuery()
@@ -61,6 +66,8 @@ public class ProcessController {
                 .involvedUser(user.getId().toString())
                 // .active()
                 .list();
+            //taskService.createTaskQuery()
+            //    .taskCandidateGroup("palga");
         }
         List<ProcessInstanceRepresentation> result = new ArrayList<ProcessInstanceRepresentation>();
         for (ProcessInstance instance : processInstances) {

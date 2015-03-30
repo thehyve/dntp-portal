@@ -17,7 +17,6 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="RequestController">
 
             <h1>{{ 'Requests' | translate }}</h1>
-
             <hr>
 
             <div ng-show="!authenticated">
@@ -48,21 +47,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="request in displayedCollection" id="request_{{request.id}}">
-                        <td>{{request.title}}</td>
-                        <td>{{request.status}}</td>
-                        <td>{{request.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
-                        <td>{{request.requesterName}}</td>
+                    <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}">
+                        <td>{{req.title}}</td>
+                        <td>{{req.status}}</td>
+                        <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
+                        <td>{{req.requesterName}}</td>
 			            <td>
 			            <span class="pull-right">
 			            <span class="btn-group">
                             <button
-                                 class="btn btn-default" type="button" title="Details" ng-click="view(request)">
+                                 class="btn btn-default" type="button" title="Details" ng-click="view(req)">
                                 {{'Details'|translate}}
                             </button>
 			                <button
-			                     ng-disabled="request.status != 'Open' && roles.indexOf('palga') != -1" 
-			                     class="btn btn-default" type="button" title="Edit" ng-click="edit(request)">
+			                     ng-disabled="req.status != 'Open' && roles.indexOf('palga') == -1" 
+			                     class="btn btn-default" type="button" title="Edit" ng-click="edit(req)">
 			                    {{'Edit'|translate}}
 			                </button>
 			            </span>

@@ -89,7 +89,7 @@
          </div>
      </div>
      
-    <div ng-if="request.status='Review'">
+    <div ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
     
     <h4>{{'Checks by Palga'|translate}}</h4>
     <hr>

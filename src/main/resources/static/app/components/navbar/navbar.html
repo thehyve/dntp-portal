@@ -39,6 +39,8 @@
                         </a></li>
                     </ul>
                 </li>
+                <li ng-show="!authenticated"><a href="" ng-click="login()"><span
+                        class="glyphicon glyphicon-log-in"></span> login</a></li>
                 <li ng-show="authenticated"   class="navbar-text"><span
                         class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</li>
                 <li ng-show="authenticated"><a href="" ng-click="logout()"><span

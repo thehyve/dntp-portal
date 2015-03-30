@@ -37,6 +37,10 @@ angular.module('ProcessApp.controllers')
                 });
             };
             authenticate();
+
+            $scope.login = function() {
+                $location.path("/login");
+            }
         
             $scope.logout = function() {
                 $http.post('logout', {}).success(function() {

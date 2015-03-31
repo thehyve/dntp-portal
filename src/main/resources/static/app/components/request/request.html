@@ -143,10 +143,11 @@
 
 </div>
 <div class="modal-footer">
-    <!-- <button type="button" 
+    <button type="button" 
         class="btn btn-warning"
-        ng-disabled="request.status != 'Open' && roles.indexOf('palga') != -1"
-        ng-click="edit(request)">{{'Edit'|translate}}</button>-->
+        ng-if="roles.indexOf('palga') == -1"
+        ng-disabled="request.status != 'Open'"
+        ng-click="edit(request)">{{'Edit'|translate}}</button>
     <button class="btn btn-default" ng-click="$hide()">{{'Close'|translate}}</button>
 </div>
 </div>

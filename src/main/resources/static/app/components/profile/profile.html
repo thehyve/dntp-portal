@@ -69,13 +69,8 @@
             </div>
             <div class="col-sm-10">
                 <br>
-                <select type="text" class="form-control" id="lab" disabled>
-                    <option>AMC, afd. Pathologie</option>
-                    <option>Meander Medisch Centrum, afd. Klinische Pathologie</option>
-                    <option>Canisius-Wilhelmina Ziekenhuis, afd. Pathologie</option>
-                    <option>Laboratorium voor Pathologie (PAL), Dordrecht</option>
-                    <option>Stichting PAMM vakgroep pathologie</option>
-                </select>
+                <em>Department</em>:
+                <p ng-repeat="lab in labs" ng-if="user.labId==lab.id">lab.name</p>
             </div>
         </div>
         <div class="alert alert-success" ng-show="success">

@@ -9,24 +9,27 @@ angular.module('ProcessApp.controllers')
                     if (data.name) {
     
                         $rootScope.username = data.name;
+                        $rootScope.userid = data.id;
                         $rootScope.authenticated = true;
                         $rootScope.roles = [];
-    
-                        $rootScope.globals = {
-                            currentUser: {
-                                username: $rootScope.username,
-                                credentials: $scope.credentials
-                            }
-                        };
-    
-                        $cookieStore.put('globals', $rootScope.globals);
-    
                         if (data.authorities) {
                             for(var i in data.authorities) {
                                 $rootScope.roles.push(data.authorities[i].authority);
                             }
                         }
                         console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
+                        
+                        $rootScope.globals = {
+                            currentUser: {
+                                userid: $rootScope.userid,
+                                username: $rootScope.username,
+                                credentials: $scope.credentials,
+                                roles: $rootScope.roles
+                            }
+                        };
+    
+                        $cookieStore.put('globals', $rootScope.globals);
+    
                     } else {
                         $rootScope.authenticated = false;
                     }

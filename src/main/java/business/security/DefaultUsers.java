@@ -43,6 +43,7 @@ public class DefaultUsers {
                 Set<Role> roles = Collections.singleton(role);
                 String password = r; //passwordEncoder.encode("admin");
                 User user = new User(username, password, true, roles);
+                user.setFirstName(r);
                 ContactData contactData = new ContactData();
                 contactData.setEmail(username);
                 user.setContactData(contactData);

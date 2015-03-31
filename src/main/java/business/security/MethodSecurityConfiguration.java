@@ -43,6 +43,16 @@ public class MethodSecurityConfiguration extends GlobalMethodSecurityConfigurati
                 log.info("isAssignedToTask: " + authentication.getName()
                         + ", " + task.getAssignee());
                 return authentication.getName().equals(task.getAssignee());
+            } else if ("requestAssignedToUser".equals(permission)) {
+                String requestId = (String)targetDomainObject;
+                //Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+                log.info("requestAssignedToUser: username = " + authentication.getName()
+                        + ", requestId = " + requestId);
+            } else if ("isPalgaUser".equals(permission)) {
+                String requestId = (String)targetDomainObject;
+                //Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+                log.info("isPalgaUser: username = " + authentication.getName()
+                        + ", requestId = " + requestId);
             }
             return false;
         }

@@ -12,6 +12,8 @@ public class RequestRepresentation {
     private String status;
     private Date dateCreated; 
     private Lab lab;
+    private String assignee;
+    private String assigneeName;
     
     private String title;
     private String description;
@@ -185,6 +187,21 @@ public class RequestRepresentation {
         this.lab = lab;
     }
 
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    public String getAssigneeName() {
+        return assigneeName;
+    }
+
+    public void setAssigneeName(String assigneeName) {
+        this.assigneeName = assigneeName;
+    }
     
     
 }

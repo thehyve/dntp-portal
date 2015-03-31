@@ -65,10 +65,26 @@
         });
     }
     
+    $scope.getName = function(user) {
+        if (user == null) {
+            return "";
+        }
+        return user.firstName 
+            + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ") 
+            + (user.lastName==null ? "" : user.lastName);
+    }
+    
     $scope.remove = function(user) {
-    	user.$remove(function() {
-    	    $scope.users.splice($scope.users.indexOf(user), 1);
-    	});    	
+        bootbox.confirm("Are you sure you want to delete user " 
+                +  $scope.getName(user)
+                + "?", function(result) {
+            if (result) {
+                user.$remove(function() {
+                    $scope.users.splice($scope.users.indexOf(user), 1);
+                    bootbox.alert("User " + $scope.getName(user) + " deleted.");
+                });
+            }
+        });    	
     };
     
     $scope.add = function() {

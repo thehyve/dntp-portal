@@ -13,6 +13,10 @@
             },
             remove : {
                 method : "DELETE"
+            },
+            claim : {
+                url : '/requests/:id/claim',
+                method : "PUT"
             }
         });
     };

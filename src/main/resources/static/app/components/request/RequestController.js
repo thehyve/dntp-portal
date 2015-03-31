@@ -1,16 +1,24 @@
 (function(angular) {
 
-    var RequestController = function($scope, $modal, Request, Task) {
+    var RequestController = function($scope, $modal, $location, Request, Task) {
         
         $scope.error = "";
+        
+        $scope.login = function() {
+            $location.path("/login");
+        }
         
         Request.query().$promise.then(function(response) {
             $scope.requests = response ? response : [];
             $scope.displayedCollection = [].concat($scope.requests);
         }, function(response) {
-            $scope.error = response.data.message + "\n";
-            if (response.data.error == 302) {
-                $scope.accessDenied = true;
+            if (response.data) {
+                $scope.error = response.data.message + "\n";
+                if (response.data.error == 302) {
+                    $scope.accessDenied = true;
+                }
+            } else {
+                $scope.login();
             }
         });
 
@@ -65,9 +73,34 @@
             $event.stopPropagation();
             $scope.opened = true;
         };
+        
+        $scope.remove = function(request) {
+            request.$remove(function(result) {
+                $scope.requests.splice($scope.requests.indexOf(request), 1);
+            }, function(response) {
+                $scope.error = response.statusText;
+            });
+        }
+
+        $scope.claim = function(request) {
+            request.$claim(function(result) {
+                $scope.requests[$scope.requests.indexOf(request)] = result;
+            }, function(response) {
+                $scope.error = response.statusText;
+            });
+        }
+        
+        $scope.getName = function(user) {
+            if (user == null) {
+                return "";
+            }
+            return user.firstName 
+                + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ") 
+                + (user.lastName==null ? "" : user.lastName);
+        }
 
     };
-    RequestController.$inject = [ '$scope', '$modal', 'Request', 'Task' ];
+    RequestController.$inject = [ '$scope', '$modal', '$location', 'Request', 'Task' ];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);
 

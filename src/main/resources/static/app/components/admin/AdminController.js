@@ -11,7 +11,7 @@
         $scope.displayedCollection = [].concat($scope.users);
     }, function(response) {
         $scope.error = $scope.error + response.data.message + "\n";
-        if (response.data.error == 302) {
+        if (response.data.status == 302 || response.data.status == 403) {
             $scope.accessDenied = true;
         }
     });
@@ -31,17 +31,25 @@
     $scope.update = function(userdata) {
         if (userdata.id > 0) {
             userdata.$update(function(result) {
+                $scope.editerror = "";
                 $scope.editUserModal.hide();
             }, function(response) {
-                $scope.error = $scope.error + response.data.message + "\n";
+                if (response.status == 304) { // not modified
+                    //console.log(JSON.stringify(response));
+                    $scope.editerror = "Email address not available.";
+                }
             });
         } else {
             var user = new User(userdata);
             user.$save(function(result) {
+                $scope.editerror = "";
                 $scope.editUserModal.hide();
                 $scope.users.unshift(result);
             }, function(response) {
-                $scope.error = $scope.error + response.data.message + "\n";
+                if (response.status == 304) { // not modified
+                    //console.log(JSON.stringify(response));
+                    $scope.editerror = "Email address not available.";
+                }
             });
         }
     };
@@ -93,6 +101,7 @@
     
     $scope.edit = function(usr) {
         $scope.edituser = usr;
+        $scope.editerror = "";
         $scope.editUserModal = $modal({scope: $scope, template: '/app/components/admin/edituser.html'});
     }
   
@@ -128,6 +137,11 @@
         
         Lab.query(function(response) {
           $scope.labs = response ? response : [];
+        }, function(response) {
+            $scope.error = $scope.error + response.data.message + "\n";
+            if (response.data.status == 302 || response.data.status == 403) {
+                $scope.accessDenied = true;
+            }
         });
        
         $scope.add = function() {
@@ -147,7 +161,7 @@
                     $scope.editLabModal.hide();
                     $scope.labs.unshift(result);
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = response.data.message + "\n";
                 });
             }
         };
@@ -162,7 +176,9 @@
         $scope.remove = function(lab) {
             lab.$remove(function() {
                 $scope.labs.splice($scope.labs.indexOf(lab), 1);
-            });     
+            }, function(response) {
+                $scope.error = response.statusText;
+            });
         };
         
         $scope.edit = function(lb) {

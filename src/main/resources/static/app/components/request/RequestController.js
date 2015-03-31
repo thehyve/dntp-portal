@@ -42,13 +42,33 @@
             });
         };
         
+        $scope.remove = function(user) {
+            bootbox.confirm("Are you sure you want to delete user " 
+                    +  $scope.getName(user)
+                    + "?", function(result) {
+                if (result) {
+                    user.$remove(function() {
+                        $scope.users.splice($scope.users.indexOf(user), 1);
+                        bootbox.alert("User " + $scope.getName(user) + " deleted.");
+                    });
+                }
+            });     
+        };
+        
         $scope.submitRequest = function(request) {
-            request.$submit(function(result) {
-                $scope.request = result;
-                $scope.editRequestModal.hide();
-            }, function(response) {
-                $scope.error = $scope.error + response.data.message + "\n";
-            });
+            bootbox.confirm(
+                "Are you sure you want to submit the request?\n "
+                + "After submission the request cannot be edited anymore.", 
+                function(confirmed) {
+                    if (confirmed) {
+                        request.$submit(function(result) {
+                            $scope.request = result;
+                            $scope.editRequestModal.hide();
+                        }, function(response) {
+                            $scope.error = $scope.error + response.data.message + "\n";
+                        });
+                    }
+                });
         }
 
         $scope.view = function(request) {

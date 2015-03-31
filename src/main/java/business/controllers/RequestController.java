@@ -238,7 +238,7 @@ public class RequestController {
 
     @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Request not found.")  // 404
     public class RequestNotFoundException extends RuntimeException {
-        private static final long serialVersionUID = -2361055636793206513L;
+        private static final long serialVersionUID = 607177856129334391L;
     }
     
     @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="No task for request.")  // 404

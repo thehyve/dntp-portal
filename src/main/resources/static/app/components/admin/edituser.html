@@ -3,22 +3,15 @@
 <div class="modal-content">
 <form class="form-horizontal" role="form" name="registrationForm" ng-submit="update(edituser)" novalidate>
 <div class="modal-header">
-    <h3 class="modal-title">Edit user</h3>
+    <h3 class="modal-title">Edit user {{edituser.username}}</h3>
 </div>
 <div class="modal-body">
-     <p><em>User name:</em></p>
-     <label>{{edituser.username}}</label>
-     <p><em>Contact info:</em></p>
-     <address>
-     {{edituser.contactData.address1}}<br/>
-     {{edituser.contactData.address2}}<br/>
-     {{edituser.contactData.postalCode}}
-     {{edituser.contactData.city}}<br/>
-     {{edituser.contactData.country}}<br/>
-     {{edituser.contactData.email}}<br/>
-     {{edituser.contactData.telephone}}
-     Role: {{edituser.currentRole}}
-     </address>
+
+        <p><em>{{'Please complete all required fields.'|translate}}</em></p>
+
+        <div ng-show="editerror" class="alert alert-danger" role="alert">
+            {{ editerror | translate }}
+        </div>
 
         <input type="hidden" ng-model="edituser.contactData.id"/>
 
@@ -143,16 +136,16 @@
         <div class="form-group" ng-if="edituser.currentRole == 'lab_user'">
             <label class="control-label col-sm-4" for="lab">{{ 'Lab' | translate }}</label>
             <div class="col-sm-6">
-                <select ng-model="edituser.labId">
+                <select id="lab" name="lab" ng-model="edituser.labId" ng-required="edituser.currentRole == 'lab_user'">
                     <option value="" ng-selected="edituser.labId==''">None</option>
                     <option ng-repeat="lab in labs" value="{{lab.id}}"  ng-selected="edituser.labId==lab.id">{{lab.name}}</option>
                 </select>
+	            <!-- errors -->
+	            <span ng-show="registrationForm.lab.$error.required"
+	                  class="help-block">
+	                {{ 'Required field' | translate }}
+	            </span>
             </div>
-            <!-- errors -->
-            <span ng-show="registrationForm.password.$error.required"
-                  class="help-block">
-                {{ 'Required field' | translate }}
-            </span>
         </div>
         
 

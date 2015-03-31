@@ -66,13 +66,18 @@
 	           &nbsp; {{ 'Request for samples (ffpe/coupus) (intermediate procedure).' |
 	          translate }}
 	      </div>
+      </div>
+      <div class="row">
+		<label class="control-label col-sm-2">
+		&nbsp;
+		</label>
 	      <div class="col-sm-8" ng-show="request.materialsRequest">
 	           <label class="control-label" for="returnDate">
 	               <span><i class="glyphicon glyphicon-calendar"></i></span>
-                    {{'Return date'|translate}}:
+                   &nbsp; {{'Return date'|translate}}:
                 </label>
+                {{request.returnDate | date: 'EEE dd MMMM yyyy'}}
                 <br>
-                {{request.returnDate}}
           </div>
 	  </div>
 

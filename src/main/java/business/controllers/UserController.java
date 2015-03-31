@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import business.models.ContactData;
@@ -58,8 +59,21 @@ public class UserController {
         }
         return users;
     }
+    
+    @ResponseStatus(value=HttpStatus.BAD_REQUEST)  // 
+    public class InvalidUserDataException extends RuntimeException {
+        private static final long serialVersionUID = -7706933733462824596L;
+        public InvalidUserDataException(String message) {
+            super(message);
+        }
+    }
+
+    @ResponseStatus(value=HttpStatus.NOT_MODIFIED, reason="Email address not available.")
+    public class EmailAddressNotAvailableException extends RuntimeException {
+        private static final long serialVersionUID = -2294620434526249799L;
+    }
    
-    public ResponseEntity<Object> transferUserData(ProfileRepresentation body, User user) {
+    public void transferUserData(ProfileRepresentation body, User user) {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());
         user.setPathologist(body.isPathologist());
@@ -69,13 +83,13 @@ public class UserController {
         if (user.isLabUser() || user.isPathologist()) {
             lab = labRepository.findOne(body.getLabId());
             if (lab == null) {
-                return new ResponseEntity<Object>("No lab selected.", HttpStatus.BAD_REQUEST);
+                throw new InvalidUserDataException("No lab selected.");
             }
         }
         user.setLab(lab);
         
         if (body.getContactData() == null) {
-            return new ResponseEntity<Object>("No contact data entered.", HttpStatus.BAD_REQUEST);
+            throw new InvalidUserDataException("No contact data entered.");
         }
         if (user.getContactData() == null) {
             user.setContactData(new ContactData());
@@ -85,7 +99,7 @@ public class UserController {
         // copy email address
         String email = body.getContactData().getEmail();
         if (email == null) {
-            return new ResponseEntity<Object>("No email address entered.", HttpStatus.BAD_REQUEST);
+            throw new InvalidUserDataException("No email address entered.");
         }
         if (user.getUsername() == null || !user.getUsername().equals(email)) {
             // check for uniqueness (also enforced by database):
@@ -93,13 +107,12 @@ public class UserController {
             if (u == null) {
                 user.setUsername(email);
             } else {
-                return new ResponseEntity<Object>("Email address not available.", HttpStatus.NOT_MODIFIED);
+                throw new EmailAddressNotAvailableException();
             }
         }
-        return null;
     }
 
-    private ResponseEntity<Object> createNewUser(ProfileRepresentation body) {
+    private ProfileRepresentation createNewUser(ProfileRepresentation body) {
         if (body.getPassword1() != null && body.getPassword1().equals(body.getPassword2()))
         {
             if (userRepository.findByUsername(body.getUsername()) != null ) {
@@ -109,44 +122,43 @@ public class UserController {
             Role role = roleRepository.findByName(body.getCurrentRole());
             Set<Role> roles;
             if (role == null) {
-                return new ResponseEntity<Object>("No role selected.", HttpStatus.BAD_REQUEST);
+                throw new InvalidUserDataException("No role selected.");
             } else {
                 roles = Collections.singleton(role);
             }
 
             User user = new User(body.getUsername(), body.getPassword1(), true, roles);
 
-            ResponseEntity<Object> result = transferUserData(body, user);
-            if (result != null) {
-                return result;
-            }
-            return new ResponseEntity<Object>(new ProfileRepresentation(userRepository.save(user)), HttpStatus.OK);
+            transferUserData(body, user);
+            return new ProfileRepresentation(userRepository.save(user));
         }
         else
         {
-            return new ResponseEntity<Object>("Passwords do not match.", HttpStatus.BAD_REQUEST);
+            throw new InvalidUserDataException("Passwords do not match.");
         }
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
-    public ResponseEntity<Object> create(Principal principal, @RequestBody ProfileRepresentation body) {
+    public ProfileRepresentation create(Principal principal, @RequestBody ProfileRepresentation body) {
         LogFactory.getLog(getClass()).info("POST /admin/users (for user: " + principal.getName() + ")");
         return createNewUser(body);
     }
 
+    @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="User not found.")  // 404
+    public class UserNotFoundException extends RuntimeException {
+        private static final long serialVersionUID = -7666653096938904964L;
+    }
+    
     @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> update(Principal principal, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
+    public ProfileRepresentation update(Principal principal, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
         LogFactory.getLog(getClass()).info("PUT /admin/users/" + id);
         User user = userRepository.findOne(id);
         if (user != null) {
-            ResponseEntity<Object> result = transferUserData(body, user);
-            if (result != null) {
-                return result;
-            }
-            return new ResponseEntity<Object>(new ProfileRepresentation(userRepository.save(user)), HttpStatus.OK);
+            transferUserData(body, user);
+            return new ProfileRepresentation(userRepository.save(user));
         }
-        return new ResponseEntity<Object>("User not found.", HttpStatus.NOT_FOUND);
+        throw new UserNotFoundException();
     }    
     
     @RequestMapping(value = "/admin/users/{id}/activate", method = RequestMethod.PUT)
@@ -177,7 +189,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register/users", method = RequestMethod.POST)
-    public ResponseEntity<Object> register(@RequestBody ProfileRepresentation body) {
+    public ProfileRepresentation register(@RequestBody ProfileRepresentation body) {
         LogFactory.getLog(getClass()).info("POST /register new user");
         return createNewUser(body);
     }

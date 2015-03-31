@@ -8,14 +8,23 @@ angular.module('ProcessApp.controllers')
                 $http.get('user').success(function(data) {
                     if (data.name) {
 
+                        $rootScope.userid = data.id;
                         $rootScope.username = data.name;
                         $rootScope.authenticated = true;
                         $rootScope.roles = [];
-
+                        if (data.authorities) {
+                            for(var i in data.authorities) {
+                                $rootScope.roles.push(data.authorities[i].authority);
+                            }
+                        }
+                        console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
+                        
                         $rootScope.globals = {
                             currentUser: {
+                                userid: $rootScope.userid,
                                 username: $rootScope.username,
-                                credentials: $scope.credentials
+                                credentials: $scope.credentials,
+                                roles: $rootScope.roles
                             }
                         };
 

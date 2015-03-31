@@ -1,12 +1,14 @@
 (function(angular) {
 
-    var RequestController = function($scope, $modal, $location, Request, Task) {
+    var RequestController = function($rootScope, $scope, $modal, $location, Request, Task) {
         
         $scope.error = "";
         
         $scope.login = function() {
             $location.path("/login");
         }
+
+        console.log("globals: "+ JSON.stringify($rootScope.globals));
         
         Request.query().$promise.then(function(response) {
             $scope.requests = response ? response : [];
@@ -100,7 +102,7 @@
         }
 
     };
-    RequestController.$inject = [ '$scope', '$modal', '$location', 'Request', 'Task' ];
+    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location', 'Request', 'Task' ];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);
 

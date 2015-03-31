@@ -34,7 +34,7 @@ public class PasswordController {
     @Value("${dntp.server-name}")
     String serverName;
 
-    @Value("${server.port}")
+    @Value("${dntp.server-port}")
     String serverPort;
 
     @RequestMapping(value = "/password/request-new", method = RequestMethod.PUT)

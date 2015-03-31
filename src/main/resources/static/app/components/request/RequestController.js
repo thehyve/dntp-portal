@@ -87,7 +87,7 @@
             if (request.returnDate == null) {
                 request.returnDate = new Date();
             }
-            $scope.editRequestModal = $modal({scope: $scope, template: '/app/components/request/editrequest.html'});
+            $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/components/request/editrequest.html'});
         };
         
         $scope.open = function($event) {

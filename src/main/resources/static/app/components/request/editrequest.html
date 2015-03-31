@@ -88,9 +88,10 @@
 	               <span><i class="glyphicon glyphicon-calendar"></i></span>
                     {{'Return date'|translate}}:
                 </label>
-                <input type="text" class="form-control" name="returnDate" ng-model="request.returnDate"
+                <input type="text" class="form-control" id="returnDate" name="returnDate" ng-model="request.returnDate"
                    bs-datepicker
                    data-date-format="yyyy-MM-dd"
+                   data-min-date="today"
                    data-autoclose="1"
                    ng-required="request.materialsRequest" />
           </div>

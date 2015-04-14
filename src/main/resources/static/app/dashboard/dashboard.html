@@ -6,7 +6,7 @@
         <!--Side Bar-->
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li class="active"><a href="#/">Overview <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="#/">{{'Overview'|translate}} <span class="sr-only">(current)</span></a></li>
                 <li><a href="#/">Sub Menu #1</a></li>
                 <li><a href="#/">Sub Menu #2</a></li>
                 <li><a href="#/">Sub Menu #3</a></li>
@@ -32,7 +32,8 @@
             <ul class="nav nav-pills">
                 <li role="presentation" title="Create a new request">
                     <a href="#/" ng-click="start()">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Create New Request
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        {{'Create New Request'|translate}}
                     </a>
                 </li>
             </ul>
@@ -42,20 +43,33 @@
                 <table st-table="displayedCollection" st-safe-src="requests" class="table">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th>#</th>
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
-                        <th st-sort="getters.dateCreated">{{'Date created'|translate}}</th>
+                        <th st-sort="getters.dateCreated">{{'Created Date'|translate}}</th>
                         <th ng-if="roles.indexOf('palga') != -1"  st-sort="requesterName">{{'Requester'|translate}}</th>
                         <th ng-if="roles.indexOf('palga') != -1" st-sort="assigneeName">{{'Assignee'|translate}}</th>
                         <th>{{'Actions'|translate}}</th>
+                    </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th><input st-search="title" placeholder="Filter by Title" class="input-sm form-control" type="search"/></th>
+                        <th><input st-search="status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
+                        <th>&nbsp;</th>
+                        <th><input st-search="requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
+                        <th><input st-search="assigneeName" placeholder="Filter by Assignee" class="input-sm form-control" type="search"/></th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th colspan="6"><input st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}">
                         <td>{{req.processInstanceId}}</td>
                         <td>{{req.title}}</td>
-                        <td>{{req.status}}</td>
+                        <td>{{req.status | translate}}</td>
                         <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
                         <td ng-if="roles.indexOf('palga') != -1" >{{req.requesterName}}</td>
                         <td ng-if="roles.indexOf('palga') != -1" >{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
@@ -67,7 +81,7 @@
                                 {{'Details'|translate}}
                             </button>
                             <button
-                                 ng-disabled="(req.status != 'Open' && roles.indexOf('palga') == -1) || (roles.indexOf('palga') != -1 && req.assignee != globals.currentUser.userid)" 
+                                 ng-disabled="(req.status != 'Open' && roles.indexOf('palga') == -1) || (roles.indexOf('palga') != -1 && req.assignee != globals.currentUser.userid)"
                                  class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(req)">
                                 {{'Edit'|translate}}
                             </button>
@@ -76,12 +90,12 @@
                                 {{'Claim'|translate}}
                             </button>
                             <button
-                                 ng-disabled="req.status != 'Open'" 
+                                 ng-disabled="req.status != 'Open'"
                                  class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
                                 {{'Delete'|translate}}
                             </button>
                         </span>
-                        </span>            
+                        </span>
                         </td>
                     </tr>
                     </tbody>
@@ -98,7 +112,6 @@
             <!--=====================================================-->
             <!--TODO: To reuse table just change the result instance -->
             <!--=====================================================-->
-
 
         </div> <!--end Main Content-->
 

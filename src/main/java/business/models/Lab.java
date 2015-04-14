@@ -26,6 +26,8 @@ public class Lab {
     @RestResource(exported = false)
     private ContactData contactData;
     
+    private boolean active = true;
+    
     public Lab() {
         
     }
@@ -68,5 +70,18 @@ public class Lab {
     public void setContactData(ContactData contactData) {
         this.contactData = contactData;
     }
+    
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
     
 }

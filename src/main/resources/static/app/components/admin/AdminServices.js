@@ -62,7 +62,15 @@
             },
             update : {
                 method : "PUT"
-            }
+            },
+            activate : {
+                url : '/admin/labs/:id/activate',
+                method : "PUT"
+            },
+            deactivate : {
+                url : '/admin/labs/:id/deactivate',
+                method : "PUT"
+            },
         });
     };
 

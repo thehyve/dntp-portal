@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +25,8 @@ import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
+import business.models.UserService;
+import business.models.UserService.EmailAddressNotUnique;
 import business.representation.ProfileRepresentation;
 
 @RestController
@@ -34,6 +35,9 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
+    
     @Autowired
     RoleRepository roleRepository;
 
@@ -68,11 +72,17 @@ public class UserController {
         }
     }
 
-    @ResponseStatus(value=HttpStatus.NOT_MODIFIED, reason="Email address not available.")
+    @ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="Email address not available.")
     public class EmailAddressNotAvailableException extends RuntimeException {
         private static final long serialVersionUID = -2294620434526249799L;
+        public EmailAddressNotAvailableException(String message) {
+            super(message);
+        }
+        public EmailAddressNotAvailableException() {
+            super("Email address not available.");
+        }
     }
-   
+
     public void transferUserData(ProfileRepresentation body, User user) {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());
@@ -102,7 +112,7 @@ public class UserController {
             throw new InvalidUserDataException("No email address entered.");
         }
         if (user.getUsername() == null || !user.getUsername().equals(email)) {
-            // check for uniqueness (also enforced by database):
+            // check for uniqueness (also enforced by user service):
             User u = userRepository.findByUsernameAndDeletedFalse(email);
             if (u == null) {
                 user.setUsername(email);
@@ -116,7 +126,7 @@ public class UserController {
         if (body.getPassword1() != null && body.getPassword1().equals(body.getPassword2()))
         {
             if (userRepository.findByUsername(body.getUsername()) != null ) {
-                throw new IllegalArgumentException("Credentials already exist in our system.");
+                throw new EmailAddressNotAvailableException();
             }
 
             Role role = roleRepository.findByName(body.getCurrentRole());
@@ -130,7 +140,12 @@ public class UserController {
             User user = new User(body.getUsername(), body.getPassword1(), true, roles);
 
             transferUserData(body, user);
-            return new ProfileRepresentation(userRepository.save(user));
+            try {
+                User result = userService.save(user);
+                return new ProfileRepresentation(result);
+            } catch (EmailAddressNotUnique e) {
+                throw new EmailAddressNotAvailableException();
+            }
         }
         else
         {
@@ -156,7 +171,12 @@ public class UserController {
         User user = userRepository.findOne(id);
         if (user != null) {
             transferUserData(body, user);
-            return new ProfileRepresentation(userRepository.save(user));
+            try {
+                User result = userService.save(user);
+                return new ProfileRepresentation(result);
+            } catch(UserService.EmailAddressNotUnique e) {
+                throw new EmailAddressNotAvailableException();
+            }
         }
         throw new UserNotFoundException();
     }    

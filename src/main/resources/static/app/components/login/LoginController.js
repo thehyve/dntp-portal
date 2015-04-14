@@ -6,8 +6,8 @@ angular.module('ProcessApp.controllers')
 
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
+                    console.log("Login succes: " + JSON.stringify(data));
                     if (data.name) {
-
                         $rootScope.userid = data.id;
                         $rootScope.username = data.name;
                         $rootScope.authenticated = true;
@@ -66,11 +66,15 @@ angular.module('ProcessApp.controllers')
                         } else {
                             $location.path("/login");
                             $scope.error = true;
+                            $scope.errormessage = "";
                         }
                     });
                 }).error(function(data) {
                     $location.path("/login");
                     $scope.error = true;
+                    if (data.message) {
+                        $scope.errormessage = data.message;
+                    }
                     $rootScope.authenticated = false;
                 })
             };

@@ -4,6 +4,32 @@ angular.module('ProcessApp.controllers')
     .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookieStore',
         function ($scope, $http, $rootScope, $location, $cookieStore) {
 
+            /**
+             * To authorize feature based on role
+             * @param role
+             */
+            function setCurrentUserAuthorizations (currentUser) {
+                var globalFeatures = {
+                    HAS_MANAGE_LAB_PAGE_AUTH : 'HAS_MANAGE_LAB_PAGE_AUTH',
+                    HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
+                    HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH'
+                };
+
+                if (currentUser.roles[0] === "palga") {
+                    currentUser.features.push();
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_USER_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                } else if (currentUser.roles[0] === 'lab_user') {
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                } else if (currentUser.roles[0] === 'requester') {
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                } else if (currentUser.roles[0] === 'scientific_council') {
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                }
+            };
+
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
                     console.log("Login succes: " + JSON.stringify(data));
@@ -18,15 +44,18 @@ angular.module('ProcessApp.controllers')
                             }
                         }
                         console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
-                        
+
                         $rootScope.globals = {
                             currentUser: {
                                 userid: $rootScope.userid,
                                 username: $rootScope.username,
                                 credentials: $scope.credentials,
-                                roles: $rootScope.roles
+                                roles: $rootScope.roles,
+                                features : []
                             }
                         };
+
+                        setCurrentUserAuthorizations($rootScope.globals.currentUser);
 
                         $cookieStore.put('globals', $rootScope.globals);
 

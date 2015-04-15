@@ -4,8 +4,6 @@ angular.module('ProcessApp.controllers')
     .controller('LabController',['$scope', '$modal', 'Lab',
         function ($scope, $modal, Lab) {
 
-            var users = ['palga', 'lab_user'];
-
             $scope.error = "";
             $scope.accessDenied = false;
             $scope.visibility = {};

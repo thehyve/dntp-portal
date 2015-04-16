@@ -102,10 +102,10 @@
                     <div class="col-sm-6">
                         <input type="email" class="form-control" id="email" name="email" placeholder="{{ 'E-mail' | translate }}"
                                ng-model="editlab.contactData.email" >
+                        <span class="help-block" ng-show="myLabEditForm.email.$invalid && myLabEditForm.email.$dirty">
+                            {{ 'Email format is invalid' | translate }}
+                        </span>
                     </div>
-                    <span class="help-block" ng-show="myLabEditForm.email.$invalid && myLabEditForm.email.$dirty">
-                        {{ 'Email format is invalid' | translate }}
-                    </span>
                 </div>
 
                 <!-- Telephone -->

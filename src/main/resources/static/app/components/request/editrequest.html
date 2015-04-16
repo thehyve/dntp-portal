@@ -123,7 +123,9 @@
 		<span class="pull-right">
 		<span class="btn-group">
 		    <button class="btn btn-default" type="button" title="Delete"
-		        ng-click="removeFile(file)">
+		        ng-click="removeFile(file)"
+		        ng-if="request.status=='Open'"
+		        >
 		        Delete
 		    </button>
 		</span>
@@ -135,6 +137,7 @@
             flow-name="agreementFlow"
             flow-files-submitted="$flow.upload()"
             flow-file-success="fileuploadsuccess($message)"
+            ng-if="request.status=='Open'"
             >
         <div>
         <span class="btn btn-default" flow-btn>{{'Upload file'|translate}}</span>
@@ -197,7 +200,7 @@
                ng-model="request.requesterLabValid"> &nbsp; {{ 'The requester is indeed associated with the lab.' | translate }}
         </div>
     </div>
-     </div>
+
      
      <h4>{{'Signed agreement'|translate}}</h4>
      <hr>

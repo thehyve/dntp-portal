@@ -51,15 +51,8 @@ mvn package
 ```
 There should now be a `.war`-file in `target/dntp-portal-0.0.1-SNAPSHOT.war`.
 
-## Build with Gradle
+## Test with maven
 
-Make sure you have [https://gradle.org/docs/current/userguide/installation.html](Gradle installed), then run the application:
 ```
-gradle bootRun
-```
-There should now be an application running at [http://localhost:8092/](http://localhost:8092/).
-
-Run gradle tasks to view all tasks runnable from root project
-```
-gradle tasks
+mvn -Dspring.profiles.active=test test
 ```

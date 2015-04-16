@@ -86,6 +86,10 @@
                             <button ng-if="roles.indexOf('palga') != -1" ng-disabled="req.assignee == globals.currentUser.userid"
                                  class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
                                 {{'Claim'|translate}}
+			    </button>
+                            <button ng-if="roles.indexOf('palga') != -1" ng-disabled="req.assignee != globals.currentUser.userid"
+                                 class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
+                                {{'Unclaim'|translate}}
                             </button>
                             <button
                                  ng-disabled="req.status != 'Open'"

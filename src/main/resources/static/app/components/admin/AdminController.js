@@ -10,9 +10,11 @@
         $scope.users = response ? response : [];
         $scope.displayedCollection = [].concat($scope.users);
     }, function(response) {
-        $scope.error = $scope.error + response.data.message + "\n";
-        if (response.data.status == 302 || response.data.status == 403) {
-            $scope.accessDenied = true;
+        if (response.data) {
+            $scope.error = $scope.error + response.data.message + "\n";
+            if (response.data.status == 302 || response.data.status == 403) {
+                $scope.accessDenied = true;
+            }
         }
     });
 
@@ -128,7 +130,7 @@
           });
       };
     };
-
+    
     UserController.$inject = [ '$scope', '$modal', 'User', 'Role', 'UserRole',
                                'Lab'];
     angular.module("ProcessApp.controllers").controller("UserController",

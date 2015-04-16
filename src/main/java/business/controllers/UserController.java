@@ -3,6 +3,7 @@ package business.controllers;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -89,6 +90,34 @@ public class UserController {
         user.setPathologist(body.isPathologist());
         user.setInstitute(body.getInstitute());
         user.setSpecialism(body.getSpecialism());
+
+        // copy email address
+        String email = body.getContactData().getEmail();
+        if (email == null) {
+            throw new InvalidUserDataException("No email address entered.");
+        }
+        if (user.getUsername() == null || !user.getUsername().equals(email)) {
+            // check for uniqueness (also enforced by user service):
+            User u = userRepository.findByUsernameAndDeletedFalse(email);
+            if (u == null) {
+                user.setUsername(email);
+            } else {
+                throw new EmailAddressNotAvailableException();
+            }
+        }
+
+        // change role
+        ProfileRepresentation representation = new ProfileRepresentation(user);
+        if (!representation.getCurrentRole().equals(body)) {
+            Role role = roleRepository.findByName(body.getCurrentRole());
+            if (role == null) {
+                throw new InvalidUserDataException("Unknown role selected.");
+            }
+            Set<Role> roles = new HashSet<Role>();
+            roles.add(role);
+            user.setRoles(roles);
+        }
+        
         Lab lab = null;
         if (user.isLabUser() || user.isPathologist()) {
             lab = labRepository.findOne(body.getLabId());
@@ -106,20 +135,6 @@ public class UserController {
         }
         user.getContactData().copy(body.getContactData());
 
-        // copy email address
-        String email = body.getContactData().getEmail();
-        if (email == null) {
-            throw new InvalidUserDataException("No email address entered.");
-        }
-        if (user.getUsername() == null || !user.getUsername().equals(email)) {
-            // check for uniqueness (also enforced by user service):
-            User u = userRepository.findByUsernameAndDeletedFalse(email);
-            if (u == null) {
-                user.setUsername(email);
-            } else {
-                throw new EmailAddressNotAvailableException();
-            }
-        }
     }
 
     private ProfileRepresentation createNewUser(ProfileRepresentation body) {
@@ -130,11 +145,11 @@ public class UserController {
             }
 
             Role role = roleRepository.findByName(body.getCurrentRole());
-            Set<Role> roles;
+            Set<Role> roles = new HashSet<Role>();
             if (role == null) {
                 throw new InvalidUserDataException("No role selected.");
             } else {
-                roles = Collections.singleton(role);
+                roles.add(role);
             }
 
             User user = new User(body.getUsername(), body.getPassword1(), true, roles);

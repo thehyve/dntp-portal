@@ -40,7 +40,7 @@ public class ProfileRepresentation {
         this.id = user.getId();
         this.username = user.getUsername();
         this.currentRole =  user.isPalga() ? "palga" :
-                            user.isLabUser() ? "labuser" :
+                            user.isLabUser() ? "lab_user" :
                             user.isScientificCouncilMember() ? "scientific_council" :
                             user.isRequester() ? "requester" :
                             "";

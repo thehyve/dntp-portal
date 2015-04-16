@@ -111,6 +111,14 @@
                 $scope.error = response.statusText;
             });
         }
+
+        $scope.unclaim = function(request) {
+            request.$unclaim(function(result) {
+                $scope.requests[$scope.requests.indexOf(request)] = result;
+            }, function(response) {
+                $scope.error = response.statusText;
+            });
+        }
         
         $scope.getName = function(user) {
             if (user == null) {

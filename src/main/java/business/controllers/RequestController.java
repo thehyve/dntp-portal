@@ -15,6 +15,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,8 @@ import business.security.UserAuthenticationToken;
 @RestController
 public class RequestController {
 
+    Log log = LogFactory.getLog(getClass());
+    
     @Autowired
     private RuntimeService runtimeService;
 
@@ -152,7 +155,7 @@ public class RequestController {
     
     @RequestMapping(value = "/requests", method = RequestMethod.GET)
     public List<RequestRepresentation> get(UserAuthenticationToken user) {
-        LogFactory.getLog(getClass()).info(
+        log.info(
                 "GET /requests/ (for user: " + (user == null ? "null" : user.getId()) + ")");
         List<ProcessInstance> processInstances;
         if (user == null) {
@@ -193,7 +196,7 @@ public class RequestController {
             throw new NotLoggedInException();
         } else {
             String userId = user.getId().toString();
-            LogFactory.getLog(getClass()).info(
+            log.info(
                     "POST /requests (initiator: " + userId + ")");
             Map<String, Object> values = new HashMap<String, Object>();
             values.put("initiator", userId);
@@ -214,19 +217,19 @@ public class RequestController {
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        LogFactory.getLog(getClass()).info("PUT /requests/" + id);
+        log.info("PUT /requests/" + id);
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
                 .includeProcessVariables()
                 .processInstanceId(id).singleResult();
         if (instance == null) {
-            LogFactory.getLog(getClass()).error(
+            log.error(
                     "Request with id '" + id + "' not found.");
             return null;
         }
         Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
-            LogFactory.getLog(getClass()).info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
+            log.info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
         instance = runtimeService.createProcessInstanceQuery()
                 .includeProcessVariables()
@@ -252,7 +255,7 @@ public class RequestController {
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        LogFactory.getLog(getClass()).info("PUT /requests/" + id + "/submit");
+        log.info("PUT /requests/" + id + "/submit");
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
                 .includeProcessVariables()
                 .processInstanceId(id).singleResult();
@@ -262,7 +265,7 @@ public class RequestController {
         Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
-            LogFactory.getLog(getClass()).info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
+            log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
         
         Task task = taskService.createTaskQuery().processInstanceId(id)
@@ -288,7 +291,7 @@ public class RequestController {
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        LogFactory.getLog(getClass()).info("PUT /requests/" + id + "/claim");
+        log.info("PUT /requests/" + id + "/claim");
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
                 .includeProcessVariables()
                 .processInstanceId(id).singleResult();
@@ -302,7 +305,41 @@ public class RequestController {
         if (task == null) {
             throw new TaskNotFoundException();
         } else {
-            taskService.claim(task.getId(), user.getId().toString());
+            if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
+                taskService.claim(task.getId(), user.getId().toString());
+            } else {
+                taskService.delegateTask(task.getId(), user.getId().toString());
+            }
+        }
+        instance = runtimeService.createProcessInstanceQuery()
+                .includeProcessVariables()
+                .processInstanceId(id).singleResult();
+        RequestRepresentation updatedRequest = new RequestRepresentation();
+        transferData(instance, updatedRequest, user.getUser().isPalga());
+        return updatedRequest;
+    }    
+    
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/unclaim", method = RequestMethod.PUT)
+    public RequestRepresentation unclaim(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestBody RequestRepresentation request) {
+        log.info("PUT /requests/" + id + "/unclaim");
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .includeProcessVariables()
+                .processInstanceId(id).singleResult();
+        if (instance == null) {
+            throw new RequestNotFoundException();
+        }
+        Task task = taskService.createTaskQuery().processInstanceId(id)
+            .active()
+            //.taskId("request_form")
+            .singleResult();
+        if (task == null) {
+            throw new TaskNotFoundException();
+        } else {
+            taskService.unclaim(task.getId());
         }
         instance = runtimeService.createProcessInstanceQuery()
                 .includeProcessVariables()
@@ -317,12 +354,12 @@ public class RequestController {
     public RequestRepresentation remove(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        LogFactory.getLog(getClass()).info("DELETE /requests/" + id);
+        log.info("DELETE /requests/" + id);
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
                 .includeProcessVariables()
                 .processInstanceId(id).singleResult();
         if (instance == null) {
-            LogFactory.getLog(getClass()).error(
+            log.error(
                     "Request with id '" + id + "' not found.");
             return null;
         }

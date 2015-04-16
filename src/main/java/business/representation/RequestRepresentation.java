@@ -1,6 +1,9 @@
 package business.representation;
 
 import java.util.Date;
+import java.util.List;
+
+import org.activiti.engine.task.Attachment;
 
 import business.models.Lab;
 
@@ -24,6 +27,9 @@ public class RequestRepresentation {
     private Date returnDate;
     private boolean limitedToCohort;
     private String contactPersonName;
+
+    private List<Attachment> attachments;
+    private String signedAgreementId;
     
     // Palga specific
     private boolean requesterValid;
@@ -202,6 +208,21 @@ public class RequestRepresentation {
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
     }
-    
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getSignedAgreementId() {
+        return signedAgreementId;
+    }
+
+    public void setSignedAgreementId(String signedAgreementId) {
+        this.signedAgreementId = signedAgreementId;
+    }
     
 }

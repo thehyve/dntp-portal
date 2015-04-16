@@ -36,6 +36,9 @@
                 templateUrl : 'app/components/admin/users.html'
             }).when('/labs', {
                 templateUrl : 'app/components/admin/labs.html'
+            }).when('/my-lab', {
+                templateUrl : 'app/lab/my-lab.html',
+                controller : 'MyLabController'
             }).when('/profile/password', {
                 templateUrl : 'app/components/profile/password.html',
                 controller : 'PasswordController'
@@ -72,21 +75,21 @@
                     }
                 });
             }]);
-            
-    
+
+
     // Checks if `string` starts with `start`
     function startsWith(string, start) {
         console.log('startsWith: ' + string + ', ' + start);
         if (typeof(string) !== 'string')
             return false;
-            
+
         if (string.length < start.length)
             return false;
-    
+
         for (var i = 0; i < string.length && i < start.length; i++)
             if (string[i] !== start[i])
                 return false;
-                
+
         return true;
     }
 }(angular));

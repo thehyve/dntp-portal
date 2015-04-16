@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('LabController',['$scope', '$modal', 'Lab',
+    .controller('AdminLabController',['$scope', '$modal', 'Lab',
         function ($scope, $modal, Lab) {
 
             $scope.error = "";

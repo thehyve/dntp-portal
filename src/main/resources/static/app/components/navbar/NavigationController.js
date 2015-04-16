@@ -28,6 +28,10 @@ angular.module('ProcessApp.controllers')
                 return checkRoles(['HAS_MANAGE_USER_PAGE_AUTH']);
             };
 
+            $scope.isViewOwnLabAllowed = function() {
+                return checkRoles(['HAS_MANAGE_OWN_LAB_PAGE_AUTH']);
+            };
+
             $scope.login = function() {
                 $location.path("/login");
             };

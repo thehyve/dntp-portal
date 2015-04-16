@@ -1,5 +1,8 @@
 package business.controllers;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,18 +17,26 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import business.models.User;
 import business.models.UserRepository;
@@ -91,10 +102,7 @@ public class RequestController {
                     request.setLab(user.getLab());
                 }
             }
-            Task task = taskService.createTaskQuery().processInstanceId(instance.getId())
-                    .active()
-                    //.taskId("request_form")
-                    .singleResult();
+            Task task = findTaskByRequestId(instance.getId());
             if (task != null) {
                 request.setAssignee(task.getAssignee());
                 if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
@@ -108,6 +116,7 @@ public class RequestController {
                         } 
                     } 
                 }
+                request.setAttachments(taskService.getTaskAttachments(task.getId()));
             }
             request.setStatus((String)variables.get("status"));
             request.setTitle((String)variables.get("title"));
@@ -119,6 +128,7 @@ public class RequestController {
             request.setReturnDate((Date)variables.get("return_date"));
             request.setLimitedToCohort(fetchBooleanVariable("limited_to_cohort", variables));
             request.setContactPersonName((String)variables.get("contact_person_name"));
+            request.setSignedAgreementId((String)variables.get("signed_agreement_id"));
             
             if (is_palga) {
                 request.setRequesterValid(fetchBooleanVariable("requester_is_valid", variables));
@@ -148,6 +158,7 @@ public class RequestController {
                 variables.put("requester_is_allowed", (Boolean)request.isRequesterAllowed());
                 variables.put("contact_person_is_allowed", (Boolean)request.isContactPersonAllowed());
                 variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
+                variables.put("signed_agreement_id", request.getSignedAgreementId());
             }
         }
         return variables;        
@@ -182,7 +193,7 @@ public class RequestController {
         return result;
     }
     
-    @ResponseStatus(value=HttpStatus.UNAUTHORIZED, reason="Not logged in.")  // 404
+    @ResponseStatus(value=HttpStatus.UNAUTHORIZED, reason="Not logged in.")
     public class NotLoggedInException extends RuntimeException {
         private static final long serialVersionUID = -2361055636793206513L;
     }
@@ -218,35 +229,84 @@ public class RequestController {
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id);
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
-        if (instance == null) {
-            log.error(
-                    "Request with id '" + id + "' not found.");
-            return null;
-        }
+        ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
             log.info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
-        instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
+        instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser().isPalga());
         return updatedRequest;
     }    
 
     @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Request not found.")  // 404
-    public class RequestNotFoundException extends RuntimeException {
+    public class RequestNotFound extends RuntimeException {
         private static final long serialVersionUID = 607177856129334391L;
     }
     
     @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="No task for request.")  // 404
-    public class TaskNotFoundException extends RuntimeException {
+    public class TaskNotFound extends RuntimeException {
         private static final long serialVersionUID = -2361055636793206513L;
+    }
+    
+    /**
+     * Finds current task. Assumes that exactly one task is currently active.
+     * @param requestId
+     * @return the current task if it exists.
+     * @throws TaskNotFound.
+     */
+    Task getTaskByRequestId(String requestId) {
+        Task task = taskService.createTaskQuery().processInstanceId(requestId)
+                .active()
+                //.taskId("request_form")
+                .singleResult();
+        if (task == null) {
+            throw new TaskNotFound();
+        }
+        return task;
+    }
+
+    /** 
+     * Finds current task. Assumes that at most one task is currently active.
+     * @param requestId
+     * @return the current task if it exists, null otherwise.
+     */
+    Task findTaskByRequestId(String requestId) {
+        Task task = taskService.createTaskQuery().processInstanceId(requestId)
+                .active()
+                //.taskId("request_form")
+                .singleResult();
+        return task;
+    }
+    
+    /**
+     * Finds request.
+     * @param requestId
+     * @return the current request if it exists; null otherwise.
+     */
+    ProcessInstance findProcessInstance(String processInstanceId) {
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .includeProcessVariables()
+                .processInstanceId(processInstanceId).singleResult();
+        return instance;
+    }
+
+    /**
+     * Finds request.
+     * @param requestId
+     * @return the current request if it exists.
+     * @throws RequestNotFound.
+     */
+    ProcessInstance getProcessInstance(String processInstanceId) {
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .includeProcessVariables()
+                .processInstanceId(processInstanceId).singleResult();
+        if (instance == null) {
+            throw new RequestNotFound();
+        }
+        return instance;
     }
     
     @Secured("hasPermission(#param, 'requestAssignedToUser')")
@@ -256,30 +316,16 @@ public class RequestController {
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/submit");
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
-        if (instance == null) {
-            throw new RequestNotFoundException();
-        }
+        ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
             log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
         
-        Task task = taskService.createTaskQuery().processInstanceId(id)
-            .active()
-            //.taskId("request_form")
-            .singleResult();
-        if (task == null) {
-            throw new TaskNotFoundException();
-        } else {
-            taskService.complete(task.getId());
-        }
-        instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
+        Task task = getTaskByRequestId(id);
+        taskService.complete(task.getId());
+        instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser().isPalga());
         return updatedRequest;
@@ -292,28 +338,14 @@ public class RequestController {
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/claim");
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
-        if (instance == null) {
-            throw new RequestNotFoundException();
-        }
-        Task task = taskService.createTaskQuery().processInstanceId(id)
-            .active()
-            //.taskId("request_form")
-            .singleResult();
-        if (task == null) {
-            throw new TaskNotFoundException();
+        ProcessInstance instance = getProcessInstance(id);
+        Task task = getTaskByRequestId(id);
+        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
+            taskService.claim(task.getId(), user.getId().toString());
         } else {
-            if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-                taskService.claim(task.getId(), user.getId().toString());
-            } else {
-                taskService.delegateTask(task.getId(), user.getId().toString());
-            }
+            taskService.delegateTask(task.getId(), user.getId().toString());
         }
-        instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
+        instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser().isPalga());
         return updatedRequest;
@@ -326,46 +358,138 @@ public class RequestController {
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/unclaim");
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
-        if (instance == null) {
-            throw new RequestNotFoundException();
-        }
-        Task task = taskService.createTaskQuery().processInstanceId(id)
-            .active()
-            //.taskId("request_form")
-            .singleResult();
-        if (task == null) {
-            throw new TaskNotFoundException();
-        } else {
-            taskService.unclaim(task.getId());
-        }
-        instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
+        ProcessInstance instance = getProcessInstance(id);
+        Task task = getTaskByRequestId(id);
+        taskService.unclaim(task.getId());
+        instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser().isPalga());
         return updatedRequest;
     }    
     
+    @ResponseStatus(value=HttpStatus.METHOD_NOT_ALLOWED, reason="Action not allowed in current status.")
+    public class InvalidActionInStatus extends RuntimeException {
+        private static final long serialVersionUID = 607177856129334391L;
+    }
+    
     @Secured("hasPermission(#param, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}", method = RequestMethod.DELETE)
-    public RequestRepresentation remove(
+    public void remove(
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("DELETE /requests/" + id);
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                .includeProcessVariables()
-                .processInstanceId(id).singleResult();
-        if (instance == null) {
-            log.error(
-                    "Request with id '" + id + "' not found.");
-            return null;
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser().isPalga());
+        if (!request.getRequesterId().equals(user.getUser().getId().toString())) {
+            throw new RequestNotFound();
         }
-        RequestRepresentation updatedRequest = new RequestRepresentation();
-        transferData(instance, updatedRequest, user.getUser().isPalga());
-        return updatedRequest;
+        if (!request.getStatus().equals("Open")) {
+            throw new InvalidActionInStatus();
+        }
+        runtimeService.deleteProcessInstance(id, "Removed by user: " + user.getName());
     }    
 
+    @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR, reason="File upload error.") 
+    public class FileUploadError extends RuntimeException {
+        private static final long serialVersionUID = 51403280891772531L;
+        public FileUploadError() {
+            super("File upload error.");
+        }
+    }
+    
+    @RequestMapping(value = "/requests/{id}/files", method = RequestMethod.POST)
+    public RequestRepresentation uploadFile(UserAuthenticationToken user, @PathVariable String id, 
+            @RequestParam("flowFilename") String name,
+            @RequestParam("file") MultipartFile file) {
+        log.info("POST /requests/" + id + "/files");
+        Task task = getTaskByRequestId(id);
+        try{
+            taskService.createAttachment(
+                    file.getContentType(), 
+                    task.getId(), task.getProcessInstanceId(), 
+                    name, name, file.getInputStream());
+        } catch(IOException e) {
+            throw new FileUploadError();
+        }
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser().isPalga());
+        return request;
+    }
+    
+    @RequestMapping(value = "/requests/{id}/signedAgreement", method = RequestMethod.POST)
+    public RequestRepresentation uploadSignedAgreement(UserAuthenticationToken user, @PathVariable String id, 
+            @RequestParam("flowFilename") String name,
+            @RequestParam("file") MultipartFile file) {
+        log.info("POST /requests/" + id + "/signedAgreement");
+        Task task = getTaskByRequestId(id);
+        String attachmentId;
+        try{
+            Attachment result = taskService.createAttachment(
+                    file.getContentType(), 
+                    task.getId(), task.getProcessInstanceId(), 
+                    name, name, file.getInputStream());
+            attachmentId = result.getId();
+        } catch(IOException e) {
+            throw new FileUploadError();
+        }
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser().isPalga());
+        
+        // remove existing agreement.
+        if (request.getSignedAgreementId() != null && ! request.getSignedAgreementId().isEmpty()) {
+            taskService.deleteAttachment(request.getSignedAgreementId());
+        }
+        
+        // set signed agreement id to the id of the uploaded attachment.
+        request.setSignedAgreementId(attachmentId);
+        Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
+        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+        instance = getProcessInstance(id);
+        request = new RequestRepresentation();
+        transferData(instance, request, user.getUser().isPalga());
+        return request;
+    }
+    
+    @RequestMapping(value = "/requests/{id}/files/{attachmentId}", method = RequestMethod.GET)
+    public HttpEntity<InputStreamResource> getFile(UserAuthenticationToken user, @PathVariable String id, 
+            @PathVariable String attachmentId) {
+        log.info("GET /requests/" + id + "/files/" + attachmentId);
+        Task task = getTaskByRequestId(id);
+        Attachment result = taskService.getAttachment(attachmentId);
+        if (!result.getTaskId().equals(task.getId())) {
+            // error
+            throw new TaskNotFound();
+        }
+        InputStream input = taskService.getAttachmentContent(attachmentId);
+        InputStreamResource resource = new InputStreamResource(input);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(result.getType()));
+        HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
+        LogFactory.getLog(getClass()).info("Returning reponse.");
+        return response;
+    }    
+ 
+    @RequestMapping(value = "/requests/{id}/files/{attachmentId}", method = RequestMethod.DELETE)
+    public void deleteFile(UserAuthenticationToken user, @PathVariable String id, 
+            @PathVariable String attachmentId) {
+        log.info("DELETE /requests/" + id + "/files/" + attachmentId);
+        Task task = getTaskByRequestId(id);
+        Attachment result = taskService.getAttachment(attachmentId);
+        if (!result.getTaskId().equals(task.getId())) {
+            // error
+            throw new TaskNotFound();
+        }
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser().isPalga());
+        log.info("Status: " + request.getStatus());
+        if (!request.getStatus().equals("Open")) {
+            throw new InvalidActionInStatus();
+        }
+        taskService.deleteAttachment(attachmentId);
+    }      
+    
 }

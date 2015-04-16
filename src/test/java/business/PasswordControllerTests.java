@@ -2,7 +2,11 @@ package business;
 
 import business.models.NewPasswordRequest;
 import business.models.NewPasswordRequestRepository;
+import business.models.User;
+import business.models.UserRepository;
 import business.representation.EmailRepresentation;
+import business.representation.NewPasswordRepresentation;
+import business.representation.PasswordChangeRepresentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMail;
@@ -43,17 +47,20 @@ public class PasswordControllerTests {
     @Autowired
     private NewPasswordRequestRepository passwordRequestRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private MockMvc mockMvc;
     public GreenMail greenMail;
 
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        this.greenMail = new GreenMail(ServerSetup.ALL);
+        this.greenMail = new GreenMail(ServerSetup.SMTP);
     }
 
     @Test
-    public void requestNewPassword() throws Exception {
+    public void requestNewPasswordSendsCorrectEmail() throws Exception {
         EmailRepresentation emailForm = new EmailRepresentation("palga@dntp.thehyve.nl");
         greenMail.start();
 
@@ -93,5 +100,65 @@ public class PasswordControllerTests {
         Assert.assertEquals(passwordRequest.getUser().getUsername(), emailForm.getEmail());
 
         greenMail.stop();
+    }
+
+    @Test
+    public void requestNewPasswordDoesNothingForUnknownUser() throws Exception {
+        EmailRepresentation emailForm = new EmailRepresentation("somebody@nowhere.com");
+        greenMail.start();
+
+        // Perform the request and ensure we get a correct result status
+        mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
+                .content(new ObjectMapper().writeValueAsString(emailForm))
+                .contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(new ResultHandler() {
+                    @Override
+                    public void handle(MvcResult result) throws Exception {
+                        LogFactory.getLog(getClass()).info("TEST: requestNewPassword()\n" +
+                                result.getResponse().getStatus() +
+                                "\n" +
+                                result.getResponse().getContentAsString());
+                    }
+                })
+                .andExpect(status().isOk());
+
+        // Check that no email has been sent
+        MimeMessage[] emails = greenMail.getReceivedMessages();
+        Assert.assertEquals(0, emails.length);
+
+        greenMail.stop();
+    }
+
+    @Test
+    public void resetPassword() throws Exception {
+        // Insert a password reset request in the database
+        User user = userRepository.findByUsername("palga@dntp.thehyve.nl");
+        NewPasswordRequest npr = new NewPasswordRequest(user);
+        passwordRequestRepository.saveAndFlush(npr);
+
+        // Call password reset with the token
+        NewPasswordRepresentation npRepr = new NewPasswordRepresentation("12345678", npr.getToken());
+        mockMvc.perform(MockMvcRequestBuilders.post("/password/reset")
+                .content(new ObjectMapper().writeValueAsString(npRepr))
+                .contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(new ResultHandler() {
+                    @Override
+                    public void handle(MvcResult result) throws Exception {
+                        LogFactory.getLog(getClass()).info("TEST: setPassword()\n" +
+                                result.getResponse().getStatus() +
+                                "\n" +
+                                result.getResponse().getContentAsString());
+                    }
+                })
+                .andExpect(status().isOk());
+
+        // Check that the password has been changed
+        user = userRepository.findOne(user.getId());
+        Assert.assertEquals("12345678", user.getPassword());
+
+        // Check that the reset link doesn't exist anymore
+        Assert.assertNull(passwordRequestRepository.findByToken(npr.getToken()));
     }
 }

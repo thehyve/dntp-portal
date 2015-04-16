@@ -17,6 +17,10 @@
             claim : {
                 url : '/requests/:id/claim',
                 method : "PUT"
+            },
+            unclaim : {
+                url : '/requests/:id/unclaim',
+                method : "PUT"
             }
         });
     };

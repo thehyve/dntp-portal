@@ -1,16 +1,22 @@
 package business.security;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-
-import business.models.*;
 
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import business.models.ContactData;
+import business.models.Lab;
+import business.models.LabRepository;
+import business.models.Role;
+import business.models.RoleRepository;
+import business.models.User;
+import business.models.UserRepository;
 
 @Service
 public class DefaultUsers {
@@ -40,7 +46,8 @@ public class DefaultUsers {
             }
             String username = r + "@dntp.thehyve.nl";
             if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
-                Set<Role> roles = Collections.singleton(role);
+                Set<Role> roles = new HashSet<Role>();
+                roles.add(role);
                 String password = r; //passwordEncoder.encode("admin");
                 User user = new User(username, password, true, roles);
                 user.setFirstName(r);

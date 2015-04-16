@@ -17,12 +17,12 @@ public class LabProfileController {
     @RequestMapping(value = "/public/labs", method = RequestMethod.GET)
     public List<Lab> get() {
         LogFactory.getLog(getClass()).info("GET /labs/ for anonymous user");
-        return labRepository.findAll();
+        return labRepository.findAllByActiveTrue();
     }
 
     @RequestMapping(value = "/public/labs/{id}", method = RequestMethod.GET)
     public Lab get(@PathVariable("id") long id) {
         LogFactory.getLog(getClass()).info("GET /labs/" + id + " for anonymous user");
-        return labRepository.findOne(id);
+        return labRepository.findOneByActiveTrue(id);
     }
 }

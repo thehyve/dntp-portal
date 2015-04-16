@@ -5,7 +5,7 @@
 
 	<groupId>nl.thehyve</groupId>
 	<artifactId>dntp-portal</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>DNTP portal</name>
@@ -116,6 +116,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+	    <dependency>
+	        <groupId>com.h2database</groupId>
+	        <artifactId>h2</artifactId>
+	        <scope>test</scope>
+	    </dependency>		
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>

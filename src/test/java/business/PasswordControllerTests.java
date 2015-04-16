@@ -53,7 +53,7 @@ public class PasswordControllerTests {
     }
 
     @Test
-    public void requestNewPassword() throws Exception {
+    public void requestNewPasswordSendsCorrectEmail() throws Exception {
         EmailRepresentation emailForm = new EmailRepresentation("palga@dntp.thehyve.nl");
         greenMail.start();
 
@@ -91,6 +91,34 @@ public class PasswordControllerTests {
         NewPasswordRequest passwordRequest = passwordRequestRepository.findByToken(link);
         Assert.assertNotNull(passwordRequest);
         Assert.assertEquals(passwordRequest.getUser().getUsername(), emailForm.getEmail());
+
+        greenMail.stop();
+    }
+
+    @Test
+    public void requestNewPasswordDoesNothingForUnknownUser() throws Exception {
+        EmailRepresentation emailForm = new EmailRepresentation("somebody@nowhere.com");
+        greenMail.start();
+
+        // Perform the request and ensure we get a correct result status
+        mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
+                .content(new ObjectMapper().writeValueAsString(emailForm))
+                .contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(new ResultHandler() {
+                    @Override
+                    public void handle(MvcResult result) throws Exception {
+                        LogFactory.getLog(getClass()).info("TEST: requestNewPassword()\n" +
+                                result.getResponse().getStatus() +
+                                "\n" +
+                                result.getResponse().getContentAsString());
+                    }
+                })
+                .andExpect(status().isOk());
+
+        // Check that no email has been sent
+        MimeMessage[] emails = greenMail.getReceivedMessages();
+        Assert.assertEquals(0, emails.length);
 
         greenMail.stop();
     }

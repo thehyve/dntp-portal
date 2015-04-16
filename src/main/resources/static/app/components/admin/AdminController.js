@@ -10,9 +10,11 @@
         $scope.users = response ? response : [];
         $scope.displayedCollection = [].concat($scope.users);
     }, function(response) {
-        $scope.error = $scope.error + response.data.message + "\n";
-        if (response.data.status == 302 || response.data.status == 403) {
-            $scope.accessDenied = true;
+        if (response.data) {
+            $scope.error = $scope.error + response.data.message + "\n";
+            if (response.data.status == 302 || response.data.status == 403) {
+                $scope.accessDenied = true;
+            }
         }
     });
 	
@@ -138,9 +140,11 @@
         Lab.query(function(response) {
           $scope.labs = response ? response : [];
         }, function(response) {
-            $scope.error = $scope.error + response.data.message + "\n";
-            if (response.data.status == 302 || response.data.status == 403) {
-                $scope.accessDenied = true;
+            if (response.data) {
+                $scope.error = $scope.error + response.data.message + "\n";
+                if (response.data.status == 302 || response.data.status == 403) {
+                    $scope.accessDenied = true;
+                }
             }
         });
        
@@ -165,6 +169,18 @@
                 });
             }
         };
+        
+        $scope.activate = function(lab) {
+            lab.$activate(function(result) {
+                $scope.labs[$scope.labs.indexOf(lab)] = result;
+            });
+        }
+
+        $scope.deactivate = function(lab) {
+            lab.$deactivate(function(result) {
+                $scope.labs[$scope.labs.indexOf(lab)] = result;
+            });
+        }
 
         $scope.toggleVisibility = function(lab) {
             if (!(lab.id in $scope.visibility)) {
@@ -184,7 +200,7 @@
         $scope.edit = function(lb) {
             $scope.editlab = lb;
             $scope.editLabModal = $modal({scope: $scope, template: '/app/components/admin/editlab.html'});
-        };        
+        };
         
       };
 

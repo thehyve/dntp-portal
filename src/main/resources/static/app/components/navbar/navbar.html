@@ -25,7 +25,12 @@
                 </li>
             </ul>
 
-            <ul ng-if="authenticated" class="nav navbar-nav navbar-right">
+            <ul ng-if="!authenticated" class="nav navbar-nav navbar-right">
+                <li><a href="" ng-click="login()"><span
+                        class="glyphicon glyphicon-log-in"></span> {{'login'|translate}}</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
                         {{ 'Language' | translate }}: {{currentLanguage}}
@@ -42,7 +47,7 @@
                 <li ng-show="authenticated"   class="navbar-text"><span
                         class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</li>
                 <li ng-show="authenticated"><a href="" ng-click="logout()"><span
-                        class="glyphicon glyphicon-log-out"></span> logout</a></li>
+                        class="glyphicon glyphicon-log-out"></span> {{'logout'|translate}}</a></li>
                 <li ng-show="authenticated" class="dropdown">
                     <a class="dropdown-toggle" role="button" data-toggle="dropdown">
                         <span class="glyphicon glyphicon-menu-hamburger"></span>
@@ -52,10 +57,6 @@
                         <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>
                     </ul>
                 </li>
-            </ul>
-            <ul ng-if="!authenticated" class="nav navbar-nav navbar-right">
-                <li><a href="" ng-click="login()"><span
-                        class="glyphicon glyphicon-log-in"></span> login</a></li>
             </ul>
         </div>
     </div>

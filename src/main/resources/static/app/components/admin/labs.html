@@ -32,7 +32,7 @@
     </div>
 
     <ul class="list-group">
-    <li class="list-group-item {{visibility[lab.id] ? 'list-group-item-info' : ''}}" ng-repeat="lab in labs" id="lab_{{lab.id}}">
+    <li class="list-group-item {{lab.active ? '' : 'disabled' }} {{visibility[lab.id] ? 'list-group-item-info' : ''}}" ng-repeat="lab in labs" id="lab_{{lab.id}}">
         <h4 class="list-group-item-heading" ng-click="toggleVisibility(lab)">
             <label>Lab {{lab.number}}: {{lab.name}}</label>
             <span class="pull-right">
@@ -43,9 +43,13 @@
                 <button class="btn btn-default" type="button" title="Edit" ng-click="edit(lab)">
                     Edit
                 </button>
-                <button class="btn btn-default" type="button" title="Remove"
-                    ng-click="remove(lab)">
-                <span class="glyphicon glyphicon-trash"></span>
+                <button class="btn btn-default {{lab.active ? 'disabled' : ''}}" type="button" title="Activate"
+                    ng-click="activate(lab)">
+                    Activate
+                </button>
+                <button class="btn btn-default {{lab.active ? '' : 'disabled'}}" type="button" title="Deactivate"
+                    ng-click="deactivate(lab)">
+                    Deactivate
                 </button>
             </span>
             </span>            

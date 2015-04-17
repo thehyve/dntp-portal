@@ -67,7 +67,6 @@ public class PasswordController {
         LogFactory.getLog(this.getClass()).info("POST password/reset");
 
         // LATER: Check if the link was issued a couple of days ago
-        // LATER: Check that the new password meets the criteria
 
         NewPasswordRequest npr = this.nprRepo.findByToken(form.getToken());
         if (npr != null && PasswordValidator.validate(form.getPassword())) {
@@ -88,8 +87,6 @@ public class PasswordController {
     @RequestMapping(value = "/password/change", method = RequestMethod.POST)
     public ResponseEntity<Object> changePassword(UserAuthenticationToken user, @RequestBody PasswordChangeRepresentation form) {
         LogFactory.getLog(this.getClass()).info("POST /password/change");
-
-        // LATER: Validate data (password requirements)
 
         // Update profile
         User currentUser = this.userRepository.getOne(user.getId());

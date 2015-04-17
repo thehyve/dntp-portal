@@ -15,35 +15,35 @@
         .config(function($routeProvider, $translateProvider) {
 
             $routeProvider.when('/', {
-                templateUrl : 'app/components/dashboard/dashboard.html',
+                templateUrl : 'app/dashboard/dashboard.html',
                 controller : ''
             }).when('/login', {
-                templateUrl : 'app/components/login/login.html',
+                templateUrl : 'app/login/login.html',
                 controller : 'LoginController'
             }).when('/login/forgot-password', {
-                templateUrl : 'app/components/forgot-password/forgot-password.html',
+                templateUrl : 'app/forgot-password/forgot-password.html',
                 controller : 'ForgotPasswordController'
             }).when('/login/reset-password/:token', {
-                templateUrl : 'app/components/forgot-password/reset-password.html',
+                templateUrl : 'app/forgot-password/reset-password.html',
                 controller : 'ResetPasswordController'
             }).when('/register', {
-                templateUrl : 'app/components/registration/registration.html',
+                templateUrl : 'app/registration/registration.html',
                 controller : 'RegistrationController'
             }).when('/register/success', {
-                templateUrl : 'app/components/registration/thank-you.html',
+                templateUrl : 'app/registration/thank-you.html',
                 controller : 'RegistrationController'
             }).when('/users', {
-                templateUrl : 'app/components/admin/users.html'
+                templateUrl : 'app/admin/users.html'
             }).when('/labs', {
-                templateUrl : 'app/components/admin/labs.html'
+                templateUrl : 'app/admin/labs.html'
             }).when('/my-lab', {
-                templateUrl : 'app/components/lab/my-lab.html',
+                templateUrl : 'app/lab/my-lab.html',
                 controller : 'MyLabController'
             }).when('/profile/password', {
-                templateUrl : 'app/components/profile/password.html',
+                templateUrl : 'app/profile/password.html',
                 controller : 'PasswordController'
             }).when('/profile/', {
-                templateUrl : 'app/components/profile/profile.html',
+                templateUrl : 'app/profile/profile.html',
                 controller : 'ProfileController'
             }).otherwise('/');
 

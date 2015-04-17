@@ -10,7 +10,6 @@ angular.module('ProcessApp.controllers')
             $scope.originLab = {};
 
 
-
             Restangular.one('lab').get()
                 .then(function (myLab) {
                     $scope.editlab = myLab;

@@ -1,19 +1,19 @@
 (function(angular) {
 
     var RequestController = function($rootScope, $scope, $modal, $location, Request, RequestAttachment, Task, FlowOptionService) {
-        
+
         $scope.error = "";
-        
+
         $scope.login = function() {
             $location.path("/login");
         }
 
         console.log("globals: "+ JSON.stringify($rootScope.globals));
-        
+
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
         };
-        
+
         Request.query().$promise.then(function(response) {
             $scope.requests = response ? response : [];
             $scope.displayedCollection = [].concat($scope.requests);
@@ -49,7 +49,7 @@
             $scope.requests[$scope.requests.indexOf(request)] = result;
             $scope.request = result;
         }
-        
+
         $scope.update = function(request) {
             request.$update(function(result) {
                 $scope.refresh(request, result);
@@ -60,7 +60,7 @@
         };
 
         $scope.removeAgreementFile = function(f) {
-            bootbox.confirm("Are you sure you want to delete file " 
+            bootbox.confirm("Are you sure you want to delete file "
                     +  f.name
                     + "?", function(result) {
                 if (result) {
@@ -74,11 +74,11 @@
                         $scope.error = response.statusText;
                     });
                 }
-            });     
-        };        
-        
+            });
+        };
+
         $scope.removeFile = function(f) {
-            bootbox.confirm("Are you sure you want to delete file " 
+            bootbox.confirm("Are you sure you want to delete file "
                     +  f.name
                     + "?", function(result) {
                 if (result) {
@@ -92,11 +92,11 @@
                         $scope.error = response.statusText;
                     });
                 }
-            });     
+            });
         };
-        
+
         $scope.remove = function(request) {
-            bootbox.confirm("Are you sure you want to delete request " 
+            bootbox.confirm("Are you sure you want to delete request "
                     +  request.processInstanceId
                     + "?", function(result) {
                 if (result) {
@@ -107,13 +107,13 @@
                         $scope.error = response.statusText;
                     });
                 }
-            });     
+            });
         };
-        
+
         $scope.submitRequest = function(request) {
             bootbox.confirm(
                 "Are you sure you want to submit the request?\n "
-                + "After submission the request cannot be edited anymore.", 
+                + "After submission the request cannot be edited anymore.",
                 function(confirmed) {
                     if (confirmed) {
                         request.$submit(function(result) {
@@ -131,9 +131,9 @@
                 $scope.editRequestModal.hide();
             }
             $scope.request = request;
-            $scope.viewRequestModal = $modal({scope: $scope, template: '/app/components/request/request.html'});
+            $scope.viewRequestModal = $modal({scope: $scope, template: '/app/request/request.html'});
         };
-       
+
         $scope.edit = function(request) {
             if ($scope.viewRequestModal) {
                 $scope.viewRequestModal.hide();
@@ -142,15 +142,15 @@
             if (request.returnDate == null) {
                 request.returnDate = new Date();
             }
-            $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/components/request/editrequest.html'});
+            $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html'});
         };
-        
+
         $scope.open = function($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
         };
-        
+
         $scope.claim = function(request) {
             request.$claim(function(result) {
                 $scope.requests[$scope.requests.indexOf(request)] = result;
@@ -166,13 +166,13 @@
                 $scope.error = response.statusText;
             });
         }
-        
+
         $scope.getName = function(user) {
             if (user == null) {
                 return "";
             }
-            return user.firstName 
-                + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ") 
+            return user.firstName
+                + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ")
                 + (user.lastName==null ? "" : user.lastName);
         }
 
@@ -197,7 +197,7 @@
                 task.completed = true;
             });
         };
-        
+
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
         };

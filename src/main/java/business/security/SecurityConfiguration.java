@@ -38,7 +38,7 @@ public class SecurityConfiguration extends
         GlobalAuthenticationConfigurerAdapter {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
         LogFactory.getLog(getClass()).info("INIT AUTH!!!");
@@ -50,10 +50,10 @@ public class SecurityConfiguration extends
         .authenticationProvider(authenticationProvider());
         LogFactory.getLog(getClass()).info("INIT AUTH DONE!!!");
     }
-    
+
     static final long MAX_FAILED_LOGIN_ATTEMPTS = 10;
-    static final long ACCOUNT_BLOCKING_PERIOD = 900; // 900 seconds, 15 minutes
-    
+    static final long ACCOUNT_BLOCKING_PERIOD = 3600; // 900 seconds, 15 minutes
+
     @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="User account blocked.")
     public class UserAccountBlocked extends LockedException {
         private static final long serialVersionUID = 6789077965053928047L;
@@ -64,17 +64,17 @@ public class SecurityConfiguration extends
             super("User account blocked. Please retry in 15 minutes.");
         }
     }
-    
+
     @Bean
     protected AuthenticationProvider authenticationProvider() {
         return new AuthenticationProvider() {
-            
+
             @Autowired
             UserRepository userRepository;
-            
+
             @Autowired
             AuthenticationManager authenticationManager;
-            
+
             @Override
             public boolean supports(Class<?> authentication) {
                 if (authentication == UsernamePasswordAuthenticationToken.class) {
@@ -82,7 +82,7 @@ public class SecurityConfiguration extends
                 }
                 return false;
             }
-            
+
             @Override
             public Authentication authenticate(Authentication authentication)
                     throws AuthenticationException {

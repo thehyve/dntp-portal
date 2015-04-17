@@ -3,9 +3,10 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 
-import org.activiti.engine.task.Attachment;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import business.models.Lab;
+import business.models.RequestProperties;
 
 public class RequestRepresentation {
 
@@ -28,6 +29,9 @@ public class RequestRepresentation {
     private boolean limitedToCohort;
     private String contactPersonName;
 
+    @RestResource(exported = false)
+    private RequestProperties properties;
+    
     private List<AttachmentRepresentation> attachments;
     private List<AttachmentRepresentation> agreementAttachments;
     
@@ -208,6 +212,14 @@ public class RequestRepresentation {
 
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
+    }
+
+    public RequestProperties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(RequestProperties properties) {
+        this.properties = properties;
     }
 
     public List<AttachmentRepresentation> getAttachments() {

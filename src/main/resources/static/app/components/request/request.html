@@ -174,6 +174,27 @@
     
      <br>
      
+    <h4>{{'Comments'|translate}}</h4>
+    <hr>
+
+    <ul class="list-group">
+    <li class="list-group-item" ng-repeat="comment in request.properties.comments">
+        <p>
+            {{comment.contents}}
+        </p>
+        <p>
+        <small>
+        <span><i class="glyphicon glyphicon-user"></i></span>
+        <em>{{getName(comment.creator)}}</em>
+        &nbsp;
+        <span><i class="glyphicon glyphicon-time"></i></span>
+        <span>{{comment.timeCreated | date: 'EEE dd MMMM yyyy  HH:mm'}}</span>
+        <span ng-if="comment.timeEdited != comment.timeCreated">(Last edited: {{comment.timeEdited | date: 'EEE dd MMMM yyyy  HH:mm'}})</span>
+        </small>
+        </p>
+    </li>
+    </ul>
+     
      </div>
 
 </div>

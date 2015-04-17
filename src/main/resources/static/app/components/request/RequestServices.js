@@ -21,10 +21,6 @@
             unclaim : {
                 url : '/requests/:id/unclaim',
                 method : "PUT"
-            },
-            removeFile : {
-                url : '/requests/:id/files',
-                method : "PUT"
             }
         });
     };
@@ -48,6 +44,23 @@
     };
     RequestAttachmentFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("RequestAttachment", RequestAttachmentFactory);
+    
+    RequestCommentFactory = function($resource) {
+        return $resource('/requests/:processInstanceId/comments/:id', {
+            processInstanceId: '@processInstanceId', 
+            id : '@id'
+        }, {
+            update : {
+                method : "PUT"
+            },
+            remove : {
+                method : "DELETE"
+            }
+        });
+    };
+    RequestCommentFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("RequestComment", RequestCommentFactory);
+    
     
     var TaskFactory = function($resource) {
         return $resource('/tasks/:id', {

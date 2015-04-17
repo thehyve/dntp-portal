@@ -38,6 +38,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import business.models.Comment;
+import business.models.CommentRepository;
 import business.models.RequestProperties;
 import business.models.RequestPropertiesRepository;
 import business.models.User;
@@ -74,6 +76,9 @@ public class RequestController {
     
     @Autowired
     private RequestPropertiesRepository requestPropertiesRepository;
+    
+    @Autowired
+    private CommentRepository commentRepository;
 
     private boolean fetchBooleanVariable(String name, Map<String,Object> variables) {
         if (variables.get(name) != null) {
@@ -122,7 +127,7 @@ public class RequestController {
                         } 
                     } 
                 }
-                List<Attachment> attachments = taskService.getTaskAttachments(task.getId()); 
+                List<Attachment> attachments = new ArrayList<Attachment>(); //taskService.getTaskAttachments(task.getId()); 
                 List<HistoricTaskInstance> historicTasks = getHistoricTasksByRequestId(instance.getProcessInstanceId());
                 for (HistoricTaskInstance historicTask: historicTasks) {
                     List<Attachment> historicAttachments = taskService.getTaskAttachments(historicTask.getId());
@@ -142,10 +147,12 @@ public class RequestController {
                         }
                     }
                 } else {
+                    properties = new RequestProperties();
                     for (Attachment attachment: attachments) {
                         requesterAttachments.add(new AttachmentRepresentation(attachment));
                     }
                 }
+                request.setProperties(properties);
                 request.setAttachments(requesterAttachments);
                 request.setAgreementAttachments(agreementAttachments);
             }
@@ -569,6 +576,62 @@ public class RequestController {
             throw new InvalidActionInStatus();
         }
         taskService.deleteAttachment(attachmentId);
-    }      
+    }
+    
+    @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
+    public Comment addComment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestBody Comment body) {
+        log.info("POST /requests/" + id + "/comments");
+        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        Comment comment = new Comment(id, user.getUser(), body.getContents());
+        comment = commentRepository.save(comment);
+        properties.addComment(comment);
+        requestPropertiesRepository.save(properties);
+        
+        return comment;
+    }
+
+    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.") 
+    public class UpdateNotAllowed extends RuntimeException {
+        private static final long serialVersionUID = 4000154580392628894L;
+        public UpdateNotAllowed() {
+            super("Update not allowed. Not the owner.");
+        }
+    }
+    
+    @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.PUT)
+    public Comment updateComment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @PathVariable Long commentId,
+            @RequestBody Comment body) {
+        log.info("PUT /requests/" + id + "/comments/" + commentId);
+        Comment comment = commentRepository.findOne(commentId);
+        if (!comment.getCreator().getId().equals(user.getUser().getId())) {
+            throw new UpdateNotAllowed();
+        }
+        comment.setContents(body.getContents());
+        comment.setTimeEdited(new Date());
+        comment = commentRepository.save(comment);
+        
+        return comment;
+    }
+    
+    @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.DELETE)
+    public void removeComment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @PathVariable Long commentId) {
+        log.info("PUT /requests/" + id + "/comments");
+        Comment comment = commentRepository.findOne(commentId);
+        if (!comment.getCreator().getId().equals(user.getUser().getId())) {
+            throw new UpdateNotAllowed();
+        }
+        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        properties.getComments().remove(comment);
+        requestPropertiesRepository.save(properties);
+    }
     
 }

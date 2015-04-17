@@ -15,7 +15,7 @@
         .config(function($routeProvider, $translateProvider) {
 
             $routeProvider.when('/', {
-                templateUrl : 'app/dashboard/dashboard.html',
+                templateUrl : 'app/components/dashboard/dashboard.html',
                 controller : ''
             }).when('/login', {
                 templateUrl : 'app/components/login/login.html',
@@ -37,7 +37,7 @@
             }).when('/labs', {
                 templateUrl : 'app/components/admin/labs.html'
             }).when('/my-lab', {
-                templateUrl : 'app/lab/my-lab.html',
+                templateUrl : 'app/components/lab/my-lab.html',
                 controller : 'MyLabController'
             }).when('/profile/password', {
                 templateUrl : 'app/components/profile/password.html',

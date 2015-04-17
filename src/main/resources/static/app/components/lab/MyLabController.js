@@ -9,15 +9,17 @@ angular.module('ProcessApp.controllers')
             $scope.editlab = {};
             $scope.originLab = {};
 
+
+
             Restangular.one('lab').get()
                 .then(function (myLab) {
-                    console.log(myLab);
                     $scope.editlab = myLab;
-                    $scope.originLab = myLab;
+                    $scope.globals.currentUser.lab = myLab;
+                }, function (err) {
+                    $scope.alerts.push({type: 'danger', msg: err.data.message});
                 });
 
             $scope.update = function () {
-
                 $scope.editlab.save()
                     .then(function (){
                         $scope.alerts.push({type: 'success', msg: 'Your lab credentials has been successfully updated.' });
@@ -30,7 +32,7 @@ angular.module('ProcessApp.controllers')
             $scope.reset = function () {
                 console.log("about to reset");
                 $scope.editlab = angular.copy($scope.originLab);
-            }
+            };
 
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);

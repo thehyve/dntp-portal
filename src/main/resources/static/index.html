@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./index.css" />
-    <link rel="stylesheet" href="./app/dashboard/dashboard.css" />
+    <link rel="stylesheet" href="app/components/dashboard/dashboard.css" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,12 +24,12 @@
   <body ng-app="ProcessApp"> <!-- flow-prevent-drop -->
 
     <!-- Navigator -->
-    <div ng-include="'app/components/navbar/navbar.html'"></div>
+    <div ng-include="'app/shared/navbar/navbar.html'"></div>
 
     <div ng-view></div>
 
     <!-- Footer -->
-    <div ng-include="'app/components/footer/footer.html'"></div>
+    <div ng-include="'app/shared/footer/footer.html'"></div>
 
     <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -49,12 +49,12 @@
     <script type="text/javascript" src="./bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
     <script type="text/javascript" src="./bower_components/bootbox/bootbox.js"></script>
     <script type="text/javascript" src="./app/processapp.js"></script>
-    <script type="text/javascript" src="./app/components/navbar/NavigationController.js"></script>
+    <script type="text/javascript" src="app/shared/navbar/NavigationController.js"></script>
     <script type="text/javascript" src="./app/components/login/LoginController.js"></script>
     <script type="text/javascript" src="./app/components/request/RequestServices.js"></script>
     <script type="text/javascript" src="./app/components/request/RequestController.js"></script>
     <script type="text/javascript" src="./app/components/admin/AdminServices.js"></script>
-    <script type="text/javascript" src="./app/components/admin/AdminController.js"></script>
+    <script type="text/javascript" src="./app/components/admin/AdminUserController.js"></script>
     <script type="text/javascript" src="./app/components/admin/AdminLabController.js"></script>
     <script type="text/javascript" src="./app/components/registration/RegistrationController.js"></script>
     <script type="text/javascript" src="./app/components/registration/RegistrationDirectives.js"></script>
@@ -62,7 +62,7 @@
     <script type="text/javascript" src="./app/components/profile/PasswordController.js"></script>
     <script type="text/javascript" src="./app/components/forgot-password/ForgotPasswordController.js"></script>
     <script type="text/javascript" src="./app/components/forgot-password/ResetPasswordController.js"></script>
-    <script type="text/javascript" src="app/lab/MyLabController.js"></script>
+    <script type="text/javascript" src="app/components/lab/MyLabController.js"></script>
 
   </body>
 </html>

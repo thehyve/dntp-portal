@@ -18,36 +18,27 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeAlert();">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                {{alert.msg}}
+                {{alert.msg | translate}}
             </div>
 
-            <form class="form-horizontal" role="form" name="myLabEditForm" novalidate>
+
+            <form class="form-horizontal" role="form" name="myLabEditForm" novalidate ng-show="globals.currentUser.lab">
 
                 <input type="hidden" ng-model="editlab.contactData.id"/>
 
                 <!-- Number -->
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="labNumber">{{ 'Number' | translate }}</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="labNumber" placeholder="{{ 'Number' | translate }}"
-                               ng-model="editlab.number" ng-disabled="editlab.id">
+                    <label class="control-label col-sm-2">{{ 'Number' | translate }}</label>
+                    <div class="col-sm-6 ">
+                        <div class="controls readonly">{{editlab.number}}</div>
                     </div>
                 </div>
 
                 <!-- Name -->
-                <div class="form-group" ng-class="{ 'has-error' : (myLabEditForm.labName.$invalid ||
-                myLabEditForm.labName.$error.required) && myLabEditForm.labName.$dirty }">
-                    <label class="control-label col-sm-2" for="labName">{{ 'Name' | translate }}</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="labName" name="labName"
-                               placeholder="{{ 'Name' | translate }}"
-                               ng-model="editlab.name" ng-maxlength="50" required>
-                        <!-- errors -->
-                        <span class="help-block" ng-show="myLabEditForm.labName.$error.required &&
-                        myLabEditForm.labName.$dirty">{{ 'Required field' | translate }}</span>
-                        <span class="help-block" ng-show="myLabEditForm.labName.$error.maxlength">
-                            {{ 'Input value is too long' | translate }}
-                        </span>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">{{ 'Name' | translate }}</label>
+                    <div class="col-sm-6 ">
+                        <div class="controls readonly">{{editlab.name}}</div>
                     </div>
                 </div>
 

@@ -52,7 +52,7 @@ public class SecurityConfiguration extends
     }
 
     static final long MAX_FAILED_LOGIN_ATTEMPTS = 10;
-    static final long ACCOUNT_BLOCKING_PERIOD = 3600; // 900 seconds, 15 minutes
+    static final long ACCOUNT_BLOCKING_PERIOD = 3600; // 3600 seconds, 1h
 
     @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="User account blocked.")
     public class UserAccountBlocked extends LockedException {

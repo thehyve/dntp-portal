@@ -53,6 +53,9 @@
         }
         
         $scope.update = function(request) {
+            // FIXME: currently 'properties' is set to null,
+            // because of issues with deserialising by jackson in the
+            // spring controller.
             request.properties = null;
             request.$update(function(result) {
                 $scope.refresh(request, result);
@@ -142,6 +145,8 @@
                 $scope.viewRequestModal.hide();
             }
             $scope.request = request;
+            $scope.edit_comment = {};
+            $scope.comment_edit_visibility = {};
             if (request.returnDate == null) {
                 request.returnDate = new Date();
             }
@@ -175,25 +180,22 @@
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
                 request.properties.comments.unshift(result);
+                $scope.edit_comment = {};
             }, function(response) {
                 $scope.error = response.statusText;
             });
         }
         
-        $scope.edit_comment = {};
-        
-        $scope.comment_edit_visibility = {};
-        
-        $scope.editComment = function(comment) {
-            $scope.edit_comment = comment;
-        }
-        
         $scope.updateComment = function(request, body) {
             comment = new RequestComment(body);
+            // FIXME: currently 'creator' is set to null,
+            // because of issues with deserialising by jackson in the
+            // spring controller.
             comment.creator = null;
             comment.$update(function(result) {
-                $scope.request.properties.comments[$scope.request.properties.comments.indexOf(comment)]
-                    = result;
+                index = $scope.request.properties.comments.indexOf(body);
+                //console.log("Updating comment at index " + index);
+                $scope.request.properties.comments[index] = result;
                 $scope.comment_edit_visibility[comment.id] = 0;
             }, function(response) {
                 $scope.error = $scope.error + response.data.message + "\n";

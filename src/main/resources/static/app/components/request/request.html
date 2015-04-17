@@ -98,7 +98,7 @@
     <hr>
      
     <ul class="list-group">
-    <li class="list-group-item" ng-repeat="file in request.attachments" ng-if="file.id!=request.signedAgreementId">
+    <li class="list-group-item" ng-repeat="file in request.attachments">
         <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
     </li>
     </ul>
@@ -144,9 +144,6 @@
 
     <!-- Requester valid -->
     <div class="row">
-        <label class="control-label col-sm-2">
-        &nbsp;
-        </label>
         <div class="col-sm-8">
             <strong>Lab</strong>: {{request.lab.number}}. {{request.lab.name}}
             <br>
@@ -158,12 +155,22 @@
      <h4>{{'Signed agreement'|translate}}</h4>
      <hr>
      
-     <div ng-if="request.signedAgreementId">
-	       <span ng-repeat="file in request.attachments" ng-if="file.id==request.signedAgreementId">
-	             {{'Uploaded agreement:'|translate}}
-	             <a ng-href="/requests/{{request.processInstanceId}}/files/{{request.signedAgreementId}}">{{file.name}}</a>
-	       </span>
-     </div>
+    <!-- Agreement reached -->
+    <div class="row">
+        <label class="control-label col-sm-2">
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+            <span><i class="glyphicon {{request.agreementReached ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+           &nbsp; {{ 'Agreement has been reached.' | translate }}
+        </div>
+    </div>
+
+     <ul class="list-group">
+     <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
+         <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+     </li>
+     </ul>
     
      <br>
      

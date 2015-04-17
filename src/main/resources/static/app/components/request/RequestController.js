@@ -28,9 +28,11 @@
             }
         });
 
-        $scope.fileuploadsuccess = function(data) {
-            result = JSON.parse(data);
-            $scope.refresh($scope.request, result);
+        $scope.fileuploadsuccess = function(request, data) {
+            result = new Request(JSON.parse(data));
+            //$scope.refresh(request, result);
+            request.attachments = result.attachments;
+            request.agreementAttachments = result.agreementAttachments;
         };
 
         $scope.start = function() {
@@ -43,8 +45,9 @@
         };
 
         $scope.refresh = function(request, result) {
-            $scope.request = result;
+            console.log("Updating request at index: " + $scope.requests.indexOf(request));
             $scope.requests[$scope.requests.indexOf(request)] = result;
+            $scope.request = result;
         }
         
         $scope.update = function(request) {
@@ -55,6 +58,24 @@
                 $scope.error = $scope.error + response.data.message + "\n";
             });
         };
+
+        $scope.removeAgreementFile = function(f) {
+            bootbox.confirm("Are you sure you want to delete file " 
+                    +  f.name
+                    + "?", function(result) {
+                if (result) {
+                    attachment = new RequestAttachment();
+                    attachment.requestId = $scope.request.processInstanceId;
+                    attachment.id = f.id;
+                    attachment.$removeAgreementFile(function(result) {
+                        $scope.request.agreementAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
+                        bootbox.alert("File " + f.name + " deleted.");
+                    }, function(response) {
+                        $scope.error = response.statusText;
+                    });
+                }
+            });     
+        };        
         
         $scope.removeFile = function(f) {
             bootbox.confirm("Are you sure you want to delete file " 

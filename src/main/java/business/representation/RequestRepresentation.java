@@ -28,14 +28,15 @@ public class RequestRepresentation {
     private boolean limitedToCohort;
     private String contactPersonName;
 
-    private List<Attachment> attachments;
-    private String signedAgreementId;
+    private List<AttachmentRepresentation> attachments;
+    private List<AttachmentRepresentation> agreementAttachments;
     
     // Palga specific
     private boolean requesterValid;
     private boolean requesterAllowed;
     private boolean contactPersonAllowed;
     private boolean requesterLabValid;
+    private boolean agreementReached;
     
     public RequestRepresentation() {
         
@@ -209,20 +210,28 @@ public class RequestRepresentation {
         this.assigneeName = assigneeName;
     }
 
-    public List<Attachment> getAttachments() {
+    public List<AttachmentRepresentation> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<Attachment> attachments) {
+    public void setAttachments(List<AttachmentRepresentation> attachments) {
         this.attachments = attachments;
     }
 
-    public String getSignedAgreementId() {
-        return signedAgreementId;
+    public List<AttachmentRepresentation> getAgreementAttachments() {
+        return agreementAttachments;
     }
 
-    public void setSignedAgreementId(String signedAgreementId) {
-        this.signedAgreementId = signedAgreementId;
+    public void setAgreementAttachments(List<AttachmentRepresentation> agreementAttachments) {
+        this.agreementAttachments = agreementAttachments;
     }
-    
+
+    public boolean isAgreementReached() {
+        return agreementReached;
+    }
+
+    public void setAgreementReached(boolean agreementReached) {
+        this.agreementReached = agreementReached;
+    }
+ 
 }

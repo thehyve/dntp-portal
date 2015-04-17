@@ -38,7 +38,12 @@
         }, {
             remove : {
                 method : "DELETE"
+            },
+            removeAgreementFile : {
+                url : '/requests/:requestId/agreementFiles/:id',
+                method : "DELETE"
             }
+        
         });
     };
     RequestAttachmentFactory.$inject = [ '$resource' ];

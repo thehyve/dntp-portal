@@ -63,6 +63,7 @@
         <activiti:formProperty id="contact_person_is_allowed" name="Is the contact person allowed?" type="boolean" variable="is_contact_person_allowed" required="true"></activiti:formProperty>
         <activiti:formProperty id="requester_lab_is_valid" name="Is the requester lab valid?" type="boolean" variable="is_requester_lab_validated" required="true"></activiti:formProperty>
         <activiti:formProperty id="request_is_admissible" name="Is the request admissible?" type="boolean" variable="request_is_admissible" required="true"></activiti:formProperty>
+        <activiti:formProperty id="agreement_reached" name="Has agreement been reached?" type="boolean" variable="agreement_reached" required="true"></activiti:formProperty>
         </extensionElements>
     </userTask>
 

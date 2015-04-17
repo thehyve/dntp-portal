@@ -1,6 +1,6 @@
 (function(angular) {
 
-    var RequestController = function($rootScope, $scope, $modal, $location, Request, Task) {
+    var RequestController = function($rootScope, $scope, $modal, $location, Request, RequestAttachment, Task, FlowOptionService) {
         
         $scope.error = "";
         
@@ -9,6 +9,10 @@
         }
 
         console.log("globals: "+ JSON.stringify($rootScope.globals));
+        
+        $scope.flow_options = function(options) {
+            return FlowOptionService.get_default(options);
+        };
         
         Request.query().$promise.then(function(response) {
             $scope.requests = response ? response : [];
@@ -24,6 +28,13 @@
             }
         });
 
+        $scope.fileuploadsuccess = function(request, data) {
+            result = new Request(JSON.parse(data));
+            //$scope.refresh(request, result);
+            request.attachments = result.attachments;
+            request.agreementAttachments = result.agreementAttachments;
+        };
+
         $scope.start = function() {
             new Request().$save(function(request) {
                 $scope.requests.unshift(request);
@@ -33,23 +44,67 @@
             });
         };
 
+        $scope.refresh = function(request, result) {
+            console.log("Updating request at index: " + $scope.requests.indexOf(request));
+            $scope.requests[$scope.requests.indexOf(request)] = result;
+            $scope.request = result;
+        }
+        
         $scope.update = function(request) {
             request.$update(function(result) {
-                $scope.request = result;
+                $scope.refresh(request, result);
                 $scope.editRequestModal.hide();
             }, function(response) {
                 $scope.error = $scope.error + response.data.message + "\n";
             });
         };
-        
-        $scope.remove = function(user) {
-            bootbox.confirm("Are you sure you want to delete user " 
-                    +  $scope.getName(user)
+
+        $scope.removeAgreementFile = function(f) {
+            bootbox.confirm("Are you sure you want to delete file " 
+                    +  f.name
                     + "?", function(result) {
                 if (result) {
-                    user.$remove(function() {
-                        $scope.users.splice($scope.users.indexOf(user), 1);
-                        bootbox.alert("User " + $scope.getName(user) + " deleted.");
+                    attachment = new RequestAttachment();
+                    attachment.requestId = $scope.request.processInstanceId;
+                    attachment.id = f.id;
+                    attachment.$removeAgreementFile(function(result) {
+                        $scope.request.agreementAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
+                        bootbox.alert("File " + f.name + " deleted.");
+                    }, function(response) {
+                        $scope.error = response.statusText;
+                    });
+                }
+            });     
+        };        
+        
+        $scope.removeFile = function(f) {
+            bootbox.confirm("Are you sure you want to delete file " 
+                    +  f.name
+                    + "?", function(result) {
+                if (result) {
+                    attachment = new RequestAttachment();
+                    attachment.requestId = $scope.request.processInstanceId;
+                    attachment.id = f.id;
+                    attachment.$remove(function(result) {
+                        $scope.request.attachments.splice($scope.request.attachments.indexOf(f), 1);
+                        bootbox.alert("File " + f.name + " deleted.");
+                    }, function(response) {
+                        $scope.error = response.statusText;
+                    });
+                }
+            });     
+        };
+        
+        $scope.remove = function(request) {
+            bootbox.confirm("Are you sure you want to delete request " 
+                    +  request.processInstanceId
+                    + "?", function(result) {
+                if (result) {
+                    request.$remove(function(result) {
+                        $scope.requests.splice($scope.requests.indexOf(request), 1);
+                        bootbox.alert("Request " + request.processInstanceId + " deleted.");
+                    }, function(response) {
+                        $scope.error = response.statusText;
                     });
                 }
             });     
@@ -96,16 +151,16 @@
             $scope.opened = true;
         };
         
-        $scope.remove = function(request) {
-            request.$remove(function(result) {
-                $scope.requests.splice($scope.requests.indexOf(request), 1);
+        $scope.claim = function(request) {
+            request.$claim(function(result) {
+                $scope.requests[$scope.requests.indexOf(request)] = result;
             }, function(response) {
                 $scope.error = response.statusText;
             });
         }
 
-        $scope.claim = function(request) {
-            request.$claim(function(result) {
+        $scope.unclaim = function(request) {
+            request.$unclaim(function(result) {
                 $scope.requests[$scope.requests.indexOf(request)] = result;
             }, function(response) {
                 $scope.error = response.statusText;
@@ -122,7 +177,7 @@
         }
 
     };
-    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location', 'Request', 'Task' ];
+    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location', 'Request', 'RequestAttachment', 'Task', 'FlowOptionService' ];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);
 

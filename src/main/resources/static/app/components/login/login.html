@@ -4,7 +4,8 @@
     </div>
 
     <div class="alert alert-danger" ng-show="error">
-        {{'There was a problem logging in. Please try again.' | translate}}
+        {{'There was a problem logging in.' | translate}}
+        {{errormessage | translate}}
     </div>
 
     <form role="form" ng-submit="login()">

@@ -17,11 +17,37 @@
             claim : {
                 url : '/requests/:id/claim',
                 method : "PUT"
+            },
+            unclaim : {
+                url : '/requests/:id/unclaim',
+                method : "PUT"
+            },
+            removeFile : {
+                url : '/requests/:id/files',
+                method : "PUT"
             }
         });
     };
     RequestFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("Request", RequestFactory);
+    
+    RequestAttachmentFactory = function($resource) {
+        return $resource('/requests/:requestId/files/:id', {
+            requestId: '@requestId', 
+            id : '@id'
+        }, {
+            remove : {
+                method : "DELETE"
+            },
+            removeAgreementFile : {
+                url : '/requests/:requestId/agreementFiles/:id',
+                method : "DELETE"
+            }
+        
+        });
+    };
+    RequestAttachmentFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("RequestAttachment", RequestAttachmentFactory);
     
     var TaskFactory = function($resource) {
         return $resource('/tasks/:id', {

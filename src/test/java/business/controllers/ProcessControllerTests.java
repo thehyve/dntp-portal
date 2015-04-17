@@ -1,12 +1,7 @@
-package business;
+package business.controllers;
 
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
+import business.Application;
+import business.models.*;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,11 +18,10 @@ import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import business.models.Lab;
-import business.models.LabRepository;
-import business.models.Role;
-import business.models.User;
-import business.models.UserRepository;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class})

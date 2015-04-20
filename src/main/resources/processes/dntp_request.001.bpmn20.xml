@@ -58,6 +58,7 @@
         Review if the request is valid and admissible.
         </documentation>
         <extensionElements>
+        <activiti:formProperty id="assigned_date" name="Time when this task was assigned." type="date" variable="assigned_date" required="true"></activiti:formProperty>
         <activiti:formProperty id="requester_is_valid" name="Is the requester valid?" type="boolean" variable="is_requester_validated" required="true"></activiti:formProperty>
         <activiti:formProperty id="requester_is_allowed" name="Is the requester allowed?" type="boolean" variable="is_requester_allowed" required="true"></activiti:formProperty>
         <activiti:formProperty id="contact_person_is_allowed" name="Is the contact person allowed?" type="boolean" variable="is_contact_person_allowed" required="true"></activiti:formProperty>

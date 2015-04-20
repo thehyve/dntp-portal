@@ -161,6 +161,7 @@ public class RequestController {
                 }
                 request.setComments(comments);
             }
+            request.setDateAssigned((Date)variables.get("assigned_date"));
             request.setStatus((String)variables.get("status"));
             request.setTitle((String)variables.get("title"));
             request.setDescription((String)variables.get("description"));
@@ -402,6 +403,11 @@ public class RequestController {
         } else {
             taskService.delegateTask(task.getId(), user.getId().toString());
         }
+        Map<String, Object> variables = instance.getProcessVariables();
+        if (variables != null) {
+            variables.put("assigned_date", new Date());
+        }
+        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser().isPalga());
@@ -475,6 +481,7 @@ public class RequestController {
         return request;
     }
     
+    @Secured("hasPermission(#param, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadAgreementAttachment(UserAuthenticationToken user, @PathVariable String id, 
             @RequestParam("flowFilename") String name,
@@ -512,6 +519,7 @@ public class RequestController {
         return request;
     }
 
+    @Secured("hasPermission(#param, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeAgreementAttachment(UserAuthenticationToken user, @PathVariable String id, 
             @PathVariable String attachmentId) {

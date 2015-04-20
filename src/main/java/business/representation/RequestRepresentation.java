@@ -18,6 +18,7 @@ public class RequestRepresentation {
     private Lab lab;
     private String assignee;
     private String assigneeName;
+    private Date dateAssigned;
     
     private String title;
     private String description;
@@ -206,6 +207,14 @@ public class RequestRepresentation {
 
     public String getAssigneeName() {
         return assigneeName;
+    }
+    
+    public Date getDateAssigned() {
+        return dateAssigned;
+    }
+
+    public void setDateAssigned(Date dateAssigned) {
+        this.dateAssigned = dateAssigned;
     }
 
     public void setAssigneeName(String assigneeName) {

@@ -53,10 +53,6 @@
         }
         
         $scope.update = function(request) {
-            // FIXME: currently 'properties' is set to null,
-            // because of issues with deserialising by jackson in the
-            // spring controller.
-            request.properties = null;
             request.$update(function(result) {
                 $scope.refresh(request, result);
                 $scope.editRequestModal.hide();
@@ -179,7 +175,7 @@
             comment = new RequestComment(body);
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
-                request.properties.comments.unshift(result);
+                request.comments.unshift(result);
                 $scope.edit_comment = {};
             }, function(response) {
                 $scope.error = response.statusText;
@@ -188,14 +184,10 @@
         
         $scope.updateComment = function(request, body) {
             comment = new RequestComment(body);
-            // FIXME: currently 'creator' is set to null,
-            // because of issues with deserialising by jackson in the
-            // spring controller.
-            comment.creator = null;
             comment.$update(function(result) {
-                index = $scope.request.properties.comments.indexOf(body);
+                index = $scope.request.comments.indexOf(body);
                 //console.log("Updating comment at index " + index);
-                $scope.request.properties.comments[index] = result;
+                $scope.request.comments[index] = result;
                 $scope.comment_edit_visibility[comment.id] = 0;
             }, function(response) {
                 $scope.error = $scope.error + response.data.message + "\n";
@@ -204,8 +196,8 @@
         
         $scope.removeComment = function(comment) {
             new RequestComment(comment).$remove(function(result) {
-                $scope.request.properties.comments.splice(
-                        $scope.request.properties.comments.indexOf(comment), 1);
+                $scope.request.comments.splice(
+                        $scope.request.comments.indexOf(comment), 1);
             }, function(response) {
                 $scope.error = $scope.error + response.data.message + "\n";
             });

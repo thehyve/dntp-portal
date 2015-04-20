@@ -45,6 +45,7 @@ import business.models.RequestPropertiesRepository;
 import business.models.User;
 import business.models.UserRepository;
 import business.representation.AttachmentRepresentation;
+import business.representation.CommentRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 
@@ -152,9 +153,13 @@ public class RequestController {
                         requesterAttachments.add(new AttachmentRepresentation(attachment));
                     }
                 }
-                request.setProperties(properties);
                 request.setAttachments(requesterAttachments);
                 request.setAgreementAttachments(agreementAttachments);
+                List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
+                for (Comment comment: properties.getComments()) {
+                    comments.add(new CommentRepresentation(comment));
+                }
+                request.setComments(comments);
             }
             request.setStatus((String)variables.get("status"));
             request.setTitle((String)variables.get("title"));
@@ -576,62 +581,6 @@ public class RequestController {
             throw new InvalidActionInStatus();
         }
         taskService.deleteAttachment(attachmentId);
-    }
-    
-    @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
-    public Comment addComment(
-            UserAuthenticationToken user,
-            @PathVariable String id,
-            @RequestBody Comment body) {
-        log.info("POST /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
-        Comment comment = new Comment(id, user.getUser(), body.getContents());
-        comment = commentRepository.save(comment);
-        properties.addComment(comment);
-        requestPropertiesRepository.save(properties);
-        
-        return comment;
-    }
-
-    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.") 
-    public class UpdateNotAllowed extends RuntimeException {
-        private static final long serialVersionUID = 4000154580392628894L;
-        public UpdateNotAllowed() {
-            super("Update not allowed. Not the owner.");
-        }
-    }
-    
-    @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.PUT)
-    public Comment updateComment(
-            UserAuthenticationToken user,
-            @PathVariable String id,
-            @PathVariable Long commentId,
-            @RequestBody Comment body) {
-        log.info("PUT /requests/" + id + "/comments/" + commentId);
-        Comment comment = commentRepository.findOne(commentId);
-        if (!comment.getCreator().getId().equals(user.getUser().getId())) {
-            throw new UpdateNotAllowed();
-        }
-        comment.setContents(body.getContents());
-        comment.setTimeEdited(new Date());
-        comment = commentRepository.save(comment);
-        
-        return comment;
-    }
-    
-    @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.DELETE)
-    public void removeComment(
-            UserAuthenticationToken user,
-            @PathVariable String id,
-            @PathVariable Long commentId) {
-        log.info("PUT /requests/" + id + "/comments");
-        Comment comment = commentRepository.findOne(commentId);
-        if (!comment.getCreator().getId().equals(user.getUser().getId())) {
-            throw new UpdateNotAllowed();
-        }
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
-        properties.getComments().remove(comment);
-        requestPropertiesRepository.save(properties);
     }
     
 }

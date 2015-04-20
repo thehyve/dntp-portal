@@ -29,11 +29,9 @@ public class RequestRepresentation {
     private boolean limitedToCohort;
     private String contactPersonName;
 
-    @RestResource(exported = false)
-    private RequestProperties properties;
-    
     private List<AttachmentRepresentation> attachments;
     private List<AttachmentRepresentation> agreementAttachments;
+    private List<CommentRepresentation> comments;
     
     // Palga specific
     private boolean requesterValid;
@@ -214,14 +212,6 @@ public class RequestRepresentation {
         this.assigneeName = assigneeName;
     }
 
-    public RequestProperties getProperties() {
-        return properties;
-    }
-
-    public void setProperties(RequestProperties properties) {
-        this.properties = properties;
-    }
-
     public List<AttachmentRepresentation> getAttachments() {
         return attachments;
     }
@@ -244,6 +234,14 @@ public class RequestRepresentation {
 
     public void setAgreementReached(boolean agreementReached) {
         this.agreementReached = agreementReached;
+    }
+
+    public List<CommentRepresentation> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentRepresentation> comments) {
+        this.comments = comments;
     }
  
 }

@@ -254,7 +254,7 @@
     <hr>
 
     <ul class="list-group">
-    <li class="list-group-item" ng-repeat="comment in request.properties.comments">
+    <li class="list-group-item" ng-repeat="comment in request.comments">
         <p><div ng-show="!comment_edit_visibility[comment.id]">{{comment.contents}}</div>
             <div ng-show="comment_edit_visibility[comment.id]">
            <textarea id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"

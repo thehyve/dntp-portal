@@ -26,10 +26,10 @@
     };
     RequestFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("Request", RequestFactory);
-    
+
     RequestAttachmentFactory = function($resource) {
         return $resource('/requests/:requestId/files/:id', {
-            requestId: '@requestId', 
+            requestId: '@requestId',
             id : '@id'
         }, {
             remove : {
@@ -39,15 +39,15 @@
                 url : '/requests/:requestId/agreementFiles/:id',
                 method : "DELETE"
             }
-        
+
         });
     };
     RequestAttachmentFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("RequestAttachment", RequestAttachmentFactory);
-    
+
     RequestCommentFactory = function($resource) {
         return $resource('/requests/:processInstanceId/comments/:id', {
-            processInstanceId: '@processInstanceId', 
+            processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
             update : {
@@ -60,8 +60,8 @@
     };
     RequestCommentFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("RequestComment", RequestCommentFactory);
-    
-    
+
+
     var TaskFactory = function($resource) {
         return $resource('/tasks/:id', {
             id : '@id'
@@ -81,7 +81,7 @@
     };
     TaskFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("Task", TaskFactory);
-    
+
     var FormDataFactory = function($resource) {
         return $resource('/formdata/:id', {
             id : '@id'
@@ -112,5 +112,5 @@
     };
     FlowOptionService.$inject = [ '$cookies' ];
     angular.module("ProcessApp.services").factory("FlowOptionService", FlowOptionService);
-    
+
 }(angular));

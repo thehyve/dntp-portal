@@ -2,7 +2,7 @@
 
     var RequestController = function($rootScope, $scope, $modal, $location,
             Request, RequestAttachment, RequestComment,
-            FlowOptionService) {
+            FlowOptionService, $routeParams) {
 
         $scope.error = "";
 
@@ -11,6 +11,12 @@
         }
 
         console.log("globals: "+ JSON.stringify($rootScope.globals));
+
+        if ($routeParams.requestId) {
+            Request.get({id:$routeParams.requestId}, function (req) {
+                $scope.request = req;
+            });
+        }
 
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
@@ -50,7 +56,7 @@
             console.log("Updating request at index: " + $scope.requests.indexOf(request));
             $scope.requests[$scope.requests.indexOf(request)] = result;
             $scope.request = result;
-        }
+        };
 
         $scope.update = function(request) {
             request.$update(function(result) {
@@ -129,24 +135,26 @@
         }
 
         $scope.view = function(request) {
-            if ($scope.editRequestModal) {
-                $scope.editRequestModal.hide();
-            }
-            $scope.request = request;
-            $scope.viewRequestModal = $modal({scope: $scope, template: '/app/request/request.html'});
+            $location.path("/request/view/" + request.processInstanceId);
         };
 
         $scope.edit = function(request) {
             if ($scope.viewRequestModal) {
                 $scope.viewRequestModal.hide();
             }
-            $scope.request = request;
-            $scope.edit_comment = {};
-            $scope.comment_edit_visibility = {};
-            if (request.returnDate == null) {
-                request.returnDate = new Date();
+
+            if (request) {
+
+                Request.get({id:request.processInstanceId}, function (data) {
+                    $scope.request = data;
+                    $scope.edit_comment = {};
+                    $scope.comment_edit_visibility = {};
+                    if (data.returnDate == null) {
+                        data.returnDate = new Date();
+                    }
+                    $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html'});
+                });
             }
-            $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html'});
         };
 
         $scope.open = function($event) {
@@ -169,6 +177,10 @@
             }, function(response) {
                 $scope.error = response.statusText;
             });
+        };
+
+        $scope.focus = function (el) {
+            $(el).focus();
         }
 
         $scope.addComment = function(request, body) {
@@ -213,9 +225,10 @@
         }
 
     };
+
     RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location',
                                   'Request', 'RequestAttachment', 'RequestComment',
-                                  'FlowOptionService' ];
+                                  'FlowOptionService', '$routeParams'];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);
 

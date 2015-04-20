@@ -10,7 +10,8 @@
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
                                    "smart-table",
-                                   "ProcessApp.services", "ProcessApp.controllers",
+                                   "ProcessApp.services",
+                                   "ProcessApp.controllers",
                                    "ProcessApp.directives"])
         .config(function($routeProvider, $translateProvider) {
 
@@ -36,6 +37,12 @@
                 templateUrl : 'app/admin/user/users.html'
             }).when('/labs', {
                 templateUrl : 'app/admin/lab/labs.html'
+            }).when('/request/view/:requestId', {
+                templateUrl : 'app/request/request.html',
+                controller : 'RequestController'
+            }).when('/request/edit/:requestId', {
+                templateUrl : 'app/request/editrequest.html',
+                controller : 'RequestController'
             }).when('/my-lab', {
                 templateUrl : 'app/lab/my-lab.html',
                 controller : 'MyLabController'

@@ -111,3 +111,30 @@ body {
     border-radius: 50%;
 }
 
+/*Modal background opacity*/
+
+.modal-backdrop {
+    position:absolute !important;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:#000000;
+    opacity: 0.6;
+}
+
+.modal-content {
+    background-color: #f5f5f5;
+}
+
+.modal-body {
+    background-color: #FFFFFF;
+}
+
+
+.smart-table-selected {
+    background-color: #c8e5bc;
+}
+.smart-table-not-selected {
+    background-color: #ffffff;
+}

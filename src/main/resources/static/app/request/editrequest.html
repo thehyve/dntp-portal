@@ -249,6 +249,69 @@
         </div>
     </div>
 
+
+    <h4>{{'Comments'|translate}}</h4>
+    <hr>
+
+    <ul class="list-group">
+    <li class="list-group-item" ng-repeat="comment in request.comments">
+        <p><div ng-show="!comment_edit_visibility[comment.id]">{{comment.contents}}</div>
+            <div ng-show="comment_edit_visibility[comment.id]">
+           <textarea id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
+            ng-model="comment.contents">
+           </textarea>
+           <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+            ng-click="updateComment(request, comment)">
+            {{'Update comment'|translate}}
+            </button>
+            </div>
+        <span class="pull-right">
+        <span class="btn-group btn-group-xs">
+            <button class="btn btn-info" type="button" title="Edit"
+                ng-click="comment_edit_visibility[comment.id] = 1">
+                <span><i class="glyphicon glyphicon-pencil"></i></span>
+                </button>
+            <button class="btn btn-danger" type="button" title="Delete"
+                ng-click="removeComment(comment)">
+                <span><i class="glyphicon glyphicon-remove-circle"></i></span>
+            </button>
+        </span>
+        </span>
+        </p>
+        <p>
+        <small>
+        <span><i class="glyphicon glyphicon-user"></i></span>
+        <em>{{getName(comment.creator)}}</em>
+        &nbsp;
+        <span><i class="glyphicon glyphicon-time"></i></span>
+        <span>{{comment.timeCreated | date: 'EEE dd MMMM yyyy  HH:mm'}}</span>
+        <span ng-if="comment.timeEdited != comment.timeCreated">(Last edited: {{comment.timeEdited | date: 'EEE dd MMMM yyyy  HH:mm'}})</span>
+        </small>
+        </p>
+    </li>
+    </ul>
+
+    <!-- Add comment -->
+    <div class="form-group" ng-class="">
+        <div class="col-sm-8">
+           <input type="hidden" ng-model="edit_comment.processInstanceId" value="{{request.processInstanceId}}">
+           <textarea id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
+            ng-model="edit_comment.contents">
+           </textarea>
+           <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
+            ng-click="addComment(request, edit_comment)"
+            ng-if="!edit_comment.id">
+            {{'Add comment'|translate}}
+            </button>
+           <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+            ng-click="updateComment(request, edit_comment)"
+            ng-if="edit_comment.id">
+            {{'Update comment'|translate}}
+            </button>
+        </div>
+    </div>
+
+
     </div>
 
 </div>

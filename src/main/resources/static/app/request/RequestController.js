@@ -1,6 +1,8 @@
 (function(angular) {
 
-    var RequestController = function($rootScope, $scope, $modal, $location, Request, RequestAttachment, Task, FlowOptionService) {
+    var RequestController = function($rootScope, $scope, $modal, $location,
+            Request, RequestAttachment, RequestComment,
+            FlowOptionService) {
 
         $scope.error = "";
 
@@ -139,6 +141,8 @@
                 $scope.viewRequestModal.hide();
             }
             $scope.request = request;
+            $scope.edit_comment = {};
+            $scope.comment_edit_visibility = {};
             if (request.returnDate == null) {
                 request.returnDate = new Date();
             }
@@ -167,6 +171,38 @@
             });
         }
 
+        $scope.addComment = function(request, body) {
+            comment = new RequestComment(body);
+            comment.processInstanceId = request.processInstanceId;
+            comment.$save(function(result) {
+                request.comments.unshift(result);
+                $scope.edit_comment = {};
+            }, function(response) {
+                $scope.error = response.statusText;
+            });
+        }
+
+        $scope.updateComment = function(request, body) {
+            comment = new RequestComment(body);
+            comment.$update(function(result) {
+                index = $scope.request.comments.indexOf(body);
+                //console.log("Updating comment at index " + index);
+                $scope.request.comments[index] = result;
+                $scope.comment_edit_visibility[comment.id] = 0;
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        };
+
+        $scope.removeComment = function(comment) {
+            new RequestComment(comment).$remove(function(result) {
+                $scope.request.comments.splice(
+                        $scope.request.comments.indexOf(comment), 1);
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        };
+
         $scope.getName = function(user) {
             if (user == null) {
                 return "";
@@ -177,7 +213,9 @@
         }
 
     };
-    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location', 'Request', 'RequestAttachment', 'Task', 'FlowOptionService' ];
+    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location',
+                                  'Request', 'RequestAttachment', 'RequestComment',
+                                  'FlowOptionService' ];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);
 

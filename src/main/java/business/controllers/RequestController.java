@@ -38,11 +38,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import business.models.Comment;
+import business.models.CommentRepository;
 import business.models.RequestProperties;
 import business.models.RequestPropertiesRepository;
 import business.models.User;
 import business.models.UserRepository;
 import business.representation.AttachmentRepresentation;
+import business.representation.CommentRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 
@@ -74,6 +77,9 @@ public class RequestController {
     
     @Autowired
     private RequestPropertiesRepository requestPropertiesRepository;
+    
+    @Autowired
+    private CommentRepository commentRepository;
 
     private boolean fetchBooleanVariable(String name, Map<String,Object> variables) {
         if (variables.get(name) != null) {
@@ -122,7 +128,7 @@ public class RequestController {
                         } 
                     } 
                 }
-                List<Attachment> attachments = taskService.getTaskAttachments(task.getId()); 
+                List<Attachment> attachments = new ArrayList<Attachment>(); //taskService.getTaskAttachments(task.getId()); 
                 List<HistoricTaskInstance> historicTasks = getHistoricTasksByRequestId(instance.getProcessInstanceId());
                 for (HistoricTaskInstance historicTask: historicTasks) {
                     List<Attachment> historicAttachments = taskService.getTaskAttachments(historicTask.getId());
@@ -142,13 +148,20 @@ public class RequestController {
                         }
                     }
                 } else {
+                    properties = new RequestProperties();
                     for (Attachment attachment: attachments) {
                         requesterAttachments.add(new AttachmentRepresentation(attachment));
                     }
                 }
                 request.setAttachments(requesterAttachments);
                 request.setAgreementAttachments(agreementAttachments);
+                List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
+                for (Comment comment: properties.getComments()) {
+                    comments.add(new CommentRepresentation(comment));
+                }
+                request.setComments(comments);
             }
+            request.setDateAssigned((Date)variables.get("assigned_date"));
             request.setStatus((String)variables.get("status"));
             request.setTitle((String)variables.get("title"));
             request.setDescription((String)variables.get("description"));
@@ -390,6 +403,11 @@ public class RequestController {
         } else {
             taskService.delegateTask(task.getId(), user.getId().toString());
         }
+        Map<String, Object> variables = instance.getProcessVariables();
+        if (variables != null) {
+            variables.put("assigned_date", new Date());
+        }
+        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser().isPalga());
@@ -463,6 +481,7 @@ public class RequestController {
         return request;
     }
     
+    @Secured("hasPermission(#param, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadAgreementAttachment(UserAuthenticationToken user, @PathVariable String id, 
             @RequestParam("flowFilename") String name,
@@ -500,6 +519,7 @@ public class RequestController {
         return request;
     }
 
+    @Secured("hasPermission(#param, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeAgreementAttachment(UserAuthenticationToken user, @PathVariable String id, 
             @PathVariable String attachmentId) {
@@ -569,6 +589,6 @@ public class RequestController {
             throw new InvalidActionInStatus();
         }
         taskService.deleteAttachment(attachmentId);
-    }      
+    }
     
 }

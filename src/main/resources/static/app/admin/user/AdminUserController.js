@@ -106,7 +106,7 @@ angular.module('ProcessApp.controllers')
             $scope.edit = function(usr) {
                 $scope.edituser = usr;
                 $scope.editerror = "";
-                $scope.editUserModal = $modal({scope: $scope, template: '/app/admin/edituser.html'});
+                $scope.editUserModal = $modal({scope: $scope, template: '/app/admin/user/edituser.html'});
             }
 
 

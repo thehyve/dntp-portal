@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css" />
+
+      <!-- bower:css -->
+      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+      <!-- endbower -->
+
     <link rel="stylesheet" href="./index.css" />
-    <link rel="stylesheet" href="app/dashboard/dashboard.css" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -31,38 +34,45 @@
     <!-- Footer -->
     <div ng-include="'app/components/footer/footer.html'"></div>
 
-    <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="./bower_components/angular/angular.min.js"></script>
-    <script type="text/javascript" src="./bower_components/angular-resource/angular-resource.min.js"></script>
-    <script type="text/javascript" src="./bower_components/angular-route/angular-route.min.js"></script>
-    <script type="text/javascript" src="./bower_components/angular-cookies/angular-cookies.min.js"></script>
-    <script type="text/javascript" src="./bower_components/ng-flow/dist/ng-flow-standalone.min.js"></script>
-    <script type="text/javascript" src="./bower_components/lodash/dist/lodash.min.js"></script>
-    <script type="text/javascript" src="./bower_components/restangular/dist/restangular.min.js"></script>
-    <script type="text/javascript" src="./bower_components/angular-smart-table/dist/smart-table.min.js"></script>
-    <script type="text/javascript" src="./bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
-    <script type="text/javascript" src="./messages/messages_en.js"></script>
-    <script type="text/javascript" src="./messages/messages_nl.js"></script>
-    <script type="text/javascript" src="./bower_components/angular-translate/angular-translate.min.js"></script>
-    <script type="text/javascript" src="./bower_components/angular-strap/dist/angular-strap.min.js"></script>
-    <script type="text/javascript" src="./bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
-    <script type="text/javascript" src="./bower_components/bootbox/bootbox.js"></script>
-    <script type="text/javascript" src="./app/processapp.js"></script>
-    <script type="text/javascript" src="app/components/navbar/NavigationController.js"></script>
-    <script type="text/javascript" src="app/login/LoginController.js"></script>
-    <script type="text/javascript" src="app/request/RequestServices.js"></script>
-    <script type="text/javascript" src="app/request/RequestController.js"></script>
-    <script type="text/javascript" src="app/admin/AdminServices.js"></script>
-    <script type="text/javascript" src="app/admin/AdminUserController.js"></script>
-    <script type="text/javascript" src="app/admin/AdminLabController.js"></script>
-    <script type="text/javascript" src="app/registration/RegistrationController.js"></script>
-    <script type="text/javascript" src="app/registration/RegistrationDirectives.js"></script>
-    <script type="text/javascript" src="app/profile/ProfileController.js"></script>
-    <script type="text/javascript" src="app/profile/PasswordController.js"></script>
-    <script type="text/javascript" src="app/forgot-password/ForgotPasswordController.js"></script>
-    <script type="text/javascript" src="app/forgot-password/ResetPasswordController.js"></script>
-    <script type="text/javascript" src="app/lab/MyLabController.js"></script>
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-translate/angular-translate.js"></script>
+  <script src="bower_components/restangular/dist/restangular.js"></script>
+  <script src="bower_components/flow.js/dist/flow.js"></script>
+  <script src="bower_components/ng-flow/dist/ng-flow.js"></script>
+  <script src="bower_components/fusty-flow.js/src/fusty-flow.js"></script>
+  <script src="bower_components/fusty-flow.js/src/fusty-flow-factory.js"></script>
+  <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
+  <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+  <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+  <script src="bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
+  <script src="bower_components/bootbox/bootbox.js"></script>
+  <!-- endbower -->
+
+  <script type="text/javascript" src="app/processapp.js"></script>
+  <script type="text/javascript" src="messages/messages_en.js"></script>
+  <script type="text/javascript" src="messages/messages_nl.js"></script>
+  <script type="text/javascript" src="app/components/navbar/NavigationController.js"></script>
+  <script type="text/javascript" src="app/login/LoginController.js"></script>
+  <script type="text/javascript" src="app/request/RequestServices.js"></script>
+  <script type="text/javascript" src="app/request/RequestController.js"></script>
+  <script type="text/javascript" src="app/admin/AdminServices.js"></script>
+  <script type="text/javascript" src="app/admin/user/AdminUserController.js"></script>
+  <script type="text/javascript" src="app/admin/lab/AdminLabController.js"></script>
+  <script type="text/javascript" src="app/registration/RegistrationController.js"></script>
+  <script type="text/javascript" src="app/registration/RegistrationDirectives.js"></script>
+  <script type="text/javascript" src="app/profile/ProfileController.js"></script>
+  <script type="text/javascript" src="app/profile/PasswordController.js"></script>
+  <script type="text/javascript" src="app/forgot-password/ForgotPasswordController.js"></script>
+  <script type="text/javascript" src="app/forgot-password/ResetPasswordController.js"></script>
+  <script type="text/javascript" src="app/lab/MyLabController.js"></script>
+
 
   </body>
 </html>

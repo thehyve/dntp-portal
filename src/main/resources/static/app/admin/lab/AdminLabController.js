@@ -68,6 +68,6 @@ angular.module('ProcessApp.controllers')
 
             $scope.edit = function(lb) {
                 $scope.editlab = lb;
-                $scope.editLabModal = $modal({scope: $scope, template: '/app/admin/editlab.html'});
+                $scope.editLabModal = $modal({scope: $scope, template: '/app/admin/lab/editlab.html'});
             };
         }]);

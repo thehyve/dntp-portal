@@ -44,9 +44,10 @@
                         <th>#</th>
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
-                        <th st-sort="getters.dateCreated">{{'Created Date'|translate}}</th>
+                        <th st-sort="dateCreated">{{'Created Date'|translate}}</th>
                         <th ng-if="roles.indexOf('palga') != -1"  st-sort="requesterName">{{'Requester'|translate}}</th>
                         <th ng-if="roles.indexOf('palga') != -1" st-sort="assigneeName">{{'Assignee'|translate}}</th>
+                        <th ng-if="roles.indexOf('palga') != -1" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
                         <th>{{'Actions'|translate}}</th>
                     </tr>
                     <tr>
@@ -56,6 +57,7 @@
                         <th>&nbsp;</th>
                         <th><input st-search="requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="assigneeName" placeholder="Filter by Assignee" class="input-sm form-control" type="search"/></th>
+                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>
                     <tr>
@@ -71,6 +73,9 @@
                         <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
                         <td ng-if="roles.indexOf('palga') != -1" >{{req.requesterName}}</td>
                         <td ng-if="roles.indexOf('palga') != -1" >{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
+                        <td ng-if="roles.indexOf('palga') != -1" >
+                            <small>{{req.dateAssigned | date: 'EEE dd MMMM yyyy  H:mm'}}</small>
+                        </td>
                         <td>
                         <span class="pull-right">
                         <span class="btn-group">
@@ -103,7 +108,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7" class="text-center">
+                            <td colspan="8" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                             </td>
                         </tr>

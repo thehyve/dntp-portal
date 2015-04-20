@@ -3,9 +3,10 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 
-import org.activiti.engine.task.Attachment;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import business.models.Lab;
+import business.models.RequestProperties;
 
 public class RequestRepresentation {
 
@@ -17,6 +18,7 @@ public class RequestRepresentation {
     private Lab lab;
     private String assignee;
     private String assigneeName;
+    private Date dateAssigned;
     
     private String title;
     private String description;
@@ -30,6 +32,7 @@ public class RequestRepresentation {
 
     private List<AttachmentRepresentation> attachments;
     private List<AttachmentRepresentation> agreementAttachments;
+    private List<CommentRepresentation> comments;
     
     // Palga specific
     private boolean requesterValid;
@@ -205,6 +208,14 @@ public class RequestRepresentation {
     public String getAssigneeName() {
         return assigneeName;
     }
+    
+    public Date getDateAssigned() {
+        return dateAssigned;
+    }
+
+    public void setDateAssigned(Date dateAssigned) {
+        this.dateAssigned = dateAssigned;
+    }
 
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
@@ -232,6 +243,14 @@ public class RequestRepresentation {
 
     public void setAgreementReached(boolean agreementReached) {
         this.agreementReached = agreementReached;
+    }
+
+    public List<CommentRepresentation> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentRepresentation> comments) {
+        this.comments = comments;
     }
  
 }

@@ -5,50 +5,50 @@
     <h3 class="modal-title">Request</h3>
 </div>
 <div class="modal-body">
-	
-	 <!-- Title -->
-	 <div class="row">
-	     <label class="control-label col-sm-2">{{ 'Title' | translate }}</label>
-	     <p class="col-sm-8">
-	         {{request.title}}
-	     </p>
-	 </div>
-	
-	 <!-- Description -->
-	 <div class="row">
-	     <label class="control-label col-sm-2">{{ 'Description' | translate }}</label>
-	     <div class="col-sm-8">
-	         {{request.description}}
-	     </div>
-	 </div>
-	
-	 <!-- Motivation -->
-	 <div class="row">
-	     <label class="control-label col-sm-2">{{ 'Motivation' | translate }}</label>
-	     <div class="col-sm-8">
-	         {{request.motivation}}
-	     </div>
-	 </div>
 
-	 <!-- Is statistics request -->
-	 <div class="row">
-	     <label class="control-label col-sm-2">
-	         &nbsp;
-	     </label>
-	
-	     <div class="col-sm-8">
-	           <span><i class="glyphicon {{request.statisticsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+     <!-- Title -->
+     <div class="row">
+         <label class="control-label col-sm-2">{{ 'Title' | translate }}</label>
+         <p class="col-sm-8">
+             {{request.title}}
+         </p>
+     </div>
+
+     <!-- Description -->
+     <div class="row">
+         <label class="control-label col-sm-2">{{ 'Description' | translate }}</label>
+         <div class="col-sm-8">
+             {{request.description}}
+         </div>
+     </div>
+
+     <!-- Motivation -->
+     <div class="row">
+         <label class="control-label col-sm-2">{{ 'Motivation' | translate }}</label>
+         <div class="col-sm-8">
+             {{request.motivation}}
+         </div>
+     </div>
+
+     <!-- Is statistics request -->
+     <div class="row">
+         <label class="control-label col-sm-2">
+             &nbsp;
+         </label>
+
+         <div class="col-sm-8">
+               <span><i class="glyphicon {{request.statisticsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                  &nbsp; {{ 'Request for information (statistics or Palga excerpts).' |
-	         translate }}
-	     </div>
-	 </div>
+             translate }}
+         </div>
+     </div>
 
      <!-- Is PA report request -->
      <div class="row">
          <label class="control-label col-sm-2">
              &nbsp;
          </label>
-    
+
          <div class="col-sm-8">
              <span><i class="glyphicon {{request.paReportRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
               &nbsp; {{ 'Request for PA reports (intermediate procedure).' |
@@ -56,69 +56,69 @@
          </div>
      </div>
 
-	  <!-- Is PA materials request -->
-	  <div class="row">
-	      <label class="control-label col-sm-2">
-	          &nbsp;
-	      </label>
-	      <div class="col-sm-8">
-	      <span><i class="glyphicon {{request.materialsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-	           &nbsp; {{ 'Request for samples (ffpe/coupus) (intermediate procedure).' |
-	          translate }}
-	      </div>
+      <!-- Is PA materials request -->
+      <div class="row">
+          <label class="control-label col-sm-2">
+              &nbsp;
+          </label>
+          <div class="col-sm-8">
+          <span><i class="glyphicon {{request.materialsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+               &nbsp; {{ 'Request for samples (ffpe/coupus) (intermediate procedure).' |
+              translate }}
+          </div>
       </div>
       <div class="row">
-		<label class="control-label col-sm-2">
-		&nbsp;
-		</label>
-	      <div class="col-sm-8" ng-show="request.materialsRequest">
-	           <label class="control-label" for="returnDate">
-	               <span><i class="glyphicon glyphicon-calendar"></i></span>
+        <label class="control-label col-sm-2">
+        &nbsp;
+        </label>
+          <div class="col-sm-8" ng-show="request.materialsRequest">
+               <label class="control-label" for="returnDate">
+                   <span><i class="glyphicon glyphicon-calendar"></i></span>
                    &nbsp; {{'Return date'|translate}}:
                 </label>
                 {{request.returnDate | date: 'EEE dd MMMM yyyy'}}
                 <br>
           </div>
-	  </div>
+      </div>
 
      <!-- Is request limited to cohort-->
      <div class="row">
          <label class="control-label col-sm-2">
              &nbsp;
          </label>
-    
+
          <div class="col-sm-8">
          <span><i class="glyphicon {{request.limitedToCohort ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
               &nbsp; {{ 'The request is limited to a specific cohort.' |
              translate }}
          </div>
      </div>
-     
+
     <h4>{{ 'Attachments' | translate }}</h4>
     <hr>
-     
+
     <ul class="list-group">
     <li class="list-group-item" ng-repeat="file in request.attachments">
         <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
     </li>
     </ul>
-     
-     
+
+
     <div ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
-    
+
     <h4>{{'Checks by Palga'|translate}}</h4>
     <hr>
-     
-	<!-- Requester valid -->
+
+    <!-- Requester valid -->
     <div class="row">
         <label class="control-label col-sm-2">
-	    &nbsp;
-	    </label>
-		<div class="col-sm-8">
-		<span><i class="glyphicon {{request.requesterValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-	        &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
-	    </div>
-	</div>
+        &nbsp;
+        </label>
+        <div class="col-sm-8">
+        <span><i class="glyphicon {{request.requesterValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+            &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
+        </div>
+    </div>
 
     <!-- Requester allowed -->
     <div class="row">
@@ -151,10 +151,10 @@
             &nbsp; {{ 'The requester is indeed associated with the lab.' | translate }}
         </div>
     </div>
-    
+
      <h4>{{'Signed agreement'|translate}}</h4>
      <hr>
-     
+
     <!-- Agreement reached -->
     <div class="row">
         <label class="control-label col-sm-2">
@@ -171,9 +171,9 @@
          <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
      </li>
      </ul>
-    
+
      <br>
-     
+
     <h4>{{'Comments'|translate}}</h4>
     <hr>
 
@@ -194,12 +194,12 @@
         </p>
     </li>
     </ul>
-     
+
      </div>
 
 </div>
 <div class="modal-footer">
-    <button type="button" 
+    <button type="button"
         class="btn btn-warning"
         ng-if="roles.indexOf('palga') == -1"
         ng-disabled="request.status != 'Open'"

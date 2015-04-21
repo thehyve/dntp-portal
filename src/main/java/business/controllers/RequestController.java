@@ -133,12 +133,12 @@ public class RequestController {
                         }
                     }
 
-                    request.setDateAssigned((Date)variables.get("assigned_date"));
-                    request.setStatus((String)variables.get("status"));
-                    request.setTitle((String)variables.get("title"));
-                    request.setDescription((String)variables.get("description"));
-                    request.setMotivation((String)variables.get("motivation"));
+                    request.setDateAssigned((Date) variables.get("assigned_date"));
                 }
+                request.setStatus((String)variables.get("status"));
+                request.setTitle((String)variables.get("title"));
+                request.setDescription((String)variables.get("description"));
+                request.setMotivation((String)variables.get("motivation"));
             }
         }
     }

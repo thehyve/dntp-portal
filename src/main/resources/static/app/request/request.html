@@ -16,11 +16,12 @@
             <hr>
 
             <div style="padding-bottom: 25px;">
-                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit">
+                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit"
+                        ng-hide="(request.status != 'Open' && globals.currentUser.roles.indexOf('palga') == -1) || (globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Edit' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="focus('#commentText');" title="Comment">
+                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1"  class="btn btn-default" type="button"  ng-click="focus('#commentText');" title="Comment">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Comment' | translate}}
                 </button>
@@ -32,7 +33,8 @@
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="remove(request)" title="Claim">
+                <button class="btn btn-default" type="button"  ng-click="remove(request)" title="Claim"
+                        ng-hide="(request.status != 'Open' && globals.currentUser.roles.indexOf('palga') == -1) || (globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid)">
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                     {{'Delete' | translate}}
                 </button>

@@ -8,6 +8,8 @@ messages_nl =
     'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
     'Loading': 'Laden',
     'Passwords must be at least 8 characters long': 'Wachtwoorden moeten minstens 8 tekens lang zijn',
+    'No lab associated with lab user.' : 'Dit user heeft geen lab.',
+
 
     /* ========= */
     /* Request status */

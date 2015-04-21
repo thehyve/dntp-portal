@@ -56,7 +56,8 @@ angular.module('ProcessApp.controllers')
                                 username: $rootScope.username,
                                 credentials: $scope.credentials,
                                 roles: $rootScope.roles,
-                                features : []
+                                features : [],
+                                lab : null
                             }
                         };
 

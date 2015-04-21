@@ -1,21 +1,27 @@
 (function(angular) {
 
-    var RequestController = function($rootScope, $scope, $modal, $location, 
-            Request, RequestAttachment, RequestComment, 
-            FlowOptionService) {
-        
+    var RequestController = function($rootScope, $scope, $modal, $location,
+            Request, RequestAttachment, RequestComment,
+            FlowOptionService, $routeParams) {
+
         $scope.error = "";
-        
+
         $scope.login = function() {
             $location.path("/login");
         }
 
         console.log("globals: "+ JSON.stringify($rootScope.globals));
-        
+
+        if ($routeParams.requestId) {
+            Request.get({id:$routeParams.requestId}, function (req) {
+                $scope.request = req;
+            });
+        }
+
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
         };
-        
+
         Request.query().$promise.then(function(response) {
             $scope.requests = response ? response : [];
             $scope.displayedCollection = [].concat($scope.requests);
@@ -50,8 +56,8 @@
             console.log("Updating request at index: " + $scope.requests.indexOf(request));
             $scope.requests[$scope.requests.indexOf(request)] = result;
             $scope.request = result;
-        }
-        
+        };
+
         $scope.update = function(request) {
             request.$update(function(result) {
                 $scope.refresh(request, result);
@@ -62,7 +68,7 @@
         };
 
         $scope.removeAgreementFile = function(f) {
-            bootbox.confirm("Are you sure you want to delete file " 
+            bootbox.confirm("Are you sure you want to delete file "
                     +  f.name
                     + "?", function(result) {
                 if (result) {
@@ -76,11 +82,11 @@
                         $scope.error = response.statusText;
                     });
                 }
-            });     
-        };        
-        
+            });
+        };
+
         $scope.removeFile = function(f) {
-            bootbox.confirm("Are you sure you want to delete file " 
+            bootbox.confirm("Are you sure you want to delete file "
                     +  f.name
                     + "?", function(result) {
                 if (result) {
@@ -94,11 +100,11 @@
                         $scope.error = response.statusText;
                     });
                 }
-            });     
+            });
         };
-        
+
         $scope.remove = function(request) {
-            bootbox.confirm("Are you sure you want to delete request " 
+            bootbox.confirm("Are you sure you want to delete request "
                     +  request.processInstanceId
                     + "?", function(result) {
                 if (result) {
@@ -109,13 +115,13 @@
                         $scope.error = response.statusText;
                     });
                 }
-            });     
+            });
         };
-        
+
         $scope.submitRequest = function(request) {
             bootbox.confirm(
                 "Are you sure you want to submit the request?\n "
-                + "After submission the request cannot be edited anymore.", 
+                + "After submission the request cannot be edited anymore.",
                 function(confirmed) {
                     if (confirmed) {
                         request.$submit(function(result) {
@@ -129,32 +135,34 @@
         }
 
         $scope.view = function(request) {
-            if ($scope.editRequestModal) {
-                $scope.editRequestModal.hide();
-            }
-            $scope.request = request;
-            $scope.viewRequestModal = $modal({scope: $scope, template: '/app/components/request/request.html'});
+            $location.path("/request/view/" + request.processInstanceId);
         };
-       
+
         $scope.edit = function(request) {
             if ($scope.viewRequestModal) {
                 $scope.viewRequestModal.hide();
             }
-            $scope.request = request;
-            $scope.edit_comment = {};
-            $scope.comment_edit_visibility = {};
-            if (request.returnDate == null) {
-                request.returnDate = new Date();
+
+            if (request) {
+
+                Request.get({id:request.processInstanceId}, function (data) {
+                    $scope.request = data;
+                    $scope.edit_comment = {};
+                    $scope.comment_edit_visibility = {};
+                    if (data.returnDate == null) {
+                        data.returnDate = new Date();
+                    }
+                    $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html'});
+                });
             }
-            $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/components/request/editrequest.html'});
         };
-        
+
         $scope.open = function($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
         };
-        
+
         $scope.claim = function(request) {
             request.$claim(function(result) {
                 $scope.requests[$scope.requests.indexOf(request)] = result;
@@ -169,6 +177,10 @@
             }, function(response) {
                 $scope.error = response.statusText;
             });
+        };
+
+        $scope.focus = function (el) {
+            $(el).focus();
         }
 
         $scope.addComment = function(request, body) {
@@ -181,7 +193,7 @@
                 $scope.error = response.statusText;
             });
         }
-        
+
         $scope.updateComment = function(request, body) {
             comment = new RequestComment(body);
             comment.$update(function(result) {
@@ -193,7 +205,7 @@
                 $scope.error = $scope.error + response.data.message + "\n";
             });
         };
-        
+
         $scope.removeComment = function(comment) {
             new RequestComment(comment).$remove(function(result) {
                 $scope.request.comments.splice(
@@ -202,20 +214,21 @@
                 $scope.error = $scope.error + response.data.message + "\n";
             });
         };
-        
+
         $scope.getName = function(user) {
             if (user == null) {
                 return "";
             }
-            return user.firstName 
-                + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ") 
+            return user.firstName
+                + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ")
                 + (user.lastName==null ? "" : user.lastName);
         }
 
     };
-    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location', 
-                                  'Request', 'RequestAttachment', 'RequestComment', 
-                                  'FlowOptionService' ];
+
+    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location',
+                                  'Request', 'RequestAttachment', 'RequestComment',
+                                  'FlowOptionService', '$routeParams'];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);
 
@@ -235,7 +248,7 @@
                 task.completed = true;
             });
         };
-        
+
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
         };

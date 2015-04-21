@@ -62,11 +62,11 @@
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="email" name="email" placeholder="{{ 'E-mail' | translate }}"
                 ng-model="edituser.contactData.email" required>
-	            <!-- errors -->
-	            <span ng-show="registrationForm.email.$error.required"
-	                  class="help-block">
-	                {{ 'Required field' | translate }}
-	            </span>
+                <!-- errors -->
+                <span ng-show="registrationForm.email.$error.required"
+                      class="help-block">
+                    {{ 'Required field' | translate }}
+                </span>
             </div>
         </div>
 
@@ -124,14 +124,14 @@
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="institute" name="institute" placeholder="{{ 'Institute' | translate }}"
                 ng-model="edituser.institute" required>
-	            <!-- errors -->
-	            <span ng-show="registrationForm.institute.$error.required"
-	                  class="help-block">
-	                {{ 'Required field' | translate }}
-	            </span>
+                <!-- errors -->
+                <span ng-show="registrationForm.institute.$error.required"
+                      class="help-block">
+                    {{ 'Required field' | translate }}
+                </span>
             </div>
         </div>
-        
+
         <!-- Lab -->
         <div class="form-group" ng-if="edituser.currentRole == 'lab_user'">
             <label class="control-label col-sm-4" for="lab">{{ 'Lab' | translate }}</label>
@@ -140,20 +140,20 @@
                     <option value="" ng-selected="edituser.labId==''">None</option>
                     <option ng-disabled="!lab.active" ng-repeat="lab in labs" value="{{lab.id}}"  ng-selected="edituser.labId==lab.id">{{lab.name}}</option>
                 </select>
-	            <!-- errors -->
-	            <span ng-show="registrationForm.lab.$error.required"
-	                  class="help-block">
-	                {{ 'Required field' | translate }}
-	            </span>
+                <!-- errors -->
+                <span ng-show="registrationForm.lab.$error.required"
+                      class="help-block">
+                    {{ 'Required field' | translate }}
+                </span>
             </div>
         </div>
-        
+
 
         <!-- Specialism -->
         <div class="form-group">
             <label class="control-label col-sm-4" for="specialism">{{ 'Specialism' | translate }}</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="specialism" placeholder="{{ 'Specialism' | translate }}" 
+                <input type="text" class="form-control" id="specialism" placeholder="{{ 'Specialism' | translate }}"
                 ng-model="edituser.specialism">
             </div>
         </div>
@@ -176,7 +176,7 @@
                     <option ng-disabled="!lab.active" ng-repeat="lab in labs" value="{{lab.id}}"  ng-selected="edituser.labId==lab.id">{{lab.name}}</option>
                 </select>
             </div>
-            
+
         </div>
         <br>
 </div>

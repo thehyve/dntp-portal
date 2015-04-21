@@ -12,7 +12,7 @@
         <div id="navbar" class="navbar-collapse collapse">
 
             <ul ng-if="authenticated" class="nav navbar-nav" >
-                <li ng-show="isViewRequestsAllowed();" class="{{$route.current.templateUrl=='dashboard/workflow.html' ? 'active': ''}}">
+                <li ng-show="isViewRequestsAllowed();" class="{{$route.current.templateUrl=='request/workflow.html' ? 'active': ''}}">
                     <a href="#/">{{'Requests'|translate}}</a>
                 </li>
                 <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">

@@ -70,7 +70,7 @@
             deactivate : {
                 url : '/admin/labs/:id/deactivate',
                 method : "PUT"
-            },
+            }
         });
     };
 
@@ -86,7 +86,7 @@
             }
         });
     };
-    
+
     UserFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("User", UserFactory);
 
@@ -94,12 +94,12 @@
     angular.module("ProcessApp.services").factory("Role", RoleFactory);
 
     UserRoleFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("UserRole", UserRoleFactory);    
+    angular.module("ProcessApp.services").factory("UserRole", UserRoleFactory);
 
     LabFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Lab", LabFactory);    
+    angular.module("ProcessApp.services").factory("Lab", LabFactory);
 
     InstituteFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Institute", InstituteFactory);    
+    angular.module("ProcessApp.services").factory("Institute", InstituteFactory);
 
 }(angular));

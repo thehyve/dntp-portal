@@ -41,14 +41,13 @@ public class SecurityConfiguration extends
 
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
-        LogFactory.getLog(getClass()).info("INIT AUTH!!!");
+        LogFactory.getLog(getClass()).info("INIT AUTH.");
         //auth.inMemoryAuthentication().withUser("user").password("password")
         //        .roles("USER").and().withUser("admin").password("password")
         //        .roles("USER", "ADMIN");
         auth.userDetailsService(userDetailsService())
         .and()
         .authenticationProvider(authenticationProvider());
-        LogFactory.getLog(getClass()).info("INIT AUTH DONE!!!");
     }
 
     static final long MAX_FAILED_LOGIN_ATTEMPTS = 10;
@@ -61,7 +60,7 @@ public class SecurityConfiguration extends
             super(message);
         }
         public UserAccountBlocked() {
-            super("User account blocked. Please retry in 15 minutes.");
+            super("User account blocked. Please retry in an hour.");
         }
     }
 

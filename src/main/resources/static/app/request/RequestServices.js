@@ -11,6 +11,10 @@
                 url : '/requests/:id/submit',
                 method : "PUT"
             },
+            submitForApproval : {
+                url : '/requests/:id/submitForApproval',
+                method : "PUT"
+            },
             remove : {
                 method : "DELETE"
             },
@@ -60,8 +64,39 @@
     };
     RequestCommentFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("RequestComment", RequestCommentFactory);
+    
+    ApprovalCommentFactory = function($resource) {
+        return $resource('/requests/:processInstanceId/approvalComments/:id', {
+            processInstanceId: '@processInstanceId', 
+            id : '@id'
+        }, {
+            update : {
+                method : "PUT"
+            },
+            remove : {
+                method : "DELETE"
+            }
+        });
+    };
+    ApprovalCommentFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("ApprovalComment", ApprovalCommentFactory);
 
-
+    ApprovalVoteFactory = function($resource) {
+        return $resource('/requests/:processInstanceId/approvalVotes/:id', {
+            processInstanceId: '@processInstanceId', 
+            id : '@id'
+        }, {
+            update : {
+                method : "PUT"
+            },
+            remove : {
+                method : "DELETE"
+            }
+        });
+    };
+    ApprovalVoteFactory.$inject = [ '$resource' ];
+    angular.module("ProcessApp.services").factory("ApprovalVote", ApprovalVoteFactory);
+        
     var TaskFactory = function($resource) {
         return $resource('/tasks/:id', {
             id : '@id'

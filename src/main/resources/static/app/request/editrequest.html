@@ -352,7 +352,7 @@
                         <div class="col-sm-8">
                         <div class="panel panel-default">
                             <div class="panel-body">
-                            {{request.approvalVotes.length}} votes.
+                            {{size(request.approvalVotes)}} votes.
                             </div>
                         </div>
                          <div class="panel panel-default"  ng-repeat="(user_id, vote) in request.approvalVotes">

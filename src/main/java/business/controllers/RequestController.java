@@ -108,6 +108,7 @@ public class RequestController {
         Map<String, Object> variables = instance.getProcessVariables();
 
         if (variables != null) {
+            request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
             Long userId = null;
@@ -120,7 +121,15 @@ public class RequestController {
                 }
             }
 
-            Task task = findTaskByRequestId(instance.getId());
+            Task task = null;
+            switch(request.getStatus()) {
+                case "Review":   
+                    task = findTaskByRequestId(instance.getId(), "palga_request_review"); 
+                    break;
+                case "Approval":
+                    task = findTaskByRequestId(instance.getId(), "request_approval"); 
+                    break;
+            }
             if (task != null) {
                 request.setAssignee(task.getAssignee());
                 if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
@@ -137,7 +146,6 @@ public class RequestController {
                     }
 
                     request.setDateAssigned((Date)variables.get("assigned_date"));
-                    request.setStatus((String)variables.get("status"));
                     request.setTitle((String)variables.get("title"));
                     request.setDescription((String)variables.get("description"));
                     request.setMotivation((String)variables.get("motivation"));
@@ -347,14 +355,24 @@ public class RequestController {
             processInstances = runtimeService
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
-                    .variableValueEquals("status", "Review")
+                    .or()
+                        //.involvedUser(user.getId().toString())
+                        .variableValueEquals("status", "Review")
+                        .variableValueEquals("status", "Approval")
+                    .endOr()
                     .list();
-        } else {
+        } else if (user.getUser().isScientificCouncilMember()) {
             processInstances = runtimeService
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
-                    .involvedUser(user.getId().toString())
+                    .variableValueEquals("status", "Approval")
                     .list();
+        } else {
+            processInstances = runtimeService
+                .createProcessInstanceQuery()
+                .includeProcessVariables()
+                .involvedUser(user.getId().toString())
+                .list();
         }
 
         List<RequestListRepresentation> result = new ArrayList<RequestListRepresentation>();

@@ -207,7 +207,7 @@
             comment = new RequestComment(body);
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
-                request.comments.unshift(result);
+                request.comments.push(result);
                 $scope.edit_comment = {};
             }, function(response) {
                 $scope.error = response.statusText;
@@ -239,7 +239,7 @@
             comment = new ApprovalComment(body);
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
-                request.approvalComments.unshift(result);
+                request.approvalComments.push(result);
                 $scope.approval_comment = {};
             }, function(response) {
                 $scope.error = response.statusText;

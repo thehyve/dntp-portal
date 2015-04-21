@@ -97,17 +97,21 @@ public class RequestController {
             return "";
         }
         return user.getFirstName()
-                + (user.getFirstName().isEmpty() || user.getLastName() == null
+                + (user.getFirstName() == null || user.getFirstName().isEmpty() || user.getLastName() == null
                 || user.getLastName().isEmpty() ? "" :" ")
                 + (user.getLastName() == null ? "" : user.getLastName());
     }
 
-    private void transferData(ProcessInstance instance, RequestListRepresentation request, boolean is_palga) {
+    private void transferData(ProcessInstance instance, RequestListRepresentation request, User currentUser) {
+        
         request.setProcessInstanceId(instance.getProcessInstanceId());
 
         Map<String, Object> variables = instance.getProcessVariables();
 
         if (variables != null) {
+            request.setTitle((String)variables.get("title"));
+            request.setDescription((String)variables.get("description"));
+            request.setMotivation((String)variables.get("motivation"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
@@ -123,7 +127,7 @@ public class RequestController {
 
             Task task = null;
             switch(request.getStatus()) {
-                case "Review":   
+                case "Review":
                     task = findTaskByRequestId(instance.getId(), "palga_request_review"); 
                     break;
                 case "Approval":
@@ -144,26 +148,33 @@ public class RequestController {
                             request.setAssigneeName(getName(assignee));
                         }
                     }
-
                     request.setDateAssigned((Date)variables.get("assigned_date"));
-                    request.setTitle((String)variables.get("title"));
-                    request.setDescription((String)variables.get("description"));
-                    request.setMotivation((String)variables.get("motivation"));
                 }
             }
         }
     }
 
-    private void transferData(ProcessInstance instance, RequestRepresentation request, boolean is_palga ) {
+    private void transferData(ProcessInstance instance, RequestRepresentation request, User currentUser) {
+        boolean is_palga = currentUser == null ? false : currentUser.isPalga(); 
+        boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();
+        
         request.setProcessInstanceId(instance.getProcessInstanceId());
         request.setActivityId(instance.getActivityId());
+        
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             request.setStatus((String)variables.get("status"));
-            
             request.setDateCreated((Date)variables.get("date_created"));
             request.setDateAssigned((Date)variables.get("assigned_date"));
-            
+            request.setTitle((String)variables.get("title"));
+            request.setDescription((String)variables.get("description"));
+            request.setMotivation((String)variables.get("motivation"));
+            request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
+            request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
+            request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
+            request.setReturnDate((Date)variables.get("return_date"));
+            request.setLimitedToCohort(fetchBooleanVariable("limited_to_cohort", variables));
+            request.setContactPersonName((String)variables.get("contact_person_name"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
             Long userId = null;
             try { userId = Long.valueOf(request.getRequesterId()); }
@@ -224,34 +235,29 @@ public class RequestController {
                 }
             }
             request.setAttachments(requesterAttachments);
-            request.setAgreementAttachments(agreementAttachments);
-            List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
-            for (Comment comment: properties.getComments()) {
-                comments.add(new CommentRepresentation(comment));
+            if (is_palga) {
+                request.setAgreementAttachments(agreementAttachments);
             }
-            request.setComments(comments);
             
-            List<CommentRepresentation> approvalComments = new ArrayList<CommentRepresentation>();
-            for (Comment comment: properties.getApprovalComments()) {
-                approvalComments.add(new CommentRepresentation(comment));
+            if (is_palga || is_scientific_council) {
+                List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
+                for (Comment comment: properties.getComments()) {
+                    comments.add(new CommentRepresentation(comment));
+                }
+                request.setComments(comments);
+                
+                List<CommentRepresentation> approvalComments = new ArrayList<CommentRepresentation>();
+                for (Comment comment: properties.getApprovalComments()) {
+                    approvalComments.add(new CommentRepresentation(comment));
+                }
+                request.setApprovalComments(approvalComments);
+                
+                Map<Long, ApprovalVoteRepresentation> approvalVotes = new HashMap<Long, ApprovalVoteRepresentation>();
+                for (Entry<User, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
+                    approvalVotes.put(entry.getKey().getId(), new ApprovalVoteRepresentation(entry.getValue()));
+                }
+                request.setApprovalVotes(approvalVotes);
             }
-            request.setApprovalComments(approvalComments);
-            
-            Map<Long, ApprovalVoteRepresentation> approvalVotes = new HashMap<Long, ApprovalVoteRepresentation>();
-            for (Entry<User, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
-                approvalVotes.put(entry.getKey().getId(), new ApprovalVoteRepresentation(entry.getValue()));
-            }
-            request.setApprovalVotes(approvalVotes);
-
-            request.setTitle((String)variables.get("title"));
-            request.setDescription((String)variables.get("description"));
-            request.setMotivation((String)variables.get("motivation"));
-            request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
-            request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
-            request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
-            request.setReturnDate((Date)variables.get("return_date"));
-            request.setLimitedToCohort(fetchBooleanVariable("limited_to_cohort", variables));
-            request.setContactPersonName((String)variables.get("contact_person_name"));
 
             if (is_palga) {
                 request.setRequesterValid(fetchBooleanVariable("requester_is_valid", variables));
@@ -263,7 +269,8 @@ public class RequestController {
         }
     }
 
-    private Map<String, Object> transferFormData(RequestRepresentation request, ProcessInstance instance, boolean is_palga ) {
+    private Map<String, Object> transferFormData(RequestRepresentation request, ProcessInstance instance, User user) {
+        boolean is_palga = user.isPalga();
         request.setProcessInstanceId(instance.getProcessInstanceId());
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
@@ -333,7 +340,7 @@ public class RequestController {
         List<RequestRepresentation> result = new ArrayList<RequestRepresentation>();
         for (ProcessInstance instance : processInstances) {
             RequestRepresentation request = new RequestRepresentation();
-            transferData(instance, request, user.getUser().isPalga());
+            transferData(instance, request, user.getUser());
             result.add(request);
         }
         Date representationEnd = new Date();
@@ -379,7 +386,7 @@ public class RequestController {
 
         for (ProcessInstance instance : processInstances) {
             RequestListRepresentation request = new RequestListRepresentation();
-            transferData(instance, request, user.getUser().isPalga());
+            transferData(instance, request, user.getUser());
             result.add(request);
         }
         return result;
@@ -395,7 +402,7 @@ public class RequestController {
             throw new NotLoggedInException();
         } else {
             ProcessInstance instance = getProcessInstance(id);
-            transferData(instance, request, user.getUser().isPalga());
+            transferData(instance, request, user.getUser());
         }
 
         return request;
@@ -426,7 +433,7 @@ public class RequestController {
                     .includeProcessVariables()
                     .processInstanceId(instance.getId()).singleResult();
             RequestRepresentation request = new RequestRepresentation();
-            transferData(instance, request, false);
+            transferData(instance, request, null);
             return request;
         }
     }
@@ -439,14 +446,14 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id);
         ProcessInstance instance = getProcessInstance(id);
-        Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
+        Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
             log.info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
-        transferData(instance, updatedRequest, user.getUser().isPalga());
+        transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
     }
 
@@ -540,7 +547,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/submit");
         ProcessInstance instance = getProcessInstance(id);
-        Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
+        Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
             log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
@@ -554,7 +561,7 @@ public class RequestController {
         taskService.complete(task.getId());
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
-        transferData(instance, updatedRequest, user.getUser().isPalga());
+        transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
     }
 
@@ -566,7 +573,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/submit");
         ProcessInstance instance = getProcessInstance(id);
-        Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
+        Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         
         Task task = getTaskByRequestId(id, "palga_request_review");
@@ -576,7 +583,7 @@ public class RequestController {
         taskService.complete(task.getId());
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
-        transferData(instance, updatedRequest, user.getUser().isPalga());
+        transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
     }    
     
@@ -601,7 +608,7 @@ public class RequestController {
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
-        transferData(instance, updatedRequest, user.getUser().isPalga());
+        transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
     }
 
@@ -617,7 +624,7 @@ public class RequestController {
         taskService.unclaim(task.getId());
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
-        transferData(instance, updatedRequest, user.getUser().isPalga());
+        transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
     }
 
@@ -634,7 +641,7 @@ public class RequestController {
         log.info("DELETE /requests/" + id);
         ProcessInstance instance = getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
-        transferData(instance, request, user.getUser().isPalga());
+        transferData(instance, request, user.getUser());
         if (!request.getRequesterId().equals(user.getUser().getId().toString())) {
             throw new RequestNotFound();
         }
@@ -668,7 +675,7 @@ public class RequestController {
         }
         ProcessInstance instance = getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
-        transferData(instance, request, user.getUser().isPalga());
+        transferData(instance, request, user.getUser());
         return request;
     }
 
@@ -691,7 +698,7 @@ public class RequestController {
         }
         ProcessInstance instance = getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
-        transferData(instance, request, user.getUser().isPalga());
+        transferData(instance, request, user.getUser());
 
         // add attachment id to the set of ids of the agreement attachments.
         RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
@@ -702,11 +709,11 @@ public class RequestController {
         properties.getAgreementAttachmentIds().add(attachmentId);
         requestPropertiesRepository.save(properties);
 
-        Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
+        Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         instance = getProcessInstance(id);
         request = new RequestRepresentation();
-        transferData(instance, request, user.getUser().isPalga());
+        transferData(instance, request, user.getUser());
         return request;
     }
 
@@ -728,7 +735,7 @@ public class RequestController {
 
         instance = getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
-        transferData(instance, request, user.getUser().isPalga());
+        transferData(instance, request, user.getUser());
         return request;
     }
 
@@ -753,8 +760,10 @@ public class RequestController {
         InputStreamResource resource = new InputStreamResource(input);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf(result.getType()));
+        headers.set("Content-Disposition",
+                   "attachment; filename=" + result.getName().replace(" ", "_"));
         HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
-        LogFactory.getLog(getClass()).info("Returning reponse.");
+        log.info("Returning reponse.");
         return response;
     }
 
@@ -770,7 +779,7 @@ public class RequestController {
         }
         ProcessInstance instance = getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
-        transferData(instance, request, user.getUser().isPalga());
+        transferData(instance, request, user.getUser());
         log.info("Status: " + request.getStatus());
         if (!request.getStatus().equals("Open")) {
             throw new InvalidActionInStatus();

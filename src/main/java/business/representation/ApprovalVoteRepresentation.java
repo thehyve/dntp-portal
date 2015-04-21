@@ -2,9 +2,9 @@ package business.representation;
 
 import java.util.Date;
 
-import business.models.Comment;
+import business.models.ApprovalVote;
 
-public class CommentRepresentation {
+public class ApprovalVoteRepresentation {
 
     
     private Long id;
@@ -17,19 +17,19 @@ public class CommentRepresentation {
     
     private Date timeEdited = timeCreated;
     
-    private String contents;
+    private String value;
 
-    public CommentRepresentation() {
+    public ApprovalVoteRepresentation() {
         
     }
     
-    public CommentRepresentation(Comment comment) {
-        this.id = comment.getId();
-        this.creator = new ProfileRepresentation(comment.getCreator());
-        this.processInstanceId = comment.getProcessInstanceId();
-        this.timeCreated = comment.getTimeCreated();
-        this.timeEdited = comment.getTimeEdited();
-        this.contents = comment.getContents();
+    public ApprovalVoteRepresentation(ApprovalVote vote) {
+        this.id = vote.getId();
+        this.creator = new ProfileRepresentation(vote.getCreator());
+        this.processInstanceId = vote.getProcessInstanceId();
+        this.timeCreated = vote.getTimeCreated();
+        this.timeEdited = vote.getTimeEdited();
+        this.value = vote.getValue().toString();
     }
 
     public Long getId() {
@@ -72,12 +72,12 @@ public class CommentRepresentation {
         this.timeEdited = timeEdited;
     }
 
-    public String getContents() {
-        return contents;
+    public String getValue() {
+        return value;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void setValue(String value) {
+        this.value = value;
     }
     
 }

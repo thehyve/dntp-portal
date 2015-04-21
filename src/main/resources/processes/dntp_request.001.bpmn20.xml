@@ -81,7 +81,23 @@
         <script>execution.setVariable("status", "Approval")</script>
     </scriptTask>
 
-    <sequenceFlow id="approval_to_approval_task" sourceRef="status_approval" targetRef="request_approval"></sequenceFlow>
+    <!-- Start two tasks in parallel: 
+        - approval by scientific council;
+        - update approval status by palga. 
+    -->
+    <sequenceFlow id="approval_to_approval_task" sourceRef="status_approval" targetRef="approval_tasks"></sequenceFlow>
+    <parallelGateway id="approval_tasks" />
+    <sequenceFlow id="approval_tasks_to_scientific_council_approval" sourceRef="approval_tasks" targetRef="scientific_council_approval"></sequenceFlow>
+    <sequenceFlow id="approval_tasks_to_request_approval" sourceRef="approval_tasks" targetRef="request_approval"></sequenceFlow>
+
+    <userTask id="scientific_council_approval" name="Scientific council approval" activiti:candidateGroups="scientific_council">
+        <documentation>
+        Approval by scientific council. Members can vote and add comments.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
 
     <userTask id="request_approval" name="Request approval" activiti:candidateGroups="palga">
         <documentation>
@@ -92,7 +108,11 @@
         </extensionElements>
     </userTask>
 
-    <sequenceFlow id="approval_to_closed" sourceRef="request_approval" targetRef="status_closed"></sequenceFlow>
+    <!-- Join the parallel approval tasks. -->
+    <sequenceFlow id="scientific_council_approval_to_end" sourceRef="scientific_council_approval" targetRef="approval_end"></sequenceFlow>
+    <sequenceFlow id="request_approval_to_end" sourceRef="request_approval" targetRef="approval_end"></sequenceFlow>
+    <parallelGateway id="approval_end" />
+    <sequenceFlow id="approval_to_closed" sourceRef="approval_end" targetRef="status_closed"></sequenceFlow>
     
     <scriptTask id="status_closed" name="Update status to Closed" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>

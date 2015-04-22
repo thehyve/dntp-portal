@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import business.representation.RequestListRepresentation;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -25,11 +24,14 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,11 +47,14 @@ import business.models.Comment;
 import business.models.CommentRepository;
 import business.models.RequestProperties;
 import business.models.RequestPropertiesRepository;
+import business.models.Role;
+import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
 import business.representation.ApprovalVoteRepresentation;
 import business.representation.AttachmentRepresentation;
 import business.representation.CommentRepresentation;
+import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 
@@ -77,6 +82,9 @@ public class RequestController {
     private RepositoryService repositoryService;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -85,6 +93,15 @@ public class RequestController {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    JavaMailSender mailSender;
+
+    @Value("${dntp.server-name}")
+    String serverName;
+
+    @Value("${dntp.server-port}")
+    String serverPort;
+    
     private boolean fetchBooleanVariable(String name, Map<String,Object> variables) {
         if (variables.get(name) != null) {
             return (boolean)variables.get(name);
@@ -313,15 +330,22 @@ public class RequestController {
         if (user == null) {
             processInstances = new ArrayList<ProcessInstance>();
         } else if (user.getUser().isPalga()) {
-            processInstances = runtimeService
+            processInstances = new ArrayList<ProcessInstance>();
+            processInstances.addAll(runtimeService
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
-                    .or()
-                        //.involvedUser(user.getId().toString())
-                        .variableValueEquals("status", "Review")
-                        .variableValueEquals("status", "Approval")
-                    .endOr()
-                    .list();
+                    .variableValueEquals("status", "Review")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Approval")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "DataDelivery")
+                    .list());
         } else if (user.getUser().isScientificCouncilMember()) {
             processInstances = runtimeService
                     .createProcessInstanceQuery()
@@ -359,15 +383,22 @@ public class RequestController {
         if (user == null) {
             processInstances = new ArrayList<ProcessInstance>();
         } else if (user.getUser().isPalga()) {
-            processInstances = runtimeService
+            processInstances = new ArrayList<ProcessInstance>();
+            processInstances.addAll(runtimeService
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
-                    .or()
-                        //.involvedUser(user.getId().toString())
-                        .variableValueEquals("status", "Review")
-                        .variableValueEquals("status", "Approval")
-                    .endOr()
-                    .list();
+                    .variableValueEquals("status", "Review")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Approval")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "DataDelivery")
+                    .list());
         } else if (user.getUser().isScientificCouncilMember()) {
             processInstances = runtimeService
                     .createProcessInstanceQuery()
@@ -565,13 +596,43 @@ public class RequestController {
         return updatedRequest;
     }
 
+    private void notifyScientificCouncil(RequestRepresentation request) {
+        log.info("Notify scientic council for request " + request.getProcessInstanceId() + ".");
+
+        Role role = roleRepository.findByName("scientific_council");
+        Set<User> members = role.getUsers();
+        for (User member: members) {
+            log.info("Sending notification to user " + member.getUsername());
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(member.getContactData().getEmail());
+            message.setFrom("no-reply@dntp.thehyve.nl");
+            message.setReplyTo("no-reply@dntp.thehyve.nl");
+            message.setSubject("[DNTP portal] New request open for approval.");
+            String template =
+                    "Request : %s\n"
+                +   "Title   : %s\n";
+            String body = String.format(template, 
+                    request.getProcessInstanceId(),
+                    request.getTitle());
+            message.setText(String.format(
+                    "(We're testing a prototype system. If you receive this email, please contact gijs@thehyve.nl.)\n"
+                    + "Please follow this link to view the new request: http://%s:%s/#/request/view/%s.\n"
+                    + "====\n"
+                    + body, 
+                    serverName, serverPort, request.getProcessInstanceId()));
+            log.info("Mail contents:\n" + message.getText());
+            mailSender.send(message);
+        }
+    }
+    
+    
     @Secured("hasPermission(#param, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/submitForApproval", method = RequestMethod.PUT)
     public RequestRepresentation submitForApproval(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id + "/submit");
+        log.info("PUT /requests/" + id + "/submitForApproval");
         ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
@@ -584,6 +645,41 @@ public class RequestController {
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser());
+        
+        notifyScientificCouncil(updatedRequest);
+        
+        return updatedRequest;
+    }    
+
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/finalise", method = RequestMethod.PUT)
+    public RequestRepresentation finalise(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestBody RequestRepresentation request) {
+        log.info("PUT /requests/" + id + "/finalise");
+        ProcessInstance instance = getProcessInstance(id);
+        Map<String, Object> variables = transferFormData(request, instance, user.getUser());
+        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+
+        log.info("Fetching scientific_council_approval task");
+        Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
+        if (councilTask.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(councilTask.getId());
+        }
+        taskService.complete(councilTask.getId());
+        
+        log.info("Fetching request_approval task");
+        Task palgaTask = getTaskByRequestId(id, "request_approval");
+        if (palgaTask.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(palgaTask.getId());
+        }
+        taskService.complete(palgaTask.getId());
+        
+        instance = getProcessInstance(id);
+        RequestRepresentation updatedRequest = new RequestRepresentation();
+        transferData(instance, updatedRequest, user.getUser());
+        
         return updatedRequest;
     }    
     

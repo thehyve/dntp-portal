@@ -14,29 +14,30 @@
         console.log("globals: "+ JSON.stringify($rootScope.globals));
 
         if ($routeParams.requestId) {
+            $scope.requests = [];
             Request.get({id:$routeParams.requestId}, function (req) {
                 $scope.request = req;
+            });
+        } else {
+            Request.query().$promise.then(function(response) {
+                $scope.requests = response ? response : [];
+                $scope.displayedCollection = [].concat($scope.requests);
+            }, function(response) {
+                if (response.data) {
+                    $scope.error = response.data.message + "\n";
+                    if (response.data.error == 302) {
+                        $scope.accessDenied = true;
+                    }
+                } else {
+                    $scope.login();
+                }
             });
         }
 
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
         };
-
-        Request.query().$promise.then(function(response) {
-            $scope.requests = response ? response : [];
-            $scope.displayedCollection = [].concat($scope.requests);
-        }, function(response) {
-            if (response.data) {
-                $scope.error = response.data.message + "\n";
-                if (response.data.error == 302) {
-                    $scope.accessDenied = true;
-                }
-            } else {
-                $scope.login();
-            }
-        });
-
+        
         $scope.fileuploadsuccess = function(request, data) {
             result = new Request(JSON.parse(data));
             //$scope.refresh(request, result);
@@ -54,8 +55,16 @@
         };
 
         $scope.refresh = function(request, result) {
-            console.log("Updating request at index: " + $scope.requests.indexOf(request));
-            $scope.requests[$scope.requests.indexOf(request)] = result;
+            var index = -1;
+            for (i in $scope.requests) {
+                if ($scope.requests[i].processInstanceId == request.processInstanceId) {
+                    index = i;
+                    break;
+                }
+            }
+            console.log("Updating request at index: " + index);
+            $scope.requests.splice(index, 1);
+            $scope.requests.splice(index, 1, result);
             $scope.request = result;
         };
 
@@ -126,7 +135,7 @@
                 function(confirmed) {
                     if (confirmed) {
                         request.$submit(function(result) {
-                            $scope.request = result;
+                            $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
                         }, function(response) {
                             $scope.error = $scope.error + response.data.message + "\n";
@@ -141,7 +150,22 @@
                 function(confirmed) {
                     if (confirmed) {
                         request.$submitForApproval(function(result) {
-                            $scope.request = result;
+                            $scope.refresh(request, result);
+                            $scope.editRequestModal.hide();
+                        }, function(response) {
+                            $scope.error = $scope.error + response.data.message + "\n";
+                        });
+                    }
+                });
+        }
+
+        $scope.finalise = function(request) {
+            bootbox.confirm(
+                "Are you sure you want to finalise the request?", 
+                function(confirmed) {
+                    if (confirmed) {
+                        request.$finalise(function(result) {
+                            $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
                         }, function(response) {
                             $scope.error = $scope.error + response.data.message + "\n";

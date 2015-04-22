@@ -1,16 +1,21 @@
 package business.representation;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import business.models.ContactData;
+import business.models.Role;
 import business.models.User;
 
 
 public class ProfileRepresentation {
 
     private String currentRole;
+    private Set<RoleRepresentation> roles = new HashSet<RoleRepresentation>();
+    
     private boolean active;
     
     private Long id;
@@ -44,6 +49,9 @@ public class ProfileRepresentation {
                             user.isScientificCouncilMember() ? "scientific_council" :
                             user.isRequester() ? "requester" :
                             "";
+        for (Role role: user.getRoles()) {
+            this.roles.add(new RoleRepresentation(role));
+        }
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.setPathologist(user.isPathologist());
@@ -63,6 +71,10 @@ public class ProfileRepresentation {
         return currentRole;
     }
     
+    public Set<RoleRepresentation> getRoles() {
+        return roles;
+    }
+
     public Long getId() {
         return id;
     }

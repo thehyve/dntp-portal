@@ -15,6 +15,10 @@
                 url : '/requests/:id/submitForApproval',
                 method : "PUT"
             },
+            finalise : {
+                url : '/requests/:id/finalise',
+                method : "PUT"
+            },
             remove : {
                 method : "DELETE"
             },

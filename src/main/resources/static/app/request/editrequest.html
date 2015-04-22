@@ -467,6 +467,13 @@
                         ">
                             {{'Submit for approval'|translate}}
                     </button>
+                    <button class="btn btn-warning" type="button" 
+                        ng-if="request.status=='Approval'"
+                        ng-click="finalise(request)" 
+                        ng-disabled="requestEditForm.$invalid
+                        ">
+                            {{'Finalise'|translate}}
+                    </button>
                     <button class="btn btn-info" type="submit"
                             ng-disabled="requestEditForm.$invalid">{{'Save'|translate}}</button>
                     <button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>

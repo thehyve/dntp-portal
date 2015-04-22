@@ -112,7 +112,22 @@
     <sequenceFlow id="scientific_council_approval_to_end" sourceRef="scientific_council_approval" targetRef="approval_end"></sequenceFlow>
     <sequenceFlow id="request_approval_to_end" sourceRef="request_approval" targetRef="approval_end"></sequenceFlow>
     <parallelGateway id="approval_end" />
-    <sequenceFlow id="approval_to_closed" sourceRef="approval_end" targetRef="status_closed"></sequenceFlow>
+    <sequenceFlow id="approval_to_status_delivery" sourceRef="approval_end" targetRef="status_data_delivery"></sequenceFlow>
+
+    <scriptTask id="status_data_delivery" name="Update status to DataDelivery" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "DataDelivery")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_delivery_to_delivery_task" sourceRef="status_data_delivery" targetRef="data_delivery"></sequenceFlow>
+
+    <userTask id="data_delivery" name="Data delivery" activiti:candidateGroups="palga">
+        <documentation>
+        Delivery of data.
+        </documentation>
+    </userTask>
+
+    <sequenceFlow id="data_delivery_to_closed" sourceRef="data_delivery" targetRef="status_closed"></sequenceFlow>
     
     <scriptTask id="status_closed" name="Update status to Closed" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>

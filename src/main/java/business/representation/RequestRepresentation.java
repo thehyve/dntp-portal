@@ -2,14 +2,15 @@ package business.representation;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import business.models.Lab;
+import business.models.RequestProperties;
 
 public class RequestRepresentation {
 
     private String processInstanceId;
-    private String activityId;
     private String requesterId;
     private String requesterName;
     private String status;
@@ -33,9 +34,6 @@ public class RequestRepresentation {
     private List<AttachmentRepresentation> agreementAttachments;
     private List<CommentRepresentation> comments;
     
-    private List<CommentRepresentation> approvalComments;
-    private Map<Long, ApprovalVoteRepresentation> approvalVotes;
-    
     // Palga specific
     private boolean requesterValid;
     private boolean requesterAllowed;
@@ -53,14 +51,6 @@ public class RequestRepresentation {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
-    }
-    
-    public String getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
     }
 
     public String getRequesterId() {
@@ -261,22 +251,6 @@ public class RequestRepresentation {
 
     public void setComments(List<CommentRepresentation> comments) {
         this.comments = comments;
-    }
-
-    public List<CommentRepresentation> getApprovalComments() {
-        return approvalComments;
-    }
-
-    public void setApprovalComments(List<CommentRepresentation> approvalComments) {
-        this.approvalComments = approvalComments;
-    }
-
-    public Map<Long, ApprovalVoteRepresentation> getApprovalVotes() {
-        return approvalVotes;
-    }
-
-    public void setApprovalVotes(Map<Long, ApprovalVoteRepresentation> approvalVotes) {
-        this.approvalVotes = approvalVotes;
     }
  
 }

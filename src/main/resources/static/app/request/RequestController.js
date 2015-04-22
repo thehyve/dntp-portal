@@ -2,7 +2,6 @@
 
     var RequestController = function($rootScope, $scope, $modal, $location,
             Request, RequestAttachment, RequestComment,
-            ApprovalComment, ApprovalVote,
             FlowOptionService, $routeParams) {
 
         $scope.error = "";
@@ -135,21 +134,6 @@
                 });
         }
 
-        $scope.submitForApproval = function(request) {
-            bootbox.confirm(
-                "Are you sure you want to submit the request for approval?", 
-                function(confirmed) {
-                    if (confirmed) {
-                        request.$submitForApproval(function(result) {
-                            $scope.request = result;
-                            $scope.editRequestModal.hide();
-                        }, function(response) {
-                            $scope.error = $scope.error + response.data.message + "\n";
-                        });
-                    }
-                });
-        }
-        
         $scope.view = function(request) {
             $location.path("/request/view/" + request.processInstanceId);
         };
@@ -163,10 +147,6 @@
 
                 Request.get({id:request.processInstanceId}, function (data) {
                     $scope.request = data;
-                    if (!($scope.globals.currentUser.userid in $scope.request.approvalVotes)) {
-                        $scope.request.approvalVotes[$scope.globals.currentUser.userid] = 
-                        new ApprovalVote({value: 'NONE'});
-                    }
                     $scope.edit_comment = {};
                     $scope.comment_edit_visibility = {};
                     if (data.returnDate == null) {
@@ -207,7 +187,7 @@
             comment = new RequestComment(body);
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
-                request.comments.push(result);
+                request.comments.unshift(result);
                 $scope.edit_comment = {};
             }, function(response) {
                 $scope.error = response.statusText;
@@ -235,50 +215,6 @@
             });
         };
 
-        $scope.addApprovalComment = function(request, body) {
-            comment = new ApprovalComment(body);
-            comment.processInstanceId = request.processInstanceId;
-            comment.$save(function(result) {
-                request.approvalComments.push(result);
-                $scope.approval_comment = {};
-            }, function(response) {
-                $scope.error = response.statusText;
-            });
-        }
-        
-        $scope.updateApprovalComment = function(request, body) {
-            comment = new ApprovalComment(body);
-            comment.$update(function(result) {
-                index = $scope.request.approvalComments.indexOf(body);
-                //console.log("Updating comment at index " + index);
-                $scope.request.approvalComments[index] = result;
-                $scope.approval_comment_edit_visibility[comment.id] = 0;
-            }, function(response) {
-                $scope.error = $scope.error + response.data.message + "\n";
-            });
-        };
-
-        $scope.updateVote = function(request, value) {
-            vote = new ApprovalVote();
-            vote.value = value;
-            vote.processInstanceId = request.processInstanceId;
-            vote.$save(function(result) {
-                $scope.request.approvalVotes[$scope.globals.currentUser.userid] = result;
-                //console.log("Updating vote");
-            }, function(response) {
-                $scope.error = $scope.error + response.data.message + "\n";
-            });
-        };
-        
-        $scope.removeComment = function(comment) {
-            new ApprovalComment(comment).$remove(function(result) {
-                $scope.request.approvalComments.splice(
-                        $scope.request.approvalComments.indexOf(comment), 1);
-            }, function(response) {
-                $scope.error = $scope.error + response.data.message + "\n";
-            });
-        };
-                
         $scope.getName = function(user) {
             if (user == null) {
                 return "";
@@ -287,20 +223,11 @@
                 + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ")
                 + (user.lastName==null ? "" : user.lastName);
         }
-        
-        $scope.size = function(obj) {
-            var size = 0, key;
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) size++;
-            }
-            return size;
-        };
 
     };
 
     RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location',
                                   'Request', 'RequestAttachment', 'RequestComment',
-                                  'ApprovalComment', 'ApprovalVote',
                                   'FlowOptionService', '$routeParams'];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);

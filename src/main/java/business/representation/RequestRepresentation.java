@@ -2,6 +2,7 @@ package business.representation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -11,6 +12,7 @@ import business.models.RequestProperties;
 public class RequestRepresentation {
 
     private String processInstanceId;
+    private String activityId;
     private String requesterId;
     private String requesterName;
     private String status;
@@ -33,6 +35,9 @@ public class RequestRepresentation {
     private List<AttachmentRepresentation> attachments;
     private List<AttachmentRepresentation> agreementAttachments;
     private List<CommentRepresentation> comments;
+
+    private List<CommentRepresentation> approvalComments;
+    private Map<Long, ApprovalVoteRepresentation> approvalVotes;
 
     // Palga specific
     private boolean requesterValid;
@@ -60,6 +65,13 @@ public class RequestRepresentation {
         this.processInstanceId = processInstanceId;
     }
 
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
 
     public String getRequesterId() {
         return requesterId;
@@ -261,20 +273,20 @@ public class RequestRepresentation {
         this.comments = comments;
     }
 
-    public boolean isSentToPrivacyCommittee() {
-        return sentToPrivacyCommittee;
+    public List<CommentRepresentation> getApprovalComments() {
+        return approvalComments;
     }
 
-    public void setSentToPrivacyCommittee(boolean sentToPrivacyCommittee) {
-        this.sentToPrivacyCommittee = sentToPrivacyCommittee;
+    public void setApprovalComments(List<CommentRepresentation> approvalComments) {
+        this.approvalComments = approvalComments;
     }
 
-    public String getPrivacyCommitteeOutcome() {
-        return privacyCommitteeOutcome;
+    public Map<Long, ApprovalVoteRepresentation> getApprovalVotes() {
+        return approvalVotes;
     }
 
-    public void setPrivacyCommitteeOutcome(String privacyCommitteeOutcome) {
-        this.privacyCommitteeOutcome = privacyCommitteeOutcome;
+    public void setApprovalVotes(Map<Long, ApprovalVoteRepresentation> approvalVotes) {
+        this.approvalVotes = approvalVotes;
     }
 
     public String getPrivacyCommitteeOutcomeRef() {
@@ -291,5 +303,21 @@ public class RequestRepresentation {
 
     public void setPrivacyCommitteeEmails(String privacyCommitteeEmails) {
         this.privacyCommitteeEmails = privacyCommitteeEmails;
+    }
+
+    public boolean isSentToPrivacyCommittee() {
+        return sentToPrivacyCommittee;
+    }
+
+    public void setSentToPrivacyCommittee(boolean sentToPrivacyCommittee) {
+        this.sentToPrivacyCommittee = sentToPrivacyCommittee;
+    }
+
+    public String getPrivacyCommitteeOutcome() {
+        return privacyCommitteeOutcome;
+    }
+
+    public void setPrivacyCommitteeOutcome(String privacyCommitteeOutcome) {
+        this.privacyCommitteeOutcome = privacyCommitteeOutcome;
     }
 }

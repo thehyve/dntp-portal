@@ -1,8 +1,10 @@
 package business.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -29,6 +31,12 @@ public class RequestProperties {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Comment> approvalComments = new ArrayList<Comment>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Map<User, ApprovalVote> approvalVotes = new HashMap<User, ApprovalVote>();
 
     @Column
     private boolean sentToPrivacyCommittee;
@@ -68,6 +76,30 @@ public class RequestProperties {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<Comment> getApprovalComments() {
+        return approvalComments;
+    }
+
+    public void addApprovalComment(Comment comment) {
+        this.approvalComments.add(comment);
+    }
+
+    public void setApprovalComments(List<Comment> approvalComments) {
+        this.approvalComments = approvalComments;
+    }
+
+    public Map<User, ApprovalVote> getApprovalVotes() {
+        return approvalVotes;
+    }
+
+    public void addApprovalVote(User user, ApprovalVote approvalVote) {
+        this.approvalVotes.put(user, approvalVote);
+    }
+
+    public void setApprovalVotes(Map<User, ApprovalVote> approvalVotes) {
+        this.approvalVotes = approvalVotes;
     }
 
     public Set<String> getAgreementAttachmentIds() {

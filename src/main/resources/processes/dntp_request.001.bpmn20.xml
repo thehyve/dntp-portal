@@ -28,15 +28,15 @@
             <activiti:formProperty id="title" name="Title" type="string" variable="title" required="true"></activiti:formProperty>
             <activiti:formProperty id="description" name="Description" type="string" variable="description" required="true"></activiti:formProperty>
             <activiti:formProperty id="motivation" name="Motivation" type="string" variable="motivation" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_statistics_request" name="Request for information (statistics or Palga excerpts)" type="boolean" 
+            <activiti:formProperty id="is_statistics_request" name="Request for information (statistics or Palga excerpts)" type="boolean"
                 variable="is_statistics_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports (intermediate procedure)" type="boolean" 
+            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports (intermediate procedure)" type="boolean"
                 variable="is_pa_report_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_materials_request" name="Request for samples (ffpe/coupus) (intermediate procedure)" type="boolean" 
+            <activiti:formProperty id="is_materials_request" name="Request for samples (ffpe/coupus) (intermediate procedure)" type="boolean"
                 variable="is_materials_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="return_date" name="Return date" type="date" 
+            <activiti:formProperty id="return_date" name="Return date" type="date"
                 variable="return date"></activiti:formProperty>
-            <activiti:formProperty id="limited_to_cohort" name="Is your request limited to a specific cohort?" type="boolean" 
+            <activiti:formProperty id="limited_to_cohort" name="Is your request limited to a specific cohort?" type="boolean"
                 variable="is_limited_to_cohort" required="true"></activiti:formProperty>
             <activiti:formProperty id="contact_person_name" name="Contact person" type="string" variable="contact_person_name" required="true"></activiti:formProperty>
         </extensionElements>
@@ -81,7 +81,23 @@
         <script>execution.setVariable("status", "Approval")</script>
     </scriptTask>
 
-    <sequenceFlow id="approval_to_approval_task" sourceRef="status_approval" targetRef="request_approval"></sequenceFlow>
+    <!-- Start two tasks in parallel:
+        - approval by scientific council;
+        - update approval status by palga.
+    -->
+    <sequenceFlow id="approval_to_approval_task" sourceRef="status_approval" targetRef="approval_tasks"></sequenceFlow>
+    <parallelGateway id="approval_tasks" />
+    <sequenceFlow id="approval_tasks_to_scientific_council_approval" sourceRef="approval_tasks" targetRef="scientific_council_approval"></sequenceFlow>
+    <sequenceFlow id="approval_tasks_to_request_approval" sourceRef="approval_tasks" targetRef="request_approval"></sequenceFlow>
+
+    <userTask id="scientific_council_approval" name="Scientific council approval" activiti:candidateGroups="scientific_council">
+        <documentation>
+        Approval by scientific council. Members can vote and add comments.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
 
     <userTask id="request_approval" name="Request approval" activiti:candidateGroups="palga">
         <documentation>
@@ -92,8 +108,27 @@
         </extensionElements>
     </userTask>
 
-    <sequenceFlow id="approval_to_closed" sourceRef="request_approval" targetRef="status_closed"></sequenceFlow>
-    
+    <!-- Join the parallel approval tasks. -->
+    <sequenceFlow id="scientific_council_approval_to_end" sourceRef="scientific_council_approval" targetRef="approval_end"></sequenceFlow>
+    <sequenceFlow id="request_approval_to_end" sourceRef="request_approval" targetRef="approval_end"></sequenceFlow>
+    <parallelGateway id="approval_end" />
+    <sequenceFlow id="approval_to_status_delivery" sourceRef="approval_end" targetRef="status_data_delivery"></sequenceFlow>
+
+    <scriptTask id="status_data_delivery" name="Update status to DataDelivery" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "DataDelivery")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_delivery_to_delivery_task" sourceRef="status_data_delivery" targetRef="data_delivery"></sequenceFlow>
+
+    <userTask id="data_delivery" name="Data delivery" activiti:candidateGroups="palga">
+        <documentation>
+        Delivery of data.
+        </documentation>
+    </userTask>
+
+    <sequenceFlow id="data_delivery_to_closed" sourceRef="data_delivery" targetRef="status_closed"></sequenceFlow>
+
     <scriptTask id="status_closed" name="Update status to Closed" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>
         <script>execution.setVariable("status", "Closed")</script>

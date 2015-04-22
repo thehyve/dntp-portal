@@ -1,6 +1,6 @@
 (function(angular) {
 
-    var RequestController = function($rootScope, $scope, $modal, $location,
+    var RequestController = function($rootScope, $scope, $modal, $location, $route,
             Request, RequestAttachment, RequestComment,
             ApprovalComment, ApprovalVote,
             FlowOptionService, $routeParams) {
@@ -14,7 +14,9 @@
         console.log("globals: "+ JSON.stringify($rootScope.globals));
 
         if ($routeParams.requestId) {
-            $scope.requests = [];
+            if (!$scope.requests) {
+                $scope.requests = [];
+            }
             Request.get({id:$routeParams.requestId}, function (req) {
                 $scope.request = req;
             });
@@ -63,8 +65,10 @@
                 }
             }
             console.log("Updating request at index: " + index);
-            $scope.requests.splice(index, 1);
-            $scope.requests.splice(index, 1, result);
+            $scope.requests[index] = result;
+            
+            $route.reload();
+            
             $scope.request = result;
         };
 
@@ -187,9 +191,14 @@
 
                 Request.get({id:request.processInstanceId}, function (data) {
                     $scope.request = data;
-                    if (!($scope.globals.currentUser.userid in $scope.request.approvalVotes)) {
-                        $scope.request.approvalVotes[$scope.globals.currentUser.userid] = 
-                        new ApprovalVote({value: 'NONE'});
+                    if ($scope.globals.currentUser.roles.indexOf('scientific_council') != -1) {
+                        if (!$scope.request.approvalVotes) {
+                            $scope.request.approvalVotes = {};
+                        }
+                        if (!($scope.globals.currentUser.userid in $scope.request.approvalVotes)) {
+                            $scope.request.approvalVotes[$scope.globals.currentUser.userid] = 
+                                new ApprovalVote({value: 'NONE'});
+                        }
                     }
                     $scope.edit_comment = {};
                     $scope.comment_edit_visibility = {};
@@ -322,7 +331,7 @@
 
     };
 
-    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location',
+    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location', '$route',
                                   'Request', 'RequestAttachment', 'RequestComment',
                                   'ApprovalComment', 'ApprovalVote',
                                   'FlowOptionService', '$routeParams'];

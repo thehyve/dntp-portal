@@ -211,6 +211,15 @@ public class RequestController {
                 }
                 request.setComments(comments);
             }
+
+            RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(instance.getProcessInstanceId());
+            if (properties != null) {
+                request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
+                request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
+                request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
+                request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
+            }
+
             request.setDateAssigned((Date)variables.get("assigned_date"));
             request.setStatus((String)variables.get("status"));
             request.setTitle((String)variables.get("title"));
@@ -376,12 +385,26 @@ public class RequestController {
         log.info("PUT /requests/" + id);
         ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser().isPalga());
+
+        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        if (properties == null) {
+            properties = new RequestProperties();
+        }
+        properties.setProcessInstanceId(id);
+        properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
+        properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
+        properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
+        properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
+        requestPropertiesRepository.save(properties);
+
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
             log.info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
+
+
         transferData(instance, updatedRequest, user.getUser().isPalga());
         return updatedRequest;
     }

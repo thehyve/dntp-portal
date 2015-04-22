@@ -20,16 +20,28 @@ public class RequestProperties {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     @Column(unique = true)
     private String processInstanceId;
-    
+
     @ElementCollection
     private Set<String> agreementAttachmentIds = new HashSet<String>();
-    
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
-    
+
+    @Column
+    private boolean sentToPrivacyCommittee;
+
+    @Column(length = 10000)
+    private String privacyCommitteeOutcome;
+
+    @Column(length = 10000)
+    private String privacyCommitteeOutcomeRef;
+
+    @Column(columnDefinition="TEXT")
+    private String privacyCommitteeEmails;
+
     public Long getId() {
         return id;
     }
@@ -45,11 +57,11 @@ public class RequestProperties {
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
     }
-    
+
     public List<Comment> getComments() {
         return comments;
     }
-    
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
@@ -65,5 +77,36 @@ public class RequestProperties {
     public void setAgreementAttachmentIds(Set<String> agreementAttachmentIds) {
         this.agreementAttachmentIds = agreementAttachmentIds;
     }
-    
+
+    public boolean isSentToPrivacyCommittee() {
+        return sentToPrivacyCommittee;
+    }
+
+    public void setSentToPrivacyCommittee(boolean sentToPrivacyCommittee) {
+        this.sentToPrivacyCommittee = sentToPrivacyCommittee;
+    }
+
+    public String getPrivacyCommitteeOutcome() {
+        return privacyCommitteeOutcome;
+    }
+
+    public void setPrivacyCommitteeOutcome(String privacyCommitteeOutcome) {
+        this.privacyCommitteeOutcome = privacyCommitteeOutcome;
+    }
+
+    public String getPrivacyCommitteeOutcomeRef() {
+        return privacyCommitteeOutcomeRef;
+    }
+
+    public void setPrivacyCommitteeOutcomeRef(String privacyCommitteeOutcomeRef) {
+        this.privacyCommitteeOutcomeRef = privacyCommitteeOutcomeRef;
+    }
+
+    public String getPrivacyCommitteeEmails() {
+        return privacyCommitteeEmails;
+    }
+
+    public void setPrivacyCommitteeEmails(String privacyCommitteeEmails) {
+        this.privacyCommitteeEmails = privacyCommitteeEmails;
+    }
 }

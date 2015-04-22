@@ -46,18 +46,6 @@ public class CommentController {
         return comments;
     }
     
-    @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.GET)
-    public List<CommentRepresentation> getApprovalComments(
-            UserAuthenticationToken user,
-            @PathVariable String id) {
-        log.info("GET /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
-        List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
-        for (Comment comment: properties.getApprovalComments()) {
-            comments.add(new CommentRepresentation(comment));
-        }
-        return comments;
-    }
     
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
     public CommentRepresentation addComment(
@@ -74,21 +62,6 @@ public class CommentController {
         return new CommentRepresentation(comment);
     }
 
-    @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.POST)
-    public CommentRepresentation addApprovalComment(
-            UserAuthenticationToken user,
-            @PathVariable String id,
-            @RequestBody CommentRepresentation body) {
-        log.info("POST /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
-        Comment comment = new Comment(id, user.getUser(), body.getContents());
-        comment = commentRepository.save(comment);
-        properties.addApprovalComment(comment);
-        requestPropertiesRepository.save(properties);
-        
-        return new CommentRepresentation(comment);
-    }
-    
     @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.") 
     public class UpdateNotAllowed extends RuntimeException {
         private static final long serialVersionUID = 4000154580392628894L;

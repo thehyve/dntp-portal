@@ -26,10 +26,10 @@ import business.security.UserAuthenticationToken;
 public class CommentController {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Autowired
     private RequestPropertiesRepository requestPropertiesRepository;
-    
+
     @Autowired
     private CommentRepository commentRepository;
 
@@ -45,8 +45,20 @@ public class CommentController {
         }
         return comments;
     }
-    
-    
+
+    @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.GET)
+    public List<CommentRepresentation> getApprovalComments(
+            UserAuthenticationToken user,
+            @PathVariable String id) {
+        log.info("GET /requests/" + id + "/comments");
+        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
+        for (Comment comment: properties.getApprovalComments()) {
+            comments.add(new CommentRepresentation(comment));
+        }
+        return comments;
+    }
+
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
     public CommentRepresentation addComment(
             UserAuthenticationToken user,
@@ -58,18 +70,33 @@ public class CommentController {
         comment = commentRepository.save(comment);
         properties.addComment(comment);
         requestPropertiesRepository.save(properties);
-        
+
         return new CommentRepresentation(comment);
     }
 
-    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.") 
+    @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.POST)
+    public CommentRepresentation addApprovalComment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestBody CommentRepresentation body) {
+        log.info("POST /requests/" + id + "/comments");
+        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        Comment comment = new Comment(id, user.getUser(), body.getContents());
+        comment = commentRepository.save(comment);
+        properties.addApprovalComment(comment);
+        requestPropertiesRepository.save(properties);
+
+        return new CommentRepresentation(comment);
+    }
+
+    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.")
     public class UpdateNotAllowed extends RuntimeException {
         private static final long serialVersionUID = 4000154580392628894L;
         public UpdateNotAllowed() {
             super("Update not allowed. Not the owner.");
         }
     }
-    
+
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.PUT)
     public CommentRepresentation updateComment(
             UserAuthenticationToken user,
@@ -84,10 +111,10 @@ public class CommentController {
         comment.setContents(body.getContents());
         comment.setTimeEdited(new Date());
         comment = commentRepository.save(comment);
-        
+
         return new CommentRepresentation(comment);
     }
-    
+
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.DELETE)
     public void removeComment(
             UserAuthenticationToken user,
@@ -102,5 +129,5 @@ public class CommentController {
         properties.getComments().remove(comment);
         requestPropertiesRepository.save(properties);
     }
-    
+
 }

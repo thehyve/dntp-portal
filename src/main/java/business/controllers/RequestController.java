@@ -508,7 +508,7 @@ public class RequestController {
         ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
 
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         if (properties == null) {
             properties = new RequestProperties();
         }
@@ -517,7 +517,7 @@ public class RequestController {
         properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
         properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
         properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
-        requestPropertiesRepository.save(properties);
+        requestPropertiesService.save(properties);
 
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {

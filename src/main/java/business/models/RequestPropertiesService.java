@@ -19,7 +19,11 @@ public class RequestPropertiesService {
     }
     
     public RequestProperties findByProcessInstanceId(String processInstanceId) {
-        return requestPropertiesRepository.findByProcessInstanceId(processInstanceId);
+        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(processInstanceId);
+        if (properties == null) {
+            properties = new RequestProperties(processInstanceId);
+        }
+        return properties;
     }
     
 }

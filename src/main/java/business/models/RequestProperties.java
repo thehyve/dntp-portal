@@ -56,6 +56,14 @@ public class RequestProperties {
     @Column(columnDefinition="TEXT")
     private String privacyCommitteeEmails;
 
+    public RequestProperties() {
+        
+    }
+    
+    public RequestProperties(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+    
     public Long getId() {
         return id;
     }

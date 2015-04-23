@@ -20,7 +20,7 @@ import business.models.ApprovalVote;
 import business.models.ApprovalVote.Value;
 import business.models.ApprovalVoteRepository;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesRepository;
+import business.models.RequestPropertiesService;
 import business.models.User;
 import business.representation.ApprovalVoteRepresentation;
 import business.security.UserAuthenticationToken;
@@ -31,7 +31,7 @@ public class ApprovalVoteController {
     Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private RequestPropertiesRepository requestPropertiesRepository;
+    private RequestPropertiesService requestPropertiesService;
 
     @Autowired
     private ApprovalVoteRepository approvalVoteRepository;
@@ -41,7 +41,7 @@ public class ApprovalVoteController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("GET /requests/" + id + "/approvalVotes");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         Map<Long, ApprovalVoteRepresentation> votes = new HashMap<Long, ApprovalVoteRepresentation>();
         for (Entry<User, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
             votes.put(entry.getKey().getId(), new ApprovalVoteRepresentation(entry.getValue()));
@@ -55,7 +55,7 @@ public class ApprovalVoteController {
             @PathVariable String id,
             @RequestBody ApprovalVoteRepresentation body) {
         log.info("POST /requests/" + id + "/approvalVotes");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         ApprovalVote vote = approvalVoteRepository.findOneByProcessInstanceIdAndCreator(id, user.getUser());
         if (vote != null) {
             vote.setValue(Value.valueOf(body.getValue()));
@@ -63,8 +63,10 @@ public class ApprovalVoteController {
             vote = new ApprovalVote(id, user.getUser(), Value.valueOf(body.getValue()));
         }
         vote = approvalVoteRepository.save(vote);
+        log.info("properties: " + properties);
+        log.info("user: " + user);
         properties.addApprovalVote(user.getUser(), vote);
-        requestPropertiesRepository.save(properties);
+        requestPropertiesService.save(properties);
 
         return new ApprovalVoteRepresentation(vote);
     }

@@ -19,6 +19,15 @@
             }
             Request.get({id:$routeParams.requestId}, function (req) {
                 $scope.request = req;
+            }, function(response) {
+                if (response.data) {
+                    $scope.error = response.data.message + "\n";
+                    if (response.data.error == 302) {
+                        $scope.accessDenied = true;
+                    }
+                } else {
+                    $scope.login();
+                }
             });
         } else {
             Request.query().$promise.then(function(response) {
@@ -46,6 +55,7 @@
             request.attachments = result.attachments;
             request.agreementAttachments = result.agreementAttachments;
             request.excerptList = result.excerptList;
+            request.dataAttachments = result.dataAttachments;
         };
 
         $scope.start = function() {
@@ -100,6 +110,24 @@
             });
         };
 
+        $scope.removeDataFile = function(f) {
+            bootbox.confirm("Are you sure you want to delete file "
+                    +  f.name
+                    + "?", function(result) {
+                if (result) {
+                    attachment = new RequestAttachment();
+                    attachment.requestId = $scope.request.processInstanceId;
+                    attachment.id = f.id;
+                    attachment.$removeDataFile(function(result) {
+                        $scope.request.dataAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
+                        bootbox.alert("File " + f.name + " deleted.");
+                    }, function(response) {
+                        $scope.error = response.statusText;
+                    });
+                }
+            });
+        };
+        
         $scope.removeFile = function(f) {
             bootbox.confirm("Are you sure you want to delete file "
                     +  f.name

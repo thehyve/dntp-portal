@@ -34,6 +34,7 @@ public class RequestRepresentation {
 
     private List<AttachmentRepresentation> attachments;
     private List<AttachmentRepresentation> agreementAttachments;
+    private List<AttachmentRepresentation> dataAttachments;
     private List<CommentRepresentation> comments;
 
     private List<CommentRepresentation> approvalComments;
@@ -257,6 +258,14 @@ public class RequestRepresentation {
 
     public void setAgreementAttachments(List<AttachmentRepresentation> agreementAttachments) {
         this.agreementAttachments = agreementAttachments;
+    }
+
+    public List<AttachmentRepresentation> getDataAttachments() {
+        return dataAttachments;
+    }
+
+    public void setDataAttachments(List<AttachmentRepresentation> dataAttachments) {
+        this.dataAttachments = dataAttachments;
     }
 
     public boolean isAgreementReached() {

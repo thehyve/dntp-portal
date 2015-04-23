@@ -26,6 +26,11 @@
                     <span><i class="glyphicon glyphicon-check"></i></span>
                     {{'Vote' | translate}}
                 </button>
+                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Vote"
+                        ng-hide="(request.status != 'DataDelivery' || globals.currentUser.roles.indexOf('palga') == -1)">
+                    <span><i class="glyphicon glyphicon-upload"></i></span>
+                    {{'Upload' | translate}}
+                </button>
                 <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Discuss"
                         ng-hide="(request.status != 'Approval' || globals.currentUser.roles.indexOf('palga') == -1)">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
@@ -378,6 +383,27 @@
                 <p ng-if="!request.excerptList">
                 {{'No exerpt list has been uploaded.' | translate }}
                 </p>
+                
+                <h4>{{'Other data files'|translate}}</h4>
+                <hr>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="file in request.dataAttachments">
+                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                        <span class="pull-right">
+                        <span class="btn-group">
+                            <button class="btn btn-default" type="button" title="Delete"
+                                    ng-click="removeDataFile(file)"
+                                    >
+                                Delete
+                            </button>
+                        </span>
+                        </span>
+                    </li>
+                </ul>
+                <p ng-if="!request.dataAttachments">
+                    {{'No data files'|translate}}
+                </p>
+                
             </div>
 
         </div>

@@ -247,33 +247,29 @@ public class RequestController {
             }
             List<AttachmentRepresentation> requesterAttachments = new ArrayList<AttachmentRepresentation>();
             List<AttachmentRepresentation> agreementAttachments = new ArrayList<AttachmentRepresentation>();
+            List<AttachmentRepresentation> dataAttachments = new ArrayList<AttachmentRepresentation>();
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getProcessInstanceId());
-            if (properties != null) {
-                Set<String> agreementAttachmentIds = properties.getAgreementAttachmentIds();
-                for (Attachment attachment: attachments) {
-                    if (properties.getExcerptListAttachmentId() != null && 
-                            properties.getExcerptListAttachmentId().equals(attachment.getId())) {
-                        //
-                    } else if (agreementAttachmentIds.contains(attachment.getId())) {
-                        agreementAttachments.add(new AttachmentRepresentation(attachment));
-                    } else {
-                        requesterAttachments.add(new AttachmentRepresentation(attachment));
-                    }
-                }
-                request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
-                request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
-                request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
-                request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
-            } else {
-                properties = new RequestProperties();
-                for (Attachment attachment: attachments) {
-                    if (properties.getExcerptListAttachmentId() == null ||
-                            !properties.getExcerptListAttachmentId().equals(attachment.getId())) {
-                        requesterAttachments.add(new AttachmentRepresentation(attachment));
-                    }
+
+            Set<String> agreementAttachmentIds = properties.getAgreementAttachmentIds();
+            Set<String> dataAttachmentIds = properties.getDataAttachmentIds();
+            for (Attachment attachment: attachments) {
+                if (properties.getExcerptListAttachmentId() != null && 
+                        properties.getExcerptListAttachmentId().equals(attachment.getId())) {
+                    //
+                } else if (agreementAttachmentIds.contains(attachment.getId())) {
+                    agreementAttachments.add(new AttachmentRepresentation(attachment));
+                } else if (dataAttachmentIds.contains(attachment.getId())) {
+                    dataAttachments.add(new AttachmentRepresentation(attachment));
+                } else {
+                    requesterAttachments.add(new AttachmentRepresentation(attachment));
                 }
             }
+            request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
+            request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
+            request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
+            request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
+            
             request.setAttachments(requesterAttachments);
             if (is_palga) {
                 request.setAgreementAttachments(agreementAttachments);
@@ -307,6 +303,8 @@ public class RequestController {
                 request.setAgreementReached(fetchBooleanVariable("agreement_reached", variables));
             }
 
+            request.setDataAttachments(dataAttachments);
+            
             if (properties.getExcerptList() != null) {
                 log.info("Set excerpt list.");
                 request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
@@ -879,6 +877,62 @@ public class RequestController {
         return request;
     }
 
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
+    public RequestRepresentation uploadDataAttachment(UserAuthenticationToken user, @PathVariable String id,
+            @RequestParam("flowFilename") String name,
+            @RequestParam("file") MultipartFile file) {
+        log.info("POST /requests/" + id + "/dataFiles");
+        Task task = getTaskByRequestId(id, "data_delivery");
+        String attachmentId;
+        try{
+            Attachment result = taskService.createAttachment(
+                    file.getContentType(),
+                    task.getId(), task.getProcessInstanceId(),
+                    name, name, file.getInputStream());
+            attachmentId = result.getId();
+        } catch(IOException e) {
+            throw new FileUploadError();
+        }
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+
+        // add attachment id to the set of ids of the agreement attachments.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        properties.getDataAttachmentIds().add(attachmentId);
+        requestPropertiesService.save(properties);
+
+        //Map<String, Object> variables = transferFormData(request, instance, user.getUser());
+        //runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+        instance = getProcessInstance(id);
+        request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+        return request;
+    }
+    
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
+    public RequestRepresentation removeDataAttachment(UserAuthenticationToken user, @PathVariable String id,
+            @PathVariable String attachmentId) {
+        log.info("DELETE /requests/" + id + "/dataFiles/" + attachmentId);
+
+        ProcessInstance instance = getProcessInstance(id);
+
+        // remove existing agreement.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        if (properties != null && properties.getDataAttachmentIds().contains(attachmentId)) {
+            taskService.deleteAttachment(attachmentId);
+            properties.getDataAttachmentIds().remove(attachmentId);
+            requestPropertiesService.save(properties);
+        }
+
+        instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+        return request;
+    }
+    
     @ResponseStatus(value=HttpStatus.NOT_ACCEPTABLE, reason="Excerpt list upload error.")
     public class ExcerptListUploadError extends RuntimeException {
         

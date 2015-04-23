@@ -29,6 +29,9 @@ public class RequestProperties {
 
     @ElementCollection
     private Set<String> agreementAttachmentIds = new HashSet<String>();
+
+    @ElementCollection
+    private Set<String> dataAttachmentIds = new HashSet<String>();
     
     private String excerptListAttachmentId;
     
@@ -122,6 +125,14 @@ public class RequestProperties {
 
     public void setAgreementAttachmentIds(Set<String> agreementAttachmentIds) {
         this.agreementAttachmentIds = agreementAttachmentIds;
+    }
+
+    public Set<String> getDataAttachmentIds() {
+        return dataAttachmentIds;
+    }
+
+    public void setDataAttachmentIds(Set<String> dataAttachmentIds) {
+        this.dataAttachmentIds = dataAttachmentIds;
     }
 
     public boolean isSentToPrivacyCommittee() {

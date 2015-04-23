@@ -39,7 +39,7 @@
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
         };
-        
+
         $scope.fileuploadsuccess = function(request, data) {
             result = new Request(JSON.parse(data));
             //$scope.refresh(request, result);
@@ -66,9 +66,9 @@
             }
             console.log("Updating request at index: " + index);
             $scope.requests[index] = result;
-            
+
             $route.reload();
-            
+
             $scope.request = result;
         };
 
@@ -150,7 +150,7 @@
 
         $scope.submitForApproval = function(request) {
             bootbox.confirm(
-                "Are you sure you want to submit the request for approval?", 
+                "Are you sure you want to submit the request for approval?",
                 function(confirmed) {
                     if (confirmed) {
                         request.$submitForApproval(function(result) {
@@ -165,7 +165,7 @@
 
         $scope.finalise = function(request) {
             bootbox.confirm(
-                "Are you sure you want to finalise the request?", 
+                "Are you sure you want to finalise the request?",
                 function(confirmed) {
                     if (confirmed) {
                         request.$finalise(function(result) {
@@ -177,7 +177,7 @@
                     }
                 });
         }
-        
+
         $scope.view = function(request) {
             $location.path("/request/view/" + request.processInstanceId);
         };
@@ -196,7 +196,7 @@
                             $scope.request.approvalVotes = {};
                         }
                         if (!($scope.globals.currentUser.userid in $scope.request.approvalVotes)) {
-                            $scope.request.approvalVotes[$scope.globals.currentUser.userid] = 
+                            $scope.request.approvalVotes[$scope.globals.currentUser.userid] =
                                 new ApprovalVote({value: 'NONE'});
                         }
                     }
@@ -278,7 +278,7 @@
                 $scope.error = response.statusText;
             });
         }
-        
+
         $scope.updateApprovalComment = function(request, body) {
             comment = new ApprovalComment(body);
             comment.$update(function(result) {
@@ -302,7 +302,7 @@
                 $scope.error = $scope.error + response.data.message + "\n";
             });
         };
-        
+
         $scope.removeComment = function(comment) {
             new ApprovalComment(comment).$remove(function(result) {
                 $scope.request.approvalComments.splice(
@@ -311,7 +311,7 @@
                 $scope.error = $scope.error + response.data.message + "\n";
             });
         };
-                
+
         $scope.getName = function(user) {
             if (user == null) {
                 return "";
@@ -320,7 +320,7 @@
                 + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ")
                 + (user.lastName==null ? "" : user.lastName);
         }
-        
+
         $scope.size = function(obj) {
             var size = 0, key;
             for (key in obj) {

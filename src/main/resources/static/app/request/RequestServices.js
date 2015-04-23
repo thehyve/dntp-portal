@@ -68,10 +68,10 @@
     };
     RequestCommentFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("RequestComment", RequestCommentFactory);
-    
+
     ApprovalCommentFactory = function($resource) {
         return $resource('/requests/:processInstanceId/approvalComments/:id', {
-            processInstanceId: '@processInstanceId', 
+            processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
             update : {
@@ -87,7 +87,7 @@
 
     ApprovalVoteFactory = function($resource) {
         return $resource('/requests/:processInstanceId/approvalVotes/:id', {
-            processInstanceId: '@processInstanceId', 
+            processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
             update : {
@@ -100,7 +100,7 @@
     };
     ApprovalVoteFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("ApprovalVote", ApprovalVoteFactory);
-        
+
     var TaskFactory = function($resource) {
         return $resource('/tasks/:id', {
             id : '@id'

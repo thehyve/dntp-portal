@@ -26,10 +26,10 @@ import business.security.UserAuthenticationToken;
 public class CommentController {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Autowired
     private RequestPropertiesRepository requestPropertiesRepository;
-    
+
     @Autowired
     private CommentRepository commentRepository;
 
@@ -45,7 +45,7 @@ public class CommentController {
         }
         return comments;
     }
-    
+
     @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.GET)
     public List<CommentRepresentation> getApprovalComments(
             UserAuthenticationToken user,
@@ -58,7 +58,7 @@ public class CommentController {
         }
         return comments;
     }
-    
+
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
     public CommentRepresentation addComment(
             UserAuthenticationToken user,
@@ -70,7 +70,7 @@ public class CommentController {
         comment = commentRepository.save(comment);
         properties.addComment(comment);
         requestPropertiesRepository.save(properties);
-        
+
         return new CommentRepresentation(comment);
     }
 
@@ -85,18 +85,18 @@ public class CommentController {
         comment = commentRepository.save(comment);
         properties.addApprovalComment(comment);
         requestPropertiesRepository.save(properties);
-        
+
         return new CommentRepresentation(comment);
     }
-    
-    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.") 
+
+    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.")
     public class UpdateNotAllowed extends RuntimeException {
         private static final long serialVersionUID = 4000154580392628894L;
         public UpdateNotAllowed() {
             super("Update not allowed. Not the owner.");
         }
     }
-    
+
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.PUT)
     public CommentRepresentation updateComment(
             UserAuthenticationToken user,
@@ -111,10 +111,10 @@ public class CommentController {
         comment.setContents(body.getContents());
         comment.setTimeEdited(new Date());
         comment = commentRepository.save(comment);
-        
+
         return new CommentRepresentation(comment);
     }
-    
+
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.DELETE)
     public void removeComment(
             UserAuthenticationToken user,
@@ -129,5 +129,5 @@ public class CommentController {
         properties.getComments().remove(comment);
         requestPropertiesRepository.save(properties);
     }
-    
+
 }

@@ -25,7 +25,6 @@ public class CommentRepresentation {
     
     public CommentRepresentation(Comment comment) {
         this.id = comment.getId();
-        this.creator = new ProfileRepresentation(comment.getCreator());
         this.processInstanceId = comment.getProcessInstanceId();
         this.timeCreated = comment.getTimeCreated();
         this.timeEdited = comment.getTimeEdited();

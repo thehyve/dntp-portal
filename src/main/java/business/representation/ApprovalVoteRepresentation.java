@@ -6,23 +6,23 @@ import business.models.ApprovalVote;
 
 public class ApprovalVoteRepresentation {
 
-    
+
     private Long id;
-    
+
     private String processInstanceId;
 
     private ProfileRepresentation creator;
-    
+
     private Date timeCreated = new Date();
-    
+
     private Date timeEdited = timeCreated;
-    
+
     private String value;
 
     public ApprovalVoteRepresentation() {
-        
+
     }
-    
+
     public ApprovalVoteRepresentation(ApprovalVote vote) {
         this.id = vote.getId();
         this.creator = new ProfileRepresentation(vote.getCreator());
@@ -79,5 +79,5 @@ public class ApprovalVoteRepresentation {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
 }

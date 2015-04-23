@@ -29,10 +29,10 @@ import business.security.UserAuthenticationToken;
 public class ApprovalVoteController {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Autowired
     private RequestPropertiesRepository requestPropertiesRepository;
-    
+
     @Autowired
     private ApprovalVoteRepository approvalVoteRepository;
 
@@ -48,7 +48,7 @@ public class ApprovalVoteController {
         }
         return votes;
     }
-    
+
     @RequestMapping(value = "/requests/{id}/approvalVotes", method = RequestMethod.POST)
     public ApprovalVoteRepresentation addVote(
             UserAuthenticationToken user,
@@ -65,18 +65,18 @@ public class ApprovalVoteController {
         vote = approvalVoteRepository.save(vote);
         properties.addApprovalVote(user.getUser(), vote);
         requestPropertiesRepository.save(properties);
-        
+
         return new ApprovalVoteRepresentation(vote);
     }
 
-    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.") 
+    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.")
     public class UpdateNotAllowed extends RuntimeException {
         private static final long serialVersionUID = 4000154580392628894L;
         public UpdateNotAllowed() {
             super("Update not allowed. Not the owner.");
         }
     }
-    
+
     @RequestMapping(value = "/requests/{id}/approvalVotes/{voteId}", method = RequestMethod.PUT)
     public ApprovalVoteRepresentation updateVote(
             UserAuthenticationToken user,
@@ -91,8 +91,8 @@ public class ApprovalVoteController {
         vote.setValue(Value.valueOf(body.getValue()));
         vote.setTimeEdited(new Date());
         vote = approvalVoteRepository.save(vote);
-        
+
         return new ApprovalVoteRepresentation(vote);
     }
-        
+
 }

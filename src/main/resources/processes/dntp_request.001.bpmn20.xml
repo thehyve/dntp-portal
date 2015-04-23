@@ -28,15 +28,15 @@
             <activiti:formProperty id="title" name="Title" type="string" variable="title" required="true"></activiti:formProperty>
             <activiti:formProperty id="description" name="Description" type="string" variable="description" required="true"></activiti:formProperty>
             <activiti:formProperty id="motivation" name="Motivation" type="string" variable="motivation" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_statistics_request" name="Request for information (statistics or Palga excerpts)" type="boolean" 
+            <activiti:formProperty id="is_statistics_request" name="Request for information (statistics or Palga excerpts)" type="boolean"
                 variable="is_statistics_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports (intermediate procedure)" type="boolean" 
+            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports (intermediate procedure)" type="boolean"
                 variable="is_pa_report_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_materials_request" name="Request for samples (ffpe/coupus) (intermediate procedure)" type="boolean" 
+            <activiti:formProperty id="is_materials_request" name="Request for samples (ffpe/coupus) (intermediate procedure)" type="boolean"
                 variable="is_materials_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="return_date" name="Return date" type="date" 
+            <activiti:formProperty id="return_date" name="Return date" type="date"
                 variable="return date"></activiti:formProperty>
-            <activiti:formProperty id="limited_to_cohort" name="Is your request limited to a specific cohort?" type="boolean" 
+            <activiti:formProperty id="limited_to_cohort" name="Is your request limited to a specific cohort?" type="boolean"
                 variable="is_limited_to_cohort" required="true"></activiti:formProperty>
             <activiti:formProperty id="contact_person_name" name="Contact person" type="string" variable="contact_person_name" required="true"></activiti:formProperty>
         </extensionElements>
@@ -81,9 +81,9 @@
         <script>execution.setVariable("status", "Approval")</script>
     </scriptTask>
 
-    <!-- Start two tasks in parallel: 
+    <!-- Start two tasks in parallel:
         - approval by scientific council;
-        - update approval status by palga. 
+        - update approval status by palga.
     -->
     <sequenceFlow id="approval_to_approval_task" sourceRef="status_approval" targetRef="approval_tasks"></sequenceFlow>
     <parallelGateway id="approval_tasks" />
@@ -128,7 +128,7 @@
     </userTask>
 
     <sequenceFlow id="data_delivery_to_closed" sourceRef="data_delivery" targetRef="status_closed"></sequenceFlow>
-    
+
     <scriptTask id="status_closed" name="Update status to Closed" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>
         <script>execution.setVariable("status", "Closed")</script>

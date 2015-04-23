@@ -506,6 +506,32 @@
                     </div> <!-- endif 'Review' status and user type 'palga' or 'scientific_council' -->
 
 
+                    <!-- If in 'DataDelivery' status -->
+                    <div ng-if="request.status=='DataDelivery'">
+                        <h4>Excerpt list</h4>
+                        <hr>
+                        <label ng-if="request.excerptList">
+                            <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
+                        </label>
+                        
+                        <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
+                             flow-name="excerptListFlow"
+                             flow-files-submitted="$flow.upload()"
+                             flow-file-success="fileuploadsuccess(request, $message)"
+                                >
+                            <div>
+                                <span class="btn btn-default" flow-btn>{{'Upload excerpt list'|translate}}</span>
+                            </div>
+                            <br>
+                            <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                                 flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                                 flow-drag-leave="style={border: '2px dashed gray'}"
+                                 ng-style="style">
+                                ({{'drag and drop your file here'|translate}})
+                            </div>
+                        </div>
+                    </div>
+
                 </div> <!--end modal-body-->
 
                 <div class="modal-footer">

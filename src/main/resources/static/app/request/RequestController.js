@@ -45,6 +45,7 @@
             //$scope.refresh(request, result);
             request.attachments = result.attachments;
             request.agreementAttachments = result.agreementAttachments;
+            request.excerptList = result.excerptList;
         };
 
         $scope.start = function() {

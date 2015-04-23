@@ -38,7 +38,9 @@ public class RequestRepresentation {
 
     private List<CommentRepresentation> approvalComments;
     private Map<Long, ApprovalVoteRepresentation> approvalVotes;
-
+    
+    private ExcerptListRepresentation excerptList;
+    
     // Palga specific
     private boolean requesterValid;
     private boolean requesterAllowed;
@@ -320,4 +322,13 @@ public class RequestRepresentation {
     public void setPrivacyCommitteeOutcome(String privacyCommitteeOutcome) {
         this.privacyCommitteeOutcome = privacyCommitteeOutcome;
     }
+
+    public ExcerptListRepresentation getExcerptList() {
+        return excerptList;
+    }
+
+    public void setExcerptList(ExcerptListRepresentation excerptList) {
+        this.excerptList = excerptList;
+    } 
+
 }

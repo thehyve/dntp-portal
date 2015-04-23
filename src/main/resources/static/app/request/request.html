@@ -358,6 +358,18 @@
 
             </div>
 
+            <!-- If in 'DataDelivery' status -->
+            <div ng-if="request.status=='DataDelivery'">
+                <h4>Excerpt list</h4>
+                <hr>
+                <label ng-if="request.excerptList">
+                    <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
+                </label>
+                <p ng-if="!request.excerptList">
+                {{'No exerpt list has been uploaded.' | translate }}
+                </p>
+            </div>
+
         </div>
 
     </div> <!--end row-->

@@ -55,6 +55,9 @@ public class RequestRepresentation {
     private boolean contactPersonAllowed;
     private boolean requesterLabValid;
     private boolean agreementReached;
+    
+    private boolean scientificCouncilApproved;
+    private boolean privacyCommitteeApproved;
 
     // Privacy Committee
     private boolean sentToPrivacyCommittee;
@@ -377,6 +380,22 @@ public class RequestRepresentation {
 
     public void setExcerptList(ExcerptListRepresentation excerptList) {
         this.excerptList = excerptList;
+    }
+
+    public boolean isScientificCouncilApproved() {
+        return scientificCouncilApproved;
+    }
+
+    public void setScientificCouncilApproved(boolean scientificCouncilApproved) {
+        this.scientificCouncilApproved = scientificCouncilApproved;
+    }
+
+    public boolean isPrivacyCommitteeApproved() {
+        return privacyCommitteeApproved;
+    }
+
+    public void setPrivacyCommitteeApproved(boolean privacyCommitteeApproved) {
+        this.privacyCommitteeApproved = privacyCommitteeApproved;
     } 
 
 }

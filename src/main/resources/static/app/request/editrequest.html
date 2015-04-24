@@ -510,6 +510,33 @@
 
                     </div> <!-- endif 'Review' status and user type 'palga' or 'scientific_council' -->
 
+                <div ng-if="request.status=='Approval' &&
+                        globals.currentUser.roles.indexOf('palga') != -1">
+                <h4>{{'Finalisation checks'|translate}}</h4>
+                <hr>
+                <!-- Scientific council has approved -->
+                <div class="form-group" ng-class="">
+                    <label class="control-label col-sm-3" for="scientificCouncilApproved">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved" 
+                               ng-model="request.scientificCouncilApproved"> &nbsp; {{ 'The scientific council has approved.' | translate }}
+                    </div>
+                </div>
+            
+                <!-- There are no privacy issues or the privacy committee has approved. -->
+                <div class="form-group" ng-class="">
+                    <label class="control-label col-sm-3" for="privacyCommiteeApproved">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved" 
+                               ng-model="request.privacyCommitteeApproved"> &nbsp; {{ 'There are no privacy issues or the privacy committee has approved.' | translate }}
+                    </div>
+                </div>
+                </div>            
+
 
                 </div> <!--end modal-body-->
 
@@ -534,6 +561,8 @@
                         ng-if="request.status=='Approval'"
                         ng-click="finalise(request)"
                         ng-disabled="requestEditForm.$invalid
+                            || !request.scientificCouncilApproved
+                            || !request.privacyCommitteeApproved
                         ">
                             {{'Finalise'|translate}}
                     </button>

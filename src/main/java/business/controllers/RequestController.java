@@ -307,6 +307,9 @@ public class RequestController {
                 request.setContactPersonAllowed(fetchBooleanVariable("contact_person_is_allowed", variables));
                 request.setRequesterLabValid(fetchBooleanVariable("requester_lab_is_valid", variables));
                 request.setAgreementReached(fetchBooleanVariable("agreement_reached", variables));
+                
+                request.setScientificCouncilApproved(fetchBooleanVariable("scientific_council_approved", variables));
+                request.setPrivacyCommitteeApproved(fetchBooleanVariable("privacy_committee_approved", variables));
             }
 
             request.setDataAttachments(dataAttachments);
@@ -347,6 +350,10 @@ public class RequestController {
                 variables.put("contact_person_is_allowed", (Boolean)request.isContactPersonAllowed());
                 variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
                 variables.put("agreement_reached", (Boolean)request.isAgreementReached());
+                
+                variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
+                variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
+                
                 if (request.isRequesterValid()
                         && request.isRequesterAllowed()
                         && request.isContactPersonAllowed()
@@ -356,6 +363,12 @@ public class RequestController {
                 } else {
                     variables.put("request_is_admissible", Boolean.FALSE);
                 }
+                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getProcessInstanceId());
+                properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
+                properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
+                properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
+                properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
+                requestPropertiesService.save(properties);
             }
         }
         return variables;
@@ -520,17 +533,6 @@ public class RequestController {
         log.info("PUT /requests/" + id);
         ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
-
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        if (properties == null) {
-            properties = new RequestProperties();
-        }
-        properties.setProcessInstanceId(id);
-        properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
-        properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
-        properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
-        properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
-        requestPropertiesService.save(properties);
 
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
@@ -745,22 +747,31 @@ public class RequestController {
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
 
-        log.info("Fetching scientific_council_approval task");
-        Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
-        if (councilTask.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(councilTask.getId());
-        }
-        taskService.complete(councilTask.getId());
-
-        log.info("Fetching request_approval task");
-        Task palgaTask = getTaskByRequestId(id, "request_approval");
-        if (palgaTask.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(palgaTask.getId());
-        }
-        taskService.complete(palgaTask.getId());
-
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
+        transferData(instance, updatedRequest, user.getUser());
+        if (updatedRequest.isPrivacyCommitteeApproved() && 
+                updatedRequest.isScientificCouncilApproved()) {
+        
+            log.info("Fetching scientific_council_approval task");
+            Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
+            if (councilTask.getDelegationState()==DelegationState.PENDING) {
+                taskService.resolveTask(councilTask.getId());
+            }
+            taskService.complete(councilTask.getId());
+    
+            log.info("Fetching request_approval task");
+            Task palgaTask = getTaskByRequestId(id, "request_approval");
+            if (palgaTask.getDelegationState()==DelegationState.PENDING) {
+                taskService.resolveTask(palgaTask.getId());
+            }
+            taskService.complete(palgaTask.getId());
+        } else {
+            log.warn("Finalisation failed because of lacking approval.");
+        }
+
+        instance = getProcessInstance(id);
+        updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser());
 
         return updatedRequest;

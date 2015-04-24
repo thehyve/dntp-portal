@@ -357,7 +357,9 @@
 
                     <h3>{{'Approval by the scientific council'|translate}}</h3>
                     <hr>
-
+                    
+                    <h4>{{'Votes'|translate}}</h4>
+                    <hr>
                     <!-- Status -->
                     <div class="row">
                         <label class="control-label col-sm-3">{{ 'Votes' | translate }}</label>
@@ -377,7 +379,30 @@
                         </div>
                         </div>
                     </div>
+                    <!-- Add vote -->
+                    <div ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="row" ng-class="">
+                        <div class="col-sm-8">
+                           <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
+                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
+                            type="button" title="{{'Accepted'|translate}}"
+                            ng-click="updateVote(request, 'ACCEPTED')"
+                            ng-if="!edit_comment.id">
+                            <span><i class="glyphicon glyphicon-ok-circle"></i></span>
+                            {{'Accepted'|translate}}
+                            </button>
+                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
+                            type="button" title="{{'Rejected'|translate}}"
+                            ng-click="updateVote(request, 'REJECTED')"
+                            ng-if="!edit_comment.id">
+                            <span><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            {{'Rejected'|translate}}
+                            </button>
+                        </div>
+                    </div>
+                    <br>
 
+                    <h4>{{'Discussion'|translate}}</h4>
+                    <hr>
                     <ul class="list-group">
                     <li class="list-group-item" ng-repeat="comment in request.approvalComments">
                         <p><div ng-show="!approval_comment_edit_visibility[comment.id]">{{comment.contents}}</div>
@@ -440,32 +465,11 @@
                             </button>
                         </div>
                     </div>
-                        
-                    <!-- Add vote -->
-                    <div ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="form-group" ng-class="">
-                        <div class="col-sm-8">
-                           <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
-                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
-                            type="button" title="{{'Accepted'|translate}}"
-                            ng-click="updateVote(request, 'ACCEPTED')"
-                            ng-if="!edit_comment.id">
-                            <span><i class="glyphicon glyphicon-ok-circle"></i></span>
-                            {{'Accepted'|translate}}
-                            </button>
-                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
-                            type="button" title="{{'Rejected'|translate}}"
-                            ng-click="updateVote(request, 'REJECTED')"
-                            ng-if="!edit_comment.id">
-                            <span><i class="glyphicon glyphicon-ban-circle"></i></span>
-                            {{'Rejected'|translate}}
-                            </button>
-                        </div>
-                    </div>
                     <br>
                 </div> <!-- endif 'Approval' status and user type 'palga' or 'scientific_council' -->
                 
                 
-                <div ng-if="roles.indexOf('palga') != -1">
+                <div ng-if="globals.currentUser.roles.indexOf('palga') != -1">
 
                 <!--###################################-->
                 <!-- START COMMENTS-->

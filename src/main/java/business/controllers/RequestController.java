@@ -596,6 +596,36 @@ public class RequestController {
     }
 
     /**
+     * Finds current task. Assumes that exactly one task is currently active.
+     * @param requestId
+     * @return the current task if it exists.
+     * @throws business.controllers.RequestController.TaskNotFound
+     */
+    Task getCurrentPalgaTaskByRequestId(String requestId) {
+        Task task = findCurrentPalgaTaskByRequestId(requestId);
+        if (task == null) {
+            throw new TaskNotFound();
+        }
+        return task;
+    }
+    
+    /**
+     * Finds current task. Assumes that at most one task is currently active.
+     * @param requestId
+     * @return the current task if it exists, null otherwise.
+     */
+    Task findCurrentPalgaTaskByRequestId(String requestId) {
+        Task task = findTaskByRequestId(requestId, "palga_request_review");
+        if (task == null) {
+            task = findTaskByRequestId(requestId, "request_approval");
+        }
+        if (task == null) {
+            task = findTaskByRequestId(requestId, "data_delivery");
+        }
+        return task;
+    }
+    
+    /**
      * Finds request.
      * @param processInstanceId
      * @return the current request if it exists; null otherwise.
@@ -744,7 +774,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/claim");
         ProcessInstance instance = getProcessInstance(id);
-        Task task = getTaskByRequestId(id, "palga_request_review");
+        Task task = getCurrentPalgaTaskByRequestId(id);
         if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
             taskService.claim(task.getId(), user.getId().toString());
         } else {
@@ -769,7 +799,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/unclaim");
         ProcessInstance instance = getProcessInstance(id);
-        Task task = getTaskByRequestId(id, "palga_request_review");
+        Task task = getCurrentPalgaTaskByRequestId(id);
         taskService.unclaim(task.getId());
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();

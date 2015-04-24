@@ -242,6 +242,17 @@
                     }
                 });
         };
+        
+        $scope.uploadDataFile = function(flow) {
+            max_size = 1024*1024*10;
+            if (flow.getSize() > max_size) {
+                console.log('size: '+ flow.getSize());
+                mb_size = (flow.getSize()/(1024*1024)).toFixed(1);
+                bootbox.alert("File too large (" + mb_size + " MB). Maximum size is 10 MB.");
+            } else {
+                flow.upload();
+            }
+        }
 
         $scope.view = function(request) {
             $location.path("/request/view/" + request.processInstanceId);

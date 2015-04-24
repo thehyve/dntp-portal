@@ -16,7 +16,9 @@
 
             <div style="padding-bottom: 25px;">
                 <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit"
-                        ng-hide="(request.status != 'Open' && globals.currentUser.roles.indexOf('palga') == -1) || (globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid)">
+                        ng-if="(request.status == 'Open' && globals.currentUser.roles.indexOf('requester') != -1) 
+                        || (request.status != 'DataDelivery') && globals.currentUser.roles.indexOf('palga') != -1"
+                        ng-disabled="globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Edit' | translate}}
                 </button>
@@ -25,14 +27,9 @@
                     <span><i class="glyphicon glyphicon-check"></i></span>
                     {{'Vote' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Discuss"
-                        ng-hide="(request.status != 'Approval' || globals.currentUser.roles.indexOf('palga') == -1)">
+                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1"  class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
-                    {{'Discuss' | translate}}
-                </button>
-                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1"  class="btn btn-default" type="button"  ng-click="focus('#commentText');" title="Comment">
-                    <span><i class="glyphicon glyphicon-comment"></i></span>
-                    {{'Comment' | translate}}
+                    {{'Notes' | translate}}
                 </button>
                 <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" ng-show="request.assignee != globals.currentUser.userid" class="btn btn-default" type="button"  ng-click="claim(request);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
@@ -42,8 +39,8 @@
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="remove(request)" title="Claim"
-                        ng-hide="(request.status != 'Open' && globals.currentUser.roles.indexOf('palga') == -1) || (globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid)">
+                <button class="btn btn-default" type="button"  ng-click="remove(request)" title="{{'Delete' | translate}}"
+                        ng-if="request.status == 'Open'">
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                     {{'Delete' | translate}}
                 </button>
@@ -247,7 +244,7 @@
             <div ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
                 <br>
 
-                <h4>{{'Checks by Palga'|translate}}</h4>
+                <h3>{{'Checks by Palga'|translate}}</h3>
                 <hr>
 
                 <!-- Requester valid -->
@@ -288,7 +285,7 @@
                 <!--*****************-->
                 <br>
 
-                <h4>{{'Checks by Privacy Committee'|translate}}</h4>
+                <h3>{{'Checks by Privacy Committee'|translate}}</h3>
                 <hr>
 
                 <!-- Is this request has been sent to Privacy Committee -->
@@ -349,18 +346,136 @@
                 </ul>
 
                 <br>
+                
+                </div>
+                
+                
+                <!-- If in 'Approval' status and user type 'palga' or 'scientific_council' -->
+                <div ng-if="request.status=='Approval' &&
+                    (   globals.currentUser.roles.indexOf('palga') != -1
+                     || globals.currentUser.roles.indexOf('scientific_council') != -1)">
+
+                    <h3>{{'Approval by the scientific council'|translate}}</h3>
+                    <hr>
+
+                    <!-- Status -->
+                    <div class="row">
+                        <label class="control-label col-sm-3">{{ 'Votes' | translate }}</label>
+                        <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                            {{size(request.approvalVotes)}} votes.
+                            </div>
+                        </div>
+                         <div class="panel panel-default"  ng-repeat="(user_id, vote) in request.approvalVotes">
+                            <div class="panel-body">
+                            <span ng-if="vote.value=='ACCEPTED'"><i class="glyphicon glyphicon-ok-circle"></i></span>
+                            <span ng-if="vote.value=='REJECTED'"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            <span ng-if="vote.value=='NONE'"><i class="glyphicon glyphicon-question-sign"></i></span>
+                            {{vote.value}} &nbsp; <small ng-if="getName(vote.creator)">({{getName(vote.creator)}})</small>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="comment in request.approvalComments">
+                        <p><div ng-show="!approval_comment_edit_visibility[comment.id]">{{comment.contents}}</div>
+                            <div ng-show="approval_comment_edit_visibility[comment.id]">
+                           <textarea name="commentText" placeholder="{{'Add comment'|translate}}"
+                            ng-model="comment.contents">
+                           </textarea>
+                           <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+                            ng-click="updateComment(request, comment)">
+                            {{'Update comment'|translate}}
+                            </button>
+                            </div>
+                        <span class="pull-right" ng-if="globals.currentUser.id==comment.creator.id">
+                        <span class="btn-group btn-group-xs">
+                            <button class="btn btn-info {{comment_edit_visibility[comment.id] ? 'active' : ''}}" type="button" title="Edit"
+                                ng-click="comment_edit_visibility[comment.id] = 1">
+                                <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                </button>
+                            <button class="btn btn-danger" type="button" title="Delete"
+                                ng-click="removeApprovalComment(comment)">
+                                <span><i class="glyphicon glyphicon-remove-circle"></i></span>
+                            </button>
+                        </span>
+                        </span>
+                        </p>
+                        <p>
+                        <small>
+                        <span><i class="glyphicon glyphicon-user"></i></span>
+                        <em>{{getName(comment.creator)}}</em>
+                        &nbsp;
+                        <span><i class="glyphicon glyphicon-time"></i></span>
+                        <span>{{comment.timeCreated | date: 'EEE dd MMMM yyyy  HH:mm'}}</span>
+                        <span ng-if="comment.timeEdited != comment.timeCreated">(Last edited: {{comment.timeEdited | date: 'EEE dd MMMM yyyy  HH:mm'}})</span>
+                        </small>
+                        </p>
+                    </li>
+                    </ul>
+
+                    <!-- Add approval comment -->
+                    <div class="row" ng-class="">
+                        <div class="col-sm-12">
+                            <input type="hidden" ng-model="approval_comment.processInstanceId" value="{{request.processInstanceId}}">
+                            <textarea class="form-control" id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
+                                      ng-model="approval_comment.contents">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="row" ng-class="">
+                        <div class="col-sm-12 text-justify">
+                            <br>
+                            <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
+                                    ng-click="addApprovalComment(request, approval_comment)"
+                                    ng-if="!approval_comment.id">
+                                {{'Add comment'|translate}}
+                            </button>
+                            <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+                                    ng-click="updateApprovalComment(request, approval_comment)"
+                                    ng-if="approval_comment.id">
+                                {{'Update comment'|translate}}
+                            </button>
+                        </div>
+                    </div>
+                        
+                    <!-- Add vote -->
+                    <div ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="form-group" ng-class="">
+                        <div class="col-sm-8">
+                           <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
+                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
+                            type="button" title="{{'Accepted'|translate}}"
+                            ng-click="updateVote(request, 'ACCEPTED')"
+                            ng-if="!edit_comment.id">
+                            <span><i class="glyphicon glyphicon-ok-circle"></i></span>
+                            {{'Accepted'|translate}}
+                            </button>
+                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
+                            type="button" title="{{'Rejected'|translate}}"
+                            ng-click="updateVote(request, 'REJECTED')"
+                            ng-if="!edit_comment.id">
+                            <span><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            {{'Rejected'|translate}}
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                </div> <!-- endif 'Approval' status and user type 'palga' or 'scientific_council' -->
+                
+                
+                <div ng-if="roles.indexOf('palga') != -1">
 
                 <!--###################################-->
                 <!-- START COMMENTS-->
                 <!--TODO: Refactor-->
                 <!--###################################-->
 
-                <h4>
-                    <a data-toggle="collapse">
-                        {{request.comments.length}} {{'Comments'|translate}}
-                    </a>
-
-                </h4>
+                <h3>
+                   {{'Notes'|translate}}
+                   <span class="badge">{{request.comments.length}}</span> 
+                </h3>
                 <hr>
 
                 <div>
@@ -368,12 +483,12 @@
                         <li class="list-group-item" ng-repeat="comment in request.comments">
                             <p><div ng-show="!comment_edit_visibility[comment.id]">{{comment.contents}}</div>
                             <div ng-show="comment_edit_visibility[comment.id]">
-                                   <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add comment'|translate}}"
+                                   <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add note'|translate}}"
                                              ng-model="comment.contents">
                                    </textarea>
-                                <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+                                <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
                                         ng-click="updateComment(request, comment)">
-                                    {{'Update comment'|translate}}
+                                    {{'Update note'|translate}}
                                 </button>
                             </div>
                                 <span class="pull-right">
@@ -405,90 +520,93 @@
 
                 <!-- Add comment -->
                 <input type="hidden" ng-model="edit_comment.processInstanceId" value="{{request.processInstanceId}}">
-                <textarea class="form-control" id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
+                <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
                           ng-model="edit_comment.contents">
                 </textarea>
                 <br>
-                <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
+                <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
                         ng-click="addComment(request, edit_comment)"
                         ng-if="!edit_comment.id">
-                    {{'Add comment'|translate}}
+                    {{'Add note'|translate}}
                 </button>
-                <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+                <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
                         ng-click="updateComment(request, edit_comment)"
                         ng-if="edit_comment.id">
-                    {{'Update comment'|translate}}
+                    {{'Update note'|translate}}
                 </button>
 
                 <!-- END COMMENTS-->
 
             </div>
 
-                    <!-- If in 'DataDelivery' status -->
-                    <div ng-if="request.status=='DataDelivery'">
-                        <h4>{{'Excerpt list'|translate}}</h4>
-                        <hr>
-                        <label ng-if="request.excerptList">
-                            <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
-                        </label>
-                        
-                        <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
-                             flow-name="excerptListFlow"
-                             flow-files-submitted="$flow.upload()"
-                             flow-file-success="fileuploadsuccess(request, $message)"
-                             ng-if="globals.currentUser.roles.indexOf('palga') != -1"
-                                >
-                            <div>
-                                <span class="btn btn-default" flow-btn>{{'Upload excerpt list'|translate}}</span>
-                            </div>
-                            <br>
-                            <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
-                                 flow-drag-enter="style={border:'4px dashed lightgreen'}"
-                                 flow-drag-leave="style={border: '2px dashed gray'}"
-                                 ng-style="style">
-                                ({{'drag and drop your file here'|translate}})
-                            </div>
-                        </div>
-                        
-                        <h4>{{'Other data files'|translate}}</h4>
-                        <hr>
-                        <ul class="list-group">
-                            <li class="list-group-item" ng-repeat="file in request.dataAttachments">
-                                <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
-                                <span class="pull-right">
-                                <span class="btn-group">
-                                    <button class="btn btn-default" type="button" title="Delete"
-                                            ng-click="removeDataFile(file)"
-                                            >
-                                        Delete
-                                    </button>
-                                </span>
-                                </span>
-                            </li>
-                        </ul>
-                        <p ng-if="!request.dataAttachments">
-                            {{'No data files'|translate}}
-                        </p>
+            <!-- If in 'DataDelivery' status -->
+            <div ng-if="request.status=='DataDelivery'">
+                <h4>{{'Excerpt list'|translate}}</h4>
+                <hr>
+                <label ng-if="request.excerptList">
+                    <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
+                </label>
+                
+                <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
+                     flow-name="excerptListFlow"
+                     flow-files-submitted="$flow.upload()"
+                     flow-file-success="fileuploadsuccess(request, $message)"
+                     ng-if="globals.currentUser.roles.indexOf('palga') != -1"
+                        >
+                    <div>
+                        <span class="btn btn-default" flow-btn>{{'Upload excerpt list'|translate}}</span>
+                    </div>
+                    <br>
+                    <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                         flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                         flow-drag-leave="style={border: '2px dashed gray'}"
+                         ng-style="style">
+                        ({{'drag and drop your file here'|translate}})
+                    </div>
+                </div>
+                
+                <h4>{{'Other data files'|translate}}</h4>
+                <hr>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="file in request.dataAttachments">
+                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                        <span class="pull-right">
+                        <span class="btn-group">
+                            <button class="btn btn-default" type="button" title="Delete"
+                                    ng-click="removeDataFile(file)"
+                                    >
+                                Delete
+                            </button>
+                        </span>
+                        </span>
+                    </li>
+                </ul>
+                <p ng-if="!request.dataAttachments">
+                    {{'No data files'|translate}}
+                </p>
 
-                        <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
-                             flow-name="dataFlow"
-                             flow-files-submitted="$flow.upload()"
-                             flow-file-success="fileuploadsuccess(request, $message)"
-                             ng-if="globals.currentUser.roles.indexOf('palga') != -1"
-                                >
-                            <div>
-                                <span class="btn btn-default" flow-btn>{{'Upload data files'|translate}}</span>
-                            </div>
-                            <br>
-                            <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
-                                 flow-drag-enter="style={border:'4px dashed lightgreen'}"
-                                 flow-drag-leave="style={border: '2px dashed gray'}"
-                                 ng-style="style">
-                                ({{'drag and drop your file here'|translate}})
-                            </div>
-                        </div>
+                <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
+                     flow-name="dataFlow"
+                     flow-files-submitted="uploadDataFile($flow)"
+                     flow-file-success="fileuploadsuccess(request, $message)"
+                     ng-if="globals.currentUser.roles.indexOf('palga') != -1"
+                        >
+                    <p>
+                    (<em>{{'Maximum file size 10 MB.'|translate}}</em>)
+                    </p>
+                    <div>
+                        <span class="btn btn-default" flow-btn>{{'Upload data files'|translate}}</span>
+                    </div>
+                    <br>
+                    <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                         flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                         flow-drag-leave="style={border: '2px dashed gray'}"
+                         ng-style="style">
+                        ({{'drag and drop your file here'|translate}})
+                    </div>
+                </div>
 
-                    </div> <!-- endif DataDelivery -->
+            </div> <!-- endif DataDelivery -->
 
         </div>
 

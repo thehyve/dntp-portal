@@ -694,13 +694,25 @@ public class RequestController {
             message.setReplyTo("no-reply@dntp.thehyve.nl");
             message.setSubject("[DNTP portal] New request open for approval.");
             String template =
-                    "Request : %s\n"
-                +   "Title   : %s\n";
+                    "Request: %s\n"
+                +   "Requester: %s\n"
+                +   "Principal Investigator: %s\n"
+                +   "Title: %s\n"
+                +   "\nResearch Question:\n%s\n"
+                +   "\nHypothesis:\n%s\n"
+                +   "\nMethods:\n%s\n"
+                ;
             String body = String.format(template,
                     request.getProcessInstanceId(),
-                    request.getTitle());
+                    request.getRequesterName(),
+                    request.getContactPersonName(),
+                    request.getTitle(),
+                    request.getResearchQuestion(),
+                    request.getHypothesis(),
+                    request.getMethods()
+                    );
             message.setText(String.format(
-                    "(We're testing a prototype system. If you receive this email, please contact gijs@thehyve.nl.)\n"
+                    ""
                     + "Please follow this link to view the new request: http://%s:%s/#/request/view/%s.\n"
                     + "====\n"
                     + body,

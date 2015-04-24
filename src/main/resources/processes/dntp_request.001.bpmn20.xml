@@ -25,24 +25,44 @@
         <documentation>Request form filled in by the requester.
         </documentation>
         <extensionElements>
-            <activiti:formProperty id="title" name="Title" type="string" variable="title" required="true"></activiti:formProperty>
-            <activiti:formProperty id="description" name="Description" type="string" variable="description" required="true"></activiti:formProperty>
-            <activiti:formProperty id="motivation" name="Motivation" type="string" variable="motivation" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_statistics_request" name="Request for information (statistics or Palga excerpts)" type="boolean"
-                variable="is_statistics_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports (intermediate procedure)" type="boolean"
-                variable="is_pa_report_request" required="true"></activiti:formProperty>
-            <activiti:formProperty id="is_materials_request" name="Request for samples (ffpe/coupus) (intermediate procedure)" type="boolean"
-                variable="is_materials_request" required="true"></activiti:formProperty>
+            <!--Descriptions-->
+            <activiti:formProperty id="title" name="Title" type="string" variable="title"
+                                   required="true"></activiti:formProperty>
+            <activiti:formProperty id="research_question" name="Research Question" type="string"
+                                   variable="research_question" required="true"></activiti:formProperty>
+            <activiti:formProperty id="hypothesis" name="Hypothesis" type="string" variable="hypothesis"
+                                   required="true"></activiti:formProperty>
+            <activiti:formProperty id="methods" name="Methods" type="string" variable="methods"
+                                   required="true"></activiti:formProperty>
+            <!--Types-->
+            <activiti:formProperty id="is_statistics_request" name="Request for statistics (OZV)" type="boolean"
+                                   variable="is_statistics_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_excerpts_request" name="Request for excerpts (LZV)" type="boolean"
+                                   variable="is_excerpts_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports" type="boolean"
+                                   variable="is_pa_report_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_materials_request" name="Request for samples/materials" type="boolean"
+                                   variable="is_materials_request" required="true"></activiti:formProperty>
+            <!--Optionals-->
+            <activiti:formProperty id="is_linkage_with_personal_data" name="Linkage with own or external personal data"
+                                   type="boolean" variable="is_linkage_with_personal_data"
+                                   required="true"></activiti:formProperty>
+            <activiti:formProperty id="linkage_with_personal_data_notes"
+                                   name="Notes for linkage with own or external personal data" type="string"
+                                   variable="linkage_with_personal_data_notes" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_informed_consent" name="Informed Consent" type="boolean"
+                                   variable="is_informed_consent" required="true"></activiti:formProperty>
+            <activiti:formProperty id="reason_using_personal_data" name="Reason for Using Personal Data" type="string"
+                                   variable="reason_using_personal_data" required="true"></activiti:formProperty>
+            <!--Others-->
             <activiti:formProperty id="return_date" name="Return date" type="date"
-                variable="return date"></activiti:formProperty>
-            <activiti:formProperty id="limited_to_cohort" name="Is your request limited to a specific cohort?" type="boolean"
-                variable="is_limited_to_cohort" required="true"></activiti:formProperty>
-            <activiti:formProperty id="contact_person_name" name="Contact person" type="string" variable="contact_person_name" required="true"></activiti:formProperty>
+                                   variable="return date"></activiti:formProperty>
+            <activiti:formProperty id="contact_person_name" name="Principal Investigator" type="string"
+                                   variable="contact_person_name" required="true"></activiti:formProperty>
         </extensionElements>
     </userTask>
 
-	<sequenceFlow id="request_form_to_review" sourceRef="request_form" targetRef="status_review"></sequenceFlow>
+    <sequenceFlow id="request_form_to_review" sourceRef="request_form" targetRef="status_review"></sequenceFlow>
 
     <scriptTask id="status_review" name="Update status to Review" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>
@@ -94,9 +114,6 @@
         <documentation>
         Approval by scientific council. Members can vote and add comments.
         </documentation>
-        <extensionElements>
-            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
-        </extensionElements>
     </userTask>
 
     <userTask id="request_approval" name="Request approval" activiti:candidateGroups="palga">
@@ -105,6 +122,7 @@
         </documentation>
         <extensionElements>
             <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="privacy_committee_approved" name="Privacy committee approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
         </extensionElements>
     </userTask>
 

@@ -137,8 +137,6 @@ public class RequestController {
 
         if (variables != null) {
             request.setTitle((String)variables.get("title"));
-            request.setDescription((String)variables.get("description"));
-            request.setMotivation((String)variables.get("motivation"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
@@ -193,15 +191,24 @@ public class RequestController {
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setDateAssigned((Date)variables.get("assigned_date"));
+
+            request.setContactPersonName((String)variables.get("contact_person_name"));
             request.setTitle((String)variables.get("title"));
-            request.setDescription((String)variables.get("description"));
-            request.setMotivation((String)variables.get("motivation"));
+            request.setResearchQuestion((String)variables.get("research_question"));
+            request.setHypothesis((String) variables.get("hypothesis"));
+            request.setMethods((String) variables.get("methods"));
+
             request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
+            request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
+
+            request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
+            request.setLinkageWithPersonalDataNotes((String) variables.get("linkage_with_personal_data_notes"));
+            request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
+            request.setReasonUsingPersonalData((String) variables.get("reason_using_personal_data"));
+
             request.setReturnDate((Date)variables.get("return_date"));
-            request.setLimitedToCohort(fetchBooleanVariable("limited_to_cohort", variables));
-            request.setContactPersonName((String)variables.get("contact_person_name"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
             Long userId = null;
             try { userId = Long.valueOf(request.getRequesterId()); }
@@ -301,6 +308,9 @@ public class RequestController {
                 request.setContactPersonAllowed(fetchBooleanVariable("contact_person_is_allowed", variables));
                 request.setRequesterLabValid(fetchBooleanVariable("requester_lab_is_valid", variables));
                 request.setAgreementReached(fetchBooleanVariable("agreement_reached", variables));
+                
+                request.setScientificCouncilApproved(fetchBooleanVariable("scientific_council_approved", variables));
+                request.setPrivacyCommitteeApproved(fetchBooleanVariable("privacy_committee_approved", variables));
             }
 
             request.setDataAttachments(dataAttachments);
@@ -319,13 +329,21 @@ public class RequestController {
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             variables.put("title", request.getTitle());
-            variables.put("description", request.getDescription());
-            variables.put("motivation", request.getMotivation());
+            variables.put("research_question", request.getResearchQuestion());
+            variables.put("hypothesis", request.getHypothesis());
+            variables.put("methods", request.getMethods());
+
             variables.put("is_statistics_request", (Boolean)request.isStatisticsRequest());
+            variables.put("is_excerpts_request", (Boolean)request.isExcerptsRequest());
             variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
             variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
+
+            variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
+            variables.put("linkage_with_personal_data_notes", request.getLinkageWithPersonalDataNotes());
+            variables.put("is_informed_consent", (Boolean)request.isInformedConsent());
+            variables.put("reason_using_personal_data", request.getReasonUsingPersonalData());
+
             variables.put("return_date", request.getReturnDate());
-            variables.put("limited_to_cohort", (Boolean)request.isLimitedToCohort());
             variables.put("contact_person_name", request.getContactPersonName());
 
             if (is_palga) {
@@ -334,6 +352,10 @@ public class RequestController {
                 variables.put("contact_person_is_allowed", (Boolean)request.isContactPersonAllowed());
                 variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
                 variables.put("agreement_reached", (Boolean)request.isAgreementReached());
+                
+                variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
+                variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
+                
                 if (request.isRequesterValid()
                         && request.isRequesterAllowed()
                         && request.isContactPersonAllowed()
@@ -343,6 +365,12 @@ public class RequestController {
                 } else {
                     variables.put("request_is_admissible", Boolean.FALSE);
                 }
+                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getProcessInstanceId());
+                properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
+                properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
+                properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
+                properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
+                requestPropertiesService.save(properties);
             }
         }
         return variables;
@@ -485,8 +513,10 @@ public class RequestController {
                     "POST /requests (initiator: " + userId + ")");
             Map<String, Object> values = new HashMap<String, Object>();
             values.put("initiator", userId);
+
             ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                     "dntp_request_001", values);
+
             instance = runtimeService.createProcessInstanceQuery()
                     .includeProcessVariables()
                     .processInstanceId(instance.getId()).singleResult();
@@ -505,17 +535,6 @@ public class RequestController {
         log.info("PUT /requests/" + id);
         ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
-
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        if (properties == null) {
-            properties = new RequestProperties();
-        }
-        properties.setProcessInstanceId(id);
-        properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
-        properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
-        properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
-        properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
-        requestPropertiesService.save(properties);
 
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
@@ -554,7 +573,7 @@ public class RequestController {
      * Finds current task. Assumes that exactly one task is currently active.
      * @param requestId
      * @return the current task if it exists.
-     * @throws TaskNotFound.
+     * @throws business.controllers.RequestController.TaskNotFound
      */
     Task getTaskByRequestId(String requestId, String taskDefinition) {
         Task task = taskService.createTaskQuery().processInstanceId(requestId)
@@ -581,6 +600,36 @@ public class RequestController {
     }
 
     /**
+     * Finds current task. Assumes that exactly one task is currently active.
+     * @param requestId
+     * @return the current task if it exists.
+     * @throws business.controllers.RequestController.TaskNotFound
+     */
+    Task getCurrentPalgaTaskByRequestId(String requestId) {
+        Task task = findCurrentPalgaTaskByRequestId(requestId);
+        if (task == null) {
+            throw new TaskNotFound();
+        }
+        return task;
+    }
+    
+    /**
+     * Finds current task. Assumes that at most one task is currently active.
+     * @param requestId
+     * @return the current task if it exists, null otherwise.
+     */
+    Task findCurrentPalgaTaskByRequestId(String requestId) {
+        Task task = findTaskByRequestId(requestId, "palga_request_review");
+        if (task == null) {
+            task = findTaskByRequestId(requestId, "request_approval");
+        }
+        if (task == null) {
+            task = findTaskByRequestId(requestId, "data_delivery");
+        }
+        return task;
+    }
+    
+    /**
      * Finds request.
      * @param processInstanceId
      * @return the current request if it exists; null otherwise.
@@ -596,7 +645,7 @@ public class RequestController {
      * Finds request.
      * @param processInstanceId
      * @return the current request if it exists.
-     * @throws RequestNotFound.
+     * @throws
      */
     ProcessInstance getProcessInstance(String processInstanceId) {
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
@@ -647,13 +696,25 @@ public class RequestController {
             message.setReplyTo("no-reply@dntp.thehyve.nl");
             message.setSubject("[DNTP portal] New request open for approval.");
             String template =
-                    "Request : %s\n"
-                +   "Title   : %s\n";
+                    "Request: %s\n"
+                +   "Requester: %s\n"
+                +   "Principal Investigator: %s\n"
+                +   "Title: %s\n"
+                +   "\nResearch Question:\n%s\n"
+                +   "\nHypothesis:\n%s\n"
+                +   "\nMethods:\n%s\n"
+                ;
             String body = String.format(template,
                     request.getProcessInstanceId(),
-                    request.getTitle());
+                    request.getRequesterName(),
+                    request.getContactPersonName(),
+                    request.getTitle(),
+                    request.getResearchQuestion(),
+                    request.getHypothesis(),
+                    request.getMethods()
+                    );
             message.setText(String.format(
-                    "(We're testing a prototype system. If you receive this email, please contact gijs@thehyve.nl.)\n"
+                    ""
                     + "Please follow this link to view the new request: http://%s:%s/#/request/view/%s.\n"
                     + "====\n"
                     + body,
@@ -700,22 +761,31 @@ public class RequestController {
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
 
-        log.info("Fetching scientific_council_approval task");
-        Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
-        if (councilTask.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(councilTask.getId());
-        }
-        taskService.complete(councilTask.getId());
-
-        log.info("Fetching request_approval task");
-        Task palgaTask = getTaskByRequestId(id, "request_approval");
-        if (palgaTask.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(palgaTask.getId());
-        }
-        taskService.complete(palgaTask.getId());
-
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
+        transferData(instance, updatedRequest, user.getUser());
+        if (updatedRequest.isPrivacyCommitteeApproved() && 
+                updatedRequest.isScientificCouncilApproved()) {
+        
+            log.info("Fetching scientific_council_approval task");
+            Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
+            if (councilTask.getDelegationState()==DelegationState.PENDING) {
+                taskService.resolveTask(councilTask.getId());
+            }
+            taskService.complete(councilTask.getId());
+    
+            log.info("Fetching request_approval task");
+            Task palgaTask = getTaskByRequestId(id, "request_approval");
+            if (palgaTask.getDelegationState()==DelegationState.PENDING) {
+                taskService.resolveTask(palgaTask.getId());
+            }
+            taskService.complete(palgaTask.getId());
+        } else {
+            log.warn("Finalisation failed because of lacking approval.");
+        }
+
+        instance = getProcessInstance(id);
+        updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser());
 
         return updatedRequest;
@@ -729,7 +799,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/claim");
         ProcessInstance instance = getProcessInstance(id);
-        Task task = getTaskByRequestId(id, "palga_request_review");
+        Task task = getCurrentPalgaTaskByRequestId(id);
         if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
             taskService.claim(task.getId(), user.getId().toString());
         } else {
@@ -754,7 +824,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/unclaim");
         ProcessInstance instance = getProcessInstance(id);
-        Task task = getTaskByRequestId(id, "palga_request_review");
+        Task task = getCurrentPalgaTaskByRequestId(id);
         taskService.unclaim(task.getId());
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();

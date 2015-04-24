@@ -3,9 +3,9 @@
         <div class="modal-content">
             <form class="form-horizontal" role="form" name="requestEditForm" ng-submit="update(request)" novalidate>
                 <div class="modal-header">
-                    <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'Add new request' | translate }}</h3>
-                    <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit request' | translate }}: {{request.title}}</h3>
-                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Evaluate request' |translate }}: {{request.title}}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'New Request' | translate }}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit Request' | translate }}: {{request.title}}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Evaluate Request' |translate }}: {{request.title}}</h3>
                 </div>
                 <div class="modal-body">
 
@@ -13,9 +13,20 @@
                         {{ error }}
                     </div>
 
+                    <!-- Principal Investigator -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonName.$invalid && requestEditForm.contactPersonName.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Principal Investigator' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" placeholder="{{ 'Principal Investigator' | translate }}"
+                                   ng-model="request.contactPersonName" ng-maxlength="100">
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
                     <!-- Title -->
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.requestTitle.$invalid || requestEditForm.requestTitle.$error.required) && requestEditForm.requestTitle.$dirty }">
-                        <label class="control-label col-sm-2" for="requestTitle">{{ 'Title' | translate }}</label>
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Title' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="requestTitle" name="requestTitle" placeholder="{{ 'Title' | translate }}"
                                    ng-model="request.title" ng-maxlength="50" required>
@@ -25,44 +36,81 @@
                         </div>
                     </div>
 
-                    <!-- Description -->
-                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.description.$invalid || requestEditForm.description.$error.required) && requestEditForm.description.$dirty }">
-                        <label class="control-label col-sm-2" for="requestTitle">{{ 'Description' | translate }}</label>
+                    <!-- Research Question -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.researchQuestion.$invalid || requestEditForm.researchQuestion.$error.required) && requestEditForm.researchQuestion.$dirty }">
+                        <label class="control-label col-sm-3" for="researchQuestion">{{ 'Research Question' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="description" name="description" placeholder="{{ 'Description' | translate }}"
-                            ng-model="request.description" required></textarea>
+                        <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" placeholder="{{ 'Research Question' | translate }}"
+                            ng-model="request.researchQuestion" required></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.description.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
                     </div>
 
-                    <!-- Motivation -->
-                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.motivation.$invalid || requestEditForm.motivation.$error.required) && requestEditForm.motivation.$dirty }">
-                        <label class="control-label col-sm-2" for="requestTitle">{{ 'Motivation' | translate }}</label>
+                    <!-- Hypothesis -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.hypothesis.$invalid || requestEditForm.hypothesis.$error.required) && requestEditForm.hypothesis.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Hypothesis' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="motivation" name="motivation" placeholder="{{ 'Motivation' | translate }}"
-                            ng-model="request.motivation" required></textarea>
+                        <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" placeholder="{{ 'Hypothesis' | translate }}"
+                            ng-model="request.hypothesis" required></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.motivation.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
                     </div>
 
-                    <!-- Is statistics request -->
+                    <!-- Methods -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.methods.$invalid || requestEditForm.methods.$error.required) && requestEditForm.methods.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Methods' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="methods" name="methods" placeholder="{{ 'Methods' | translate }}"
+                            ng-model="request.methods" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.methods.$error.required">{{ 'Required field' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!--Request Type-->
+                    <!--TODO-->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">{{'Request Type' | translate}}</label>
+                        <div class="col-sm-8">
+                            <input type="radio" ng-model="request.type" value="1"> {{'Request for numbers only' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="2"> {{'Request for excerpts' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="3"> {{'Request for excerpts + PA reports' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="4"> {{'Request for excerpts + materials' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="5"> {{'Request for excerpts + PA reports + materials' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="6"> {{'Request for PA-reports only' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="7"> {{'Request for materials only' | translate}} <br>
+                        </div>
+                    </div>
+
+<!--
                     <div class="form-group" ng-class="">
-                        <label class="control-label col-sm-2" for="statisticsRequest">
+                        <label class="control-label col-sm-3" for="statisticsRequest">
                             &nbsp;
                         </label>
 
                         <div class="col-sm-8">
                             <input type="checkbox" id="statisticsRequest" name="statisticsRequest" value="1"
-                                   ng-model="request.statisticsRequest"> &nbsp; {{ 'Request for information (statistics or Palga excerpts).' |
+                                   ng-model="request.statisticsRequest"> &nbsp; {{ 'Request for statistics.' |
                             translate }}
                         </div>
                     </div>
 
-                    <!-- Is PA report request -->
                     <div class="form-group" ng-class="">
-                        <label class="control-label col-sm-2" for="paReportRequest">
+                        <label class="control-label col-sm-3" for="excerptsRequest">
+                            &nbsp;
+                        </label>
+
+                        <div class="col-sm-8">
+                            <input type="checkbox" id="excerptsRequest" name="excerptsRequest" value="1"
+                                   ng-model="request.excerptsRequest"> &nbsp; {{ 'Request for information PALGA excerpts.' |
+                            translate }}
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="">
+                        <label class="control-label col-sm-3" for="paReportRequest">
                             &nbsp;
                         </label>
 
@@ -73,9 +121,8 @@
                         </div>
                     </div>
 
-                    <!-- Is PA materials request -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.returnDate.$error.required}">
-                        <label class="control-label col-sm-2" for="materialsRequest">
+                        <label class="control-label col-sm-3" for="materialsRequest">
                             &nbsp;
                         </label>
                         <div class="col-sm-8">
@@ -96,22 +143,60 @@
                                    data-autoclose="1"
                                    ng-required="request.materialsRequest" />
                         </div>
-                        <!-- errors -->
                         <span ng-show="requestEditForm.returnDate.$error.required" class="help-block">
                               {{ 'Required field' | translate }}
                         </span>
                     </div>
+-->
 
-                    <!-- Is request limited to cohort-->
+                    <!--&lt;!&ndash; Data Linkage &ndash;&gt;-->
+                    <!--<div class="form-group" ng-class="">-->
+                        <!--<label class="control-label col-sm-3" for="linkageWithPersonalData">-->
+                            <!--&nbsp;-->
+                        <!--</label>-->
+                        <!--<div class="col-sm-8">-->
+                            <!--<input type="checkbox" id="linkageWithPersonalData" name="linkageWithPersonalData" value="1"-->
+                                   <!--ng-model="request.linkageWithPersonalData"> &nbsp; {{ 'The request is linkage with personal data.' |-->
+                            <!--translate }}-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!-- Data Linkage -->
                     <div class="form-group" ng-class="">
-                        <label class="control-label col-sm-2" for="limitedToCohort">
-                            &nbsp;
+                        <label class="control-label col-sm-3" for="linkageWithPersonalDataYes">
+                            {{'Datalinkage' | translate}}
                         </label>
-
                         <div class="col-sm-8">
-                            <input type="checkbox" id="limitedToCohort" name="limitedToCohort" value="1"
-                                   ng-model="request.limitedToCohort"> &nbsp; {{ 'The request is limited to a specific cohort.' |
-                            translate }}
+                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" value="1"> {{'Linkage with own or external personal data' | translate}} <br>
+                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" value="0"> {{'No data linkage required' | translate}} <br>
+                            <!--<input type="checkbox" id="informedConsent" name="informedConsent" value="1"-->
+                                   <!--ng-model="request.informedConsent"> &nbsp; {{ 'Informed Consent.' |-->
+                            <!--translate }}-->
+                        </div>
+                    </div>
+
+                    <!-- Informed Consent  -->
+                    <div class="form-group" ng-class="">
+                        <label class="control-label col-sm-3" for="informedConsentYes">
+                            {{'Informed Consent' | translate}}
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="radio" id="informedConsentYes" name="informedConsent" ng-model="request.informedConsent" value="1"> {{'Yes' | translate}} <br>
+                            <input type="radio" id="informedConsentNo" name="informedConsent" ng-model="request.informedConsent" value="0"> {{'No' | translate}}
+                            <!--<input type="checkbox" id="informedConsent" name="informedConsent" value="1"-->
+                                   <!--ng-model="request.informedConsent"> &nbsp; {{ 'Informed Consent.' |-->
+                            <!--translate }}-->
+                        </div>
+                    </div>
+
+                    <!-- Reason Using Personal Data  -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.reasonUsingPersonalData.$invalid || requestEditForm.reasonUsingPersonalData.$error.required) && requestEditForm.reasonUsingPersonalData.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Reason using personal data' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" placeholder="{{ 'Reason using personal data' | translate }}"
+                                  ng-model="request.reasonUsingPersonalData" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
                     </div>
 
@@ -119,7 +204,7 @@
                     <div ng-if="request.status=='Review'">
                         <div class="form-group" ng-class="" ng-if="request.lab.number">
                             <br>
-                            <label class="control-label col-sm-2">
+                            <label class="control-label col-sm-3">
                                 {{'Lab' | translate}}
                             </label>
                             <div class="col-sm-8">
@@ -127,7 +212,7 @@
                             </div>
                         </div>
                         <div class="form-group" ng-class="">
-                            <label class="control-label col-sm-2" for="requesterLabValid">
+                            <label class="control-label col-sm-3" for="requesterLabValid">
                                 &nbsp;
                             </label>
                             <div class="col-sm-8">
@@ -186,7 +271,7 @@
 
                         <!-- Requester valid -->
                         <div class="form-group" ng-class="">
-                            <label class="control-label col-sm-2" for="requesterValid">
+                            <label class="control-label col-sm-3" for="requesterValid">
                                 &nbsp;
                             </label>
                             <div class="col-sm-8">
@@ -197,7 +282,7 @@
 
                         <!-- Requester allowed -->
                         <div class="form-group" ng-class="">
-                            <label class="control-label col-sm-2" for="requesterAllowed">
+                            <label class="control-label col-sm-3" for="requesterAllowed">
                                 &nbsp;
                             </label>
                             <div class="col-sm-8">
@@ -208,7 +293,7 @@
 
                         <!-- Contact person allowed -->
                         <div class="form-group" ng-class="">
-                            <label class="control-label col-sm-2" for="contactPersonAllowed">
+                            <label class="control-label col-sm-3" for="contactPersonAllowed">
                                 &nbsp;
                             </label>
                             <div class="col-sm-8">
@@ -224,7 +309,7 @@
 
                         <!-- Is sent to privacy commitee -->
                         <div class="form-group" ng-class="">
-                            <label class="control-label col-sm-2" for="requesterValid">
+                            <label class="control-label col-sm-3" for="requesterValid">
                                 &nbsp;
                             </label>
                             <div class="col-sm-8">
@@ -235,7 +320,7 @@
 
                         <!-- Outcome -->
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="privacyCommitteeOutcome">{{ 'Outcome' | translate }}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Outcome' | translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeOutcome" name="privacyCommitteeOutcome" placeholder="{{ 'Outcome' | translate }}"
                                   ng-model="request.privacyCommitteeOutcome"></textarea>
@@ -244,7 +329,7 @@
 
                         <!-- Outcome Reference -->
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="privacyCommitteeOutcomeRef">{{ 'Outcome Reference' | translate }}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{ 'Outcome Reference' | translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef" name="privacyCommitteeOutcomeRef" placeholder="{{ 'Outcome Reference' | translate }}"
                                   ng-model="request.privacyCommitteeOutcomeRef"></textarea>
@@ -253,7 +338,7 @@
 
                         <!-- Outcome Emails -->
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="privacyCommitteeEmails">{{ 'Emailing History' | translate }}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeEmails">{{ 'Emailing History' | translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeEmails" name="privacyCommitteeEmails" placeholder="{{ 'Emailing History' | translate }}"
                                       ng-model="request.privacyCommitteeEmails"></textarea>
@@ -267,7 +352,7 @@
 
                         <!-- Agreement reached -->
                         <div class="form-group" ng-class="">
-                            <label class="control-label col-sm-2" for="agreementReached">
+                            <label class="control-label col-sm-3" for="agreementReached">
                                 &nbsp;
                             </label>
                             <div class="col-sm-8">
@@ -406,7 +491,7 @@
 
                     <!-- Status -->
                     <div class="row">
-                        <label class="control-label col-sm-2">{{ 'Votes' | translate }}</label>
+                        <label class="control-label col-sm-3">{{ 'Votes' | translate }}</label>
                         <div class="col-sm-8">
                         <div class="panel panel-default">
                             <div class="panel-body">

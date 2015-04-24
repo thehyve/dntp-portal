@@ -5,13 +5,39 @@
             ApprovalComment, ApprovalVote,
             FlowOptionService, $routeParams) {
 
+        var convertRequestType = function (type) {
+            var requestOpts = {
+                statisticsRequest : false,
+                excerptsRequest : false,
+                paReportRequest : false,
+                materialsRequest : false
+            };
+            var cases = {
+                1 : requestOpts.statisticsRequest = true,
+                2 : console.log("type1"),
+                3 : console.log("type2"),
+                4 : console.log("type3"),
+                5 : console.log("type4"),
+                6 : console.log("type5"),
+                6 : console.log("type6"),
+                7 : console.log("type7")
+            };
+
+            if (cases[type]) {
+                cases[type];
+            };
+
+            return requestOpts;
+        };
+
+
         $scope.error = "";
 
         $scope.login = function() {
             $location.path("/login");
-        }
+        };
 
-        console.log("globals: "+ JSON.stringify($rootScope.globals));
+        //console.log("globals: "+ JSON.stringify($rootScope.globals));
 
         if ($routeParams.requestId) {
             if (!$scope.requests) {
@@ -19,6 +45,7 @@
             }
             Request.get({id:$routeParams.requestId}, function (req) {
                 $scope.request = req;
+                console.log("current req is", req);
             });
         } else {
             Request.query().$promise.then(function(response) {
@@ -34,7 +61,11 @@
                     $scope.login();
                 }
             });
-        }
+        };
+
+        $scope.saveOpenRequest = function(request) {
+            //TODO
+        };
 
         $scope.flow_options = function(options) {
             return FlowOptionService.get_default(options);
@@ -138,6 +169,7 @@
                 + "After submission the request cannot be edited anymore.",
                 function(confirmed) {
                     if (confirmed) {
+                        console.log("request.type ", request.type );
                         request.$submit(function(result) {
                             $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
@@ -153,6 +185,7 @@
                 "Are you sure you want to submit the request for approval?",
                 function(confirmed) {
                     if (confirmed) {
+                        // TODO convert request type
                         request.$submitForApproval(function(result) {
                             $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
@@ -161,7 +194,7 @@
                         });
                     }
                 });
-        }
+        };
 
         $scope.finalise = function(request) {
             bootbox.confirm(
@@ -176,7 +209,7 @@
                         });
                     }
                 });
-        }
+        };
 
         $scope.view = function(request) {
             $location.path("/request/view/" + request.processInstanceId);

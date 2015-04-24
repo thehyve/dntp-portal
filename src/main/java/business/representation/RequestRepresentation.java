@@ -42,17 +42,23 @@ public class RequestRepresentation {
 
     private List<AttachmentRepresentation> attachments;
     private List<AttachmentRepresentation> agreementAttachments;
+    private List<AttachmentRepresentation> dataAttachments;
     private List<CommentRepresentation> comments;
 
     private List<CommentRepresentation> approvalComments;
     private Map<Long, ApprovalVoteRepresentation> approvalVotes;
-
+    
+    private ExcerptListRepresentation excerptList;
+    
     // Palga specific
     private boolean requesterValid;
     private boolean requesterAllowed;
     private boolean contactPersonAllowed;
     private boolean requesterLabValid;
     private boolean agreementReached;
+    
+    private boolean scientificCouncilApproved;
+    private boolean privacyCommitteeApproved;
 
     // Privacy Committee
     private boolean sentToPrivacyCommittee;
@@ -305,6 +311,14 @@ public class RequestRepresentation {
         this.agreementAttachments = agreementAttachments;
     }
 
+    public List<AttachmentRepresentation> getDataAttachments() {
+        return dataAttachments;
+    }
+
+    public void setDataAttachments(List<AttachmentRepresentation> dataAttachments) {
+        this.dataAttachments = dataAttachments;
+    }
+
     public boolean isAgreementReached() {
         return agreementReached;
     }
@@ -368,4 +382,29 @@ public class RequestRepresentation {
     public void setPrivacyCommitteeOutcome(String privacyCommitteeOutcome) {
         this.privacyCommitteeOutcome = privacyCommitteeOutcome;
     }
+
+    public ExcerptListRepresentation getExcerptList() {
+        return excerptList;
+    }
+
+    public void setExcerptList(ExcerptListRepresentation excerptList) {
+        this.excerptList = excerptList;
+    }
+
+    public boolean isScientificCouncilApproved() {
+        return scientificCouncilApproved;
+    }
+
+    public void setScientificCouncilApproved(boolean scientificCouncilApproved) {
+        this.scientificCouncilApproved = scientificCouncilApproved;
+    }
+
+    public boolean isPrivacyCommitteeApproved() {
+        return privacyCommitteeApproved;
+    }
+
+    public void setPrivacyCommitteeApproved(boolean privacyCommitteeApproved) {
+        this.privacyCommitteeApproved = privacyCommitteeApproved;
+    } 
+
 }

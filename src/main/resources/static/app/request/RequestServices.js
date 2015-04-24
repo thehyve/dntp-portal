@@ -165,6 +165,10 @@
             remove : {
                 method : "DELETE"
             },
+            removeDataFile : {
+                url : '/requests/:requestId/dataFiles/:id',
+                method : "DELETE"
+            },
             removeAgreementFile : {
                 url : '/requests/:requestId/agreementFiles/:id',
                 method : "DELETE"

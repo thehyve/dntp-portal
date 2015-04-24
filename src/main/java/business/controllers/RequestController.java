@@ -1,7 +1,12 @@
 package business.controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,11 +47,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 import business.models.ApprovalVote;
 import business.models.Comment;
 import business.models.CommentRepository;
+import business.models.ExcerptEntry;
+import business.models.ExcerptList;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesRepository;
+import business.models.RequestPropertiesService;
 import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
@@ -54,6 +63,7 @@ import business.models.UserRepository;
 import business.representation.ApprovalVoteRepresentation;
 import business.representation.AttachmentRepresentation;
 import business.representation.CommentRepresentation;
+import business.representation.ExcerptListRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
@@ -88,7 +98,7 @@ public class RequestController {
     private UserRepository userRepository;
 
     @Autowired
-    private RequestPropertiesRepository requestPropertiesRepository;
+    private RequestPropertiesService requestPropertiesService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -218,6 +228,9 @@ public class RequestController {
                 case "Approval":
                     task = findTaskByRequestId(instance.getId(), "request_approval");
                     break;
+                case "DataDelivery":
+                    task = findTaskByRequestId(instance.getId(), "data_delivery"); 
+                    break;
             }
             if (task != null) {
                 request.setAssignee(task.getAssignee());
@@ -241,27 +254,29 @@ public class RequestController {
             }
             List<AttachmentRepresentation> requesterAttachments = new ArrayList<AttachmentRepresentation>();
             List<AttachmentRepresentation> agreementAttachments = new ArrayList<AttachmentRepresentation>();
-            RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(
+            List<AttachmentRepresentation> dataAttachments = new ArrayList<AttachmentRepresentation>();
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getProcessInstanceId());
-            if (properties != null) {
-                Set<String> agreementAttachmentIds = properties.getAgreementAttachmentIds();
-                for (Attachment attachment: attachments) {
-                    if (agreementAttachmentIds.contains(attachment.getId())) {
-                        agreementAttachments.add(new AttachmentRepresentation(attachment));
-                    } else {
-                        requesterAttachments.add(new AttachmentRepresentation(attachment));
-                    }
-                }
-                request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
-                request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
-                request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
-                request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
-            } else {
-                properties = new RequestProperties();
-                for (Attachment attachment: attachments) {
+
+            Set<String> agreementAttachmentIds = properties.getAgreementAttachmentIds();
+            Set<String> dataAttachmentIds = properties.getDataAttachmentIds();
+            for (Attachment attachment: attachments) {
+                if (properties.getExcerptListAttachmentId() != null && 
+                        properties.getExcerptListAttachmentId().equals(attachment.getId())) {
+                    //
+                } else if (agreementAttachmentIds.contains(attachment.getId())) {
+                    agreementAttachments.add(new AttachmentRepresentation(attachment));
+                } else if (dataAttachmentIds.contains(attachment.getId())) {
+                    dataAttachments.add(new AttachmentRepresentation(attachment));
+                } else {
                     requesterAttachments.add(new AttachmentRepresentation(attachment));
                 }
             }
+            request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
+            request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
+            request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
+            request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
+            
             request.setAttachments(requesterAttachments);
             if (is_palga) {
                 request.setAgreementAttachments(agreementAttachments);
@@ -293,7 +308,18 @@ public class RequestController {
                 request.setContactPersonAllowed(fetchBooleanVariable("contact_person_is_allowed", variables));
                 request.setRequesterLabValid(fetchBooleanVariable("requester_lab_is_valid", variables));
                 request.setAgreementReached(fetchBooleanVariable("agreement_reached", variables));
+                
+                request.setScientificCouncilApproved(fetchBooleanVariable("scientific_council_approved", variables));
+                request.setPrivacyCommitteeApproved(fetchBooleanVariable("privacy_committee_approved", variables));
             }
+
+            request.setDataAttachments(dataAttachments);
+            
+            if (properties.getExcerptList() != null) {
+                log.info("Set excerpt list.");
+                request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
+            }
+            log.info("Not setting excerpt list.");
         }
     }
 
@@ -326,6 +352,10 @@ public class RequestController {
                 variables.put("contact_person_is_allowed", (Boolean)request.isContactPersonAllowed());
                 variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
                 variables.put("agreement_reached", (Boolean)request.isAgreementReached());
+                
+                variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
+                variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
+                
                 if (request.isRequesterValid()
                         && request.isRequesterAllowed()
                         && request.isContactPersonAllowed()
@@ -335,6 +365,12 @@ public class RequestController {
                 } else {
                     variables.put("request_is_admissible", Boolean.FALSE);
                 }
+                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getProcessInstanceId());
+                properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
+                properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
+                properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
+                properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
+                requestPropertiesService.save(properties);
             }
         }
         return variables;
@@ -500,17 +536,6 @@ public class RequestController {
         ProcessInstance instance = getProcessInstance(id);
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
 
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
-        if (properties == null) {
-            properties = new RequestProperties();
-        }
-        properties.setProcessInstanceId(id);
-        properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
-        properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
-        properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
-        properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
-        requestPropertiesRepository.save(properties);
-
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
             log.info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
@@ -574,6 +599,36 @@ public class RequestController {
         return task;
     }
 
+    /**
+     * Finds current task. Assumes that exactly one task is currently active.
+     * @param requestId
+     * @return the current task if it exists.
+     * @throws business.controllers.RequestController.TaskNotFound
+     */
+    Task getCurrentPalgaTaskByRequestId(String requestId) {
+        Task task = findCurrentPalgaTaskByRequestId(requestId);
+        if (task == null) {
+            throw new TaskNotFound();
+        }
+        return task;
+    }
+    
+    /**
+     * Finds current task. Assumes that at most one task is currently active.
+     * @param requestId
+     * @return the current task if it exists, null otherwise.
+     */
+    Task findCurrentPalgaTaskByRequestId(String requestId) {
+        Task task = findTaskByRequestId(requestId, "palga_request_review");
+        if (task == null) {
+            task = findTaskByRequestId(requestId, "request_approval");
+        }
+        if (task == null) {
+            task = findTaskByRequestId(requestId, "data_delivery");
+        }
+        return task;
+    }
+    
     /**
      * Finds request.
      * @param processInstanceId
@@ -641,13 +696,25 @@ public class RequestController {
             message.setReplyTo("no-reply@dntp.thehyve.nl");
             message.setSubject("[DNTP portal] New request open for approval.");
             String template =
-                    "Request : %s\n"
-                +   "Title   : %s\n";
+                    "Request: %s\n"
+                +   "Requester: %s\n"
+                +   "Principal Investigator: %s\n"
+                +   "Title: %s\n"
+                +   "\nResearch Question:\n%s\n"
+                +   "\nHypothesis:\n%s\n"
+                +   "\nMethods:\n%s\n"
+                ;
             String body = String.format(template,
                     request.getProcessInstanceId(),
-                    request.getTitle());
+                    request.getRequesterName(),
+                    request.getContactPersonName(),
+                    request.getTitle(),
+                    request.getResearchQuestion(),
+                    request.getHypothesis(),
+                    request.getMethods()
+                    );
             message.setText(String.format(
-                    "(We're testing a prototype system. If you receive this email, please contact gijs@thehyve.nl.)\n"
+                    ""
                     + "Please follow this link to view the new request: http://%s:%s/#/request/view/%s.\n"
                     + "====\n"
                     + body,
@@ -694,22 +761,31 @@ public class RequestController {
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
 
-        log.info("Fetching scientific_council_approval task");
-        Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
-        if (councilTask.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(councilTask.getId());
-        }
-        taskService.complete(councilTask.getId());
-
-        log.info("Fetching request_approval task");
-        Task palgaTask = getTaskByRequestId(id, "request_approval");
-        if (palgaTask.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(palgaTask.getId());
-        }
-        taskService.complete(palgaTask.getId());
-
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
+        transferData(instance, updatedRequest, user.getUser());
+        if (updatedRequest.isPrivacyCommitteeApproved() && 
+                updatedRequest.isScientificCouncilApproved()) {
+        
+            log.info("Fetching scientific_council_approval task");
+            Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
+            if (councilTask.getDelegationState()==DelegationState.PENDING) {
+                taskService.resolveTask(councilTask.getId());
+            }
+            taskService.complete(councilTask.getId());
+    
+            log.info("Fetching request_approval task");
+            Task palgaTask = getTaskByRequestId(id, "request_approval");
+            if (palgaTask.getDelegationState()==DelegationState.PENDING) {
+                taskService.resolveTask(palgaTask.getId());
+            }
+            taskService.complete(palgaTask.getId());
+        } else {
+            log.warn("Finalisation failed because of lacking approval.");
+        }
+
+        instance = getProcessInstance(id);
+        updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser());
 
         return updatedRequest;
@@ -723,7 +799,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/claim");
         ProcessInstance instance = getProcessInstance(id);
-        Task task = getTaskByRequestId(id, "palga_request_review");
+        Task task = getCurrentPalgaTaskByRequestId(id);
         if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
             taskService.claim(task.getId(), user.getId().toString());
         } else {
@@ -748,7 +824,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/unclaim");
         ProcessInstance instance = getProcessInstance(id);
-        Task task = getTaskByRequestId(id, "palga_request_review");
+        Task task = getCurrentPalgaTaskByRequestId(id);
         taskService.unclaim(task.getId());
         instance = getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
@@ -784,6 +860,10 @@ public class RequestController {
         private static final long serialVersionUID = 51403280891772531L;
         public FileUploadError() {
             super("File upload error.");
+        }
+        
+        public FileUploadError(String message) {
+            super("File upload error: " + message);
         }
     }
 
@@ -829,22 +909,22 @@ public class RequestController {
         transferData(instance, request, user.getUser());
 
         // add attachment id to the set of ids of the agreement attachments.
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         if (properties == null) {
             properties = new RequestProperties();
             properties.setProcessInstanceId(id);
         }
         properties.getAgreementAttachmentIds().add(attachmentId);
-        requestPropertiesRepository.save(properties);
+        requestPropertiesService.save(properties);
 
-        Map<String, Object> variables = transferFormData(request, instance, user.getUser());
-        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+        //Map<String, Object> variables = transferFormData(request, instance, user.getUser());
+        //runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         instance = getProcessInstance(id);
         request = new RequestRepresentation();
         transferData(instance, request, user.getUser());
         return request;
     }
-
+    
     @Secured("hasPermission(#param, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeAgreementAttachment(UserAuthenticationToken user, @PathVariable String id,
@@ -854,11 +934,11 @@ public class RequestController {
         ProcessInstance instance = getProcessInstance(id);
 
         // remove existing agreement.
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         if (properties != null && properties.getAgreementAttachmentIds().contains(attachmentId)) {
             taskService.deleteAttachment(attachmentId);
             properties.getAgreementAttachmentIds().remove(attachmentId);
-            requestPropertiesRepository.save(properties);
+            requestPropertiesService.save(properties);
         }
 
         instance = getProcessInstance(id);
@@ -867,6 +947,229 @@ public class RequestController {
         return request;
     }
 
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
+    public RequestRepresentation uploadDataAttachment(UserAuthenticationToken user, @PathVariable String id,
+            @RequestParam("flowFilename") String name,
+            @RequestParam("file") MultipartFile file) {
+        log.info("POST /requests/" + id + "/dataFiles");
+        Task task = getTaskByRequestId(id, "data_delivery");
+        String attachmentId;
+        try{
+            Attachment result = taskService.createAttachment(
+                    file.getContentType(),
+                    task.getId(), task.getProcessInstanceId(),
+                    name, name, file.getInputStream());
+            attachmentId = result.getId();
+        } catch(IOException e) {
+            throw new FileUploadError();
+        }
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+
+        // add attachment id to the set of ids of the agreement attachments.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        properties.getDataAttachmentIds().add(attachmentId);
+        requestPropertiesService.save(properties);
+
+        //Map<String, Object> variables = transferFormData(request, instance, user.getUser());
+        //runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+        instance = getProcessInstance(id);
+        request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+        return request;
+    }
+    
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
+    public RequestRepresentation removeDataAttachment(UserAuthenticationToken user, @PathVariable String id,
+            @PathVariable String attachmentId) {
+        log.info("DELETE /requests/" + id + "/dataFiles/" + attachmentId);
+
+        ProcessInstance instance = getProcessInstance(id);
+
+        // remove existing agreement.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        if (properties != null && properties.getDataAttachmentIds().contains(attachmentId)) {
+            taskService.deleteAttachment(attachmentId);
+            properties.getDataAttachmentIds().remove(attachmentId);
+            requestPropertiesService.save(properties);
+        }
+
+        instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+        return request;
+    }
+    
+    @ResponseStatus(value=HttpStatus.NOT_ACCEPTABLE, reason="Excerpt list upload error.")
+    public class ExcerptListUploadError extends RuntimeException {
+        
+        public ExcerptListUploadError() {
+            super("Excerpt list upload error.");
+        }
+
+        public ExcerptListUploadError(String message) {
+            super("Excerpt list upload error: " + message);
+        }
+    
+    }
+    
+    private ExcerptList processExcerptList(MultipartFile file) {
+        log.info("Processing excerpt list");
+        try {
+            CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()), ';', '"');
+            ExcerptList list = new ExcerptList();
+            String [] nextLine;
+            log.info("Column names.");
+            if ((nextLine = reader.readNext()) != null) {
+                try {
+                    list.setColumnNames(nextLine);
+                } catch (RuntimeException e) {
+                    reader.close();
+                    throw new ExcerptListUploadError(e.getMessage());
+                } 
+            }
+            int line = 2;
+            while ((nextLine = reader.readNext()) != null) {
+                log.info("Line " + line);
+                try {
+                    list.addEntry(nextLine);
+                } catch (RuntimeException e) {
+                    reader.close();
+                    throw new ExcerptListUploadError("Line " + line + ": " + e.getMessage());
+                }
+                line++;
+            }
+            reader.close();
+            log.info("Added " + list.getEntries().size() + " entries.");
+            return list;
+        } catch(IOException e) {
+            throw new FileUploadError(e.getMessage());
+        }
+    }
+    
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.POST)
+    public RequestRepresentation uploadExcerptList(UserAuthenticationToken user, @PathVariable String id,
+            @RequestParam("flowFilename") String name,
+            @RequestParam("file") MultipartFile file) {
+        log.info("POST /requests/" + id + "/excerptList");
+        Task task = getTaskByRequestId(id, "data_delivery");
+        String attachmentId;
+        try{
+            Attachment result = taskService.createAttachment(
+                    file.getContentType(),
+                    task.getId(), task.getProcessInstanceId(),
+                    name, name, file.getInputStream());
+            attachmentId = result.getId();
+        } catch(IOException e) {
+            throw new FileUploadError();
+        }
+        ProcessInstance instance = getProcessInstance(id);
+        
+        // add attachment id to the set of ids of the agreement attachments.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        if (properties == null) {
+            properties = new RequestProperties();
+            properties.setProcessInstanceId(id);
+        }
+        if (properties.getExcerptListAttachmentId() != null && !properties.getExcerptListAttachmentId().equals(attachmentId)) {
+            log.info("Deleting attachment " + properties.getExcerptListAttachmentId());
+            taskService.deleteAttachment(properties.getExcerptListAttachmentId());
+        }
+        properties.setExcerptListAttachmentId(attachmentId);
+        requestPropertiesService.save(properties);
+
+        ExcerptList list = processExcerptList(file);
+        properties.setExcerptList(list);
+        log.info("Saving excerpt list.");
+        requestPropertiesService.save(properties);
+        log.info("Done.");
+        
+        instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+        return request;
+    }
+
+    @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Excerpt list not found.")
+    public class ExcerptListNotFound extends RuntimeException {
+        public ExcerptListNotFound() {
+            super("Excerpt list not found.");
+        }
+    }
+    
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.GET)
+    public ExcerptList getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
+        log.info("GET /requests/" + id + "/excerptList");
+        Task task = getTaskByRequestId(id, "data_delivery");
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+
+        // add attachment id to the set of ids of the agreement attachments.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        if (properties == null || properties.getExcerptList() == null) {
+            throw new ExcerptListNotFound();
+        }
+        ExcerptList list = properties.getExcerptList();
+        log.info("entries: " + list.getEntries().size());
+        return list;
+    }
+
+    @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR, reason="Error while downloading excerpt list.")
+    public class ExcerptListDownloadError extends RuntimeException {
+        public ExcerptListDownloadError() {
+            super("Error while downloading excerpt list.");
+        }
+    }
+    
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/excerptList/csv", method = RequestMethod.GET)
+    public HttpEntity<InputStreamResource> downloadExcerptList(UserAuthenticationToken user, @PathVariable String id) {
+        log.info("GET /requests/" + id + "/excerptList/csv");
+        Task task = getTaskByRequestId(id, "data_delivery");
+        ProcessInstance instance = getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        transferData(instance, request, user.getUser());
+
+        // add attachment id to the set of ids of the agreement attachments.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        if (properties == null || properties.getExcerptList() == null) {
+            throw new ExcerptListNotFound();
+        }
+        ExcerptList list = properties.getExcerptList();
+        ByteArrayOutputStream out = new ByteArrayOutputStream(); 
+        Writer writer = new PrintWriter(out);
+        CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
+        csvwriter.writeNext(list.getCsvColumnNames());
+        for (ExcerptEntry entry: list.getEntries()) {
+            csvwriter.writeNext(entry.getCsvValues());
+        }
+        try {
+            csvwriter.flush();
+            csvwriter.close();
+            writer.flush();
+            writer.close();
+            out.flush();
+            InputStream in = new ByteArrayInputStream(out.toByteArray());
+            out.close();
+            InputStreamResource resource = new InputStreamResource(in);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.valueOf("text/csv"));
+            headers.set("Content-Disposition",
+                       "attachment; filename=excerpts_" + id + ".csv");
+            HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
+            log.info("Returning reponse.");
+            return response;
+        } catch (IOException e) {
+            throw new ExcerptListDownloadError();
+        }
+    }
+    
     @RequestMapping(value = "/requests/{id}/files/{attachmentId}", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> getFile(UserAuthenticationToken user, @PathVariable String id,
             @PathVariable String attachmentId) {

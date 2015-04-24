@@ -111,8 +111,8 @@
                             {{'Datalinkage' | translate}}
                         </label>
                         <div class="col-sm-8">
-                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" value="true" ng-checked="request.linkageWithPersonalData"> {{'Linkage with own or external personal data' | translate}} <br>
-                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" value="false" ng-checked="request.linkageWithPersonalData"> {{'No data linkage required' | translate}} <br>
+                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData"> {{'Linkage with own or external personal data' | translate}} <br>
+                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="request.linkageWithPersonalData"> {{'No data linkage required' | translate}} <br>
                         </div>
                     </div>
 
@@ -343,91 +343,6 @@
                         <br>
                     </div> <!-- endif request.status=='Review' -->
 
-                    <!--###################################-->
-                    <!-- START COMMENTS-->
-                    <!--TODO: Refactor-->
-                    <!--###################################-->
-                    <br>
-
-                    <!-- If palga user -->
-                    <div ng-if="globals.currentUser.roles.indexOf('palga') != -1">
-                    <h4>
-                        <a data-toggle="collapse" href="#collapseExample"
-                           aria-expanded="false"
-                           aria-controls="collapseExample">
-                            {{request.comments.length}} {{'Comments'|translate}}
-                        </a>
-
-                    </h4>
-                    <hr>
-
-                    <div class="collapse" id="collapseExample">
-                        <ul class="list-group">
-                            <li class="list-group-item" ng-repeat="comment in request.comments">
-                                <p><div ng-show="!comment_edit_visibility[comment.id]">{{comment.contents}}</div>
-                                <div ng-show="comment_edit_visibility[comment.id]">
-                                   <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add comment'|translate}}"
-                                             ng-model="comment.contents">
-                                   </textarea>
-                                    <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
-                                            ng-click="updateComment(request, comment)">
-                                        {{'Update comment'|translate}}
-                                    </button>
-                                </div>
-                                <span class="pull-right">
-                                    <span class="btn-group btn-group-xs">
-                                        <button class="btn btn-info" type="button" title="Edit"
-                                                ng-click="comment_edit_visibility[comment.id] = 1">
-                                            <span><i class="glyphicon glyphicon-pencil"></i></span>
-                                        </button>
-                                        <button class="btn btn-danger" type="button" title="Delete"
-                                                ng-click="removeComment(comment)">
-                                            <span><i class="glyphicon glyphicon-remove-circle"></i></span>
-                                        </button>
-                                    </span>
-                                </span>
-                                </p>
-                                <p>
-                                    <small>
-                                        <span><i class="glyphicon glyphicon-user"></i></span>
-                                        <em>{{getName(comment.creator)}}</em>
-                                        &nbsp;
-                                        <span><i class="glyphicon glyphicon-time"></i></span>
-                                        <span>{{comment.timeCreated | date: 'EEE dd MMMM yyyy  HH:mm'}}</span>
-                                        <span ng-if="comment.timeEdited != comment.timeCreated">(Last edited: {{comment.timeEdited | date: 'EEE dd MMMM yyyy  HH:mm'}})</span>
-                                    </small>
-                                </p>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Add comment -->
-                    <div class="form-group" ng-class="">
-                        <div class="col-sm-12">
-                            <input type="hidden" ng-model="edit_comment.processInstanceId" value="{{request.processInstanceId}}">
-                            <textarea class="form-control" id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
-                                      ng-model="edit_comment.contents">
-                            </textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group" ng-class="">
-                        <div class="col-sm-12 text-justify">
-                            <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
-                                    ng-click="addComment(request, edit_comment)"
-                                    ng-if="!edit_comment.id">
-                                {{'Add comment'|translate}}
-                            </button>
-                            <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
-                                    ng-click="updateComment(request, edit_comment)"
-                                    ng-if="edit_comment.id">
-                                {{'Update comment'|translate}}
-                            </button>
-                        </div>
-                    </div>
-                    </div> <!-- endif palga user -->
-                    <!-- END COMMENTS-->
-
                     <!-- If in 'Review' status and user type 'palga' or 'scientific_council' -->
                     <div ng-if="request.status=='Approval' &&
                         (   globals.currentUser.roles.indexOf('palga') != -1
@@ -450,7 +365,7 @@
                             <span ng-if="vote.value=='ACCEPTED'"><i class="glyphicon glyphicon-ok-circle"></i></span>
                             <span ng-if="vote.value=='REJECTED'"><i class="glyphicon glyphicon-ban-circle"></i></span>
                             <span ng-if="vote.value=='NONE'"><i class="glyphicon glyphicon-question-sign"></i></span>
-                            {{vote.value}} &nbsp; <small>({{getName(vote.creator)}})</small>
+                            {{vote.value}} &nbsp; <small ng-if="getName(vote.creator)">({{getName(vote.creator)}})</small>
                             </div>
                         </div>
                         </div>
@@ -470,12 +385,12 @@
                             </div>
                         <span class="pull-right" ng-if="globals.currentUser.id==comment.creator.id">
                         <span class="btn-group btn-group-xs">
-                            <button class="btn btn-info {{approval_comment_edit_visibility[comment.id] ? 'active' : ''}}" type="button" title="Edit"
-                                ng-click="approval_comment_edit_visibility[comment.id] = 1">
+                            <button class="btn btn-info {{comment_edit_visibility[comment.id] ? 'active' : ''}}" type="button" title="Edit"
+                                ng-click="comment_edit_visibility[comment.id] = 1">
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                                 </button>
                             <button class="btn btn-danger" type="button" title="Delete"
-                                ng-click="removeComment(comment)">
+                                ng-click="removeApprovalComment(comment)">
                                 <span><i class="glyphicon glyphicon-remove-circle"></i></span>
                             </button>
                         </span>
@@ -496,28 +411,33 @@
 
                     <!-- Add approval comment -->
                     <div class="form-group" ng-class="">
-                        <div class="col-sm-8">
-                           <input type="hidden" ng-model="approval_comment.processInstanceId" value="{{request.processInstanceId}}">
-                           <textarea name="commentText" placeholder="{{'Add comment'|translate}}"
-                            ng-model="approval_comment.contents">
-                           </textarea>
-                           <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
-                            ng-click="addApprovalComment(request, approval_comment)"
-                            ng-if="!edit_comment.id">
-                            {{'Add comment'|translate}}
-                            </button>
-                           <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
-                            ng-click="updateApprovalComment(request, approval_comment)"
-                            ng-if="approval_comment.id">
-                            {{'Update comment'|translate}}
-                            </button>
+                        <div class="col-sm-12">
+                            <input type="hidden" ng-model="approval_comment.processInstanceId" value="{{request.processInstanceId}}">
+                            <textarea class="form-control" id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
+                                      ng-model="approval_comment.contents">
+                            </textarea>
                         </div>
                     </div>
 
+                    <div class="form-group" ng-class="">
+                        <div class="col-sm-12 text-justify">
+                            <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
+                                    ng-click="addApprovalComment(request, approval_comment)"
+                                    ng-if="!approval_comment.id">
+                                {{'Add comment'|translate}}
+                            </button>
+                            <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+                                    ng-click="updateApprovalComment(request, approval_comment)"
+                                    ng-if="approval_comment.id">
+                                {{'Update comment'|translate}}
+                            </button>
+                        </div>
+                    </div>
+                        
                     <!-- Add vote -->
                     <div ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="form-group" ng-class="">
                         <div class="col-sm-8">
-                            {{request.approvalVotes[globals.currentUser.userid].value}}
+                           <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
                            <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
                             type="button" title="{{'Accepted'|translate}}"
                             ng-click="updateVote(request, 'ACCEPTED')"
@@ -536,6 +456,33 @@
                     </div>
 
                     </div> <!-- endif 'Review' status and user type 'palga' or 'scientific_council' -->
+
+                <div ng-if="request.status=='Approval' &&
+                        globals.currentUser.roles.indexOf('palga') != -1">
+                <h4>{{'Finalisation checks'|translate}}</h4>
+                <hr>
+                <!-- Scientific council has approved -->
+                <div class="form-group" ng-class="">
+                    <label class="control-label col-sm-3" for="scientificCouncilApproved">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved" 
+                               ng-model="request.scientificCouncilApproved"> &nbsp; {{ 'The scientific council has approved.' | translate }}
+                    </div>
+                </div>
+            
+                <!-- There are no privacy issues or the privacy committee has approved. -->
+                <div class="form-group" ng-class="">
+                    <label class="control-label col-sm-3" for="privacyCommiteeApproved">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved" 
+                               ng-model="request.privacyCommitteeApproved"> &nbsp; {{ 'There are no privacy issues or the privacy committee has approved.' | translate }}
+                    </div>
+                </div>
+                </div>            
 
 
                 </div> <!--end modal-body-->
@@ -561,6 +508,8 @@
                         ng-if="request.status=='Approval'"
                         ng-click="finalise(request)"
                         ng-disabled="requestEditForm.$invalid
+                            || !request.scientificCouncilApproved
+                            || !request.privacyCommitteeApproved
                         ">
                             {{'Finalise'|translate}}
                     </button>

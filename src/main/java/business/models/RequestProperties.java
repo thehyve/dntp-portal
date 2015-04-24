@@ -15,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 @Entity
 public class RequestProperties {
@@ -29,9 +31,19 @@ public class RequestProperties {
     @ElementCollection
     private Set<String> agreementAttachmentIds = new HashSet<String>();
 
+    @ElementCollection
+    private Set<String> dataAttachmentIds = new HashSet<String>();
+    
+    private String excerptListAttachmentId;
+    
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private ExcerptList excerptList;
+    
+    @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
 
+    @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> approvalComments = new ArrayList<Comment>();
 
@@ -50,6 +62,14 @@ public class RequestProperties {
     @Column(columnDefinition="TEXT")
     private String privacyCommitteeEmails;
 
+    public RequestProperties() {
+        
+    }
+    
+    public RequestProperties(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -110,6 +130,14 @@ public class RequestProperties {
         this.agreementAttachmentIds = agreementAttachmentIds;
     }
 
+    public Set<String> getDataAttachmentIds() {
+        return dataAttachmentIds;
+    }
+
+    public void setDataAttachmentIds(Set<String> dataAttachmentIds) {
+        this.dataAttachmentIds = dataAttachmentIds;
+    }
+
     public boolean isSentToPrivacyCommittee() {
         return sentToPrivacyCommittee;
     }
@@ -141,4 +169,21 @@ public class RequestProperties {
     public void setPrivacyCommitteeEmails(String privacyCommitteeEmails) {
         this.privacyCommitteeEmails = privacyCommitteeEmails;
     }
+
+    public String getExcerptListAttachmentId() {
+        return excerptListAttachmentId;
+    }
+
+    public void setExcerptListAttachmentId(String excerptListAttachmentId) {
+        this.excerptListAttachmentId = excerptListAttachmentId;
+    }
+
+    public ExcerptList getExcerptList() {
+        return excerptList;
+    }
+
+    public void setExcerptList(ExcerptList excerptList) {
+        this.excerptList = excerptList;
+    }
+    
 }

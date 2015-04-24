@@ -114,9 +114,6 @@
         <documentation>
         Approval by scientific council. Members can vote and add comments.
         </documentation>
-        <extensionElements>
-            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
-        </extensionElements>
     </userTask>
 
     <userTask id="request_approval" name="Request approval" activiti:candidateGroups="palga">
@@ -125,6 +122,7 @@
         </documentation>
         <extensionElements>
             <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="privacy_committee_approved" name="Privacy committee approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
         </extensionElements>
     </userTask>
 

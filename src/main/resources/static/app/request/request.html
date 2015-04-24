@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="RequestController">
     <div class="row">
 
         <!--Side Bar-->
@@ -9,7 +9,6 @@
         </div>
 
         <!--Main-->
-
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
             <h2>{{request.processInstanceId}} - {{ 'Request' | translate }} {{request.title}}</h2>
@@ -62,62 +61,98 @@
             <h3>{{ 'Details' | translate }}</h3>
             <hr>
 
+            <!-- Principal Investigator -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Principal Investigator' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.contactPersonName}}
+                </p>
+            </div>
+
             <!-- Title -->
             <div class="row">
-                <label class="control-label col-sm-2">{{ 'Title' | translate }}</label>
-                <p class="col-sm-8">
+                <label class="control-label col-sm-3">{{ 'Title' | translate }}</label>
+                <p class="col-sm-7">
                     {{request.title}}
                 </p>
             </div>
 
-            <!-- Description -->
+            <!-- Research Question -->
             <div class="row">
-                <label class="control-label col-sm-2">{{ 'Description' | translate }}</label>
-                <div class="col-sm-8">
-                    {{request.description}}
+                <label class="control-label col-sm-3">{{ ' Research Question' | translate }}</label>
+                <div class="col-sm-7">
+                    {{request.researchQuestion}}
                 </div>
             </div>
 
-            <!-- Motivation -->
+            <!-- Hypothesis -->
             <div class="row">
-                <label class="control-label col-sm-2">{{ 'Motivation' | translate }}</label>
-                <div class="col-sm-8">
-                    {{request.motivation}}
+                <label class="control-label col-sm-3">{{ 'Hypothesis' | translate }}</label>
+                <div class="col-sm-7">
+                    {{request.hypothesis}}
                 </div>
             </div>
 
-            <!-- Is statistics request -->
+            <!-- Methods -->
             <div class="row">
-                <label class="control-label col-sm-2">
+                <label class="control-label col-sm-3">{{ 'Methods' | translate }}</label>
+                <div class="col-sm-7">
+                    {{request.methods}}
+                </div>
+            </div>
+
+            <!-- Request Type -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Request Type' | translate }}</label>
+                <div class="col-sm-7">
+                    {{request.type}}
+                </div>
+            </div>
+
+<!--
+            <div class="row">
+                <label class="control-label col-sm-3">
                     &nbsp;
                 </label>
 
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <span><i class="glyphicon {{request.statisticsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'Request for information (statistics or Palga excerpts).' |
+                    &nbsp; {{ 'Request for statistic.' |
                     translate }}
                 </div>
             </div>
 
-            <!-- Is PA report request -->
             <div class="row">
-                <label class="control-label col-sm-2">
+                <label class="control-label col-sm-3">
                     &nbsp;
                 </label>
 
-                <div class="col-sm-8">
+                <div class="col-sm-7">
+                    <span><i class="glyphicon {{request.excerptsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                    &nbsp; {{ 'Request for Palga excerpts.' |
+                    translate }}
+                </div>
+            </div>
+
+
+            <div class="row">
+                <label class="control-label col-sm-3">
+                    &nbsp;
+                </label>
+
+                <div class="col-sm-7">
                     <span><i class="glyphicon {{request.paReportRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                     &nbsp; {{ 'Request for PA reports (intermediate procedure).' |
                     translate }}
                 </div>
             </div>
 
-            <!-- Is PA materials request -->
+
             <div class="row">
-                <label class="control-label col-sm-2">
+                <label class="control-label col-sm-3">
                     &nbsp;
                 </label>
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <span><i class="glyphicon {{request.materialsRequest ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                     &nbsp; {{ 'Request for samples (ffpe/coupus) (intermediate procedure).' |
                     translate }}
@@ -125,10 +160,10 @@
             </div>
 
             <div class="row" ng-show="request.materialsRequest">
-                <label class="control-label col-sm-2">
+                <label class="control-label col-sm-3">
                     &nbsp;
                 </label>
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <label class="control-label">
                         <span><i class="glyphicon glyphicon-calendar"></i></span>
                         &nbsp; {{'Return date'|translate}}:
@@ -137,38 +172,59 @@
                     <br>
                 </div>
             </div>
+-->
 
-            <!-- Is request limited to cohort-->
-            <div class="row">
-                <label class="control-label col-sm-2">
+
+            <!-- Data Linkage -->
+            <div class="row" ng-show="request.type != '1'">
+                <label class="control-label col-sm-3">
                     &nbsp;
                 </label>
 
-                <div class="col-sm-8">
-                    <span><i class="glyphicon {{request.limitedToCohort ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'The request is limited to a specific cohort.' |
+                <div class="col-sm-7">
+                    <span><i class="glyphicon {{request.linkageWithPersonalData ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                    &nbsp; {{ 'The request is linkage with personal data.' |
                     translate }}
                 </div>
             </div>
 
+            <!-- Informed Consent -->
+            <div class="row" ng-show="request.type != '1'">
+                <label class="control-label col-sm-3">
+                    &nbsp;
+                </label>
 
+                <div class="col-sm-7">
+                    <span><i class="glyphicon {{request.informedConsent ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                    &nbsp; {{ 'Informed Consent.' |
+                    translate }}
+                </div>
+            </div>
+
+            <!-- Reason Using Personal Data -->
+            <div class="row" ng-show="request.type != '1'">
+                <label class="control-label col-sm-3">{{ 'Reason using personal data' | translate }}</label>
+                <div class="col-sm-7">
+                    {{request.reasonUsingPersonalData}}
+                </div>
+            </div>
 
             <!-- Lab -->
             <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1 && request.lab.number">
                 <br>
-                <label class="control-label col-sm-2">
+                <label class="control-label col-sm-3">
                    {{'Lab' | translate}}
                 </label>
 
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     {{request.lab.number}} {{request.lab.name}}
                 </div>
             </div>
             <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
-                <label class="control-label col-sm-2">
+                <label class="control-label col-sm-3">
                     &nbsp;
                 </label>
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                     &nbsp; {{ 'The requester has been confirmed that he/she is associated with the lab.' | translate }}
                 </div>
@@ -196,10 +252,10 @@
 
                 <!-- Requester valid -->
                 <div class="row">
-                    <label class="control-label col-sm-2">
+                    <label class="control-label col-sm-3">
                         &nbsp;
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <span><i class="glyphicon {{request.requesterValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                         &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
                     </div>
@@ -207,10 +263,10 @@
 
                 <!-- Requester allowed -->
                 <div class="row">
-                    <label class="control-label col-sm-2">
+                    <label class="control-label col-sm-3">
                         &nbsp;
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <span><i class="glyphicon {{request.requesterAllowed ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                         &nbsp; {{ 'The requester is allowed to file the request.' | translate }}
                     </div>
@@ -218,10 +274,10 @@
 
                 <!-- Contact person allowed -->
                 <div class="row">
-                    <label class="control-label col-sm-2">
+                    <label class="control-label col-sm-3">
                         &nbsp;
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <span><i class="glyphicon {{request.contactPersonAllowed ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                         &nbsp; {{ 'The contact person been checked and is authorised to support the request.' | translate }}
                     </div>
@@ -237,10 +293,10 @@
 
                 <!-- Is this request has been sent to Privacy Committee -->
                 <div class="row">
-                    <label class="control-label col-sm-2">
+                    <label class="control-label col-sm-3">
                         &nbsp;
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <span><i class="glyphicon {{request.sentToPrivacyComm ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                         &nbsp; {{ 'This request has been sent to Privacy Committee to be checked.' | translate }}
                     </div>
@@ -248,24 +304,24 @@
 
                 <!-- Outcome -->
                 <div class="row">
-                    <label class="control-label col-sm-2">{{ 'Outcome' | translate }}</label>
-                    <div class="col-sm-8">
+                    <label class="control-label col-sm-3">{{ 'Outcome' | translate }}</label>
+                    <div class="col-sm-7">
                         {{request.privacyCommitteeOutcome}}
                     </div>
                 </div>
 
                 <!-- Outcome Reference -->
                 <div class="row">
-                    <label class="control-label col-sm-2">{{ 'Outcome Reference' | translate }}</label>
-                    <div class="col-sm-8">
+                    <label class="control-label col-sm-3">{{ 'Outcome Reference' | translate }}</label>
+                    <div class="col-sm-7">
                         {{request.privacyCommitteeOutcomeRef}}
                     </div>
                 </div>
 
                 <!-- Outcome Emails -->
                 <div class="row">
-                    <label class="control-label col-sm-2">{{ 'Emailing History' | translate }}</label>
-                    <div class="col-sm-8">
+                    <label class="control-label col-sm-3">{{ 'Emailing History' | translate }}</label>
+                    <div class="col-sm-7">
                         {{request.privacyCommitteeEmails}}
                     </div>
                 </div>
@@ -277,10 +333,10 @@
 
                 <!-- Agreement reached -->
                 <div class="row">
-                    <label class="control-label col-sm-2">
+                    <label class="control-label col-sm-3">
                         &nbsp;
                     </label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <span><i class="glyphicon {{request.agreementReached ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
                         &nbsp; {{ 'Agreement has been reached.' | translate }}
                     </div>

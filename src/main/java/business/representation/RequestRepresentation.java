@@ -23,13 +23,20 @@ public class RequestRepresentation {
     private Date dateAssigned;
 
     private String title;
-    private String description;
-    private String motivation;
+    private String researchQuestion;
+    private String hypothesis;
+    private String methods;
+
     private boolean statisticsRequest;
+    private boolean excerptsRequest;
     private boolean paReportRequest;
     private boolean materialsRequest;
+
+    private boolean linkageWithPersonalData;
+    private boolean informedConsent;
+    private String reasonUsingPersonalData;
+
     private Date returnDate;
-    private boolean limitedToCohort;
     private String contactPersonName;
 
     private List<AttachmentRepresentation> attachments;
@@ -116,20 +123,28 @@ public class RequestRepresentation {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getResearchQuestion() {
+        return researchQuestion;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setResearchQuestion(String researchQuestion) {
+        this.researchQuestion = researchQuestion;
     }
 
-    public String getMotivation() {
-        return motivation;
+    public String getHypothesis() {
+        return hypothesis;
     }
 
-    public void setMotivation(String motivation) {
-        this.motivation = motivation;
+    public void setHypothesis(String hypothesis) {
+        this.hypothesis = hypothesis;
+    }
+
+    public String getMethods() {
+        return methods;
+    }
+
+    public void setMethods(String methods) {
+        this.methods = methods;
     }
 
     public boolean isStatisticsRequest() {
@@ -138,6 +153,14 @@ public class RequestRepresentation {
 
     public void setStatisticsRequest(boolean statisticsRequest) {
         this.statisticsRequest = statisticsRequest;
+    }
+
+    public boolean isExcerptsRequest() {
+        return excerptsRequest;
+    }
+
+    public void setExcerptsRequest(boolean excerptsRequest) {
+        this.excerptsRequest = excerptsRequest;
     }
 
     public boolean isPaReportRequest() {
@@ -156,20 +179,36 @@ public class RequestRepresentation {
         this.materialsRequest = materialsRequest;
     }
 
+    public boolean isLinkageWithPersonalData() {
+        return linkageWithPersonalData;
+    }
+
+    public void setLinkageWithPersonalData(boolean linkageWithPersonalData) {
+        this.linkageWithPersonalData = linkageWithPersonalData;
+    }
+
+    public boolean isInformedConsent() {
+        return informedConsent;
+    }
+
+    public void setInformedConsent(boolean informedConsent) {
+        this.informedConsent = informedConsent;
+    }
+
+    public String getReasonUsingPersonalData() {
+        return reasonUsingPersonalData;
+    }
+
+    public void setReasonUsingPersonalData(String reasonUsingPersonalData) {
+        this.reasonUsingPersonalData = reasonUsingPersonalData;
+    }
+
     public Date getReturnDate() {
         return returnDate;
     }
 
     public void setReturnDate(Date returnDate) {
         this.returnDate = returnDate;
-    }
-
-    public boolean isLimitedToCohort() {
-        return limitedToCohort;
-    }
-
-    public void setLimitedToCohort(boolean limitedToCohort) {
-        this.limitedToCohort = limitedToCohort;
     }
 
     public String getContactPersonName() {

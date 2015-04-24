@@ -33,6 +33,7 @@ public class RequestRepresentation {
     private boolean materialsRequest;
 
     private boolean linkageWithPersonalData;
+    private String linkageWithPersonalDataNotes;
     private boolean informedConsent;
     private String reasonUsingPersonalData;
 
@@ -182,6 +183,14 @@ public class RequestRepresentation {
 
     public void setLinkageWithPersonalData(boolean linkageWithPersonalData) {
         this.linkageWithPersonalData = linkageWithPersonalData;
+    }
+
+    public String getLinkageWithPersonalDataNotes() {
+        return linkageWithPersonalDataNotes;
+    }
+
+    public void setLinkageWithPersonalDataNotes(String linkageWithPersonalDataNotes) {
+        this.linkageWithPersonalDataNotes = linkageWithPersonalDataNotes;
     }
 
     public boolean isInformedConsent() {

@@ -5,47 +5,20 @@
             ApprovalComment, ApprovalVote,
             FlowOptionService, $routeParams) {
 
-        var convertRequestType = function (type) {
-            var requestOpts = {
-                statisticsRequest : false,
-                excerptsRequest : false,
-                paReportRequest : false,
-                materialsRequest : false
-            };
-            var cases = {
-                1 : requestOpts.statisticsRequest = true,
-                2 : console.log("type1"),
-                3 : console.log("type2"),
-                4 : console.log("type3"),
-                5 : console.log("type4"),
-                6 : console.log("type5"),
-                6 : console.log("type6"),
-                7 : console.log("type7")
-            };
-
-            if (cases[type]) {
-                cases[type];
-            };
-
-            return requestOpts;
-        };
-
-
         $scope.error = "";
 
         $scope.login = function() {
             $location.path("/login");
         };
 
-        //console.log("globals: "+ JSON.stringify($rootScope.globals));
-
         if ($routeParams.requestId) {
             if (!$scope.requests) {
                 $scope.requests = [];
             }
             Request.get({id:$routeParams.requestId}, function (req) {
+                req.type = Request.convertRequestOptsToType(req);
                 $scope.request = req;
-                console.log("current req is", req);
+                //console.log("current req is", req);
             });
         } else {
             Request.query().$promise.then(function(response) {
@@ -63,8 +36,19 @@
             });
         };
 
-        $scope.saveOpenRequest = function(request) {
-            //TODO
+        $scope.isMaterialNeeded = function (request) {
+            Request.convertRequestTypeToOpts(request);
+            if (request.type != 1) {
+                $scope.resetDataLinkage(request);
+            }
+            return Request.isMaterialNeeded(request);
+        };
+
+        $scope.resetDataLinkage = function (request) {
+            request.linkageWithPersonalData = false;
+            request.linkageWithPersonalDataNotes = "";
+            request.informedConsent = false;
+            request.reasonUsingPersonalData = "";
         };
 
         $scope.flow_options = function(options) {
@@ -95,7 +79,7 @@
                     break;
                 }
             }
-            console.log("Updating request at index: " + index);
+            //console.log("Updating request at index: " + index);
             $scope.requests[index] = result;
 
             $route.reload();
@@ -104,6 +88,7 @@
         };
 
         $scope.update = function(request) {
+            Request.convertRequestTypeToOpts(request); // convert request type
             request.$update(function(result) {
                 $scope.refresh(request, result);
                 $scope.editRequestModal.hide();
@@ -169,7 +154,7 @@
                 + "After submission the request cannot be edited anymore.",
                 function(confirmed) {
                     if (confirmed) {
-                        console.log("request.type ", request.type );
+                        //console.log("request.type ", request.type );
                         request.$submit(function(result) {
                             $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
@@ -178,14 +163,13 @@
                         });
                     }
                 });
-        }
+        };
 
         $scope.submitForApproval = function(request) {
             bootbox.confirm(
                 "Are you sure you want to submit the request for approval?",
                 function(confirmed) {
                     if (confirmed) {
-                        // TODO convert request type
                         request.$submitForApproval(function(result) {
                             $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
@@ -223,7 +207,9 @@
             if (request) {
 
                 Request.get({id:request.processInstanceId}, function (data) {
+                    data.type = Request.convertRequestOptsToType(data);
                     $scope.request = data;
+
                     if ($scope.globals.currentUser.roles.indexOf('scientific_council') != -1) {
                         if (!$scope.request.approvalVotes) {
                             $scope.request.approvalVotes = {};

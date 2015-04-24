@@ -94,8 +94,8 @@
             <!-- Request Type -->
             <div class="row">
                 <label class="control-label col-sm-3">{{ 'Request Type' | translate }}</label>
-                <div class="col-sm-7">
-                    {{request.type}}
+                <div class="col-sm-7" ng-init="">
+                    {{"Request_Type_" + request.type | translate}}
                 </div>
             </div>
 

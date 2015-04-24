@@ -25,11 +25,6 @@
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Edit' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Vote"
-                        ng-hide="(request.status != 'Approval' || globals.currentUser.roles.indexOf('scientific_council') == -1)">
-                    <span><i class="glyphicon glyphicon-check"></i></span>
-                    {{'Vote' | translate}}
-                </button>
                 <button ng-if="globals.currentUser.roles.indexOf('palga') != -1"  class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}

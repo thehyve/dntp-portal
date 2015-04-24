@@ -227,7 +227,25 @@
                     }
                 });
         };
-        
+
+        $scope.reject = function(request) {
+            bootbox.prompt({
+                title: "Are you sure you want to reject the request?\n<br>"
+                    +"Please enter a reject reason:",
+                callback: function(result) {
+                    if (result) {
+                        request.rejectReason = result;
+                        request.$reject(function(result) {
+                            $scope.refresh(request, result);
+                            $scope.editRequestModal.hide();
+                        }, function(response) {
+                            $scope.error = $scope.error + response.data.message + "\n";
+                        });
+                    } 
+                }
+            });
+        };
+
         $scope.uploadDataFile = function(flow) {
             max_size = 1024*1024*10;
             if (flow.getSize() > max_size) {

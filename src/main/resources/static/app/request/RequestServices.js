@@ -20,6 +20,10 @@
                 url : '/requests/:id/finalise',
                 method : "PUT"
             },
+            reject : {
+                url : '/requests/:id/reject',
+                method : "PUT"
+            },
             remove : {
                 method : "DELETE"
             },

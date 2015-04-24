@@ -311,6 +311,10 @@ public class RequestController {
                 
                 request.setScientificCouncilApproved(fetchBooleanVariable("scientific_council_approved", variables));
                 request.setPrivacyCommitteeApproved(fetchBooleanVariable("privacy_committee_approved", variables));
+                
+                request.setRequestApproved(fetchBooleanVariable("request_approved", variables));
+                request.setRejectReason((String)variables.get("reject_reason"));
+                request.setRejectDate((Date)variables.get("reject_date"));
             }
 
             request.setDataAttachments(dataAttachments);
@@ -356,6 +360,10 @@ public class RequestController {
                 variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
                 variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
                 
+                variables.put("request_approved", (Boolean)request.isRequestApproved());
+                variables.put("reject_reason", request.getRejectReason());
+                variables.put("reject_date", request.getRejectDate());
+                
                 if (request.isRequesterValid()
                         && request.isRequesterAllowed()
                         && request.isContactPersonAllowed()
@@ -400,6 +408,11 @@ public class RequestController {
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
                     .variableValueEquals("status", "DataDelivery")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Rejected")
                     .list());
         } else if (user.getUser().isScientificCouncilMember()) {
             processInstances = runtimeService
@@ -758,6 +771,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/finalise");
         ProcessInstance instance = getProcessInstance(id);
+        
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
 
@@ -766,6 +780,10 @@ public class RequestController {
         transferData(instance, updatedRequest, user.getUser());
         if (updatedRequest.isPrivacyCommitteeApproved() && 
                 updatedRequest.isScientificCouncilApproved()) {
+            // marking request as approved
+            updatedRequest.setRequestApproved(true);
+            variables = transferFormData(updatedRequest, instance, user.getUser());
+            runtimeService.setVariables(instance.getProcessInstanceId(), variables);
         
             log.info("Fetching scientific_council_approval task");
             Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
@@ -791,6 +809,51 @@ public class RequestController {
         return updatedRequest;
     }
 
+    @Secured("hasPermission(#param, 'isPalgaUser')")
+    @RequestMapping(value = "/requests/{id}/reject", method = RequestMethod.PUT)
+    public RequestRepresentation reject(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestBody RequestRepresentation request) {
+        log.info("PUT /requests/" + id + "/reject");
+        ProcessInstance instance = getProcessInstance(id);
+        
+        Map<String, Object> variables = transferFormData(request, instance, user.getUser());
+        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+
+        instance = getProcessInstance(id);
+        RequestRepresentation updatedRequest = new RequestRepresentation();
+        transferData(instance, updatedRequest, user.getUser());
+
+        // marking request as rejected
+        updatedRequest.setRequestApproved(false);
+        updatedRequest.setRejectDate(new Date());
+        log.info("Reject request.");
+        log.info("Reject reason: " + updatedRequest.getRejectReason());
+        variables = transferFormData(updatedRequest, instance, user.getUser());
+        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+    
+        log.info("Fetching scientific_council_approval task");
+        Task councilTask = getTaskByRequestId(id, "scientific_council_approval");
+        if (councilTask.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(councilTask.getId());
+        }
+        taskService.complete(councilTask.getId());
+
+        log.info("Fetching request_approval task");
+        Task palgaTask = getTaskByRequestId(id, "request_approval");
+        if (palgaTask.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(palgaTask.getId());
+        }
+        taskService.complete(palgaTask.getId());
+
+        instance = getProcessInstance(id);
+        updatedRequest = new RequestRepresentation();
+        transferData(instance, updatedRequest, user.getUser());
+
+        return updatedRequest;
+    }
+    
     @Secured("hasPermission(#param, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/claim", method = RequestMethod.PUT)
     public RequestRepresentation claim(

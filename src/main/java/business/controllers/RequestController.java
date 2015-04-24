@@ -217,6 +217,9 @@ public class RequestController {
                 User user = userRepository.findOne(userId);
                 if (user != null) {
                     request.setRequesterName(getName(user));
+                    if (user.getContactData() != null) {
+                        request.setRequesterEmail(user.getContactData().getEmail());
+                    }
                     request.setLab(user.getLab());
                 }
             }
@@ -414,6 +417,11 @@ public class RequestController {
                     .includeProcessVariables()
                     .variableValueEquals("status", "Rejected")
                     .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Closed")
+                    .list());
         } else if (user.getUser().isScientificCouncilMember()) {
             processInstances = runtimeService
                     .createProcessInstanceQuery()
@@ -466,6 +474,16 @@ public class RequestController {
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
                     .variableValueEquals("status", "DataDelivery")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Rejected")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Closed")
                     .list());
         } else if (user.getUser().isScientificCouncilMember()) {
             processInstances = runtimeService
@@ -817,7 +835,9 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/reject");
         ProcessInstance instance = getProcessInstance(id);
-        
+
+        request.setRequestApproved(false);
+        request.setRejectDate(new Date());
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
 
@@ -825,13 +845,8 @@ public class RequestController {
         RequestRepresentation updatedRequest = new RequestRepresentation();
         transferData(instance, updatedRequest, user.getUser());
 
-        // marking request as rejected
-        updatedRequest.setRequestApproved(false);
-        updatedRequest.setRejectDate(new Date());
         log.info("Reject request.");
         log.info("Reject reason: " + updatedRequest.getRejectReason());
-        variables = transferFormData(updatedRequest, instance, user.getUser());
-        runtimeService.setVariables(instance.getProcessInstanceId(), variables);
     
         log.info("Fetching scientific_council_approval task");
         Task councilTask = getTaskByRequestId(id, "scientific_council_approval");

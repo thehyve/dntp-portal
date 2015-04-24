@@ -135,7 +135,7 @@
     <parallelGateway id="approval_end" />
     
     <sequenceFlow id="approval_to_status_delivery" sourceRef="approval_end" targetRef="status_data_delivery">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == yes} ]]></conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == "true"} ]]></conditionExpression>
     </sequenceFlow>
 
     <scriptTask id="status_data_delivery" name="Update status to DataDelivery" scriptFormat="groovy" activiti:autoStoreVariables="true">
@@ -155,7 +155,7 @@
 
 
     <sequenceFlow id="approval_to_status_rejected" sourceRef="approval_end" targetRef="status_rejected">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == no} ]]></conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == "false"} ]]></conditionExpression>
     </sequenceFlow>
 
     <scriptTask id="status_rejected" name="Update status to Rejected" scriptFormat="groovy" activiti:autoStoreVariables="true">

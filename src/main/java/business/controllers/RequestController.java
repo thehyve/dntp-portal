@@ -204,6 +204,7 @@ public class RequestController {
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
 
             request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
+            request.setLinkageWithPersonalDataNotes((String) variables.get("linkage_with_personal_data_notes"));
             request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
             request.setReasonUsingPersonalData((String) variables.get("reason_using_personal_data"));
 
@@ -338,6 +339,7 @@ public class RequestController {
             variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
 
             variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
+            variables.put("linkage_with_personal_data_notes", request.getLinkageWithPersonalDataNotes());
             variables.put("is_informed_consent", (Boolean)request.isInformedConsent());
             variables.put("reason_using_personal_data", request.getReasonUsingPersonalData());
 

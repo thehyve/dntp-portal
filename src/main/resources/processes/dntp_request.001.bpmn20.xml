@@ -47,6 +47,9 @@
             <activiti:formProperty id="is_linkage_with_personal_data" name="Linkage with own or external personal data"
                                    type="boolean" variable="is_linkage_with_personal_data"
                                    required="true"></activiti:formProperty>
+            <activiti:formProperty id="linkage_with_personal_data_notes"
+                                   name="Notes for linkage with own or external personal data" type="string"
+                                   variable="linkage_with_personal_data_notes" required="true"></activiti:formProperty>
             <activiti:formProperty id="is_informed_consent" name="Informed Consent" type="boolean"
                                    variable="is_informed_consent" required="true"></activiti:formProperty>
             <activiti:formProperty id="reason_using_personal_data" name="Reason for Using Personal Data" type="string"
@@ -59,7 +62,7 @@
         </extensionElements>
     </userTask>
 
-	<sequenceFlow id="request_form_to_review" sourceRef="request_form" targetRef="status_review"></sequenceFlow>
+    <sequenceFlow id="request_form_to_review" sourceRef="request_form" targetRef="status_review"></sequenceFlow>
 
     <scriptTask id="status_review" name="Update status to Review" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>

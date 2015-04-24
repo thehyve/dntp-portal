@@ -82,7 +82,7 @@
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                             </button>
                             <button
-                                 ng-disabled="req.status != 'Approval' || (
+                                 ng-hide="req.status != 'Approval' || (
                                  globals.currentUser.roles.indexOf('palga') == -1 && globals.currentUser.roles.indexOf('scientific_council') == -1)"
                                  class="btn btn-default" type="button" title="{{'evaluate'|translate}}" ng-click="edit(req)">
                                 {{'Evaluate'|translate}}

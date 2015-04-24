@@ -33,6 +33,9 @@
             }).when('/register/success', {
                 templateUrl : 'app/registration/thank-you.html',
                 controller : 'RegistrationController'
+            }).when('/activate/:token', {
+                templateUrl : 'app/activation/activate.html',
+                controller : 'ActivationController'
             }).when('/users', {
                 templateUrl : 'app/admin/user/users.html'
             }).when('/labs', {
@@ -77,6 +80,7 @@
                         && $location.path() !== '/register/success'
                         && $location.path() !== '/login/forgot-password'
                         && !startsWith($location.path(), '/login/reset-password')
+                        && !startsWith($location.path(), '/activate/')
                         ) && !$rootScope.globals.currentUser) {
                         $location.path('/login');
                     }

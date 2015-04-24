@@ -96,6 +96,7 @@ public class HttpSecurityConfiguration extends
                 ).permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/register/users/activate/**").permitAll()
             .anyRequest()
                 .authenticated()
                 .and()

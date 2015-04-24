@@ -1,16 +1,19 @@
 package business.controllers;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+import business.models.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,22 +22,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import business.models.ContactData;
-import business.models.Lab;
-import business.models.LabRepository;
-import business.models.Role;
-import business.models.RoleRepository;
-import business.models.User;
-import business.models.UserRepository;
-import business.models.UserService;
 import business.models.UserService.EmailAddressNotUnique;
 import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
+
+import javax.validation.constraints.NotNull;
 
 @RestController
 public class UserController {
 
     Log log = LogFactory.getLog(getClass());
+
+    @Value("${dntp.server-name}")
+    String serverName;
+
+    @Value("${dntp.server-port}")
+    String serverPort;
     
     @Autowired
     UserRepository userRepository;
@@ -48,10 +51,33 @@ public class UserController {
     @Autowired
     LabRepository labRepository;
 
+    @Autowired
+    ActivationLinkRepository activationLinkRepository;
+
+    @Autowired
+    JavaMailSender mailSender;
+
     @RequestMapping("/user")
     public ProfileRepresentation user(UserAuthenticationToken user) {
         log.info("GET /user");
         return new ProfileRepresentation(user.getUser());
+    }
+
+    @RequestMapping(value = "/register/users/activate/{token}", method = RequestMethod.GET)
+    public ResponseEntity<Object> activateUser(@PathVariable String token) {
+        ActivationLink link = activationLinkRepository.findByToken(token);
+
+        // Check that the link has been issued in the previous week
+        if (link != null && TimeUnit.MILLISECONDS.toDays(new Date().getTime() - link.getCreationDate().getTime()) <= 7) {
+            User user = link.getUser();
+            user.setEmailValidated(true);
+            userRepository.save(user);
+            activationLinkRepository.delete(link);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        } else {
+            // The activation link doesn't exist or is outdated!
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/admin/user", method = RequestMethod.GET)
@@ -161,6 +187,10 @@ public class UserController {
             transferUserData(body, user);
             try {
                 User result = userService.save(user);
+
+                // The user has been successfully saved. Send activation email
+                sendActivationEmail(user);
+
                 return new ProfileRepresentation(result);
             } catch (EmailAddressNotUnique e) {
                 throw new EmailAddressNotAvailableException();
@@ -170,6 +200,22 @@ public class UserController {
         {
             throw new InvalidUserDataException("Passwords do not match.");
         }
+    }
+
+    private void sendActivationEmail(@NotNull User user) {
+        // Generate and save activation link
+        ActivationLink link = new ActivationLink(user);
+        this.activationLinkRepository.save(link);
+
+        // Send email to user
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getUsername());
+        message.setFrom("no-reply@dntp.thehyve.nl");
+        message.setReplyTo("no-reply@dntp.thehyve.nl");
+        message.setSubject("Account activation");
+        message.setText(String.format("Please follow this link to activate your account: http://%s:%s/#/activate/%s", serverName, serverPort, link.getToken()));
+        mailSender.send(message);
+        LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + link.getToken());
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.POST)

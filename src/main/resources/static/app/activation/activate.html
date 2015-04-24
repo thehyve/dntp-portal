@@ -1,0 +1,16 @@
+<div ng-controller="ActivationController" ng-init="init()">
+<div class="container">
+    <h2>{{ 'Account activation' | translate }}</h2>
+    <hr>
+    <div class="alert alert-info" ng-show="success === undefined">
+        {{ 'Loading' | translate }}...
+    </div>
+    <div class="alert alert-success" ng-show="success === true">
+        {{ 'Your account has been successfully activated' | translate }}
+        <a href="#/login" class="btn btn-primary">{{ 'Login' | translate }}</a>
+    </div>
+    <div class="alert alert-danger" ng-show="success === false">
+        {{ 'This link is not valid' | translate }}
+    </div>
+</div>
+</div>

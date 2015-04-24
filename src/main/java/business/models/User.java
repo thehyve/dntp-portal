@@ -28,6 +28,7 @@ public class User implements Serializable {
     private String password;
     private boolean active = true;
     private boolean deleted = false;
+    private boolean emailValidated = false;
 
     private long failedLoginAttempts = 0;
     private boolean accountTemporarilyBlocked = false;
@@ -50,9 +51,7 @@ public class User implements Serializable {
     
     private Date created = new Date();
     
-    public User() {
-        
-    }
+    public User() {}
     
     public User(String username, String password, boolean active,
             Set<Role> roles) {
@@ -230,7 +229,15 @@ public class User implements Serializable {
             this.failedLoginAttempts++;
         }
     }
-    
+
+    public boolean isEmailValidated() {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(boolean emailValidated) {
+        this.emailValidated = emailValidated;
+    }
+
     public void resetFailedLoginAttempts() {
         this.failedLoginAttempts = 0;
     }

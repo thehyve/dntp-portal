@@ -54,6 +54,7 @@ public class DefaultUsers {
                 ContactData contactData = new ContactData();
                 contactData.setEmail(username);
                 user.setContactData(contactData);
+                user.setEmailValidated(true);
                 userRepository.save(user);
             }
         }

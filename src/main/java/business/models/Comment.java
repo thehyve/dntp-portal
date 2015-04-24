@@ -28,7 +28,6 @@ public class Comment implements Serializable {
     //@RestResource(exported = false)
     private User creator;
     
-    @OrderColumn
     private Date timeCreated = new Date();
     
     private Date timeEdited = timeCreated;

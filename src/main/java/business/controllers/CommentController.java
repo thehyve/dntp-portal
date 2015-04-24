@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import business.models.Comment;
 import business.models.CommentRepository;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesRepository;
+import business.models.RequestPropertiesService;
 import business.representation.CommentRepresentation;
 import business.security.UserAuthenticationToken;
 
@@ -28,7 +28,7 @@ public class CommentController {
     Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private RequestPropertiesRepository requestPropertiesRepository;
+    private RequestPropertiesService requestPropertiesService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -38,7 +38,7 @@ public class CommentController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("GET /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
         for (Comment comment: properties.getComments()) {
             comments.add(new CommentRepresentation(comment));
@@ -51,7 +51,7 @@ public class CommentController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("GET /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
         for (Comment comment: properties.getApprovalComments()) {
             comments.add(new CommentRepresentation(comment));
@@ -65,11 +65,11 @@ public class CommentController {
             @PathVariable String id,
             @RequestBody CommentRepresentation body) {
         log.info("POST /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         Comment comment = new Comment(id, user.getUser(), body.getContents());
         comment = commentRepository.save(comment);
         properties.addComment(comment);
-        requestPropertiesRepository.save(properties);
+        requestPropertiesService.save(properties);
 
         return new CommentRepresentation(comment);
     }
@@ -80,11 +80,11 @@ public class CommentController {
             @PathVariable String id,
             @RequestBody CommentRepresentation body) {
         log.info("POST /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         Comment comment = new Comment(id, user.getUser(), body.getContents());
         comment = commentRepository.save(comment);
         properties.addApprovalComment(comment);
-        requestPropertiesRepository.save(properties);
+        requestPropertiesService.save(properties);
 
         return new CommentRepresentation(comment);
     }
@@ -125,9 +125,24 @@ public class CommentController {
         if (!comment.getCreator().getId().equals(user.getUser().getId())) {
             throw new UpdateNotAllowed();
         }
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         properties.getComments().remove(comment);
-        requestPropertiesRepository.save(properties);
+        requestPropertiesService.save(properties);
     }
 
+    @RequestMapping(value = "/requests/{id}/approvalComments/{commentId}", method = RequestMethod.DELETE)
+    public void removeApprovalComment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @PathVariable Long commentId) {
+        log.info("PUT /requests/" + id + "/comments");
+        Comment comment = commentRepository.findOne(commentId);
+        if (!comment.getCreator().getId().equals(user.getUser().getId())) {
+            throw new UpdateNotAllowed();
+        }
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        properties.getApprovalComments().remove(comment);
+        requestPropertiesService.save(properties);
+    }
+    
 }

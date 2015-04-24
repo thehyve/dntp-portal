@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 @Entity
 public class RequestProperties {
@@ -38,9 +39,11 @@ public class RequestProperties {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private ExcerptList excerptList;
     
+    @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
 
+    @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> approvalComments = new ArrayList<Comment>();
 

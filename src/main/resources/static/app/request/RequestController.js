@@ -17,6 +17,9 @@
             if (!$scope.requests) {
                 $scope.requests = [];
             }
+            $scope.edit_comment = {};
+            $scope.approval_comment = {};
+            $scope.comment_edit_visibility = {};
             Request.get({id:$routeParams.requestId}, function (req) {
                 $scope.request = req;
             }, function(response) {
@@ -230,6 +233,7 @@
                         }
                     }
                     $scope.edit_comment = {};
+                    $scope.approval_comment = {};
                     $scope.comment_edit_visibility = {};
                     if (data.returnDate == null) {
                         data.returnDate = new Date();
@@ -289,6 +293,7 @@
         };
 
         $scope.removeComment = function(comment) {
+            console.log("removeComment");
             new RequestComment(comment).$remove(function(result) {
                 $scope.request.comments.splice(
                         $scope.request.comments.indexOf(comment), 1);
@@ -332,7 +337,7 @@
             });
         };
 
-        $scope.removeComment = function(comment) {
+        $scope.removeApprovalComment = function(comment) {
             new ApprovalComment(comment).$remove(function(result) {
                 $scope.request.approvalComments.splice(
                         $scope.request.approvalComments.indexOf(comment), 1);

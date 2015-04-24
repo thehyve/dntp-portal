@@ -329,10 +329,13 @@
                     </h4>
                     <hr>
 
-                    <div class="collapse" id="collapseExample">
+                    <!-- <div class="collapse" id="collapseExample"> -->
+                    <div>
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="comment in request.comments">
-                                <p><div ng-show="!comment_edit_visibility[comment.id]">{{comment.contents}}</div>
+                                <div>
+                                [visibility: {{comment_edit_visibility[comment.id]}}]
+                                <div ng-show="!comment_edit_visibility[comment.id]">{{comment.contents}}</div>
                                 <div ng-show="comment_edit_visibility[comment.id]">
                                    <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add comment'|translate}}"
                                              ng-model="comment.contents">
@@ -354,7 +357,7 @@
                                         </button>
                                     </span>
                                 </span>
-                                </p>
+                                </div>
                                 <p>
                                     <small>
                                         <span><i class="glyphicon glyphicon-user"></i></span>
@@ -438,12 +441,12 @@
                             </div>
                         <span class="pull-right" ng-if="globals.currentUser.id==comment.creator.id">
                         <span class="btn-group btn-group-xs">
-                            <button class="btn btn-info {{approval_comment_edit_visibility[comment.id] ? 'active' : ''}}" type="button" title="Edit"
-                                ng-click="approval_comment_edit_visibility[comment.id] = 1">
+                            <button class="btn btn-info {{comment_edit_visibility[comment.id] ? 'active' : ''}}" type="button" title="Edit"
+                                ng-click="comment_edit_visibility[comment.id] = 1">
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                                 </button>
                             <button class="btn btn-danger" type="button" title="Delete"
-                                ng-click="removeComment(comment)">
+                                ng-click="removeApprovalComment(comment)">
                                 <span><i class="glyphicon glyphicon-remove-circle"></i></span>
                             </button>
                         </span>
@@ -465,7 +468,7 @@
                     <!-- Add approval comment -->
                     <div class="form-group" ng-class="">
                         <div class="col-sm-12">
-                            <input type="hidden" ng-model="approval_comment_comment.processInstanceId" value="{{request.processInstanceId}}">
+                            <input type="hidden" ng-model="approval_comment.processInstanceId" value="{{request.processInstanceId}}">
                             <textarea class="form-control" id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
                                       ng-model="approval_comment.contents">
                             </textarea>

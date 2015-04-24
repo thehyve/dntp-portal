@@ -38,17 +38,17 @@ angular.module('ProcessApp.controllers')
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
                     console.log("Login succes: " + JSON.stringify(data));
-                    if (data.name) {
+                    if (data.username) {
                         $rootScope.userid = data.id;
-                        $rootScope.username = data.name;
+                        $rootScope.username = data.username;
                         $rootScope.authenticated = true;
                         $rootScope.roles = [];
-                        if (data.authorities) {
-                            for(var i in data.authorities) {
-                                $rootScope.roles.push(data.authorities[i].authority);
+                        if (data.roles) {
+                            for(var i in data.roles) {
+                                $rootScope.roles.push(data.roles[i].name);
                             }
                         }
-                        console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
+                        console.log("User '" +  data.username + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
 
                         $rootScope.globals = {
                             currentUser: {

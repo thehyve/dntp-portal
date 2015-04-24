@@ -2,11 +2,11 @@ package business.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,10 +29,13 @@ import business.models.UserRepository;
 import business.models.UserService;
 import business.models.UserService.EmailAddressNotUnique;
 import business.representation.ProfileRepresentation;
+import business.security.UserAuthenticationToken;
 
 @RestController
 public class UserController {
 
+    Log log = LogFactory.getLog(getClass());
+    
     @Autowired
     UserRepository userRepository;
 
@@ -46,8 +49,9 @@ public class UserController {
     LabRepository labRepository;
 
     @RequestMapping("/user")
-    public Principal user(Principal user) {
-        return user;
+    public ProfileRepresentation user(UserAuthenticationToken user) {
+        log.info("GET /user");
+        return new ProfileRepresentation(user.getUser());
     }
 
     @RequestMapping(value = "/admin/user", method = RequestMethod.GET)
@@ -57,7 +61,7 @@ public class UserController {
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public List<ProfileRepresentation> getAll(Principal principal) {
-        LogFactory.getLog(getClass()).info("GET /admin/users (for user: " + principal.getName() + ")");
+        log.info("GET /admin/users (for user: " + principal.getName() + ")");
         List<ProfileRepresentation> users = new ArrayList<ProfileRepresentation>();
         for(User user: userRepository.findByActiveTrueAndDeletedFalse()) {
             users.add(new ProfileRepresentation(user));

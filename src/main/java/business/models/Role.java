@@ -1,11 +1,17 @@
 package business.models;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
 public class Role implements Serializable {
@@ -18,6 +24,9 @@ public class Role implements Serializable {
     @Column(unique = true)
     private String name;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy="roles", targetEntity = User.class)
+    private Set<User> users = new HashSet<User>();
+    
     public Role() {
     }
     
@@ -51,6 +60,10 @@ public class Role implements Serializable {
 
     public boolean isLabUser() {
         return name.equals("lab_user");
+    }
+
+    public Set<User> getUsers() {
+        return users;
     }
 
 }

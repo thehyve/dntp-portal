@@ -2,6 +2,7 @@ package business.representation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -11,15 +12,16 @@ import business.models.RequestProperties;
 public class RequestRepresentation {
 
     private String processInstanceId;
+    private String activityId;
     private String requesterId;
     private String requesterName;
     private String status;
-    private Date dateCreated; 
+    private Date dateCreated;
     private Lab lab;
     private String assignee;
     private String assigneeName;
     private Date dateAssigned;
-    
+
     private String title;
     private String description;
     private String motivation;
@@ -32,7 +34,13 @@ public class RequestRepresentation {
 
     private List<AttachmentRepresentation> attachments;
     private List<AttachmentRepresentation> agreementAttachments;
+    private List<AttachmentRepresentation> dataAttachments;
     private List<CommentRepresentation> comments;
+
+    private List<CommentRepresentation> approvalComments;
+    private Map<Long, ApprovalVoteRepresentation> approvalVotes;
+    
+    private ExcerptListRepresentation excerptList;
     
     // Palga specific
     private boolean requesterValid;
@@ -40,9 +48,16 @@ public class RequestRepresentation {
     private boolean contactPersonAllowed;
     private boolean requesterLabValid;
     private boolean agreementReached;
-    
+
+    // Privacy Committee
+    private boolean sentToPrivacyCommittee;
+    private String privacyCommitteeOutcome;
+    private String privacyCommitteeOutcomeRef;
+    private String privacyCommitteeEmails;
+
+
     public RequestRepresentation() {
-        
+
     }
 
     public String getProcessInstanceId() {
@@ -51,6 +66,14 @@ public class RequestRepresentation {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
     }
 
     public String getRequesterId() {
@@ -208,7 +231,7 @@ public class RequestRepresentation {
     public String getAssigneeName() {
         return assigneeName;
     }
-    
+
     public Date getDateAssigned() {
         return dateAssigned;
     }
@@ -237,6 +260,14 @@ public class RequestRepresentation {
         this.agreementAttachments = agreementAttachments;
     }
 
+    public List<AttachmentRepresentation> getDataAttachments() {
+        return dataAttachments;
+    }
+
+    public void setDataAttachments(List<AttachmentRepresentation> dataAttachments) {
+        this.dataAttachments = dataAttachments;
+    }
+
     public boolean isAgreementReached() {
         return agreementReached;
     }
@@ -252,5 +283,61 @@ public class RequestRepresentation {
     public void setComments(List<CommentRepresentation> comments) {
         this.comments = comments;
     }
- 
+
+    public List<CommentRepresentation> getApprovalComments() {
+        return approvalComments;
+    }
+
+    public void setApprovalComments(List<CommentRepresentation> approvalComments) {
+        this.approvalComments = approvalComments;
+    }
+
+    public Map<Long, ApprovalVoteRepresentation> getApprovalVotes() {
+        return approvalVotes;
+    }
+
+    public void setApprovalVotes(Map<Long, ApprovalVoteRepresentation> approvalVotes) {
+        this.approvalVotes = approvalVotes;
+    }
+
+    public String getPrivacyCommitteeOutcomeRef() {
+        return privacyCommitteeOutcomeRef;
+    }
+
+    public void setPrivacyCommitteeOutcomeRef(String privacyCommitteeOutcomeRef) {
+        this.privacyCommitteeOutcomeRef = privacyCommitteeOutcomeRef;
+    }
+
+    public String getPrivacyCommitteeEmails() {
+        return privacyCommitteeEmails;
+    }
+
+    public void setPrivacyCommitteeEmails(String privacyCommitteeEmails) {
+        this.privacyCommitteeEmails = privacyCommitteeEmails;
+    }
+
+    public boolean isSentToPrivacyCommittee() {
+        return sentToPrivacyCommittee;
+    }
+
+    public void setSentToPrivacyCommittee(boolean sentToPrivacyCommittee) {
+        this.sentToPrivacyCommittee = sentToPrivacyCommittee;
+    }
+
+    public String getPrivacyCommitteeOutcome() {
+        return privacyCommitteeOutcome;
+    }
+
+    public void setPrivacyCommitteeOutcome(String privacyCommitteeOutcome) {
+        this.privacyCommitteeOutcome = privacyCommitteeOutcome;
+    }
+
+    public ExcerptListRepresentation getExcerptList() {
+        return excerptList;
+    }
+
+    public void setExcerptList(ExcerptListRepresentation excerptList) {
+        this.excerptList = excerptList;
+    } 
+
 }

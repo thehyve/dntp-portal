@@ -16,11 +16,27 @@
             <hr>
 
             <div style="padding-bottom: 25px;">
-                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit">
+                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit"
+                        ng-hide="(request.status != 'Open' && globals.currentUser.roles.indexOf('palga') == -1) || (globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Edit' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="focus('#commentText');" title="Comment">
+                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Vote"
+                        ng-hide="(request.status != 'Approval' || globals.currentUser.roles.indexOf('scientific_council') == -1)">
+                    <span><i class="glyphicon glyphicon-check"></i></span>
+                    {{'Vote' | translate}}
+                </button>
+                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Vote"
+                        ng-hide="(request.status != 'DataDelivery' || globals.currentUser.roles.indexOf('palga') == -1)">
+                    <span><i class="glyphicon glyphicon-upload"></i></span>
+                    {{'Upload' | translate}}
+                </button>
+                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Discuss"
+                        ng-hide="(request.status != 'Approval' || globals.currentUser.roles.indexOf('palga') == -1)">
+                    <span><i class="glyphicon glyphicon-comment"></i></span>
+                    {{'Discuss' | translate}}
+                </button>
+                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1"  class="btn btn-default" type="button"  ng-click="focus('#commentText');" title="Comment">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Comment' | translate}}
                 </button>
@@ -32,7 +48,8 @@
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="remove(request)" title="Claim">
+                <button class="btn btn-default" type="button"  ng-click="remove(request)" title="Claim"
+                        ng-hide="(request.status != 'Open' && globals.currentUser.roles.indexOf('palga') == -1) || (globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid)">
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                     {{'Delete' | translate}}
                 </button>
@@ -111,11 +128,12 @@
                     translate }}
                 </div>
             </div>
-            <div class="row">
+
+            <div class="row" ng-show="request.materialsRequest">
                 <label class="control-label col-sm-2">
                     &nbsp;
                 </label>
-                <div class="col-sm-8" ng-show="request.materialsRequest">
+                <div class="col-sm-8">
                     <label class="control-label">
                         <span><i class="glyphicon glyphicon-calendar"></i></span>
                         &nbsp; {{'Return date'|translate}}:
@@ -138,10 +156,37 @@
                 </div>
             </div>
 
+
+
+            <!-- Lab -->
+            <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1 && request.lab.number">
+                <br>
+                <label class="control-label col-sm-2">
+                   {{'Lab' | translate}}
+                </label>
+
+                <div class="col-sm-8">
+                    {{request.lab.number}} {{request.lab.name}}
+                </div>
+            </div>
+            <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
+                <label class="control-label col-sm-2">
+                    &nbsp;
+                </label>
+                <div class="col-sm-8">
+                    <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                    &nbsp; {{ 'The requester has been confirmed that he/she is associated with the lab.' | translate }}
+                </div>
+            </div>
+
+            <br>
+
             <h4>{{ 'Attachments' | translate }}</h4>
             <hr>
 
-            <ul class="list-group">
+            <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+
+            <ul class="list-group" id="attachments">
                 <li class="list-group-item" ng-repeat="file in request.attachments">
                     <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
                 </li>
@@ -149,6 +194,7 @@
 
 
             <div ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
+                <br>
 
                 <h4>{{'Checks by Palga'|translate}}</h4>
                 <hr>
@@ -186,16 +232,50 @@
                     </div>
                 </div>
 
-                <!-- Requester valid -->
+                <!--*****************-->
+                <!--Privacy Committee-->
+                <!--*****************-->
+                <br>
+
+                <h4>{{'Checks by Privacy Committee'|translate}}</h4>
+                <hr>
+
+                <!-- Is this request has been sent to Privacy Committee -->
                 <div class="row">
+                    <label class="control-label col-sm-2">
+                        &nbsp;
+                    </label>
                     <div class="col-sm-8">
-                        <strong>Lab</strong>: {{request.lab.number}}. {{request.lab.name}}
-                        <br>
-                        <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'The requester is indeed associated with the lab.' | translate }}
+                        <span><i class="glyphicon {{request.sentToPrivacyComm ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                        &nbsp; {{ 'This request has been sent to Privacy Committee to be checked.' | translate }}
                     </div>
                 </div>
 
+                <!-- Outcome -->
+                <div class="row">
+                    <label class="control-label col-sm-2">{{ 'Outcome' | translate }}</label>
+                    <div class="col-sm-8">
+                        {{request.privacyCommitteeOutcome}}
+                    </div>
+                </div>
+
+                <!-- Outcome Reference -->
+                <div class="row">
+                    <label class="control-label col-sm-2">{{ 'Outcome Reference' | translate }}</label>
+                    <div class="col-sm-8">
+                        {{request.privacyCommitteeOutcomeRef}}
+                    </div>
+                </div>
+
+                <!-- Outcome Emails -->
+                <div class="row">
+                    <label class="control-label col-sm-2">{{ 'Emailing History' | translate }}</label>
+                    <div class="col-sm-8">
+                        {{request.privacyCommitteeEmails}}
+                    </div>
+                </div>
+
+                <br>
 
                 <h4>{{'Signed Agreement'|translate}}</h4>
                 <hr>
@@ -291,6 +371,39 @@
 
                 <!-- END COMMENTS-->
 
+            </div>
+
+            <!-- If in 'DataDelivery' status -->
+            <div ng-if="request.status=='DataDelivery'">
+                <h4>Excerpt list</h4>
+                <hr>
+                <label ng-if="request.excerptList">
+                    <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
+                </label>
+                <p ng-if="!request.excerptList">
+                {{'No exerpt list has been uploaded.' | translate }}
+                </p>
+                
+                <h4>{{'Other data files'|translate}}</h4>
+                <hr>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="file in request.dataAttachments">
+                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                        <span class="pull-right">
+                        <span class="btn-group">
+                            <button class="btn btn-default" type="button" title="Delete"
+                                    ng-click="removeDataFile(file)"
+                                    >
+                                Delete
+                            </button>
+                        </span>
+                        </span>
+                    </li>
+                </ul>
+                <p ng-if="!request.dataAttachments">
+                    {{'No data files'|translate}}
+                </p>
+                
             </div>
 
         </div>

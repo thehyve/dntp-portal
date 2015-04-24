@@ -61,7 +61,7 @@ public class SecurityConfiguration extends
             super(message);
         }
         public UserAccountBlocked() {
-            super("User account blocked. Please retry in 15 minutes.");
+            super("User account blocked. Please retry in an hour.");
         }
     }
 

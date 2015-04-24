@@ -1,7 +1,8 @@
 (function(angular) {
 
-    var RequestController = function($rootScope, $scope, $modal, $location,
+    var RequestController = function($rootScope, $scope, $modal, $location, $route,
             Request, RequestAttachment, RequestComment,
+            ApprovalComment, ApprovalVote,
             FlowOptionService, $routeParams) {
 
         $scope.error = "";
@@ -13,8 +14,37 @@
         console.log("globals: "+ JSON.stringify($rootScope.globals));
 
         if ($routeParams.requestId) {
+            if (!$scope.requests) {
+                $scope.requests = [];
+            }
+            $scope.edit_comment = {};
+            $scope.approval_comment = {};
+            $scope.comment_edit_visibility = {};
             Request.get({id:$routeParams.requestId}, function (req) {
                 $scope.request = req;
+            }, function(response) {
+                if (response.data) {
+                    $scope.error = response.data.message + "\n";
+                    if (response.data.error == 302) {
+                        $scope.accessDenied = true;
+                    }
+                } else {
+                    $scope.login();
+                }
+            });
+        } else {
+            Request.query().$promise.then(function(response) {
+                $scope.requests = response ? response : [];
+                $scope.displayedCollection = [].concat($scope.requests);
+            }, function(response) {
+                if (response.data) {
+                    $scope.error = response.data.message + "\n";
+                    if (response.data.error == 302) {
+                        $scope.accessDenied = true;
+                    }
+                } else {
+                    $scope.login();
+                }
             });
         }
 
@@ -22,25 +52,13 @@
             return FlowOptionService.get_default(options);
         };
 
-        Request.query().$promise.then(function(response) {
-            $scope.requests = response ? response : [];
-            $scope.displayedCollection = [].concat($scope.requests);
-        }, function(response) {
-            if (response.data) {
-                $scope.error = response.data.message + "\n";
-                if (response.data.error == 302) {
-                    $scope.accessDenied = true;
-                }
-            } else {
-                $scope.login();
-            }
-        });
-
         $scope.fileuploadsuccess = function(request, data) {
             result = new Request(JSON.parse(data));
             //$scope.refresh(request, result);
             request.attachments = result.attachments;
             request.agreementAttachments = result.agreementAttachments;
+            request.excerptList = result.excerptList;
+            request.dataAttachments = result.dataAttachments;
         };
 
         $scope.start = function() {
@@ -53,8 +71,18 @@
         };
 
         $scope.refresh = function(request, result) {
-            console.log("Updating request at index: " + $scope.requests.indexOf(request));
-            $scope.requests[$scope.requests.indexOf(request)] = result;
+            var index = -1;
+            for (i in $scope.requests) {
+                if ($scope.requests[i].processInstanceId == request.processInstanceId) {
+                    index = i;
+                    break;
+                }
+            }
+            console.log("Updating request at index: " + index);
+            $scope.requests[index] = result;
+
+            $route.reload();
+
             $scope.request = result;
         };
 
@@ -85,6 +113,24 @@
             });
         };
 
+        $scope.removeDataFile = function(f) {
+            bootbox.confirm("Are you sure you want to delete file "
+                    +  f.name
+                    + "?", function(result) {
+                if (result) {
+                    attachment = new RequestAttachment();
+                    attachment.requestId = $scope.request.processInstanceId;
+                    attachment.id = f.id;
+                    attachment.$removeDataFile(function(result) {
+                        $scope.request.dataAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
+                        bootbox.alert("File " + f.name + " deleted.");
+                    }, function(response) {
+                        $scope.error = response.statusText;
+                    });
+                }
+            });
+        };
+        
         $scope.removeFile = function(f) {
             bootbox.confirm("Are you sure you want to delete file "
                     +  f.name
@@ -125,7 +171,37 @@
                 function(confirmed) {
                     if (confirmed) {
                         request.$submit(function(result) {
-                            $scope.request = result;
+                            $scope.refresh(request, result);
+                            $scope.editRequestModal.hide();
+                        }, function(response) {
+                            $scope.error = $scope.error + response.data.message + "\n";
+                        });
+                    }
+                });
+        }
+
+        $scope.submitForApproval = function(request) {
+            bootbox.confirm(
+                "Are you sure you want to submit the request for approval?",
+                function(confirmed) {
+                    if (confirmed) {
+                        request.$submitForApproval(function(result) {
+                            $scope.refresh(request, result);
+                            $scope.editRequestModal.hide();
+                        }, function(response) {
+                            $scope.error = $scope.error + response.data.message + "\n";
+                        });
+                    }
+                });
+        }
+
+        $scope.finalise = function(request) {
+            bootbox.confirm(
+                "Are you sure you want to finalise the request?",
+                function(confirmed) {
+                    if (confirmed) {
+                        request.$finalise(function(result) {
+                            $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
                         }, function(response) {
                             $scope.error = $scope.error + response.data.message + "\n";
@@ -147,7 +223,17 @@
 
                 Request.get({id:request.processInstanceId}, function (data) {
                     $scope.request = data;
+                    if ($scope.globals.currentUser.roles.indexOf('scientific_council') != -1) {
+                        if (!$scope.request.approvalVotes) {
+                            $scope.request.approvalVotes = {};
+                        }
+                        if (!($scope.globals.currentUser.userid in $scope.request.approvalVotes)) {
+                            $scope.request.approvalVotes[$scope.globals.currentUser.userid] =
+                                new ApprovalVote({value: 'NONE'});
+                        }
+                    }
                     $scope.edit_comment = {};
+                    $scope.approval_comment = {};
                     $scope.comment_edit_visibility = {};
                     if (data.returnDate == null) {
                         data.returnDate = new Date();
@@ -187,7 +273,7 @@
             comment = new RequestComment(body);
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
-                request.comments.unshift(result);
+                request.comments.push(result);
                 $scope.edit_comment = {};
             }, function(response) {
                 $scope.error = response.statusText;
@@ -207,9 +293,54 @@
         };
 
         $scope.removeComment = function(comment) {
+            console.log("removeComment");
             new RequestComment(comment).$remove(function(result) {
                 $scope.request.comments.splice(
                         $scope.request.comments.indexOf(comment), 1);
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        };
+
+        $scope.addApprovalComment = function(request, body) {
+            comment = new ApprovalComment(body);
+            comment.processInstanceId = request.processInstanceId;
+            comment.$save(function(result) {
+                request.approvalComments.push(result);
+                $scope.approval_comment = {};
+            }, function(response) {
+                $scope.error = response.statusText;
+            });
+        }
+
+        $scope.updateApprovalComment = function(request, body) {
+            comment = new ApprovalComment(body);
+            comment.$update(function(result) {
+                index = $scope.request.approvalComments.indexOf(body);
+                //console.log("Updating comment at index " + index);
+                $scope.request.approvalComments[index] = result;
+                $scope.approval_comment_edit_visibility[comment.id] = 0;
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        };
+
+        $scope.updateVote = function(request, value) {
+            vote = new ApprovalVote();
+            vote.value = value;
+            vote.processInstanceId = request.processInstanceId;
+            vote.$save(function(result) {
+                $scope.request.approvalVotes[$scope.globals.currentUser.userid] = result;
+                //console.log("Updating vote");
+            }, function(response) {
+                $scope.error = $scope.error + response.data.message + "\n";
+            });
+        };
+
+        $scope.removeApprovalComment = function(comment) {
+            new ApprovalComment(comment).$remove(function(result) {
+                $scope.request.approvalComments.splice(
+                        $scope.request.approvalComments.indexOf(comment), 1);
             }, function(response) {
                 $scope.error = $scope.error + response.data.message + "\n";
             });
@@ -224,10 +355,19 @@
                 + (user.lastName==null ? "" : user.lastName);
         }
 
+        $scope.size = function(obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        };
+
     };
 
-    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location',
+    RequestController.$inject = [ '$rootScope', '$scope', '$modal', '$location', '$route',
                                   'Request', 'RequestAttachment', 'RequestComment',
+                                  'ApprovalComment', 'ApprovalVote',
                                   'FlowOptionService', '$routeParams'];
     angular.module("ProcessApp.controllers").controller("RequestController",
             RequestController);

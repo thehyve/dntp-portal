@@ -7,9 +7,12 @@ angular.module('ProcessApp.controllers')
 
         Restangular.one('profile').get().then(function (profile) {
             $scope.user = profile;
-            $scope.loaded = true;
+            Restangular.all('public/labs').getList().then(function (labs) {
+                $scope.labs = labs;
+                $scope.loaded = true;
+            }, restError);
         }, restError);
-
+        
         // This function will only be called if the form has been validated,
         // because the button will be disabled otherwise.
         $scope.submitForm = function () {

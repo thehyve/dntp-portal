@@ -1,12 +1,9 @@
 package business.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
-import business.models.Role;
-import business.models.RoleRepository;
-import business.models.User;
-import business.models.UserRepository;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import business.models.Role;
+import business.models.RoleRepository;
+import business.models.User;
+import business.models.UserRepository;
+import business.representation.RoleRepresentation;
 
 @RestController
 public class RoleController {
@@ -27,25 +30,28 @@ public class RoleController {
     RoleRepository roleRepository;
     
     @RequestMapping(value = "/admin/roles", method = RequestMethod.GET)
-    public List<Role> getAll(Principal principal) {
+    public List<RoleRepresentation> getAll(Principal principal) {
         LogFactory.getLog(getClass()).info("GET /admin/roles (for user: " + principal.getName() + ")");
-        List<Role> roles = roleRepository.findAll();
+        List<RoleRepresentation> roles = new ArrayList<RoleRepresentation>();
+        for (Role role: roleRepository.findAll()) {
+            roles.add(new RoleRepresentation(role));
+        }
         return roles;
     }
 
     @RequestMapping(value = "/admin/roles", method = RequestMethod.POST)
-    public Role create(Principal principal, @RequestBody Role role) {
+    public RoleRepresentation create(Principal principal, @RequestBody RoleRepresentation role) {
         LogFactory.getLog(getClass()).info("POST /admin/roles");
         Role result = new Role(role.getName());
-        return roleRepository.save(result);
+        return new RoleRepresentation(roleRepository.save(result));
     }
     
-    @RequestMapping(value = "/admin/roles/{userid}", method = RequestMethod.GET)
+/*    @RequestMapping(value = "/admin/roles/{userid}", method = RequestMethod.GET)
     public List<Role> getUserRoles(Principal principal) {
         LogFactory.getLog(getClass()).info("GET /admin/roles (for user: " + principal.getName() + ")");
         List<Role> roles = roleRepository.findAll();
         return roles;
-    }
+    }*/
     
     @RequestMapping(value = "/admin/roles/{userid}/{roleid}", method = RequestMethod.PUT)
     public void set(Principal principal, @PathVariable String userid, @PathVariable String roleid) {

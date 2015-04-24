@@ -3,47 +3,53 @@ package business.models;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
-
-import org.springframework.data.rest.core.annotation.RestResource;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-public class Comment implements Serializable {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"processInstanceId", "creator_id"}))
+public class ApprovalVote implements Serializable {
 
-    private static final long serialVersionUID = -2971541749268025366L;
+    private static final long serialVersionUID = 8158201293631148757L;
+
+    public enum Value {
+        ACCEPTED,
+        REJECTED,
+        NONE
+    }
 
     @Id
     @GeneratedValue
     private Long id;
-    
+
     private String processInstanceId;
 
-    @ManyToOne(optional = true)
-    //@RestResource(exported = false)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User creator;
-    
-    private Date timeCreated = new Date();
-    
-    private Date timeEdited = timeCreated;
-    
-    private String contents;
 
-    public Comment() {
-        
+    @OrderColumn
+    private Date timeCreated = new Date();
+
+    private Date timeEdited = timeCreated;
+
+    private Value value;
+
+    public ApprovalVote() {
+
     }
-    
-    public Comment(String processInstanceId, User creator, String contents) {
+
+    public ApprovalVote(String processInstanceId, User creator, Value value) {
         this.processInstanceId = processInstanceId;
         this.creator = creator;
-        this.contents = contents;
+        this.value = value;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -75,7 +81,7 @@ public class Comment implements Serializable {
     public void setTimeCreated(Date timeCreated) {
         this.timeCreated = timeCreated;
     }
-    
+
     public Date getTimeEdited() {
         return timeEdited;
     }
@@ -84,12 +90,12 @@ public class Comment implements Serializable {
         this.timeEdited = timeEdited;
     }
 
-    public String getContents() {
-        return contents;
+    public Value getValue() {
+        return value;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void setValue(Value value) {
+        this.value = value;
     }
-    
+
 }

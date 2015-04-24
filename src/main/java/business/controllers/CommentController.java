@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import business.models.Comment;
 import business.models.CommentRepository;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesRepository;
+import business.models.RequestPropertiesService;
 import business.representation.CommentRepresentation;
 import business.security.UserAuthenticationToken;
 
@@ -26,10 +26,10 @@ import business.security.UserAuthenticationToken;
 public class CommentController {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Autowired
-    private RequestPropertiesRepository requestPropertiesRepository;
-    
+    private RequestPropertiesService requestPropertiesService;
+
     @Autowired
     private CommentRepository commentRepository;
 
@@ -38,38 +38,65 @@ public class CommentController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("GET /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
         for (Comment comment: properties.getComments()) {
             comments.add(new CommentRepresentation(comment));
         }
         return comments;
     }
-    
-    
+
+    @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.GET)
+    public List<CommentRepresentation> getApprovalComments(
+            UserAuthenticationToken user,
+            @PathVariable String id) {
+        log.info("GET /requests/" + id + "/comments");
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
+        for (Comment comment: properties.getApprovalComments()) {
+            comments.add(new CommentRepresentation(comment));
+        }
+        return comments;
+    }
+
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
     public CommentRepresentation addComment(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody CommentRepresentation body) {
         log.info("POST /requests/" + id + "/comments");
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         Comment comment = new Comment(id, user.getUser(), body.getContents());
         comment = commentRepository.save(comment);
         properties.addComment(comment);
-        requestPropertiesRepository.save(properties);
-        
+        requestPropertiesService.save(properties);
+
         return new CommentRepresentation(comment);
     }
 
-    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.") 
+    @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.POST)
+    public CommentRepresentation addApprovalComment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestBody CommentRepresentation body) {
+        log.info("POST /requests/" + id + "/comments");
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        Comment comment = new Comment(id, user.getUser(), body.getContents());
+        comment = commentRepository.save(comment);
+        properties.addApprovalComment(comment);
+        requestPropertiesService.save(properties);
+
+        return new CommentRepresentation(comment);
+    }
+
+    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.")
     public class UpdateNotAllowed extends RuntimeException {
         private static final long serialVersionUID = 4000154580392628894L;
         public UpdateNotAllowed() {
             super("Update not allowed. Not the owner.");
         }
     }
-    
+
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.PUT)
     public CommentRepresentation updateComment(
             UserAuthenticationToken user,
@@ -84,10 +111,10 @@ public class CommentController {
         comment.setContents(body.getContents());
         comment.setTimeEdited(new Date());
         comment = commentRepository.save(comment);
-        
+
         return new CommentRepresentation(comment);
     }
-    
+
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.DELETE)
     public void removeComment(
             UserAuthenticationToken user,
@@ -98,9 +125,24 @@ public class CommentController {
         if (!comment.getCreator().getId().equals(user.getUser().getId())) {
             throw new UpdateNotAllowed();
         }
-        RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(id);
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         properties.getComments().remove(comment);
-        requestPropertiesRepository.save(properties);
+        requestPropertiesService.save(properties);
+    }
+
+    @RequestMapping(value = "/requests/{id}/approvalComments/{commentId}", method = RequestMethod.DELETE)
+    public void removeApprovalComment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @PathVariable Long commentId) {
+        log.info("PUT /requests/" + id + "/comments");
+        Comment comment = commentRepository.findOne(commentId);
+        if (!comment.getCreator().getId().equals(user.getUser().getId())) {
+            throw new UpdateNotAllowed();
+        }
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        properties.getApprovalComments().remove(comment);
+        requestPropertiesService.save(properties);
     }
     
 }

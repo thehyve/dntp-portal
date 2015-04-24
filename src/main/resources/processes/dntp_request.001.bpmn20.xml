@@ -121,8 +121,11 @@
         Approval by scientific council and privacy committee. Status updated by Palga.
         </documentation>
         <extensionElements>
-            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
-            <activiti:formProperty id="privacy_committee_approved" name="Privacy committee approval" type="string" variable="scientific_council_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="boolean" variable="scientific_council_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="privacy_committee_approved" name="Privacy committee approval" type="boolean" variable="scientific_council_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="request_approved" name="Request approved" type="boolean" variable="request_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="reject_reason" name="Reject reason" type="string" variable="reject_reason" required="false"></activiti:formProperty>
+            <activiti:formProperty id="reject_date" name="Reject date" type="date" variable="reject_date" required="false"></activiti:formProperty>
         </extensionElements>
     </userTask>
 
@@ -130,7 +133,10 @@
     <sequenceFlow id="scientific_council_approval_to_end" sourceRef="scientific_council_approval" targetRef="approval_end"></sequenceFlow>
     <sequenceFlow id="request_approval_to_end" sourceRef="request_approval" targetRef="approval_end"></sequenceFlow>
     <parallelGateway id="approval_end" />
-    <sequenceFlow id="approval_to_status_delivery" sourceRef="approval_end" targetRef="status_data_delivery"></sequenceFlow>
+    
+    <sequenceFlow id="approval_to_status_delivery" sourceRef="approval_end" targetRef="status_data_delivery">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == "true"} ]]></conditionExpression>
+    </sequenceFlow>
 
     <scriptTask id="status_data_delivery" name="Update status to DataDelivery" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>
@@ -146,6 +152,26 @@
     </userTask>
 
     <sequenceFlow id="data_delivery_to_closed" sourceRef="data_delivery" targetRef="status_closed"></sequenceFlow>
+
+
+    <sequenceFlow id="approval_to_status_rejected" sourceRef="approval_end" targetRef="status_rejected">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == "false"} ]]></conditionExpression>
+    </sequenceFlow>
+
+    <scriptTask id="status_rejected" name="Update status to Rejected" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "Rejected")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_rejected_to_rejected_task" sourceRef="status_rejected" targetRef="rejected"></sequenceFlow>
+
+    <userTask id="rejected" name="Rejected" activiti:candidateGroups="palga">
+        <documentation>
+        Rejected.
+        </documentation>
+    </userTask>
+
+    <sequenceFlow id="rejected_to_closed" sourceRef="rejected" targetRef="status_closed"></sequenceFlow>
 
     <scriptTask id="status_closed" name="Update status to Closed" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>

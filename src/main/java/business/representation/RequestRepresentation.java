@@ -15,6 +15,7 @@ public class RequestRepresentation {
     private String activityId;
     private String requesterId;
     private String requesterName;
+    private String requesterEmail;
     private String status;
     private Date dateCreated;
     private Lab lab;
@@ -59,6 +60,10 @@ public class RequestRepresentation {
     
     private boolean scientificCouncilApproved;
     private boolean privacyCommitteeApproved;
+    
+    private boolean requestApproved;
+    private String rejectReason;
+    private Date rejectDate;
 
     // Privacy Committee
     private boolean sentToPrivacyCommittee;
@@ -405,6 +410,38 @@ public class RequestRepresentation {
 
     public void setPrivacyCommitteeApproved(boolean privacyCommitteeApproved) {
         this.privacyCommitteeApproved = privacyCommitteeApproved;
-    } 
+    }
 
+    public boolean isRequestApproved() {
+        return requestApproved;
+    }
+
+    public void setRequestApproved(boolean requestApproved) {
+        this.requestApproved = requestApproved;
+    }
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
+    public Date getRejectDate() {
+        return rejectDate;
+    }
+
+    public void setRejectDate(Date rejectDate) {
+        this.rejectDate = rejectDate;
+    }
+
+    public String getRequesterEmail() {
+        return requesterEmail;
+    }
+
+    public void setRequesterEmail(String requesterEmail) {
+        this.requesterEmail = requesterEmail;
+    } 
+    
 }

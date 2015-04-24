@@ -18,9 +18,6 @@ public class RequestListRepresentation {
     private Date dateAssigned;
 
     private String title;
-    private String description;
-    private String motivation;
-
 
     public RequestListRepresentation() {
 
@@ -74,21 +71,6 @@ public class RequestListRepresentation {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getMotivation() {
-        return motivation;
-    }
-
-    public void setMotivation(String motivation) {
-        this.motivation = motivation;
-    }
 
     public String getAssignee() {
         return assignee;

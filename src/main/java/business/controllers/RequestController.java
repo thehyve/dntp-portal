@@ -127,8 +127,6 @@ public class RequestController {
 
         if (variables != null) {
             request.setTitle((String)variables.get("title"));
-            request.setDescription((String)variables.get("description"));
-            request.setMotivation((String)variables.get("motivation"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
@@ -183,15 +181,23 @@ public class RequestController {
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setDateAssigned((Date)variables.get("assigned_date"));
+
+            request.setContactPersonName((String)variables.get("contact_person_name"));
             request.setTitle((String)variables.get("title"));
-            request.setDescription((String)variables.get("description"));
-            request.setMotivation((String)variables.get("motivation"));
+            request.setResearchQuestion((String)variables.get("research_question"));
+            request.setHypothesis((String) variables.get("hypothesis"));
+            request.setMethods((String) variables.get("methods"));
+
             request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
+            request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
+
+            request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
+            request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
+            request.setReasonUsingPersonalData((String) variables.get("reason_using_personal_data"));
+
             request.setReturnDate((Date)variables.get("return_date"));
-            request.setLimitedToCohort(fetchBooleanVariable("limited_to_cohort", variables));
-            request.setContactPersonName((String)variables.get("contact_person_name"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
             Long userId = null;
             try { userId = Long.valueOf(request.getRequesterId()); }
@@ -296,13 +302,20 @@ public class RequestController {
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             variables.put("title", request.getTitle());
-            variables.put("description", request.getDescription());
-            variables.put("motivation", request.getMotivation());
+            variables.put("research_question", request.getResearchQuestion());
+            variables.put("hypothesis", request.getHypothesis());
+            variables.put("methods", request.getMethods());
+
             variables.put("is_statistics_request", (Boolean)request.isStatisticsRequest());
+            variables.put("is_excerpts_request", (Boolean)request.isExcerptsRequest());
             variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
             variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
+
+            variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
+            variables.put("is_informed_consent", (Boolean)request.isInformedConsent());
+            variables.put("reason_using_personal_data", request.getReasonUsingPersonalData());
+
             variables.put("return_date", request.getReturnDate());
-            variables.put("limited_to_cohort", (Boolean)request.isLimitedToCohort());
             variables.put("contact_person_name", request.getContactPersonName());
 
             if (is_palga) {
@@ -462,8 +475,10 @@ public class RequestController {
                     "POST /requests (initiator: " + userId + ")");
             Map<String, Object> values = new HashMap<String, Object>();
             values.put("initiator", userId);
+
             ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                     "dntp_request_001", values);
+
             instance = runtimeService.createProcessInstanceQuery()
                     .includeProcessVariables()
                     .processInstanceId(instance.getId()).singleResult();
@@ -531,7 +546,7 @@ public class RequestController {
      * Finds current task. Assumes that exactly one task is currently active.
      * @param requestId
      * @return the current task if it exists.
-     * @throws TaskNotFound.
+     * @throws business.controllers.RequestController.TaskNotFound
      */
     Task getTaskByRequestId(String requestId, String taskDefinition) {
         Task task = taskService.createTaskQuery().processInstanceId(requestId)
@@ -573,7 +588,7 @@ public class RequestController {
      * Finds request.
      * @param processInstanceId
      * @return the current request if it exists.
-     * @throws RequestNotFound.
+     * @throws
      */
     ProcessInstance getProcessInstance(String processInstanceId) {
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()

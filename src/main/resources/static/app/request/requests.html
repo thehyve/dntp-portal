@@ -42,6 +42,7 @@
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
                         <th st-sort="dateCreated">{{'Created Date'|translate}}</th>
+                        <th ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" st-sort="vote">{{'Vote'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"  st-sort="requesterName">{{'Requester'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="assigneeName">{{'Assignee'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
@@ -52,6 +53,7 @@
                         <th><input st-search="title" placeholder="Filter by Title" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
                         <th>&nbsp;</th>
+                        <th ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1">&nbsp;</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="assigneeName" placeholder="Filter by Assignee" class="input-sm form-control" type="search"/></th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1">&nbsp;</th>
@@ -68,6 +70,9 @@
                         <td><a ng-click="view(req)">{{req.title}}</a></td>
                         <td>{{req.status | translate}}</td>
                         <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
+                        <td ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" >
+                            {{req.approvalVote}}
+                        </td>
                         <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >{{req.requesterName}}</td>
                         <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
                         <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >

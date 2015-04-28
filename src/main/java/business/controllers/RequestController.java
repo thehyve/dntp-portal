@@ -158,6 +158,15 @@ public class RequestController {
                     break;
                 case "Approval":
                     task = findTaskByRequestId(instance.getId(), "request_approval");
+                    
+                    // fetch my vote, number of votes
+                    RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                            instance.getProcessInstanceId());
+                    Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+                    request.setNumberOfApprovalVotes(votes.size());
+                    if (votes.containsKey(currentUser.getId())) {
+                        request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+                    } 
                     break;
             }
             if (task != null) {
@@ -301,8 +310,8 @@ public class RequestController {
                 request.setApprovalComments(approvalComments);
 
                 Map<Long, ApprovalVoteRepresentation> approvalVotes = new HashMap<Long, ApprovalVoteRepresentation>();
-                for (Entry<User, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
-                    approvalVotes.put(entry.getKey().getId(), new ApprovalVoteRepresentation(entry.getValue()));
+                for (Entry<Long, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
+                    approvalVotes.put(entry.getKey(), new ApprovalVoteRepresentation(entry.getValue()));
                 }
                 request.setApprovalVotes(approvalVotes);
             }

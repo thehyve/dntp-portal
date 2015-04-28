@@ -48,7 +48,7 @@ public class RequestProperties {
     private List<Comment> approvalComments = new ArrayList<Comment>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Map<User, ApprovalVote> approvalVotes = new HashMap<User, ApprovalVote>();
+    private Map<Long, ApprovalVote> approvalVotes = new HashMap<Long, ApprovalVote>();
 
     @Column
     private boolean sentToPrivacyCommittee;
@@ -110,15 +110,15 @@ public class RequestProperties {
         this.approvalComments = approvalComments;
     }
 
-    public Map<User, ApprovalVote> getApprovalVotes() {
+    public Map<Long, ApprovalVote> getApprovalVotes() {
         return approvalVotes;
     }
 
     public void addApprovalVote(User user, ApprovalVote approvalVote) {
-        this.approvalVotes.put(user, approvalVote);
+        this.approvalVotes.put(user.getId(), approvalVote);
     }
 
-    public void setApprovalVotes(Map<User, ApprovalVote> approvalVotes) {
+    public void setApprovalVotes(Map<Long, ApprovalVote> approvalVotes) {
         this.approvalVotes = approvalVotes;
     }
 

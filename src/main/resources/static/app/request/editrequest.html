@@ -499,7 +499,7 @@
                         ng-click="submitRequest(request)"
                         ng-disabled="requestEditForm.$invalid">{{'Submit'|translate}}</button>
                     <button class="btn btn-warning" type="button"
-                        ng-if="request.status=='Review'"
+                        ng-if="request.status=='Review' && globals.currentUser.roles.indexOf('palga') != -1"
                         ng-click="submitForApproval(request)"
                         ng-disabled="requestEditForm.$invalid
                             || !request.agreementReached
@@ -511,7 +511,7 @@
                             {{'Submit for approval'|translate}}
                     </button>
                     <button class="btn btn-warning" type="button"
-                        ng-if="request.status=='Approval'"
+                        ng-if="request.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1"
                         ng-click="finalise(request)"
                         ng-disabled="requestEditForm.$invalid
                             || !request.scientificCouncilApproved
@@ -520,7 +520,7 @@
                             {{'Finalise'|translate}}
                     </button>
                     <button class="btn btn-danger" type="button"
-                        ng-if="request.status=='Approval'"
+                        ng-if="request.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1"
                         ng-click="reject(request)"
                         ng-disabled="requestEditForm.$invalid
                         ">

@@ -81,16 +81,10 @@
                                  class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(req)">
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                             </button>
-                            <button
-                                 ng-hide="req.status != 'Approval' || (
-                                 globals.currentUser.roles.indexOf('palga') == -1 && globals.currentUser.roles.indexOf('scientific_council') == -1)"
-                                 class="btn btn-default" type="button" title="{{'evaluate'|translate}}" ng-click="edit(req)">
-                                {{'Evaluate'|translate}}
-                            </button>
                             <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" ng-disabled="req.assignee == globals.currentUser.userid"
                                  class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
-                        </button>
+                            </button>
                             <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" ng-disabled="req.assignee != globals.currentUser.userid"
                                  class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>

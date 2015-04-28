@@ -64,6 +64,7 @@ import business.representation.ApprovalVoteRepresentation;
 import business.representation.AttachmentRepresentation;
 import business.representation.CommentRepresentation;
 import business.representation.ExcerptListRepresentation;
+import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
@@ -220,6 +221,7 @@ public class RequestController {
                     if (user.getContactData() != null) {
                         request.setRequesterEmail(user.getContactData().getEmail());
                     }
+                    request.setRequester(new ProfileRepresentation(user));
                     request.setLab(user.getLab());
                 }
             }

@@ -63,8 +63,53 @@
             </div>
 
 
+            <!-- Status -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.status}}
+                    <br>
+                </p>
+            </div>
+
+            <!-- Reject reason  -->
+            <div class="row" ng-if="request.status == 'Rejected'">
+                <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.rejectReason}}
+                    <br>
+                </p>
+            </div>
+
+            <!-- Requester -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Requester' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.requesterName}}
+                    <br>
+                </p>
+            </div>
+            <div class="row" ng-if="request.requester.contactData">
+                <label class="control-label col-sm-3">{{ 'Contact data' | translate }}</label>
+                <address  class="col-sm-7">
+                     {{request.requester.contactData.address1}}
+                     <br ng-if="request.requester.contactData.address1">
+                     {{request.requester.contactData.address2}}
+                     <br ng-if="request.requester.contactData.address2">
+                     {{request.requester.contactData.postalCode}} {{request.requester.contactData.city}}
+                    <span ng-if="request.requester.contactData.telephone">
+                        <span><i class="glyphicon glyphicon-earphone"></i></span> 
+                        {{request.requester.contactData.telephone}}
+                    </span>
+                    <br ng-if="request.requester.contactData.telephone">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    <a href="mailto:{{request.requester.contactData.email}}">{{request.requester.contactData.email}}</a>
+                </address>
+            </div>
+
             <h3>{{ 'Details' | translate }}</h3>
             <hr>
+
 
             <!-- Principal Investigator -->
             <div class="row">

@@ -233,8 +233,12 @@
 
                 <div class="col-sm-7">
                     <span><i class="glyphicon {{request.linkageWithPersonalData ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'The request is linkage with personal data.' |
-                    translate }}
+                    &nbsp;{{'Data linkage'|translate}} 
+                    <br>
+                    (<em><span ng-if="request.linkageWithPersonalData">{{ 'Linkage with own or external personal data.' |
+                    translate }}</span><span 
+                    ng-if="!request.linkageWithPersonalData">{{ 'No data linkage required.' |
+                    translate }}</span></em>)
                 </div>
             </div>
 

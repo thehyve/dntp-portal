@@ -214,27 +214,6 @@
                 </div>
             </div>
 
-            <!-- Lab -->
-            <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1 && request.lab.number">
-                <br>
-                <label class="control-label col-sm-3">
-                   {{'Lab' | translate}}
-                </label>
-
-                <div class="col-sm-7">
-                    {{request.lab.number}} {{request.lab.name}}
-                </div>
-            </div>
-            <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
-                <label class="control-label col-sm-3">
-                    &nbsp;
-                </label>
-                <div class="col-sm-7">
-                    <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'The requester has been confirmed that he/she is associated with the lab.' | translate }}
-                </div>
-            </div>
-
             <br>
 
             <h4>{{ 'Attachments' | translate }}</h4>
@@ -266,6 +245,27 @@
                     </div>
                 </div>
 
+                <!-- Lab -->
+                <div class="row">
+                    <br>
+                    <label class="control-label col-sm-3">
+                       {{'Lab' | translate}}
+                    </label>
+                    <div class="col-sm-7">
+                        <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
+                        <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="control-label col-sm-3">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-7">
+                        <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                        &nbsp; {{ 'The requester has been confirmed to be associated with the lab.' | translate }}
+                    </div>
+                </div>
+
                 <!-- Requester allowed -->
                 <div class="row">
                     <label class="control-label col-sm-3">
@@ -288,15 +288,42 @@
                     </div>
                 </div>
 
+                <h4>{{'Signed Agreement'|translate}}</h4>
+                <hr>
+
+                <!-- Agreement reached -->
+                <div class="row">
+                    <label class="control-label col-sm-3">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-7">
+                        <span><i class="glyphicon {{request.agreementReached ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                        &nbsp; {{ 'Agreement has been reached.' | translate }}
+                    </div>
+                </div>
+
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
+                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                    </li>
+                </ul>
+
+                <br>
+
+            </div>
+            
+            
+            <div ng-if="request.status=='Approval' && roles.indexOf('palga') != -1">
+
                 <!--*****************-->
                 <!--Privacy Committee-->
                 <!--*****************-->
                 <br>
 
-                <h3>{{'Checks by Privacy Committee'|translate}}</h3>
+                <h3>{{'Privacy committee checks'|translate}}</h3>
                 <hr>
 
-                <!-- Is this request has been sent to Privacy Committee -->
+                <!-- Has this request has been sent to Privacy Committee -->
                 <div class="row">
                     <label class="control-label col-sm-3">
                         &nbsp;
@@ -333,28 +360,6 @@
 
                 <br>
 
-                <h4>{{'Signed Agreement'|translate}}</h4>
-                <hr>
-
-                <!-- Agreement reached -->
-                <div class="row">
-                    <label class="control-label col-sm-3">
-                        &nbsp;
-                    </label>
-                    <div class="col-sm-7">
-                        <span><i class="glyphicon {{request.agreementReached ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'Agreement has been reached.' | translate }}
-                    </div>
-                </div>
-
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
-                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
-                    </li>
-                </ul>
-
-                <br>
-                
                 </div>
                 
                 

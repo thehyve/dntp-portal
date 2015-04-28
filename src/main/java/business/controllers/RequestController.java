@@ -791,7 +791,6 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/finalise");
         ProcessInstance instance = getProcessInstance(id);
-        
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
 
@@ -804,6 +803,9 @@ public class RequestController {
             updatedRequest.setRequestApproved(true);
             variables = transferFormData(updatedRequest, instance, user.getUser());
             runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+            
+            Boolean requestApproved = runtimeService.getVariable(id, "request_approved", Boolean.class);
+            log.info("Request approved: " + requestApproved);
         
             log.info("Fetching scientific_council_approval task");
             Task councilTask = getTaskByRequestId(id, "scientific_council_approval");

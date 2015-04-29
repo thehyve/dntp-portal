@@ -64,6 +64,7 @@ import business.representation.ApprovalVoteRepresentation;
 import business.representation.AttachmentRepresentation;
 import business.representation.CommentRepresentation;
 import business.representation.ExcerptListRepresentation;
+import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
@@ -157,6 +158,15 @@ public class RequestController {
                     break;
                 case "Approval":
                     task = findTaskByRequestId(instance.getId(), "request_approval");
+                    
+                    // fetch my vote, number of votes
+                    RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                            instance.getProcessInstanceId());
+                    Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+                    request.setNumberOfApprovalVotes(votes.size());
+                    if (votes.containsKey(currentUser.getId())) {
+                        request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+                    } 
                     break;
             }
             if (task != null) {
@@ -220,6 +230,7 @@ public class RequestController {
                     if (user.getContactData() != null) {
                         request.setRequesterEmail(user.getContactData().getEmail());
                     }
+                    request.setRequester(new ProfileRepresentation(user));
                     request.setLab(user.getLab());
                 }
             }
@@ -299,8 +310,8 @@ public class RequestController {
                 request.setApprovalComments(approvalComments);
 
                 Map<Long, ApprovalVoteRepresentation> approvalVotes = new HashMap<Long, ApprovalVoteRepresentation>();
-                for (Entry<User, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
-                    approvalVotes.put(entry.getKey().getId(), new ApprovalVoteRepresentation(entry.getValue()));
+                for (Entry<Long, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
+                    approvalVotes.put(entry.getKey(), new ApprovalVoteRepresentation(entry.getValue()));
                 }
                 request.setApprovalVotes(approvalVotes);
             }
@@ -789,7 +800,6 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/finalise");
         ProcessInstance instance = getProcessInstance(id);
-        
         Map<String, Object> variables = transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getProcessInstanceId(), variables);
 
@@ -802,6 +812,9 @@ public class RequestController {
             updatedRequest.setRequestApproved(true);
             variables = transferFormData(updatedRequest, instance, user.getUser());
             runtimeService.setVariables(instance.getProcessInstanceId(), variables);
+            
+            Boolean requestApproved = runtimeService.getVariable(id, "request_approved", Boolean.class);
+            log.info("Request approved: " + requestApproved);
         
             log.info("Fetching scientific_council_approval task");
             Task councilTask = getTaskByRequestId(id, "scientific_council_approval");

@@ -25,11 +25,6 @@
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Edit' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Vote"
-                        ng-hide="(request.status != 'Approval' || globals.currentUser.roles.indexOf('scientific_council') == -1)">
-                    <span><i class="glyphicon glyphicon-check"></i></span>
-                    {{'Vote' | translate}}
-                </button>
                 <button ng-if="globals.currentUser.roles.indexOf('palga') != -1"  class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}
@@ -68,8 +63,53 @@
             </div>
 
 
+            <!-- Status -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.status}}
+                    <br>
+                </p>
+            </div>
+
+            <!-- Reject reason  -->
+            <div class="row" ng-if="request.status == 'Rejected'">
+                <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.rejectReason}}
+                    <br>
+                </p>
+            </div>
+
+            <!-- Requester -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Requester' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.requesterName}}
+                    <br>
+                </p>
+            </div>
+            <div class="row" ng-if="request.requester.contactData">
+                <label class="control-label col-sm-3">{{ 'Contact data' | translate }}</label>
+                <address  class="col-sm-7">
+                     {{request.requester.contactData.address1}}
+                     <br ng-if="request.requester.contactData.address1">
+                     {{request.requester.contactData.address2}}
+                     <br ng-if="request.requester.contactData.address2">
+                     {{request.requester.contactData.postalCode}} {{request.requester.contactData.city}}
+                    <span ng-if="request.requester.contactData.telephone">
+                        <span><i class="glyphicon glyphicon-earphone"></i></span> 
+                        {{request.requester.contactData.telephone}}
+                    </span>
+                    <br ng-if="request.requester.contactData.telephone">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    <a href="mailto:{{request.requester.contactData.email}}">{{request.requester.contactData.email}}</a>
+                </address>
+            </div>
+
             <h3>{{ 'Details' | translate }}</h3>
             <hr>
+
 
             <!-- Principal Investigator -->
             <div class="row">
@@ -193,8 +233,12 @@
 
                 <div class="col-sm-7">
                     <span><i class="glyphicon {{request.linkageWithPersonalData ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'The request is linkage with personal data.' |
-                    translate }}
+                    &nbsp;{{'Data linkage'|translate}} 
+                    <br>
+                    (<em><span ng-if="request.linkageWithPersonalData">{{ 'Linkage with own or external personal data.' |
+                    translate }}</span><span 
+                    ng-if="!request.linkageWithPersonalData">{{ 'No data linkage required.' |
+                    translate }}</span></em>)
                 </div>
             </div>
 
@@ -216,27 +260,6 @@
                 <label class="control-label col-sm-3">{{ 'Reason using personal data' | translate }}</label>
                 <div class="col-sm-7">
                     {{request.reasonUsingPersonalData}}
-                </div>
-            </div>
-
-            <!-- Lab -->
-            <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1 && request.lab.number">
-                <br>
-                <label class="control-label col-sm-3">
-                   {{'Lab' | translate}}
-                </label>
-
-                <div class="col-sm-7">
-                    {{request.lab.number}} {{request.lab.name}}
-                </div>
-            </div>
-            <div class="row" ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
-                <label class="control-label col-sm-3">
-                    &nbsp;
-                </label>
-                <div class="col-sm-7">
-                    <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'The requester has been confirmed that he/she is associated with the lab.' | translate }}
                 </div>
             </div>
 
@@ -271,6 +294,27 @@
                     </div>
                 </div>
 
+                <!-- Lab -->
+                <div class="row">
+                    <br>
+                    <label class="control-label col-sm-3">
+                       {{'Lab' | translate}}
+                    </label>
+                    <div class="col-sm-7">
+                        <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
+                        <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="control-label col-sm-3">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-7">
+                        <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                        &nbsp; {{ 'The requester has been confirmed to be associated with the lab.' | translate }}
+                    </div>
+                </div>
+
                 <!-- Requester allowed -->
                 <div class="row">
                     <label class="control-label col-sm-3">
@@ -293,15 +337,42 @@
                     </div>
                 </div>
 
+                <h4>{{'Signed Agreement'|translate}}</h4>
+                <hr>
+
+                <!-- Agreement reached -->
+                <div class="row">
+                    <label class="control-label col-sm-3">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-7">
+                        <span><i class="glyphicon {{request.agreementReached ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                        &nbsp; {{ 'Agreement has been reached.' | translate }}
+                    </div>
+                </div>
+
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
+                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                    </li>
+                </ul>
+
+                <br>
+
+            </div>
+            
+            
+            <div ng-if="request.status=='Approval' && roles.indexOf('palga') != -1">
+
                 <!--*****************-->
                 <!--Privacy Committee-->
                 <!--*****************-->
                 <br>
 
-                <h3>{{'Checks by Privacy Committee'|translate}}</h3>
+                <h3>{{'Privacy committee checks'|translate}}</h3>
                 <hr>
 
-                <!-- Is this request has been sent to Privacy Committee -->
+                <!-- Has this request has been sent to Privacy Committee -->
                 <div class="row">
                     <label class="control-label col-sm-3">
                         &nbsp;
@@ -338,28 +409,6 @@
 
                 <br>
 
-                <h4>{{'Signed Agreement'|translate}}</h4>
-                <hr>
-
-                <!-- Agreement reached -->
-                <div class="row">
-                    <label class="control-label col-sm-3">
-                        &nbsp;
-                    </label>
-                    <div class="col-sm-7">
-                        <span><i class="glyphicon {{request.agreementReached ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'Agreement has been reached.' | translate }}
-                    </div>
-                </div>
-
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
-                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
-                    </li>
-                </ul>
-
-                <br>
-                
                 </div>
                 
                 

@@ -19,6 +19,9 @@ public class RequestListRepresentation {
 
     private String title;
 
+    private String approvalVote;
+    private Integer numberOfApprovalVotes;
+    
     public RequestListRepresentation() {
 
     }
@@ -94,6 +97,22 @@ public class RequestListRepresentation {
 
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
+    }
+
+    public String getApprovalVote() {
+        return approvalVote;
+    }
+
+    public void setApprovalVote(String approvalVote) {
+        this.approvalVote = approvalVote;
+    }
+
+    public Integer getNumberOfApprovalVotes() {
+        return numberOfApprovalVotes;
+    }
+
+    public void setNumberOfApprovalVotes(Integer numberOfApprovalVotes) {
+        this.numberOfApprovalVotes = numberOfApprovalVotes;
     }
 
 }

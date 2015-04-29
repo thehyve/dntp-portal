@@ -43,8 +43,8 @@ public class ApprovalVoteController {
         log.info("GET /requests/" + id + "/approvalVotes");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         Map<Long, ApprovalVoteRepresentation> votes = new HashMap<Long, ApprovalVoteRepresentation>();
-        for (Entry<User, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
-            votes.put(entry.getKey().getId(), new ApprovalVoteRepresentation(entry.getValue()));
+        for (Entry<Long, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
+            votes.put(entry.getKey(), new ApprovalVoteRepresentation(entry.getValue()));
         }
         return votes;
     }

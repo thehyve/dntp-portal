@@ -16,6 +16,7 @@ public class RequestRepresentation {
     private String requesterId;
     private String requesterName;
     private String requesterEmail;
+    private ProfileRepresentation requester;
     private String status;
     private Date dateCreated;
     private Lab lab;
@@ -442,6 +443,14 @@ public class RequestRepresentation {
 
     public void setRequesterEmail(String requesterEmail) {
         this.requesterEmail = requesterEmail;
+    }
+
+    public ProfileRepresentation getRequester() {
+        return requester;
+    }
+
+    public void setRequester(ProfileRepresentation requester) {
+        this.requester = requester;
     } 
     
 }

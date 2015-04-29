@@ -1,37 +1,31 @@
-package business;
+package business.controllers;
 
+import business.Application;
 import business.models.NewPasswordRequest;
 import business.models.NewPasswordRequestRepository;
 import business.models.User;
 import business.models.UserRepository;
 import business.representation.EmailRepresentation;
 import business.representation.NewPasswordRepresentation;
-import business.representation.PasswordChangeRepresentation;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.icegreen.greenmail.junit.GreenMailRule;
+import business.util.DefaultUsers;
+import business.util.Util;
 import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultHandler;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.mail.internet.MimeMessage;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class})
 @WebIntegrationTest("server.port = 8093")
-public class PasswordControllerTests {
+public class PasswordResetTests {
     @Autowired
     private EmbeddedWebApplicationContext webApplicationContext;
 
@@ -50,35 +44,31 @@ public class PasswordControllerTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private business.security.DefaultUsers defaultUsers;
+
     private MockMvc mockMvc;
     public GreenMail greenMail;
 
     @Before
     public void setUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        // Reset database
+        //defaultUsers.resetDatabase();
+
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .build();
+
         this.greenMail = new GreenMail(ServerSetupTest.SMTP);
     }
 
     @Test
     public void requestNewPasswordSendsCorrectEmail() throws Exception {
-        EmailRepresentation emailForm = new EmailRepresentation("palga@dntp.thehyve.nl");
+        EmailRepresentation emailForm = new EmailRepresentation(DefaultUsers.Admin.getEmail());
         greenMail.start();
 
         // Perform the request and ensure we get a correct result status
-        mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
-                .content(new ObjectMapper().writeValueAsString(emailForm))
-                .contentType("application/json")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(new ResultHandler() {
-                    @Override
-                    public void handle(MvcResult result) throws Exception {
-                        LogFactory.getLog(getClass()).info("TEST: requestNewPassword()\n" +
-                                result.getResponse().getStatus() +
-                                "\n" +
-                                result.getResponse().getContentAsString());
-                    }
-                })
-                .andExpect(status().isOk());
+        Util.performHttpRequest(mockMvc, HttpMethod.PUT, "/password/request-new", emailForm);
 
         // Check that the link has been sent to the right user, only once
         MimeMessage[] emails = greenMail.getReceivedMessages();
@@ -108,20 +98,7 @@ public class PasswordControllerTests {
         greenMail.start();
 
         // Perform the request and ensure we get a correct result status
-        mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
-                .content(new ObjectMapper().writeValueAsString(emailForm))
-                .contentType("application/json")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(new ResultHandler() {
-                    @Override
-                    public void handle(MvcResult result) throws Exception {
-                        LogFactory.getLog(getClass()).info("TEST: requestNewPassword()\n" +
-                                result.getResponse().getStatus() +
-                                "\n" +
-                                result.getResponse().getContentAsString());
-                    }
-                })
-                .andExpect(status().isOk());
+        Util.performHttpRequest(mockMvc, HttpMethod.PUT, "/password/request-new", emailForm);
 
         // Check that no email has been sent
         MimeMessage[] emails = greenMail.getReceivedMessages();
@@ -131,28 +108,15 @@ public class PasswordControllerTests {
     }
 
     @Test
-    public void resetPassword() throws Exception {
+    public void resetPasswordWorks() throws Exception {
         // Insert a password reset request in the database
-        User user = userRepository.findByUsername("palga@dntp.thehyve.nl");
+        User user = userRepository.findByUsername(DefaultUsers.Admin.getEmail());
         NewPasswordRequest npr = new NewPasswordRequest(user);
         passwordRequestRepository.saveAndFlush(npr);
 
         // Call password reset with the token
         NewPasswordRepresentation npRepr = new NewPasswordRepresentation("12345678", npr.getToken());
-        mockMvc.perform(MockMvcRequestBuilders.post("/password/reset")
-                .content(new ObjectMapper().writeValueAsString(npRepr))
-                .contentType("application/json")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(new ResultHandler() {
-                    @Override
-                    public void handle(MvcResult result) throws Exception {
-                        LogFactory.getLog(getClass()).info("TEST: setPassword()\n" +
-                                result.getResponse().getStatus() +
-                                "\n" +
-                                result.getResponse().getContentAsString());
-                    }
-                })
-                .andExpect(status().isOk());
+        Util.performHttpRequest(mockMvc, HttpMethod.POST, "/password/reset", npRepr);
 
         // Check that the password has been changed
         user = userRepository.findOne(user.getId());
@@ -160,5 +124,29 @@ public class PasswordControllerTests {
 
         // Check that the reset link doesn't exist anymore
         Assert.assertNull(passwordRequestRepository.findByToken(npr.getToken()));
+
+        // Restore original password
+        user.setPassword(DefaultUsers.Admin.getPassword());
+        userRepository.save(user);
+    }
+
+    @Test
+    public void resetPasswordRejectsInvalidPassword() throws Exception {
+        // Insert a password reset request in the database
+        User user = userRepository.findByUsername(DefaultUsers.Admin.getEmail());
+        NewPasswordRequest npr = new NewPasswordRequest(user);
+        passwordRequestRepository.saveAndFlush(npr);
+
+        // Call password reset with the token
+        // The new password is invalid, since it has only 4 characters
+        NewPasswordRepresentation npRepr = new NewPasswordRepresentation("1234", npr.getToken());
+        Util.performHttpRequest(mockMvc, HttpMethod.POST, "/password/reset", npRepr, status().is4xxClientError());
+
+        // Check that the password has not been changed
+        user = userRepository.findOne(user.getId());
+        Assert.assertEquals(DefaultUsers.Admin.getPassword(), user.getPassword());
+
+        // Check that the reset link still exists
+        Assert.assertNotNull(passwordRequestRepository.findByToken(npr.getToken()));
     }
 }

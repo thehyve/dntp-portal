@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -89,7 +90,7 @@ public class PasswordController {
         LogFactory.getLog(this.getClass()).info("POST /password/change");
 
         // Update profile
-        User currentUser = this.userRepository.getOne(user.getId());
+        User currentUser = user.getUser();
 
         if (currentUser.getPassword().equals(form.getOldPassword()) && PasswordValidator.validate(form.getNewPassword())) {
             currentUser.setPassword(form.getNewPassword());

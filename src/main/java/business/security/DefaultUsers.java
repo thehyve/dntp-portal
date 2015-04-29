@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,9 @@ public class DefaultUsers {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    Environment env;
     
     @PostConstruct
     private void initDatabase() {
@@ -85,5 +89,4 @@ public class DefaultUsers {
         };
 
     }
-
 }

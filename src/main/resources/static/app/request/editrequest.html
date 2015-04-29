@@ -1,0 +1,536 @@
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" role="form" name="requestEditForm" ng-submit="update(request)" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'New Request' | translate }}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit Request' | translate }}: {{request.title}}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Evaluate Request' |translate }}: {{request.title}}</h3>
+                </div>
+                <div class="modal-body">
+
+                    <div class="alert alert-danger" role="alert" ng-show="error">
+                        {{ error }}
+                    </div>
+
+                    <!-- Principal Investigator -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonName.$invalid && requestEditForm.contactPersonName.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Principal Investigator' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" placeholder="{{ 'Principal Investigator' | translate }}"
+                                   ng-model="request.contactPersonName" ng-maxlength="100">
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.requestTitle.$invalid || requestEditForm.requestTitle.$error.required) && requestEditForm.requestTitle.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Title' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="requestTitle" name="requestTitle" placeholder="{{ 'Title' | translate }}"
+                                   ng-model="request.title" ng-maxlength="50" required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Research Question -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.researchQuestion.$invalid || requestEditForm.researchQuestion.$error.required) && requestEditForm.researchQuestion.$dirty }">
+                        <label class="control-label col-sm-3" for="researchQuestion">{{ 'Research Question' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" placeholder="{{ 'Research Question' | translate }}"
+                            ng-model="request.researchQuestion" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Hypothesis -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.hypothesis.$invalid || requestEditForm.hypothesis.$error.required) && requestEditForm.hypothesis.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Hypothesis' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" placeholder="{{ 'Hypothesis' | translate }}"
+                            ng-model="request.hypothesis" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Methods -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.methods.$invalid || requestEditForm.methods.$error.required) && requestEditForm.methods.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Methods' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="methods" name="methods" placeholder="{{ 'Methods' | translate }}"
+                            ng-model="request.methods" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.methods.$error.required">{{ 'Required field' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!--Request Type-->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">{{'Request Type' | translate}}</label>
+                        <div class="col-sm-8">
+                            <input type="radio" ng-model="request.type" value="1" ng-click="isMaterialNeeded(request)"> {{'Request for numbers only' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="2" ng-click="isMaterialNeeded(request)"> {{'Request for excerpts' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="3" ng-click="isMaterialNeeded(request)"> {{'Request for excerpts + PA reports' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="4" ng-click="isMaterialNeeded(request)"> {{'Request for excerpts + materials' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="5" ng-click="isMaterialNeeded(request)"> {{'Request for excerpts + PA reports + materials' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="6" ng-click="isMaterialNeeded(request)"> {{'Request for PA-reports only' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="7" ng-click="isMaterialNeeded(request)"> {{'Request for materials only' | translate}}
+                        </div>
+                    </div>
+
+                    <!--Returned Date-->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.returnDate.$error.required}" ng-show="request.materialsRequest">
+                        <label class="control-label col-sm-3">
+                            &nbsp;
+                        </label>
+                        <div class="col-sm-8" >
+                            <label class="control-label" for="returnDate">
+                                <span><i class="glyphicon glyphicon-calendar"></i></span>
+                                {{'Return date'|translate}}:
+                            </label>
+                            <input type="text" class="form-control" id="returnDate" name="returnDate" ng-model="request.returnDate"
+                                   bs-datepicker
+                                   data-date-format="yyyy-MM-dd"
+                                   data-min-date="today"
+                                   data-autoclose="1"
+                                   ng-required="request.materialsRequest" />
+                        </div>
+                        <span ng-show="requestEditForm.returnDate.$error.required" class="help-block">
+                              {{ 'Required field' | translate }}
+                        </span>
+                    </div>
+
+                    <!-- Data Linkage -->
+                    <div class="form-group" ng-class="" ng-show="request.type != 1">
+                        <label class="control-label col-sm-3" for="linkageWithPersonalDataYes">
+                            {{'Data linkage' | translate}}
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData"> {{'Linkage with own or external personal data' | translate}} <br>
+                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData"> {{'No data linkage required' | translate}} <br>
+                        </div>
+                    </div>
+
+                    <!-- Data Linkage Notes  -->
+                    <div class="form-group" ng-show="request.type != 1"
+                         ng-class="{ 'has-error' : requestEditForm.linkageWithPersonalDataNotes.$invalid  && requestEditForm.linkageWithPersonalDataNotes.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Data Linkage Notes' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes" placeholder="{{ 'Notes for linkage with personal data' | translate }}"
+                                  ng-model="request.linkageWithPersonalDataNotes"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Informed Consent  -->
+                    <div class="form-group" ng-class="" ng-show="request.linkageWithPersonalData == 'true'">
+                        <label class="control-label col-sm-3" for="informedConsentYes">
+                            {{'Informed Consent' | translate}}
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="radio" id="informedConsentYes" name="informedConsent" ng-model="request.informedConsent" value="true" ng-checked="request.informedConsent"> {{'Yes' | translate}} <br>
+                            <input type="radio" id="informedConsentNo" name="informedConsent" ng-model="request.informedConsent" value="false" ng-checked="!request.informedConsent"> {{'No' | translate}}
+                        </div>
+                    </div>
+
+                    <!-- Reason Using Personal Data  -->
+                    <div class="form-group" ng-show="request.informedConsent == 'false'"
+                         ng-class="{ 'has-error' : requestEditForm.reasonUsingPersonalData.$invalid && requestEditForm.reasonUsingPersonalData.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Reason using personal data' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" placeholder="{{ 'Reason using personal data' | translate }}"
+                                  ng-model="request.reasonUsingPersonalData"></textarea>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <h4>{{ 'Attachments' | translate }}</h4>
+                    <hr>
+
+                    <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="file in request.attachments">
+                            <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                            <span class="pull-right">
+                            <span class="btn-group">
+                                <button class="btn btn-default" type="button" title="Delete"
+                                        ng-click="removeFile(file)"
+                                        ng-if="request.status=='Open'"
+                                        >
+                                    Delete
+                                </button>
+                            </span>
+                            </span>
+                        </li>
+                    </ul>
+
+                    <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/files'})"
+                         flow-name="agreementFlow"
+                         flow-files-submitted="$flow.upload()"
+                         flow-file-success="fileuploadsuccess(request, $message)"
+                         ng-if="request.status=='Open'"
+                            >
+                        <div>
+                            <span class="btn btn-default" flow-btn>{{'Upload file'|translate}}</span>
+                        </div>
+                        <br>
+                        <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                             flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                             flow-drag-leave="style={border: '2px dashed gray'}"
+                             ng-style="style">
+                            ({{'drag and drop your file here'|translate}})
+                        </div>
+                    </div>
+
+                    <div ng-if="request.status=='Review'">
+                        <br>
+
+                        <h4>{{'Checks by Palga'|translate}}</h4>
+                        <hr>
+
+                        <!-- Requester valid -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3" for="requesterValid">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="requesterValid" name="requesterValid" value="1"
+                                       ng-model="request.requesterValid"> &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
+                            </div>
+                        </div>
+
+                        <!-- Requester valid Lab-->
+                        <div class="form-group" ng-class="">
+                            <br>
+                            <label class="control-label col-sm-3">
+                               {{'Lab' | translate}}
+                            </label>
+                            <div class="col-sm-8">
+                                <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
+                                <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3" for="requesterLabValid">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="requesterLabValid" name="requesterLabValid" value="1"
+                                       ng-model="request.requesterLabValid"> &nbsp; {{ 'The requester is indeed associated with the lab.' | translate }}
+                            </div>
+                        </div>
+
+                        <!-- Requester allowed -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3" for="requesterAllowed">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="requesterAllowed" name="requesterAllowed" value="1"
+                                       ng-model="request.requesterAllowed"> &nbsp; {{ 'The requester is allowed to file the request.' | translate }}
+                            </div>
+                        </div>
+
+                        <!-- Contact person allowed -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3" for="contactPersonAllowed">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="contactPersonAllowed" name="contactPersonAllowed" value="1"
+                                       ng-model="request.contactPersonAllowed"> &nbsp; {{ 'The contact person been checked and is authorised to support the request.' | translate }}
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <h4>{{'Signed agreement'|translate}}</h4>
+                        <hr>
+
+                        <!-- Agreement reached -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3" for="agreementReached">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="agreementReached" name="agreementReached" value="1"
+                                       ng-model="request.agreementReached"> &nbsp; {{ 'Agreement has been reached.' | translate }}
+                            </div>
+                        </div>
+
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
+                                <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                                <span class="pull-right">
+                                <span class="btn-group">
+                                    <button class="btn btn-default" type="button" title="Delete"
+                                            ng-click="removeAgreementFile(file)"
+                                            ng-if="request.status=='Review'"
+                                            >
+                                        Delete
+                                    </button>
+                                </span>
+                                </span>
+                            </li>
+                        </ul>
+
+                        <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
+                             flow-name="agreementFlow"
+                             flow-files-submitted="$flow.upload()"
+                             flow-file-success="fileuploadsuccess(request, $message)"
+                                >
+                            <div>
+                                <span class="btn btn-default" flow-btn>{{'Upload agreement files'|translate}}</span>
+                            </div>
+                            <br>
+                            <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                                 flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                                 flow-drag-leave="style={border: '2px dashed gray'}"
+                                 ng-style="style">
+                                ({{'drag and drop your file here'|translate}})
+                            </div>
+                        </div>
+                        <br>
+                    </div> <!-- endif request.status=='Review' -->
+
+                    
+                    <div ng-if="request.status=='Approval' &&
+                        (   globals.currentUser.roles.indexOf('palga') != -1)">
+
+                        <br>
+
+                        <h4>{{'Checks by Privacy Committee'|translate}}</h4>
+                        <hr>
+
+                        <!-- Is sent to privacy commitee -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3" for="requesterValid">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="sentToPrivacyComm" name="sentToPrivacyComm" value="1"
+                                       ng-model="request.sentToPrivacyCommittee"> &nbsp; {{ 'This request has been sent to Privacy Committee to be checked.' | translate }}
+                            </div>
+                        </div>
+
+                        <!-- Outcome -->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Outcome' | translate }}</label>
+                            <div class="col-sm-8">
+                            <textarea type="text" class="form-control" id="privacyCommitteeOutcome" name="privacyCommitteeOutcome" placeholder="{{ 'Outcome' | translate }}"
+                                  ng-model="request.privacyCommitteeOutcome"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Outcome Reference -->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{ 'Outcome Reference' | translate }}</label>
+                            <div class="col-sm-8">
+                            <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef" name="privacyCommitteeOutcomeRef" placeholder="{{ 'Outcome Reference' | translate }}"
+                                  ng-model="request.privacyCommitteeOutcomeRef"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Outcome Emails -->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="privacyCommitteeEmails">{{ 'Emailing History' | translate }}</label>
+                            <div class="col-sm-8">
+                            <textarea type="text" class="form-control" id="privacyCommitteeEmails" name="privacyCommitteeEmails" placeholder="{{ 'Emailing History' | translate }}"
+                                      ng-model="request.privacyCommitteeEmails"></textarea>
+                            </div>
+                        </div>
+                    
+                    </div> <!-- endif in 'Review' status and user type 'palga' -->
+
+
+                    <!-- If in 'Review' status and user type 'palga' or 'scientific_council' -->
+                    <div ng-if="request.status=='Approval' &&
+                        (   globals.currentUser.roles.indexOf('palga') != -1
+                         || globals.currentUser.roles.indexOf('scientific_council') != -1)">
+
+                    <h4>{{'Approval by the scientific council'|translate}}</h4>
+                    <hr>
+
+                    <!-- Status -->
+                    <div class="row">
+                        <label class="control-label col-sm-3">{{ 'Votes' | translate }}</label>
+                        <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                            {{size(request.approvalVotes)}} votes.
+                            </div>
+                        </div>
+                         <div class="panel panel-default"  ng-repeat="(user_id, vote) in request.approvalVotes">
+                            <div class="panel-body">
+                            <span ng-if="vote.value=='ACCEPTED'"><i class="glyphicon glyphicon-ok-circle"></i></span>
+                            <span ng-if="vote.value=='REJECTED'"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            <span ng-if="vote.value=='NONE'"><i class="glyphicon glyphicon-question-sign"></i></span>
+                            {{vote.value}} &nbsp; <small ng-if="getName(vote.creator)">({{getName(vote.creator)}})</small>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="comment in request.approvalComments">
+                        <p><div ng-show="!approval_comment_edit_visibility[comment.id]">{{comment.contents}}</div>
+                            <div ng-show="approval_comment_edit_visibility[comment.id]">
+                           <textarea name="commentText" placeholder="{{'Add comment'|translate}}"
+                            ng-model="comment.contents">
+                           </textarea>
+                           <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+                            ng-click="updateComment(request, comment)">
+                            {{'Update comment'|translate}}
+                            </button>
+                            </div>
+                        <span class="pull-right" ng-if="globals.currentUser.id==comment.creator.id">
+                        <span class="btn-group btn-group-xs">
+                            <button class="btn btn-info {{comment_edit_visibility[comment.id] ? 'active' : ''}}" type="button" title="Edit"
+                                ng-click="comment_edit_visibility[comment.id] = 1">
+                                <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                </button>
+                            <button class="btn btn-danger" type="button" title="Delete"
+                                ng-click="removeApprovalComment(comment)">
+                                <span><i class="glyphicon glyphicon-remove-circle"></i></span>
+                            </button>
+                        </span>
+                        </span>
+                        </p>
+                        <p>
+                        <small>
+                        <span><i class="glyphicon glyphicon-user"></i></span>
+                        <em>{{getName(comment.creator)}}</em>
+                        &nbsp;
+                        <span><i class="glyphicon glyphicon-time"></i></span>
+                        <span>{{comment.timeCreated | date: 'EEE dd MMMM yyyy  HH:mm'}}</span>
+                        <span ng-if="comment.timeEdited != comment.timeCreated">(Last edited: {{comment.timeEdited | date: 'EEE dd MMMM yyyy  HH:mm'}})</span>
+                        </small>
+                        </p>
+                    </li>
+                    </ul>
+
+                    <!-- Add approval comment -->
+                    <div class="form-group" ng-class="">
+                        <div class="col-sm-12">
+                            <input type="hidden" ng-model="approval_comment.processInstanceId" value="{{request.processInstanceId}}">
+                            <textarea class="form-control" id="commentText" name="commentText" placeholder="{{'Add comment'|translate}}"
+                                      ng-model="approval_comment.contents">
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="">
+                        <div class="col-sm-12 text-justify">
+                            <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
+                                    ng-click="addApprovalComment(request, approval_comment)"
+                                    ng-if="!approval_comment.id">
+                                {{'Add comment'|translate}}
+                            </button>
+                            <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
+                                    ng-click="updateApprovalComment(request, approval_comment)"
+                                    ng-if="approval_comment.id">
+                                {{'Update comment'|translate}}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Add vote -->
+                    <div ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="form-group" ng-class="">
+                        <div class="col-sm-8">
+                           <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
+                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
+                            type="button" title="{{'Accepted'|translate}}"
+                            ng-click="updateVote(request, 'ACCEPTED')"
+                            ng-if="!edit_comment.id">
+                            <span><i class="glyphicon glyphicon-ok-circle"></i></span>
+                            {{'Accepted'|translate}}
+                            </button>
+                           <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
+                            type="button" title="{{'Rejected'|translate}}"
+                            ng-click="updateVote(request, 'REJECTED')"
+                            ng-if="!edit_comment.id">
+                            <span><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            {{'Rejected'|translate}}
+                            </button>
+                        </div>
+                    </div>
+
+                    </div> <!-- endif 'Review' status and user type 'palga' or 'scientific_council' -->
+
+                <div ng-if="request.status=='Approval' &&
+                        globals.currentUser.roles.indexOf('palga') != -1">
+                <h4>{{'Finalisation checks'|translate}}</h4>
+                <hr>
+                <!-- Scientific council has approved -->
+                <div class="form-group" ng-class="">
+                    <label class="control-label col-sm-3" for="scientificCouncilApproved">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved"
+                               ng-model="request.scientificCouncilApproved"> &nbsp; {{ 'The scientific council has approved.' | translate }}
+                    </div>
+                </div>
+
+                <!-- There are no privacy issues or the privacy committee has approved. -->
+                <div class="form-group" ng-class="">
+                    <label class="control-label col-sm-3" for="privacyCommiteeApproved">
+                        &nbsp;
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved"
+                               ng-model="request.privacyCommitteeApproved"> &nbsp; {{ 'There are no privacy issues or the privacy committee has approved.' | translate }}
+                    </div>
+                </div>
+                </div>
+
+
+                </div> <!--end modal-body-->
+
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button"
+                        ng-if="request.status=='Open'"
+                        ng-click="submitRequest(request)"
+                        ng-disabled="requestEditForm.$invalid">{{'Submit'|translate}}</button>
+                    <button class="btn btn-warning" type="button"
+                        ng-if="request.status=='Review' && globals.currentUser.roles.indexOf('palga') != -1"
+                        ng-click="submitForApproval(request)"
+                        ng-disabled="requestEditForm.$invalid
+                            || !request.agreementReached
+                            || !request.requesterValid
+                            || !request.requesterAllowed
+                            || !request.contactPersonAllowed
+                            || !request.requesterLabValid
+                        ">
+                            {{'Submit for approval'|translate}}
+                    </button>
+                    <button class="btn btn-warning" type="button"
+                        ng-if="request.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1"
+                        ng-click="finalise(request)"
+                        ng-disabled="requestEditForm.$invalid
+                            || !request.scientificCouncilApproved
+                            || !request.privacyCommitteeApproved
+                        ">
+                            {{'Finalise'|translate}}
+                    </button>
+                    <button class="btn btn-danger" type="button"
+                        ng-if="request.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1"
+                        ng-click="reject(request)"
+                        ng-disabled="requestEditForm.$invalid
+                        ">
+                            {{'Reject'|translate}}
+                    </button>
+                    <button class="btn btn-info" type="submit"
+                            ng-disabled="requestEditForm.$invalid">{{'Save'|translate}}</button>
+                    <button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

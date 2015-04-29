@@ -1,0 +1,101 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <!--Side Bar-->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#/">{{'Overview'|translate}} <span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
+
+        <div ng-show="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{'Not logged in'|translate}}.
+            </div>
+        </div>
+
+        <div ng-if="authenticated">
+
+            <div ng-controller="AdminLabController" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+                <div class="alert alert-danger" role="alert" ng-show="error.length" id="error">
+                    {{error|translate}}.
+                </div>
+
+                <h1>{{ 'Labs' | translate }}</h1>
+                <hr>
+
+                <div ng-hide="accessDenied">
+
+                    <ul class="nav nav-pills">
+                        <li>
+                            <button class="btn btn-info" type="button" title="Add lab" ng-click="add()">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> add lab
+                            </button>
+                        </li>
+                    </ul>
+
+                    <p></p>
+
+                    <div class="alert alert-info" role="alert" ng-hide="labs.length">
+                        There are no labs yet.
+                    </div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item {{lab.active ? '' : 'disabled' }} {{visibility[lab.id] ? 'list-group-item-info' : ''}}"
+                            ng-repeat="lab in labs" id="lab_{{lab.id}}">
+                            <h4 class="list-group-item-heading" ng-click="toggleVisibility(lab)">
+                                <label>Lab {{lab.number}}: {{lab.name}}</label>
+            <span class="pull-right">
+            <span class="btn-group">
+                <button ng-if="lab.contactData" class="btn btn-default" type="button"
+                        title="{{visibility[lab.id] ? 'Collapse' :'Details'}}">
+                    <span class="glyphicon {{visibility[lab.id] ? 'glyphicon-menu-up' :'glyphicon-menu-down'}}"></span>
+                </button>
+                <button class="btn btn-default" type="button" title="Edit" ng-click="edit(lab)">
+                    Edit
+                </button>
+                <button class="btn btn-default {{lab.active ? 'disabled' : ''}}" type="button" title="Activate"
+                        ng-click="activate(lab)">
+                    Activate
+                </button>
+                <button class="btn btn-default {{lab.active ? '' : 'disabled'}}" type="button" title="Deactivate"
+                        ng-click="deactivate(lab)">
+                    Deactivate
+                </button>
+            </span>
+            </span>
+                            </h4>
+                            <div ng-show="visibility[lab.id]" ng-if="lab.contactData">
+                                <em>{{'Contact info'|translate}}</em>:
+                                <address>
+                                    {{lab.contactData.address1}}<br/>
+                                    {{lab.contactData.address2}}<br/>
+                                    {{lab.contactData.postalCode}}
+                                    {{lab.contactData.city}}<br/>
+                                    {{lab.contactData.country}}<br/>
+                                    {{lab.contactData.email}}<br/>
+                                    {{lab.contactData.telephone}}
+                                </address>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="page-header">
+    <h2>{{'Labs'|translate}}</h2>
+</div>
+<div ng-show="!authenticated">
+    <div class="alert alert-danger" role="alert">
+        {{'Not logged in'|translate}}.
+    </div>
+</div>

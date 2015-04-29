@@ -10,37 +10,50 @@
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
                                    "smart-table",
-                                   "ProcessApp.services", "ProcessApp.controllers",
+                                   "ProcessApp.services",
+                                   "ProcessApp.controllers",
                                    "ProcessApp.directives"])
         .config(function($routeProvider, $translateProvider) {
 
             $routeProvider.when('/', {
-                templateUrl : 'app/dashboard/dashboard.html',
+                templateUrl : 'app/request/requests.html',
                 controller : ''
             }).when('/login', {
-                templateUrl : 'app/components/login/login.html',
+                templateUrl : 'app/login/login.html',
                 controller : 'LoginController'
             }).when('/login/forgot-password', {
-                templateUrl : 'app/components/forgot-password/forgot-password.html',
+                templateUrl : 'app/forgot-password/forgot-password.html',
                 controller : 'ForgotPasswordController'
             }).when('/login/reset-password/:token', {
-                templateUrl : 'app/components/forgot-password/reset-password.html',
+                templateUrl : 'app/forgot-password/reset-password.html',
                 controller : 'ResetPasswordController'
             }).when('/register', {
-                templateUrl : 'app/components/registration/registration.html',
+                templateUrl : 'app/registration/registration.html',
                 controller : 'RegistrationController'
             }).when('/register/success', {
-                templateUrl : 'app/components/registration/thank-you.html',
+                templateUrl : 'app/registration/thank-you.html',
                 controller : 'RegistrationController'
+            }).when('/activate/:token', {
+                templateUrl : 'app/activation/activate.html',
+                controller : 'ActivationController'
             }).when('/users', {
-                templateUrl : 'app/components/admin/users.html'
+                templateUrl : 'app/admin/user/users.html'
             }).when('/labs', {
-                templateUrl : 'app/components/admin/labs.html'
+                templateUrl : 'app/admin/lab/labs.html'
+            }).when('/request/view/:requestId', {
+                templateUrl : 'app/request/request.html',
+                controller : 'RequestController'
+            }).when('/request/edit/:requestId', {
+                templateUrl : 'app/request/editrequest.html',
+                controller : 'RequestController'
+            }).when('/my-lab', {
+                templateUrl : 'app/lab/my-lab.html',
+                controller : 'MyLabController'
             }).when('/profile/password', {
-                templateUrl : 'app/components/profile/password.html',
+                templateUrl : 'app/profile/password.html',
                 controller : 'PasswordController'
             }).when('/profile/', {
-                templateUrl : 'app/components/profile/profile.html',
+                templateUrl : 'app/profile/profile.html',
                 controller : 'ProfileController'
             }).otherwise('/');
 
@@ -67,26 +80,27 @@
                         && $location.path() !== '/register/success'
                         && $location.path() !== '/login/forgot-password'
                         && !startsWith($location.path(), '/login/reset-password')
+                        && !startsWith($location.path(), '/activate/')
                         ) && !$rootScope.globals.currentUser) {
                         $location.path('/login');
                     }
                 });
             }]);
-            
-    
+
+
     // Checks if `string` starts with `start`
     function startsWith(string, start) {
         console.log('startsWith: ' + string + ', ' + start);
         if (typeof(string) !== 'string')
             return false;
-            
+
         if (string.length < start.length)
             return false;
-    
+
         for (var i = 0; i < string.length && i < start.length; i++)
             if (string[i] !== start[i])
                 return false;
-                
+
         return true;
     }
 }(angular));

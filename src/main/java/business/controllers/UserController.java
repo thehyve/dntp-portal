@@ -1,16 +1,19 @@
 package business.controllers;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+import business.models.*;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,30 +22,62 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import business.models.ContactData;
-import business.models.Lab;
-import business.models.LabRepository;
-import business.models.Role;
-import business.models.RoleRepository;
-import business.models.User;
-import business.models.UserRepository;
+import business.models.UserService.EmailAddressNotUnique;
 import business.representation.ProfileRepresentation;
+import business.security.UserAuthenticationToken;
+
+import javax.validation.constraints.NotNull;
 
 @RestController
 public class UserController {
 
+    Log log = LogFactory.getLog(getClass());
+
+    @Value("${dntp.server-name}")
+    String serverName;
+
+    @Value("${dntp.server-port}")
+    String serverPort;
+    
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
+    
     @Autowired
     RoleRepository roleRepository;
 
     @Autowired
     LabRepository labRepository;
 
+    @Autowired
+    ActivationLinkRepository activationLinkRepository;
+
+    @Autowired
+    JavaMailSender mailSender;
+
     @RequestMapping("/user")
-    public Principal user(Principal user) {
-        return user;
+    public ProfileRepresentation user(UserAuthenticationToken user) {
+        log.info("GET /user");
+        return new ProfileRepresentation(user.getUser());
+    }
+
+    @RequestMapping(value = "/register/users/activate/{token}", method = RequestMethod.GET)
+    public ResponseEntity<Object> activateUser(@PathVariable String token) {
+        ActivationLink link = activationLinkRepository.findByToken(token);
+
+        // Check that the link has been issued in the previous week
+        if (link != null && TimeUnit.MILLISECONDS.toDays(new Date().getTime() - link.getCreationDate().getTime()) <= 7) {
+            User user = link.getUser();
+            user.setEmailValidated(true);
+            userRepository.save(user);
+            activationLinkRepository.delete(link);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        } else {
+            // The activation link doesn't exist or is outdated!
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/admin/user", method = RequestMethod.GET)
@@ -52,7 +87,7 @@ public class UserController {
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public List<ProfileRepresentation> getAll(Principal principal) {
-        LogFactory.getLog(getClass()).info("GET /admin/users (for user: " + principal.getName() + ")");
+        log.info("GET /admin/users (for user: " + principal.getName() + ")");
         List<ProfileRepresentation> users = new ArrayList<ProfileRepresentation>();
         for(User user: userRepository.findByActiveTrueAndDeletedFalse()) {
             users.add(new ProfileRepresentation(user));
@@ -68,17 +103,51 @@ public class UserController {
         }
     }
 
-    @ResponseStatus(value=HttpStatus.NOT_MODIFIED, reason="Email address not available.")
+    @ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="Email address not available.")
     public class EmailAddressNotAvailableException extends RuntimeException {
         private static final long serialVersionUID = -2294620434526249799L;
+        public EmailAddressNotAvailableException(String message) {
+            super(message);
+        }
+        public EmailAddressNotAvailableException() {
+            super("Email address not available.");
+        }
     }
-   
+
     public void transferUserData(ProfileRepresentation body, User user) {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());
         user.setPathologist(body.isPathologist());
         user.setInstitute(body.getInstitute());
         user.setSpecialism(body.getSpecialism());
+
+        // copy email address
+        String email = body.getContactData().getEmail();
+        if (email == null) {
+            throw new InvalidUserDataException("No email address entered.");
+        }
+        if (user.getUsername() == null || !user.getUsername().equals(email)) {
+            // check for uniqueness (also enforced by user service):
+            User u = userRepository.findByUsernameAndDeletedFalse(email);
+            if (u == null) {
+                user.setUsername(email);
+            } else {
+                throw new EmailAddressNotAvailableException();
+            }
+        }
+
+        // change role
+        ProfileRepresentation representation = new ProfileRepresentation(user);
+        if (!representation.getCurrentRole().equals(body)) {
+            Role role = roleRepository.findByName(body.getCurrentRole());
+            if (role == null) {
+                throw new InvalidUserDataException("Unknown role selected.");
+            }
+            Set<Role> roles = new HashSet<Role>();
+            roles.add(role);
+            user.setRoles(roles);
+        }
+        
         Lab lab = null;
         if (user.isLabUser() || user.isPathologist()) {
             lab = labRepository.findOne(body.getLabId());
@@ -96,46 +165,57 @@ public class UserController {
         }
         user.getContactData().copy(body.getContactData());
 
-        // copy email address
-        String email = body.getContactData().getEmail();
-        if (email == null) {
-            throw new InvalidUserDataException("No email address entered.");
-        }
-        if (user.getUsername() == null || !user.getUsername().equals(email)) {
-            // check for uniqueness (also enforced by database):
-            User u = userRepository.findByUsernameAndDeletedFalse(email);
-            if (u == null) {
-                user.setUsername(email);
-            } else {
-                throw new EmailAddressNotAvailableException();
-            }
-        }
     }
 
     private ProfileRepresentation createNewUser(ProfileRepresentation body) {
         if (body.getPassword1() != null && body.getPassword1().equals(body.getPassword2()))
         {
             if (userRepository.findByUsername(body.getUsername()) != null ) {
-                throw new IllegalArgumentException("Credentials already exist in our system.");
+                throw new EmailAddressNotAvailableException();
             }
 
             Role role = roleRepository.findByName(body.getCurrentRole());
-            Set<Role> roles;
+            Set<Role> roles = new HashSet<Role>();
             if (role == null) {
                 throw new InvalidUserDataException("No role selected.");
             } else {
-                roles = Collections.singleton(role);
+                roles.add(role);
             }
 
             User user = new User(body.getUsername(), body.getPassword1(), true, roles);
 
             transferUserData(body, user);
-            return new ProfileRepresentation(userRepository.save(user));
+            try {
+                User result = userService.save(user);
+
+                // The user has been successfully saved. Send activation email
+                sendActivationEmail(user);
+
+                return new ProfileRepresentation(result);
+            } catch (EmailAddressNotUnique e) {
+                throw new EmailAddressNotAvailableException();
+            }
         }
         else
         {
             throw new InvalidUserDataException("Passwords do not match.");
         }
+    }
+
+    private void sendActivationEmail(@NotNull User user) {
+        // Generate and save activation link
+        ActivationLink link = new ActivationLink(user);
+        this.activationLinkRepository.save(link);
+
+        // Send email to user
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getUsername());
+        message.setFrom("no-reply@dntp.thehyve.nl");
+        message.setReplyTo("no-reply@dntp.thehyve.nl");
+        message.setSubject("Account activation");
+        message.setText(String.format("Please follow this link to activate your account: http://%s:%s/#/activate/%s", serverName, serverPort, link.getToken()));
+        mailSender.send(message);
+        LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + link.getToken());
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
@@ -156,7 +236,12 @@ public class UserController {
         User user = userRepository.findOne(id);
         if (user != null) {
             transferUserData(body, user);
-            return new ProfileRepresentation(userRepository.save(user));
+            try {
+                User result = userService.save(user);
+                return new ProfileRepresentation(result);
+            } catch(UserService.EmailAddressNotUnique e) {
+                throw new EmailAddressNotAvailableException();
+            }
         }
         throw new UserNotFoundException();
     }    

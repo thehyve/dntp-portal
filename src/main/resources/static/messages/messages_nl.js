@@ -1,13 +1,28 @@
 messages_nl =
 {
     /* ========= */
-    /* Shared    */
+    /* Global    */
     /* ========= */
 
     'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
     'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
     'Loading': 'Laden',
     'Passwords must be at least 8 characters long': 'Wachtwoorden moeten minstens 8 tekens lang zijn',
+    'No lab associated with lab user.' : 'Dit user heeft geen lab.',
+
+
+    /* ========= */
+    /* Request   */
+    /* ========= */
+
+    'Review': 'Herzien',
+    'Request_Type_1' : 'Request for numbers only (OZV=Orientererende zoekvraag)',
+    'Request_Type_2' : 'Request for excerpts (LZV=Landelijke zoekvraag)',
+    'Request_Type_3' : 'Request for excerpts + PA reports',
+    'Request_Type_4' : 'Request for excerpts + materials',
+    'Request_Type_5' : 'Request for excerpts + PA reports + materials',
+    'Request_Type_6' : 'Request for PA-reports only',
+    'Request_Type_7' : 'Request for materials only',
 
     /* ========= */
     /* Login     */
@@ -15,8 +30,12 @@ messages_nl =
 
     Username: 'Gebruikersnaam',
     Login: 'Aanmelden',
+    login: 'aanmelden',
+    logout: 'afmelden',
     'Forgot Password' : 'Wachwoord vergeten',
     'Create an account' : 'Een account maken',
+    'Bad credentials': 'Ongeldige logingegevens.',
+    'User account blocked. Please retry in 15 minutes.': 'Account geblokkeerd. Probeert u het opnieuw over 15 minuten.',
 
     /* ========= */
     /* Main page */
@@ -55,6 +74,14 @@ messages_nl =
     'Request Account': 'Account aanvragen',
     'Required field': 'Veld is verplicht',
     'Input value is too long': 'Invoerwaarde is te lang',
+    
+    /* ================= */
+    /* Email validation  */
+    /* ================= */
+    
+    'Account activation': 'Account activeren',
+    'Your account has been successfully activated': 'Uw account is succesvol geactiveerd',
+    'This link is not valid': 'Deze link is niet geldig',
 
     /* ================= */
     /* Profile           */
@@ -86,6 +113,26 @@ messages_nl =
     'Send email': 'Stuur email',
     'An email has been sent to': 'We hebben een email gestuurd naar',
     'with instructions on how to reset your password': 'met instructies om uw wachtwoord te resetten',
+
+    /* ===================== */
+    /* Request Overview      */
+    /* ===================== */
+    'Overview': 'Overzicht',
+    'Create New Request': 'Nieuw Aanvraag',
+    'Title': 'Titel',
+    'Status': 'Status',
+    'Created Date': 'Overview',
+    'Requester': 'Aanvrager',
+    'Assignee': 'Gevolmachtigde',
+    'Actions': 'Acties',
+    'Details': 'Details',
+    'Claim': 'Opeis',
+    'Edit': 'Bewerk',
+    'Delete': 'Verwijder',
+    'Filter by Title': 'Filteren door Titel',
+    'Filter by Status': 'Filteren door Status',
+    'Filter by Requester': 'Filteren door Aanvrager',
+    'Filter by Asignee': 'Filteren door Gevolmachtigde',
 
     null : null
 }

@@ -11,21 +11,28 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
-            <ul ng-if="authenticated" class="nav navbar-nav">
-                <li ng-show="authenticated" class="{{$route.current.templateUrl=='dashboard/workflow.html' ? 'active': ''}}">
+            <ul ng-if="authenticated" class="nav navbar-nav" >
+                <li ng-show="isViewRequestsAllowed();" class="{{$route.current.templateUrl=='request/workflow.html' ? 'active': ''}}">
                     <a href="#/">{{'Requests'|translate}}</a>
                 </li>
-            </ul>
-            <ul ng-if="authenticated && globals.currentUser.roles.indexOf('palga') != -1" class="nav navbar-nav">
-                <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">
+                <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">
                     <a href="#/users">{{'Users'|translate}}</a>
                 </li>
-                <li ng-show="authenticated" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
+                <li ng-show="isViewLabsAllowed();" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
                     <a href="#/labs">{{'Labs'|translate}}</a>
+                </li>
+                <li ng-show="isViewOwnLabAllowed();" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
+                    <a href="#/my-lab">{{'My Lab'|translate}}</a>
                 </li>
             </ul>
 
-            <ul ng-if="authenticated" class="nav navbar-nav navbar-right">
+            <ul ng-if="!authenticated" class="nav navbar-nav navbar-right">
+                <li><a href="" ng-click="login()"><span class="glyphicon glyphicon-log-in"></span>
+                    {{'login'|translate}}
+                </a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
                         {{ 'Language' | translate }}: {{currentLanguage}}
@@ -39,24 +46,23 @@
                         </a></li>
                     </ul>
                 </li>
-                <li ng-show="authenticated"   class="navbar-text"><span
-                        class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</li>
-                <li ng-show="authenticated"><a href="" ng-click="logout()"><span
-                        class="glyphicon glyphicon-log-out"></span> logout</a></li>
-                <li ng-show="authenticated" class="dropdown">
-                    <a class="dropdown-toggle" role="button" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-menu-hamburger"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
+                <li ng-show="authenticated"   class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</a>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
                         <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>
+                        <li>
+                            <a href="" ng-click="logout()">
+                                <span class="glyphicon glyphicon-log-out"></span> {{'logout'|translate}}
+                            </a>
+                        </li>
                     </ul>
                 </li>
+                <li>
+                    <a role="button">{{'About' | translate}}</a>
+                </li>
             </ul>
-            <ul ng-if="!authenticated" class="nav navbar-nav navbar-right">
-                <li><a href="" ng-click="login()"><span
-                        class="glyphicon glyphicon-log-in"></span> login</a></li>
-            </ul>
+            &nbsp;
         </div>
     </div>
 </nav>

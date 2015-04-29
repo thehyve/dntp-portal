@@ -1,0 +1,116 @@
+<div class="container-fluid">
+    <div class="row">
+
+        <!--Side Bar-->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#/">{{'Overview'|translate}} <span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
+
+        <div ng-show="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{'Not logged in'|translate}}.
+            </div>
+        </div>
+
+        <div ng-if="authenticated">
+
+            <div ng-controller="AdminUserController" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+                <div class="alert alert-danger" role="alert" ng-show="error.length" id="error">
+                    {{error|translate}}.
+                </div>
+
+                <h1>{{ 'Users' | translate }}</h1>
+                <hr>
+
+                <div ng-hide="error">
+
+                    <div class="input-group">
+                        <button class="btn btn-info" ng-click="add()" title="Add user">
+                            <span class="glyphicon glyphicon-plus"></span> add user
+                        </button>
+                    </div>
+
+                    <p></p>
+
+                    <div class="alert alert-info" role="alert" ng-hide="users.length">
+                        There are no users yet.
+                    </div>
+
+                    <table st-table="displayedCollection" st-safe-src="users" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th st-sort="getters.lastName">{{'Name'|translate}}</th>
+                            <th st-sort="username">{{'Email'|translate}}</th>
+                            <th st-sort="currentRole">{{'Role'|translate}}</th>
+                            <th st-sort="institute">{{'Institute'|translate}}</th>
+                            <th st-sort="labId">{{'Lab'|translate}}</th>
+                            <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="7"><input st-search="" class="form-control" placeholder="global search ..."
+                                                   type="text"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="user in displayedCollection">
+                            <td>{{user.firstName}} {{user.lastName}}</td>
+                            <td>{{user.username}}</td>
+                            <td>{{user.currentRole}}</td>
+                            <td>{{user.institute}}</td>
+                            <td>{{labmap[user.labId].name}}</td>
+                            <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
+                                &nbsp;&nbsp;
+                                {{user.created | date: 'HH:mm'}}
+                            </td>
+                            <td>
+            <span class="pull-right">
+            <span class="btn-group">
+                <button class="btn btn-default" type="button" title="Edit" ng-click="edit(user)">
+                    Edit
+                </button>
+                <button class="btn btn-default {{user.active ? 'disabled' : ''}}" type="button" title="Activate"
+                        ng-click="activate(user)">
+                    Activate
+                </button>
+                <button class="btn btn-default {{user.active ? '' : 'disabled'}}" type="button" title="Dectivate"
+                        ng-click="deactivate(user)">
+                    Deactivate
+                </button>
+                <button class="btn btn-default" type="button" title="Remove"
+                        ng-click="remove(user)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </span>
+            </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+        </div>
+        <!-- end row-->
+    </div>
+    <!-- end container-->
+
+
+    <div class="page-header">
+        <h2>{{'Users'|translate}}</h2>
+    </div>
+    <div ng-show="!authenticated">
+        <div class="alert alert-danger" role="alert">
+            {{'Not logged in'|translate}}.
+        </div>
+    </div>
+
+    <div ng-if="authenticated">
+
+
+    </div>

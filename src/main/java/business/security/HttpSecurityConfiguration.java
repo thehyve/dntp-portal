@@ -9,9 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import business.models.Role;
-import business.models.User;
-import business.models.UserRepository;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -19,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -33,19 +32,25 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
+import business.models.Role;
+import business.models.User;
+import business.models.UserRepository;
+
 @Configuration
 @EnableWebSecurity
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class HttpSecurityConfiguration extends
         WebSecurityConfigurerAdapter {
 
+    Log log = LogFactory.getLog(getClass());
+    
     private AuthenticationFailureHandler authenticationFailureHandler = new AuthenticationFailureHandler() {
         @Override
-        public void onAuthenticationFailure(HttpServletRequest arg0,
-                HttpServletResponse arg1, AuthenticationException arg2)
+        public void onAuthenticationFailure(HttpServletRequest request,
+                HttpServletResponse response, AuthenticationException e)
                 throws IOException, ServletException {
             StringBuilder sb = new StringBuilder();
-            for (Entry<String, String[]> entry : arg0.getParameterMap()
+            for (Entry<String, String[]> entry : request.getParameterMap()
                     .entrySet()) {
                 sb.append(entry.getKey()).append(":");
                 for (String s : entry.getValue()) {
@@ -53,9 +58,9 @@ public class HttpSecurityConfiguration extends
                 }
                 sb.append(", ");
             }
-            LogFactory.getLog(getClass()).info(
-                    "Authentication failure: " + sb.toString()
-                            + arg2.getMessage());
+            log.info("Authentication failure: " + sb.toString()
+                            + e.getMessage());
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         }
     };
 
@@ -91,6 +96,7 @@ public class HttpSecurityConfiguration extends
                 ).permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/register/users/activate/**").permitAll()
             .anyRequest()
                 .authenticated()
                 .and()
@@ -109,8 +115,7 @@ public class HttpSecurityConfiguration extends
             @Override
             public UserDetails loadUserByUsername(String username)
                     throws UsernameNotFoundException {
-                LogFactory.getLog(getClass()).info(
-                        "loadUserByUsername: " + username);
+                log.info("loadUserByUsername: " + username);
                 User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(username);
                 if (user != null) {
                     List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
@@ -123,7 +128,7 @@ public class HttpSecurityConfiguration extends
                             true, true, authorityList);
                 } else {
                     throw new UsernameNotFoundException(
-                            "could not find the user '" + username + "'");
+                            "Could not find the user '" + username + "'.");
                 }
             }
         };

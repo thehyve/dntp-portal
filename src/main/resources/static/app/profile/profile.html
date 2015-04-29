@@ -1,0 +1,91 @@
+<div ng-controller="ProfileController">
+<div class="container">
+
+    <h2>{{ 'Profile' | translate }}</h2>
+    <hr>
+    <h2 ng-show="!loaded">Loading</h2>
+    <form class="form-horizontal" role="form" name="profileForm" ng-show="loaded" novalidate>
+        <div class="alert alert-success" role="alert">
+            {{ 'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA' | translate }}
+        </div>
+    
+    
+        <!-- First Name -->
+        <div class="form-group" ng-class="{ 'has-error' : (registrationForm.firstName.$invalid || registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
+            <label class="control-label col-sm-2" for="firstName">{{ 'First name' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="firstName" ng-model="user.firstName" disabled>
+            </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="lastName">{{ 'Last name' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="lastName" ng-model="user.lastName" disabled>
+            </div>
+        </div>
+
+        <!-- E-mail -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">{{ 'E-mail' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="email" ng-model="user.contactData.email" disabled>
+            </div>
+        </div>
+
+        <!-- Telephone -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="telephone">{{ 'Telephone' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="telephone" ng-model="user.contactData.telephone">
+            </div>
+        </div>
+
+        <!-- Institute -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="institute">{{ 'Institute' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="institute" ng-model="user.institute" disabled>
+            </div>
+        </div>
+
+        <!-- Specialism -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="specialism">{{ 'Specialism' | translate }}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="specialism" ng-model="user.specialism" disabled>
+            </div>
+        </div>
+
+        <!-- Pathology Dept. Member -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="isPathologist">
+                &nbsp;
+            </label>
+            <div class="col-sm-10">
+                <input type="checkbox" id="isPathologyLabMember" ng-model="user.pathologist" disabled>
+                &nbsp; {{ 'I am member of a pathology department' | translate }}
+            </div>
+            <div class="col-sm-10">
+                <br>
+                <em>Department</em>:
+                <p ng-repeat="lab in labs" ng-if="user.labId==lab.id">{{lab.name}}</p>
+            </div>
+        </div>
+        <div class="alert alert-success" ng-show="success">
+            {{ 'Your profile has been updated' | translate }}!
+        </div>
+        <br>
+
+        <!-- Submit -->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" ng-disabled="registrationForm.$invalid || submitted" ng-click="submitForm()">{{ 'Update' | translate }}</button>
+                <span class="label label-success" ng-show="submitted">{{ 'Loading' | translate }}...</span>
+            </div>
+        </div>
+    </form>
+
+</div>
+</div>

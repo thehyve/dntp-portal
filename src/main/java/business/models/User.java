@@ -5,7 +5,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "appUser")
@@ -16,12 +24,16 @@ public class User implements Serializable {
     @Id
     @GeneratedValue
     private Long id;    
-    @Column(unique = true)
     private String username;
     private String password;
     private boolean active = true;
     private boolean deleted = false;
+    private boolean emailValidated = false;
 
+    private long failedLoginAttempts = 0;
+    private boolean accountTemporarilyBlocked = false;
+    private Date accountBlockStartTime;
+    
     private String firstName = "";
     private String lastName = "";
     boolean isPathologist = false;
@@ -39,9 +51,7 @@ public class User implements Serializable {
     
     private Date created = new Date();
     
-    public User() {
-        
-    }
+    public User() {}
     
     public User(String username, String password, boolean active,
             Set<Role> roles) {
@@ -172,6 +182,10 @@ public class User implements Serializable {
     public Set<Role> getRoles() {
         return roles;
     }
+    
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public void clearPassword() {
         this.password = ""; 
@@ -198,4 +212,42 @@ public class User implements Serializable {
         this.created = created;
     }
 
+    public Date getAccountBlockStartTime() {
+        return accountBlockStartTime;
+    }
+
+    public void setAccountBlockStartTime(Date accountBlockStartTime) {
+        this.accountBlockStartTime = accountBlockStartTime;
+    }
+
+    public long getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void incrementFailedLoginAttempts() {
+        if (this.failedLoginAttempts < Long.MAX_VALUE) {
+            this.failedLoginAttempts++;
+        }
+    }
+
+    public boolean isEmailValidated() {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(boolean emailValidated) {
+        this.emailValidated = emailValidated;
+    }
+
+    public void resetFailedLoginAttempts() {
+        this.failedLoginAttempts = 0;
+    }
+
+    public boolean isAccountTemporarilyBlocked() {
+        return accountTemporarilyBlocked;
+    }
+
+    public void setAccountTemporarilyBlocked(boolean accountTemporarilyBlocked) {
+        this.accountTemporarilyBlocked = accountTemporarilyBlocked;
+    }
+    
 }

@@ -92,6 +92,7 @@ public class HttpSecurityConfiguration extends
                         "/bower_components/**",
                         "/app/**",
                         "/messages/**",
+                        "/css/**",
                         "/images/**"
                 ).permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users").permitAll()

@@ -28,6 +28,8 @@
             <!--Descriptions-->
             <activiti:formProperty id="title" name="Title" type="string" variable="title"
                                    required="true"></activiti:formProperty>
+            <activiti:formProperty id="background" name="Background" type="string"
+                                   variable="background" required="true"></activiti:formProperty>
             <activiti:formProperty id="research_question" name="Research Question" type="string"
                                    variable="research_question" required="true"></activiti:formProperty>
             <activiti:formProperty id="hypothesis" name="Hypothesis" type="string" variable="hypothesis"

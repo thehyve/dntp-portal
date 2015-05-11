@@ -204,6 +204,7 @@ public class RequestController {
 
             request.setContactPersonName((String)variables.get("contact_person_name"));
             request.setTitle((String)variables.get("title"));
+            request.setBackground((String)variables.get("background"));
             request.setResearchQuestion((String)variables.get("research_question"));
             request.setHypothesis((String) variables.get("hypothesis"));
             request.setMethods((String) variables.get("methods"));
@@ -347,6 +348,7 @@ public class RequestController {
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             variables.put("title", request.getTitle());
+            variables.put("background", request.getBackground());
             variables.put("research_question", request.getResearchQuestion());
             variables.put("hypothesis", request.getHypothesis());
             variables.put("methods", request.getMethods());
@@ -742,6 +744,7 @@ public class RequestController {
                 +   "Requester: %s\n"
                 +   "Principal Investigator: %s\n"
                 +   "Title: %s\n"
+                +   "\nBackground:\n%s\n"
                 +   "\nResearch Question:\n%s\n"
                 +   "\nHypothesis:\n%s\n"
                 +   "\nMethods:\n%s\n"
@@ -751,6 +754,7 @@ public class RequestController {
                     request.getRequesterName(),
                     request.getContactPersonName(),
                     request.getTitle(),
+                    request.getBackground(),
                     request.getResearchQuestion(),
                     request.getHypothesis(),
                     request.getMethods()

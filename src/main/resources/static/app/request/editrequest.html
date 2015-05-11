@@ -1,7 +1,7 @@
 <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form class="form-horizontal" role="form" name="requestEditForm" ng-submit="update(request)" novalidate>
+            <form class="form-horizontal" role="form" name="requestEditForm" novalidate>
                 <div class="modal-header">
                     <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'New Request' | translate }}</h3>
                     <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit Request' | translate }}: {{request.title}}</h3>
@@ -33,6 +33,17 @@
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Background -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.background.$invalid || requestEditForm.background.$error.required) && requestEditForm.background.$dirty }">
+                        <label class="control-label col-sm-3" for="background">{{ 'Background' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="background" name="background" placeholder="{{ 'Background' | translate }}"
+                            ng-model="request.background" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
                     </div>
 
@@ -480,7 +491,7 @@
 
                 <!-- There are no privacy issues or the privacy committee has approved. -->
                 <div class="form-group" ng-class="">
-                    <label class="control-label col-sm-3" for="privacyCommiteeApproved">
+                    <label class="control-label col-sm-3" for="privacyCommitteeApproved">
                         &nbsp;
                     </label>
                     <div class="col-sm-8">
@@ -526,9 +537,10 @@
                         ">
                             {{'Reject'|translate}}
                     </button>
-                    <button class="btn btn-info" type="submit"
+                    <button class="btn btn-info" type="submit" ng-click="update(request);"
                             ng-disabled="requestEditForm.$invalid">{{'Save'|translate}}</button>
-                    <button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>
+                    <!--<button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>-->
+                    <button class="btn btn-default" ng-click="cancel(request);">{{'Cancel'|translate}}</button>
                 </div>
             </form>
         </div>

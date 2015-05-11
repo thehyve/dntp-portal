@@ -6,10 +6,7 @@
             FlowOptionService, $routeParams) {
 
         $scope.error = "";
-
-        $scope.login = function() {
-            $location.path("/login");
-        };
+        $scope.tempRequest = null;
 
         if ($routeParams.requestId) {
             if (!$scope.requests) {
@@ -21,8 +18,7 @@
             Request.get({id:$routeParams.requestId}, function (req) {
                 req.type = Request.convertRequestOptsToType(req);
                 $scope.request = req;
-                //console.log("current req is", req);
-                console.log("current req is", req);
+                $scope.tempRequest = $scope.request; // preserve original request
             }, function(response) {
                 if (response.data) {
                     $scope.error = response.data.message + "\n";
@@ -47,6 +43,10 @@
                     $scope.login();
                 }
             });
+        };
+
+        $scope.login = function() {
+            $location.path("/login");
         };
 
         $scope.isMaterialNeeded = function (request) {
@@ -94,11 +94,8 @@
                     break;
                 }
             }
-            //console.log("Updating request at index: " + index);
             $scope.requests[index] = result;
-
             $route.reload();
-
             $scope.request = result;
         };
 
@@ -255,22 +252,35 @@
             } else {
                 flow.upload();
             }
-        }
+        };
 
         $scope.view = function(request) {
             $location.path("/request/view/" + request.processInstanceId);
         };
 
-        $scope.edit = function(request) {
-            if ($scope.viewRequestModal) {
-                $scope.viewRequestModal.hide();
+        $scope.cancel = function (request) {
+            if ($scope.tempRequest == null) {
+                request.$remove(function (result) {
+                    $scope.requests.splice($scope.requests.indexOf(request), 1);
+                    //bootbox.alert("Request " + request.processInstanceId + " deleted.");
+                    $scope.refresh(request, result);
+                }, function (response) {
+                    $scope.error = response.statusText;
+                });
+            } else {
+                // reverse request to the original
+                $scope.request = $scope.tempRequest;
             }
+            $scope.editRequestModal.hide();
+        };
+
+        $scope.edit = function(request) {
 
             if (request) {
-
                 Request.get({id:request.processInstanceId}, function (data) {
                     data.type = Request.convertRequestOptsToType(data);
                     $scope.request = data;
+                    $scope.tempRequest = data;
 
                     if ($scope.globals.currentUser.roles.indexOf('scientific_council') != -1) {
                         if (!$scope.request.approvalVotes) {
@@ -287,7 +297,7 @@
                     if (data.returnDate == null) {
                         data.returnDate = new Date();
                     }
-                    $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html'});
+                    $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html', backdrop: 'static'});
                 });
             }
         };
@@ -319,7 +329,7 @@
         }
 
         $scope.addComment = function(request, body) {
-            comment = new RequestComment(body);
+            var comment = new RequestComment(body);
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
                 request.comments.push(result);
@@ -330,7 +340,7 @@
         }
 
         $scope.updateComment = function(request, body) {
-            comment = new RequestComment(body);
+            var comment = new RequestComment(body);
             comment.$update(function(result) {
                 index = $scope.request.comments.indexOf(body);
                 //console.log("Updating comment at index " + index);
@@ -352,7 +362,7 @@
         };
 
         $scope.addApprovalComment = function(request, body) {
-            comment = new ApprovalComment(body);
+            var comment = new ApprovalComment(body);
             comment.processInstanceId = request.processInstanceId;
             comment.$save(function(result) {
                 request.approvalComments.push(result);
@@ -363,7 +373,7 @@
         }
 
         $scope.updateApprovalComment = function(request, body) {
-            comment = new ApprovalComment(body);
+            var comment = new ApprovalComment(body);
             comment.$update(function(result) {
                 index = $scope.request.approvalComments.indexOf(body);
                 //console.log("Updating comment at index " + index);
@@ -402,7 +412,7 @@
             return user.firstName
                 + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ")
                 + (user.lastName==null ? "" : user.lastName);
-        }
+        };
 
         $scope.size = function(obj) {
             var size = 0, key;
@@ -449,6 +459,7 @@
     var FormDataController = function($scope, FormFata) {
 
         $scope.update = function(formData) {
+            console.log("sdsd");
             alert(formData.name + ': ' + formData.value);
             formData.$update();
         };

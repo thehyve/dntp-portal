@@ -6,7 +6,7 @@
             FlowOptionService, $routeParams) {
 
         $scope.error = "";
-        $scope.tempRequest = null;
+        $rootScope.tempRequest = null;
 
         if ($routeParams.requestId) {
             if (!$scope.requests) {
@@ -18,7 +18,7 @@
             Request.get({id:$routeParams.requestId}, function (req) {
                 req.type = Request.convertRequestOptsToType(req);
                 $scope.request = req;
-                $scope.tempRequest = $scope.request; // preserve original request
+                $rootScope.tempRequest = $scope.request; // preserve original request
             }, function(response) {
                 if (response.data) {
                     $scope.error = response.data.message + "\n";
@@ -259,7 +259,7 @@
         };
 
         $scope.cancel = function (request) {
-            if ($scope.tempRequest == null) {
+            if ($rootScope.tempRequest.title == null) {
                 request.$remove(function (result) {
                     $scope.requests.splice($scope.requests.indexOf(request), 1);
                     //bootbox.alert("Request " + request.processInstanceId + " deleted.");
@@ -269,7 +269,7 @@
                 });
             } else {
                 // reverse request to the original
-                $scope.request = $scope.tempRequest;
+                $scope.request = $rootScope.tempRequest;
             }
             $scope.editRequestModal.hide();
         };
@@ -280,7 +280,7 @@
                 Request.get({id:request.processInstanceId}, function (data) {
                     data.type = Request.convertRequestOptsToType(data);
                     $scope.request = data;
-                    $scope.tempRequest = data;
+                    $rootScope.tempRequest = data;
 
                     if ($scope.globals.currentUser.roles.indexOf('scientific_council') != -1) {
                         if (!$scope.request.approvalVotes) {
@@ -314,7 +314,7 @@
             }, function(response) {
                 $scope.error = response.statusText;
             });
-        }
+        };
 
         $scope.unclaim = function(request) {
             request.$unclaim(function(result) {
@@ -326,7 +326,7 @@
 
         $scope.focus = function (el) {
             $(el).focus();
-        }
+        };
 
         $scope.addComment = function(request, body) {
             var comment = new RequestComment(body);
@@ -352,7 +352,6 @@
         };
 
         $scope.removeComment = function(comment) {
-            console.log("removeComment");
             new RequestComment(comment).$remove(function(result) {
                 $scope.request.comments.splice(
                         $scope.request.comments.indexOf(comment), 1);
@@ -459,7 +458,6 @@
     var FormDataController = function($scope, FormFata) {
 
         $scope.update = function(formData) {
-            console.log("sdsd");
             alert(formData.name + ': ' + formData.value);
             formData.$update();
         };

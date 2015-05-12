@@ -95,6 +95,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             log.info("Task: " + task);
             return (task != null);
         } 
+        else if ("isLabuser".equals(permission)) 
+        {
+            log.info("isLabuser: user = " + user.getId());
+            return user.isLabUser();
+        } 
         else 
         {
             throw new InvalidPermissionExpression();

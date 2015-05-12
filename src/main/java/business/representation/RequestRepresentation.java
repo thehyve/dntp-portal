@@ -4,10 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.rest.core.annotation.RestResource;
-
 import business.models.Lab;
-import business.models.RequestProperties;
 
 public class RequestRepresentation {
 

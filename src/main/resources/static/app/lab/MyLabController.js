@@ -19,7 +19,7 @@ angular.module('ProcessApp.controllers')
                 });
 
             $scope.update = function () {
-                $scope.editlab.save()
+                Restangular.one('lab').customPUT($scope.editlab, '')
                     .then(function (){
                         $scope.alerts.push({type: 'success', msg: 'Your lab credentials has been successfully updated.' });
                     }, function (e) {

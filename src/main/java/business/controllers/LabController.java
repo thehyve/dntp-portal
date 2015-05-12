@@ -103,6 +103,7 @@ public class LabController {
     
     @RequestMapping(value = "/lab", method = RequestMethod.GET)
     public Lab getLab(UserAuthenticationToken token) {
+        log.info("GET /lab");
         User user = token.getUser();
         if (user != null && user.isLabUser()) {
             if (user.getLab() == null) {
@@ -113,11 +114,10 @@ public class LabController {
         throw new UserUnauthorised("User not authorised to fetch lab information.");
     }
     
-    @PreAuthorize("isAuthenticated() and hasPermission('isLabuser')")
-    @RequestMapping(value = "/lab", method = RequestMethod.PUT,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("isAuthenticated() and hasRole('lab_user')")
+    @RequestMapping(value = "/lab", method = RequestMethod.PUT)
     public Lab updateLab(UserAuthenticationToken token, @RequestBody Lab body) {
-        log.info("PUT /lab " + body.getNumber());
+        log.info("PUT /lab");
         User user = token.getUser();
         if (user != null && user.isLabUser()) {
             if (user.getLab() == null) {

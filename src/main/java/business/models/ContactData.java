@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.springframework.data.rest.core.annotation.RestResource;
-
 @Entity
 public class ContactData {
 

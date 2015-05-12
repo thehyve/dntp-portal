@@ -25,6 +25,7 @@ public class RequestRepresentation {
     private Date dateAssigned;
 
     private String title;
+    private String background;
     private String researchQuestion;
     private String hypothesis;
     private String methods;
@@ -131,6 +132,14 @@ public class RequestRepresentation {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 
     public String getResearchQuestion() {

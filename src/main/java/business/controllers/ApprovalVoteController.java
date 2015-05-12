@@ -20,10 +20,10 @@ import business.models.ApprovalVote;
 import business.models.ApprovalVote.Value;
 import business.models.ApprovalVoteRepository;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesService;
 import business.models.User;
 import business.representation.ApprovalVoteRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.RequestPropertiesService;
 
 @RestController
 public class ApprovalVoteController {

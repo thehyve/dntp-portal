@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import business.models.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import business.models.UserService.EmailAddressNotUnique;
 import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.UserService;
+import business.services.UserService.EmailAddressNotUnique;
 
 import javax.validation.constraints.NotNull;
 

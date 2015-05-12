@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import business.models.Comment;
 import business.models.CommentRepository;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesService;
 import business.representation.CommentRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.RequestPropertiesService;
 
 @RestController
 public class CommentController {

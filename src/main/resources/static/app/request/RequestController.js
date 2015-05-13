@@ -51,6 +51,11 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.popover = {
+                "title": "Info",
+                "content": ''
+            };
+
             $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {
                 if (!isOnlyResetReason) {
                     request.linkageWithPersonalDataNotes = "";

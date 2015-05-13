@@ -9,11 +9,11 @@
                                    "mgcrea.ngStrap",
                                    "ngResource", "ngRoute", "ngCookies",
                                    "pascalprecht.translate",
-                                   "smart-table",
+                                   "smart-table", "ngSanitize",
                                    "ProcessApp.services",
                                    "ProcessApp.controllers",
                                    "ProcessApp.directives"])
-        .config(function($routeProvider, $translateProvider) {
+        .config(function($routeProvider, $translateProvider, $popoverProvider) {
 
             $routeProvider.when('/', {
                 templateUrl : 'app/request/requests.html',
@@ -57,9 +57,17 @@
                 controller : 'ProfileController'
             }).otherwise('/');
 
+            // default lang settings for the localization
             $translateProvider.translations('en', messages_en)
                               .translations('nl', messages_nl);
             $translateProvider.preferredLanguage('en');
+
+            // default popover setting to have html friendly content
+            angular.extend($popoverProvider.defaults, {
+                html: true,
+                trigger: 'hover'
+            });
+
         })
 
         .run(['$rootScope', '$location', '$cookieStore', '$http',

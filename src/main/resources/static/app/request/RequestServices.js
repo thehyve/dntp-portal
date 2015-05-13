@@ -37,9 +37,6 @@
             }
         });
 
-        _requestFactory.isMaterialNeeded = function (request) {
-            return request.materialsRequest ? true : false;
-        };
 
         _requestFactory.convertRequestTypeToOpts = function (request) {
             var _type = request.type;
@@ -180,6 +177,7 @@
 
         });
     };
+
     RequestAttachmentFactory.$inject = [ '$resource' ];
     angular.module("ProcessApp.services").factory("RequestAttachment", RequestAttachmentFactory);
 

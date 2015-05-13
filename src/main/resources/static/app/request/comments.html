@@ -1,0 +1,65 @@
+<div ng-controller="RequestCommentController">
+    <h3>
+        {{'Notes'|translate}}
+        <span class="badge">{{request.comments.length}}</span>
+    </h3>
+    <hr>
+
+    <div>
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="comment in request.comments">
+                <p><div ng-show="!comment_edit_visibility[comment.id]">{{comment.contents}}</div>
+                <div ng-show="comment_edit_visibility[comment.id]">
+                                   <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add note'|translate}}"
+                                             ng-model="comment.contents">
+                                   </textarea>
+                    <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
+                            ng-click="updateComment(request, comment)">
+                        {{'Update note'|translate}}
+                    </button>
+                </div>
+                                <span class="pull-right">
+                                    <span class="btn-group btn-group-xs">
+                                        <button class="btn btn-info" type="button" title="Edit"
+                                                ng-click="comment_edit_visibility[comment.id] = 1">
+                                            <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                        </button>
+                                        <button class="btn btn-danger" type="button" title="Delete"
+                                                ng-click="removeComment(comment)">
+                                            <span><i class="glyphicon glyphicon-remove-circle"></i></span>
+                                        </button>
+                                    </span>
+                                </span>
+                </p>
+                <p>
+                    <small>
+                        <span><i class="glyphicon glyphicon-user"></i></span>
+                        <em>{{getName(comment.creator)}}</em>
+                        &nbsp;
+                        <span><i class="glyphicon glyphicon-time"></i></span>
+                        <span>{{comment.timeCreated | date: 'EEE dd MMMM yyyy  HH:mm'}}</span>
+                        <span ng-if="comment.timeEdited != comment.timeCreated">(Last edited: {{comment.timeEdited | date: 'EEE dd MMMM yyyy  HH:mm'}})</span>
+                    </small>
+                </p>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Add comment -->
+    <input type="hidden" ng-model="edit_comment.processInstanceId" value="{{request.processInstanceId}}">
+    <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
+              ng-model="edit_comment.contents">
+                    </textarea>
+    <br>
+    <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
+            ng-click="addComment(request, edit_comment)"
+            ng-if="!edit_comment.id">
+        {{'Add note'|translate}}
+    </button>
+    <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
+            ng-click="updateComment(request, edit_comment)"
+            ng-if="edit_comment.id">
+        {{'Update note'|translate}}
+    </button>
+</div>
+

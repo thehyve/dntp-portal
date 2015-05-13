@@ -14,6 +14,8 @@ body {
     padding-top: 50px;
 }
 
+h1, h2, h3 { color: steelblue; }
+h3 { color: #949494; }
 
 /*
  * Global add-ons

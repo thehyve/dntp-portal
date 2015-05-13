@@ -51,15 +51,16 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            $scope.login = function() {
-                $location.path("/login");
+            $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {
+                if (!isOnlyResetReason) {
+                    request.linkageWithPersonalDataNotes = "";
+                    request.informedConsent = false;
+                }
+                request.reasonUsingPersonalData = "";
             };
 
-            $scope.resetDataLinkage = function (request) {
-                request.linkageWithPersonalData = false;
-                request.linkageWithPersonalDataNotes = "";
-                request.informedConsent = false;
-                request.reasonUsingPersonalData = "";
+            $scope.login = function() {
+                $location.path("/login");
             };
 
             $scope.flow_options = function(options) {

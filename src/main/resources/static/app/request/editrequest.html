@@ -102,8 +102,8 @@
                             {{'Data linkage' | translate}}
                         </label>
                         <div class="col-sm-8">
-                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData"> {{'Linkage with own or external personal data' | translate}} <br>
-                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData"> {{'No data linkage required' | translate}} <br>
+                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData" > {{'Linkage with own or external personal data' | translate}} <br>
+                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);"> {{'No data linkage required' | translate}} <br>
                         </div>
                     </div>
 
@@ -127,18 +127,18 @@
                             {{'Informed Consent' | translate}}
                         </label>
                         <div class="col-sm-8">
-                            <input type="radio" id="informedConsentYes" name="informedConsent" ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent"> {{'Yes' | translate}} <br>
+                            <input type="radio" id="informedConsentYes" name="informedConsent" ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);"> {{'Yes' | translate}} <br>
                             <input type="radio" id="informedConsentNo" name="informedConsent" ng-model="request.informedConsent" ng-value="false" ng-checked="!request.informedConsent"> {{'No' | translate}}
                         </div>
                     </div>
 
                     <!-- Reason Using Personal Data  -->
-                    <div class="form-group" ng-show="(request.type != 1 && request.linkageWithPersonalData) && !request.informedConsent"
+                    <div class="form-group" ng-show="(request.type != 1 && request.linkageWithPersonalData)"
                          ng-class="{ 'has-error' : requestEditForm.reasonUsingPersonalData.$invalid && requestEditForm.reasonUsingPersonalData.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Reason using personal data' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" placeholder="{{ 'Reason using personal data' | translate }}"
-                                  ng-model="request.reasonUsingPersonalData" ></textarea>
+                                  ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"></textarea>
                         </div>
                     </div>
 

@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,10 @@ import business.models.ApprovalVote;
 import business.models.ApprovalVote.Value;
 import business.models.ApprovalVoteRepository;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesService;
 import business.models.User;
 import business.representation.ApprovalVoteRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.RequestPropertiesService;
 
 @RestController
 public class ApprovalVoteController {
@@ -36,6 +37,8 @@ public class ApprovalVoteController {
     @Autowired
     private ApprovalVoteRepository approvalVoteRepository;
 
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/approvalVotes", method = RequestMethod.GET)
     public Map<Long, ApprovalVoteRepresentation> getVotes(
             UserAuthenticationToken user,
@@ -49,6 +52,7 @@ public class ApprovalVoteController {
         return votes;
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isScientificCouncil')")
     @RequestMapping(value = "/requests/{id}/approvalVotes", method = RequestMethod.POST)
     public ApprovalVoteRepresentation addVote(
             UserAuthenticationToken user,
@@ -79,6 +83,7 @@ public class ApprovalVoteController {
         }
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isScientificCouncil')")
     @RequestMapping(value = "/requests/{id}/approvalVotes/{voteId}", method = RequestMethod.PUT)
     public ApprovalVoteRepresentation updateVote(
             UserAuthenticationToken user,

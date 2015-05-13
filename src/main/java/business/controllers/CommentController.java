@@ -7,20 +7,20 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import business.exceptions.UpdateNotAllowed;
 import business.models.Comment;
 import business.models.CommentRepository;
 import business.models.RequestProperties;
-import business.models.RequestPropertiesService;
 import business.representation.CommentRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.RequestPropertiesService;
 
 @RestController
 public class CommentController {
@@ -33,6 +33,7 @@ public class CommentController {
     @Autowired
     private CommentRepository commentRepository;
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.GET)
     public List<CommentRepresentation> getComments(
             UserAuthenticationToken user,
@@ -46,6 +47,8 @@ public class CommentController {
         return comments;
     }
 
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.GET)
     public List<CommentRepresentation> getApprovalComments(
             UserAuthenticationToken user,
@@ -59,6 +62,7 @@ public class CommentController {
         return comments;
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
     public CommentRepresentation addComment(
             UserAuthenticationToken user,
@@ -74,6 +78,8 @@ public class CommentController {
         return new CommentRepresentation(comment);
     }
 
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.POST)
     public CommentRepresentation addApprovalComment(
             UserAuthenticationToken user,
@@ -89,14 +95,7 @@ public class CommentController {
         return new CommentRepresentation(comment);
     }
 
-    @ResponseStatus(value=HttpStatus.FORBIDDEN, reason="Update not allowed.")
-    public class UpdateNotAllowed extends RuntimeException {
-        private static final long serialVersionUID = 4000154580392628894L;
-        public UpdateNotAllowed() {
-            super("Update not allowed. Not the owner.");
-        }
-    }
-
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.PUT)
     public CommentRepresentation updateComment(
             UserAuthenticationToken user,
@@ -130,6 +129,8 @@ public class CommentController {
         requestPropertiesService.save(properties);
     }
 
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/approvalComments/{commentId}", method = RequestMethod.DELETE)
     public void removeApprovalComment(
             UserAuthenticationToken user,

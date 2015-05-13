@@ -4,10 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.rest.core.annotation.RestResource;
-
 import business.models.Lab;
-import business.models.RequestProperties;
 
 public class RequestRepresentation {
 
@@ -25,6 +22,7 @@ public class RequestRepresentation {
     private Date dateAssigned;
 
     private String title;
+    private String background;
     private String researchQuestion;
     private String hypothesis;
     private String methods;
@@ -131,6 +129,14 @@ public class RequestRepresentation {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 
     public String getResearchQuestion() {

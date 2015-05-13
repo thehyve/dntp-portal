@@ -1,10 +1,15 @@
 package business.controllers;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import business.models.*;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +27,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import business.models.UserService.EmailAddressNotUnique;
+import business.models.ActivationLink;
+import business.models.ActivationLinkRepository;
+import business.models.ContactData;
+import business.models.Lab;
+import business.models.LabRepository;
+import business.models.Role;
+import business.models.RoleRepository;
+import business.models.User;
+import business.models.UserRepository;
 import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
-
-import javax.validation.constraints.NotNull;
+import business.services.UserService;
+import business.services.UserService.EmailAddressNotUnique;
 
 @RestController
 public class UserController {
@@ -38,6 +51,10 @@ public class UserController {
 
     @Value("${dntp.server-port}")
     String serverPort;
+    
+    @Value("${dntp.activation-link.expiry-hours}")
+    @NotNull
+    Integer activationLinkExpiryHours;
     
     @Autowired
     UserRepository userRepository;
@@ -65,10 +82,11 @@ public class UserController {
 
     @RequestMapping(value = "/register/users/activate/{token}", method = RequestMethod.GET)
     public ResponseEntity<Object> activateUser(@PathVariable String token) {
+        log.info("activation link: expiry hours = " + activationLinkExpiryHours);
         ActivationLink link = activationLinkRepository.findByToken(token);
 
         // Check that the link has been issued in the previous week
-        if (link != null && TimeUnit.MILLISECONDS.toDays(new Date().getTime() - link.getCreationDate().getTime()) <= 7) {
+        if (link != null && TimeUnit.MILLISECONDS.toDays(new Date().getTime() - link.getCreationDate().getTime()) <= activationLinkExpiryHours) {
             User user = link.getUser();
             user.setEmailValidated(true);
             userRepository.save(user);

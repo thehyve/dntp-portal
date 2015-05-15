@@ -18,7 +18,7 @@
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Principal Investigator' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" placeholder="{{ 'Principal Investigator' | translate }}"
-                                   ng-model="request.contactPersonName" ng-maxlength="100">
+                                   ng-model="request.contactPersonName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                         </div>

@@ -42,11 +42,11 @@ public class UserService {
     }
     
     public User getOne(Long id) {
-        return userRepository.getOneByDeletedFalse(id);
+        return userRepository.getByIdAndDeletedFalse(id);
     }
 
     public User findOne(Long id) {
-        return userRepository.findOneByDeletedFalse(id);
+        return userRepository.findByIdAndDeletedFalse(id);
     }
     
     public List<User> findAll() {

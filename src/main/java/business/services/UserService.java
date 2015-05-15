@@ -1,5 +1,7 @@
 package business.services;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,22 @@ public class UserService {
             return result;
         }
         throw new EmailAddressNotUnique();
+    }
+    
+    public User findByUsername(String username) {
+        return userRepository.findByUsernameAndDeletedFalse(username);
+    }
+    
+    public User getOne(Long id) {
+        return userRepository.getOneByDeletedFalse(id);
+    }
+
+    public User findOne(Long id) {
+        return userRepository.findOneByDeletedFalse(id);
+    }
+    
+    public List<User> findAll() {
+        return userRepository.findByDeletedFalse();
     }
     
 }

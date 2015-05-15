@@ -81,7 +81,7 @@ public class UserController {
         ActivationLink link = activationLinkRepository.findByToken(token);
 
         // Check that the link has been issued in the previous week
-        if (link != null && TimeUnit.MILLISECONDS.toDays(new Date().getTime() - link.getCreationDate().getTime()) <= activationLinkExpiryHours) {
+        if (link != null && TimeUnit.MILLISECONDS.toHours(new Date().getTime() - link.getCreationDate().getTime()) <= activationLinkExpiryHours) {
             User user = link.getUser();
             user.setEmailValidated(true);
             userService.save(user);

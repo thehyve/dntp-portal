@@ -61,10 +61,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             String requestId = (String)targetDomainObject;
             log.info("requestAssignedToUser: user = " + user.getId()
                     + ", requestId = " + requestId);
-            Task task = taskService.createTaskQuery().processInstanceId(requestId)
+            long count = taskService.createTaskQuery().processInstanceId(requestId)
                     .active()
-                    .singleResult();
-            return task.getAssignee().equals(user.getId().toString());
+                    .taskAssignee(user.getId().toString())
+                    .count();
+            return (count > 0);
         } 
         else if ("isPalgaUser".equals(permission)) 
         {

@@ -9,12 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class ExcerptEntry implements Serializable {
+
+    private static final long serialVersionUID = -2703523787993359530L;
 
     @Id
     @GeneratedValue
@@ -25,6 +26,8 @@ public class ExcerptEntry implements Serializable {
     private String paNumber;
     
     private Integer sequenceNumber;
+    
+    private Boolean selected;
     
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ExcerptValue> values = new ArrayList<ExcerptValue>();
@@ -63,6 +66,14 @@ public class ExcerptEntry implements Serializable {
 
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+    
+    public boolean isSelected() {
+        return (selected != null && selected.booleanValue());
+    }
+
+    public void setSelected(@NotNull Boolean selected) {
+        this.selected = selected;
     }
 
     public List<ExcerptValue> getValues() {

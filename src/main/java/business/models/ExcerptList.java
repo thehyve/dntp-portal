@@ -37,7 +37,10 @@ public class ExcerptList implements Serializable {
     private int labNumberColumn = -1;
     
     private int paNumberColumn = -1;
-    
+
+    /**
+     * Maps sequence numbers to entries.
+     */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Map<Integer, ExcerptEntry> entries = new HashMap<Integer, ExcerptEntry>();
 
@@ -100,7 +103,14 @@ public class ExcerptList implements Serializable {
         }
     }
 
-    public Collection<ExcerptEntry> getEntries() {
+    /**
+     * Maps sequence numbers to entries.
+     */
+    public Map<Integer, ExcerptEntry> getEntries() {
+        return entries;
+    }
+    
+    public Collection<ExcerptEntry> getEntryValues() {
         return entries.values();
     }
 

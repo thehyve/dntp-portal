@@ -371,10 +371,18 @@
                 
                 <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
                      flow-name="excerptListFlow"
-                     flow-files-submitted="$flow.upload()"
+                     flow-files-submitted="$scope.fileupload_result = ''; $flow.upload()"
                      flow-file-success="fileuploadsuccess(request, $message)"
+                     flow-file-error="fileuploaderror($message)"
                      ng-if="globals.currentUser.roles.indexOf('palga') != -1"
                         >
+                    <div class="alert alert-success" role="alert" ng-show="fileupload_result == 'success'">
+                        {{ 'Excerpt list uploaded.' | translate }}
+                    </div>
+                    <div class="alert alert-danger" role="alert" ng-show="fileupload_result == 'error'">
+                        {{ 'Error uploading excerpt list.' | translate }}
+                    </div>
+                    
                     <div>
                         <span class="btn btn-default" flow-btn>{{'Upload excerpt list'|translate}}</span>
                     </div>
@@ -385,6 +393,14 @@
                          ng-style="style">
                         ({{'drag and drop your file here'|translate}})
                     </div>
+                </div>
+                
+                <div ng-if="request.excerptList && globals.currentUser.roles.indexOf('requester') != -1">
+                    <a ng-href="/#/request/{{request.processInstanceId}}/selection">
+                    <button type="button" class="btn btn-primary">
+                        Select PA numbers
+                    </button>
+                    </a>
                 </div>
                 
                 <h4>{{'Other data files'|translate}}</h4>

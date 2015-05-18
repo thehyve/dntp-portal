@@ -3,6 +3,7 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import business.models.Lab;
 
@@ -49,6 +50,8 @@ public class RequestRepresentation {
     private Map<Long, ApprovalVoteRepresentation> approvalVotes;
     
     private ExcerptListRepresentation excerptList;
+    
+    private Set<Integer> selectedLabs;
     
     // Palga specific
     private boolean requesterValid;
@@ -401,6 +404,14 @@ public class RequestRepresentation {
 
     public void setExcerptList(ExcerptListRepresentation excerptList) {
         this.excerptList = excerptList;
+    }
+    
+    public Set<Integer> getSelectedLabs() {
+        return selectedLabs;
+    }
+
+    public void setSelectedLabs(Set<Integer> selectedLabs) {
+        this.selectedLabs = selectedLabs;
     }
 
     public boolean isScientificCouncilApproved() {

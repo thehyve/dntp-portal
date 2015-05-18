@@ -5,9 +5,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
@@ -16,6 +18,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.DelegationState;
@@ -209,12 +212,54 @@ public class RequestController {
                     .includeProcessVariables()
                     .variableValueEquals("status", "Approval")
                     .list();
+        } else if (user.getUser().isLabUser()) {
+            List<Task> tasks = taskService
+                    .createTaskQuery()
+                    .processVariableValueEquals("lab", user.getUser().getLab().getNumber())
+                    .orderByTaskCreateTime()
+                    .desc()
+                    .list();
+            Set<String> processInstanceIds = new HashSet<String>();
+            for (Task task: tasks) {
+                processInstanceIds.add(task.getProcessInstanceId());
+            }
+            if (!processInstanceIds.isEmpty()) {
+                processInstances = runtimeService
+                        .createProcessInstanceQuery()
+                        .includeProcessVariables()
+                        .processInstanceIds(processInstanceIds)
+                        .list();
+            } else {
+                processInstances = new ArrayList<ProcessInstance>();
+            }
         } else {
+            
+            /*
             processInstances = runtimeService
                 .createProcessInstanceQuery()
                 .includeProcessVariables()
                 .involvedUser(user.getId().toString())
                 .list();
+                */
+            List<HistoricProcessInstance> historicInstances = 
+                    historyService.createHistoricProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .involvedUser(user.getId().toString())
+                    .orderByProcessInstanceStartTime()
+                    .desc()
+                    .list();
+            log.info("#historic instances: " + historicInstances.size());
+            processInstances = new ArrayList<ProcessInstance>();
+            for (HistoricProcessInstance hist: historicInstances) {
+                ProcessInstance instance =
+                    runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(hist.getId())
+                    .includeProcessVariables()
+                    .singleResult();
+                if (instance != null) {
+                    processInstances.add(instance);
+                }
+            }
         }
 
         List<RequestListRepresentation> result = new ArrayList<RequestListRepresentation>();
@@ -673,14 +718,15 @@ public class RequestController {
             properties = new RequestProperties();
             properties.setProcessInstanceId(id);
         }
+
+        // process list
+        ExcerptList list = excerptListService.processExcerptList(file);
+        // if not exception thrown, save list and attachment
         if (properties.getExcerptListAttachmentId() != null && !properties.getExcerptListAttachmentId().equals(attachmentId)) {
             log.info("Deleting attachment " + properties.getExcerptListAttachmentId());
             taskService.deleteAttachment(properties.getExcerptListAttachmentId());
         }
         properties.setExcerptListAttachmentId(attachmentId);
-        requestPropertiesService.save(properties);
-
-        ExcerptList list = excerptListService.processExcerptList(file);
         properties.setExcerptList(list);
         log.info("Saving excerpt list.");
         requestPropertiesService.save(properties);

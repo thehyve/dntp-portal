@@ -69,7 +69,7 @@ public class ExcerptListService {
         Writer writer = new PrintWriter(out);
         CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
         csvwriter.writeNext(list.getCsvColumnNames());
-        for (ExcerptEntry entry: list.getEntries()) {
+        for (ExcerptEntry entry: list.getEntryValues()) {
             csvwriter.writeNext(entry.getCsvValues());
         }
         try {

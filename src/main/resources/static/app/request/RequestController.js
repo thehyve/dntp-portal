@@ -30,6 +30,7 @@ angular.module('ProcessApp.controllers')
                         $scope.error = response.data.message + "\n";
                         if (response.data.error == 302) {
                             $scope.accessDenied = true;
+                            console.log("ACCESS DENIED");
                         }
                     } else {
                         $scope.login();
@@ -73,6 +74,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.fileuploadsuccess = function(request, data) {
+                $scope.fileupload_result = "success";
                 var result = new Request(JSON.parse(data));
                 //$scope.refresh(request, result);
                 request.attachments = result.attachments;
@@ -80,7 +82,11 @@ angular.module('ProcessApp.controllers')
                 request.excerptList = result.excerptList;
                 request.dataAttachments = result.dataAttachments;
             };
-
+            
+            $scope.fileuploaderror = function(data) {
+                $scope.fileupload_result = "error";
+            };
+            
             $scope.start = function() {
                 new Request().$save(function(request) {
                     $scope.requests.unshift(request);

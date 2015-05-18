@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import business.exceptions.InvalidPermissionExpression;
+import business.exceptions.NullIdentifier;
 import business.models.User;
 import business.representation.RequestRepresentation;
 import business.services.RequestFormService;
@@ -36,6 +37,12 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     
     Log log = LogFactory.getLog(getClass());
     
+    private void checkTargetDomainObjectNotNull(Object targetDomainObject) {
+        if (targetDomainObject == null) {
+            throw new NullIdentifier();
+        }
+    }
+    
     @Override
     public boolean hasPermission(Authentication authentication,
             Object targetDomainObject, Object permission) {
@@ -50,6 +57,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 + ", permission = " + permission.toString());
         if ("isAssignedToTask".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String taskId = (String)targetDomainObject;
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             log.info("isAssignedToTask: " + authentication.getName()
@@ -58,6 +66,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         } 
         else if ("requestAssignedToUser".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             log.info("requestAssignedToUser: user = " + user.getId()
                     + ", requestId = " + requestId);
@@ -76,7 +85,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
         else if ("isRequester".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
+            if (requestId == null)
             log.info("isRequester: user = " + user.getId()
                     + ", requestId = " + requestId);
             ProcessInstance instance = requestService.findProcessInstance(requestId);
@@ -86,6 +97,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         } 
         else if ("isScientificCouncil".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             log.info("isScientificCouncil: user = " + user.getId()
                     + ", requestId = " + requestId);

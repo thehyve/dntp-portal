@@ -86,8 +86,6 @@ angular.module('ProcessApp.controllers')
                 password: 'palga'
             };
 
-            $('#username').focus();
-
             $scope.login = function() {
                 $http.post('login', jQuery.param($scope.credentials), {
                     headers : {

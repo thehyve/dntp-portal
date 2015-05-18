@@ -216,8 +216,6 @@ public class RequestController {
             List<Task> tasks = taskService
                     .createTaskQuery()
                     .processVariableValueEquals("lab", user.getUser().getLab().getNumber())
-                    .orderByTaskCreateTime()
-                    .desc()
                     .list();
             Set<String> processInstanceIds = new HashSet<String>();
             for (Task task: tasks) {
@@ -776,7 +774,11 @@ public class RequestController {
     }
     
     @PreAuthorize("isAuthenticated() and "
-            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isRequester') or hasPermission(#id, 'isScientificCouncil'))")
+            + "(hasPermission(#id, 'isPalgaUser') "
+            + " or hasPermission(#id, 'isRequester') "
+            + " or hasPermission(#id, 'isScientificCouncil') "
+            + " or hasPermission(#id, 'isLabuser') "
+            + ")")
     @RequestMapping(value = "/requests/{id}/files/{attachmentId}", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> getFile(UserAuthenticationToken user, @PathVariable String id,
             @PathVariable String attachmentId) {

@@ -1,6 +1,7 @@
 package business.security;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -110,8 +111,18 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         } 
         else if ("isLabuser".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
             log.info("isLabuser: user = " + user.getId());
-            return user.isLabUser();
+            if (!user.isLabUser()) {
+                return false;
+            }
+            long count = taskService
+                    .createTaskQuery()
+                    .processInstanceId(requestId)
+                    .processVariableValueEquals("lab", user.getLab().getNumber())
+                    .count();
+            return (count > 0);
         } 
         else 
         {

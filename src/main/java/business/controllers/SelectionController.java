@@ -134,12 +134,16 @@ public class SelectionController {
     @RequestMapping(value = "/requests/{id}/submitExcerptSelection", method = RequestMethod.PUT)
     public RequestRepresentation submitExcerptSelection(
             UserAuthenticationToken user,
-            @PathVariable String id) {
+            @PathVariable String id,
+            @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/submitExcerptSelection");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         if (properties == null) {
             throw new RequestNotFound();
         }
+        
+        properties.setExcerptListRemark(body.getExcerptListRemark());
+        properties = requestPropertiesService.save(properties);
         
         // TODO: set lab numbers for creating lab requests.
         Set<Integer> selectedLabNumbers = new TreeSet<Integer>();

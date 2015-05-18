@@ -31,10 +31,19 @@ angular.module('ProcessApp.controllers')
             }
             
             $scope.submitExcerptSelection = function(request) {
-                request.$submitExcerptSelection(function(result) {
-                    console.log("Selection submitted: " + result);
-                }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                bootbox.prompt({
+                    title: "Are you sure you want to submit the selection?\n<br>"
+                    +"You may enter a remark:",
+                    callback: function(result) {
+                        if (result) {
+                            request.excerptListRemark = result;
+                            request.$submitExcerptSelection(function(result) {
+                                console.log("Selection submitted: " + result);
+                            }, function(response) {
+                                $scope.error = $scope.error + response.data.message + "\n";
+                            });
+                        }
+                    }
                 });
             }
 

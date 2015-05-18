@@ -73,6 +73,7 @@ public class RequestRepresentation {
     private String privacyCommitteeOutcomeRef;
     private String privacyCommitteeEmails;
 
+    private String excerptListRemark;
 
     public RequestRepresentation() {
 
@@ -468,6 +469,14 @@ public class RequestRepresentation {
 
     public void setRequester(ProfileRepresentation requester) {
         this.requester = requester;
+    }
+
+    public String getExcerptListRemark() {
+        return excerptListRemark;
+    }
+
+    public void setExcerptListRemark(String excerptListRemark) {
+        this.excerptListRemark = excerptListRemark;
     } 
     
 }

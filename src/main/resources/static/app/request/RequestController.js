@@ -73,8 +73,12 @@ angular.module('ProcessApp.controllers')
                 return FlowOptionService.get_default(options);
             };
 
-            $scope.fileuploadsuccess = function(request, data) {
-                $scope.fileupload_result = "success";
+            $scope.fileuploadsuccess = function(request, data, excerpts) {
+                if (excerpts) {
+                    $scope.excerptlist_upload_result = "success";
+                } else {
+                    $scope.fileupload_result = "success";
+                }
                 var result = new Request(JSON.parse(data));
                 //$scope.refresh(request, result);
                 request.attachments = result.attachments;
@@ -83,8 +87,12 @@ angular.module('ProcessApp.controllers')
                 request.dataAttachments = result.dataAttachments;
             };
             
-            $scope.fileuploaderror = function(data) {
-                $scope.fileupload_result = "error";
+            $scope.fileuploaderror = function(data, excerpts) {
+                if (excerpts) {
+                    $scope.excerptlist_upload_result = "error";
+                } else {
+                    $scope.fileupload_result = "error";
+                }
             };
             
             $scope.start = function() {

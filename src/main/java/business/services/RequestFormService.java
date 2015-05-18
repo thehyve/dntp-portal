@@ -282,6 +282,7 @@ public class RequestFormService {
                 Set<Integer> selectedLabSet = new TreeSet<Integer>();
                 for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
                 request.setSelectedLabs(selectedLabSet);
+                request.setExcerptListRemark(properties.getExcerptListRemark());
             }
             log.info("Not setting excerpt list.");
         }

@@ -80,8 +80,13 @@ public class UserController {
         log.info("activation link: expiry hours = " + activationLinkExpiryHours);
         ActivationLink link = activationLinkRepository.findByToken(token);
 
+        if (link == null) {
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
         // Check that the link has been issued in the previous week
-        if (link != null && TimeUnit.MILLISECONDS.toHours(new Date().getTime() - link.getCreationDate().getTime()) <= activationLinkExpiryHours) {
+        long linkAge = TimeUnit.MILLISECONDS.toHours(new Date().getTime() - link.getCreationDate().getTime()); // hours
+        log.info("activation link age in hours: " + linkAge);
+        if (linkAge <= activationLinkExpiryHours) {
             User user = link.getUser();
             user.setEmailValidated(true);
             userService.save(user);

@@ -1,0 +1,39 @@
+package business.controllers;
+
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import business.representation.LabRequestRepresentation;
+import business.security.UserAuthenticationToken;
+import business.services.LabRequestService;
+
+@RestController
+public class LabRequestController {
+
+    Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private LabRequestService labRequestService;
+    
+    @PreAuthorize("isAuthenticated() and ("
+            + "hasRole('requester')"
+            + " or "
+            + "hasRole('palga')"
+            + " or "
+            + "hasRole('lab_user')"
+            + ")")
+    @RequestMapping(value = "/labrequests", method = RequestMethod.GET)
+    public List<LabRequestRepresentation> getLabRequests(
+            UserAuthenticationToken user) {
+        log.info("GET /labrequests");
+        return labRequestService.findLabRequestsForUser(user.getUser());
+    }
+    
+}

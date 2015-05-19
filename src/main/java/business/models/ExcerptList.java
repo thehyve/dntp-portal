@@ -3,9 +3,9 @@ package business.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -42,7 +42,7 @@ public class ExcerptList implements Serializable {
      * Maps sequence numbers to entries.
      */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Map<Integer, ExcerptEntry> entries = new HashMap<Integer, ExcerptEntry>();
+    private Map<Integer, ExcerptEntry> entries = new TreeMap<Integer, ExcerptEntry>();
 
     public ExcerptList() {
         
@@ -68,6 +68,19 @@ public class ExcerptList implements Serializable {
         return result;
     }
 
+    public String[] getLabRequestColumnNames() {
+        String[] result = new String[columnNames.size() + 3];
+        result[0] = "Sequence number";
+        result[1] = "Lab";
+        result[2] = "PA number";
+        int i = 3;
+        for (String name: columnNames) {
+            result[i] = name;
+            i++;
+        }
+        return result;
+    }
+    
     public class InvalidHeader extends RuntimeException {
         private static final long serialVersionUID = 4962263427071738791L;
         

@@ -44,6 +44,15 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
     }
     
+    /**
+     * FIXME: documentation:
+     * - isAssignedToTask
+     * - requestAssignedToUser: hasPermission(#id, 'requestAssignedToUser')
+     * - isPalgaUser
+     * - isRequester
+     * - isScientificCouncil
+     * - isLabuser
+     */
     @Override
     public boolean hasPermission(Authentication authentication,
             Object targetDomainObject, Object permission) {

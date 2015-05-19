@@ -98,5 +98,18 @@ public class ExcerptEntry implements Serializable {
         }
         return result;
     }
+
+    public String[] getLabRequestValues() {
+        String[] result = new String[this.getValues().size() + 3];
+        result[0] = this.sequenceNumber.toString();
+        result[1] = this.labNumber.toString();
+        result[2] = this.paNumber;
+        int i = 3;
+        for (ExcerptValue value: this.getValues()) {
+            result[i] = value.getValue();
+            i++;
+        }
+        return result;
+    }
     
 }

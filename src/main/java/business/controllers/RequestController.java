@@ -136,6 +136,11 @@ public class RequestController {
             processInstances.addAll(runtimeService
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
+                    .variableValueEquals("status", "LabRequest")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
                     .variableValueEquals("status", "Rejected")
                     .list());
             processInstances.addAll(runtimeService
@@ -195,6 +200,11 @@ public class RequestController {
                     .createProcessInstanceQuery()
                     .includeProcessVariables()
                     .variableValueEquals("status", "DataDelivery")
+                    .list());
+            processInstances.addAll(runtimeService
+                    .createProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "LabRequest")
                     .list());
             processInstances.addAll(runtimeService
                     .createProcessInstanceQuery()

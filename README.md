@@ -31,6 +31,11 @@ grant all privileges on database dntp_portal to thehyve;
 or edit `src/main/resources/application.properties` to change
 the database settings.
 
+Important for performance: setting the indexes appropriately, e.g.:
+```
+create index var_procinst_name_index on act_hi_varinst (proc_inst_id_, name_ );
+```
+
 Run `bower` to install the required Javascript and CSS libraries:
 ```
 bower install

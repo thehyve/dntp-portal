@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import business.exceptions.ExcerptListUploadError;
+
 /**
  * From http://www.jayway.com/2012/09/16/improve-your-spring-rest-api-part-i/
  */

@@ -18,7 +18,6 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.DelegationState;
@@ -41,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import business.exceptions.AttachmentNotFound;
 import business.exceptions.ExcerptListNotFound;
+import business.exceptions.ExcerptListUploadError;
 import business.exceptions.FileUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.NotLoggedInException;
@@ -728,17 +728,23 @@ public class RequestController {
         }
 
         // process list
-        ExcerptList list = excerptListService.processExcerptList(file);
-        // if not exception thrown, save list and attachment
-        if (properties.getExcerptListAttachmentId() != null && !properties.getExcerptListAttachmentId().equals(attachmentId)) {
-            log.info("Deleting attachment " + properties.getExcerptListAttachmentId());
-            taskService.deleteAttachment(properties.getExcerptListAttachmentId());
+        try {
+            ExcerptList list = excerptListService.processExcerptList(file);
+            // if not exception thrown, save list and attachment
+            if (properties.getExcerptListAttachmentId() != null && !properties.getExcerptListAttachmentId().equals(attachmentId)) {
+                log.info("Deleting attachment " + properties.getExcerptListAttachmentId());
+                taskService.deleteAttachment(properties.getExcerptListAttachmentId());
+            }
+            properties.setExcerptListAttachmentId(attachmentId);
+            properties.setExcerptList(list);
+            log.info("Saving excerpt list.");
+            requestPropertiesService.save(properties);
+            log.info("Done.");
+        } catch (ExcerptListUploadError e) {
+            // revert uploading
+            taskService.deleteAttachment(attachmentId);
+            throw e;
         }
-        properties.setExcerptListAttachmentId(attachmentId);
-        properties.setExcerptList(list);
-        log.info("Saving excerpt list.");
-        requestPropertiesService.save(properties);
-        log.info("Done.");
         
         instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();

@@ -8,4 +8,8 @@ public class LabNotFound extends RuntimeException {
     public LabNotFound() {
         super("Lab cannot be found.");
     }
+    
+    public LabNotFound(String message) {
+        super(message);
+    }
 }

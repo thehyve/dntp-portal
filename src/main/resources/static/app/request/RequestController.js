@@ -89,6 +89,7 @@ angular.module('ProcessApp.controllers')
             
             $scope.fileuploaderror = function(data, excerpts) {
                 if (excerpts) {
+                    $scope.excerptlist_upload_error = data;
                     $scope.excerptlist_upload_result = "error";
                 } else {
                     $scope.fileupload_result = "error";

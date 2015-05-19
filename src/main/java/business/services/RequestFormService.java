@@ -280,11 +280,12 @@ public class RequestFormService {
                 request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
                 Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
                 Set<Integer> selectedLabSet = new TreeSet<Integer>();
-                for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                if (selectedLabs != null) {
+                    for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                }
                 request.setSelectedLabs(selectedLabSet);
                 request.setExcerptListRemark(properties.getExcerptListRemark());
             }
-            log.info("Not setting excerpt list.");
         }
     }
 

@@ -9,7 +9,7 @@ angular.module('ProcessApp.controllers')
                     var userFeatures = $rootScope.globals.currentUser.features;
                     for (var j=0;j<requirements.length; j++) {
                         for (var i=0;i<userFeatures.length; i++) {
-                            if (requirements[j] === userFeatures[i]) return true;
+                            if (requirements[j] === userFeatures[i]) {return true;}
                         }
                     }
                 }
@@ -33,17 +33,18 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.login = function() {
-                $location.path("/login");
+                $location.path('/login');
             };
 
             $scope.logout = function() {
                 $http.post('logout', {}).success(function() {
-                    $location.path("/login");
+                    $location.path('/login');
                     $rootScope.authenticated = false;
                     $rootScope.globals = {};
                     $cookieStore.remove('globals');
                 }).error(function(data) {
                     $rootScope.authenticated = false;
+                    console.log('logout error', data);
                 });
             };
 

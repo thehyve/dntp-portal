@@ -11,24 +11,24 @@ angular.module('ProcessApp.controllers')
                   ApprovalComment, ApprovalVote,
                   FlowOptionService, $routeParams) {
 
-            $scope.error = "";
+            $scope.error = '';
             $rootScope.tempRequest = null;
 
             if ($routeParams.requestId) {
                 if (!$scope.requests) {
                     $scope.requests = [];
                 }
-                $scope.edit_comment = {};
-                $scope.approval_comment = {};
-                $scope.comment_edit_visibility = {};
+                $scope.editComment = {};
+                $scope.approvalComment = {};
+                $scope.commentEditVisibility = {};
                 Request.get({id:$routeParams.requestId}, function (req) {
                     req.type = Request.convertRequestOptsToType(req);
                     $scope.request = req;
                     $rootScope.tempRequest = $.extend( true, {}, req ); // deep copy
                 }, function(response) {
                     if (response.data) {
-                        $scope.error = response.data.message + "\n";
-                        if (response.data.error == 302) {
+                        $scope.error = response.data.message + '\n';
+                        if (response.data.error === 302) {
                             $scope.accessDenied = true;
                         }
                     } else {
@@ -41,8 +41,8 @@ angular.module('ProcessApp.controllers')
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
                     if (response.data) {
-                        $scope.error = response.data.message + "\n";
-                        if (response.data.error == 302) {
+                        $scope.error = response.data.message + '\n';
+                        if (response.data.error === 302) {
                             $scope.accessDenied = true;
                         }
                     } else {
@@ -52,20 +52,20 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.popover = {
-                "title": "Info",
-                "content": ''
+                'title': 'Info',
+                'content': ''
             };
 
             $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {
                 if (!isOnlyResetReason) {
-                    request.linkageWithPersonalDataNotes = "";
+                    request.linkageWithPersonalDataNotes = '';
                     request.informedConsent = false;
                 }
-                request.reasonUsingPersonalData = "";
+                request.reasonUsingPersonalData = '';
             };
 
             $scope.login = function() {
-                $location.path("/login");
+                $location.path('/login');
             };
 
             $scope.flow_options = function(options) {
@@ -86,14 +86,14 @@ angular.module('ProcessApp.controllers')
                     $scope.requests.unshift(request);
                     $scope.edit(request);
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 
             $scope.refresh = function(request, result) {
                 var index = -1;
                 for (var i in $scope.requests) {
-                    if ($scope.requests[i].processInstanceId == request.processInstanceId) {
+                    if ($scope.requests[i].processInstanceId === request.processInstanceId) {
                         index = i;
                         break;
                     }
@@ -109,21 +109,21 @@ angular.module('ProcessApp.controllers')
                     $scope.refresh(request, result);
                     $scope.editRequestModal.hide();
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 
             $scope.removeAgreementFile = function(f) {
-                bootbox.confirm("Are you sure you want to delete file "
-                +  f.name
-                + "?", function(result) {
+                bootbox.confirm('Are you sure you want to delete file ' +
+                f.name +
+                '?', function(result) {
                     if (result) {
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
                         attachment.$removeAgreementFile(function(result) {
                             $scope.request.agreementAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
-                            bootbox.alert("File " + f.name + " deleted.");
+                            bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
                             $scope.error = response.statusText;
                         });
@@ -132,16 +132,16 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.removeDataFile = function(f) {
-                bootbox.confirm("Are you sure you want to delete file "
-                +  f.name
-                + "?", function(result) {
+                bootbox.confirm('Are you sure you want to delete file ' +
+                f.name +
+                '?', function(result) {
                     if (result) {
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
                         attachment.$removeDataFile(function(result) {
                             $scope.request.dataAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
-                            bootbox.alert("File " + f.name + " deleted.");
+                            bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
                             $scope.error = response.statusText;
                         });
@@ -150,16 +150,16 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.removeFile = function(f) {
-                bootbox.confirm("Are you sure you want to delete file "
-                +  f.name
-                + "?", function(result) {
+                bootbox.confirm('Are you sure you want to delete file ' +
+                f.name +
+                '?', function(result) {
                     if (result) {
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
                         attachment.$remove(function(result) {
                             $scope.request.attachments.splice($scope.request.attachments.indexOf(f), 1);
-                            bootbox.alert("File " + f.name + " deleted.");
+                            bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
                             $scope.error = response.statusText;
                         });
@@ -168,13 +168,13 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.remove = function(request) {
-                bootbox.confirm("Are you sure you want to delete request "
-                +  request.processInstanceId
-                + "?", function(result) {
+                bootbox.confirm('Are you sure you want to delete request ' +
+                request.processInstanceId +
+                '?', function(result) {
                     if (result) {
                         request.$remove(function(result) {
                             $scope.requests.splice($scope.requests.indexOf(request), 1);
-                            bootbox.alert("Request " + request.processInstanceId + " deleted.");
+                            bootbox.alert('Request ' + request.processInstanceId + ' deleted.');
                         }, function(response) {
                             $scope.error = response.statusText;
                         });
@@ -184,16 +184,16 @@ angular.module('ProcessApp.controllers')
 
             $scope.submitRequest = function(request) {
                 bootbox.confirm(
-                    "Are you sure you want to submit the request?\n "
-                    + "After submission the request cannot be edited anymore.",
+                    'Are you sure you want to submit the request?\n ' +
+                    'After submission the request cannot be edited anymore.',
                     function(confirmed) {
                         if (confirmed) {
-                            //console.log("request.type ", request.type );
+                            //console.log('request.type ', request.type );
                             request.$submit(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + "\n";
+                                $scope.error = $scope.error + response.data.message + '\n';
                             });
                         }
                     });
@@ -201,14 +201,14 @@ angular.module('ProcessApp.controllers')
 
             $scope.submitForApproval = function(request) {
                 bootbox.confirm(
-                    "Are you sure you want to submit the request for approval?",
+                    'Are you sure you want to submit the request for approval?',
                     function(confirmed) {
                         if (confirmed) {
                             request.$submitForApproval(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + "\n";
+                                $scope.error = $scope.error + response.data.message + '\n';
                             });
                         }
                     });
@@ -216,14 +216,14 @@ angular.module('ProcessApp.controllers')
 
             $scope.finalise = function(request) {
                 bootbox.confirm(
-                    "Are you sure you want to finalise the request?",
+                    'Are you sure you want to finalise the request?',
                     function(confirmed) {
                         if (confirmed) {
                             request.$finalise(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + "\n";
+                                $scope.error = $scope.error + response.data.message + '\n';
                             });
                         }
                     });
@@ -231,8 +231,8 @@ angular.module('ProcessApp.controllers')
 
             $scope.reject = function(request) {
                 bootbox.prompt({
-                    title: "Are you sure you want to reject the request?\n<br>"
-                    +"Please enter a reject reason:",
+                    title: 'Are you sure you want to reject the request?\n<br>' +
+                    'Please enter a reject reason:',
                     callback: function(result) {
                         if (result) {
                             request.rejectReason = result;
@@ -240,7 +240,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + "\n";
+                                $scope.error = $scope.error + response.data.message + '\n';
                             });
                         }
                     }
@@ -252,25 +252,25 @@ angular.module('ProcessApp.controllers')
                 if (flow.getSize() > max_size) {
                     console.log('size: '+ flow.getSize());
                     var mb_size = (flow.getSize()/(1024*1024)).toFixed(1);
-                    bootbox.alert("File too large (" + mb_size + " MB). Maximum size is 10 MB.");
+                    bootbox.alert('File too large (' + mb_size + ' MB). Maximum size is 10 MB.');
                 } else {
                     flow.upload();
                 }
             };
 
             $scope.view = function(request) {
-                $location.path("/request/view/" + request.processInstanceId);
+                $location.path('/request/view/' + request.processInstanceId);
             };
 
             $scope.cancelByEscKey = function (key, request) {
-                console.log("In cancelByEscKey");
+                console.log('In cancelByEscKey');
                 if (key.which === 27) {
-                    console.log("Escape key");
+                    console.log('Escape key');
                 }
             };
 
             $scope.cancel = function (request) {
-                if ($rootScope.tempRequest.title == null) {
+                if ($rootScope.tempRequest.title === null) {
                     request.$remove(function (result) {
                         $scope.requests.splice($scope.requests.indexOf(request), 1);
                         $scope.refresh(request, result);
@@ -292,11 +292,11 @@ angular.module('ProcessApp.controllers')
                         $scope.request = data;
                         $rootScope.tempRequest = $.extend( true, {}, data ); // deep copy
 
-                        if ($rootScope.tempRequest.title == null) {
-                            $scope.request.type = "1";
+                        if ($rootScope.tempRequest.title === null) {
+                            $scope.request.type = '1';
                         }
 
-                        if ($scope.globals.currentUser.roles.indexOf('scientific_council') != -1) {
+                        if ($scope.globals.currentUser.roles.indexOf('scientific_council') !== -1) {
                             if (!$scope.request.approvalVotes) {
                                 $scope.request.approvalVotes = {};
                             }
@@ -305,10 +305,10 @@ angular.module('ProcessApp.controllers')
                                     new ApprovalVote({value: 'NONE'});
                             }
                         }
-                        $scope.edit_comment = {};
-                        $scope.approval_comment = {};
-                        $scope.comment_edit_visibility = {};
-                        if (data.returnDate == null) {
+                        $scope.editComment = {};
+                        $scope.approvalComment = {};
+                        $scope.commentEditVisibility = {};
+                        if (data.returnDate === null) {
                             data.returnDate = new Date();
                         }
                         $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html', backdrop: 'static'});
@@ -343,18 +343,18 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.getName = function(user) {
-                if (user == null) {
-                    return "";
+                if (user === null) {
+                    return '';
                 }
-                return user.firstName
-                    + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ")
-                    + (user.lastName==null ? "" : user.lastName);
+                return user.firstName +
+                    ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
+                    (user.lastName === null ? '' : user.lastName);
             };
 
             $scope.size = function(obj) {
                 var size = 0, key;
                 for (key in obj) {
-                    if (obj.hasOwnProperty(key)) size++;
+                    if (obj.hasOwnProperty(key)) {size++};
                 }
                 return size;
             };

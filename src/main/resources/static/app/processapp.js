@@ -1,18 +1,20 @@
+'use strict';
+
 (function(angular) {
-    angular.module("ProcessApp.services", []);
-    angular.module("ProcessApp.directives", []);
-    angular.module("ProcessApp.controllers", ["restangular"])
+    angular.module('ProcessApp.services', []);
+    angular.module('ProcessApp.directives', []);
+    angular.module('ProcessApp.controllers', ['restangular'])
         .config(function(RestangularProvider) {
             RestangularProvider.setBaseUrl('/');
         });
-    angular.module('ProcessApp', [ "flow",
-                                   "mgcrea.ngStrap",
-                                   "ngResource", "ngRoute", "ngCookies",
-                                   "pascalprecht.translate",
-                                   "smart-table", "ngSanitize",
-                                   "ProcessApp.services",
-                                   "ProcessApp.controllers",
-                                   "ProcessApp.directives"])
+    angular.module('ProcessApp', [ 'flow',
+                                   'mgcrea.ngStrap',
+                                   'ngResource', 'ngRoute', 'ngCookies',
+                                   'pascalprecht.translate',
+                                   'smart-table', 'ngSanitize',
+                                   'ProcessApp.services',
+                                   'ProcessApp.controllers',
+                                   'ProcessApp.directives'])
         .config(function($routeProvider, $translateProvider, $popoverProvider) {
 
             $routeProvider.when('/', {
@@ -58,8 +60,8 @@
             }).otherwise('/');
 
             // default lang settings for the localization
-            $translateProvider.translations('en', messages_en)
-                              .translations('nl', messages_nl);
+            $translateProvider.translations('en', messagesEN)
+                              .translations('nl', messagesNL);
             $translateProvider.preferredLanguage('en');
 
             // default popover setting to have html friendly content
@@ -78,37 +80,38 @@
 
                 if ($rootScope.globals.currentUser) {
                     $rootScope.authenticated = true;
-                    $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.credentials;
+                    $http.defaults.headers.common.Authorization = 'Basic ' + $rootScope.globals.currentUser.credentials;
                 }
 
-                $rootScope.$on('$locationChangeStart', function (event, next, current) {
+                $rootScope.$on('$locationChangeStart', function () {
                     // redirect to login page if not logged in
-                    if (($location.path() !== '/login'
-                        && $location.path() !== '/register'
-                        && $location.path() !== '/register/success'
-                        && $location.path() !== '/login/forgot-password'
-                        && !startsWith($location.path(), '/login/reset-password')
-                        && !startsWith($location.path(), '/activate/')
-                        ) && !$rootScope.globals.currentUser) {
-                        $location.path('/login');
-                    }
+                  if (($location.path() !== '/login' &&
+                    $location.path() !== '/register' &&
+                    $location.path() !== '/register/success' &&
+                    $location.path() !== '/login/forgot-password' &&
+                    !startsWith($location.path(), '/login/reset-password') &&
+                    !startsWith($location.path(), '/activate/')
+                    ) &&
+                    !$rootScope.globals.currentUser) {
+                    $location.path('/login');
+                  }
                 });
             }]);
 
 
     // Checks if `string` starts with `start`
     function startsWith(string, start) {
-        console.log('startsWith: ' + string + ', ' + start);
-        if (typeof(string) !== 'string')
+        if (typeof(string) !== 'string') {
+          return false;
+        }
+        if (string.length < start.length) {
+          return false;
+        }
+        for (var i = 0; i < string.length && i < start.length; i++) {
+          if (string[i] !== start[i]) {
             return false;
-
-        if (string.length < start.length)
-            return false;
-
-        for (var i = 0; i < string.length && i < start.length; i++)
-            if (string[i] !== start[i])
-                return false;
-
+          }
+        }
         return true;
     }
 }(angular));

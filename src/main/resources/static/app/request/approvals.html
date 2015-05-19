@@ -35,14 +35,14 @@
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
                     type="button" title="{{'Accepted'|translate}}"
                     ng-click="updateVote(request, 'ACCEPTED')"
-                    ng-if="!edit_comment.id">
+                    ng-if="!editComment.id">
                 <span><i class="glyphicon glyphicon-ok-circle"></i></span>
                 {{'Accepted'|translate}}
             </button>
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
                     type="button" title="{{'Rejected'|translate}}"
                     ng-click="updateVote(request, 'REJECTED')"
-                    ng-if="!edit_comment.id">
+                    ng-if="!editComment.id">
                 <span><i class="glyphicon glyphicon-ban-circle"></i></span>
                 {{'Rejected'|translate}}
             </button>
@@ -67,9 +67,9 @@
             </div>
                 <span class="pull-right" ng-if="globals.currentUser.id==comment.creator.id">
                 <span class="btn-group btn-group-xs">
-                    <button class="btn btn-info {{comment_edit_visibility[comment.id] ? 'active' : ''}}" type="button"
+                    <button class="btn btn-info {{commentEditVisibility[comment.id] ? 'active' : ''}}" type="button"
                             title="Edit"
-                            ng-click="comment_edit_visibility[comment.id] = 1">
+                            ng-click="commentEditVisibility[comment.id] = 1">
                         <span><i class="glyphicon glyphicon-pencil"></i></span>
                     </button>
                     <button class="btn btn-danger" type="button" title="Delete"
@@ -95,10 +95,10 @@
     <!-- Add approval comment -->
     <div class="row" ng-class="">
         <div class="col-sm-12">
-            <input type="hidden" ng-model="approval_comment.processInstanceId" value="{{request.processInstanceId}}">
+            <input type="hidden" ng-model="approvalComment.processInstanceId" value="{{request.processInstanceId}}">
                             <textarea class="form-control" id="commentText" name="commentText"
                                       placeholder="{{'Add comment'|translate}}"
-                                      ng-model="approval_comment.contents">
+                                      ng-model="approvalComment.contents">
                             </textarea>
         </div>
     </div>
@@ -106,13 +106,13 @@
         <div class="col-sm-12 text-justify">
             <br>
             <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
-                    ng-click="addApprovalComment(request, approval_comment)"
-                    ng-if="!approval_comment.id">
+                    ng-click="addApprovalComment(request, approvalComment)"
+                    ng-if="!approvalComment.id">
                 {{'Add comment'|translate}}
             </button>
             <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
-                    ng-click="updateApprovalComment(request, approval_comment)"
-                    ng-if="approval_comment.id">
+                    ng-click="updateApprovalComment(request, approvalComment)"
+                    ng-if="approvalComment.id">
                 {{'Update comment'|translate}}
             </button>
         </div>

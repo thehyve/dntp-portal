@@ -1,3 +1,5 @@
+'use strict';
+
 (function(angular) {
 
     var UserFactory = function($resource) {
@@ -5,19 +7,19 @@
             id : '@id'
         }, {
             update : {
-                method : "PUT"
+                method : 'PUT'
             },
             activate : {
                 url : '/admin/users/:id/activate',
-                method : "PUT"
+                method : 'PUT'
             },
             deactivate : {
                 url : '/admin/users/:id/deactivate',
-                method : "PUT"
+                method : 'PUT'
             },
             remove : {
                 url : '/admin/users/:id/delete',
-                method : "PUT"
+                method : 'PUT'
             },
             register : {
                 url : '/register/users',
@@ -31,10 +33,10 @@
             id : '@id'
         }, {
             update : {
-                method : "PUT"
+                method : 'PUT'
             },
             remove : {
-                method : "DELETE"
+                method : 'DELETE'
             }
         });
     };
@@ -45,10 +47,10 @@
             roleid : '@roleid'
         }, {
             save : {
-                method : "PUT"
+                method : 'PUT'
             },
             remove : {
-                method : "DELETE"
+                method : 'DELETE'
             }
         });
     };
@@ -58,18 +60,18 @@
             id : '@id'
         }, {
             save : {
-                method : "POST"
+                method : 'POST'
             },
             update : {
-                method : "PUT"
+                method : 'PUT'
             },
             activate : {
                 url : '/admin/labs/:id/activate',
-                method : "PUT"
+                method : 'PUT'
             },
             deactivate : {
                 url : '/admin/labs/:id/deactivate',
-                method : "PUT"
+                method : 'PUT'
             }
         });
     };
@@ -79,27 +81,27 @@
             id : '@id'
         }, {
             save : {
-                method : "POST"
+                method : 'POST'
             },
             update : {
-                method : "PUT"
+                method : 'PUT'
             }
         });
     };
 
     UserFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("User", UserFactory);
+    angular.module('ProcessApp.services').factory('User', UserFactory);
 
     RoleFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Role", RoleFactory);
+    angular.module('ProcessApp.services').factory('Role', RoleFactory);
 
     UserRoleFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("UserRole", UserRoleFactory);
+    angular.module('ProcessApp.services').factory('UserRole', UserRoleFactory);
 
     LabFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Lab", LabFactory);
+    angular.module('ProcessApp.services').factory('Lab', LabFactory);
 
     InstituteFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Institute", InstituteFactory);
+    angular.module('ProcessApp.services').factory('Institute', InstituteFactory);
 
 }(angular));

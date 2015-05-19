@@ -13,9 +13,9 @@ angular.module('ProcessApp.controllers')
                 vote.processInstanceId = request.processInstanceId;
                 vote.$save(function(result) {
                     $scope.request.approvalVotes[$scope.globals.currentUser.userid] = result;
-                    //console.log("Updating vote");
+                    //console.log('Updating vote');
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 
@@ -24,7 +24,7 @@ angular.module('ProcessApp.controllers')
                 comment.processInstanceId = request.processInstanceId;
                 comment.$save(function(result) {
                     request.approvalComments.push(result);
-                    $scope.approval_comment = {};
+                    $scope.approvalComment = {};
                 }, function(response) {
                     $scope.error = response.statusText;
                 });
@@ -34,11 +34,11 @@ angular.module('ProcessApp.controllers')
                 var comment = new ApprovalComment(body);
                 comment.$update(function(result) {
                     var index = $scope.request.approvalComments.indexOf(body);
-                    //console.log("Updating comment at index " + index);
+                    //console.log('Updating comment at index ' + index);
                     $scope.request.approvalComments[index] = result;
                     $scope.approval_comment_edit_visibility[comment.id] = 0;
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 
@@ -47,7 +47,7 @@ angular.module('ProcessApp.controllers')
                     $scope.request.approvalComments.splice(
                         $scope.request.approvalComments.indexOf(comment), 1);
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 }]);

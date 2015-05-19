@@ -22,11 +22,11 @@ angular.module('ProcessApp.controllers')
                 var comment = new RequestComment(body);
                 comment.$update(function(result) {
                     var index = $scope.request.comments.indexOf(body);
-                    //console.log("Updating comment at index " + index);
+                    //console.log('Updating comment at index ' + index);
                     $scope.request.comments[index] = result;
-                    $scope.comment_edit_visibility[comment.id] = 0;
+                    $scope.commentEditVisibility[comment.id] = 0;
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 
@@ -35,7 +35,7 @@ angular.module('ProcessApp.controllers')
                     $scope.request.comments.splice(
                         $scope.request.comments.indexOf(comment), 1);
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + "\n";
+                    $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 

@@ -1,4 +1,4 @@
-messages_en =
+var messagesEN =
 {
         'Bad credentials': 'Bad credentials.',
 

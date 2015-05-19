@@ -4,15 +4,15 @@ angular.module('ProcessApp.controllers')
     .controller('AdminLabController',['$scope', '$modal', 'Lab',
         function ($scope, $modal, Lab) {
 
-            $scope.error = "";
+            $scope.error = '';
             $scope.accessDenied = false;
             $scope.visibility = {};
 
             Lab.query(function(response) {
                 $scope.labs = response ? response : [];
             }, function(response) {
-                $scope.error = $scope.error + response.data.message + "\n";
-                if (response.data.status == 302 || response.data.status == 403) {
+                $scope.error = $scope.error + response.data.message + '\n';
+                if (response.data.status === 302 || response.data.status === 403) {
                     $scope.accessDenied = true;
                 }
             });
@@ -26,7 +26,7 @@ angular.module('ProcessApp.controllers')
                     labdata.$update(function(result) {
                         $scope.editLabModal.hide();
                     }, function(response) {
-                        $scope.error = $scope.error + response.data.message + "\n";
+                        $scope.error = $scope.error + response.data.message + '\n';
                     });
                 } else {
                     var lab = new Lab(labdata);
@@ -34,7 +34,7 @@ angular.module('ProcessApp.controllers')
                         $scope.editLabModal.hide();
                         $scope.labs.unshift(result);
                     }, function(response) {
-                        $scope.error = response.data.message + "\n";
+                        $scope.error = response.data.message + '\n';
                     });
                 }
             };

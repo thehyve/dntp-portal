@@ -202,7 +202,7 @@ angular.module('ProcessApp.controllers')
                     'After submission the request cannot be edited anymore.',
                     function(confirmed) {
                         if (confirmed) {
-                            //console.log('request.type ', request.type );
+                            Request.convertRequestTypeToOpts(request); // convert request type
                             request.$submit(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();

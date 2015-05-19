@@ -16,6 +16,7 @@
         	execution.setVariable("status", "Open")
         	execution.setVariable("requester_id", "${initiator}")
         	execution.setVariable("date_created", new Date())
+            execution.setVariable("lab_request_labs", [])
         </script>
     </scriptTask>
 
@@ -161,8 +162,23 @@
         Delivery of data.
         </documentation>
     </userTask>
+    
+    <sequenceFlow id="data_delivery_to_status_lab_request" sourceRef="data_delivery" targetRef="status_lab_request"></sequenceFlow>
+    
+    <scriptTask id="status_lab_request" name="Update status to LabRequest" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "LabRequest")</script>
+    </scriptTask>
 
-    <sequenceFlow id="data_delivery_to_closed" sourceRef="data_delivery" targetRef="status_closed"></sequenceFlow>
+    <sequenceFlow id="status_lab_request_to_lab_request" sourceRef="status_lab_request" targetRef="lab_request"></sequenceFlow>
+
+    <userTask id="lab_request">
+        <multiInstanceLoopCharacteristics isSequential="false" 
+            activiti:collection="${lab_request_labs}" activiti:elementVariable="lab">
+        </multiInstanceLoopCharacteristics>
+    </userTask>
+
+    <sequenceFlow id="lab_request_to_closed" sourceRef="lab_request" targetRef="status_closed"></sequenceFlow>
 
 
     <scriptTask id="status_rejected" name="Update status to Rejected" scriptFormat="groovy" activiti:autoStoreVariables="true">

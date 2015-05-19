@@ -36,6 +36,10 @@
             unclaim : {
                 url : '/requests/:id/unclaim',
                 method : 'PUT'
+            },
+            submitExcerptSelection : {
+                url : '/requests/:id/submitExcerptSelection',
+                method : 'PUT'
             }
         });
 
@@ -231,25 +235,18 @@
     ApprovalVoteFactory.$inject = [ '$resource' ];
     angular.module('ProcessApp.services').factory('ApprovalVote', ApprovalVoteFactory);
 
-    var TaskFactory = function($resource) {
-        return $resource('/tasks/:id', {
+    var ExcerptEntryFactory = function($resource) {
+        return $resource('/requests/:processInstanceId/excerpts/:id/selection', {
+            processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
-            queryCompleted : {
-                url : '/tasks/completed/',
-                method : 'GET',
-                isArray : true
-            },
             update : {
                 method : 'PUT'
-            },
-            remove : {
-                method : 'DELETE'
             }
         });
     };
-    TaskFactory.$inject = [ '$resource' ];
-    angular.module('ProcessApp.services').factory('Task', TaskFactory);
+    ExcerptEntryFactory.$inject = [ '$resource' ];
+    angular.module('ProcessApp.services').factory('ExcerptEntry', ExcerptEntryFactory);
 
     var FormDataFactory = function($resource) {
         return $resource('/formdata/:id', {

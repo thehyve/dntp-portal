@@ -1,15 +1,16 @@
 package business.services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
@@ -95,22 +96,24 @@ public class RequestFormService {
             }
 
             Task task = null;
-            switch(request.getStatus()) {
-                case "Review":
-                    task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
-                    break;
-                case "Approval":
-                    task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
-                                        
-                    // fetch my vote, number of votes
-                    RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                            instance.getProcessInstanceId());
-                    Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
-                    request.setNumberOfApprovalVotes(votes.size());
-                    if (votes.containsKey(currentUser.getId())) {
-                        request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
-                    } 
-                    break;
+            if (request.getStatus() != null) {
+                switch(request.getStatus()) {
+                    case "Review":
+                        task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
+                        break;
+                    case "Approval":
+                        task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
+                                            
+                        // fetch my vote, number of votes
+                        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                                instance.getProcessInstanceId());
+                        Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+                        request.setNumberOfApprovalVotes(votes.size());
+                        if (votes.containsKey(currentUser.getId())) {
+                            request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+                        } 
+                        break;
+                }
             }
             if (task != null) {
                 request.setAssignee(task.getAssignee());
@@ -275,6 +278,11 @@ public class RequestFormService {
             if (properties.getExcerptList() != null) {
                 log.info("Set excerpt list.");
                 request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
+                Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
+                Set<Integer> selectedLabSet = new TreeSet<Integer>();
+                for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                request.setSelectedLabs(selectedLabSet);
+                request.setExcerptListRemark(properties.getExcerptListRemark());
             }
             log.info("Not setting excerpt list.");
         }

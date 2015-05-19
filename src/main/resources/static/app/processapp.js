@@ -48,6 +48,9 @@
             }).when('/request/edit/:requestId', {
                 templateUrl : 'app/request/editrequest.html',
                 controller : 'RequestController'
+            }).when('/request/:requestId/selection', {
+                templateUrl : 'app/request/selection.html',
+                controller : 'RequestController'
             }).when('/my-lab', {
                 templateUrl : 'app/lab/my-lab.html',
                 controller : 'MyLabController'

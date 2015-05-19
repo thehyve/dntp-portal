@@ -2,6 +2,8 @@ package business.services;
 
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import business.models.ActivationLink;
+import business.models.NewPasswordRequest;
 import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
@@ -32,8 +36,10 @@ public class MailService {
     @Value("${dntp.server-port}")
     String serverPort;
 
+    @Value("${dntp.reply-address}")
+    String replyAddress;
     
-    public void notifyScientificCouncil(RequestRepresentation request) {
+    public void notifyScientificCouncil(@NotNull RequestRepresentation request) {
         log.info("Notify scientic council for request " + request.getProcessInstanceId() + ".");
 
         Role role = roleRepository.findByName("scientific_council");
@@ -42,8 +48,8 @@ public class MailService {
             log.info("Sending notification to user " + member.getUsername());
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(member.getContactData().getEmail());
-            message.setFrom("no-reply@dntp.thehyve.nl");
-            message.setReplyTo("no-reply@dntp.thehyve.nl");
+            message.setFrom(replyAddress);
+            message.setReplyTo(replyAddress);
             message.setSubject("[DNTP portal] New request open for approval.");
             String template =
                     "Request: %s\n"
@@ -74,6 +80,28 @@ public class MailService {
             log.info("Mail contents:\n" + message.getText());
             mailSender.send(message);
         }
+    }
+    
+    public void sendActivationEmail(@NotNull ActivationLink link) {
+        // Send email to user
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(link.getUser().getUsername());
+        message.setFrom(replyAddress);
+        message.setReplyTo(replyAddress);
+        message.setSubject("Account activation");
+        message.setText(String.format("Please follow this link to activate your account: http://%s:%s/#/activate/%s", serverName, serverPort, link.getToken()));
+        mailSender.send(message);
+        LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + link.getToken());
+    }
+    
+    public void sendPasswordRecoveryToken(NewPasswordRequest npr) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(npr.getUser().getContactData().getEmail());
+        message.setFrom(replyAddress);
+        message.setReplyTo(replyAddress);
+        message.setSubject("Password recovery");
+        message.setText(String.format("Please follow this link to reset your password: http://%s:%s/#/login/reset-password/%s", serverName, serverPort, npr.getToken()));
+        mailSender.send(message);
     }
 
 }

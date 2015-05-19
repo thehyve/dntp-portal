@@ -1,3 +1,4 @@
+/node_modules/
 /src/main/resources/static/bower_components/
 /build/
 /classes/

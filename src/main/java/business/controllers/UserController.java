@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +33,9 @@ import business.models.LabRepository;
 import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
-import business.models.UserRepository;
 import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.MailService;
 import business.services.UserService;
 import business.services.UserService.EmailAddressNotUnique;
 
@@ -57,9 +55,6 @@ public class UserController {
     Integer activationLinkExpiryHours;
     
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     UserService userService;
     
     @Autowired
@@ -70,9 +65,9 @@ public class UserController {
 
     @Autowired
     ActivationLinkRepository activationLinkRepository;
-
+    
     @Autowired
-    JavaMailSender mailSender;
+    MailService mailService;
 
     @RequestMapping("/user")
     public ProfileRepresentation user(UserAuthenticationToken user) {
@@ -85,11 +80,16 @@ public class UserController {
         log.info("activation link: expiry hours = " + activationLinkExpiryHours);
         ActivationLink link = activationLinkRepository.findByToken(token);
 
+        if (link == null) {
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
         // Check that the link has been issued in the previous week
-        if (link != null && TimeUnit.MILLISECONDS.toDays(new Date().getTime() - link.getCreationDate().getTime()) <= activationLinkExpiryHours) {
+        long linkAge = TimeUnit.MILLISECONDS.toHours(new Date().getTime() - link.getCreationDate().getTime()); // hours
+        log.info("activation link age in hours: " + linkAge);
+        if (linkAge <= activationLinkExpiryHours) {
             User user = link.getUser();
             user.setEmailValidated(true);
-            userRepository.save(user);
+            userService.save(user);
             activationLinkRepository.delete(link);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } else {
@@ -100,14 +100,14 @@ public class UserController {
 
     @RequestMapping(value = "/admin/user", method = RequestMethod.GET)
     public ProfileRepresentation get(@RequestParam String username) {
-        return new ProfileRepresentation(userRepository.findByUsernameAndDeletedFalse(username));
+        return new ProfileRepresentation(userService.findByUsername(username));
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
     public List<ProfileRepresentation> getAll(Principal principal) {
         log.info("GET /admin/users (for user: " + principal.getName() + ")");
         List<ProfileRepresentation> users = new ArrayList<ProfileRepresentation>();
-        for(User user: userRepository.findByActiveTrueAndDeletedFalse()) {
+        for(User user: userService.findAll()) {
             users.add(new ProfileRepresentation(user));
         }
         return users;
@@ -146,7 +146,7 @@ public class UserController {
         }
         if (user.getUsername() == null || !user.getUsername().equals(email)) {
             // check for uniqueness (also enforced by user service):
-            User u = userRepository.findByUsernameAndDeletedFalse(email);
+            User u = userService.findByUsername(email);
             if (u == null) {
                 user.setUsername(email);
             } else {
@@ -188,7 +188,7 @@ public class UserController {
     private ProfileRepresentation createNewUser(ProfileRepresentation body) {
         if (body.getPassword1() != null && body.getPassword1().equals(body.getPassword2()))
         {
-            if (userRepository.findByUsername(body.getUsername()) != null ) {
+            if (userService.findByUsername(body.getUsername()) != null ) {
                 throw new EmailAddressNotAvailableException();
             }
 
@@ -206,8 +206,12 @@ public class UserController {
             try {
                 User result = userService.save(user);
 
+                // Generate and save activation link
+                ActivationLink link = new ActivationLink(user);
+                this.activationLinkRepository.save(link);
+                
                 // The user has been successfully saved. Send activation email
-                sendActivationEmail(user);
+                mailService.sendActivationEmail(link);
 
                 return new ProfileRepresentation(result);
             } catch (EmailAddressNotUnique e) {
@@ -218,22 +222,6 @@ public class UserController {
         {
             throw new InvalidUserDataException("Passwords do not match.");
         }
-    }
-
-    private void sendActivationEmail(@NotNull User user) {
-        // Generate and save activation link
-        ActivationLink link = new ActivationLink(user);
-        this.activationLinkRepository.save(link);
-
-        // Send email to user
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(user.getUsername());
-        message.setFrom("no-reply@dntp.thehyve.nl");
-        message.setReplyTo("no-reply@dntp.thehyve.nl");
-        message.setSubject("Account activation");
-        message.setText(String.format("Please follow this link to activate your account: http://%s:%s/#/activate/%s", serverName, serverPort, link.getToken()));
-        mailSender.send(message);
-        LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + link.getToken());
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
@@ -251,7 +239,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ProfileRepresentation update(Principal principal, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
         LogFactory.getLog(getClass()).info("PUT /admin/users/" + id);
-        User user = userRepository.findOne(id);
+        User user = userService.findOne(id);
         if (user != null) {
             transferUserData(body, user);
             try {
@@ -268,27 +256,27 @@ public class UserController {
     public ProfileRepresentation activate(Principal principal, @PathVariable String id) {
         LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/activate");
         Long userId = Long.valueOf(id);
-        User user = userRepository.getOne(userId);
+        User user = userService.getOne(userId);
         user.activate();
-        return new ProfileRepresentation(userRepository.save(user));
+        return new ProfileRepresentation(userService.save(user));
     }
 
     @RequestMapping(value = "/admin/users/{id}/deactivate", method = RequestMethod.PUT)
     public ProfileRepresentation deactivate(Principal principal, @PathVariable String id) {
         LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/deactivate");
         Long userId = Long.valueOf(id);
-        User user = userRepository.getOne(userId);
+        User user = userService.getOne(userId);
         user.deactivate();
-        return new ProfileRepresentation(userRepository.save(user));
+        return new ProfileRepresentation(userService.save(user));
     }
     
     @RequestMapping(value = "/admin/users/{id}/delete", method = RequestMethod.PUT)
     public void delete(Principal principal, @PathVariable String id) {
         LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/delete");
         Long userId = Long.valueOf(id);
-        User user = userRepository.getOne(userId);
+        User user = userService.getOne(userId);
         user.markDeleted();
-        userRepository.save(user);
+        userService.save(user);
     }
 
     @RequestMapping(value = "/register/users", method = RequestMethod.POST)

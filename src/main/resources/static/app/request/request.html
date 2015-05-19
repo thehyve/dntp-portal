@@ -371,12 +371,22 @@
                 
                 <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
                      flow-name="excerptListFlow"
-                     flow-files-submitted="$flow.upload()"
-                     flow-file-success="fileuploadsuccess(request, $message)"
+                     flow-files-submitted="$scope.fileupload_result = ''; $flow.upload()"
+                     flow-file-success="fileuploadsuccess(request, $message, true)"
+                     flow-file-error="fileuploaderror($message, true)"
                      ng-if="globals.currentUser.roles.indexOf('palga') != -1"
                         >
+                    <div class="alert alert-success" role="alert" ng-show="excerptlist_upload_result == 'success'">
+                        {{ 'Excerpt list uploaded.' | translate }}
+                    </div>
+                    <div class="alert alert-danger" role="alert" ng-show="excerptlist_upload_result == 'error'">
+                        {{ 'Error uploading excerpt list.' | translate }}
+                    </div>
+                    
                     <div>
-                        <span class="btn btn-default" flow-btn>{{'Upload excerpt list'|translate}}</span>
+                        <span class="btn btn-default" flow-btn
+                        ng-disabled="request.assignee != globals.currentUser.userid"
+                        >{{'Upload excerpt list'|translate}}</span>
                     </div>
                     <br>
                     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
@@ -385,6 +395,14 @@
                          ng-style="style">
                         ({{'drag and drop your file here'|translate}})
                     </div>
+                </div>
+                
+                <div ng-if="request.excerptList && globals.currentUser.roles.indexOf('requester') != -1">
+                    <a ng-href="/#/request/{{request.processInstanceId}}/selection">
+                    <button type="button" class="btn btn-primary">
+                        {{'Select PA numbers'|translate}}
+                    </button>
+                    </a>
                 </div>
                 
                 <h4>{{'Other data files'|translate}}</h4>
@@ -411,13 +429,23 @@
                      flow-name="dataFlow"
                      flow-files-submitted="uploadDataFile($flow)"
                      flow-file-success="fileuploadsuccess(request, $message)"
+                     flow-file-error="fileuploaderror($message)"
                      ng-if="globals.currentUser.roles.indexOf('palga') != -1"
                         >
+                    <div class="alert alert-success" role="alert" ng-show="fileupload_result == 'success'">
+                        {{ 'File uploaded.' | translate }}
+                    </div>
+                    <div class="alert alert-danger" role="alert" ng-show="fileupload_result == 'error'">
+                        {{ 'Error uploading file.' | translate }}
+                    </div>
+                        
                     <p>
                     (<em>{{'Maximum file size 10 MB.'|translate}}</em>)
                     </p>
                     <div>
-                        <span class="btn btn-default" flow-btn>{{'Upload data files'|translate}}</span>
+                        <span class="btn btn-default" flow-btn
+                            ng-disabled="request.assignee != globals.currentUser.userid"
+                            >{{'Upload data files'|translate}}</span>
                     </div>
                     <br>
                     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
@@ -429,6 +457,22 @@
                 </div>
 
             </div> <!-- endif DataDelivery -->
+
+            <div ng-if="request.status == 'LabRequest'">
+            
+            <h3>{{ 'Lab request details' | translate }}</h3>
+            <hr>
+
+            <!-- Excerpt list remark -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Remark' | translate }}</label>
+                <div class="col-sm-7">
+                    {{request.excerptListRemark}}
+                </div>
+            </div>
+            
+            </div> <!-- endif LabRequest -->
+
 
         </div>
 

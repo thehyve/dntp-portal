@@ -1,9 +1,6 @@
 package business.representation;
 
-import business.models.Lab;
-
 import java.util.Date;
-import java.util.List;
 
 public class RequestListRepresentation {
 

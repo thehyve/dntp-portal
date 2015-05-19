@@ -1,0 +1,51 @@
+<!-- If in 'DataDelivery' status -->
+<div class="container-fluid" ng-if="request.status=='DataDelivery'" ng-controller="SelectionController">
+
+    <div class="page-header">
+    <h3>{{'Selection'|translate}}</h3>
+    </div>
+    <!--List of PA numbers-->
+
+    <div class="main">    
+    <ul class="list-group">
+        <li class="list-group-item {{excerpt.selected ? 'list-group-item-info' : ''}}"
+            ng-repeat="excerpt in request.excerptList.entries track by excerpt.id">
+            <h4 class="list-group-item-heading">
+                <label>Excerpt {{excerpt.values[0]}}</label>
+                <span class="pull-right">
+                <span class="btn-group">
+                    <button class="btn btn-default" type="button" title="Select"
+                            ng-click="selectExcerpt(request, excerpt)"
+                            ng-disabled="excerpt.selected">
+                        Select
+                    </button>
+                    <button class="btn btn-default" type="button" title="Deselect"
+                            ng-click="deselectExcerpt(request, excerpt)"
+                            ng-disabled="!excerpt.selected">
+                        Deselect
+                    </button>
+                </span>
+                </span>
+            </h4>
+            <div>
+                <p ng-repeat="value in excerpt.values track by $index">
+                {{request.excerptList.columnNames[$index]}}: {{value | limitTo: 25}}
+                {{(value.length > 25) ? '...' : ''}}
+                </p>
+            </div>
+        </li>
+    </ul>
+
+    <div class="row">
+    <button type="button" class="btn btn-primary" title="Submit"
+        ng-click="submitExcerptSelection(request)"
+        >
+        Submit selection
+    </button>
+    </div>
+
+    <div class="row">&nbsp;</div>    
+    
+    </div>
+    
+</div> <!-- endif 'DataDelivery' status -->

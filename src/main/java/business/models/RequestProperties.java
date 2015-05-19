@@ -62,6 +62,9 @@ public class RequestProperties {
     @Column(columnDefinition="TEXT")
     private String privacyCommitteeEmails;
 
+    @Column(columnDefinition="TEXT")
+    private String excerptListRemark;
+    
     public RequestProperties() {
         
     }
@@ -184,6 +187,14 @@ public class RequestProperties {
 
     public void setExcerptList(ExcerptList excerptList) {
         this.excerptList = excerptList;
+    }
+
+    public String getExcerptListRemark() {
+        return excerptListRemark;
+    }
+
+    public void setExcerptListRemark(String excerptListRemark) {
+        this.excerptListRemark = excerptListRemark;
     }
     
 }

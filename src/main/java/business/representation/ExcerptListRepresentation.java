@@ -3,21 +3,14 @@ package business.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Transient;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 
 public class ExcerptListRepresentation {
 
-    Log log = LogFactory.getLog(getClass());
-    
     private Long id;
     private List<String> columnNames = new ArrayList<String>();
-    private List<List<String>> values = new ArrayList<List<String>>();
+    private List<ExcerptEntryRepresentation> entries = new ArrayList<ExcerptEntryRepresentation>();
     
     public ExcerptListRepresentation() {
         
@@ -28,12 +21,8 @@ public class ExcerptListRepresentation {
         for (String name: list.getCsvColumnNames()) {
             this.columnNames.add(name);
         }
-        for (ExcerptEntry entry: list.getEntries()) {
-            List<String> row = new ArrayList<String>();
-            for (String value: entry.getCsvValues()) {
-                row.add(value);
-            }
-            this.values.add(row);
+        for (ExcerptEntry entry: list.getEntryValues()) {
+            entries.add(new ExcerptEntryRepresentation(entry));
         }
     }
 
@@ -53,12 +42,12 @@ public class ExcerptListRepresentation {
         this.columnNames = columnNames;
     }
 
-    public List<List<String>> getValues() {
-        return values;
+    public List<ExcerptEntryRepresentation> getEntries() {
+        return entries;
     }
 
-    public void setValues(List<List<String>> values) {
-        this.values = values;
+    public void setEntries(List<ExcerptEntryRepresentation> entries) {
+        this.entries = entries;
     }
-    
+
 }

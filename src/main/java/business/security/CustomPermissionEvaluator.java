@@ -1,6 +1,7 @@
 package business.security;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import business.exceptions.InvalidPermissionExpression;
+import business.exceptions.NullIdentifier;
 import business.models.User;
 import business.representation.RequestRepresentation;
 import business.services.RequestFormService;
@@ -36,6 +38,21 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     
     Log log = LogFactory.getLog(getClass());
     
+    private void checkTargetDomainObjectNotNull(Object targetDomainObject) {
+        if (targetDomainObject == null) {
+            throw new NullIdentifier();
+        }
+    }
+    
+    /**
+     * FIXME: documentation:
+     * - isAssignedToTask
+     * - requestAssignedToUser: hasPermission(#id, 'requestAssignedToUser')
+     * - isPalgaUser
+     * - isRequester
+     * - isScientificCouncil
+     * - isLabuser
+     */
     @Override
     public boolean hasPermission(Authentication authentication,
             Object targetDomainObject, Object permission) {
@@ -50,6 +67,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 + ", permission = " + permission.toString());
         if ("isAssignedToTask".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String taskId = (String)targetDomainObject;
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             log.info("isAssignedToTask: " + authentication.getName()
@@ -58,13 +76,15 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         } 
         else if ("requestAssignedToUser".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             log.info("requestAssignedToUser: user = " + user.getId()
                     + ", requestId = " + requestId);
-            Task task = taskService.createTaskQuery().processInstanceId(requestId)
+            long count = taskService.createTaskQuery().processInstanceId(requestId)
                     .active()
-                    .singleResult();
-            return task.getAssignee().equals(user.getId().toString());
+                    .taskAssignee(user.getId().toString())
+                    .count();
+            return (count > 0);
         } 
         else if ("isPalgaUser".equals(permission)) 
         {
@@ -75,7 +95,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
         else if ("isRequester".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
+            if (requestId == null)
             log.info("isRequester: user = " + user.getId()
                     + ", requestId = " + requestId);
             ProcessInstance instance = requestService.findProcessInstance(requestId);
@@ -85,6 +107,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         } 
         else if ("isScientificCouncil".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             log.info("isScientificCouncil: user = " + user.getId()
                     + ", requestId = " + requestId);
@@ -97,8 +120,18 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         } 
         else if ("isLabuser".equals(permission)) 
         {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
             log.info("isLabuser: user = " + user.getId());
-            return user.isLabUser();
+            if (!user.isLabUser()) {
+                return false;
+            }
+            long count = taskService
+                    .createTaskQuery()
+                    .processInstanceId(requestId)
+                    .processVariableValueEquals("lab", user.getLab().getNumber())
+                    .count();
+            return (count > 0);
         } 
         else 
         {

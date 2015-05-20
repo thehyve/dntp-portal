@@ -1,11 +1,10 @@
 package business.security;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -100,7 +99,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             if (requestId == null)
             log.info("isRequester: user = " + user.getId()
                     + ", requestId = " + requestId);
-            ProcessInstance instance = requestService.findProcessInstance(requestId);
+            HistoricProcessInstance instance = requestService.findProcessInstance(requestId);
             RequestRepresentation request = new RequestRepresentation();
             requestFormService.transferData(instance, request, user);
             return request.getRequesterId().equals(user.getId().toString());

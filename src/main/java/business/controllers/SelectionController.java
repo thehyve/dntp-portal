@@ -5,7 +5,7 @@ import java.util.TreeSet;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -159,7 +159,7 @@ public class SelectionController {
 
         taskService.complete(task.getId());
 
-        ProcessInstance instance = requestService.getProcessInstance(id);
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;

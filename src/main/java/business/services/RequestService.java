@@ -7,6 +7,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -38,19 +39,6 @@ public class RequestService {
     @Autowired
     private HistoryService historyService;
     
-    /**
-     * Finds current task. Assumes that exactly one task is currently active.
-     * @param requestId
-     * @return the current task if it exists.
-     */
-    public List<HistoricTaskInstance> getHistoricTasksByRequestId(String requestId) {
-        return historyService.createHistoricTaskInstanceQuery()
-                .processInstanceId(requestId)
-                .taskDefinitionKey("dna_isolation")
-                .orderByHistoricTaskInstanceEndTime()
-                .desc()
-                .list();
-    }
 
     /**
      * Finds current task. Assumes that exactly one task is currently active.
@@ -117,10 +105,12 @@ public class RequestService {
      * @param processInstanceId
      * @return the current request if it exists; null otherwise.
      */
-    public ProcessInstance findProcessInstance(String processInstanceId) {
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+    public HistoricProcessInstance findProcessInstance(String processInstanceId) {
+        HistoricProcessInstance instance = historyService
+                .createHistoricProcessInstanceQuery()
                 .includeProcessVariables()
-                .processInstanceId(processInstanceId).singleResult();
+                .processInstanceId(processInstanceId)
+                .singleResult();
         return instance;
     }
 
@@ -130,10 +120,12 @@ public class RequestService {
      * @return the current request if it exists.
      * @throws
      */
-    public ProcessInstance getProcessInstance(String processInstanceId) {
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+    public HistoricProcessInstance getProcessInstance(String processInstanceId) {
+        HistoricProcessInstance instance = historyService
+                .createHistoricProcessInstanceQuery()
                 .includeProcessVariables()
-                .processInstanceId(processInstanceId).singleResult();
+                .processInstanceId(processInstanceId)
+                .singleResult();
         if (instance == null) {
             throw new RequestNotFound();
         }

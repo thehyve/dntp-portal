@@ -31,6 +31,8 @@ grant all privileges on database dntp_portal to thehyve;
 or edit `src/main/resources/application.properties` to change
 the database settings.
 
+## Installation
+
 Make sure you have npm installed https://docs.npmjs.com/getting-started/installing-node
 
 - Install tools

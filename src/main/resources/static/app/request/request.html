@@ -411,7 +411,7 @@
                 
                 </div>
                 
-                <h4>{{'Other data files'|translate}}</h4>
+                <h4>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
                 <hr>
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="file in request.dataAttachments">
@@ -427,8 +427,8 @@
                         </span>
                     </li>
                 </ul>
-                <p ng-if="!request.dataAttachments">
-                    {{'No data files'|translate}}
+                <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">
+                    <i>{{'No data files.'|translate}}</i>
                 </p>
 
                 <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"

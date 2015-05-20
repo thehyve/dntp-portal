@@ -363,6 +363,10 @@
 
             <!-- If in 'DataDelivery' status -->
             <div ng-if="request.status=='DataDelivery'">
+            
+                <!-- If the request is not a statistics request (but also requires uploading an excerpt list) -->
+                <div ng-if="!request.statisticsRequest">
+                
                 <h4>{{'Excerpt list'|translate}}</h4>
                 <hr>
                 <label ng-if="request.excerptList">
@@ -403,6 +407,8 @@
                         {{'Select PA numbers'|translate}}
                     </button>
                     </a>
+                </div>
+                
                 </div>
                 
                 <h4>{{'Other data files'|translate}}</h4>

@@ -31,9 +31,15 @@ grant all privileges on database dntp_portal to thehyve;
 or edit `src/main/resources/application.properties` to change
 the database settings.
 
-Run `bower` to install the required Javascript and CSS libraries:
+Make sure you have npm installed https://docs.npmjs.com/getting-started/installing-node
+
+- Install tools
 ```
-bower install
+$ npm install 
+```
+- Install libs by running `bower` to install the required Javascript and CSS libraries:
+```
+$ bower install 
 ```
 
 ## Build with Maven
@@ -56,3 +62,10 @@ There should now be a `.war`-file in `target/dntp-portal-0.0.1-SNAPSHOT.war`.
 ```
 mvn -Dspring.profiles.active=dev test
 ```
+
+## Running front-end unit testing and e2e testing
+
+* `gulp test` to launch your unit tests with Karma
+* `gulp test:auto` to launch your unit tests with Karma in watch mode
+* `gulp protractor` to launch your e2e tests with Protractor
+* `gulp protractor:dist` to launch your e2e tests with Protractor on the dist files

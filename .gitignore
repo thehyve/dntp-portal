@@ -1,4 +1,6 @@
 /node_modules/
+/dist/
+/.tmp/
 /src/main/resources/static/bower_components/
 /build/
 /classes/

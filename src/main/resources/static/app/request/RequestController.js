@@ -89,6 +89,7 @@ angular.module('ProcessApp.controllers')
             
             $scope.fileuploaderror = function(data, excerpts) {
                 if (excerpts) {
+                    $scope.excerptlist_upload_error = data;
                     $scope.excerptlist_upload_result = "error";
                 } else {
                     $scope.fileupload_result = "error";
@@ -202,7 +203,7 @@ angular.module('ProcessApp.controllers')
                     'After submission the request cannot be edited anymore.',
                     function(confirmed) {
                         if (confirmed) {
-                            //console.log('request.type ', request.type );
+                            Request.convertRequestTypeToOpts(request); // convert request type
                             request.$submit(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();

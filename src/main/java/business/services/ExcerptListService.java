@@ -7,9 +7,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,13 +27,18 @@ import business.exceptions.ExcerptListUploadError;
 import business.exceptions.FileUploadError;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
+import business.models.Lab;
+import business.models.LabRepository;
 
 @Service
 public class ExcerptListService {
 
     Log log = LogFactory.getLog(getClass());
     
+    @Autowired LabRepository labRepository;
+    
     public ExcerptList processExcerptList(MultipartFile file) {
+        Set<Integer> validLabNumbers = new TreeSet<Integer>();
         log.info("Processing excerpt list");
         try {
             CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()), ';', '"');
@@ -49,7 +57,18 @@ public class ExcerptListService {
             while ((nextLine = reader.readNext()) != null) {
                 log.info("Line " + line);
                 try {
-                    list.addEntry(nextLine);
+                    ExcerptEntry entry = list.addEntry(nextLine);
+                    // check lab number
+                    if (!validLabNumbers.contains(entry.getLabNumber())) {
+                        Lab lab = labRepository.findByNumber(entry.getLabNumber());
+                        if (lab == null) {
+                            throw new ExcerptListUploadError(
+                                    "Lab not found: " + entry.getLabNumber());
+                        } else {
+                            validLabNumbers.add(entry.getLabNumber());
+                        }
+                    }
+                    
                 } catch (RuntimeException e) {
                     reader.close();
                     throw new ExcerptListUploadError("Line " + line + ": " + e.getMessage());

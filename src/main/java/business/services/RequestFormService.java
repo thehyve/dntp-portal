@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
@@ -74,9 +75,9 @@ public class RequestFormService {
                 + (user.getLastName() == null ? "" : user.getLastName());
     }
     
-    public void transferData(ProcessInstance instance, RequestListRepresentation request, User currentUser) {
+    public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
 
-        request.setProcessInstanceId(instance.getProcessInstanceId());
+        request.setProcessInstanceId(instance.getId());
 
         Map<String, Object> variables = instance.getProcessVariables();
 
@@ -106,7 +107,7 @@ public class RequestFormService {
                                             
                         // fetch my vote, number of votes
                         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                                instance.getProcessInstanceId());
+                                instance.getId());
                         Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
                         request.setNumberOfApprovalVotes(votes.size());
                         if (votes.containsKey(currentUser.getId())) {
@@ -135,12 +136,13 @@ public class RequestFormService {
         }
     }
 
-    public void transferData(ProcessInstance instance, RequestRepresentation request, User currentUser) {
+    public void transferData(HistoricProcessInstance instance, RequestRepresentation request, User currentUser) {
         boolean is_palga = currentUser == null ? false : currentUser.isPalga();
         boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();
 
-        request.setProcessInstanceId(instance.getProcessInstanceId());
-        request.setActivityId(instance.getActivityId());
+        request.setProcessInstanceId(instance.getId());
+        
+        //request.setActivityId(instance.getActivityId()); // fetch from runtimeService?
 
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
@@ -212,7 +214,7 @@ public class RequestFormService {
             List<AttachmentRepresentation> agreementAttachments = new ArrayList<AttachmentRepresentation>();
             List<AttachmentRepresentation> dataAttachments = new ArrayList<AttachmentRepresentation>();
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                    instance.getProcessInstanceId());
+                    instance.getId());
 
             Set<String> agreementAttachmentIds = properties.getAgreementAttachmentIds();
             Set<String> dataAttachmentIds = properties.getDataAttachmentIds();
@@ -280,17 +282,18 @@ public class RequestFormService {
                 request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
                 Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
                 Set<Integer> selectedLabSet = new TreeSet<Integer>();
-                for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                if (selectedLabs != null) {
+                    for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                }
                 request.setSelectedLabs(selectedLabSet);
                 request.setExcerptListRemark(properties.getExcerptListRemark());
             }
-            log.info("Not setting excerpt list.");
         }
     }
 
-    public Map<String, Object> transferFormData(RequestRepresentation request, ProcessInstance instance, User user) {
+    public Map<String, Object> transferFormData(RequestRepresentation request, HistoricProcessInstance instance, User user) {
         boolean is_palga = user.isPalga();
-        request.setProcessInstanceId(instance.getProcessInstanceId());
+        request.setProcessInstanceId(instance.getId());
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             variables.put("title", request.getTitle());
@@ -335,7 +338,7 @@ public class RequestFormService {
                 } else {
                     variables.put("request_is_admissible", Boolean.FALSE);
                 }
-                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getProcessInstanceId());
+                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
                 properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
                 properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
                 properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());

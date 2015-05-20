@@ -9,6 +9,11 @@ import business.models.Lab;
 
 public class LabRequestRepresentation {
 
+    /** 
+     * Task id from Activiti. This is a unique identifier for lab requests.
+     */
+    private String taskId;
+    
     private String processInstanceId;
     
     private String requesterId;
@@ -28,6 +33,14 @@ public class LabRequestRepresentation {
 
     public LabRequestRepresentation() {
 
+    }
+    
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
     public String getProcessInstanceId() {

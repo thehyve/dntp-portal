@@ -147,7 +147,7 @@ public class ExcerptList implements Serializable {
         this.entries.put(this.entries.size(), entry);
     }
     
-    public void addEntry(String[] data) {
+    public ExcerptEntry addEntry(String[] data) {
         if (data.length != columnNames.size() + 2) {
             throw new InvalidRow("Row length does not match header length.");
         }
@@ -168,5 +168,6 @@ public class ExcerptList implements Serializable {
         // not thread-safe, but that is not required here anyway.
         entry.setSequenceNumber(this.entries.size() + 1);
         this.entries.put(this.entries.size(), entry);
+        return entry;
     }
 }

@@ -371,7 +371,7 @@
                 
                 <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
                      flow-name="excerptListFlow"
-                     flow-files-submitted="$scope.fileupload_result = ''; $flow.upload()"
+                     flow-files-submitted="$scope.excerptlist_upload_error = ''; $scope.fileupload_result = ''; $flow.upload()"
                      flow-file-success="fileuploadsuccess(request, $message, true)"
                      flow-file-error="fileuploaderror($message, true)"
                      ng-if="globals.currentUser.roles.indexOf('palga') != -1"
@@ -380,7 +380,7 @@
                         {{ 'Excerpt list uploaded.' | translate }}
                     </div>
                     <div class="alert alert-danger" role="alert" ng-show="excerptlist_upload_result == 'error'">
-                        {{ 'Error uploading excerpt list.' | translate }}
+                        {{ excerptlist_upload_error | translate }}
                     </div>
                     
                     <div>

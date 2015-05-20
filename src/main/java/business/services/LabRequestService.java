@@ -57,6 +57,7 @@ public class LabRequestService {
             @NotNull HistoricTaskInstance task, 
             @NotNull Integer labNumber) {
         log.info("labrequest: " + labrequest + ", task: " + task);
+        labrequest.setTaskId(task.getId());
         labrequest.setProcessInstanceId(task.getProcessInstanceId());
         
         // get task data

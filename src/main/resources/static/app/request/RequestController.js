@@ -106,6 +106,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.refresh = function(request, result) {
+                result.type = Request.convertRequestOptsToType(result);
                 var index = -1;
                 for (var i in $scope.requests) {
                     if ($scope.requests[i].processInstanceId === request.processInstanceId) {
@@ -355,6 +356,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.claim = function(request) {
                 request.$claim(function(result) {
+                    result.type = Request.convertRequestOptsToType(result);
                     $scope.requests[$scope.requests.indexOf(request)] = result;
                 }, function(response) {
                     $scope.error = response.statusText;
@@ -363,6 +365,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.unclaim = function(request) {
                 request.$unclaim(function(result) {
+                    result.type = Request.convertRequestOptsToType(result);
                     $scope.requests[$scope.requests.indexOf(request)] = result;
                 }, function(response) {
                     $scope.error = response.statusText;

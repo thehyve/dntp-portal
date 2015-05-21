@@ -8,16 +8,18 @@
 
     <div class="main">
     
-    <p>Select/deselect: <kbd>Space</kbd>, down: <kbd>&darr;</kbd>, up: <kbd>&uarr;</kbd>.</p>
-    
-    <p>Index: {{currentIndex}}</p>
+    <div class="panel panel-default">
+        <div class="panel-body">
+        Select/deselect: <kbd>Space</kbd>, down: <kbd>&darr;</kbd>, up: <kbd>&uarr;</kbd>.
+        </div>
+    </div>
     
     <ul class="list-group">
         <li class="list-group-item {{excerpt.selected ? 'list-group-item-info' : ''}} {{$index == currentIndex ? 'active':''}}"
             ng-repeat="excerpt in request.excerptList.entries track by excerpt.id"
             id="excerpt_{{excerpt.id}}">
             <h4 class="list-group-item-heading">
-                <label>Excerpt {{excerpt.values[0]}}</label>
+                Excerpt {{excerpt.values[0]}}
                 &nbsp;
                 <i ng-if="excerpt.selected" class="glyphicon glyphicon-check"></i>
                 <span class="pull-right">
@@ -35,11 +37,26 @@
                 </span>
                 </span>
             </h4>
-            <div>
-                <p ng-repeat="fieldName in relevantFields">
-                {{fieldName}}: {{excerpt.values[relevantIndexes[$index]] | limitTo: 25}}
-                {{(value.length > 25) ? '...' : ''}}
-                </p>
+            <div ng-show="$index == currentIndex">
+            <div class="row" ng-repeat="fieldName in relevantFields">
+                <div class="col-xs-2 col-md-1">
+                    {{fieldName}}
+                </div>
+                <div class="col-xs-10 col-md-5"> 
+                    <span ng-bind-html="xls2html(excerpt.values[relevantIndexes[$index]])"></span>
+                </div>
+            </div>
+            </div>
+            <div ng-show="$index != currentIndex">
+            <div class="row" ng-repeat="fieldName in relevantFields">
+                <div class="col-xs-2 col-md-1">
+                    {{fieldName}}
+                </div>
+                <div class="col-xs-10 col-md-5">
+                    <span ng-bind-html="xls2html(excerpt.values[relevantIndexes[$index]]) | limitTo: 100"></span>
+                    {{(excerpt.values[relevantIndexes[$index]].length > 100) ? '...' : ''}}
+                </div>
+            </div>
             </div>
         </li>
     </ul>

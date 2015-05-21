@@ -28,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -66,7 +67,9 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-        .userDetailsService(userDetailsService())
+        .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
+        .and()
+            .userDetailsService(userDetailsService())
                 .formLogin()
                 .permitAll()
                 .failureHandler(authenticationFailureHandler)

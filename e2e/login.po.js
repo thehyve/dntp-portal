@@ -11,6 +11,17 @@ var LoginPage = function() {
   this.loginH1El = this.loginContainer.element(by.css('h1'));
   this.loginUsernameEl = this.loginContainer.element(by.id('username'));
   this.loginPasswordEl = this.loginContainer.element(by.id('password'));
+
+  this.submit = function() {
+      this.loginContainer.element(by.buttonText('Login')).submit();
+  }
+
+  this.verify = function() {
+    expect(this.loginH1El.getText()).toBe('Login');
+    expect(this.loginUsernameEl);
+    expect(this.loginPasswordEl);
+  }
+
 };
 
 module.exports = new LoginPage;

@@ -135,4 +135,4 @@ var messagesNL =
     'Filter by Asignee': 'Filteren door Gevolmachtigde',
 
     null : null
-}
+};

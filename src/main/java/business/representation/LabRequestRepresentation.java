@@ -15,7 +15,9 @@ public class LabRequestRepresentation {
     private String taskId;
     
     private String processInstanceId;
-    
+
+    private RequestListRepresentation requestListRepresentation;
+
     private String requesterId;
     private String requesterName;
     private String requesterEmail;
@@ -28,7 +30,7 @@ public class LabRequestRepresentation {
     private Lab lab;
 
     private ExcerptListRepresentation excerptList;
-    
+
     private String excerptListRemark;
 
     public LabRequestRepresentation() {
@@ -122,5 +124,12 @@ public class LabRequestRepresentation {
     public void setExcerptListRemark(String excerptListRemark) {
         this.excerptListRemark = excerptListRemark;
     }
-    
+
+    public RequestListRepresentation getRequestListRepresentation() {
+      return requestListRepresentation;
+    }
+
+    public void setRequestListRepresentation(RequestListRepresentation requestListRepresentation) {
+      this.requestListRepresentation = requestListRepresentation;
+    }
 }

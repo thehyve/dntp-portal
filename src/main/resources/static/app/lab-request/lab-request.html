@@ -1,0 +1,99 @@
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!--HEADER-->
+      <div class="modal-header">
+        <h3 class="modal-title">Lab Request : {{labRequest.taskId}}</h3>
+      </div>
+
+      <!--BODY-->
+      <div class="modal-body form-horizontal">
+
+        <!--Parent request details-->
+        <div class="form-group">
+          <label class="control-label col-sm-3">{{ 'Request Title' | translate }}</label>
+          <p class="col-sm-7">
+            {{labRequest.requestListRepresentation.title}}
+            <br>
+          </p>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-3">{{ 'Created Date' | translate }}</label>
+          <p class="col-sm-7">
+            {{labRequest.requestListRepresentation.dateCreated | date }}
+            <br>
+          </p>
+        </div>
+
+        <div ng-if="globals.currentUser.roles.indexOf('requester') == -1" >
+          <!--Requester info-->
+          <!--Displayed only to users with non requester role-->
+          <div class="form-group">
+            <label class="control-label col-sm-3">{{ 'Requester Name' | translate }}</label>
+            <p class="col-sm-7">
+              {{labRequest.requesterName}}
+              <br>
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3">{{ 'Email' | translate }}</label>
+            <p class="col-sm-7">
+              {{labRequest.requesterEmail}}
+              <br>
+            </p>
+          </div>
+        </div>
+
+        <div ng-if="globals.currentUser.roles.indexOf('lab_user') == -1" >
+          <!--Lab Info-->
+          <!--Displayed only to users with non lab user role-->
+          <div class="form-group">
+            <label class="control-label col-sm-3">{{ 'Lab' | translate }}</label>
+            <p class="col-sm-7">
+              {{"Lab" | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
+              <br>
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
+          <p class="col-sm-7">
+            {{labRequest.requesterEmail}}
+            <br>
+          </p>
+        </div>
+
+        <!--Excerpt List Details-->
+
+        <div style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">
+          <table st-table="rowCollection" class="table">
+            <thead>
+            <tr>
+              <th></th>
+              <th ng-repeat="value in labRequest.excerptList.columnNames track by $index">{{value}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="excerpt in labRequest.excerptList.entries track by excerpt.id" >
+              <td cs-select="row"></td>
+              <td  ng-repeat="value in excerpt.values track by $index">
+                {{value}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!--FOOTER-->
+      <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel(request);">{{'Cancel'|translate}}</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+

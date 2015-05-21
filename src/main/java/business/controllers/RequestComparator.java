@@ -45,10 +45,10 @@ public class RequestComparator implements Comparator<HistoricProcessInstance> {
         if (s0 < s1) { return -1; }
         else if (s1 < s0) { return 1; }
         else {
-            Long id0 = Long.valueOf(arg0.getId());
-            Long id1 = Long.valueOf(arg1.getId());
-            if (id0 > id1) { return -1; }
-            else if (id1 > id0) { return 1; }
+            long start0 = arg0.getStartTime().getTime();
+            long start1 = arg1.getStartTime().getTime();
+            if (start0 > start1) { return -1; }
+            else if (start1 > start0) { return 1; }
         }
         return 0;
     }

@@ -406,7 +406,7 @@
                             {{'Finalise'|translate}}
                     </button>
                     <button class="btn btn-danger" type="button"
-                        ng-if="request.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1"
+                        ng-if="(request.status=='Review' || request.status=='Approval') && globals.currentUser.roles.indexOf('palga') != -1"
                         ng-click="reject(request)"
                         ng-disabled="requestEditForm.$invalid
                         ">

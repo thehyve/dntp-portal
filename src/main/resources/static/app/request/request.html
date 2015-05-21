@@ -363,6 +363,10 @@
 
             <!-- If in 'DataDelivery' status -->
             <div ng-if="request.status=='DataDelivery'">
+            
+                <!-- If the request is not a statistics request (but also requires uploading an excerpt list) -->
+                <div ng-if="!request.statisticsRequest">
+                
                 <h4>{{'Excerpt list'|translate}}</h4>
                 <hr>
                 <label ng-if="request.excerptList">
@@ -405,7 +409,9 @@
                     </a>
                 </div>
                 
-                <h4>{{'Other data files'|translate}}</h4>
+                </div>
+                
+                <h4>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
                 <hr>
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="file in request.dataAttachments">
@@ -421,8 +427,8 @@
                         </span>
                     </li>
                 </ul>
-                <p ng-if="!request.dataAttachments">
-                    {{'No data files'|translate}}
+                <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">
+                    <i>{{'No data files.'|translate}}</i>
                 </p>
 
                 <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
@@ -454,6 +460,17 @@
                          ng-style="style">
                         ({{'drag and drop your file here'|translate}})
                     </div>
+                </div>
+                
+                <div ng-if="(!request.paReportRequest && !request.materialsRequest)
+                    && globals.currentUser.roles.indexOf('palga') != -1">
+                    <button type="button" class="btn btn-primary"
+                        ng-disabled="request.assignee != globals.currentUser.userid"
+                        ng-click="closeRequest(request)"
+                        >
+                        {{'Close request'|translate}}
+                    </button>
+                    </a>
                 </div>
 
             </div> <!-- endif DataDelivery -->

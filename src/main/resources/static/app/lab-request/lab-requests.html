@@ -24,6 +24,15 @@
       <h1>{{ 'Lab Requests' | translate }}</h1>
       <hr>
 
+      <!-- Alert -->
+      <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeAlert();">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{alert.msg | translate}}
+      </div>
+
+
       <!--List of Lab Requests-->
       <div class="table-responsive" ng-if="authenticated">
 

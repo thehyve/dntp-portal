@@ -7,25 +7,29 @@ angular.module('ProcessApp.controllers')
     function ($rootScope, $scope, $modal, $location, $route,
               LabRequest, Restangular) {
 
+      $scope.alerts = [];
 
-
-      Restangular.all('labrequests').getList().then(function (labRequests) {
+      Restangular.all('labrequeests').getList().then(function (labRequests) {
 
         $scope.labRequests = labRequests;
-        console.log(labRequests);
+        ///console.log(labRequests);
 
-      }, function () {
-        console.log("error");
+      }, function (err) {
+        $scope.alerts.push({type: 'danger', msg: 'Error : ' + err.data.status  + ' - ' + err.data.error });
       });
 
       $scope.edit = function (labRequest) {
-        console.log(labRequest);
+        // console.log(labRequest);
         $scope.labRequest = labRequest;
         $scope.editRequestModal = $modal({id: 'labRequestWindow', scope: $scope, template: '/app/lab-request/lab-request.html', backdrop: 'static'});
       };
 
       $scope.cancel = function (labRequest) {
         $scope.editRequestModal.hide();
+      };
+
+      $scope.closeAlert = function (index) {
+        $scope.alerts.splice(index, 1);
       };
 
     }]);

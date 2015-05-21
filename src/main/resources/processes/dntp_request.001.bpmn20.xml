@@ -91,11 +91,17 @@
         </extensionElements>
     </userTask>
 
-    <sequenceFlow id="review_to_approval" sourceRef="palga_request_review" targetRef="status_approval">
+    <sequenceFlow id="review_to_approval_or_rejected" sourceRef="palga_request_review" targetRef="to_approval_or_rejected"></sequenceFlow>
+
+    <!-- Choice between:
+        - 'rejected' if not request_is_admissible
+        - 'approval' if request_is_admissible;
+    -->
+    <exclusiveGateway id="to_approval_or_rejected" name="Approval or rejected" />
+    <sequenceFlow id="review_to_approval" sourceRef="to_approval_or_rejected" targetRef="status_approval">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == true} ]]></conditionExpression>
     </sequenceFlow>
-
-    <sequenceFlow id="review_to_closed" sourceRef="palga_request_review" targetRef="status_closed">
+    <sequenceFlow id="review_to_rejected" sourceRef="to_approval_or_rejected" targetRef="status_rejected">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == false} ]]></conditionExpression>
     </sequenceFlow>
 
@@ -167,6 +173,7 @@
         </documentation>
     </userTask>
 
+    <sequenceFlow id="data_delivery_to_lab_request_or_closed" sourceRef="data_delivery" targetRef="to_lab_request_or_closed"></sequenceFlow>
 
     <!-- Choice between 'lab request' (if is_pa_report_request or is_materials_request) or 'closed' status. -->
     <exclusiveGateway id="to_lab_request_or_closed" name="Lab request or closed" />

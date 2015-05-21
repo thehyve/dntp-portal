@@ -461,6 +461,17 @@
                         ({{'drag and drop your file here'|translate}})
                     </div>
                 </div>
+                
+                <div ng-if="(!request.paReportRequest && !request.materialsRequest)
+                    && globals.currentUser.roles.indexOf('palga') != -1">
+                    <button type="button" class="btn btn-primary"
+                        ng-disabled="request.assignee != globals.currentUser.userid"
+                        ng-click="closeRequest(request)"
+                        >
+                        {{'Close request'|translate}}
+                    </button>
+                    </a>
+                </div>
 
             </div> <!-- endif DataDelivery -->
 

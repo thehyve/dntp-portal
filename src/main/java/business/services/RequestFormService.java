@@ -267,6 +267,8 @@ public class RequestFormService {
                 request.setRequesterLabValid(fetchBooleanVariable("requester_lab_is_valid", variables));
                 request.setAgreementReached(fetchBooleanVariable("agreement_reached", variables));
                 
+                request.setRequestAdmissible(fetchBooleanVariable("request_is_admissible", variables));
+                
                 request.setScientificCouncilApproved(fetchBooleanVariable("scientific_council_approved", variables));
                 request.setPrivacyCommitteeApproved(fetchBooleanVariable("privacy_committee_approved", variables));
                 
@@ -322,6 +324,8 @@ public class RequestFormService {
                 variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
                 variables.put("agreement_reached", (Boolean)request.isAgreementReached());
                 
+                variables.put("request_is_admissible", (Boolean)request.isRequestAdmissible());
+                
                 variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
                 variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
                 
@@ -329,13 +333,12 @@ public class RequestFormService {
                 variables.put("reject_reason", request.getRejectReason());
                 variables.put("reject_date", request.getRejectDate());
                 
-                if (request.isRequesterValid()
+                if (!(request.isRequesterValid()
                         && request.isRequesterAllowed()
                         && request.isContactPersonAllowed()
                         && request.isRequesterLabValid()
-                        && request.isAgreementReached()) {
-                    variables.put("request_is_admissible", Boolean.TRUE);
-                } else {
+                        && request.isAgreementReached())) {
+                    log.info("Request not admissible");
                     variables.put("request_is_admissible", Boolean.FALSE);
                 }
                 RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());

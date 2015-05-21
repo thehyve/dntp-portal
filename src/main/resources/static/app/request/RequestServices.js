@@ -153,7 +153,7 @@
             };
 
             for (var i=0; i<mapTypeToOpts.length; i++) {
-                if (JSON.stringify(mapTypeToOpts[i]) == JSON.stringify(requestOptsObj)) {
+                if (JSON.stringify(mapTypeToOpts[i]) === JSON.stringify(requestOptsObj)) {
                     return i+1;
                 }
             }

@@ -11,4 +11,4 @@ var messagesEN =
         'Request_Type_7' : 'Request for materials only',
 
         null: null
-}
+};

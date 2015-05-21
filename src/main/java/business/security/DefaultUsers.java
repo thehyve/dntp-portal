@@ -48,7 +48,7 @@ public class DefaultUsers {
             if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
                 Set<Role> roles = new HashSet<Role>();
                 roles.add(role);
-                String password = r; //passwordEncoder.encode("admin");
+                String password = passwordEncoder.encode(r);
                 User user = new User(username, password, true, roles);
                 user.setFirstName(r);
                 ContactData contactData = new ContactData();

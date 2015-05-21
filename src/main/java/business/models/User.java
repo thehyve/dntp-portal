@@ -195,6 +195,7 @@ public class User implements Serializable {
         return this.username;
     }
 
+    // Set the BCrypt hashed password
     public void setPassword(String password) {
         this.password = password;
     }

@@ -61,3 +61,9 @@ There should now be a `.war`-file in `target/dntp-portal-0.0.1-SNAPSHOT.war`.
 ```
 mvn -Dspring.profiles.active=dev test
 ```
+
+## Release notes
+When updating from 0.0.4 to 0.0.5, an existing database can be updated with:
+```
+alter table excerpt_entry add selected boolean;
+```

@@ -9,7 +9,7 @@ angular.module('ProcessApp.controllers')
 
       $scope.alerts = [];
 
-      Restangular.all('labrequeests').getList().then(function (labRequests) {
+      Restangular.all('labrequests').getList().then(function (labRequests) {
 
         $scope.labRequests = labRequests;
         ///console.log(labRequests);

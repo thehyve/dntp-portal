@@ -2,6 +2,7 @@
 
 describe('The main view', function () {
   var loginPage;
+  var navPage
   var page;
 
   beforeEach(function () {
@@ -10,27 +11,22 @@ describe('The main view', function () {
     loginPage = require('./login.po');
     loginPage.verify();
     loginPage.submit();
+    navPage = require('./nav.po');
   });
 
   afterEach(function () {
-    //TODO: logout here
+    navPage.verify();
+    navPage.doLogout();
   });
 
-  /*
-  it('should include jumbotron with correct data', function() {
-    expect(page.h1El.getText()).toBe('\'Allo, \'Allo!');
-    expect(page.imgEl.getAttribute('src')).toMatch(/assets\/images\/yeoman.png$/);
-    expect(page.imgEl.getAttribute('alt')).toBe('I\'m Yeoman');
-  });
-
-  it('list more than 5 awesome things', function () {
-    expect(page.thumbnailEls.count()).toBeGreaterThan(5);
-  });
-  */
-
-  it('login works', function() {
+  it('logs in properly', function() {
       //TODO: verify post-login page components
-      browser.sleep(5000);
+      browser.sleep(1000);
+  })
+
+  it('creates a new request', function() {
+      //TODO: implement me
+      browser.sleep(1000);
   })
 
 });

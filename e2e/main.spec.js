@@ -1,11 +1,19 @@
 'use strict';
 
 describe('The main view', function () {
+  var loginPage;
   var page;
 
   beforeEach(function () {
-    browser.get('http://localhost:3000/index.html');
-    page = require('./main.po');
+    //browser.get('http://localhost:3000/index.html');
+    browser.get('http://localhost:8092/');
+    loginPage = require('./login.po');
+    loginPage.verify();
+    loginPage.submit();
+  });
+
+  afterEach(function () {
+    //TODO: logout here
   });
 
   /*
@@ -20,9 +28,9 @@ describe('The main view', function () {
   });
   */
 
-  it('should has container with correct data', function() {
-    expect(page.loginH1El.getText()).toBe('Login');
-    expect(page.loginUsernameEl)
+  it('login works', function() {
+      //TODO: verify post-login page components
+      browser.sleep(5000);
   })
 
 });

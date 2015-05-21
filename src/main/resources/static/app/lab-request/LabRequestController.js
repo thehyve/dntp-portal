@@ -8,13 +8,6 @@ angular.module('ProcessApp.controllers')
               LabRequest, Restangular) {
 
 
-      $scope.labRequests = [
-        {
-
-          dateCreated : 1000000,
-          status : 'PENDING'
-        }
-      ];
 
       Restangular.all('labrequests').getList().then(function (labRequests) {
 
@@ -24,5 +17,15 @@ angular.module('ProcessApp.controllers')
       }, function () {
         console.log("error");
       });
+
+      $scope.edit = function (labRequest) {
+        console.log(labRequest);
+        $scope.labRequest = labRequest;
+        $scope.editRequestModal = $modal({id: 'labRequestWindow', scope: $scope, template: '/app/lab-request/lab-request.html', backdrop: 'static'});
+      };
+
+      $scope.cancel = function (labRequest) {
+        $scope.editRequestModal.hide();
+      };
 
     }]);

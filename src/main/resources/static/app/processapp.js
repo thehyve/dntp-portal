@@ -1,6 +1,7 @@
 'use strict';
 
 (function(angular) {
+
     angular.module('ProcessApp.services', []);
     angular.module('ProcessApp.directives', []);
     angular.module('ProcessApp.controllers', ['restangular'])
@@ -42,6 +43,9 @@
                 templateUrl : 'app/admin/user/users.html'
             }).when('/labs', {
                 templateUrl : 'app/admin/lab/labs.html'
+            }).when('/lab-requests', {
+              templateUrl : 'app/lab-request/lab-requests.html',
+              controller : 'LabRequestController'
             }).when('/request/view/:requestId', {
                 templateUrl : 'app/request/request.html',
                 controller : 'RequestController'

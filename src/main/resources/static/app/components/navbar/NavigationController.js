@@ -24,6 +24,10 @@ angular.module('ProcessApp.controllers')
                 return checkRoles(['HAS_MANAGE_REQUEST_PAGE_AUTH']);
             };
 
+            $scope.isViewLabRequestsAllowed = function() {
+              return checkRoles(['HAS_MANAGE_LAB_REQUEST_PAGE_AUTH']);
+            };
+
             $scope.isViewUsersAllowed = function() {
                 return checkRoles(['HAS_MANAGE_USER_PAGE_AUTH']);
             };

@@ -59,6 +59,7 @@ public class RequestRepresentation {
     private boolean contactPersonAllowed;
     private boolean requesterLabValid;
     private boolean agreementReached;
+    private boolean requestAdmissible;
     
     private boolean scientificCouncilApproved;
     private boolean privacyCommitteeApproved;
@@ -341,6 +342,14 @@ public class RequestRepresentation {
 
     public void setAgreementReached(boolean agreementReached) {
         this.agreementReached = agreementReached;
+    }
+    
+    public boolean isRequestAdmissible() {
+        return requestAdmissible;
+    }
+
+    public void setRequestAdmissible(boolean requestAdmissible) {
+        this.requestAdmissible = requestAdmissible;
     }
 
     public List<CommentRepresentation> getComments() {

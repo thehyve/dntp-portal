@@ -244,6 +244,22 @@ angular.module('ProcessApp.controllers')
                     });
             };
 
+            $scope.closeRequest = function(request) {
+                bootbox.confirm(
+                    'Are you sure you want to close the request?\n<br>' +
+                    'After closing, no data files can be added.',
+                    function(confirmed) {
+                        if (confirmed) {
+                            request.$close(function(result) {
+                                $scope.refresh(request, result);
+                                $scope.editRequestModal.hide();
+                            }, function(response) {
+                                $scope.error = $scope.error + response.data.message + '\n';
+                            });
+                        }
+                    });
+            };
+            
             $scope.reject = function(request) {
                 bootbox.prompt({
                     title: 'Are you sure you want to reject the request?\n<br>' +

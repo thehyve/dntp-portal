@@ -22,6 +22,10 @@
                 url : '/requests/:id/finalise',
                 method : 'PUT'
             },
+            close : {
+                url : '/requests/:id/close',
+                method : 'PUT'
+            },
             reject : {
                 url : '/requests/:id/reject',
                 method : 'PUT'

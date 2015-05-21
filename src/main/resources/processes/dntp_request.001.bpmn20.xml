@@ -91,11 +91,17 @@
         </extensionElements>
     </userTask>
 
-    <sequenceFlow id="review_to_approval" sourceRef="palga_request_review" targetRef="status_approval">
+    <sequenceFlow id="review_to_approval_or_rejected" sourceRef="palga_request_review" targetRef="to_approval_or_rejected"></sequenceFlow>
+
+    <!-- Choice between:
+        - 'rejected' if not request_is_admissible
+        - 'approval' if request_is_admissible;
+    -->
+    <exclusiveGateway id="to_approval_or_rejected" name="Approval or rejected" />
+    <sequenceFlow id="review_to_approval" sourceRef="to_approval_or_rejected" targetRef="status_approval">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == true} ]]></conditionExpression>
     </sequenceFlow>
-
-    <sequenceFlow id="review_to_closed" sourceRef="palga_request_review" targetRef="status_closed">
+    <sequenceFlow id="review_to_rejected" sourceRef="to_approval_or_rejected" targetRef="status_rejected">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == false} ]]></conditionExpression>
     </sequenceFlow>
 
@@ -141,16 +147,12 @@
     <sequenceFlow id="approval_to_delivery_or_rejected" sourceRef="approval_end" targetRef="to_delivery_or_rejected"></sequenceFlow>
     
     <!-- Choice between:
-        - 'data delivery' (if request_approved and not is_statistics_request);
-        - 'closed' (if request_approved and is_statistics_request);
-        - 'rejected' status. 
+        - 'data delivery' if request_approved;
+        - 'rejected' status otherwise. 
     -->
     <exclusiveGateway id="to_delivery_or_rejected" name="Data delivery or rejected" />
     <sequenceFlow id="approval_to_status_delivery" sourceRef="to_delivery_or_rejected" targetRef="status_data_delivery">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == true && is_statistics_request == false} ]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="approval_to_status_closed" sourceRef="to_delivery_or_rejected" targetRef="status_closed">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == true && is_statistics_request == true} ]]></conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == true} ]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="approval_to_status_rejected" sourceRef="to_delivery_or_rejected" targetRef="status_rejected">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == false} ]]></conditionExpression>
@@ -171,14 +173,19 @@
         </documentation>
     </userTask>
 
+    <sequenceFlow id="data_delivery_to_lab_request_or_closed" sourceRef="data_delivery" targetRef="to_lab_request_or_closed"></sequenceFlow>
 
     <!-- Choice between 'lab request' (if is_pa_report_request or is_materials_request) or 'closed' status. -->
     <exclusiveGateway id="to_lab_request_or_closed" name="Lab request or closed" />
     <sequenceFlow id="data_delivery_to_status_lab_request" sourceRef="to_lab_request_or_closed" targetRef="status_lab_request">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${is_pa_report_request == true || is_materials_request == true} ]]></conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${is_pa_report_request == true || is_materials_request == true} ]]>
+        </conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="data_delivery_to_status_closed" sourceRef="to_lab_request_or_closed" targetRef="status_closed">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${is_pa_report_request == false && is_materials_request == false} ]]></conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${is_pa_report_request == false && is_materials_request == false} ]]>
+        </conditionExpression>
     </sequenceFlow>
 
 

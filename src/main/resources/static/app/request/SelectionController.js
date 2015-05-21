@@ -28,11 +28,11 @@ angular.module('ProcessApp.controllers')
                                      'Jaar onderzoek',
                                      'Conclusie'
                                      ];
-            $scope.relevantIndexes = []
+            $scope.relevantIndexes = [];
             if ($scope.request) {
                 for (var field in $scope.relevantFields) {
                     var index = $scope.request.excerptList.columnNames.indexOf($scope.relevantFields[field]);
-                    //console.log("field "+field+": index = "+index);
+                    //console.log('field '+field+': index = '+index);
                     $scope.relevantIndexes.push(index);
                 }
             }
@@ -42,7 +42,7 @@ angular.module('ProcessApp.controllers')
             }
             
             $scope.toggleExcerpt = function(request, excerpt) {
-                //console.log("Toggle excerpt: " + excerpt.id + " for request " + request.processInstanceId);
+                //console.log('Toggle excerpt: ' + excerpt.id + ' for request ' + request.processInstanceId);
                 $scope.updateSelection(request, excerpt, !excerpt.selected);
             };
 

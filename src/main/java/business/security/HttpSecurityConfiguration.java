@@ -39,8 +39,7 @@ import business.models.UserRepository;
 @Configuration
 @EnableWebSecurity
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-public class HttpSecurityConfiguration extends
-        WebSecurityConfigurerAdapter {
+public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     Log log = LogFactory.getLog(getClass());
     
@@ -104,35 +103,6 @@ public class HttpSecurityConfiguration extends
                 .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
                 .csrf().csrfTokenRepository(csrfTokenRepository())
         ;
-    }
-
-    @Bean
-    protected UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-
-            @Autowired
-            UserRepository userRepository;
-
-            @Override
-            public UserDetails loadUserByUsername(String username)
-                    throws UsernameNotFoundException {
-                log.info("loadUserByUsername: " + username);
-                User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(username);
-                if (user != null) {
-                    List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
-                    for (Role r : user.getRoles()) {
-                        authorityList.add(AuthorityUtils.createAuthorityList(
-                                r.getName()).get(0));
-                    }
-                    return new org.springframework.security.core.userdetails.User(
-                            user.getUsername(), user.getPassword(), true, true,
-                            true, true, authorityList);
-                } else {
-                    throw new UsernameNotFoundException(
-                            "Could not find the user '" + username + "'.");
-                }
-            }
-        };
     }
 
     private CsrfTokenRepository csrfTokenRepository() {

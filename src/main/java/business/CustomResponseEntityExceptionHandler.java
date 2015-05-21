@@ -22,28 +22,20 @@ import business.exceptions.ExcerptListUploadError;
  * From http://www.jayway.com/2012/09/16/improve-your-spring-rest-api-part-i/
  */
 @ControllerAdvice
-public class CustomResponseEntityExceptionHandler extends
-        ResponseEntityExceptionHandler {
+public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        List<ObjectError> globalErrors = ex.getBindingResult()
-                .getGlobalErrors();
-        List<String> errors = new ArrayList<>(fieldErrors.size()
-                + globalErrors.size());
-        String error;
+        List<ObjectError> globalErrors = ex.getBindingResult() .getGlobalErrors();
+        List<String> errors = new ArrayList<>(fieldErrors.size() + globalErrors.size());
         for (FieldError fieldError : fieldErrors) {
-            error = fieldError.getField() + ", "
-                    + fieldError.getDefaultMessage();
-            errors.add(error);
+            errors.add(fieldError.getField() + ", " + fieldError.getDefaultMessage());
         }
         for (ObjectError objectError : globalErrors) {
-            error = objectError.getObjectName() + ", "
-                    + objectError.getDefaultMessage();
-            errors.add(error);
+            errors.add(objectError.getObjectName() + ", " + objectError.getDefaultMessage());
         }
         ErrorMessage errorMessage = new ErrorMessage(errors);
         return new ResponseEntity<Object>(errorMessage, headers, status);
@@ -54,8 +46,7 @@ public class CustomResponseEntityExceptionHandler extends
             HttpMediaTypeNotSupportedException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         String unsupported = "Unsupported content type: " + ex.getContentType();
-        String supported = "Supported content types: "
-                + MediaType.toString(ex.getSupportedMediaTypes());
+        String supported = "Supported content types: " + MediaType.toString(ex.getSupportedMediaTypes());
         ErrorMessage errorMessage = new ErrorMessage(unsupported, supported);
         return new ResponseEntity<Object>(errorMessage, headers, status);
     }

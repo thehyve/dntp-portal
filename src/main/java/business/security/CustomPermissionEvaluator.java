@@ -55,6 +55,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication authentication,
             Object targetDomainObject, Object permission) {
+
         if (!authentication.isAuthenticated()) {
             log.info("CustomPermissionEvaluator: User not authenticated.");
             return false;

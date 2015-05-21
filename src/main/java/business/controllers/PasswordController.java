@@ -4,6 +4,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,8 +23,9 @@ import business.validation.PasswordValidator;
 
 @RestController
 public class PasswordController {
-    //@Autowired
-    //private UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     UserService userService;
@@ -64,7 +66,7 @@ public class PasswordController {
         if (npr != null && PasswordValidator.validate(form.getPassword())) {
             // Update the password of the user and delete the npr
             User user = npr.getUser();
-            user.setPassword(form.getPassword());
+            user.setPassword(passwordEncoder.encode(form.getPassword()));
             this.userService.save(user);
             this.nprRepo.delete(npr);
             return new ResponseEntity<Object>(HttpStatus.OK);
@@ -83,8 +85,8 @@ public class PasswordController {
         // Update profile
         User currentUser = this.userService.getOne(user.getId());
 
-        if (currentUser.getPassword().equals(form.getOldPassword()) && PasswordValidator.validate(form.getNewPassword())) {
-            currentUser.setPassword(form.getNewPassword());
+        if (passwordEncoder.matches(form.getOldPassword(), currentUser.getPassword()) && PasswordValidator.validate(form.getNewPassword())) {
+            currentUser.setPassword(passwordEncoder.encode(form.getNewPassword()));
             this.userService.save(currentUser);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } else {

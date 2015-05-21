@@ -43,7 +43,7 @@ public class SecurityConfiguration extends GlobalAuthenticationConfigurerAdapter
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
         LogFactory.getLog(getClass()).info("INIT AUTH!!!");
-        auth.userDetailsService(userDetailsService)
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
             .and()
             .authenticationProvider(authenticationProvider);
         LogFactory.getLog(getClass()).info("INIT AUTH DONE!!!");

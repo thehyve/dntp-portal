@@ -49,17 +49,6 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
         public void onAuthenticationFailure(HttpServletRequest request,
                 HttpServletResponse response, AuthenticationException e)
                 throws IOException, ServletException {
-            StringBuilder sb = new StringBuilder();
-            for (Entry<String, String[]> entry : request.getParameterMap()
-                    .entrySet()) {
-                sb.append(entry.getKey()).append(":");
-                for (String s : entry.getValue()) {
-                    sb.append(" '").append(s).append("'");
-                }
-                sb.append(", ");
-            }
-            log.info("Authentication failure: " + sb.toString()
-                            + e.getMessage());
             response.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         }
     };

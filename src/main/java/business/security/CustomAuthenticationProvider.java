@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -36,6 +37,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     public boolean supports(Class<?> authentication) {
         if (authentication == UsernamePasswordAuthenticationToken.class) {
@@ -47,10 +51,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        log.info("AuthenticationProvider: "+
-                        "username: " + authentication.getName() + ", " +
-                        "password: " + authentication.getCredentials().toString()
-        );
+        log.info("username: " + authentication.getName());
         User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(authentication.getName());
         if (user != null) {
             if (user.isAccountTemporarilyBlocked()) {
@@ -68,8 +69,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     throw new UserAccountBlocked();
                 }
             }
-            if (user.getPassword().equals(
-                    authentication.getCredentials().toString())) {
+            if (passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
                 log.info("AuthenticationProvider: OK");
                 if (user.getFailedLoginAttempts() > 0) {
                     user.resetFailedLoginAttempts();
@@ -77,8 +77,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 }
                 List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
                 for (Role r : user.getRoles()) {
-                    authorityList.add(AuthorityUtils.createAuthorityList(
-                            r.getName()).get(0));
+                    authorityList.add(AuthorityUtils.createAuthorityList(r.getName()).get(0));
                 }
                 return new UserAuthenticationToken(user, authorityList);
             }

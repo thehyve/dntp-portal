@@ -11,6 +11,8 @@ angular.module('ProcessApp.controllers')
                   ApprovalComment, ApprovalVote,
                   FlowOptionService, $routeParams) {
 
+            $scope.serverurl = $location.protocol()+'://'+$location.host()+':'+$location.port();
+        
             $scope.error = '';
             $rootScope.tempRequest = null;
 

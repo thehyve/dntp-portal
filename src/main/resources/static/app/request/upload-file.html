@@ -38,7 +38,9 @@
 
     <div ng-if="request.excerptList
                       && (request.paReportRequest || request.materialsRequest)
-                      && globals.currentUser.roles.indexOf('requester') != -1">
+                      && globals.currentUser.roles.indexOf('requester') != -1
+                      && request.status=='DataDelivery'
+                      ">
       <a ng-href="/#/request/{{request.processInstanceId}}/selection">
         <button type="button" class="btn btn-primary">
           {{'Select PA numbers'|translate}}

@@ -1,0 +1,108 @@
+  <br>
+
+  <h4>{{'Checks by Palga'|translate}}</h4>
+  <hr>
+
+  <!-- Requester valid -->
+  <div class="form-group" ng-class="">
+    <label class="control-label col-sm-3" for="requesterValid">
+      &nbsp;
+    </label>
+    <div class="col-sm-8">
+      <input type="checkbox" id="requesterValid" name="requesterValid" value="1"
+             ng-model="request.requesterValid"> &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
+    </div>
+  </div>
+
+  <!-- Requester valid Lab-->
+  <div class="form-group" ng-class="">
+    <br>
+    <label class="control-label col-sm-3">
+      {{'Lab' | translate}}
+    </label>
+    <div class="col-sm-8">
+      <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
+      <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
+    </div>
+  </div>
+  <div class="form-group" ng-class="">
+    <label class="control-label col-sm-3" for="requesterLabValid">
+      &nbsp;
+    </label>
+    <div class="col-sm-8">
+      <input type="checkbox" id="requesterLabValid" name="requesterLabValid" value="1"
+             ng-model="request.requesterLabValid"> &nbsp; {{ 'The requester is indeed associated with the lab.' | translate }}
+    </div>
+  </div>
+
+  <!-- Requester allowed -->
+  <div class="form-group" ng-class="">
+    <label class="control-label col-sm-3" for="requesterAllowed">
+      &nbsp;
+    </label>
+    <div class="col-sm-8">
+      <input type="checkbox" id="requesterAllowed" name="requesterAllowed" value="1"
+             ng-model="request.requesterAllowed"> &nbsp; {{ 'The requester is allowed to file the request.' | translate }}
+    </div>
+  </div>
+
+  <!-- Contact person allowed -->
+  <div class="form-group" ng-class="">
+    <label class="control-label col-sm-3" for="contactPersonAllowed">
+      &nbsp;
+    </label>
+    <div class="col-sm-8">
+      <input type="checkbox" id="contactPersonAllowed" name="contactPersonAllowed" value="1"
+             ng-model="request.contactPersonAllowed"> &nbsp; {{ 'The contact person been checked and is authorised to support the request.' | translate }}
+    </div>
+  </div>
+
+  <br>
+
+  <h4>{{'Signed agreement'|translate}}</h4>
+  <hr>
+
+  <!-- Agreement reached -->
+  <div class="form-group" ng-class="">
+    <label class="control-label col-sm-3" for="agreementReached">
+      &nbsp;
+    </label>
+    <div class="col-sm-8">
+      <input type="checkbox" id="agreementReached" name="agreementReached" value="1"
+             ng-model="request.agreementReached"> &nbsp; {{ 'Agreement has been reached.' | translate }}
+    </div>
+  </div>
+
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
+      <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                                <span class="pull-right">
+                                <span class="btn-group">
+                                    <button class="btn btn-default" type="button" title="Delete"
+                                            ng-click="removeAgreementFile(file)"
+                                            ng-if="request.status=='Review'"
+                                      >
+                                      Delete
+                                    </button>
+                                </span>
+                                </span>
+    </li>
+  </ul>
+
+  <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
+       flow-name="agreementFlow"
+       flow-files-submitted="$flow.upload()"
+       flow-file-success="fileuploadsuccess(request, $message)"
+    >
+    <div>
+      <span class="btn btn-default" flow-btn>{{'Upload agreement files'|translate}}</span>
+    </div>
+    <br>
+    <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+         flow-drag-enter="style={border:'4px dashed lightgreen'}"
+         flow-drag-leave="style={border: '2px dashed gray'}"
+         ng-style="style">
+      ({{'drag and drop your file here'|translate}})
+    </div>
+  </div>
+  <br>

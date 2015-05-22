@@ -137,6 +137,9 @@ public class SelectionController {
             @PathVariable String id,
             @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/submitExcerptSelection");
+        
+        // FIXME: claim task for requester
+        
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         if (properties == null) {
             throw new RequestNotFound();

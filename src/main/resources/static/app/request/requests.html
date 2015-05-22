@@ -68,7 +68,11 @@
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': req.assignee == globals.currentUser.userid}">
                         <td>{{req.processInstanceId}}</td>
                         <td><a ng-click="view(req)">{{req.title}}</a></td>
-                        <td>{{req.status | translate}}</td>
+                        <td>{{req.status | translate}}
+                            <span class="badge" ng-if="req.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1" >
+                            {{req.numberOfApprovalVotes}}
+                            </span>                        
+                        </td>
                         <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
                         <td ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" >
                             {{req.approvalVote}}

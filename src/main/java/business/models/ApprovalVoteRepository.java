@@ -6,4 +6,5 @@ public interface ApprovalVoteRepository extends JpaRepository<ApprovalVote, Long
 
     ApprovalVote findOneByProcessInstanceIdAndCreator(String processInstanceId, User creator);
 
+    Long countByProcessInstanceId(String processInstanceId);
 }

@@ -50,7 +50,7 @@
                 templateUrl : 'app/request/request.html',
                 controller : 'RequestController'
             }).when('/request/edit/:requestId', {
-                templateUrl : 'app/request/editrequest.html',
+                templateUrl : 'app/request/edit-request.html',
                 controller : 'RequestController'
             }).when('/request/:requestId/selection', {
                 templateUrl : 'app/request/selection.html',

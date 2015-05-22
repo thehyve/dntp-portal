@@ -144,7 +144,7 @@
 
                     <br>
 
-                    <h4>{{ 'Attachments' | translate }}</h4>
+                    <h3>{{ 'Attachments' | translate }}</h3>
                     <hr>
 
                     <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
@@ -189,7 +189,7 @@
 
                         <br>
 
-                        <h4>{{'Checks by Privacy Committee'|translate}}</h4>
+                        <h3>{{'Checks by Privacy Committee'|translate}}</h3>
                         <hr>
 
                         <!-- Is sent to privacy commitee -->
@@ -244,7 +244,7 @@
 
                 <div ng-if="request.status=='Approval' &&
                         globals.currentUser.roles.indexOf('palga') != -1">
-                <h4>{{'Finalisation checks'|translate}}</h4>
+                <h3>{{'Finalisation checks'|translate}}</h3>
                 <hr>
                 <!-- Scientific council has approved -->
                 <div class="form-group" ng-class="">

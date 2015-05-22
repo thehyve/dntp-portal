@@ -86,7 +86,7 @@ angular.module('ProcessApp.controllers')
                 request.excerptList = result.excerptList;
                 request.dataAttachments = result.dataAttachments;
             };
-            
+
             $scope.fileuploaderror = function(data, excerpts) {
                 if (excerpts) {
                     $scope.excerptlist_upload_error = data;
@@ -95,7 +95,7 @@ angular.module('ProcessApp.controllers')
                     $scope.fileupload_result = "error";
                 }
             };
-            
+
             $scope.start = function() {
                 new Request().$save(function(request) {
                     $scope.requests.unshift(request);
@@ -260,7 +260,7 @@ angular.module('ProcessApp.controllers')
                         }
                     });
             };
-            
+
             $scope.reject = function(request) {
                 bootbox.prompt({
                     title: 'Are you sure you want to reject the request?\n<br>' +
@@ -343,7 +343,7 @@ angular.module('ProcessApp.controllers')
                         if (data.returnDate === null) {
                             data.returnDate = new Date();
                         }
-                        $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/editrequest.html', backdrop: 'static'});
+                        $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/edit-request.html', backdrop: 'static'});
                     });
                 }
             };

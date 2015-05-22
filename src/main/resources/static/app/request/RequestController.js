@@ -253,7 +253,7 @@ angular.module('ProcessApp.controllers')
                         if (confirmed) {
                             request.$close(function(result) {
                                 $scope.refresh(request, result);
-                                $scope.editRequestModal.hide();
+                                //$scope.editRequestModal.hide();
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });

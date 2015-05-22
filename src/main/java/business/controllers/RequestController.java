@@ -729,16 +729,23 @@ public class RequestController {
         return list;
     }
 
+    private static final Set<String> excerptListStatuses = new HashSet<String>();
+    {
+        excerptListStatuses.add("DataDelivery");
+        excerptListStatuses.add("LabRequest");
+        excerptListStatuses.add("Closed");
+    }
+    
     @PreAuthorize("isAuthenticated() and (hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isRequester'))")
     @RequestMapping(value = "/requests/{id}/excerptList/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadExcerptList(UserAuthenticationToken user, @PathVariable String id) {
         log.info("GET /requests/" + id + "/excerptList/csv");
-        Task task = requestService.getTaskByRequestId(id, "data_delivery");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
-
-        // add attachment id to the set of ids of the agreement attachments.
+        if (!excerptListStatuses.contains(request.getStatus())) {
+            throw new InvalidActionInStatus();
+        }
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         if (properties == null || properties.getExcerptList() == null) {
             throw new ExcerptListNotFound();

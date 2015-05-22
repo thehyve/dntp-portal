@@ -362,7 +362,8 @@
             <div ng-include="'app/request/comments.html'" ng-if="globals.currentUser.roles.indexOf('palga') != -1"></div>
 
             <!--Upload Files if in 'DataDelivery' status-->
-            <div ng-include="'app/request/upload-file.html'" ng-if="request.status=='DataDelivery'"></div>
+            <div ng-include="'app/request/upload-file.html'" 
+                ng-if="request.status=='DataDelivery' || request.status=='LabRequest' || request.status=='Closed'"></div>
 
             <div ng-if="request.status == 'LabRequest'">
 

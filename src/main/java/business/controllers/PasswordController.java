@@ -1,5 +1,6 @@
 package business.controllers;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ import business.validation.PasswordValidator;
 @RestController
 public class PasswordController {
 
+    Log log = LogFactory.getLog(getClass());
+    
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -38,7 +41,7 @@ public class PasswordController {
 
     @RequestMapping(value = "/password/request-new", method = RequestMethod.PUT)
     public void requestNewPassword(@RequestBody EmailRepresentation form) {
-        LogFactory.getLog(this.getClass()).info("PUT request-password/" + form.getEmail());
+        log.info("PUT /password/request-new/" + form.getEmail());
 
         // Authenticate user (maybe the email doesn't even exist!)
         User user = this.userService.findByUsername(form.getEmail());
@@ -49,7 +52,7 @@ public class PasswordController {
 
             mailService.sendPasswordRecoveryToken(npr);
             
-            LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + npr.getToken());
+            log.info("Recovery password token generated: " + npr.getToken());
         }
 
         // If the user doesn't exist we still return OK, since we don't want to let an attacker know if an email
@@ -58,7 +61,7 @@ public class PasswordController {
 
     @RequestMapping(value = "/password/reset", method = RequestMethod.POST)
     public ResponseEntity<Object> setPassword(@RequestBody NewPasswordRepresentation form) {
-        LogFactory.getLog(this.getClass()).info("POST password/reset");
+        log.info("POST /password/reset");
 
         // LATER: Check if the link was issued a couple of days ago
 
@@ -80,7 +83,7 @@ public class PasswordController {
 
     @RequestMapping(value = "/password/change", method = RequestMethod.POST)
     public ResponseEntity<Object> changePassword(UserAuthenticationToken user, @RequestBody PasswordChangeRepresentation form) {
-        LogFactory.getLog(this.getClass()).info("POST /password/change");
+        log.info("POST /password/change");
 
         // Update profile
         User currentUser = this.userService.getOne(user.getId());

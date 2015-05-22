@@ -26,7 +26,7 @@
             <!--Tool bar-->
           <ul class="nav nav-pills" ng-if="globals.currentUser.roles.indexOf('requester') != -1" >
             <li role="presentation" title="Create a new request">
-                    <a href="#/" ng-click="start()">
+                    <a href="#/" ng-click="start()" id="new-request">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                         {{'Create New Request'|translate}}
                     </a>
@@ -61,7 +61,7 @@
                     </tr>
                     <tr>
                         <th>&nbsp;</th>
-                        <th colspan="6"><input st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
+                        <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
                     </tr>
                     </thead>
                     <tbody>

@@ -21,8 +21,9 @@ var options = {
   }
 };
 
+// Require all files in the `gulp` directory
 wrench.readdirSyncRecursive('./gulp').filter(function(file) {
-  return (/\.(js|coffee)$/i).test(file);
+  return (/\.js$/i).test(file);
 }).map(function(file) {
   require('./gulp/' + file)(options);
 });

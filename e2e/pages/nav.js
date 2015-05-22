@@ -5,10 +5,11 @@
 
 'use strict';
 
-
+// The navigation bar
 var NavPage = function() {
     this.container = element(by.css('.container'));
     this.profileMenu = element(by.id('profile_menu'));
+    this.login = element(by.id('login'));
     this.logout = element(by.id('logout'));
 
     this.verify = function() {
@@ -22,4 +23,4 @@ var NavPage = function() {
 
 };
 
-module.exports = new NavPage;
+module.exports = new NavPage();

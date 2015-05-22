@@ -16,7 +16,7 @@ module.exports = function(options) {
 
     gulp.src(options.e2e + '/**/*.js')
       .pipe($.protractor.protractor({
-        configFile: 'protractor.conf.js'
+        configFile: options.e2e + '/protractor.conf.js'
       }))
       .on('error', function (err) {
         // Make sure failed tests cause gulp to exit non-zero

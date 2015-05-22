@@ -1,7 +1,7 @@
   <!-- If the request is not a statistics request (but also requires uploading an excerpt list) -->
   <div ng-if="!request.statisticsRequest">
 
-    <h4>{{'Excerpt list'|translate}}</h4>
+    <h3>{{'Excerpt List'|translate}}</h3>
     <hr>
     <label ng-if="request.excerptList">
       <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
@@ -12,8 +12,7 @@
          flow-files-submitted="$scope.excerptlist_upload_error = ''; $scope.fileupload_result = ''; $flow.upload()"
          flow-file-success="fileuploadsuccess(request, $message, true)"
          flow-file-error="fileuploaderror($message, true)"
-         ng-if="globals.currentUser.roles.indexOf('palga') != -1"
-      >
+         ng-if="globals.currentUser.roles.indexOf('palga') != -1">
       <div class="alert alert-success" role="alert" ng-show="excerptlist_upload_result == 'success'">
         {{ 'Excerpt list uploaded.' | translate }}
       </div>
@@ -48,8 +47,9 @@
 
   </div>
 
-  <h4>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
+  <h3>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h3>
   <hr>
+
   <ul class="list-group">
     <li class="list-group-item" ng-repeat="file in request.dataAttachments">
       <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>

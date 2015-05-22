@@ -16,9 +16,9 @@
 
             <div style="padding-bottom: 25px;">
                 <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit"
-                        ng-if="(request.status != 'Closed') && (request.status != 'Rejected') && 
+                        ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
                         (
-                        (request.status == 'Open' && globals.currentUser.roles.indexOf('requester') != -1) 
+                        (request.status == 'Open' && globals.currentUser.roles.indexOf('requester') != -1)
                         || (request.status != 'DataDelivery' && globals.currentUser.roles.indexOf('palga') != -1)
                         )"
                         ng-disabled="globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid">
@@ -31,14 +31,14 @@
                 </button>
                 <a href="mailto:{{request.requesterEmail}}?subject=Request rejected&amp;body=Request rejected.%0AReject reason: {{request.rejectReason}}
                 ">
-                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1 && request.status == 'Rejected'"  
+                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1 && request.status == 'Rejected'"
                 class="btn btn-default" type="button" title="{{'Mail requester' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Mail requester' | translate}}
                 </button>
                 </a>
-                <button ng-if="(request.status != 'Closed') && (request.status != 'Rejected') && 
-                (globals.currentUser.roles.indexOf('palga') != -1)" ng-show="request.assignee != globals.currentUser.userid" 
+                <button ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
+                (globals.currentUser.roles.indexOf('palga') != -1)" ng-show="request.assignee != globals.currentUser.userid"
                 class="btn btn-default" type="button"  ng-click="claim(request);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
                     {{'Claim' | translate}}
@@ -98,7 +98,7 @@
                      <br ng-if="request.requester.contactData.address2">
                      {{request.requester.contactData.postalCode}} {{request.requester.contactData.city}}
                     <span ng-if="request.requester.contactData.telephone">
-                        <span><i class="glyphicon glyphicon-earphone"></i></span> 
+                        <span><i class="glyphicon glyphicon-earphone"></i></span>
                         {{request.requester.contactData.telephone}}
                     </span>
                     <br ng-if="request.requester.contactData.telephone">
@@ -175,10 +175,10 @@
 
                 <div class="col-sm-7">
                     <span><i class="glyphicon {{request.linkageWithPersonalData ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp;{{'Data linkage'|translate}} 
+                    &nbsp;{{'Data linkage'|translate}}
                     <br>
                     (<em><span ng-if="request.linkageWithPersonalData">{{ 'Linkage with own or external personal data.' |
-                    translate }}</span><span 
+                    translate }}</span><span
                     ng-if="!request.linkageWithPersonalData">{{ 'No data linkage required.' |
                     translate }}</span></em>)
                 </div>
@@ -302,8 +302,8 @@
                 <br>
 
             </div>
-            
-            
+
+
             <div ng-if="request.status=='Approval' && roles.indexOf('palga') != -1">
 
                 <!--*****************-->
@@ -361,124 +361,11 @@
             <!--Comments-->
             <div ng-include="'app/request/comments.html'" ng-if="globals.currentUser.roles.indexOf('palga') != -1"></div>
 
-            <!-- If in 'DataDelivery' status -->
-            <div ng-if="request.status=='DataDelivery'">
-            
-                <!-- If the request is not a statistics request (but also requires uploading an excerpt list) -->
-                <div ng-if="!request.statisticsRequest">
-                
-                <h4>{{'Excerpt list'|translate}}</h4>
-                <hr>
-                <label ng-if="request.excerptList">
-                    <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
-                </label>
-                
-                <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
-                     flow-name="excerptListFlow"
-                     flow-files-submitted="$scope.excerptlist_upload_error = ''; $scope.fileupload_result = ''; $flow.upload()"
-                     flow-file-success="fileuploadsuccess(request, $message, true)"
-                     flow-file-error="fileuploaderror($message, true)"
-                     ng-if="globals.currentUser.roles.indexOf('palga') != -1"
-                        >
-                    <div class="alert alert-success" role="alert" ng-show="excerptlist_upload_result == 'success'">
-                        {{ 'Excerpt list uploaded.' | translate }}
-                    </div>
-                    <div class="alert alert-danger" role="alert" ng-show="excerptlist_upload_result == 'error'">
-                        {{ excerptlist_upload_error | translate }}
-                    </div>
-                    
-                    <div>
-                        <span class="btn btn-default" flow-btn
-                        ng-disabled="request.assignee != globals.currentUser.userid"
-                        >{{'Upload excerpt list'|translate}}</span>
-                    </div>
-                    <br>
-                    <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
-                         flow-drag-enter="style={border:'4px dashed lightgreen'}"
-                         flow-drag-leave="style={border: '2px dashed gray'}"
-                         ng-style="style">
-                        ({{'drag and drop your file here'|translate}})
-                    </div>
-                </div>
-                
-                <div ng-if="request.excerptList 
-                    && (request.paReportRequest || request.materialsRequest)
-                    && globals.currentUser.roles.indexOf('requester') != -1">
-                    <a ng-href="/#/request/{{request.processInstanceId}}/selection">
-                    <button type="button" class="btn btn-primary">
-                        {{'Select PA numbers'|translate}}
-                    </button>
-                    </a>
-                </div>
-                
-                </div>
-                
-                <h4>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
-                <hr>
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="file in request.dataAttachments">
-                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
-                        <span class="pull-right">
-                        <span class="btn-group">
-                            <button class="btn btn-default" type="button" title="Delete"
-                                    ng-click="removeDataFile(file)"
-                                    >
-                                Delete
-                            </button>
-                        </span>
-                        </span>
-                    </li>
-                </ul>
-                <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">
-                    <i>{{'No data files.'|translate}}</i>
-                </p>
-
-                <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
-                     flow-name="dataFlow"
-                     flow-files-submitted="uploadDataFile($flow)"
-                     flow-file-success="fileuploadsuccess(request, $message)"
-                     flow-file-error="fileuploaderror($message)"
-                     ng-if="globals.currentUser.roles.indexOf('palga') != -1"
-                        >
-                    <div class="alert alert-success" role="alert" ng-show="fileupload_result == 'success'">
-                        {{ 'File uploaded.' | translate }}
-                    </div>
-                    <div class="alert alert-danger" role="alert" ng-show="fileupload_result == 'error'">
-                        {{ 'Error uploading file.' | translate }}
-                    </div>
-                        
-                    <p>
-                    (<em>{{'Maximum file size 10 MB.'|translate}}</em>)
-                    </p>
-                    <div>
-                        <span class="btn btn-default" flow-btn
-                            ng-disabled="request.assignee != globals.currentUser.userid"
-                            >{{'Upload data files'|translate}}</span>
-                    </div>
-                    <br>
-                    <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
-                         flow-drag-enter="style={border:'4px dashed lightgreen'}"
-                         flow-drag-leave="style={border: '2px dashed gray'}"
-                         ng-style="style">
-                        ({{'drag and drop your file here'|translate}})
-                    </div>
-                </div>
-                
-                <div ng-if="(!request.paReportRequest && !request.materialsRequest)
-                    && globals.currentUser.roles.indexOf('palga') != -1">
-                    <button type="button" class="btn btn-primary"
-                        ng-disabled="request.assignee != globals.currentUser.userid"
-                        ng-click="closeRequest(request)"
-                        >
-                        {{'Close request'|translate}}
-                    </button>
-                    </a>
-                </div>
-
-            </div> <!-- endif DataDelivery -->
+            <!--Upload Files if in 'DataDelivery' status-->
+            <div ng-include="'app/request/upload-file.html'" ng-if="request.status=='DataDelivery'"></div>
 
             <div ng-if="request.status == 'LabRequest'">
-            
+
             <h3>{{ 'Lab request details' | translate }}</h3>
             <hr>
 
@@ -489,7 +376,7 @@
                     {{request.excerptListRemark}}
                 </div>
             </div>
-            
+
             </div> <!-- endif LabRequest -->
 
 

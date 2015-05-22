@@ -1,16 +1,18 @@
 package business.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.mail.internet.MimeMessage;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
-import org.springframework.mail.MailPreparationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-
-import javax.mail.internet.MimeMessage;
-import java.util.Properties;
 
 /**
  *
@@ -19,25 +21,30 @@ import java.util.Properties;
 @Profile("dev")
 public class MockConfiguration {
 
+    Log log = LogFactory.getLog(this.getClass());
+    
     @Bean
     public JavaMailSender mailSender() {
+        log.info("Initialising mock mail sender.");
         return new MockMailSender();
     }
 
-}
+    public class MockMailSender extends JavaMailSenderImpl {
 
-class MockMailSender extends JavaMailSenderImpl {
-
-    @Override
-    public void send(final MimeMessagePreparator mimeMessagePreparator) throws MailException {
-        final MimeMessage mimeMessage = createMimeMessage();
-        try {
-            mimeMessagePreparator.prepare(mimeMessage);
-            final String content = (String) mimeMessage.getContent();
-            final Properties javaMailProperties = getJavaMailProperties();
-            javaMailProperties.setProperty("mailContent", content);
-        } catch (final Exception e) {
-            throw new MailPreparationException(e);
+        List<MimeMessage> messages = new ArrayList<MimeMessage>();
+        
+        public List<MimeMessage> getMessages() {
+            return messages;
         }
-    }
+        
+        @Override
+        public void send(MimeMessage mimeMessage) throws MailException {
+            log.info("MockMailSender: send mime mail message.");
+            messages.add(mimeMessage);
+            log.info("MockMailSender: mail sent. #messages = " + messages.size());
+        };
+        
+    }    
+    
 }
+

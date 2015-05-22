@@ -11,6 +11,8 @@ angular.module('ProcessApp.controllers')
                   ApprovalComment, ApprovalVote,
                   FlowOptionService, $routeParams) {
 
+            $scope.serverurl = $location.protocol()+'://'+$location.host()+':'+$location.port();
+        
             $scope.error = '';
             $rootScope.tempRequest = null;
 
@@ -253,7 +255,7 @@ angular.module('ProcessApp.controllers')
                         if (confirmed) {
                             request.$close(function(result) {
                                 $scope.refresh(request, result);
-                                $scope.editRequestModal.hide();
+                                //$scope.editRequestModal.hide();
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });

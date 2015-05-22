@@ -38,7 +38,11 @@ angular.module('ProcessApp.controllers')
             }
             
             $scope.xls2html = function(text) {
-                return text.replace(/_x000D_/g, '<br />\n');
+                if (text) {
+                    return text.replace(/_x000D_/g, '<br />\n');
+                } else {
+                    return "";
+                }
             }
             
             $scope.toggleExcerpt = function(request, excerpt) {

@@ -32,11 +32,17 @@
                 <a href="mailto:{{request.requesterEmail}}?subject=Request rejected&amp;body=Request rejected.%0AReject reason: {{request.rejectReason}}
                 ">
                 <button ng-if="globals.currentUser.roles.indexOf('palga') != -1 && request.status == 'Rejected'"
-                class="btn btn-default" type="button" title="{{'Mail requester' | translate}}">
+                class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
-                    {{'Mail requester' | translate}}
-                </button>
-                </a>
+                    {{'Compose rejection mail' | translate}}
+                </button></a>
+                <a href="mailto:{{request.requesterEmail}}?subject=Excerpt list ready&amp;body=The excerpt list for request {{request.processInstanceId}} (&ldquo;{{request.title}}&rdquo;) is ready for download.%0ALink: {{serverurl}}/#/request/view/{{request.processInstanceId}}
+                ">
+                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1 && request.status == 'DataDelivery' && request.excerptList"
+                class="btn btn-default" type="button" title="{{'Compose notification mail' | translate}}">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    {{'Compose notification mail' | translate}}
+                </button></a>
                 <button ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
                 (globals.currentUser.roles.indexOf('palga') != -1)" ng-show="request.assignee != globals.currentUser.userid"
                 class="btn btn-default" type="button"  ng-click="claim(request);" title="Claim">
@@ -361,7 +367,8 @@
             <div ng-include="'app/request/comments.html'" ng-if="globals.currentUser.roles.indexOf('palga') != -1"></div>
 
             <!--Upload Files if in 'DataDelivery' status-->
-            <div ng-include="'app/request/upload-file.html'" ng-if="request.status=='DataDelivery'"></div>
+            <div ng-include="'app/request/upload-file.html'" 
+                ng-if="request.status=='DataDelivery' || request.status=='LabRequest' || request.status=='Closed'"></div>
 
             <div ng-if="request.status == 'LabRequest'">
 

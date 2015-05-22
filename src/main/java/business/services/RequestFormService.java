@@ -12,7 +12,6 @@ import java.util.TreeSet;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import business.models.ApprovalVote;
+import business.models.ApprovalVoteRepository;
 import business.models.Comment;
 import business.models.RequestProperties;
 import business.models.User;
@@ -44,6 +44,9 @@ public class RequestFormService {
     @Autowired
     private RequestPropertiesService requestPropertiesService;
   
+    @Autowired
+    private ApprovalVoteRepository approvalVoteRepository;
+    
     @Autowired
     private RequestService requestService;
 
@@ -104,15 +107,17 @@ public class RequestFormService {
                         break;
                     case "Approval":
                         task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
-                                            
-                        // fetch my vote, number of votes
-                        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                                instance.getId());
-                        Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
-                        request.setNumberOfApprovalVotes(votes.size());
-                        if (votes.containsKey(currentUser.getId())) {
-                            request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
-                        } 
+
+                        request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
+                        if (currentUser.isScientificCouncilMember()) {
+                            // fetch my vote, number of votes
+                            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                                    instance.getId());
+                            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+                            if (votes.containsKey(currentUser.getId())) {
+                                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+                            }
+                        }
                         break;
                 }
             }
@@ -282,6 +287,7 @@ public class RequestFormService {
             if (properties.getExcerptList() != null) {
                 log.info("Set excerpt list.");
                 request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
+                @SuppressWarnings("unchecked")
                 Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
                 Set<Integer> selectedLabSet = new TreeSet<Integer>();
                 if (selectedLabs != null) {

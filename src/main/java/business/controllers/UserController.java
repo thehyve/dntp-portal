@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,6 +69,9 @@ public class UserController {
     
     @Autowired
     MailService mailService;
+    
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @RequestMapping("/user")
     public ProfileRepresentation user(UserAuthenticationToken user) {
@@ -200,7 +204,7 @@ public class UserController {
                 roles.add(role);
             }
 
-            User user = new User(body.getUsername(), body.getPassword1(), true, roles);
+            User user = new User(body.getUsername(), passwordEncoder.encode(body.getPassword1()), true, roles);
 
             transferUserData(body, user);
             try {

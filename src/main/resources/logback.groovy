@@ -10,5 +10,6 @@ appender("stdout", ConsoleAppender) {
 logger("org.springframework.beans", INFO)
 logger("business.controllers", INFO)
 logger("business.security", INFO)
+logger("business.services", INFO)
 //logger("org.springframework.security.access", DEBUG)
 root(WARN, ["stdout"])

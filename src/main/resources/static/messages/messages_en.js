@@ -1,4 +1,4 @@
-messages_en =
+var messagesEN =
 {
         'Bad credentials': 'Bad credentials.',
 
@@ -11,4 +11,4 @@ messages_en =
         'Request_Type_7' : 'Request for materials only',
 
         null: null
-}
+};

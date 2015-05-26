@@ -10,7 +10,7 @@ angular.module('ProcessApp.controllers')
         $scope.submitForm = function () {
             // Validation
             if ($scope.form.newPassword !== $scope.form.repeatNewPassword) {
-                error("Passwords do not match");
+                error('Passwords do not match');
                 return;
             } else if ($scope.form.oldPassword === '' || $scope.form.newPassword === '') {
                 error('Passwords cannot be empty');
@@ -19,7 +19,7 @@ angular.module('ProcessApp.controllers')
                 error('Passwords must be at least 8 characters long');
                 return;
             }
-        
+
             // Submission
             $scope.submitted = true;
 
@@ -34,7 +34,7 @@ angular.module('ProcessApp.controllers')
                 $scope.submitted = false;
             });
         };
-        
+
         function error(msg) {
             $scope.error = msg;
             $timeout(function () {

@@ -3,11 +3,9 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.data.rest.core.annotation.RestResource;
+import java.util.Set;
 
 import business.models.Lab;
-import business.models.RequestProperties;
 
 public class RequestRepresentation {
 
@@ -25,6 +23,7 @@ public class RequestRepresentation {
     private Date dateAssigned;
 
     private String title;
+    private String background;
     private String researchQuestion;
     private String hypothesis;
     private String methods;
@@ -52,12 +51,15 @@ public class RequestRepresentation {
     
     private ExcerptListRepresentation excerptList;
     
+    private Set<Integer> selectedLabs;
+    
     // Palga specific
     private boolean requesterValid;
     private boolean requesterAllowed;
     private boolean contactPersonAllowed;
     private boolean requesterLabValid;
     private boolean agreementReached;
+    private boolean requestAdmissible;
     
     private boolean scientificCouncilApproved;
     private boolean privacyCommitteeApproved;
@@ -72,6 +74,7 @@ public class RequestRepresentation {
     private String privacyCommitteeOutcomeRef;
     private String privacyCommitteeEmails;
 
+    private String excerptListRemark;
 
     public RequestRepresentation() {
 
@@ -131,6 +134,14 @@ public class RequestRepresentation {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 
     public String getResearchQuestion() {
@@ -332,6 +343,14 @@ public class RequestRepresentation {
     public void setAgreementReached(boolean agreementReached) {
         this.agreementReached = agreementReached;
     }
+    
+    public boolean isRequestAdmissible() {
+        return requestAdmissible;
+    }
+
+    public void setRequestAdmissible(boolean requestAdmissible) {
+        this.requestAdmissible = requestAdmissible;
+    }
 
     public List<CommentRepresentation> getComments() {
         return comments;
@@ -396,6 +415,14 @@ public class RequestRepresentation {
     public void setExcerptList(ExcerptListRepresentation excerptList) {
         this.excerptList = excerptList;
     }
+    
+    public Set<Integer> getSelectedLabs() {
+        return selectedLabs;
+    }
+
+    public void setSelectedLabs(Set<Integer> selectedLabs) {
+        this.selectedLabs = selectedLabs;
+    }
 
     public boolean isScientificCouncilApproved() {
         return scientificCouncilApproved;
@@ -451,6 +478,14 @@ public class RequestRepresentation {
 
     public void setRequester(ProfileRepresentation requester) {
         this.requester = requester;
+    }
+
+    public String getExcerptListRemark() {
+        return excerptListRemark;
+    }
+
+    public void setExcerptListRemark(String excerptListRemark) {
+        this.excerptListRemark = excerptListRemark;
     } 
     
 }

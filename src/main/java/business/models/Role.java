@@ -11,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import org.springframework.data.rest.core.annotation.RestResource;
-
 @Entity
 public class Role implements Serializable {
     

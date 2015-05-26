@@ -1,0 +1,76 @@
+<!-- If in 'DataDelivery' status -->
+<div class="container-fluid" ng-if="request.status=='DataDelivery'" ng-controller="SelectionController">
+
+    <div class="page-header">
+    <h3>{{'Selection'|translate}}</h3>
+    </div>
+    <!--List of PA numbers-->
+
+    <div class="main">
+    
+    <div class="panel panel-default">
+        <div class="panel-body">
+        Select/deselect: <kbd>Space</kbd>, down: <kbd>&darr;</kbd>, up: <kbd>&uarr;</kbd>.
+        </div>
+    </div>
+    
+    <ul class="list-group">
+        <li class="list-group-item {{excerpt.selected ? 'list-group-item-info' : ''}} {{$index == currentIndex ? 'active':''}}"
+            ng-repeat="excerpt in request.excerptList.entries track by excerpt.id"
+            id="excerpt_{{excerpt.id}}">
+            <h4 class="list-group-item-heading">
+                Excerpt {{excerpt.values[0]}}
+                &nbsp;
+                <i ng-if="excerpt.selected" class="glyphicon glyphicon-check"></i>
+                <span class="pull-right">
+                <span class="btn-group">
+                    <button class="btn btn-default" type="button" title="Select"
+                            ng-click="selectExcerpt(request, excerpt)"
+                            ng-disabled="excerpt.selected">
+                        Select
+                    </button>
+                    <button class="btn btn-default" type="button" title="Deselect"
+                            ng-click="deselectExcerpt(request, excerpt)"
+                            ng-disabled="!excerpt.selected">
+                        Deselect
+                    </button>
+                </span>
+                </span>
+            </h4>
+            <div ng-show="$index == currentIndex">
+            <div class="row" ng-repeat="fieldName in relevantFields">
+                <div class="col-xs-2 col-md-1">
+                    {{fieldName}}
+                </div>
+                <div class="col-xs-10 col-md-5"> 
+                    <span ng-bind-html="xls2html(excerpt.values[relevantIndexes[$index]])"></span>
+                </div>
+            </div>
+            </div>
+            <div ng-show="$index != currentIndex">
+            <div class="row" ng-repeat="fieldName in relevantFields">
+                <div class="col-xs-2 col-md-1">
+                    {{fieldName}}
+                </div>
+                <div class="col-xs-10 col-md-5">
+                    <span ng-bind-html="xls2html(excerpt.values[relevantIndexes[$index]]) | limitTo: 100"></span>
+                    {{(excerpt.values[relevantIndexes[$index]].length > 100) ? '...' : ''}}
+                </div>
+            </div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="row">
+    <button type="button" class="btn btn-primary" title="Submit"
+        ng-click="submitExcerptSelection(request)"
+        >
+        Submit selection
+    </button>
+    </div>
+
+    <div class="row">&nbsp;</div>    
+    
+    </div>
+    
+</div> <!-- endif 'DataDelivery' status -->

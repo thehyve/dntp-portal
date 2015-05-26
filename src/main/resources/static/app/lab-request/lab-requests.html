@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <div class="row">
+
+    <!--Side Bar-->
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li class="active"><a href="#/">{{'Overview'|translate}} <span class="sr-only">(current)</span></a></li>
+      </ul>
+    </div>
+
+    <div ng-show="!authenticated">
+      <div class="alert alert-danger" role="alert">
+        {{ 'Not logged in' | translate }}
+      </div>
+    </div>
+
+    <!--Main Content-->
+    <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="LabRequestController">
+
+      <div ng-show="error" class="alert alert-danger" role="alert">
+        {{ error | translate }}
+      </div>
+
+      <h1>{{ 'Lab Requests' | translate }}</h1>
+      <hr>
+
+      <!-- Alert -->
+      <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeAlert();">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{alert.msg | translate}}
+      </div>
+
+
+      <!--List of Lab Requests-->
+      <div class="table-responsive" ng-if="authenticated">
+
+      <table st-table="rowCollection" class="table">
+        <thead>
+        <tr>
+          <th>{{'#' | translate}}</th>
+          <th>{{'Request Title' | translate}}</th>
+          <th>{{'Requester' | translate}}</th>
+          <th>{{'Lab' | translate}}</th>
+          <th>{{'Created Date' | translate}}</th>
+          <th>{{'#PA Numbers' | translate}}</th>
+          <th>{{'Status' | translate}}</th>
+          <th>{{'' | translate}}</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="labRequest in labRequests track by $index">
+            <td>
+              {{labRequest.taskId}}
+            </td>
+            <td>
+              <a href="#/request/view/{{labRequest.processInstanceId}}">{{labRequest.requestListRepresentation.title}}</a>
+            </td>
+            <td>
+              {{labRequest.requestListRepresentation.requesterName}}
+            </td>
+            <td>
+              {{labRequest.lab.name}}
+            </td>
+            <td>
+              {{labRequest.dateCreated |  date: 'EEE, dd MMMM yyyy H:mm'}}
+            </td>
+            <td>
+              {{labRequest.excerptList.entries.length}}
+            </td>
+            <td>
+              {{labRequest.status}}
+            </td>
+            <td>
+              <span class="pull-right">
+              <span class="btn-group">
+                  <button class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)">
+                    <span><i class="glyphicon glyphicon-pencil"></i></span>
+                  </button>
+              </span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+    </div> <!--end Main Content-->
+
+  </div>
+</div>

@@ -19,17 +19,16 @@ angular.module('ProcessApp.controllers')
                 });
 
             $scope.update = function () {
-                $scope.editlab.save()
+                Restangular.one('lab').customPUT($scope.editlab, '')
                     .then(function (){
                         $scope.alerts.push({type: 'success', msg: 'Your lab credentials has been successfully updated.' });
-                    }, function (e) {
-                        $scope.error = $scope.error + response.data.message + "\n";
+                    }, function (response) {
+                        $scope.error = $scope.error + response.data.message + '\n';
                         $scope.alerts.push({type: 'danger', msg: response.data.message });
                     });
             };
 
             $scope.reset = function () {
-                console.log("about to reset");
                 $scope.editlab = angular.copy($scope.originLab);
             };
 

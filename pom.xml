@@ -5,7 +5,7 @@
 
 	<groupId>nl.thehyve</groupId>
 	<artifactId>dntp-portal</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>DNTP portal</name>
@@ -63,16 +63,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-rest</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.atteo</groupId>
-					<artifactId>evo-inflector</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
@@ -120,7 +110,6 @@
 	    <dependency>
 	        <groupId>com.h2database</groupId>
 	        <artifactId>h2</artifactId>
-	        <scope>test</scope>
 	    </dependency>		
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>

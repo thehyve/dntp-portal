@@ -3,15 +3,10 @@ package business.models;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
-
-import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
 public class Comment implements Serializable {
@@ -25,7 +20,6 @@ public class Comment implements Serializable {
     private String processInstanceId;
 
     @ManyToOne(optional = true)
-    //@RestResource(exported = false)
     private User creator;
     
     private Date timeCreated = new Date();

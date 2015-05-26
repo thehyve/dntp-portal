@@ -8,6 +8,8 @@ public interface LabRepository extends JpaRepository<Lab, Long> {
 
     Lab findByName(String lab);
     
+    Lab findByNumber(Integer labNumber);
+    
     List<Lab> findAllByActiveTrue();
     
     Lab findOneByActiveTrue(Long id);

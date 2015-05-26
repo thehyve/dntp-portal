@@ -17,27 +17,31 @@ angular.module('ProcessApp.controllers')
                     HAS_MANAGE_OWN_LAB_PAGE_AUTH : 'HAS_MANAGE_OWN_LAB_PAGE_AUTH',
                     HAS_MANAGE_LAB_PAGE_AUTH : 'HAS_MANAGE_LAB_PAGE_AUTH',
                     HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
-                    HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH'
+                    HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH',
+                    HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH'
                 };
 
-                if (currentUser.roles[0] === "palga") {
+                if (currentUser.roles[0] === 'palga') {
                     currentUser.features.push();
                     currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_USER_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
                 } else if (currentUser.roles[0] === 'lab_user') {
                     currentUser.features.push(globalFeatures.HAS_MANAGE_OWN_LAB_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
                 } else if (currentUser.roles[0] === 'requester') {
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
                 } else if (currentUser.roles[0] === 'scientific_council') {
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                 }
-            };
+            }
 
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
-                    console.log("Login succes: " + JSON.stringify(data));
+                    // console.log('Login succes: ' + JSON.stringify(data));
                     if (data.username) {
                         $rootScope.userid = data.id;
                         $rootScope.username = data.username;
@@ -48,7 +52,7 @@ angular.module('ProcessApp.controllers')
                                 $rootScope.roles.push(data.roles[i].name);
                             }
                         }
-                        console.log("User '" +  data.username + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
+                        //console.log('User "' +  data.username + '" has roles: ' + JSON.stringify($rootScope.roles, null, 2));
 
                         $rootScope.globals = {
                             currentUser: {
@@ -66,11 +70,11 @@ angular.module('ProcessApp.controllers')
                         $cookieStore.put('globals', $rootScope.globals);
 
                         if (data.authorities) {
-                            for(var i in data.authorities) {
-                                $rootScope.roles.push(data.authorities[i].authority);
+                            for(var j in data.authorities) {
+                                $rootScope.roles.push(data.authorities[j].authority);
                             }
                         }
-                        //console.log("User '" +  data.name + "' has roles: " + JSON.stringify($rootScope.roles, null, 2));
+                        //console.log('User '' +  data.name + '' has roles: ' + JSON.stringify($rootScope.roles, null, 2));
                     } else {
                         $rootScope.authenticated = false;
                     }
@@ -86,32 +90,30 @@ angular.module('ProcessApp.controllers')
                 password: 'palga'
             };
 
-            $('#username').focus();
-
             $scope.login = function() {
                 $http.post('login', jQuery.param($scope.credentials), {
                     headers : {
-                        "content-type" : "application/x-www-form-urlencoded"
+                        'content-type' : 'application/x-www-form-urlencoded'
                     }
                 }).success(function(data) {
                     authenticate(function() {
                         if ($rootScope.authenticated) {
-                            $location.path("/");
+                            $location.path('/');
                             $scope.error = false;
                         } else {
-                            $location.path("/login");
+                            $location.path('/login');
                             $scope.error = true;
-                            $scope.errormessage = "";
+                            $scope.errormessage = '';
                         }
                     });
                 }).error(function(data) {
-                    $location.path("/login");
+                    $location.path('/login');
                     $scope.error = true;
                     if (data.message) {
                         $scope.errormessage = data.message;
                     }
                     $rootScope.authenticated = false;
-                })
+                });
             };
 
         }]);

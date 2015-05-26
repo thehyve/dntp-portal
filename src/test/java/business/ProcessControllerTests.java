@@ -48,40 +48,6 @@ public class ProcessControllerTests {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
     
-    private String processes_expected_template = 
-            "[{\"id\":\"5001\",\"activityId\":\"theTask\",\"deploymentId\":\"2501\","
-            + "\"name\":null,\"parentId\":null,\"businessKey\":null,"
-            + "\"processDefinitionId\":\"example:2:2504\",\"processInstanceId\":\"5001\","
-            + "\"tenantId\":\"\",\"processVariables\":"
-            + "{\"assignee\":\"user\"},"
-            + "\"events\":[],\"identityLinks\":"
-            + "[{\"groupId\":null,\"processInstanceId\":\"5001\",\"taskId\":null,"
-            + "\"type\":\"participant\",\"userId\":\"user\"}],"
-            + "\"tasks\":"
-            + "[{\"id\":\"5005\",\"name\":\"my task\",\"deleteReason\":\"\",\"description\":null,"
-            + "\"assignee\":\"user\",\"createTime\":1426759545561,\"endTime\":null,"
-            + "\"dueDate\":null,\"owner\":null,\"priority\":50,"
-            + "\"processInstanceId\":\"5001\",\"parentTaskId\":null,\"formData\":null,"
-            + "\"attachments\":null}],"
-            + "\"suspended\":false,\"ended\":false,"
-            + "\"diagramData\":null,\"diagramAvailable\":false,\"diagramError\":null}]";
-    
-    @Test
-    public void getProcesses() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/processes")
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(new ResultHandler(){
-            @Override
-            public void handle(MvcResult result) throws Exception {
-                LogFactory.getLog(getClass()).info("TEST: getProcesses()\n" +
-                        result.getResponse().getContentAsString());
-            }
-                })
-                .andExpect(status().isOk())
-                //.andExpect(content().string(is(processes_expected_template)))
-                ;
-    }
-    
     private String users_test_expected_template = 
         "{\"id\":%d,\"username\":\"palga@dntp.thehyve.nl\",\"password\":\"palga\",\"active\":true,"
         + "\"deleted\":false,\"lab\":null,\"institute\":null,"

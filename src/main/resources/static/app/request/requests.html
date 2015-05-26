@@ -24,9 +24,9 @@
             <h1>{{ 'Requests' | translate }}</h1>
             <hr>
             <!--Tool bar-->
-            <ul class="nav nav-pills">
-                <li role="presentation" title="Create a new request">
-                    <a href="#/" ng-click="start()">
+          <ul class="nav nav-pills" ng-if="globals.currentUser.roles.indexOf('requester') != -1" >
+            <li role="presentation" title="Create a new request">
+                    <a href="#/" ng-click="start()" id="new-request">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                         {{'Create New Request'|translate}}
                     </a>
@@ -61,14 +61,18 @@
                     </tr>
                     <tr>
                         <th>&nbsp;</th>
-                        <th colspan="6"><input st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
+                        <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': req.assignee == globals.currentUser.userid}">
                         <td>{{req.processInstanceId}}</td>
                         <td><a ng-click="view(req)">{{req.title}}</a></td>
-                        <td>{{req.status | translate}}</td>
+                        <td>{{req.status | translate}}
+                            <span class="badge" ng-if="req.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1" >
+                            {{req.numberOfApprovalVotes}}
+                            </span>                        
+                        </td>
                         <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
                         <td ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" >
                             {{req.approvalVote}}

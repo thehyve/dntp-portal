@@ -45,16 +45,21 @@ public class DefaultUsers {
                 role = roleRepository.save(new Role(r));
             }
             String username = r + "@dntp.thehyve.nl";
-            if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
+            User user = userRepository.findByUsernameAndDeletedFalse(username);
+            if (user == null) {
                 Set<Role> roles = new HashSet<Role>();
                 roles.add(role);
-                String password = r; //passwordEncoder.encode("admin");
-                User user = new User(username, password, true, roles);
+                String password = passwordEncoder.encode(r);
+                user = new User(username, password, true, roles);
                 user.setFirstName(r);
                 ContactData contactData = new ContactData();
                 contactData.setEmail(username);
                 user.setContactData(contactData);
                 user.setEmailValidated(true);
+                userRepository.save(user);
+            } else if (!user.getPassword().startsWith("$")) {
+                // Detect and encrypt old plain-text passwords
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
                 userRepository.save(user);
             }
         }

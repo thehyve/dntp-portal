@@ -14,11 +14,15 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
 
 @Entity
+@Table(indexes = @Index(columnList="processInstanceId"))
 public class RequestProperties {
 
     @Id
@@ -62,6 +66,9 @@ public class RequestProperties {
     @Column(columnDefinition="TEXT")
     private String privacyCommitteeEmails;
 
+    @Column(columnDefinition="TEXT")
+    private String excerptListRemark;
+    
     public RequestProperties() {
         
     }
@@ -184,6 +191,14 @@ public class RequestProperties {
 
     public void setExcerptList(ExcerptList excerptList) {
         this.excerptList = excerptList;
+    }
+
+    public String getExcerptListRemark() {
+        return excerptListRemark;
+    }
+
+    public void setExcerptListRemark(String excerptListRemark) {
+        this.excerptListRemark = excerptListRemark;
     }
     
 }

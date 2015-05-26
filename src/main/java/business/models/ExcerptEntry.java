@@ -9,12 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class ExcerptEntry implements Serializable {
+
+    private static final long serialVersionUID = -2703523787993359530L;
 
     @Id
     @GeneratedValue
@@ -25,6 +26,8 @@ public class ExcerptEntry implements Serializable {
     private String paNumber;
     
     private Integer sequenceNumber;
+    
+    private Boolean selected;
     
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ExcerptValue> values = new ArrayList<ExcerptValue>();
@@ -64,6 +67,14 @@ public class ExcerptEntry implements Serializable {
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
+    
+    public boolean isSelected() {
+        return (selected != null && selected.booleanValue());
+    }
+
+    public void setSelected(@NotNull Boolean selected) {
+        this.selected = selected;
+    }
 
     public List<ExcerptValue> getValues() {
         return values;
@@ -81,6 +92,19 @@ public class ExcerptEntry implements Serializable {
         String[] result = new String[this.getValues().size() + 1];
         result[0] = this.sequenceNumber.toString();
         int i = 1;
+        for (ExcerptValue value: this.getValues()) {
+            result[i] = value.getValue();
+            i++;
+        }
+        return result;
+    }
+
+    public String[] getLabRequestValues() {
+        String[] result = new String[this.getValues().size() + 3];
+        result[0] = this.sequenceNumber.toString();
+        result[1] = this.labNumber.toString();
+        result[2] = this.paNumber;
+        int i = 3;
         for (ExcerptValue value: this.getValues()) {
             result[i] = value.getValue();
             i++;

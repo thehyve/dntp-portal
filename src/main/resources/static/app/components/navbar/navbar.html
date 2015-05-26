@@ -15,6 +15,9 @@
                 <li ng-show="isViewRequestsAllowed();" class="{{$route.current.templateUrl=='request/workflow.html' ? 'active': ''}}">
                     <a href="#/">{{'Requests'|translate}}</a>
                 </li>
+                <li ng-show="isViewLabRequestsAllowed();" class="{{$route.current.templateUrl=='request/workflow.html' ? 'active': ''}}">
+                    <a href="#/lab-requests">{{'Lab Requests'|translate}}</a>
+                </li>
                 <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">
                     <a href="#/users">{{'Users'|translate}}</a>
                 </li>
@@ -27,7 +30,7 @@
             </ul>
 
             <ul ng-if="!authenticated" class="nav navbar-nav navbar-right">
-                <li><a href="" ng-click="login()"><span class="glyphicon glyphicon-log-in"></span>
+                <li><a href="" ng-click="login()" id="login"><span class="glyphicon glyphicon-log-in"></span>
                     {{'login'|translate}}
                 </a></li>
             </ul>
@@ -47,12 +50,12 @@
                     </ul>
                 </li>
                 <li ng-show="authenticated"   class="dropdown">
-                    <a class="dropdown-toggle" role="button" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</a>
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="profile_menu"><span class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
                         <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>
                         <li>
-                            <a href="" ng-click="logout()">
+                            <a href="" ng-click="logout()" id="logout">
                                 <span class="glyphicon glyphicon-log-out"></span> {{'logout'|translate}}
                             </a>
                         </li>

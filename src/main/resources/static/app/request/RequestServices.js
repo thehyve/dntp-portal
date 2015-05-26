@@ -1,45 +1,52 @@
+'use strict';
+
 (function(angular) {
 
-    RequestFactory = function($resource) {
+    var RequestFactory = function($resource) {
 
         var _requestFactory = $resource('/requests/:id', {
             id : '@processInstanceId'
         }, {
             update : {
-                method : "PUT"
+                method : 'PUT'
             },
             submit : {
                 url : '/requests/:id/submit',
-                method : "PUT"
+                method : 'PUT'
             },
             submitForApproval : {
                 url : '/requests/:id/submitForApproval',
-                method : "PUT"
+                method : 'PUT'
             },
             finalise : {
                 url : '/requests/:id/finalise',
-                method : "PUT"
+                method : 'PUT'
+            },
+            close : {
+                url : '/requests/:id/close',
+                method : 'PUT'
             },
             reject : {
                 url : '/requests/:id/reject',
-                method : "PUT"
+                method : 'PUT'
             },
             remove : {
-                method : "DELETE"
+                method : 'DELETE'
             },
             claim : {
                 url : '/requests/:id/claim',
-                method : "PUT"
+                method : 'PUT'
             },
             unclaim : {
                 url : '/requests/:id/unclaim',
-                method : "PUT"
+                method : 'PUT'
+            },
+            submitExcerptSelection : {
+                url : '/requests/:id/submitExcerptSelection',
+                method : 'PUT'
             }
         });
 
-        _requestFactory.isMaterialNeeded = function (request) {
-            return request.materialsRequest ? true : false;
-        };
 
         _requestFactory.convertRequestTypeToOpts = function (request) {
             var _type = request.type;
@@ -150,7 +157,7 @@
             };
 
             for (var i=0; i<mapTypeToOpts.length; i++) {
-                if (JSON.stringify(mapTypeToOpts[i]) == JSON.stringify(requestOptsObj)) {
+                if (JSON.stringify(mapTypeToOpts[i]) === JSON.stringify(requestOptsObj)) {
                     return i+1;
                 }
             }
@@ -159,116 +166,110 @@
         return _requestFactory;
     };
     RequestFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Request", RequestFactory);
+    angular.module('ProcessApp.services').factory('Request', RequestFactory);
 
-    RequestAttachmentFactory = function($resource) {
+    var RequestAttachmentFactory = function($resource) {
         return $resource('/requests/:requestId/files/:id', {
             requestId: '@requestId',
             id : '@id'
         }, {
             remove : {
-                method : "DELETE"
+                method : 'DELETE'
             },
             removeDataFile : {
                 url : '/requests/:requestId/dataFiles/:id',
-                method : "DELETE"
+                method : 'DELETE'
             },
             removeAgreementFile : {
                 url : '/requests/:requestId/agreementFiles/:id',
-                method : "DELETE"
+                method : 'DELETE'
             }
 
         });
     };
-    RequestAttachmentFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("RequestAttachment", RequestAttachmentFactory);
 
-    RequestCommentFactory = function($resource) {
+    RequestAttachmentFactory.$inject = [ '$resource' ];
+    angular.module('ProcessApp.services').factory('RequestAttachment', RequestAttachmentFactory);
+
+    var RequestCommentFactory = function($resource) {
         return $resource('/requests/:processInstanceId/comments/:id', {
             processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
             update : {
-                method : "PUT"
+                method : 'PUT'
             },
             remove : {
-                method : "DELETE"
+                method : 'DELETE'
             }
         });
     };
     RequestCommentFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("RequestComment", RequestCommentFactory);
+    angular.module('ProcessApp.services').factory('RequestComment', RequestCommentFactory);
 
-    ApprovalCommentFactory = function($resource) {
+    var ApprovalCommentFactory = function($resource) {
         return $resource('/requests/:processInstanceId/approvalComments/:id', {
             processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
             update : {
-                method : "PUT"
+                method : 'PUT'
             },
             remove : {
-                method : "DELETE"
+                method : 'DELETE'
             }
         });
     };
     ApprovalCommentFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("ApprovalComment", ApprovalCommentFactory);
+    angular.module('ProcessApp.services').factory('ApprovalComment', ApprovalCommentFactory);
 
-    ApprovalVoteFactory = function($resource) {
+    var ApprovalVoteFactory = function($resource) {
         return $resource('/requests/:processInstanceId/approvalVotes/:id', {
             processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
             update : {
-                method : "PUT"
+                method : 'PUT'
             },
             remove : {
-                method : "DELETE"
+                method : 'DELETE'
             }
         });
     };
     ApprovalVoteFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("ApprovalVote", ApprovalVoteFactory);
+    angular.module('ProcessApp.services').factory('ApprovalVote', ApprovalVoteFactory);
 
-    var TaskFactory = function($resource) {
-        return $resource('/tasks/:id', {
+    var ExcerptEntryFactory = function($resource) {
+        return $resource('/requests/:processInstanceId/excerpts/:id/selection', {
+            processInstanceId: '@processInstanceId',
             id : '@id'
         }, {
-            queryCompleted : {
-                url : '/tasks/completed/',
-                method : "GET",
-                isArray : true
-            },
             update : {
-                method : "PUT"
-            },
-            remove : {
-                method : "DELETE"
+                method : 'PUT'
             }
         });
     };
-    TaskFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("Task", TaskFactory);
+    ExcerptEntryFactory.$inject = [ '$resource' ];
+    angular.module('ProcessApp.services').factory('ExcerptEntry', ExcerptEntryFactory);
 
     var FormDataFactory = function($resource) {
         return $resource('/formdata/:id', {
             id : '@id'
         }, {
             update : {
-                method : "PUT"
+                method : 'PUT'
             }
         });
     };
     FormDataFactory.$inject = [ '$resource' ];
-    angular.module("ProcessApp.services").factory("FormData", FormDataFactory);
+    angular.module('ProcessApp.services').factory('FormData', FormDataFactory);
 
     var FlowOptionService = function($cookies) {
         return {
             get_default: function(options) {
                 options.headers = function (file, chunk, isTest) {
                     var csrftoken = $cookies['XSRF-TOKEN'];
-                    console.log("csrftoken: " + csrftoken);
+                    console.log('csrftoken: ' + csrftoken);
                     return {
                         'X-CSRFToken': csrftoken,
                         'X-XSRF-TOKEN': csrftoken
@@ -280,6 +281,6 @@
         };
     };
     FlowOptionService.$inject = [ '$cookies' ];
-    angular.module("ProcessApp.services").factory("FlowOptionService", FlowOptionService);
+    angular.module('ProcessApp.services').factory('FlowOptionService', FlowOptionService);
 
 }(angular));

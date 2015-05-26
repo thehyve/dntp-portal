@@ -15,7 +15,7 @@ angular.module('ProcessApp.controllers')
         $scope.submit = function (user) {
             if ($scope.registrationForm.$valid) {
 
-                user.currentRole = "requester";
+                user.currentRole = 'requester';
                 user.username = user.contactData.email;
 
                 $rootScope.registrant = user;

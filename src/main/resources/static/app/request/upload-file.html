@@ -1,0 +1,114 @@
+  <!-- If the request is not a statistics request (but also requires uploading an excerpt list) -->
+  <div ng-if="!request.statisticsRequest">
+
+    <h3>{{'Excerpt List'|translate}}</h3>
+    <hr>
+    <label ng-if="request.excerptList">
+      <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
+    </label>
+
+    <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
+         flow-name="excerptListFlow"
+         flow-files-submitted="$scope.excerptlist_upload_error = ''; $scope.fileupload_result = ''; $flow.upload()"
+         flow-file-success="fileuploadsuccess(request, $message, true)"
+         flow-file-error="fileuploaderror($message, true)"
+         ng-if="globals.currentUser.roles.indexOf('palga') != -1">
+      <div class="alert alert-success" role="alert" ng-show="excerptlist_upload_result == 'success'">
+        {{ 'Excerpt list uploaded.' | translate }}
+      </div>
+      <div class="alert alert-danger" role="alert" ng-show="excerptlist_upload_result == 'error'">
+        {{ excerptlist_upload_error | translate }}
+      </div>
+
+      <div>
+                          <span class="btn btn-default" flow-btn
+                                ng-disabled="request.assignee != globals.currentUser.userid"
+                            >{{'Upload excerpt list'|translate}}</span>
+      </div>
+      <br>
+      <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+           flow-drag-enter="style={border:'4px dashed lightgreen'}"
+           flow-drag-leave="style={border: '2px dashed gray'}"
+           ng-style="style"
+           ng-hide="request.assignee != globals.currentUser.userid">
+        ({{'drag and drop your file here'|translate}})
+      </div>
+    </div>
+
+    <div ng-if="request.excerptList
+                      && (request.paReportRequest || request.materialsRequest)
+                      && globals.currentUser.roles.indexOf('requester') != -1
+                      && request.status=='DataDelivery'
+                      ">
+      <a ng-href="/#/request/{{request.processInstanceId}}/selection">
+        <button type="button" class="btn btn-primary">
+          {{'Select PA numbers'|translate}}
+        </button>
+      </a>
+    </div>
+
+  </div>
+
+  <h3>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h3>
+  <hr>
+
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="file in request.dataAttachments">
+      <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                        <span class="pull-right">
+                        <span class="btn-group">
+                            <button class="btn btn-default" type="button" title="Delete"
+                                    ng-click="removeDataFile(file)"
+                              >
+                              Delete
+                            </button>
+                        </span>
+                        </span>
+    </li>
+  </ul>
+  <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">
+    <i>{{'No data files.'|translate}}</i>
+  </p>
+
+  <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
+       flow-name="dataFlow"
+       flow-files-submitted="uploadDataFile($flow)"
+       flow-file-success="fileuploadsuccess(request, $message)"
+       flow-file-error="fileuploaderror($message)"
+       ng-if="globals.currentUser.roles.indexOf('palga') != -1"
+    >
+    <div class="alert alert-success" role="alert" ng-show="fileupload_result == 'success'">
+      {{ 'File uploaded.' | translate }}
+    </div>
+    <div class="alert alert-danger" role="alert" ng-show="fileupload_result == 'error'">
+      {{ 'Error uploading file.' | translate }}
+    </div>
+
+    <p>
+      (<em>{{'Maximum file size 10 MB.'|translate}}</em>)
+    </p>
+    <div>
+                        <span class="btn btn-default" flow-btn
+                              ng-disabled="request.assignee != globals.currentUser.userid"
+                          >{{'Upload data files'|translate}}</span>
+    </div>
+    <br>
+    <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+         flow-drag-enter="style={border:'4px dashed lightgreen'}"
+         flow-drag-leave="style={border: '2px dashed gray'}"
+         ng-style="style"
+         ng-hide="request.assignee != globals.currentUser.userid">
+      ({{'drag and drop your file here'|translate}})
+    </div>
+  </div>
+
+  <div ng-if="(!request.paReportRequest && !request.materialsRequest)
+                    && globals.currentUser.roles.indexOf('palga') != -1">
+    <button type="button" class="btn btn-warning"
+            ng-disabled="request.assignee != globals.currentUser.userid"
+            ng-click="closeRequest(request)"
+      >
+      {{'Close request'|translate}}
+    </button>
+    </a>
+  </div>

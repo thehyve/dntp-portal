@@ -1,9 +1,6 @@
 package business.representation;
 
-import business.models.Lab;
-
 import java.util.Date;
-import java.util.List;
 
 public class RequestListRepresentation {
 
@@ -20,7 +17,7 @@ public class RequestListRepresentation {
     private String title;
 
     private String approvalVote;
-    private Integer numberOfApprovalVotes;
+    private Long numberOfApprovalVotes;
     
     public RequestListRepresentation() {
 
@@ -107,11 +104,11 @@ public class RequestListRepresentation {
         this.approvalVote = approvalVote;
     }
 
-    public Integer getNumberOfApprovalVotes() {
+    public Long getNumberOfApprovalVotes() {
         return numberOfApprovalVotes;
     }
 
-    public void setNumberOfApprovalVotes(Integer numberOfApprovalVotes) {
+    public void setNumberOfApprovalVotes(Long numberOfApprovalVotes) {
         this.numberOfApprovalVotes = numberOfApprovalVotes;
     }
 

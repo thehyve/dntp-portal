@@ -9,7 +9,7 @@
       <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
       <!-- endbower -->
 
-    <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="./css/index.css" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,19 +26,20 @@
   </head>
   <body ng-app="ProcessApp"> <!-- flow-prevent-drop -->
 
-    <!-- Navigator -->
-    <div ng-include="'app/components/navbar/navbar.html'"></div>
+  <!-- Navigator -->
+  <div ng-include="'app/components/navbar/navbar.html'"></div>
 
-    <div ng-view></div>
+  <div ng-view></div>
 
-    <!-- Footer -->
-    <div ng-include="'app/components/footer/footer.html'"></div>
+  <!-- Footer -->
+  <div ng-include="'app/components/footer/footer.html'"></div>
 
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/lodash/dist/lodash.compat.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="bower_components/angular-resource/angular-resource.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -62,6 +63,9 @@
   <script type="text/javascript" src="app/login/LoginController.js"></script>
   <script type="text/javascript" src="app/request/RequestServices.js"></script>
   <script type="text/javascript" src="app/request/RequestController.js"></script>
+  <script type="text/javascript" src="app/request/RequestCommentController.js"></script>
+  <script type="text/javascript" src="app/request/ApprovalController.js"></script>
+  <script type="text/javascript" src="app/request/SelectionController.js"></script>
   <script type="text/javascript" src="app/admin/AdminServices.js"></script>
   <script type="text/javascript" src="app/admin/user/AdminUserController.js"></script>
   <script type="text/javascript" src="app/admin/lab/AdminLabController.js"></script>
@@ -73,7 +77,8 @@
   <script type="text/javascript" src="app/forgot-password/ForgotPasswordController.js"></script>
   <script type="text/javascript" src="app/forgot-password/ResetPasswordController.js"></script>
   <script type="text/javascript" src="app/lab/MyLabController.js"></script>
-
+  <script type="text/javascript" src="app/lab-request/LabRequestController.js"></script>
+  <script type="text/javascript" src="app/lab-request/LabRequestFactory.js"></script>
 
   </body>
 </html>

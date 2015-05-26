@@ -1,4 +1,4 @@
-messages_nl =
+var messagesNL =
 {
     /* ========= */
     /* Global    */
@@ -74,11 +74,11 @@ messages_nl =
     'Request Account': 'Account aanvragen',
     'Required field': 'Veld is verplicht',
     'Input value is too long': 'Invoerwaarde is te lang',
-    
+
     /* ================= */
     /* Email validation  */
     /* ================= */
-    
+
     'Account activation': 'Account activeren',
     'Your account has been successfully activated': 'Uw account is succesvol geactiveerd',
     'This link is not valid': 'Deze link is niet geldig',
@@ -135,4 +135,4 @@ messages_nl =
     'Filter by Asignee': 'Filteren door Gevolmachtigde',
 
     null : null
-}
+};

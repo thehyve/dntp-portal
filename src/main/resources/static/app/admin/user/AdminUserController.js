@@ -4,7 +4,7 @@ angular.module('ProcessApp.controllers')
     .controller('AdminUserController',['$scope', '$modal', 'User', 'Role', 'UserRole', 'Lab',
         function ($scope, $modal, User, Role, UserRole, Lab) {
 
-            $scope.error = "";
+            $scope.error = '';
             $scope.accessDenied = false;
             $scope.visibility = {};
 
@@ -13,8 +13,8 @@ angular.module('ProcessApp.controllers')
                 $scope.displayedCollection = [].concat($scope.users);
             }, function(response) {
                 if (response.data) {
-                    $scope.error = $scope.error + response.data.message + "\n";
-                    if (response.data.status == 302 || response.data.status == 403) {
+                    $scope.error = $scope.error + response.data.message + '\n';
+                    if (response.data.status === 302 || response.data.status === 403) {
                         $scope.accessDenied = true;
                     }
                 }
@@ -35,24 +35,24 @@ angular.module('ProcessApp.controllers')
             $scope.update = function(userdata) {
                 if (userdata.id > 0) {
                     userdata.$update(function(result) {
-                        $scope.editerror = "";
+                        $scope.editerror = '';
                         $scope.editUserModal.hide();
                     }, function(response) {
-                        if (response.status == 304) { // not modified
+                        if (response.status === 304) { // not modified
                             //console.log(JSON.stringify(response));
-                            $scope.editerror = "Email address not available.";
+                            $scope.editerror = 'Email address not available.';
                         }
                     });
                 } else {
                     var user = new User(userdata);
                     user.$save(function(result) {
-                        $scope.editerror = "";
+                        $scope.editerror = '';
                         $scope.editUserModal.hide();
                         $scope.users.unshift(result);
                     }, function(response) {
-                        if (response.status == 304) { // not modified
+                        if (response.status === 304) { // not modified
                             //console.log(JSON.stringify(response));
-                            $scope.editerror = "Email address not available.";
+                            $scope.editerror = 'Email address not available.';
                         }
                     });
                 }
@@ -78,22 +78,22 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.getName = function(user) {
-                if (user == null) {
-                    return "";
+                if (user === null) {
+                    return '';
                 }
                 return user.firstName
-                    + ((user.firstName=="" || user.lastName=="" || user.lastName == null ) ? "" : " ")
-                    + (user.lastName==null ? "" : user.lastName);
+                    + ((user.firstName === '' || user.lastName === '' || user.lastName === null ) ? '' : ' ')
+                    + (user.lastName === null ? '' : user.lastName);
             };
 
             $scope.remove = function(user) {
-                bootbox.confirm("Are you sure you want to delete user "
+                bootbox.confirm('Are you sure you want to delete user '
                 +  $scope.getName(user)
-                + "?", function(result) {
+                + '?', function(result) {
                     if (result) {
                         user.$remove(function() {
                             $scope.users.splice($scope.users.indexOf(user), 1);
-                            bootbox.alert("User " + $scope.getName(user) + " deleted.");
+                            bootbox.alert('User ' + $scope.getName(user) + ' deleted.');
                         });
                     }
                 });
@@ -105,7 +105,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.edit = function(usr) {
                 $scope.edituser = usr;
-                $scope.editerror = "";
+                $scope.editerror = '';
                 $scope.editUserModal = $modal({scope: $scope, template: '/app/admin/user/edituser.html'});
             }
 

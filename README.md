@@ -31,6 +31,11 @@ grant all privileges on database dntp_portal to thehyve;
 or edit `src/main/resources/application.properties` to change
 the database settings.
 
+Important for performance: setting the indexes appropriately, e.g.:
+```
+create index var_procinst_name_index on act_hi_varinst (proc_inst_id_, name_ );
+```
+
 ## Installation
 
 Make sure you have npm installed https://docs.npmjs.com/getting-started/installing-node
@@ -71,3 +76,9 @@ mvn -Dspring.profiles.active=dev test
 * `gulp test:auto` to launch your unit tests with Karma in watch mode
 * `gulp protractor` to launch your e2e tests with Protractor
 * `gulp protractor:dist` to launch your e2e tests with Protractor on the dist files
+
+## Release notes
+When updating from 0.0.4 to 0.0.5, an existing database can be updated with:
+```
+alter table excerpt_entry add selected boolean;
+```

@@ -14,11 +14,15 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
 
 @Entity
+@Table(indexes = @Index(columnList="processInstanceId"))
 public class RequestProperties {
 
     @Id

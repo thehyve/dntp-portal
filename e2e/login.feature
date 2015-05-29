@@ -7,8 +7,13 @@ Feature: Log in
     Given I am on the login page
     When I log in as the palga user
     Then I should be on the requests page
+    
+  Scenario: Correct log in 2
+    Given I am on the login page
+    When I log in as the requester user
+    Then I should be on the requests page
 
   Scenario: Incorrect log in
     Given I am on the login page
-    When I log in with invalid credentials
-    Then I should see a log in error
+    When I log in as an invalid user
+    Then I should see an error message

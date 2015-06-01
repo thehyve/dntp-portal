@@ -23,9 +23,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import business.exceptions.EmailAddressNotAvailable;
+import business.exceptions.EmailAddressNotUnique;
+import business.exceptions.InvalidUserData;
+import business.exceptions.UserNotFound;
 import business.models.ActivationLink;
 import business.models.ActivationLinkRepository;
 import business.models.ContactData;
@@ -38,7 +41,6 @@ import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.MailService;
 import business.services.UserService;
-import business.services.UserService.EmailAddressNotUnique;
 
 @RestController
 public class UserController {
@@ -117,25 +119,6 @@ public class UserController {
         return users;
     }
     
-    @ResponseStatus(value=HttpStatus.BAD_REQUEST)  // 
-    public class InvalidUserDataException extends RuntimeException {
-        private static final long serialVersionUID = -7706933733462824596L;
-        public InvalidUserDataException(String message) {
-            super(message);
-        }
-    }
-
-    @ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="Email address not available.")
-    public class EmailAddressNotAvailableException extends RuntimeException {
-        private static final long serialVersionUID = -2294620434526249799L;
-        public EmailAddressNotAvailableException(String message) {
-            super(message);
-        }
-        public EmailAddressNotAvailableException() {
-            super("Email address not available.");
-        }
-    }
-
     public void transferUserData(ProfileRepresentation body, User user) {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());
@@ -146,7 +129,7 @@ public class UserController {
         // copy email address
         String email = body.getContactData().getEmail();
         if (email == null) {
-            throw new InvalidUserDataException("No email address entered.");
+            throw new InvalidUserData("No email address entered.");
         }
         if (user.getUsername() == null || !user.getUsername().equals(email)) {
             // check for uniqueness (also enforced by user service):
@@ -154,7 +137,7 @@ public class UserController {
             if (u == null) {
                 user.setUsername(email);
             } else {
-                throw new EmailAddressNotAvailableException();
+                throw new EmailAddressNotAvailable();
             }
         }
 
@@ -163,7 +146,7 @@ public class UserController {
         if (!representation.getCurrentRole().equals(body)) {
             Role role = roleRepository.findByName(body.getCurrentRole());
             if (role == null) {
-                throw new InvalidUserDataException("Unknown role selected.");
+                throw new InvalidUserData("Unknown role selected.");
             }
             Set<Role> roles = new HashSet<Role>();
             roles.add(role);
@@ -174,13 +157,13 @@ public class UserController {
         if (user.isLabUser() || user.isPathologist()) {
             lab = labRepository.findOne(body.getLabId());
             if (lab == null) {
-                throw new InvalidUserDataException("No lab selected.");
+                throw new InvalidUserData("No lab selected.");
             }
         }
         user.setLab(lab);
         
         if (body.getContactData() == null) {
-            throw new InvalidUserDataException("No contact data entered.");
+            throw new InvalidUserData("No contact data entered.");
         }
         if (user.getContactData() == null) {
             user.setContactData(new ContactData());
@@ -193,13 +176,13 @@ public class UserController {
         if (body.getPassword1() != null && body.getPassword1().equals(body.getPassword2()))
         {
             if (userService.findByUsername(body.getUsername()) != null ) {
-                throw new EmailAddressNotAvailableException();
+                throw new EmailAddressNotAvailable();
             }
 
             Role role = roleRepository.findByName(body.getCurrentRole());
             Set<Role> roles = new HashSet<Role>();
             if (role == null) {
-                throw new InvalidUserDataException("No role selected.");
+                throw new InvalidUserData("No role selected.");
             } else {
                 roles.add(role);
             }
@@ -219,12 +202,12 @@ public class UserController {
 
                 return new ProfileRepresentation(result);
             } catch (EmailAddressNotUnique e) {
-                throw new EmailAddressNotAvailableException();
+                throw new EmailAddressNotAvailable();
             }
         }
         else
         {
-            throw new InvalidUserDataException("Passwords do not match.");
+            throw new InvalidUserData("Passwords do not match.");
         }
     }
 
@@ -234,11 +217,6 @@ public class UserController {
         return createNewUser(body);
     }
 
-    @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="User not found.")  // 404
-    public class UserNotFoundException extends RuntimeException {
-        private static final long serialVersionUID = -7666653096938904964L;
-    }
-    
     @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ProfileRepresentation update(Principal principal, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
@@ -249,11 +227,11 @@ public class UserController {
             try {
                 User result = userService.save(user);
                 return new ProfileRepresentation(result);
-            } catch(UserService.EmailAddressNotUnique e) {
-                throw new EmailAddressNotAvailableException();
+            } catch(EmailAddressNotUnique e) {
+                throw new EmailAddressNotAvailable();
             }
         }
-        throw new UserNotFoundException();
+        throw new UserNotFound();
     }    
     
     @RequestMapping(value = "/admin/users/{id}/activate", method = RequestMethod.PUT)

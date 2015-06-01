@@ -273,7 +273,7 @@
                 </div> <!--end modal-body-->
 
                 <div class="modal-footer">
-                    <button class="btn btn-warning" type="button"
+                    <button id="submit-new-request" class="btn btn-warning" type="button"
                         ng-if="request.status=='Open'"
                         ng-click="submitRequest(request)"
                         ng-disabled="requestEditForm.$invalid">{{'Submit'|translate}}</button>
@@ -308,7 +308,7 @@
                     <button class="btn btn-info" type="submit" ng-click="update(request);"
                             ng-disabled="requestEditForm.$invalid">{{'Save'|translate}}</button>
                     <!--<button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>-->
-                    <button class="btn btn-default" ng-click="cancel(request);">{{'Cancel'|translate}}</button>
+                    <button id="cancel-new-request" class="btn btn-default" ng-click="cancel(request);">{{'Cancel'|translate}}</button>
                 </div>
             </form>
         </div>

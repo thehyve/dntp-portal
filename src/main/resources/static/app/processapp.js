@@ -70,6 +70,7 @@
             $translateProvider.translations('en', messagesEN)
                               .translations('nl', messagesNL);
             $translateProvider.preferredLanguage('en');
+            $translateProvider.useSanitizeValueStrategy('escaped');
 
             // default popover setting to have html friendly content
             angular.extend($popoverProvider.defaults, {

@@ -1,14 +1,17 @@
 Feature: Forgot Password
   As a user
-  I want to recover my password
-  So I can recover access to my account
-
+  I want to be able to recover my password
+  
   Scenario: Forgot Password is reachable from the login page
     Given I am on the login page
-    When I click on "Forgot Password" from the login page
+    When I go from the login page to the forgot password page
     Then I should be on the forgot password page
 
   Scenario: Forgot password shows success message for any email
     Given I am on the forgot password page
-    When I submit any email
+    When I fill the form with the following data
+    """
+    email: email@example.com
+    """
+    And I click on the object with id 'submit-forgot-password'
     Then I should see a success message

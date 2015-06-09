@@ -32,4 +32,13 @@ angular.module('ProcessApp.controllers')
         $scope.alerts.splice(index, 1);
       };
 
+      $scope.reject = function (labRequest) {
+        console.log('About to reject lab request');
+      };
+
+      $scope.accept = function (labRequest) {
+        console.log('About to accept lab request');
+
+      };
+
     }]);

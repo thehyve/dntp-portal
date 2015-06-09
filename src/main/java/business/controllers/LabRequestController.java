@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ public class LabRequestController {
 
     @Autowired
     private LabRequestService labRequestService;
-    
+
     @PreAuthorize("isAuthenticated() and ("
             + "hasRole('requester')"
             + " or "
@@ -35,5 +36,11 @@ public class LabRequestController {
         log.info("GET /labrequests");
         return labRequestService.findLabRequestsForUser(user.getUser());
     }
-    
+
+  @RequestMapping(value = "/labrequest/{id}/reject", method = RequestMethod.PUT)
+  public LabRequestRepresentation reject(UserAuthenticationToken user, @PathVariable String id) {
+    log.info("About to reject a lab request");
+    return null;
+  }
+
 }

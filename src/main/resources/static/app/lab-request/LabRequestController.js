@@ -33,12 +33,21 @@ angular.module('ProcessApp.controllers')
       };
 
       $scope.reject = function (labRequest) {
-        console.log('About to reject lab request');
+        console.log(labRequest);
+        LabRequest.reject({taskId:labRequest.taskId}, function (result) {
+          console.log("after reject", result);
+        });
       };
 
       $scope.accept = function (labRequest) {
-        console.log('About to accept lab request');
+        LabRequest.accept({taskId:labRequest.taskId}, function (result) {
+          console.log("after accept", result);
+        });
 
       };
+
+      $scope.isLabUser = function () {
+       return $rootScope.globals.currentUser.roles.indexOf('lab_user') != -1
+      }
 
     }]);

@@ -39,8 +39,26 @@ public class LabRequestController {
 
   @RequestMapping(value = "/labrequest/{id}/reject", method = RequestMethod.PUT)
   public LabRequestRepresentation reject(UserAuthenticationToken user, @PathVariable String id) {
-    log.info("About to reject a lab request");
-    return null;
+    log.info("PUT /labrequest/" + id + "/reject" );
+
+    // TODO -- //
+      LabRequestRepresentation dummy = new LabRequestRepresentation();
+      dummy.setTaskId(id);
+      dummy.setStatus("Rejected");
+      return dummy;
+    // TODO -- //
+  }
+
+  @RequestMapping(value = "/labrequest/{id}/accept", method = RequestMethod.PUT)
+  public LabRequestRepresentation accept(UserAuthenticationToken user, @PathVariable String id) {
+    log.info("PUT /labrequest/" + id + "/accept" );
+
+    // TODO -- //
+      LabRequestRepresentation dummy = new LabRequestRepresentation();
+      dummy.setTaskId(id);
+      dummy.setStatus("In Progress");
+      return dummy;
+    // TODO -- //
   }
 
 }

@@ -90,7 +90,9 @@
 
       <!--FOOTER-->
       <div class="modal-footer">
-        <button class="btn btn-default" ng-click="cancel(request);">{{'Cancel'|translate}}</button>
+        <button class="btn btn-default btn-primary" ng-click="accept(labRequest);" ng-show="isLabUser();">{{'Accept'|translate}}</button>
+        <button class="btn btn-default btn-warning" ng-click="reject(labRequest);" ng-show="isLabUser();">{{'Reject'|translate}}</button>
+        <button class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</button>
       </div>
 
     </div>

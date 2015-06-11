@@ -78,11 +78,11 @@
                   <button class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                   </button>
-                <button ng-if="globals.currentUser.roles.indexOf('lab_user') != -1" ng-disabled="labRequest.assignee == globals.currentUser.userid"
+                <button ng-if="isLabUser()" ng-disabled="labRequest.assignee == globals.currentUser.userid"
                      class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(labRequest)">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
                 </button>
-                <button ng-if="globals.currentUser.roles.indexOf('lab_user') != -1" ng-disabled="labRequest.assignee != globals.currentUser.userid"
+                <button ng-if="isLabUser()" ng-disabled="labRequest.assignee != globals.currentUser.userid"
                      class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(labRequest)">
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                 </button>

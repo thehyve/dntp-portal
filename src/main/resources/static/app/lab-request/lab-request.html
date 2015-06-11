@@ -10,6 +10,40 @@
       <!--BODY-->
       <div class="modal-body form-horizontal">
 
+        <!--Status-->
+        <div class="form-group">
+          <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
+          <p class="col-sm-7">
+            {{labRequest.status}}
+            <br>
+          </p>
+        </div>
+
+        <!--Rejected details-->
+        <div ng-if="labRequest.status == 'Rejected'">
+        <div class="form-group">
+          <label class="control-label col-sm-3">{{ 'Reject date' | translate }}</label>
+          <p class="col-sm-7">
+            {{labRequest.rejectDate | date}}
+            <br>
+          </p>
+        </div>
+        <div class="form-group" ng-if="isLabUser()">
+          <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
+          <p class="col-sm-7">
+            {{labRequest.rejectReason}}
+            <br><br>
+            <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}
+                ">
+            <button
+            class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
+                <span><i class="glyphicon glyphicon-envelope"></i></span>
+                {{'Compose rejection mail' | translate}}
+            </button></a>
+          </p>
+        </div>
+        </div>
+
         <!--Parent request details-->
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Request Title' | translate }}</label>
@@ -46,7 +80,7 @@
           </div>
         </div>
 
-        <div ng-if="globals.currentUser.roles.indexOf('lab_user') == -1" >
+        <div ng-if="!isLabUser()" >
           <!--Lab Info-->
           <!--Displayed only to users with non lab user role-->
           <div class="form-group">
@@ -90,9 +124,16 @@
 
       <!--FOOTER-->
       <div class="modal-footer">
-        <button class="btn btn-default btn-primary" ng-click="accept(labRequest);" ng-show="isLabUser();">{{'Accept'|translate}}</button>
-        <button class="btn btn-default btn-warning" ng-click="reject(labRequest);" ng-show="isLabUser();">{{'Reject'|translate}}</button>
-        <button class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</button>
+        <span ng-if="!(isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid)">
+            <button class="btn btn-default" ng-click="cancel();">{{'Close'|translate}}</button>
+        </span>
+        <span ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid">
+        <button class="btn btn-default btn-primary" 
+            ng-click="accept(labRequest);">{{'Accept'|translate}}</button>
+        <button class="btn btn-default btn-warning" 
+            ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
+        <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
+        </span>
       </div>
 
     </div>

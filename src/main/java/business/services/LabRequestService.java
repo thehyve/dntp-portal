@@ -13,6 +13,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -150,12 +151,14 @@ public class LabRequestService {
 
         // get task data
         HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request"); 
-        String status = (String)historyService.createHistoricVariableInstanceQuery()
+        HistoricVariableInstance status_variable = historyService.createHistoricVariableInstanceQuery()
                 .taskId(labRequestRepresentation.getTaskId())
                 .variableName("labrequest_status")
-                .singleResult()
-                .getValue();
-        labRequestRepresentation.setStatus(status);
+                .singleResult();
+        if (status_variable != null) {
+            labRequestRepresentation.setStatus((String)status_variable.getValue());
+        }
+        
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setAssignee(task.getAssignee());
 
@@ -208,6 +211,10 @@ public class LabRequestService {
             for (Integer labNumber : labNumbers) {
                 Lab lab = labRepository.findByNumber(labNumber);
                 HistoricTaskInstance task = findLabRequestTaskForLab(labNumber, instance.getId());
+                
+                // set initial status
+                taskService.setVariableLocal(task.getId(), "labrequest_status", "Waiting for lab approval");
+                
                 // create lab requests
                 LabRequest labRequest = new LabRequest();
                 labRequest.setLab(lab);

@@ -3,15 +3,15 @@
 (function(angular) {
 
   var LabRequestFactory = function($resource) {
-    return $resource('/labrequests/:tasksId', {
-      tasksId: '@taskId'
+    return $resource('/labrequests/:id', {
+      id: '@id'
     }, {
       accept : {
-        url : '/labrequest/:tasksId/accept',
+        url : '/labrequest/:id/accept',
         method : 'PUT'
       },
       reject : {
-        url : '/labrequest/:tasksId/reject',
+        url : '/labrequest/:id/reject',
         method : 'PUT'
       }
     });

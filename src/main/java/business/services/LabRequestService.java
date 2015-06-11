@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.RequestNotFound;
+import business.exceptions.TaskNotFound;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.Lab;
@@ -69,6 +70,23 @@ public class LabRequestService {
     @Autowired 
     private ExcerptListService excerptListService;
 
+    /**
+     * Finds task. 
+     * @param taskId
+     * @return the task if it exists.
+     * @throws business.exceptions.TaskNotFound
+     */
+    public Task getTask(String taskId, String taskDefinition) {
+        Task task = taskService.createTaskQuery().taskId(taskId)
+                .active()
+                .taskDefinitionKey(taskDefinition)
+                .singleResult();
+        if (task == null) {
+            throw new TaskNotFound();
+        }
+        return task;
+    }
+    
     private void setRequestListData(
             LabRequestRepresentation labRequestRepresentation,
             HistoricProcessInstance instance
@@ -132,15 +150,15 @@ public class LabRequestService {
             @NotNull LabRequest labRequest 
             ) {
         Date start = new Date();
+        labRequestRepresentation.setId(labRequest.getId());
         labRequestRepresentation.setTaskId(labRequest.getTaskId());
         labRequestRepresentation.setProcessInstanceId(labRequest
                 .getProcessInstanceId());
 
         // get task data
         Task task = requestService.getTask(labRequest.getTaskId(), "lab_request"); 
-        Map<String, Object> taskVariables = task.getTaskLocalVariables();
-        labRequestRepresentation.setStatus((String) taskVariables
-                .get("labrequest_status"));
+        String status = taskService.getVariableLocal(labRequest.getTaskId(), "labrequest_status", String.class);
+        labRequestRepresentation.setStatus(status);
         labRequestRepresentation.setDateCreated(task.getCreateTime());
 
         // set request data

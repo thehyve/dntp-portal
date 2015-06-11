@@ -37,12 +37,23 @@ angular.module('ProcessApp.controllers')
 
       $scope.reject = function (labRequest) {
         console.log(labRequest);
-        LabRequest.reject({id:labRequest.id}, function (result) {
-          console.log("after reject", result);
-          if ($scope.editRequestModal) {
-              $scope.editRequestModal.hide();
-          }
-          $scope.loadLabRequests();
+        bootbox.prompt({
+            title: 'Are you sure you want to reject the lab request?\n<br>' +
+            'Please enter a reject reason:',
+            callback: function(result) {
+                if (result) {
+                    labRequest.rejectReason = result;
+                    LabRequest.reject(labRequest, function (result) {
+                      console.log("after reject", result);
+                      if ($scope.editRequestModal) {
+                          $scope.editRequestModal.hide();
+                      }
+                      $scope.loadLabRequests();
+                    }, function (response) {
+                        console.log("Error: ", response);
+                    });
+                }
+            }
         });
       };
 
@@ -57,6 +68,20 @@ angular.module('ProcessApp.controllers')
 
       };
 
+      $scope.claim = function (labRequest) {
+          LabRequest.claim(labRequest, function (result) {
+            console.log("after claim", result);
+            $scope.loadLabRequests();
+          });
+      };
+      
+      $scope.unclaim = function (labRequest) {
+          LabRequest.unclaim(labRequest, function (result) {
+            console.log("after unclaim", result);
+            $scope.loadLabRequests();
+          });
+      };
+      
       $scope.isLabUser = function () {
        return $rootScope.globals.currentUser.roles.indexOf('lab_user') != -1
       }

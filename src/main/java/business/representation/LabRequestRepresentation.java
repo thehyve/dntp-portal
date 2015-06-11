@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import business.models.Lab;
+import business.models.LabRequest;
 
 public class LabRequestRepresentation {
 
@@ -15,6 +16,8 @@ public class LabRequestRepresentation {
      * Task id from Activiti. This is a unique identifier for lab requests.
      */
     private String taskId;
+
+    private String assignee;
     
     private String processInstanceId;
 
@@ -32,11 +35,27 @@ public class LabRequestRepresentation {
     private Lab lab;
 
     private ExcerptListRepresentation excerptList;
+    
+    private List<String> paNumbers;
 
     private String excerptListRemark;
+    
+    private String rejectReason;
+    
+    private Date rejectDate;
 
     public LabRequestRepresentation() {
 
+    }
+
+    public LabRequestRepresentation(LabRequest labRequest) {
+        this.setId(labRequest.getId());
+        this.setProcessInstanceId(labRequest.getProcessInstanceId());
+        this.setTaskId(labRequest.getTaskId());
+        this.setLab(labRequest.getLab());
+        this.setRejectDate(labRequest.getRejectDate());
+        this.setRejectReason(labRequest.getRejectReason());
+        this.setPaNumbers(labRequest.getPaNumbers());
     }
     
     public Long getId() {
@@ -53,6 +72,14 @@ public class LabRequestRepresentation {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+    
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
     }
 
     public String getProcessInstanceId() {
@@ -142,4 +169,29 @@ public class LabRequestRepresentation {
     public void setRequestListRepresentation(RequestListRepresentation requestListRepresentation) {
       this.requestListRepresentation = requestListRepresentation;
     }
+    
+    public List<String> getPaNumbers() {
+        return paNumbers;
+    }
+
+    public void setPaNumbers(List<String> paNumbers) {
+        this.paNumbers = paNumbers;
+    }
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
+    public Date getRejectDate() {
+        return rejectDate;
+    }
+
+    public void setRejectDate(Date rejectDate) {
+        this.rejectDate = rejectDate;
+    }
+    
 }

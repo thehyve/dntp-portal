@@ -1,6 +1,7 @@
 package business.models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
@@ -26,6 +27,10 @@ public class LabRequest {
     
     @ElementCollection
     List<String> paNumbers = new ArrayList<String>();
+    
+    private String rejectReason;
+    
+    private Date rejectDate;
     
     public LabRequest() {
         
@@ -69,6 +74,22 @@ public class LabRequest {
 
     public void setPaNumbers(List<String> paNumbers) {
         this.paNumbers = paNumbers;
+    }
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
+    public Date getRejectDate() {
+        return rejectDate;
+    }
+
+    public void setRejectDate(Date rejectDate) {
+        this.rejectDate = rejectDate;
     }
     
 }

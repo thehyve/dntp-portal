@@ -475,7 +475,7 @@ public class RequestController {
         return updatedRequest;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#param, 'isPalgaUser')")
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/unclaim", method = RequestMethod.PUT)
     public RequestRepresentation unclaim(
             UserAuthenticationToken user,

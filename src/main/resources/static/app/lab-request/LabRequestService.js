@@ -7,11 +7,19 @@
       id: '@id'
     }, {
       accept : {
-        url : '/labrequest/:id/accept',
+        url : '/labrequests/:id/accept',
         method : 'PUT'
       },
       reject : {
-        url : '/labrequest/:id/reject',
+        url : '/labrequests/:id/reject',
+        method : 'PUT'
+      },
+      claim : {
+        url : '/labrequests/:id/claim',
+        method : 'PUT'
+      },
+      unclaim : {
+        url : '/labrequests/:id/unclaim',
         method : 'PUT'
       }
     });

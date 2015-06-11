@@ -1,5 +1,8 @@
   <!-- If the request is not a statistics request (but also requires uploading an excerpt list) -->
-  <div ng-if="!request.statisticsRequest">
+  <div ng-if="!request.statisticsRequest && 
+        (globals.currentUser.roles.indexOf('palga') != -1
+         || globals.currentUser.roles.indexOf('requester') != -1
+        )">
 
     <h3>{{'Excerpt List'|translate}}</h3>
     <hr>

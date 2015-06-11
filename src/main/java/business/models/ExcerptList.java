@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +31,12 @@ public class ExcerptList implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+    
+    @Column(unique = true)
+    private String processInstanceId;
+
+    @Column(columnDefinition="TEXT")
+    private String remark;
     
     @ElementCollection
     private List<String> columnNames = new ArrayList<String>();
@@ -55,8 +62,23 @@ public class ExcerptList implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
     
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+    
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public String[] getCsvColumnNames() {
         String[] result = new String[columnNames.size() + 1];
         result[0] = "Sequence number";

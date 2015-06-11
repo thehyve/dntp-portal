@@ -13,6 +13,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.RequestNotFound;
+import business.exceptions.TaskNotFound;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.Lab;
@@ -69,6 +71,23 @@ public class LabRequestService {
     @Autowired 
     private ExcerptListService excerptListService;
 
+    /**
+     * Finds task. 
+     * @param taskId
+     * @return the task if it exists.
+     * @throws business.exceptions.TaskNotFound
+     */
+    public Task getTask(String taskId, String taskDefinition) {
+        Task task = taskService.createTaskQuery().taskId(taskId)
+                .active()
+                .taskDefinitionKey(taskDefinition)
+                .singleResult();
+        if (task == null) {
+            throw new TaskNotFound();
+        }
+        return task;
+    }
+    
     private void setRequestListData(
             LabRequestRepresentation labRequestRepresentation,
             HistoricProcessInstance instance
@@ -127,29 +146,26 @@ public class LabRequestService {
         list.setEntries(entries);
     }
     
-    public void transferLabRequestData(
-            @NotNull LabRequestRepresentation labRequestRepresentation,
-            @NotNull LabRequest labRequest 
-            ) {
+    public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         Date start = new Date();
-        labRequestRepresentation.setTaskId(labRequest.getTaskId());
-        labRequestRepresentation.setProcessInstanceId(labRequest
-                .getProcessInstanceId());
 
         // get task data
-        Task task = requestService.getTask(labRequest.getTaskId(), "lab_request"); 
-        Map<String, Object> taskVariables = task.getTaskLocalVariables();
-        labRequestRepresentation.setStatus((String) taskVariables
-                .get("labrequest_status"));
+        HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request"); 
+        HistoricVariableInstance status_variable = historyService.createHistoricVariableInstanceQuery()
+                .taskId(labRequestRepresentation.getTaskId())
+                .variableName("labrequest_status")
+                .singleResult();
+        if (status_variable != null) {
+            labRequestRepresentation.setStatus((String)status_variable.getValue());
+        }
+        
         labRequestRepresentation.setDateCreated(task.getCreateTime());
+        labRequestRepresentation.setAssignee(task.getAssignee());
 
         // set request data
-        HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
+        HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);
         
-        // set lab data
-        labRequestRepresentation.setLab(labRequest.getLab());
-
         // set excerpt list data
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(task.getProcessInstanceId());
         if (excerptList == null) {
@@ -157,7 +173,7 @@ public class LabRequestService {
         }
         labRequestRepresentation.setExcerptListRemark(excerptList.getRemark());
         ExcerptListRepresentation list = new ExcerptListRepresentation();
-        transferExcerptListData(list, excerptList, labRequest.getLab().getNumber());
+        transferExcerptListData(list, excerptList, labRequestRepresentation.getLab().getNumber());
         
         labRequestRepresentation.setExcerptList(list);
         Date end = new Date();
@@ -195,6 +211,10 @@ public class LabRequestService {
             for (Integer labNumber : labNumbers) {
                 Lab lab = labRepository.findByNumber(labNumber);
                 HistoricTaskInstance task = findLabRequestTaskForLab(labNumber, instance.getId());
+                
+                // set initial status
+                taskService.setVariableLocal(task.getId(), "labrequest_status", "Waiting for lab approval");
+                
                 // create lab requests
                 LabRequest labRequest = new LabRequest();
                 labRequest.setLab(lab);
@@ -220,16 +240,16 @@ public class LabRequestService {
             // Lab user
             List<LabRequest> labRequests = labRequestRepository.findAllByLab(user.getLab());
             for (LabRequest labRequest : labRequests) {
-                LabRequestRepresentation representation = new LabRequestRepresentation();
-                transferLabRequestData(representation, labRequest);
+                LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+                transferLabRequestData(representation);
                 representations.add(representation);
             }
         } else if (user.isPalga()) {
             // Palga
             List<LabRequest> labRequests = labRequestRepository.findAll();
             for (LabRequest labRequest : labRequests) {
-                LabRequestRepresentation representation = new LabRequestRepresentation();
-                transferLabRequestData(representation, labRequest);
+                LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+                transferLabRequestData(representation);
                 representations.add(representation);
             }
         } else {
@@ -245,8 +265,8 @@ public class LabRequestService {
             for (HistoricProcessInstance instance : historicInstances) {
                 List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId());
                 for (LabRequest labRequest : labRequests) {
-                    LabRequestRepresentation representation = new LabRequestRepresentation();
-                    transferLabRequestData(representation, labRequest);
+                    LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+                    transferLabRequestData(representation);
                     representations.add(representation);
                 }
             }

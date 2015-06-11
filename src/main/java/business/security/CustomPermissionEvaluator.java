@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import business.exceptions.InvalidPermissionExpression;
 import business.exceptions.NullIdentifier;
+import business.models.LabRequest;
+import business.models.LabRequestRepository;
 import business.models.User;
 import business.representation.RequestRepresentation;
 import business.services.RequestFormService;
@@ -31,6 +33,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Autowired
     private RequestFormService requestFormService;
+    
+    @Autowired
+    private LabRequestRepository labRequestRepository;
     
     @Autowired 
     private TaskService taskService;
@@ -86,6 +91,19 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                     .count();
             return (count > 0);
         } 
+        else if ("labRequestAssignedToUser".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            log.info("labRequestAssignedToUser: user = " + user.getId()
+                    + ", labRequestId = " + labRequestId);
+            LabRequest labRequest = labRequestRepository.findOne(labRequestId); 
+            long count = taskService.createTaskQuery().taskId(labRequest.getTaskId())
+                    .active()
+                    .taskAssignee(user.getId().toString())
+                    .count();
+            return (count > 0);
+        } 
         else if ("isPalgaUser".equals(permission)) 
         {
             String requestId = (String)targetDomainObject;
@@ -132,6 +150,21 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                     .processVariableValueEquals("lab", user.getLab().getNumber())
                     .count();
             return (count > 0);
+        } 
+        else if ("isLabRequestLabuser".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            log.info("isLabRequestLabuser: user = " + user.getId()
+                    + ", labRequestId = " + labRequestId);
+            if (!user.isLabUser()) {
+                return false;
+            }
+            LabRequest labRequest = labRequestRepository.findOne(labRequestId);
+            if (!labRequest.getLab().getNumber().equals(user.getLab().getNumber())) {
+                return false;
+            }
+            return true;
         } 
         else 
         {

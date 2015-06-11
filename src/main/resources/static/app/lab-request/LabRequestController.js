@@ -9,14 +9,17 @@ angular.module('ProcessApp.controllers')
 
       $scope.alerts = [];
 
-      Restangular.all('labrequests').getList().then(function (labRequests) {
-
-        $scope.labRequests = labRequests;
-        ///console.log(labRequests);
-
-      }, function (err) {
-        $scope.alerts.push({type: 'danger', msg: 'Error : ' + err.data.status  + ' - ' + err.data.error });
-      });
+      $scope.loadLabRequests = function() {
+          Restangular.all('labrequests').getList().then(function (labRequests) {
+    
+            $scope.labRequests = labRequests;
+            ///console.log(labRequests);
+    
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: 'Error : ' + err.data.status  + ' - ' + err.data.error });
+          });
+      }
+      $scope.loadLabRequests();
 
       $scope.edit = function (labRequest) {
         // console.log(labRequest);
@@ -34,18 +37,51 @@ angular.module('ProcessApp.controllers')
 
       $scope.reject = function (labRequest) {
         console.log(labRequest);
-        LabRequest.reject({taskId:labRequest.taskId}, function (result) {
-          console.log("after reject", result);
+        bootbox.prompt({
+            title: 'Are you sure you want to reject the lab request?\n<br>' +
+            'Please enter a reject reason:',
+            callback: function(result) {
+                if (result) {
+                    labRequest.rejectReason = result;
+                    LabRequest.reject(labRequest, function (result) {
+                      console.log("after reject", result);
+                      if ($scope.editRequestModal) {
+                          $scope.editRequestModal.hide();
+                      }
+                      $scope.loadLabRequests();
+                    }, function (response) {
+                        console.log("Error: ", response);
+                    });
+                }
+            }
         });
       };
 
       $scope.accept = function (labRequest) {
-        LabRequest.accept({taskId:labRequest.taskId}, function (result) {
+        LabRequest.accept({id:labRequest.id}, function (result) {
           console.log("after accept", result);
+          if ($scope.editRequestModal) {
+              $scope.editRequestModal.hide();
+          }
+          $scope.loadLabRequests();
         });
 
       };
 
+      $scope.claim = function (labRequest) {
+          LabRequest.claim(labRequest, function (result) {
+            console.log("after claim", result);
+            $scope.loadLabRequests();
+          });
+      };
+      
+      $scope.unclaim = function (labRequest) {
+          LabRequest.unclaim(labRequest, function (result) {
+            console.log("after unclaim", result);
+            $scope.loadLabRequests();
+          });
+      };
+      
       $scope.isLabUser = function () {
        return $rootScope.globals.currentUser.roles.indexOf('lab_user') != -1
       }

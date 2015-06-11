@@ -45,9 +45,10 @@ public class RequestService {
      * @return the task if it exists.
      * @throws business.exceptions.TaskNotFound
      */
-    public Task getTask(String taskId, String taskDefinition) {
-        Task task = taskService.createTaskQuery().taskId(taskId)
-                .active()
+    public HistoricTaskInstance getTask(String taskId, String taskDefinition) {
+        HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
+                .taskId(taskId)
+                //.active()
                 .taskDefinitionKey(taskDefinition)
                 .singleResult();
         if (task == null) {

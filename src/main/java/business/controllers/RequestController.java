@@ -128,6 +128,7 @@ public class RequestController {
         } else if (user.getUser().isPalga()) {
             processInstances = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Open")
                     .orderByProcessInstanceStartTime()
@@ -137,6 +138,7 @@ public class RequestController {
             Date start = new Date();
             processInstances = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .variableValueEquals("status", "Approval")
                     .orderByProcessInstanceStartTime()
@@ -145,6 +147,7 @@ public class RequestController {
             Date endQ1 = new Date();
             List<HistoricProcessInstance> list = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Approval")
                     .variableValueNotEquals("scientific_council_approved", null)
@@ -170,6 +173,7 @@ public class RequestController {
             if (!processInstanceIds.isEmpty()) {
                 processInstances = historyService
                         .createHistoricProcessInstanceQuery()
+                        .notDeleted()
                         .includeProcessVariables()
                         .processInstanceIds(processInstanceIds)
                         .list();
@@ -179,6 +183,7 @@ public class RequestController {
         } else {
             processInstances = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .involvedUser(user.getId().toString())
                     .orderByProcessInstanceStartTime()
@@ -486,7 +491,7 @@ public class RequestController {
         return updatedRequest;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
     @RequestMapping(value = "/requests/{id}", method = RequestMethod.DELETE)
     public void remove(
             UserAuthenticationToken user,
@@ -501,7 +506,9 @@ public class RequestController {
         if (!request.getStatus().equals("Open")) {
             throw new InvalidActionInStatus();
         }
+        log.info("deleting process instance " + id);
         runtimeService.deleteProcessInstance(id, "Removed by user: " + user.getName());
+        log.info("process instance " + id + " deleted.");
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")

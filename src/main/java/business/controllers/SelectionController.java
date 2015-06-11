@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import business.exceptions.RequestNotFound;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
+import business.models.ExcerptListRepository;
 import business.models.RequestProperties;
 import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.ExcerptListService;
+import business.services.LabRequestService;
 import business.services.RequestFormService;
 import business.services.RequestPropertiesService;
 import business.services.RequestService;
@@ -38,6 +40,12 @@ public class SelectionController {
 
     @Autowired
     private ExcerptListService excerptListService;
+    
+    @Autowired 
+    ExcerptListRepository excerptListRepository;
+
+    @Autowired
+    private LabRequestService labRequestService;
     
     @Autowired
     private RequestPropertiesService requestPropertiesService;
@@ -62,11 +70,11 @@ public class SelectionController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("GET /requests/" + id + "/selection");
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        if (properties == null) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        if (excerptList == null) {
             throw new RequestNotFound();
         }
-        return new ExcerptListRepresentation(properties.getExcerptList());
+        return new ExcerptListRepresentation(excerptList);
     }
 
     // not tested yet
@@ -80,14 +88,13 @@ public class SelectionController {
             @RequestBody ExcerptListRepresentation body) {
         log.info("PUT /requests/" + id + "/selection");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        if (properties == null) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        if (excerptList == null) {
             throw new RequestNotFound();
         }
-        
-        ExcerptList list = properties.getExcerptList();
         //list.getEntries().get(body.get)
         for (ExcerptEntryRepresentation entry: body.getEntries()) {
-            ExcerptEntry excerptEntry = list.getEntries().get(entry.getSequenceNumber());
+            ExcerptEntry excerptEntry = excerptList.getEntries().get(entry.getSequenceNumber());
             if (entry.getId().equals(excerptEntry.getId())) {
                 // indeed the same entry
                 excerptEntry.setSelected(entry.isSelected());
@@ -95,7 +102,7 @@ public class SelectionController {
         }
         properties = requestPropertiesService.save(properties);
 
-        return new ExcerptListRepresentation(properties.getExcerptList());
+        return new ExcerptListRepresentation(excerptList);
     }
 
     @PreAuthorize("isAuthenticated() and "
@@ -108,13 +115,11 @@ public class SelectionController {
             @PathVariable String id,
             @RequestBody ExcerptEntryRepresentation body) {
         log.info("PUT /requests/" + requestId + "/excerpts/" + id + "/selection");
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(requestId);
-        if (properties == null) {
+        ExcerptList excerptList = excerptListService.findByProcessInstanceId(requestId);
+        if (excerptList == null) {
             throw new RequestNotFound();
         }
-        
-        ExcerptList list = properties.getExcerptList();
-        ExcerptEntry excerptEntry = list.getEntries().get(body.getSequenceNumber()-1);
+        ExcerptEntry excerptEntry = excerptList.getEntries().get(body.getSequenceNumber()-1);
         if (body.getId().equals(excerptEntry.getId())) {
             // indeed the same entry
             excerptEntry.setSelected(body.isSelected());
@@ -123,9 +128,9 @@ public class SelectionController {
             log.info("Sequence number not properly set: body.id = " + body.getId() + ", excerpt.id = " + excerptEntry.getId());
             log.info("body.seqNr = " + body.getSequenceNumber() + ", excerpt.seqNr = " + excerptEntry.getSequenceNumber());
         }
-        properties = requestPropertiesService.save(properties);
+        excerptList = excerptListRepository.save(excerptList);
 
-        return new ExcerptListRepresentation(properties.getExcerptList());
+        return new ExcerptListRepresentation(excerptList);
     }
     
     @PreAuthorize("isAuthenticated() and "
@@ -140,17 +145,17 @@ public class SelectionController {
         
         // FIXME: claim task for requester
         
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        if (properties == null) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        if (excerptList == null) {
             throw new RequestNotFound();
         }
         
-        properties.setExcerptListRemark(body.getExcerptListRemark());
-        properties = requestPropertiesService.save(properties);
+        excerptList.setRemark(body.getExcerptListRemark());
+        excerptList = excerptListRepository.save(excerptList);
         
         // TODO: set lab numbers for creating lab requests.
         Set<Integer> selectedLabNumbers = new TreeSet<Integer>();
-        for(ExcerptEntry entry: properties.getExcerptList().getEntryValues()) {
+        for(ExcerptEntry entry: excerptList.getEntryValues()) {
             selectedLabNumbers.add(entry.getLabNumber());
         }
         runtimeService.setVariable(id, "lab_request_labs", selectedLabNumbers);
@@ -161,6 +166,9 @@ public class SelectionController {
         }
 
         taskService.complete(task.getId());
+        
+        // FIXME: now generate lab requests!!!!!
+        labRequestService.generateLabRequests(id);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();

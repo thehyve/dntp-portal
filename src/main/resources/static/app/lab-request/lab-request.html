@@ -128,11 +128,11 @@
             <button class="btn btn-default" ng-click="cancel();">{{'Close'|translate}}</button>
         </span>
         <span ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid">
-          <button class="btn btn-default btn-primary"
-              ng-click="accept(labRequest);">{{'Accept'|translate}}</button>
-          <button class="btn btn-default btn-warning"
-              ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
-          <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
+            <button class="btn btn-default btn-primary"
+                    ng-click="accept(labRequest);">{{'Accept'|translate}}</button>
+            <button class="btn btn-default btn-warning"
+                    ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
+            <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
         </span>
       </div>
 

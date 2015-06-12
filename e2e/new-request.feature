@@ -1,6 +1,7 @@
 Feature: The requester should be able to create a new request and see an overview of them
   Background:
-    Given I am logged in as the requester user
+    Given I am logged out
+    And I am logged in as the requester user
 
   Scenario: Request for numbers
     When I go from the requests page to the create new request page

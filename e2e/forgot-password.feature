@@ -1,7 +1,10 @@
 Feature: Forgot Password
   As a user
   I want to be able to recover my password
-  
+
+  Background:
+    Given I am logged out
+
   Scenario: Forgot Password is reachable from the login page
     Given I am on the login page
     When I go from the login page to the forgot password page

@@ -4,6 +4,8 @@ var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
+var rp = require('request-promise')
+
 function newMapping(from, to, action) {
     return { 'from': from, 'to': to, 'action': action };
 }
@@ -53,6 +55,18 @@ module.exports = {
         } else {
             this.fatalError('The user ' + user + ' doesn\'t exist');
         }
+    },
+    logout: function() {
+        var rawBaseUrl = 'http://localhost:8092/';
+
+        // We test if we are logged in by trying to GET requests
+        return rp({uri: rawBaseUrl + 'requests', resolveWithFullResponse: true})
+            .then(function(response) {
+                // Click on the logout button of the navbar to logout!
+                var pages = require('./pages/pages');
+                pages.nav.logout();
+            })
+            .catch(function() {}) // This will catch a possible 403 error;
     },
     fatalError: function(message) {
         throw "Fatal error: the specification is incorrectly expressed! " + message;

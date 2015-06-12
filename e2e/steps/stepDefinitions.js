@@ -16,6 +16,12 @@ module.exports = function() {
         util.login(user);
         next();
     });
+    
+    this.Given('I am logged out', function(next) {
+        util.logout().then(function() {
+            next();
+        });
+    });
 
     this.When(/^I log in as (?:the|an?) (.*) user$/, function(user, next) {
         util.login(user);

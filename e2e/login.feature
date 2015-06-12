@@ -2,6 +2,9 @@ Feature: Log in
   As a user
   I want to log in
   So that I can access restricted content
+  
+  Background:
+    Given I am logged out
 
   Scenario: Correct log in
     Given I am on the login page

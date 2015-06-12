@@ -92,17 +92,17 @@ public class LabRequestController {
   @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
   @RequestMapping(value = "/labrequests/{id}/claim", method = RequestMethod.PUT)
   public LabRequestRepresentation claim(
-      UserAuthenticationToken user,
-      @PathVariable Long id) {
+    UserAuthenticationToken user,
+    @PathVariable Long id) {
     log.info("PUT /labrequests/" + id + "/claim");
 
     LabRequest labRequest = labRequestRepository.findOne(id);
     Task task = labRequestService.getTask(labRequest.getTaskId(), "lab_request");
 
     if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-      taskService.claim(task.getId(), user.getId().toString());
+        taskService.claim(task.getId(), user.getId().toString());
     } else {
-      taskService.delegateTask(task.getId(), user.getId().toString());
+        taskService.delegateTask(task.getId(), user.getId().toString());
     }
 
     LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
@@ -128,12 +128,16 @@ public class LabRequestController {
   }
 
 
-  @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+  @PreAuthorize("isAuthenticated() and "
+    + "(hasPermission(#id, 'isPalgaUser') "
+    + " or hasPermission(#id, 'isRequester') "
+    + " or hasPermission(#id, 'isLabuser') "
+    + ")")
   @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
   public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable String id) {
     log.info("GET /labrequests/" + id + "/panumbers/csv");
 
-    // TODO
+    LabRequest labRequest = labRequestRepository.findOne(Long.valueOf(id));
 
     return null;
   }

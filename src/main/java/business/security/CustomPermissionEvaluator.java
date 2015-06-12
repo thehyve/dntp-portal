@@ -166,6 +166,21 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             }
             return true;
         } 
+        else if ("isLabRequestRequester".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            log.info("isLabRequestRequester: user = " + user.getId()
+                    + ", labRequestId = " + labRequestId);
+            if (!user.isRequester()) {
+                return false;
+            }
+            LabRequest labRequest = labRequestRepository.findOne(labRequestId);
+            HistoricProcessInstance instance = requestService.findProcessInstance(labRequest.getProcessInstanceId());
+            RequestRepresentation request = new RequestRepresentation();
+            requestFormService.transferData(instance, request, user);
+            return request.getRequesterId().equals(user.getId().toString());
+        } 
         else 
         {
             throw new InvalidPermissionExpression();

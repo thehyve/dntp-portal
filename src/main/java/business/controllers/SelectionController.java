@@ -167,7 +167,7 @@ public class SelectionController {
 
         taskService.complete(task.getId());
         
-        // FIXME: now generate lab requests!!!!!
+        // generate lab requests
         labRequestService.generateLabRequests(id);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);

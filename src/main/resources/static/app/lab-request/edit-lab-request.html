@@ -1,18 +1,14 @@
-<div class="container-fluid" ng-controller="LabRequestController">
-    <div class="row">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
 
-        <!--Side Bar-->
-        <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li class="active"><a href="#/">View</a></li>
-            </ul>
-        </div>
+      <!--HEADER-->
+      <div class="modal-header">
+        <h3 class="modal-title">Lab Request : {{labRequest.taskId}}</h3>
+      </div>
 
-        <!--Main-->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-            <h2>Lab Request : {{labRequest.taskId}}</h2>
-            <hr>
+      <!--BODY-->
+      <div class="modal-body form-horizontal">
 
         <!--Status-->
         <div class="form-group">
@@ -52,9 +48,7 @@
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Request Title' | translate }}</label>
           <p class="col-sm-7">
-            <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
             {{labRequest.requestListRepresentation.title}}
-            </a>
             <br>
           </p>
         </div>
@@ -108,11 +102,6 @@
 
         <!--Excerpt List Details-->
 
-        <div style="clear: both;" class="row">
-            <br>
-            <h3>{{ 'Excerpt list' | translate}}</h3>
-        </div>
-
         <div style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">
           <table st-table="rowCollection" class="table">
             <thead>
@@ -133,8 +122,21 @@
         </div>
       </div>
 
-    </div> <!--end row-->
+      <!--FOOTER-->
+      <div class="modal-footer">
+        <span ng-if="!(isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid)">
+            <button class="btn btn-default" ng-click="cancel();">{{'Close'|translate}}</button>
+        </span>
+        <span ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid">
+            <button class="btn btn-default btn-primary"
+                    ng-click="accept(labRequest);">{{'Accept'|translate}}</button>
+            <button class="btn btn-default btn-warning"
+                    ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
+            <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
+        </span>
+      </div>
+
+    </div>
+  </div>
 </div>
-<br>
-<br>
 

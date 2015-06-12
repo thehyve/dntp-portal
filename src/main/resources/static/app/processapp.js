@@ -47,8 +47,14 @@
             }).when('/labs', {
                 templateUrl : 'app/admin/lab/labs.html'
             }).when('/lab-requests', {
-              templateUrl : 'app/lab-request/lab-requests.html',
-              controller : 'LabRequestController'
+                templateUrl : 'app/lab-request/lab-requests.html',
+                controller : ''
+            }).when('/lab-request/view/:labRequestId', {
+              templateUrl : 'app/lab-request/lab-request.html',
+              controller : ''
+            }).when('/request/view/:requestId', {
+                templateUrl : 'app/request/request.html',
+                controller : 'RequestController'
             }).when('/request/view/:requestId', {
                 templateUrl : 'app/request/request.html',
                 controller : 'RequestController'

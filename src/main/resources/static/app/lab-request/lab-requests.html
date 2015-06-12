@@ -52,10 +52,10 @@
         <tbody>
           <tr ng-repeat="labRequest in labRequests track by $index" ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid && labRequest.status == 'Waiting for lab approval'}">
             <td>
-              {{labRequest.taskId}}
+              <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.id}}</a>
             </td>
             <td>
-              <a href="#/request/view/{{labRequest.processInstanceId}}">{{labRequest.requestListRepresentation.title}}</a>
+              <a ng-href="#/request/view/{{labRequest.processInstanceId}}">{{labRequest.requestListRepresentation.title}}</a>
             </td>
             <td>
               {{labRequest.requestListRepresentation.requesterName}}
@@ -67,7 +67,7 @@
               {{labRequest.dateCreated |  date: 'EEE, dd MMMM yyyy H:mm'}}
             </td>
             <td>
-              {{labRequest.excerptList.entries.length}}
+              {{labRequest.paNumbers.length}}
             </td>
             <td>
               {{labRequest.status}}

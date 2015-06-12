@@ -696,7 +696,7 @@ public class RequestController {
 
         // process list
         try {
-            excerptListRepository.deleteByProcessInstanceId(id);
+            excerptListService.deleteByProcessInstanceId(id);
             ExcerptList list = excerptListService.processExcerptList(file);
             // if not exception thrown, save list and attachment
             if (properties.getExcerptListAttachmentId() != null && !properties.getExcerptListAttachmentId().equals(attachmentId)) {
@@ -707,9 +707,9 @@ public class RequestController {
             properties.setExcerptListAttachmentId(attachmentId);
             list.setProcessInstanceId(id);
             log.info("Saving excerpt list.");
-            list = excerptListRepository.save(list);
+            list = excerptListService.save(list);
             log.info("Done.");
-        } catch (ExcerptListUploadError e) {
+        } catch (RuntimeException e) {
             // revert uploading
             taskService.deleteAttachment(attachmentId);
             throw e;

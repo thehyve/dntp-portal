@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import business.exceptions.TaskNotFound;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -67,12 +68,12 @@ public class LabRequestService {
 
     @Autowired
     private LabRequestRepository labRequestRepository;
-    
-    @Autowired 
+
+    @Autowired
     private ExcerptListService excerptListService;
 
     /**
-     * Finds task. 
+     * Finds task.
      * @param taskId
      * @return the task if it exists.
      * @throws business.exceptions.TaskNotFound
@@ -87,7 +88,7 @@ public class LabRequestService {
         }
         return task;
     }
-    
+
     private void setRequestListData(
             LabRequestRepresentation labRequestRepresentation,
             HistoricProcessInstance instance
@@ -116,14 +117,16 @@ public class LabRequestService {
             RequestListRepresentation requestListRepresentation = new RequestListRepresentation();
             requestFormService.transferData(instance, requestListRepresentation, user);
             labRequestRepresentation.setRequestListRepresentation(requestListRepresentation);
-        } 
+        }
     }
-    
+
+
     public void transferExcerptListData(
-            ExcerptListRepresentation list, 
+            ExcerptListRepresentation list,
             ExcerptList excerptList,
             Integer labNumber
             ) {
+
         List<String> columnNames = new ArrayList<String>();
         for (String name : excerptList.getLabRequestColumnNames()) {
             columnNames.add(name);
@@ -145,12 +148,12 @@ public class LabRequestService {
         }
         list.setEntries(entries);
     }
-    
+
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         Date start = new Date();
 
         // get task data
-        HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request"); 
+        HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request");
         HistoricVariableInstance status_variable = historyService.createHistoricVariableInstanceQuery()
                 .taskId(labRequestRepresentation.getTaskId())
                 .variableName("labrequest_status")
@@ -158,14 +161,14 @@ public class LabRequestService {
         if (status_variable != null) {
             labRequestRepresentation.setStatus((String)status_variable.getValue());
         }
-        
+
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setAssignee(task.getAssignee());
 
         // set request data
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);
-        
+
         // set excerpt list data
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(task.getProcessInstanceId());
         if (excerptList == null) {
@@ -174,7 +177,7 @@ public class LabRequestService {
         labRequestRepresentation.setExcerptListRemark(excerptList.getRemark());
         ExcerptListRepresentation list = new ExcerptListRepresentation();
         transferExcerptListData(list, excerptList, labRequestRepresentation.getLab().getNumber());
-        
+
         labRequestRepresentation.setExcerptList(list);
         Date end = new Date();
         if ((end.getTime() - start.getTime()) > 10) {
@@ -211,16 +214,16 @@ public class LabRequestService {
             for (Integer labNumber : labNumbers) {
                 Lab lab = labRepository.findByNumber(labNumber);
                 HistoricTaskInstance task = findLabRequestTaskForLab(labNumber, instance.getId());
-                
+
                 // set initial status
                 taskService.setVariableLocal(task.getId(), "labrequest_status", "Waiting for lab approval");
-                
+
                 // create lab requests
                 LabRequest labRequest = new LabRequest();
                 labRequest.setLab(lab);
                 labRequest.setProcessInstanceId(processInstanceId);
                 labRequest.setTaskId(task.getId());
-                
+
                 ExcerptList excerptList = excerptListService.findByProcessInstanceId(processInstanceId);
                 ExcerptListRepresentation list = new ExcerptListRepresentation();
                 transferExcerptListData(list, excerptList, labNumber);
@@ -233,7 +236,7 @@ public class LabRequestService {
             }
         }
     }
-    
+
     public List<LabRequestRepresentation> findLabRequestsForUser(User user) {
         List<LabRequestRepresentation> representations = new ArrayList<LabRequestRepresentation>();
         if (user.isLabUser()) {
@@ -251,6 +254,7 @@ public class LabRequestService {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
                 representations.add(representation);
+
             }
         } else {
             // fetch requests in status "LabRequest" for requester
@@ -263,15 +267,34 @@ public class LabRequestService {
             log.info("#instances: " + historicInstances.size());
             // find associated lab requests
             for (HistoricProcessInstance instance : historicInstances) {
+
                 List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId());
                 for (LabRequest labRequest : labRequests) {
                     LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                     transferLabRequestData(representation);
                     representations.add(representation);
+
                 }
             }
         }
         return representations;
     }
+
+  /**
+   * Finds current task. Assumes that exactly one task is currently active.
+   * @param taskId
+   * @return the current task if it exists.
+   * @throws business.exceptions.TaskNotFound
+   */
+  public Task getTaskByTaskId(String taskId) {
+    Task task = taskService.createTaskQuery().taskId(taskId)
+      .active()
+      .singleResult();
+    if (task == null) {
+      throw new TaskNotFound();
+    }
+    return task;
+  }
+
 
 }

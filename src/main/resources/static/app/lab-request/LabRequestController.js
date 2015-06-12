@@ -1,34 +1,39 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-  .controller('LabRequestController', ['$rootScope', '$scope', '$modal', '$location', '$route',
-    'LabRequest', 'Restangular',
+  .controller('LabRequestController', ['$rootScope', '$scope', '$modal', '$location', 'Restangular',
+    function ($rootScope, $scope, $modal, $location, Restangular) {
 
-    function ($rootScope, $scope, $modal, $location, $route,
-              LabRequest, Restangular) {
+      $scope.labReqModal = $modal({
+        id: 'labRequestWindow',
+        scope: $scope,
+        template: '/app/lab-request/lab-request.html',
+        backdrop: 'static',
+        show: false
+      });
 
       $scope.alerts = [];
 
+
       $scope.loadLabRequests = function() {
           Restangular.all('labrequests').getList().then(function (labRequests) {
-    
+
             $scope.labRequests = labRequests;
-            ///console.log(labRequests);
-    
+
           }, function (err) {
             $scope.alerts.push({type: 'danger', msg: 'Error : ' + err.data.status  + ' - ' + err.data.error });
           });
-      }
+      };
+
       $scope.loadLabRequests();
 
       $scope.edit = function (labRequest) {
-        // console.log(labRequest);
         $scope.labRequest = labRequest;
-        $scope.editRequestModal = $modal({id: 'labRequestWindow', scope: $scope, template: '/app/lab-request/lab-request.html', backdrop: 'static'});
+        $scope.labReqModal.show();
       };
 
-      $scope.cancel = function (labRequest) {
-        $scope.editRequestModal.hide();
+      $scope.cancel = function () {
+        $scope.labReqModal.hide();
       };
 
       $scope.closeAlert = function (index) {
@@ -43,14 +48,16 @@ angular.module('ProcessApp.controllers')
             callback: function(result) {
                 if (result) {
                     labRequest.rejectReason = result;
-                    LabRequest.reject(labRequest, function (result) {
+
+                  Restangular.one('labrequests', labRequest.id).customPUT(labRequest, 'reject').then(function (d) {
                       console.log("after reject", result);
-                      if ($scope.editRequestModal) {
-                          $scope.editRequestModal.hide();
+                      if ($scope.labReqModal) {
+                        $scope.labReqModal.hide();
                       }
                       $scope.loadLabRequests();
-                    }, function (response) {
-                        console.log("Error: ", response);
+                    }
+                  , function (err) {
+                      console.log("Error: ", response);
                     });
                 }
             }
@@ -58,32 +65,43 @@ angular.module('ProcessApp.controllers')
       };
 
       $scope.accept = function (labRequest) {
-        LabRequest.accept({id:labRequest.id}, function (result) {
-          console.log("after accept", result);
-          if ($scope.editRequestModal) {
-              $scope.editRequestModal.hide();
+        Restangular.one('labrequests', labRequest.id).customPUT({}, 'accept').then(function (d) {
+            console.log("after accept", result);
+            if ($scope.labReqModal) {
+              $scope.labReqModal.hide();
+            }
+            $scope.loadLabRequests();
           }
-          $scope.loadLabRequests();
-        });
+        );
+      };
 
+      $scope.downloadPANumbers = function (labRequest) {
+        Restangular.one('labrequests', labRequest.id).customGET('panumbers/csv').then( function (result) {
+          console.log("after invoking panumbers/csv");
+        });
       };
 
       $scope.claim = function (labRequest) {
-          LabRequest.claim(labRequest, function (result) {
+        Restangular.one('labrequests', labRequest.id).customPUT({}, 'claim')
+          .then(function (result) {
             console.log("after claim", result);
             $scope.loadLabRequests();
-          });
+          }
+        );
       };
-      
+
       $scope.unclaim = function (labRequest) {
-          LabRequest.unclaim(labRequest, function (result) {
-            console.log("after unclaim", result);
+        Restangular.one('labrequests', labRequest.id).customPUT({}, 'unclaim')
+          .then(function (result) {
+            console.log("after claim", result);
             $scope.loadLabRequests();
-          });
+          }
+        );
+
       };
-      
+
       $scope.isLabUser = function () {
        return $rootScope.globals.currentUser.roles.indexOf('lab_user') != -1
-      }
+      };
 
     }]);

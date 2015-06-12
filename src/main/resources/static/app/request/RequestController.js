@@ -12,7 +12,7 @@ angular.module('ProcessApp.controllers')
                   FlowOptionService, $routeParams) {
 
             $scope.serverurl = $location.protocol()+'://'+$location.host()+':'+$location.port();
-        
+
             $scope.error = '';
             $rootScope.tempRequest = null;
 
@@ -40,6 +40,7 @@ angular.module('ProcessApp.controllers')
                 });
             } else {
                 Request.query().$promise.then(function(response) {
+                    console.log(response);
                     $scope.requests = response ? response : [];
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
@@ -52,7 +53,7 @@ angular.module('ProcessApp.controllers')
                         $scope.login();
                     }
                 });
-            };
+            }
 
             $scope.popover = {
                 'title': 'Info',

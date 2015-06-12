@@ -2,12 +2,15 @@
 
 (function(angular) {
 
-    angular.module('ProcessApp.services', []);
+    angular.module('ProcessApp.services', ['restangular'])
+      .config(function(RestangularProvider) {
+        RestangularProvider.setBaseUrl('/');
+      });
     angular.module('ProcessApp.directives', []);
     angular.module('ProcessApp.controllers', ['restangular'])
-        .config(function(RestangularProvider) {
-            RestangularProvider.setBaseUrl('/');
-        });
+      .config(function(RestangularProvider) {
+        RestangularProvider.setBaseUrl('/');
+      });
     angular.module('ProcessApp', [ 'flow',
                                    'mgcrea.ngStrap',
                                    'ngResource', 'ngRoute', 'ngCookies',

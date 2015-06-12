@@ -86,13 +86,13 @@
                     <div class="form-group">
                         <label class="control-label col-sm-3">{{'Request Type' | translate}}</label>
                         <div class="col-sm-8">
-                            <input type="radio" ng-model="request.type" value="1" > {{'Request for numbers only' | translate}} <br>
-                            <input type="radio" ng-model="request.type" value="2" > {{'Request for excerpts' | translate}} <br>
-                            <input type="radio" ng-model="request.type" value="3" > {{'Request for excerpts + PA reports' | translate}} <br>
-                            <input type="radio" ng-model="request.type" value="4" > {{'Request for excerpts + materials' | translate}} <br>
-                            <input type="radio" ng-model="request.type" value="5" > {{'Request for excerpts + PA reports + materials' | translate}} <br>
-                            <input type="radio" ng-model="request.type" value="6" > {{'Request for PA-reports only' | translate}} <br>
-                            <input type="radio" ng-model="request.type" value="7" > {{'Request for materials only' | translate}}
+                            <input type="radio" ng-model="request.type" value="1" id="radio-numbers" > {{'Request for numbers only' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="2" id="radio-excerpts"> {{'Request for excerpts' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA"> {{'Request for excerpts + PA reports' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials"> {{'Request for excerpts + materials' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials"> {{'Request for excerpts + PA reports + materials' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="6" id="radio-PA"> {{'Request for PA-reports only' | translate}} <br>
+                            <input type="radio" ng-model="request.type" value="7" id="radio-materials"> {{'Request for materials only' | translate}}
                         </div>
                     </div>
 

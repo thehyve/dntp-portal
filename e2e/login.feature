@@ -15,6 +15,16 @@ Feature: Log in
     Given I am on the login page
     When I log in as the requester user
     Then I should be on the requests page
+    
+  Scenario: Correct log in 3
+    Given I am on the login page
+    When I log in as the scientific council user
+    Then I should be on the requests page
+
+  Scenario: Correct log in 4
+    Given I am on the login page
+    When I log in as the lab user
+    Then I should be on the requests page
 
   Scenario: Incorrect log in
     Given I am on the login page

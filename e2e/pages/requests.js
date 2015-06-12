@@ -11,16 +11,11 @@ var expect = util.chai.expect;
 var RequestsPage = function() {
     this.createNewRequest = element(by.id('new-request'));
 
-    this.createRequestForm = {
-        cancel: element(by.buttonText('Cancel'))
-        // TODO: add more elements
-    };
-
     this.filters = {
         title: element(by.css('[st-search=title]')),
-        status: element(by.css('[st-search=status')),
-        requester: element(by.css('[st-search=requesterName')),
-        assignee: element(by.css('[st-search=assigneeName')),
+        status: element(by.css('[st-search=status]')),
+        requester: element(by.css('[st-search=requesterName]')),
+        assignee: element(by.css('[st-search=assigneeName]')),
         search: element(by.id('request-search'))
     };
 
@@ -29,6 +24,21 @@ var RequestsPage = function() {
         for (var prop in this.filters) {
             expect(this.filters[prop].getText()).to.eventually.equal('');
         }
+    };
+
+    this.getRequestWithTitle = function(title) {
+        // Return the first element with the given title
+        var titleElem = element(by.linkText(title));
+
+        // The locator to the table row of the request
+        var rowLocator = titleElem.element(by.xpath('../..'));
+
+        return {
+            title: titleElem,
+            claimButton: rowLocator.element(by.css('[title=Claim]')),
+            status: rowLocator.element(by.css('td.request-status')),
+            vote: rowLocator.element(by.css('td.request-vote'))
+        };
     };
 };
 

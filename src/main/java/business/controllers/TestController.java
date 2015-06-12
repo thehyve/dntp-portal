@@ -28,35 +28,33 @@ public class TestController {
     Log log = LogFactory.getLog(getClass());
 
     @Autowired ExcerptListRepository excerptListRepository;
-    
+
     @Autowired RequestPropertiesRepository requestPropertiesRepository;
-    
-    @Autowired CommentRepository commentRepository; 
-    
+
+    @Autowired CommentRepository commentRepository;
+
     @Autowired ApprovalVoteRepository approvalVoteRepository;
-    
+
     @Autowired PathologyItemRepository pathologyItemRepository;
-    
+
     @Autowired LabRequestRepository labRequestRepository;
-    
+
     @Autowired TaskService taskService;
-    
+
     @Autowired RuntimeService runtimeService;
-    
+
     @Autowired HistoryService historyService;
-    
-    @RequestMapping(value = "/test/clear", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/test/clear", method = RequestMethod.GET)
     public void clearAll() {
-        log.warn("POST /test/clear");
+        log.warn("GET /test/clear");
         pathologyItemRepository.deleteAll();
         labRequestRepository.deleteAll();
         excerptListRepository.deleteAll();
         requestPropertiesRepository.deleteAll();
         commentRepository.deleteAll();
         approvalVoteRepository.deleteAll();
-        //for (Task task: taskService.createTaskQuery().list()) {
-        //    taskService.deleteTask(task.getId(), true);
-        //}
+
         for (ProcessInstance instance: runtimeService.createProcessInstanceQuery().list()) {
             runtimeService.deleteProcessInstance(instance.getId(), null);
         }
@@ -64,5 +62,5 @@ public class TestController {
             historyService.deleteHistoricProcessInstance(instance.getId());
         }
     }
-    
+
 }

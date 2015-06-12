@@ -15,17 +15,19 @@ angular.module('ProcessApp.controllers')
       $scope.alerts = [];
 
 
-      $scope.loadLabRequests = function() {
+      /**
+       * To load lab request list
+       * @private
+       */
+      var _loadRequests = function() {
           Restangular.all('labrequests').getList().then(function (labRequests) {
-
             $scope.labRequests = labRequests;
-
           }, function (err) {
             $scope.alerts.push({type: 'danger', msg: 'Error : ' + err.data.status  + ' - ' + err.data.error });
           });
       };
 
-      $scope.loadLabRequests();
+      _loadRequests();
 
       $scope.edit = function (labRequest) {
         $scope.labRequest = labRequest;
@@ -54,7 +56,7 @@ angular.module('ProcessApp.controllers')
                       if ($scope.labReqModal) {
                         $scope.labReqModal.hide();
                       }
-                      $scope.loadLabRequests();
+                      _loadRequests();
                     }
                   , function (err) {
                       console.log("Error: ", response);
@@ -70,7 +72,7 @@ angular.module('ProcessApp.controllers')
             if ($scope.labReqModal) {
               $scope.labReqModal.hide();
             }
-            $scope.loadLabRequests();
+            _loadRequests();
           }
         );
       };
@@ -85,7 +87,7 @@ angular.module('ProcessApp.controllers')
         Restangular.one('labrequests', labRequest.id).customPUT({}, 'claim')
           .then(function (result) {
             console.log("after claim", result);
-            $scope.loadLabRequests();
+            _loadRequests();
           }
         );
       };
@@ -94,7 +96,7 @@ angular.module('ProcessApp.controllers')
         Restangular.one('labrequests', labRequest.id).customPUT({}, 'unclaim')
           .then(function (result) {
             console.log("after claim", result);
-            $scope.loadLabRequests();
+            _loadRequests();
           }
         );
 
@@ -103,5 +105,9 @@ angular.module('ProcessApp.controllers')
       $scope.isLabUser = function () {
        return $rootScope.globals.currentUser.roles.indexOf('lab_user') != -1
       };
+
+      $scope.enable = function () {
+
+      }
 
     }]);

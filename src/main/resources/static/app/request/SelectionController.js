@@ -61,6 +61,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.submitExcerptSelection = function(request) {
+                $scope.disableSpaceSelects();
                 bootbox.prompt({
                     title: 'Are you sure you want to submit the selection?\n<br>' +
                     'You may enter a remark:',
@@ -72,6 +73,10 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                            $location.path('/');
+                            $scope.$apply();
+                        } else {
+                            $scope.enableSpaceSelects();
                         }
                     }
                 });
@@ -87,39 +92,46 @@ angular.module('ProcessApp.controllers')
                 }
             };
 
-            $(document).keydown(function(e){
-                if(e.which === 40) { // down
-                    //console.log('down: ' + $scope.request.excerptList.entries.length);
-                    if ($scope.currentIndex < $scope.request.excerptList.entries.length - 1) {
-                        $scope.$apply(function() {
-                            $scope.currentIndex++;
-                        });
-                        $('#excerpt_'+$scope.request.excerptList.entries[$scope.currentIndex].id).focus();
+            $scope.enableSpaceSelects = function() {
+                $(document).on('keydown.selection', function(e){
+                    if(e.which === 40) { // down
+                        //console.log('down: ' + $scope.request.excerptList.entries.length);
+                        if ($scope.currentIndex < $scope.request.excerptList.entries.length - 1) {
+                            $scope.$apply(function() {
+                                $scope.currentIndex++;
+                            });
+                            $('#excerpt_'+$scope.request.excerptList.entries[$scope.currentIndex].id).focus();
+                        }
+                        $scope.scrollToCurrent();
+                        return false; // stops the page from scrolling
                     }
-                    $scope.scrollToCurrent();
-                    return false; // stops the page from scrolling
-                }
-                if(e.which === 38) { // up
-                    //console.log('up');
-                    if ($scope.currentIndex > 0) {
-                        $scope.$apply(function() {
-                            $scope.currentIndex--;
-                        });
+                    if(e.which === 38) { // up
+                        //console.log('up');
+                        if ($scope.currentIndex > 0) {
+                            $scope.$apply(function() {
+                                $scope.currentIndex--;
+                            });
+                        }
+                        $scope.scrollToCurrent();
+                        return false; // stops the page from scrolling
                     }
-                    $scope.scrollToCurrent();
-                    return false; // stops the page from scrolling
-                }
-                if(e.which === 32) { // space
-                    //console.log('toggle');
-                    $scope.$apply(function() {
-                        $scope.toggleExcerpt($scope.request, $scope.request.excerptList.entries[$scope.currentIndex]);
-                        /*if ($scope.currentIndex < $scope.request.excerptList.entries.length - 1) {
-                            $scope.currentIndex++;
-                        }*/
-                    });
-                    $scope.scrollToCurrent();
-                    return false; // stops the page from scrolling
-                }
-            });
+                    if(e.which === 32) { // space
+                        //console.log('toggle');
+                        $scope.$apply(function() {
+                            $scope.toggleExcerpt($scope.request, $scope.request.excerptList.entries[$scope.currentIndex]);
+                            /*if ($scope.currentIndex < $scope.request.excerptList.entries.length - 1) {
+                                $scope.currentIndex++;
+                            }*/
+                        });
+                        $scope.scrollToCurrent();
+                        return false; // stops the page from scrolling
+                    }
+                });
+            };
+            $scope.enableSpaceSelects();
+            
+            $scope.disableSpaceSelects = function() {
+                $(document).off('keydown.selection');
+            };
 
 }]);

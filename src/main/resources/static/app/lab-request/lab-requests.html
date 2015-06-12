@@ -50,7 +50,7 @@
         </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="labRequest in labRequests track by $index">
+          <tr ng-repeat="labRequest in labRequests track by $index" ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid && labRequest.status == 'Waiting for lab approval'}">
             <td>
               {{labRequest.taskId}}
             </td>
@@ -74,19 +74,25 @@
             </td>
             <td>
               <span class="pull-right">
-              <span class="btn-group">
-                  <button class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)">
-                    <span><i class="glyphicon glyphicon-pencil"></i></span>
-                  </button>
-                <button ng-if="isLabUser()" ng-disabled="labRequest.assignee == globals.currentUser.userid"
-                     class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(labRequest)">
-                    <span><i class="glyphicon glyphicon-eye-open"></i></span>
-                </button>
-                <button ng-if="isLabUser()" ng-disabled="labRequest.assignee != globals.currentUser.userid"
-                     class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(labRequest)">
-                    <span><i class="glyphicon glyphicon-eye-close"></i></span>
-                </button>
-              </span>
+                <span class="btn-group">
+                    <button class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)"
+                            ng-show="labRequest.status == 'Waiting for lab approval'">
+                      <span n><i class="glyphicon glyphicon-pencil"></i></span>
+                    </button>
+                    <button class="btn btn-default" type="button" title="{{'View'|translate}}" ng-click="edit(labRequest)"
+                            ng-show="labRequest.status != 'Waiting for lab approval'">
+                      <span><i class="glyphicon glyphicon-zoom-in"></i></span>
+                    </button>
+
+                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' " ng-hide="labRequest.assignee == globals.currentUser.userid"
+                         class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(labRequest)">
+                        <span><i class="glyphicon glyphicon-eye-open"></i></span>
+                    </button>
+                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' " ng-hide="labRequest.assignee != globals.currentUser.userid"
+                         class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(labRequest)">
+                        <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                    </button>
+                </span>
               </span>
             </td>
           </tr>

@@ -151,6 +151,19 @@ public class LabRequestService {
         }
         list.setEntries(entries);
     }
+    
+    public void transferExcerptListData(@NotNull LabRequestRepresentation labRequestRepresentation) {
+        // set excerpt list data
+        ExcerptList excerptList = excerptListService.findByProcessInstanceId(labRequestRepresentation.getProcessInstanceId());
+        if (excerptList == null) {
+            throw new RequestNotFound();
+        }
+        labRequestRepresentation.setExcerptListRemark(excerptList.getRemark());
+        ExcerptListRepresentation list = new ExcerptListRepresentation();
+        transferExcerptListData(list, excerptList, labRequestRepresentation.getLab().getNumber());
+
+        labRequestRepresentation.setExcerptList(list);
+    }
 
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         Date start = new Date();
@@ -172,16 +185,6 @@ public class LabRequestService {
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);
 
-        // set excerpt list data
-        ExcerptList excerptList = excerptListService.findByProcessInstanceId(task.getProcessInstanceId());
-        if (excerptList == null) {
-            throw new RequestNotFound();
-        }
-        labRequestRepresentation.setExcerptListRemark(excerptList.getRemark());
-        ExcerptListRepresentation list = new ExcerptListRepresentation();
-        transferExcerptListData(list, excerptList, labRequestRepresentation.getLab().getNumber());
-
-        labRequestRepresentation.setExcerptList(list);
         Date end = new Date();
         if ((end.getTime() - start.getTime()) > 10) {
             log.warn("transferLabRequestData took " + (end.getTime() - start.getTime()) + " ms "

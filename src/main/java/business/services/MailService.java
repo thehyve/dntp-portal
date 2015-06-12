@@ -107,16 +107,19 @@ public class MailService {
             message.setSubject("[DNTP portal] New lab request open for approval.");
             String template =
                     "Lab request: %d\n"
+                +   "Title: %s\n"
                 +   "Requester: %s\n"
                 ;
             String body = String.format(template,
                     labRequest.getId(),
+                    labRequest.getRequestListRepresentation().getTitle(),
                     labRequest.getRequesterName()
                     );
             // FIXME: not url /#/labrequest/view exists yet!
+            
             message.setText(String.format(
                     ""
-                    + "Please follow this link to view the new request: http://%s:%s/#/labrequest/view/%d.\n"
+                    + "Please follow this link to view the new request: http://%s:%s/#/lab-request/view/%d.\n"
                     + "====\n"
                     + body,
                     serverName, serverPort, labRequest.getId()));

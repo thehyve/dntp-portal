@@ -124,6 +124,9 @@ public class RequestFormService {
                             }
                         }
                         break;
+                    case "DataDelivery":
+                        task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
+                        break;
                 }
             }
             if (task != null) {

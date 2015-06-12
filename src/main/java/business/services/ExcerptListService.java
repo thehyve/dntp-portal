@@ -48,6 +48,16 @@ public class ExcerptListService {
         return excerptList;
     }
     
+    @Transactional
+    public void deleteByProcessInstanceId(String processInstanceId) {
+        excerptListRepository.deleteByProcessInstanceId(processInstanceId);
+    }
+    
+    @Transactional
+    public ExcerptList save(ExcerptList list) {
+        return excerptListRepository.save(list);
+    }
+    
     public ExcerptList processExcerptList(MultipartFile file) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
         log.info("Processing excerpt list");

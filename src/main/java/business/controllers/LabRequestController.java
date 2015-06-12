@@ -82,8 +82,8 @@ public class LabRequestController {
 
     LabRequest labRequest = labRequestRepository.findOne(id);
     Task task = labRequestService.getTask(labRequest.getTaskId(), "lab_request");
-    taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", "In progress");
-
+    taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", "Sending");
+    
     LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
     labRequestService.transferLabRequestData(representation);
     return representation;

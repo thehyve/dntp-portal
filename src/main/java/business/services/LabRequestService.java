@@ -58,6 +58,9 @@ public class LabRequestService {
     private RequestService requestService;
 
     @Autowired
+    private MailService mailService;
+
+    @Autowired
     private RuntimeService runtimeService;
 
     @Autowired
@@ -210,6 +213,7 @@ public class LabRequestService {
                 "lab_request_labs");
         log.info("instance: " + instance.getId());
         if (var != null && var instanceof Collection<?>) {
+            List<LabRequest> labRequests = new ArrayList<LabRequest>();
             Collection<Integer> labNumbers = (Collection<Integer>) var;
             for (Integer labNumber : labNumbers) {
                 Lab lab = labRepository.findByNumber(labNumber);
@@ -233,6 +237,13 @@ public class LabRequestService {
                 }
                 labRequest.setPaNumbers(paNumbers);
                 labRequestRepository.save(labRequest);
+                labRequests.add(labRequest);
+            }
+            // notify labs by mail
+            for (LabRequest labRequest: labRequests) {
+                LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+                transferLabRequestData(representation);
+                mailService.notifyLab(representation);
             }
         }
     }

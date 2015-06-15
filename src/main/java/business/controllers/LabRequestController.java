@@ -172,7 +172,7 @@ public class LabRequestController {
       HttpEntity<InputStreamResource> file = null;
 
       try {
-        file =  paNumberService.writePaNumbers(labRequest.getPaNumbers(), labRequest.getLab().getName());
+        file =  paNumberService.writePaNumbers(labRequest.getPathologyList(), labRequest.getLab().getName());
       } catch (Exception e) {
         log.error(e.getMessage());
         throw new PaNumbersDownloadError();

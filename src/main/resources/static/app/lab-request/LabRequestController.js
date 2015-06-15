@@ -53,7 +53,7 @@ angular.module('ProcessApp.controllers')
        */
       var _loadRequest = function(labRequest) {
         var deferred = $q.defer();
-        labRequest.get().then(function (result) {
+        Restangular.one('labrequests', labRequest.id).get().then(function (result) {
           $scope.labRequest = result;
           deferred.resolve($scope.labRequest);
         }, function (error) {

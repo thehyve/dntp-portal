@@ -1,8 +1,14 @@
 package business.services;
 
 
-import au.com.bytecode.opencsv.CSVWriter;
-import business.exceptions.PaNumbersDownloadError;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -11,8 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.util.List;
+import business.models.PathologyItem;
+import au.com.bytecode.opencsv.CSVWriter;
 
 
 @Service
@@ -22,7 +28,7 @@ public class PaNumberService {
 
   String[] FILE_HEADER = "LAB_NO;PA_NUMBER;SAMPLES;NOTES".split(";");
 
-  public HttpEntity<InputStreamResource> writePaNumbers(List<String> paNumbers, String labNo) throws Exception {
+  public HttpEntity<InputStreamResource> writePaNumbers(List<PathologyItem> items, String labNo) throws Exception {
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     Writer writer = new PrintWriter(out);
@@ -31,9 +37,9 @@ public class PaNumberService {
 
     csvwriter.writeNext(FILE_HEADER);
 
-    for (String paNumber : paNumbers) {
-        log.info(paNumbers);
-        String[] toppings = {labNo, paNumber, "", ""};
+    for (PathologyItem item : items) {
+        log.info(item.getPaNumber());
+        String[] toppings = {labNo, item.getPaNumber(), "", ""};
         csvwriter.writeNext(toppings);
     }
 

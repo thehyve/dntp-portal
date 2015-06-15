@@ -32,7 +32,6 @@
         {{alert.msg | translate}}
       </div>
 
-
       <!--List of Lab Requests-->
       <div class="table-responsive" ng-if="authenticated">
 
@@ -75,13 +74,12 @@
             <td>
               <span class="pull-right">
                 <span class="btn-group">
-                    <button class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)"
-                            ng-show="labRequest.status == 'Waiting for lab approval'">
-                      <span n><i class="glyphicon glyphicon-pencil"></i></span>
-                    </button>
-                    <button class="btn btn-default" type="button" title="{{'View'|translate}}" ng-click="edit(labRequest)"
-                            ng-show="labRequest.status != 'Waiting for lab approval'">
-                      <span><i class="glyphicon glyphicon-zoom-in"></i></span>
+                    <button class="btn btn-default" type="button" title="{{'View'|translate}}" ng-click="edit(labRequest)" >
+                      <span><i class="glyphicon" ng-class="
+                      {
+                        'glyphicon-zoom-in' : labRequest.assignee != globals.currentUser.userid,
+                        'glyphicon-pencil'  : labRequest.assignee == globals.currentUser.userid
+                        }"></i></span>
                     </button>
 
                     <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' " ng-hide="labRequest.assignee == globals.currentUser.userid"

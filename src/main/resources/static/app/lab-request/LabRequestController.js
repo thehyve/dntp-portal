@@ -31,7 +31,7 @@ angular.module('ProcessApp.controllers')
               ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
               (user.lastName === null ? '' : user.lastName);
       };
-      
+
       /**
        * To load lab request list
        * @private
@@ -42,7 +42,7 @@ angular.module('ProcessApp.controllers')
             $scope.labRequests = labRequests;
             deferred.resolve($scope.labRequests);
           }, function (err) {
-            deferred.reject("Cannot load lab requests ");
+            deferred.reject('Cannot load lab requests. ' + err);
           });
         return deferred.promise;
       };
@@ -53,14 +53,15 @@ angular.module('ProcessApp.controllers')
        */
       var _loadRequest = function(labRequest) {
         var deferred = $q.defer();
-        Restangular.one('labrequests', labRequest.id).get().then(function (result) {
-          $scope.labRequest = result;
+
+        if (labRequest) {
+          $scope.labRequest = labRequest;
           deferred.resolve($scope.labRequest);
-        }, function (error) {
-          var err_msg = 'Error : ' + err.data.status  + ' - ' + err.data.error;
-          deferred.reject(err_msg);
-          $scope.alerts.push({type: 'danger', msg: err_msg });
-        });
+        } else {
+          var errMsg = 'Error : ' + err.data.status  + ' - ' + err.data.error;
+          $scope.alerts.push({type: 'danger', msg: errMsg });
+          deferred.reject(errMsg);
+        }
         return deferred.promise;
       };
 
@@ -71,8 +72,8 @@ angular.module('ProcessApp.controllers')
       }
 
       $scope.edit = function (labRequest) {
-        console.log("about to edit", labRequest);
-        _loadRequest(labRequest).then (function (s) {
+        console.log('about to edit', labRequest);
+        _loadRequest(labRequest).then (function () {
             $scope.labReqModal.show();
         });
       };
@@ -93,15 +94,15 @@ angular.module('ProcessApp.controllers')
             callback: function(result) {
                 if (result) {
                     labRequest.rejectReason = result;
-                    labRequest.customPUT(labRequest, 'reject').then(function (d) {
-                        console.log("after reject", result);
+                    labRequest.customPUT(labRequest, 'reject').then(function (result) {
                         if ($scope.labReqModal) {
                           $scope.labReqModal.hide();
                         }
                         _loadRequests();
                       }
                       , function (err) {
-                        console.log("Error: ", response);
+                        console.log('Error: ', err);
+                        $scope.alerts.push({type: 'danger', msg: err });
                       });
                 }
             }
@@ -109,33 +110,36 @@ angular.module('ProcessApp.controllers')
       };
 
       $scope.accept = function (labRequest) {
-        labRequest.customPUT({}, 'accept').then(function (d) {
-          console.log("after accept", result);
+        labRequest.customPUT({}, 'accept').then(function (result) {
           if ($scope.labReqModal) {
             $scope.labReqModal.hide();
           }
           _loadRequests();
+        }, function (err) {
+          $scope.alerts.push({type: 'danger', msg: err });
         });
       };
 
       $scope.claim = function (labRequest) {
         labRequest.customPUT({}, 'claim')
           .then(function (result) {
-            console.log("after claim", result);
             _loadRequests();
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: err });
           });
       };
 
       $scope.unclaim = function (labRequest) {
         labRequest.customPUT({}, 'unclaim')
           .then(function (result) {
-            console.log("after unclaim", result);
             _loadRequests();
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: err });
           });
       };
 
       $scope.isLabUser = function () {
-       return $rootScope.globals.currentUser.roles.indexOf('lab_user') != -1
+       return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
       };
 
     }]);

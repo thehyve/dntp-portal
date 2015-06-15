@@ -119,7 +119,12 @@
             </tr>
             </tbody>
           </table>
+
         </div>
+        <br>
+         <span ng-if="labRequest.status == 'Sending' && labRequest.assignee == globals.currentUser.userid">
+           <a class="btn btn-success" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">Download panumbers_{{labRequest.id}}.csv</a>
+         </span>
       </div>
 
       <!--FOOTER-->
@@ -132,7 +137,6 @@
                     ng-click="accept(labRequest);">{{'Accept'|translate}}</button>
             <button class="btn btn-default btn-warning"
                     ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
-            <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
         </span>
       </div>
 

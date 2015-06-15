@@ -3,6 +3,8 @@ package business.controllers;
 import java.util.Date;
 import java.util.List;
 
+
+import business.exceptions.PaNumbersDownloadError;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
@@ -23,6 +25,10 @@ import business.models.LabRequestRepository;
 import business.representation.LabRequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.LabRequestService;
+import business.services.PaNumberService;
+
+
+
 
 @RestController
 public class LabRequestController {
@@ -36,7 +42,11 @@ public class LabRequestController {
     private LabRequestRepository labRequestRepository;
 
     @Autowired
+    private PaNumberService paNumberService;
+
+    @Autowired
     private TaskService taskService;
+
 
     @PreAuthorize("isAuthenticated() and (" + "hasRole('requester')" + " or "
             + "hasRole('palga')" + " or " + "hasRole('lab_user')" + ")")
@@ -63,7 +73,8 @@ public class LabRequestController {
         labRequestService.transferExcerptListData(representation);
         return representation;
     }
-    
+
+
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
     @RequestMapping(value = "/labrequests/{id}/reject", method = RequestMethod.PUT)
     public LabRequestRepresentation reject(UserAuthenticationToken user,
@@ -86,6 +97,7 @@ public class LabRequestController {
                 labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
+
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
@@ -132,29 +144,38 @@ public class LabRequestController {
     @RequestMapping(value = "/labrequests/{id}/unclaim", method = RequestMethod.PUT)
     public LabRequestRepresentation unclaim(UserAuthenticationToken user,
             @PathVariable Long id) {
-        log.info("PUT /labrequests/" + id + "/unclaim");
+      log.info("PUT /labrequests/" + id + "/unclaim");
 
-        LabRequest labRequest = labRequestRepository.findOne(id);
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
+      LabRequest labRequest = labRequestRepository.findOne(id);
+      Task task = labRequestService.getTask(labRequest.getTaskId(),
+        "lab_request");
 
-        taskService.unclaim(task.getId());
+      taskService.unclaim(task.getId());
 
-        LabRequestRepresentation representation = new LabRequestRepresentation(
-                labRequest);
-        labRequestService.transferLabRequestData(representation);
-        return representation;
+      LabRequestRepresentation representation = new LabRequestRepresentation(
+        labRequest);
+      labRequestService.transferLabRequestData(representation);
+      return representation;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+    @PreAuthorize("isAuthenticated() and "
+      + "(hasRole('palga') "
+      + " or hasPermission(#id, 'isLabRequestRequester') "
+      + " or hasPermission(#id, 'isLabRequestLabuser') "
+      + ")")
     @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
-    public HttpEntity<InputStreamResource> downloadPANumber(
-            UserAuthenticationToken user, @PathVariable String id) {
-        log.info("GET /labrequests/" + id + "/panumbers/csv");
+    public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable Long id) {
+          log.info("GET /labrequests/" + id + "/panumbers/csv for " + user.getId());
 
-        // TODO
+      LabRequest labRequest = labRequestRepository.findOne(id);
+      HttpEntity<InputStreamResource> file = null;
 
-        return null;
+      try {
+        file =  paNumberService.writePaNumbers(labRequest.getPaNumbers(), labRequest.getLab().getName());
+      } catch (Exception e) {
+        log.error(e.getMessage());
+        throw new PaNumbersDownloadError();
+      }
+      return file;
     }
-
 }

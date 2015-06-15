@@ -3,6 +3,8 @@ package business.controllers;
 import java.util.Date;
 import java.util.List;
 
+
+import business.exceptions.PaNumbersDownloadError;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
@@ -23,6 +25,10 @@ import business.models.LabRequestRepository;
 import business.representation.LabRequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.LabRequestService;
+import business.services.PaNumberService;
+
+
+
 
 @RestController
 public class LabRequestController {
@@ -36,7 +42,11 @@ public class LabRequestController {
     private LabRequestRepository labRequestRepository;
 
     @Autowired
+    private PaNumberService paNumberService;
+
+    @Autowired
     private TaskService taskService;
+
 
     @PreAuthorize("isAuthenticated() and (" + "hasRole('requester')" + " or "
             + "hasRole('palga')" + " or " + "hasRole('lab_user')" + ")")
@@ -148,18 +158,24 @@ public class LabRequestController {
       return representation;
     }
 
-  @PreAuthorize("isAuthenticated() and "
-    + "(hasPermission(#id, 'isPalgaUser') "
-    + " or hasPermission(#id, 'isRequester') "
-    + " or hasPermission(#id, 'isLabuser') "
-    + ")")
-  @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
-  public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable String id) {
-    log.info("GET /labrequests/" + id + "/panumbers/csv");
+    @PreAuthorize("isAuthenticated() and "
+      + "(hasRole('palga') "
+      + " or hasPermission(#id, 'isLabRequestRequester') "
+      + " or hasPermission(#id, 'isLabRequestLabuser') "
+      + ")")
+    @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
+    public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable Long id) {
+          log.info("GET /labrequests/" + id + "/panumbers/csv for " + user.getId());
 
-        LabRequest labRequest = labRequestRepository.findOne(Long.valueOf(id));
+      LabRequest labRequest = labRequestRepository.findOne(id);
+      HttpEntity<InputStreamResource> file = null;
 
-        return null;
+      try {
+        file =  paNumberService.writePaNumbers(labRequest.getPaNumbers(), labRequest.getLab().getName());
+      } catch (Exception e) {
+        log.error(e.getMessage());
+        throw new PaNumbersDownloadError();
+      }
+      return file;
     }
-
 }

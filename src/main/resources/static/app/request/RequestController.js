@@ -12,7 +12,7 @@ angular.module('ProcessApp.controllers')
                   FlowOptionService, $routeParams) {
 
             $scope.serverurl = $location.protocol()+'://'+$location.host()+':'+$location.port();
-        
+
             $scope.error = '';
             $rootScope.tempRequest = null;
 
@@ -40,6 +40,7 @@ angular.module('ProcessApp.controllers')
                 });
             } else {
                 Request.query().$promise.then(function(response) {
+                    console.log(response);
                     $scope.requests = response ? response : [];
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
@@ -52,7 +53,7 @@ angular.module('ProcessApp.controllers')
                         $scope.login();
                     }
                 });
-            };
+            }
 
             $scope.popover = {
                 'title': 'Info',
@@ -100,13 +101,17 @@ angular.module('ProcessApp.controllers')
 
             $scope.start = function() {
                 new Request().$save(function(request) {
-                    $scope.requests.unshift(request);
+                    //$scope.requests.unshift(request);
                     $scope.edit(request);
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
 
+            $scope.filterEmptyRequests = function(value, index) {
+                return !value;
+            }
+            
             $scope.refresh = function(request, result) {
                 result.type = Request.convertRequestOptsToType(result);
                 var index = -1;
@@ -118,6 +123,14 @@ angular.module('ProcessApp.controllers')
                 }
                 $scope.requests[index] = result;
                 $route.reload();
+                
+                /* Ugly hack to prevent having to reload the controller. 
+                 * Problem: smart table is only updated after insert or delete,
+                 * not after updating a field. 
+                 * Hack: insert an empty element and filter empty elements out.
+                 */
+                //$scope.requests.push({});
+                
                 $scope.request = result;
             };
 

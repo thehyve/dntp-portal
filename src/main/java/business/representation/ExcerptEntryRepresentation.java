@@ -62,4 +62,8 @@ public class ExcerptEntryRepresentation {
         this.values = values;
     }
     
+    public String getPaNumber() {
+        return values.get(2);
+    }
+    
 }

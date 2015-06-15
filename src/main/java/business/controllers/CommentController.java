@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import business.exceptions.UpdateNotAllowed;
 import business.models.Comment;
 import business.models.CommentRepository;
+import business.models.LabRequest;
+import business.models.LabRequestRepository;
 import business.models.RequestProperties;
 import business.representation.CommentRepresentation;
 import business.security.UserAuthenticationToken;
@@ -30,6 +32,9 @@ public class CommentController {
     @Autowired
     private RequestPropertiesService requestPropertiesService;
 
+    @Autowired
+    private LabRequestRepository labRequestRepository;
+    
     @Autowired
     private CommentRepository commentRepository;
 
@@ -146,4 +151,76 @@ public class CommentController {
         requestPropertiesService.save(properties);
     }
     
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasPermission(#id, 'isLabRequestRequester') "
+            + " or hasPermission(#id, 'isLabRequestLabuser') "
+            + " or hasRole('palga')"
+            + ")")
+    @RequestMapping(value = "/labrequests/{id}/comments", method = RequestMethod.POST)
+    public CommentRepresentation addLabRequestComment(
+            UserAuthenticationToken user,
+            @PathVariable Long id,
+            @RequestBody CommentRepresentation body) {
+        log.info("POST /lab-requests/" + id + "/comments");
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getContents());
+        comment = commentRepository.save(comment);
+        labRequest.addComment(comment);
+        labRequestRepository.save(labRequest);
+
+        return new CommentRepresentation(comment);
+    }
+    
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasRole('palga')"
+            + " or hasPermission(#id, 'isLabRequestRequester') "
+            + " or hasPermission(#id, 'isLabRequestLabuser') "
+            + ")")
+    @RequestMapping(value = "/labrequests/{id}/comments/{commentId}", method = RequestMethod.PUT)
+    public CommentRepresentation updateLabRequestComment(
+            UserAuthenticationToken user,
+            @PathVariable Long id,
+            @PathVariable Long commentId,
+            @RequestBody CommentRepresentation body) {
+        log.info("PUT /lab-requests/" + id + "/comments/" + commentId);
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        Comment comment = commentRepository.findOne(commentId);
+        if (labRequest != null && comment != null) {
+            if (!comment.getCreator().getId().equals(user.getUser().getId())) {
+                throw new UpdateNotAllowed();
+            }
+            if (!labRequest.getComments().contains(comment)) {
+                throw new UpdateNotAllowed();
+            }
+            labRequest.getComments().remove(comment);
+            labRequestRepository.save(labRequest);
+            comment.setContents(body.getContents());
+            comment.setTimeEdited(new Date());
+            comment = commentRepository.save(comment);
+        }
+        return new CommentRepresentation(comment);
+    }
+    
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasRole('palga')"
+            + " or hasPermission(#id, 'isLabRequestRequester') "
+            + " or hasPermission(#id, 'isLabRequestLabuser') "
+            + ")")
+    @RequestMapping(value = "/labrequests/{id}/comments/{commentId}", method = RequestMethod.DELETE)
+    public void removeLabRequestComment(
+            UserAuthenticationToken user,
+            @PathVariable Long id,
+            @PathVariable Long commentId) {
+        log.info("DELETE /lab-requests/" + id + "/comments/" + commentId);
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        Comment comment = commentRepository.findOne(commentId);
+        if (labRequest != null && comment != null) {
+            if (!comment.getCreator().getId().equals(user.getUser().getId())) {
+                throw new UpdateNotAllowed();
+            }
+            labRequest.getComments().remove(comment);
+            labRequestRepository.save(labRequest);
+        }
+    }
+
 }

@@ -36,6 +36,7 @@
             <!--List of request-->
             <div class="table-responsive" ng-if="authenticated">
                 <table st-table="displayedCollection" st-safe-src="requests" class="table">
+                <!-- <table st-table="displayedCollection | filter:filterEmptyRequests" st-safe-src="requests" class="table"> -->
                     <thead>
                     <tr>
                         <th st-sort="processInstanceId">#</th>
@@ -67,10 +68,10 @@
                     <tbody>
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': req.assignee == globals.currentUser.userid}">
                         <td>{{req.processInstanceId}}</td>
-                        <td><a ng-click="view(req)">{{req.title}}</a></td>
+                        <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
                         <td>{{req.status | translate}}
                             <span class="badge" ng-if="req.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1" >
-                            {{req.numberOfApprovalVotes}}
+                            {{req.numberOfApprovalVotes ? req.numberOfApprovalVotes : 0 }}
                             </span>                        
                         </td>
                         <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
@@ -86,20 +87,27 @@
                         <span class="pull-right">
                         <span class="btn-group">
                             <button
-                                 ng-disabled="(req.status != 'Open' && globals.currentUser.roles.indexOf('palga') == -1) || (globals.currentUser.roles.indexOf('palga') != -1 && req.assignee != globals.currentUser.userid)"
+                                ng-if="globals.currentUser.roles.indexOf('requester') != -1 || globals.currentUser.roles.indexOf('palga') != -1"
+                                 ng-disabled="(globals.currentUser.roles.indexOf('requester') != -1 && req.status != 'Open')
+                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval')
+                                    || (globals.currentUser.roles.indexOf('palga') != -1 && req.assignee != globals.currentUser.userid)"
                                  class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(req)">
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                             </button>
-                            <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" ng-disabled="req.assignee == globals.currentUser.userid"
+                            <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
+                                ng-disabled="req.assignee == globals.currentUser.userid
+                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery')"
                                  class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
                             </button>
-                            <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" ng-disabled="req.assignee != globals.currentUser.userid"
+                            <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
+                                ng-disabled="req.assignee != globals.currentUser.userid
+                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery')"
                                  class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>
                             </button>
                             <button
-                                 ng-disabled="req.status != 'Open'"
+                                 ng-if="req.status == 'Open'"
                                  class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>

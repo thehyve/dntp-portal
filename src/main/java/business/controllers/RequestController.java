@@ -50,6 +50,7 @@ import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.models.CommentRepository;
 import business.models.ExcerptList;
+import business.models.ExcerptListRepository;
 import business.models.RequestProperties;
 import business.models.RoleRepository;
 import business.models.UserRepository;
@@ -112,6 +113,8 @@ public class RequestController {
     @Autowired
     private RequestComparator requestComparator;
 
+    @Autowired
+    private ExcerptListRepository excerptListRepository;
 
     @RequestMapping(value = "requests", method = RequestMethod.GET)
     public List<RequestListRepresentation> getRequestList(UserAuthenticationToken user) {
@@ -125,6 +128,7 @@ public class RequestController {
         } else if (user.getUser().isPalga()) {
             processInstances = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Open")
                     .orderByProcessInstanceStartTime()
@@ -134,6 +138,7 @@ public class RequestController {
             Date start = new Date();
             processInstances = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .variableValueEquals("status", "Approval")
                     .orderByProcessInstanceStartTime()
@@ -142,6 +147,7 @@ public class RequestController {
             Date endQ1 = new Date();
             List<HistoricProcessInstance> list = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Approval")
                     .variableValueNotEquals("scientific_council_approved", null)
@@ -167,6 +173,7 @@ public class RequestController {
             if (!processInstanceIds.isEmpty()) {
                 processInstances = historyService
                         .createHistoricProcessInstanceQuery()
+                        .notDeleted()
                         .includeProcessVariables()
                         .processInstanceIds(processInstanceIds)
                         .list();
@@ -176,6 +183,7 @@ public class RequestController {
         } else {
             processInstances = historyService
                     .createHistoricProcessInstanceQuery()
+                    .notDeleted()
                     .includeProcessVariables()
                     .involvedUser(user.getId().toString())
                     .orderByProcessInstanceStartTime()
@@ -467,7 +475,7 @@ public class RequestController {
         return updatedRequest;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#param, 'isPalgaUser')")
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/unclaim", method = RequestMethod.PUT)
     public RequestRepresentation unclaim(
             UserAuthenticationToken user,
@@ -483,7 +491,7 @@ public class RequestController {
         return updatedRequest;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
     @RequestMapping(value = "/requests/{id}", method = RequestMethod.DELETE)
     public void remove(
             UserAuthenticationToken user,
@@ -498,7 +506,9 @@ public class RequestController {
         if (!request.getStatus().equals("Open")) {
             throw new InvalidActionInStatus();
         }
+        log.info("deleting process instance " + id);
         runtimeService.deleteProcessInstance(id, "Removed by user: " + user.getName());
+        log.info("process instance " + id + " deleted.");
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
@@ -544,7 +554,7 @@ public class RequestController {
         taskService.deleteAttachment(attachmentId);
     }    
     
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadAgreementAttachment(UserAuthenticationToken user, @PathVariable String id,
             @RequestParam("flowFilename") String name,
@@ -581,7 +591,7 @@ public class RequestController {
         return request;
     }
     
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeAgreementAttachment(UserAuthenticationToken user, @PathVariable String id,
             @PathVariable String attachmentId) {
@@ -603,7 +613,7 @@ public class RequestController {
         return request;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadDataAttachment(UserAuthenticationToken user, @PathVariable String id,
             @RequestParam("flowFilename") String name,
@@ -637,7 +647,7 @@ public class RequestController {
         return request;
     }
     
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeDataAttachment(UserAuthenticationToken user, @PathVariable String id,
             @PathVariable String attachmentId) {
@@ -659,7 +669,7 @@ public class RequestController {
         return request;
     }
     
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.POST)
     public RequestRepresentation uploadExcerptList(UserAuthenticationToken user, @PathVariable String id,
             @RequestParam("flowFilename") String name,
@@ -678,7 +688,6 @@ public class RequestController {
         }
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         
-        // add attachment id to the set of ids of the agreement attachments.
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         if (properties == null) {
             properties = new RequestProperties();
@@ -687,18 +696,20 @@ public class RequestController {
 
         // process list
         try {
+            excerptListService.deleteByProcessInstanceId(id);
             ExcerptList list = excerptListService.processExcerptList(file);
             // if not exception thrown, save list and attachment
             if (properties.getExcerptListAttachmentId() != null && !properties.getExcerptListAttachmentId().equals(attachmentId)) {
                 log.info("Deleting attachment " + properties.getExcerptListAttachmentId());
                 taskService.deleteAttachment(properties.getExcerptListAttachmentId());
             }
+            
             properties.setExcerptListAttachmentId(attachmentId);
-            properties.setExcerptList(list);
+            list.setProcessInstanceId(id);
             log.info("Saving excerpt list.");
-            requestPropertiesService.save(properties);
+            list = excerptListService.save(list);
             log.info("Done.");
-        } catch (ExcerptListUploadError e) {
+        } catch (RuntimeException e) {
             // revert uploading
             taskService.deleteAttachment(attachmentId);
             throw e;
@@ -719,14 +730,12 @@ public class RequestController {
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
 
-        // add attachment id to the set of ids of the agreement attachments.
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        if (properties == null || properties.getExcerptList() == null) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        if (excerptList == null) {
             throw new ExcerptListNotFound();
         }
-        ExcerptList list = properties.getExcerptList();
-        log.info("entries: " + list.getEntries().size());
-        return list;
+        log.info("entries: " + excerptList.getEntries().size());
+        return excerptList;
     }
 
     private static final Set<String> excerptListStatuses = new HashSet<String>();
@@ -736,7 +745,11 @@ public class RequestController {
         excerptListStatuses.add("Closed");
     }
     
-    @PreAuthorize("isAuthenticated() and (hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isRequester'))")
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasPermission(#id, 'isPalgaUser') "
+            + " or hasPermission(#id, 'isRequester') "
+            //+ " or hasPermission(#id, 'isLabuser') "
+            + ")")
     @RequestMapping(value = "/requests/{id}/excerptList/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadExcerptList(UserAuthenticationToken user, @PathVariable String id) {
         log.info("GET /requests/" + id + "/excerptList/csv");
@@ -746,12 +759,11 @@ public class RequestController {
         if (!excerptListStatuses.contains(request.getStatus())) {
             throw new InvalidActionInStatus();
         }
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        if (properties == null || properties.getExcerptList() == null) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        if (excerptList == null) {
             throw new ExcerptListNotFound();
         }
-        ExcerptList list = properties.getExcerptList();
-        return excerptListService.writeExcerptList(list, id);
+        return excerptListService.writeExcerptList(excerptList);
     }
     
     @PreAuthorize("isAuthenticated() and "

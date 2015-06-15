@@ -40,9 +40,6 @@ public class RequestProperties {
     
     private String excerptListAttachmentId;
     
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private ExcerptList excerptList;
-    
     @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
@@ -66,9 +63,6 @@ public class RequestProperties {
     @Column(columnDefinition="TEXT")
     private String privacyCommitteeEmails;
 
-    @Column(columnDefinition="TEXT")
-    private String excerptListRemark;
-    
     public RequestProperties() {
         
     }
@@ -183,22 +177,6 @@ public class RequestProperties {
 
     public void setExcerptListAttachmentId(String excerptListAttachmentId) {
         this.excerptListAttachmentId = excerptListAttachmentId;
-    }
-
-    public ExcerptList getExcerptList() {
-        return excerptList;
-    }
-
-    public void setExcerptList(ExcerptList excerptList) {
-        this.excerptList = excerptList;
-    }
-
-    public String getExcerptListRemark() {
-        return excerptListRemark;
-    }
-
-    public void setExcerptListRemark(String excerptListRemark) {
-        this.excerptListRemark = excerptListRemark;
     }
     
 }

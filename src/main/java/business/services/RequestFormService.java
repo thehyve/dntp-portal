@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import business.models.ApprovalVote;
 import business.models.ApprovalVoteRepository;
 import business.models.Comment;
+import business.models.ExcerptList;
+import business.models.ExcerptListRepository;
 import business.models.RequestProperties;
 import business.models.User;
 import business.models.UserRepository;
@@ -43,6 +45,9 @@ public class RequestFormService {
 
     @Autowired
     private RequestPropertiesService requestPropertiesService;
+
+    @Autowired
+    private ExcerptListService excerptListService;
   
     @Autowired
     private ApprovalVoteRepository approvalVoteRepository;
@@ -118,6 +123,9 @@ public class RequestFormService {
                                 request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
                             }
                         }
+                        break;
+                    case "DataDelivery":
+                        task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
                         break;
                 }
             }
@@ -284,9 +292,10 @@ public class RequestFormService {
 
             request.setDataAttachments(dataAttachments);
             
-            if (properties.getExcerptList() != null) {
+            ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
+            if (excerptList != null) {
                 log.info("Set excerpt list.");
-                request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
+                request.setExcerptList(new ExcerptListRepresentation(excerptList));
                 @SuppressWarnings("unchecked")
                 Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
                 Set<Integer> selectedLabSet = new TreeSet<Integer>();
@@ -294,7 +303,7 @@ public class RequestFormService {
                     for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
                 }
                 request.setSelectedLabs(selectedLabSet);
-                request.setExcerptListRemark(properties.getExcerptListRemark());
+                request.setExcerptListRemark(excerptList.getRemark());
             }
         }
     }

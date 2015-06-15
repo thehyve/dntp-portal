@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
 
+@Profile("dev")
 @Service
 public class DefaultUsers {
 
@@ -35,7 +37,27 @@ public class DefaultUsers {
     
     @PostConstruct
     private void initDatabase() {
-        LogFactory.getLog(getClass()).info("Create default users and roles.");
+
+        LogFactory.getLog(getClass()).info("Creating default labs...");
+
+        String[] defaultLabs = new String[] {
+                "AMC, afd. Pathologie",
+                "Meander Medisch Centrum, afd. Klinische Pathologie",
+                "Canisius-Wilhelmina Ziekenhuis, afd. Pathologie",
+                "Laboratorium voor Pathologie (PAL), Dordrecht"
+        };
+
+        int labIdx = 99;
+
+        for (String r: defaultLabs) {
+            if (labRepository.findByName(r) == null) {
+                Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
+                labRepository.save(l);
+            }
+        }
+        
+        
+        LogFactory.getLog(getClass()).info("Creating default users and roles...");
 
         String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
 
@@ -56,6 +78,10 @@ public class DefaultUsers {
                 contactData.setEmail(username);
                 user.setContactData(contactData);
                 user.setEmailValidated(true);
+                if (r.equals("lab_user")) {
+                    Lab lab = labRepository.findByName(defaultLabs[0]);
+                    user.setLab(lab);
+                }
                 userRepository.save(user);
             } else if (!user.getPassword().startsWith("$")) {
                 // Detect and encrypt old plain-text passwords
@@ -63,31 +89,6 @@ public class DefaultUsers {
                 userRepository.save(user);
             }
         }
-
-        LogFactory.getLog(getClass()).info("Create default labs");
-
-        String[] defaultLabs = new String[] {
-                "AMC, afd. Pathologie",
-                "Meander Medisch Centrum, afd. Klinische Pathologie",
-                "Canisius-Wilhelmina Ziekenhuis, afd. Pathologie",
-                "Laboratorium voor Pathologie (PAL), Dordrecht"
-        };
-
-        int labIdx = 99;
-
-        for (String r: defaultLabs) {
-            if (labRepository.findByName(r) == null) {
-                Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
-                labRepository.save(l);
-            }
-        }
-
-        LogFactory.getLog(getClass()).info("Create default institutes");
-
-        String[] defaultInst = new String[] {
-                "UMC",
-                "AMC"
-        };
 
     }
 

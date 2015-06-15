@@ -11,7 +11,7 @@
         <!--Main-->
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-            <h2>Lab Request : {{labRequest.taskId}}</h2>
+            <h2>Lab Request: {{labRequest.taskId}}</h2>
             <hr>
 
         <!--Status-->
@@ -53,7 +53,7 @@
           <label class="control-label col-sm-3">{{ 'Request Title' | translate }}</label>
           <p class="col-sm-7">
             <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
-            {{labRequest.requestListRepresentation.title}}
+            {{labRequest.request.title}}
             </a>
             <br>
           </p>
@@ -61,29 +61,69 @@
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Created Date' | translate }}</label>
           <p class="col-sm-7">
-            {{labRequest.requestListRepresentation.dateCreated | date }}
+            {{labRequest.request.dateCreated | date }}
             <br>
           </p>
         </div>
 
         <div ng-if="globals.currentUser.roles.indexOf('requester') == -1" >
-          <!--Requester info-->
-          <!--Displayed only to users with non requester role-->
-          <div class="form-group">
-            <label class="control-label col-sm-3">{{ 'Requester Name' | translate }}</label>
-            <p class="col-sm-7">
-              {{labRequest.requesterName}}
-              <br>
-            </p>
-          </div>
+            <!--Requester info-->
+            <!--Displayed only to users with non requester role-->
+            <!-- Requester -->
+            <div class="form-group">
+                <label class="control-label col-sm-3">{{ 'Requester' | translate }}</label>
+                <p class="col-sm-7">
+                    {{labRequest.requesterName}}
+                    <br>
+                </p>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
+                <address  class="col-sm-7">
+                     {{labRequest.requester.contactData.address1}}
+                     <br ng-if="labRequest.requester.contactData.address1">
+                     {{labRequest.requester.contactData.address2}}
+                     <br ng-if="labRequest.requester.contactData.address2">
+                     {{labRequest.requester.contactData.postalCode}} {{labRequest.requester.contactData.city}}
+                     <br ng-if="labRequest.requester.contactData.city">
+                    <span ng-if="labRequest.requester.contactData.telephone">
+                        <span><i class="glyphicon glyphicon-earphone"></i></span>
+                        {{labRequest.requester.contactData.telephone}}
+                    </span>
+                    <br ng-if="labRequest.requester.contactData.telephone">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    <a href="mailto:{{labRequest.requester.contactData.email}}">{{labRequest.requester.contactData.email}}</a>
+                </address>
+            </div>
+        </div>
 
+        <div>
+          <!--Requester lab Info-->
           <div class="form-group">
-            <label class="control-label col-sm-3">{{ 'Email' | translate }}</label>
+            <label class="control-label col-sm-3">{{ 'Requester lab' | translate }}</label>
             <p class="col-sm-7">
-              {{labRequest.requesterEmail}}
+              {{"Lab" | translate}} {{labRequest.requesterLab.number}} - {{labRequest.requesterLab.name}}
               <br>
             </p>
           </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
+                <address  class="col-sm-7">
+                     {{labRequest.requesterLab.contactData.address1}}
+                     <br ng-if="labRequest.requesterLab.contactData.address1">
+                     {{labRequest.requesterLab.contactData.address2}}
+                     <br ng-if="labRequest.requesterLab.contactData.address2">
+                     {{labRequest.requesterLab.contactData.postalCode}} {{labRequest.requesterLab.contactData.city}}
+                     <br ng-if="labRequest.requesterLab.contactData.city">
+                    <span ng-if="labRequest.requesterLab.contactData.telephone">
+                        <span><i class="glyphicon glyphicon-earphone"></i></span>
+                        {{labRequest.requesterLab.contactData.telephone}}
+                    </span>
+                    <br ng-if="labRequest.requesterLab.contactData.telephone">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    <a href="mailto:{{labRequest.requesterLab.contactData.email}}">{{labRequest.requesterLab.contactData.email}}</a>
+                </address>
+            </div>
         </div>
 
         <div ng-if="!isLabUser()" >
@@ -96,14 +136,24 @@
               <br>
             </p>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
-          <p class="col-sm-7">
-            {{labRequest.requesterEmail}}
-            <br>
-          </p>
+            <div class="form-group">
+                <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
+                <address  class="col-sm-7">
+                     {{labRequest.lab.contactData.address1}}
+                     <br ng-if="labRequest.lab.contactData.address1">
+                     {{labRequest.lab.contactData.address2}}
+                     <br ng-if="labRequest.lab.contactData.address2">
+                     {{labRequest.lab.contactData.postalCode}} {{labRequest.lab.contactData.city}}
+                     <br ng-if="labRequest.lab.contactData.city">
+                    <span ng-if="labRequest.lab.contactData.telephone">
+                        <span><i class="glyphicon glyphicon-earphone"></i></span>
+                        {{labRequest.lab.contactData.telephone}}
+                    </span>
+                    <br ng-if="labRequest.lab.contactData.telephone">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    <a href="mailto:{{labRequest.lab.contactData.email}}">{{labRequest.lab.contactData.email}}</a>
+                </address>
+            </div>
         </div>
 
         <!--Excerpt List Details-->
@@ -131,7 +181,12 @@
             </tbody>
           </table>
         </div>
-      </div>
+        
+        <!--Comments-->
+        <div ng-include="'app/lab-request/comments.html'"></div>
+        
+        
+      </div> <!-- end of main -->
 
     </div> <!--end row-->
 </div>

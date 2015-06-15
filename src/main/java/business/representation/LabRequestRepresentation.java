@@ -2,8 +2,6 @@ package business.representation;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import business.models.Lab;
 import business.models.LabRequest;
@@ -21,12 +19,13 @@ public class LabRequestRepresentation {
     
     private String processInstanceId;
 
-    private RequestListRepresentation requestListRepresentation;
+    private RequestListRepresentation request;
 
     private String requesterId;
     private String requesterName;
     private String requesterEmail;
     private ProfileRepresentation requester;
+    private Lab requesterLab;
 
     private String status;
 
@@ -36,7 +35,8 @@ public class LabRequestRepresentation {
 
     private ExcerptListRepresentation excerptList;
     
-    private List<String> paNumbers;
+    private List<PathologyRepresentation> pathologyList;
+    private Long pathologyCount;
 
     private String excerptListRemark;
     
@@ -44,6 +44,8 @@ public class LabRequestRepresentation {
     
     private Date rejectDate;
 
+    private List<CommentRepresentation> comments;
+    
     public LabRequestRepresentation() {
 
     }
@@ -53,9 +55,9 @@ public class LabRequestRepresentation {
         this.setProcessInstanceId(labRequest.getProcessInstanceId());
         this.setTaskId(labRequest.getTaskId());
         this.setLab(labRequest.getLab());
+        //this.pathologyCount = labRequest.getPathologyList().size();
         this.setRejectDate(labRequest.getRejectDate());
         this.setRejectReason(labRequest.getRejectReason());
-        this.setPaNumbers(labRequest.getPaNumbers());
     }
     
     public Long getId() {
@@ -121,6 +123,14 @@ public class LabRequestRepresentation {
     public void setRequester(ProfileRepresentation requester) {
         this.requester = requester;
     }
+    
+    public Lab getRequesterLab() {
+        return requesterLab;
+    }
+
+    public void setRequesterLab(Lab requesterLab) {
+        this.requesterLab = requesterLab;
+    }
 
     public String getStatus() {
         return status;
@@ -162,20 +172,28 @@ public class LabRequestRepresentation {
         this.excerptListRemark = excerptListRemark;
     }
 
-    public RequestListRepresentation getRequestListRepresentation() {
-      return requestListRepresentation;
+    public RequestListRepresentation getRequest() {
+      return request;
     }
 
-    public void setRequestListRepresentation(RequestListRepresentation requestListRepresentation) {
-      this.requestListRepresentation = requestListRepresentation;
+    public void setRequest(RequestListRepresentation request) {
+      this.request = request;
+    }
+
+    public List<PathologyRepresentation> getPathologyList() {
+        return pathologyList;
+    }
+
+    public void setPathologyList(List<PathologyRepresentation> pathologyList) {
+        this.pathologyList = pathologyList;
     }
     
-    public List<String> getPaNumbers() {
-        return paNumbers;
+    public Long getPathologyCount() {
+        return pathologyCount;
     }
 
-    public void setPaNumbers(List<String> paNumbers) {
-        this.paNumbers = paNumbers;
+    public void setPathologyCount(Long pathologyCount) {
+        this.pathologyCount = pathologyCount;
     }
 
     public String getRejectReason() {
@@ -192,6 +210,14 @@ public class LabRequestRepresentation {
 
     public void setRejectDate(Date rejectDate) {
         this.rejectDate = rejectDate;
+    }
+
+    public List<CommentRepresentation> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentRepresentation> comments) {
+        this.comments = comments;
     }
     
 }

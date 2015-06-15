@@ -112,11 +112,9 @@ public class MailService {
                 ;
             String body = String.format(template,
                     labRequest.getId(),
-                    labRequest.getRequestListRepresentation().getTitle(),
+                    labRequest.getRequest().getTitle(),
                     labRequest.getRequesterName()
                     );
-            // FIXME: not url /#/labrequest/view exists yet!
-            
             message.setText(String.format(
                     ""
                     + "Please follow this link to view the new request: http://%s:%s/#/lab-request/view/%d.\n"

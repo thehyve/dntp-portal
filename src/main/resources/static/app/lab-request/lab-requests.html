@@ -55,10 +55,10 @@
               <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.id}}</a>
             </td>
             <td>
-              <a ng-href="#/request/view/{{labRequest.processInstanceId}}">{{labRequest.requestListRepresentation.title}}</a>
+              <a ng-href="#/request/view/{{labRequest.processInstanceId}}">{{labRequest.request.title}}</a>
             </td>
             <td>
-              {{labRequest.requestListRepresentation.requesterName}}
+              {{labRequest.request.requesterName}}
             </td>
             <td>
               {{labRequest.lab.name}}
@@ -67,7 +67,7 @@
               {{labRequest.dateCreated |  date: 'EEE, dd MMMM yyyy H:mm'}}
             </td>
             <td>
-              {{labRequest.paNumbers.length}}
+              {{labRequest.pathologyCount}}
             </td>
             <td>
               {{labRequest.status}}

@@ -23,6 +23,15 @@ angular.module('ProcessApp.controllers')
       $scope.alerts = [];
       $scope.labRequest = {};
 
+      $scope.getName = function(user) {
+          if (user === null) {
+              return '';
+          }
+          return user.firstName +
+              ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
+              (user.lastName === null ? '' : user.lastName);
+      };
+      
       /**
        * To load lab request list
        * @private

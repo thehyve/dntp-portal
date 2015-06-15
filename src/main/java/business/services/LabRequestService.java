@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import business.exceptions.TaskNotFound;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -24,17 +25,23 @@ import org.springframework.stereotype.Service;
 
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
+import business.models.Comment;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.Lab;
 import business.models.LabRepository;
 import business.models.LabRequest;
 import business.models.LabRequestRepository;
+import business.models.PathologyItem;
+import business.models.PathologyItemRepository;
 import business.models.User;
 import business.models.UserRepository;
+import business.representation.CommentRepresentation;
 import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.LabRequestRepresentation;
+import business.representation.PathologyRepresentation;
+import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
 
 @Service
@@ -71,6 +78,9 @@ public class LabRequestService {
 
     @Autowired
     private LabRequestRepository labRequestRepository;
+    
+    @Autowired
+    private PathologyItemRepository pathologyItemRepository;
 
     @Autowired
     private ExcerptListService excerptListService;
@@ -115,11 +125,13 @@ public class LabRequestService {
                 labRequestRepresentation.setRequesterName(RequestFormService
                         .getName(user));
                 labRequestRepresentation.setRequesterEmail(user.getContactData().getEmail());
+                labRequestRepresentation.setRequester(new ProfileRepresentation(user));
+                labRequestRepresentation.setRequesterLab(user.getLab());
             }
             // copy request list representation data
             RequestListRepresentation requestListRepresentation = new RequestListRepresentation();
             requestFormService.transferData(instance, requestListRepresentation, user);
-            labRequestRepresentation.setRequestListRepresentation(requestListRepresentation);
+            labRequestRepresentation.setRequest(requestListRepresentation);
         }
     }
 
@@ -181,6 +193,9 @@ public class LabRequestService {
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setAssignee(task.getAssignee());
 
+        // set pa number count
+        labRequestRepresentation.setPathologyCount(pathologyItemRepository.countByLabRequestId(labRequestRepresentation.getId()));
+        
         // set request data
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);
@@ -209,6 +224,7 @@ public class LabRequestService {
         return task;
     }
 
+    // FIXME: add unit test
     @SuppressWarnings("unchecked")
     public void generateLabRequests(String processInstanceId) {
         HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
@@ -230,16 +246,17 @@ public class LabRequestService {
                 labRequest.setLab(lab);
                 labRequest.setProcessInstanceId(processInstanceId);
                 labRequest.setTaskId(task.getId());
+                labRequest = labRequestRepository.save(labRequest);
 
                 ExcerptList excerptList = excerptListService.findByProcessInstanceId(processInstanceId);
                 ExcerptListRepresentation list = new ExcerptListRepresentation();
                 transferExcerptListData(list, excerptList, labNumber);
-                List<String> paNumbers = new ArrayList<String>();
+                List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
                 for(ExcerptEntryRepresentation entry: list.getEntries()) {
-                    paNumbers.add(entry.getPaNumber());
+                    pathologyList.add(new PathologyItem(labRequest.getId(), entry.getPaNumber()));
                 }
-                labRequest.setPaNumbers(paNumbers);
-                labRequestRepository.save(labRequest);
+                labRequest.setPathologyList(pathologyList);
+                labRequest = labRequestRepository.save(labRequest);
                 labRequests.add(labRequest);
             }
             // notify labs by mail
@@ -309,6 +326,20 @@ public class LabRequestService {
     }
     return task;
   }
+
+public void transferLabRequestDetails(LabRequestRepresentation representation,
+        LabRequest labRequest) {
+    List<PathologyRepresentation> pathologyList = new ArrayList<PathologyRepresentation>();
+    for(PathologyItem item: labRequest.getPathologyList()) {
+        pathologyList.add(new PathologyRepresentation(item));
+    }
+    representation.setPathologyList(pathologyList);
+    List<CommentRepresentation> commentList = new ArrayList<CommentRepresentation>();
+    for(Comment comment: labRequest.getComments()) {
+        commentList.add(new CommentRepresentation(comment));
+    }
+    representation.setComments(commentList);
+}
 
 
 }

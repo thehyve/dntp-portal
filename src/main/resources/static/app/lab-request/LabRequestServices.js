@@ -28,5 +28,22 @@
   LabRequestFactory.$inject = [ '$resource' ];
   angular.module('ProcessApp.services').factory('LabRequest', LabRequestFactory);
 
+  var LabRequestCommentFactory = function($resource) {
+      return $resource('/labrequests/:labRequestId/comments/:id', {
+          labRequestId: '@labRequestId',
+          id : '@id'
+      }, {
+          update : {
+              method : 'PUT'
+          },
+          remove : {
+              method : 'DELETE'
+          }
+      });
+  };
+  LabRequestCommentFactory.$inject = [ '$resource' ];
+  angular.module('ProcessApp.services').factory('LabRequestComment', LabRequestCommentFactory);
+  
+  
 }(angular));
 

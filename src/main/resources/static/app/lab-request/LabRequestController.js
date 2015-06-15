@@ -23,6 +23,15 @@ angular.module('ProcessApp.controllers')
       $scope.alerts = [];
       $scope.labRequest = {};
 
+      $scope.getName = function(user) {
+          if (user === null) {
+              return '';
+          }
+          return user.firstName +
+              ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
+              (user.lastName === null ? '' : user.lastName);
+      };
+      
       /**
        * To load lab request list
        * @private
@@ -44,7 +53,7 @@ angular.module('ProcessApp.controllers')
        */
       var _loadRequest = function(labRequest) {
         var deferred = $q.defer();
-        labRequest.get().then(function (result) {
+        Restangular.one('labrequests', labRequest.id).get().then(function (result) {
           $scope.labRequest = result;
           deferred.resolve($scope.labRequest);
         }, function (error) {

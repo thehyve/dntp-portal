@@ -58,9 +58,9 @@ public class LabRequestController {
     }
 
     @PreAuthorize("isAuthenticated() and "
-            + "(hasPermission(#id, 'isLabRequestRequester') "
+            + "(hasRole('palga') "
+            + " or hasPermission(#id, 'isLabRequestRequester') "
             + " or hasPermission(#id, 'isLabRequestLabuser') "
-            + " or hasRole('palga')"
             + ")")
     @RequestMapping(value = "/labrequests/{id}", method = RequestMethod.GET)
     public LabRequestRepresentation getLabRequest(
@@ -69,6 +69,7 @@ public class LabRequestController {
         log.info("GET /labrequest" + id);
         LabRequest labRequest = labRequestRepository.findOne(id);
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestDetails(representation, labRequest);
         labRequestService.transferLabRequestData(representation);
         labRequestService.transferExcerptListData(representation);
         return representation;
@@ -171,7 +172,7 @@ public class LabRequestController {
       HttpEntity<InputStreamResource> file = null;
 
       try {
-        file =  paNumberService.writePaNumbers(labRequest.getPaNumbers(), labRequest.getLab().getName());
+        file =  paNumberService.writePaNumbers(labRequest.getPathologyList(), labRequest.getLab().getName());
       } catch (Exception e) {
         log.error(e.getMessage());
         throw new PaNumbersDownloadError();

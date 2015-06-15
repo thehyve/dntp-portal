@@ -2,14 +2,20 @@ package business.models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class LabRequest {
@@ -25,12 +31,16 @@ public class LabRequest {
     
     private String taskId;
     
-    @ElementCollection
-    List<String> paNumbers = new ArrayList<String>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
     
     private String rejectReason;
     
     private Date rejectDate;
+    
+    @OrderBy("timeCreated")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<Comment>();
     
     public LabRequest() {
         
@@ -68,12 +78,12 @@ public class LabRequest {
         this.taskId = taskId;
     }
 
-    public List<String> getPaNumbers() {
-        return paNumbers;
+    public List<PathologyItem> getPathologyList() {
+        return pathologyList;
     }
 
-    public void setPaNumbers(List<String> paNumbers) {
-        this.paNumbers = paNumbers;
+    public void setPathologyList(List<PathologyItem> pathologyList) {
+        this.pathologyList = pathologyList;
     }
 
     public String getRejectReason() {
@@ -90,6 +100,18 @@ public class LabRequest {
 
     public void setRejectDate(Date rejectDate) {
         this.rejectDate = rejectDate;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
     
 }

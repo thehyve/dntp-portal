@@ -38,13 +38,8 @@ public class LabRequestController {
     @Autowired
     private TaskService taskService;
 
-    @PreAuthorize("isAuthenticated() and ("
-            + "hasRole('requester')"
-            + " or "
-            + "hasRole('palga')"
-            + " or "
-            + "hasRole('lab_user')"
-            + ")")
+    @PreAuthorize("isAuthenticated() and (" + "hasRole('requester')" + " or "
+            + "hasRole('palga')" + " or " + "hasRole('lab_user')" + ")")
     @RequestMapping(value = "/labrequests", method = RequestMethod.GET)
     public List<LabRequestRepresentation> getLabRequests(
             UserAuthenticationToken user) {
@@ -52,81 +47,106 @@ public class LabRequestController {
         return labRequestService.findLabRequestsForUser(user.getUser());
     }
 
-  @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
-  @RequestMapping(value = "/labrequests/{id}/reject", method = RequestMethod.PUT)
-  public LabRequestRepresentation reject(
-      UserAuthenticationToken user,
-      @PathVariable Long id,
-      @RequestBody LabRequestRepresentation body) {
-    log.info("PUT /labrequests/" + id + "/reject");
-
-    LabRequest labRequest = labRequestRepository.findOne(id);
-    labRequest.setRejectReason(body.getRejectReason());
-    labRequest.setRejectDate(new Date());
-    taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", "Rejected");
-    Task task = labRequestService.getTask(labRequest.getTaskId(), "lab_request");
-    if (task.getDelegationState() == DelegationState.PENDING) {
-        taskService.resolveTask(task.getId());
-    }
-    taskService.complete(task.getId());
-
-    LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-    labRequestService.transferLabRequestData(representation);
-    return representation;
-  }
-
-  @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
-  @RequestMapping(value = "/labrequests/{id}/accept", method = RequestMethod.PUT)
-  public LabRequestRepresentation accept(UserAuthenticationToken user, @PathVariable Long id) {
-    log.info("PUT /labrequests/" + id + "/accept");
-
-    LabRequest labRequest = labRequestRepository.findOne(id);
-    Task task = labRequestService.getTask(labRequest.getTaskId(), "lab_request");
-    taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", "In progress");
-
-    LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-    labRequestService.transferLabRequestData(representation);
-    return representation;
-  }
-
-  @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
-  @RequestMapping(value = "/labrequests/{id}/claim", method = RequestMethod.PUT)
-  public LabRequestRepresentation claim(
-    UserAuthenticationToken user,
-    @PathVariable Long id) {
-    log.info("PUT /labrequests/" + id + "/claim");
-
-    LabRequest labRequest = labRequestRepository.findOne(id);
-    Task task = labRequestService.getTask(labRequest.getTaskId(), "lab_request");
-
-    if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-        taskService.claim(task.getId(), user.getId().toString());
-    } else {
-        taskService.delegateTask(task.getId(), user.getId().toString());
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasPermission(#id, 'isLabRequestRequester') "
+            + " or hasPermission(#id, 'isLabRequestLabuser') "
+            + " or hasRole('palga')"
+            + ")")
+    @RequestMapping(value = "/labrequests/{id}", method = RequestMethod.GET)
+    public LabRequestRepresentation getLabRequest(
+            UserAuthenticationToken user,
+            @PathVariable Long id) {
+        log.info("GET /labrequest" + id);
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferExcerptListData(representation);
+        return representation;
     }
 
-    LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-    labRequestService.transferLabRequestData(representation);
-    return representation;
-  }
 
-  @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
-  @RequestMapping(value = "/labrequests/{id}/unclaim", method = RequestMethod.PUT)
-  public LabRequestRepresentation unclaim(
-      UserAuthenticationToken user,
-      @PathVariable Long id) {
-    log.info("PUT /labrequests/" + id + "/unclaim");
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    @RequestMapping(value = "/labrequests/{id}/reject", method = RequestMethod.PUT)
+    public LabRequestRepresentation reject(UserAuthenticationToken user,
+            @PathVariable Long id, @RequestBody LabRequestRepresentation body) {
+        log.info("PUT /labrequests/" + id + "/reject");
 
-    LabRequest labRequest = labRequestRepository.findOne(id);
-    Task task = labRequestService.getTask(labRequest.getTaskId(), "lab_request");
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        labRequest.setRejectReason(body.getRejectReason());
+        labRequest.setRejectDate(new Date());
+        taskService.setVariableLocal(labRequest.getTaskId(),
+                "labrequest_status", "Rejected");
+        Task task = labRequestService.getTask(labRequest.getTaskId(),
+                "lab_request");
+        if (task.getDelegationState() == DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
 
-    taskService.unclaim(task.getId());
+        LabRequestRepresentation representation = new LabRequestRepresentation(
+                labRequest);
+        labRequestService.transferLabRequestData(representation);
+        return representation;
 
-    LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-    labRequestService.transferLabRequestData(representation);
-    return representation;
-  }
+    }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    @RequestMapping(value = "/labrequests/{id}/accept", method = RequestMethod.PUT)
+    public LabRequestRepresentation accept(UserAuthenticationToken user,
+            @PathVariable Long id) {
+        log.info("PUT /labrequests/" + id + "/accept");
+
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        Task task = labRequestService.getTask(labRequest.getTaskId(),
+                "lab_request");
+        taskService.setVariableLocal(labRequest.getTaskId(),
+                "labrequest_status", "Sending");
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(
+                labRequest);
+        labRequestService.transferLabRequestData(representation);
+        return representation;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+    @RequestMapping(value = "/labrequests/{id}/claim", method = RequestMethod.PUT)
+    public LabRequestRepresentation claim(UserAuthenticationToken user,
+            @PathVariable Long id) {
+        log.info("PUT /labrequests/" + id + "/claim");
+
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        Task task = labRequestService.getTask(labRequest.getTaskId(),
+                "lab_request");
+
+        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
+            taskService.claim(task.getId(), user.getId().toString());
+        } else {
+            taskService.delegateTask(task.getId(), user.getId().toString());
+        }
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(
+                labRequest);
+        labRequestService.transferLabRequestData(representation);
+        return representation;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+    @RequestMapping(value = "/labrequests/{id}/unclaim", method = RequestMethod.PUT)
+    public LabRequestRepresentation unclaim(UserAuthenticationToken user,
+            @PathVariable Long id) {
+      log.info("PUT /labrequests/" + id + "/unclaim");
+
+      LabRequest labRequest = labRequestRepository.findOne(id);
+      Task task = labRequestService.getTask(labRequest.getTaskId(),
+        "lab_request");
+
+      taskService.unclaim(task.getId());
+
+      LabRequestRepresentation representation = new LabRequestRepresentation(
+        labRequest);
+      labRequestService.transferLabRequestData(representation);
+      return representation;
+    }
 
   @PreAuthorize("isAuthenticated() and "
     + "(hasPermission(#id, 'isPalgaUser') "
@@ -137,10 +157,9 @@ public class LabRequestController {
   public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable String id) {
     log.info("GET /labrequests/" + id + "/panumbers/csv");
 
-    LabRequest labRequest = labRequestRepository.findOne(Long.valueOf(id));
+        LabRequest labRequest = labRequestRepository.findOne(Long.valueOf(id));
 
-    return null;
-  }
-
+        return null;
+    }
 
 }

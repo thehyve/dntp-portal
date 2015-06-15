@@ -1,13 +1,21 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-  .controller('LabRequestController', ['$rootScope', '$scope', '$modal', '$location', 'Restangular',
-    function ($rootScope, $scope, $modal, $location, Restangular) {
+  .controller('LabRequestController', [
+       '$rootScope', '$scope', 
+       '$modal', 
+       '$location', '$route', '$routeParams', 
+       'Restangular',
+    function (
+            $rootScope, $scope, 
+            $modal, 
+            $location, $route, $routeParams, 
+            Restangular) {
 
       $scope.labReqModal = $modal({
         id: 'labRequestWindow',
         scope: $scope,
-        template: '/app/lab-request/lab-request.html',
+        template: '/app/lab-request/edit-lab-request.html',
         backdrop: 'static',
         show: false
       });
@@ -26,12 +34,30 @@ angular.module('ProcessApp.controllers')
             $scope.alerts.push({type: 'danger', msg: 'Error : ' + err.data.status  + ' - ' + err.data.error });
           });
       };
+      
+      /**
+       * To load lab request
+       * @private
+       */
+      var _loadRequest = function(labRequest, callback) {
+          Restangular.one('labrequests', labRequest.id).get().then(function (result) {
+            $scope.labRequest = result;
+            callback && callback(result);
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: 'Error : ' + err.data.status  + ' - ' + err.data.error });
+          });
+      };
 
-      _loadRequests();
-
+      if ($routeParams.labRequestId) {
+          _loadRequest({id: $routeParams.labRequestId});
+      } else {
+          _loadRequests();
+      }
+      
       $scope.edit = function (labRequest) {
-        $scope.labRequest = labRequest;
-        $scope.labReqModal.show();
+        _loadRequest(labRequest, function(result) {
+            $scope.labReqModal.show();
+        });
       };
 
       $scope.cancel = function () {

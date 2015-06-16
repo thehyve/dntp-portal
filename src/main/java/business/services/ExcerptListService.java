@@ -32,6 +32,7 @@ import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
 import business.models.Lab;
 import business.models.LabRepository;
+import business.representation.ExcerptListRepresentation;
 
 @Service
 public class ExcerptListService {
@@ -46,6 +47,12 @@ public class ExcerptListService {
     public ExcerptList findByProcessInstanceId(String processInstanceId) {
         ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
         return excerptList;
+    }
+    
+    @Transactional
+    public ExcerptListRepresentation findRepresentationByProcessInstanceId(String processInstanceId) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
+        return new ExcerptListRepresentation(excerptList);
     }
     
     @Transactional

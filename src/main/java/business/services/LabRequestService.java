@@ -6,9 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-
-import business.exceptions.TaskNotFound;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
@@ -135,6 +134,7 @@ public class LabRequestService {
     }
 
 
+    @Transactional
     public void transferExcerptListData(
             ExcerptListRepresentation list,
             ExcerptList excerptList,
@@ -163,6 +163,8 @@ public class LabRequestService {
         list.setEntries(entries);
     }
 
+    
+    @Transactional
     public void transferExcerptListData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         // set excerpt list data
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(labRequestRepresentation.getProcessInstanceId());
@@ -194,7 +196,8 @@ public class LabRequestService {
 
         // set pa number count
         labRequestRepresentation.setPathologyCount(pathologyItemRepository.countByLabRequestId(labRequestRepresentation.getId()));
-
+        log.info("pathology count: " + labRequestRepresentation.getPathologyCount());
+        
         // set request data
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);
@@ -225,6 +228,7 @@ public class LabRequestService {
 
     // FIXME: add unit test
     @SuppressWarnings("unchecked")
+    @Transactional
     public void generateLabRequests(String processInstanceId) {
         HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
         Object var = instance.getProcessVariables().get(
@@ -256,6 +260,8 @@ public class LabRequestService {
                 }
                 labRequest.setPathologyList(pathologyList);
                 labRequest = labRequestRepository.save(labRequest);
+                log.info("Saved lab request " + labRequest.getId() + " for lab " + labNumber + 
+                        " with " + pathologyList.size() + " pathology items.");
                 labRequests.add(labRequest);
             }
             // notify labs by mail
@@ -310,35 +316,35 @@ public class LabRequestService {
         return representations;
     }
 
-  /**
-   * Finds current task. Assumes that exactly one task is currently active.
-   * @param taskId
-   * @return the current task if it exists.
-   * @throws business.exceptions.TaskNotFound
-   */
-  public Task getTaskByTaskId(String taskId) {
-    Task task = taskService.createTaskQuery().taskId(taskId)
-      .active()
-      .singleResult();
-    if (task == null) {
-      throw new TaskNotFound();
+    /**
+     * Finds current task. Assumes that exactly one task is currently active.
+     * 
+     * @param taskId
+     * @return the current task if it exists.
+     * @throws business.exceptions.TaskNotFound
+     */
+    public Task getTaskByTaskId(String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).active()
+                .singleResult();
+        if (task == null) {
+            throw new TaskNotFound();
+        }
+        return task;
     }
-    return task;
-  }
 
-public void transferLabRequestDetails(LabRequestRepresentation representation,
-        LabRequest labRequest) {
-    List<PathologyRepresentation> pathologyList = new ArrayList<PathologyRepresentation>();
-    for(PathologyItem item: labRequest.getPathologyList()) {
-        pathologyList.add(new PathologyRepresentation(item));
+    @Transactional
+    public void transferLabRequestDetails(LabRequestRepresentation representation) {
+        LabRequest labRequest = labRequestRepository.findOne(representation.getId());
+        List<PathologyRepresentation> pathologyList = new ArrayList<PathologyRepresentation>();
+        for (PathologyItem item : labRequest.getPathologyList()) {
+            pathologyList.add(new PathologyRepresentation(item));
+        }
+        representation.setPathologyList(pathologyList);
+        List<CommentRepresentation> commentList = new ArrayList<CommentRepresentation>();
+        for (Comment comment : labRequest.getComments()) {
+            commentList.add(new CommentRepresentation(comment));
+        }
+        representation.setComments(commentList);
     }
-    representation.setPathologyList(pathologyList);
-    List<CommentRepresentation> commentList = new ArrayList<CommentRepresentation>();
-    for(Comment comment: labRequest.getComments()) {
-        commentList.add(new CommentRepresentation(comment));
-    }
-    representation.setComments(commentList);
-}
-
 
 }

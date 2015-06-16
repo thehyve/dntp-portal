@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.transaction.Transactional;
+
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Attachment;
@@ -149,6 +151,7 @@ public class RequestFormService {
         }
     }
 
+    @Transactional
     public void transferData(HistoricProcessInstance instance, RequestRepresentation request, User currentUser) {
         boolean is_palga = currentUser == null ? false : currentUser.isPalga();
         boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();

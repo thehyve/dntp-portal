@@ -67,6 +67,7 @@ public class PasswordControllerTests {
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         //this.greenMail = new GreenMail(ServerSetupTest.SMTP);
+        ((MockMailSender)this.mailSender).clear();
     }
 
     @Test

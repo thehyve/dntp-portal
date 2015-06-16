@@ -8,14 +8,14 @@ angular.module('ProcessApp.controllers')
               LabRequest, LabRequestComment) {
 
         $scope.commentEditVisibility = {};
-        $scope.edit_comment = {};
+        //$scope.editComment = {};
         
         $scope.addComment = function(labRequest, body) {
             var comment = new LabRequestComment(body);
             comment.labRequestId = labRequest.id;
             comment.$save(function(result) {
                 labRequest.comments.push(result);
-                $scope.edit_comment = {};
+                $scope.editComment = {};
             }, function(response) {
                 $scope.error = response.statusText;
             });

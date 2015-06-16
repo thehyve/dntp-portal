@@ -94,11 +94,12 @@ angular.module('ProcessApp.controllers')
                 if (result) {
                     labRequest.rejectReason = result;
                     labRequest.customPUT(labRequest, 'reject').then(function (d) {
-                        console.log("after reject", result);
+                        //console.log("after reject", result);
                         if ($scope.labReqModal) {
                           $scope.labReqModal.hide();
                         }
-                        _loadRequests();
+                        $location.path('/lab-request/view/'+labRequest.id);
+                        //_loadRequests();
                       }
                       , function (err) {
                         console.log("Error: ", response);
@@ -110,18 +111,19 @@ angular.module('ProcessApp.controllers')
 
       $scope.accept = function (labRequest) {
         labRequest.customPUT({}, 'accept').then(function (d) {
-          console.log("after accept", result);
+          //console.log("after accept", result);
           if ($scope.labReqModal) {
-            $scope.labReqModal.hide();
+              $scope.labReqModal.hide();
           }
-          _loadRequests();
+          $location.path('/lab-request/view/'+labRequest.id);
+          //_loadRequests();
         });
       };
 
       $scope.claim = function (labRequest) {
         labRequest.customPUT({}, 'claim')
           .then(function (result) {
-            console.log("after claim", result);
+            //console.log("after claim", result);
             _loadRequests();
           });
       };
@@ -129,7 +131,7 @@ angular.module('ProcessApp.controllers')
       $scope.unclaim = function (labRequest) {
         labRequest.customPUT({}, 'unclaim')
           .then(function (result) {
-            console.log("after unclaim", result);
+            //console.log("after unclaim", result);
             _loadRequests();
           });
       };

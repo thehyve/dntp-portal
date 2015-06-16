@@ -53,15 +53,14 @@ angular.module('ProcessApp.controllers')
        */
       var _loadRequest = function(labRequest) {
         var deferred = $q.defer();
-
-        if (labRequest) {
-          $scope.labRequest = labRequest;
-          deferred.resolve($scope.labRequest);
-        } else {
+        labRequest.get().then(function (result) {
+            $scope.labRequest = result;
+            deferred.resolve($scope.labRequest);
+        }, function (err) {
           var errMsg = 'Error : ' + err.data.status  + ' - ' + err.data.error;
           $scope.alerts.push({type: 'danger', msg: errMsg });
           deferred.reject(errMsg);
-        }
+        });
         return deferred.promise;
       };
 
@@ -140,6 +139,14 @@ angular.module('ProcessApp.controllers')
 
       $scope.isLabUser = function () {
        return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
+      };
+
+      $scope.update = function (labRequest) {
+          labRequest.save().then(function (result) {
+            console.log(result);
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: err });
+          });
       };
 
     }]);

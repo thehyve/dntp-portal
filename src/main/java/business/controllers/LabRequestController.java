@@ -111,7 +111,7 @@ public class LabRequestController {
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
         taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Sending");
+                "labrequest_status", "Approved");
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
@@ -145,7 +145,7 @@ public class LabRequestController {
     @RequestMapping(value = "/labrequests/{id}/unclaim", method = RequestMethod.PUT)
     public LabRequestRepresentation unclaim(UserAuthenticationToken user,
             @PathVariable Long id) {
-      log.info("PUT /labrequests/" + id + "/unclaim");
+      log.info("PUT /labrequests/" + id + "/unclaim for userId " + user.getId());
 
       LabRequest labRequest = labRequestRepository.findOne(id);
       Task task = labRequestService.getTask(labRequest.getTaskId(),
@@ -166,17 +166,32 @@ public class LabRequestController {
       + ")")
     @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable Long id) {
-          log.info("GET /labrequests/" + id + "/panumbers/csv for " + user.getId());
+        log.info("GET /labrequests/" + id + "/panumbers/csv for userId " + user.getId());
 
-      LabRequest labRequest = labRequestRepository.findOne(id);
-      HttpEntity<InputStreamResource> file = null;
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        HttpEntity<InputStreamResource> file = null;
 
-      try {
-        file =  paNumberService.writePaNumbers(labRequest.getPathologyList(), labRequest.getLab().getName());
-      } catch (Exception e) {
-        log.error(e.getMessage());
-        throw new PaNumbersDownloadError();
-      }
-      return file;
+        try {
+          file =  paNumberService.writePaNumbers(labRequest.getPathologyList(), labRequest.getLab().getName());
+        } catch (Exception e) {
+          log.error(e.getMessage());
+          throw new PaNumbersDownloadError();
+        }
+        return file;
+    }
+
+    @PreAuthorize("isAuthenticated() and "
+      + "(hasRole('palga') "
+      + " or hasPermission(#id, 'isLabRequestLabuser') "
+      + ")")
+    @RequestMapping (value = "/labrequests/{id}", method = RequestMethod.PUT)
+    public LabRequestRepresentation update (UserAuthenticationToken user,
+                                            @RequestBody LabRequestRepresentation labRequestRepresentation) {
+        log.info("PUT /labrequests/" + labRequestRepresentation.getId() + " for userId " + user.getId());
+        LabRequest labRequest = labRequestRepository.findOne(labRequestRepresentation.getId());
+
+        // TODO update labRequest with updated information from labRequestRepresentation
+
+        return labRequestRepresentation;
     }
 }

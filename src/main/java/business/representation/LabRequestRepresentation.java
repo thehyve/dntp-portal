@@ -9,14 +9,14 @@ import business.models.LabRequest;
 public class LabRequestRepresentation {
 
     private Long id;
-    
-    /** 
+
+    /**
      * Task id from Activiti. This is a unique identifier for lab requests.
      */
     private String taskId;
 
     private String assignee;
-    
+
     private String processInstanceId;
 
     private RequestListRepresentation request;
@@ -34,18 +34,20 @@ public class LabRequestRepresentation {
     private Lab lab;
 
     private ExcerptListRepresentation excerptList;
-    
+
     private List<PathologyRepresentation> pathologyList;
     private Long pathologyCount;
 
     private String excerptListRemark;
-    
+
     private String rejectReason;
-    
+
     private Date rejectDate;
 
+    private boolean isPaReportsSent;
+
     private List<CommentRepresentation> comments;
-    
+
     public LabRequestRepresentation() {
 
     }
@@ -58,8 +60,9 @@ public class LabRequestRepresentation {
         //this.pathologyCount = labRequest.getPathologyList().size();
         this.setRejectDate(labRequest.getRejectDate());
         this.setRejectReason(labRequest.getRejectReason());
+        this.setPaReportsSent(labRequest.isPaReportsSent());
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -75,7 +78,7 @@ public class LabRequestRepresentation {
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
-    
+
     public String getAssignee() {
         return assignee;
     }
@@ -123,7 +126,7 @@ public class LabRequestRepresentation {
     public void setRequester(ProfileRepresentation requester) {
         this.requester = requester;
     }
-    
+
     public Lab getRequesterLab() {
         return requesterLab;
     }
@@ -187,7 +190,7 @@ public class LabRequestRepresentation {
     public void setPathologyList(List<PathologyRepresentation> pathologyList) {
         this.pathologyList = pathologyList;
     }
-    
+
     public Long getPathologyCount() {
         return pathologyCount;
     }
@@ -202,6 +205,14 @@ public class LabRequestRepresentation {
 
     public void setRejectReason(String rejectReason) {
         this.rejectReason = rejectReason;
+    }
+
+    public boolean isPaReportsSent() {
+      return isPaReportsSent;
+    }
+
+    public void setPaReportsSent(boolean isPaReportsSent) {
+        this.isPaReportsSent = isPaReportsSent;
     }
 
     public Date getRejectDate() {
@@ -219,5 +230,5 @@ public class LabRequestRepresentation {
     public void setComments(List<CommentRepresentation> comments) {
         this.comments = comments;
     }
-    
+
 }

@@ -33,14 +33,14 @@
         <div class="col-sm-8">
             <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
-                    type="button" title="{{'Accepted'|translate}}"
+                    type="button" title="{{'Accepted'|translate}}" id="vote-accepted"
                     ng-click="updateVote(request, 'ACCEPTED')"
                     ng-if="!editComment.id">
                 <span><i class="glyphicon glyphicon-ok-circle"></i></span>
                 {{'Accepted'|translate}}
             </button>
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
-                    type="button" title="{{'Rejected'|translate}}"
+                    type="button" title="{{'Rejected'|translate}}" id="vote-rejected"
                     ng-click="updateVote(request, 'REJECTED')"
                     ng-if="!editComment.id">
                 <span><i class="glyphicon glyphicon-ban-circle"></i></span>

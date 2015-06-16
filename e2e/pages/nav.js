@@ -7,20 +7,11 @@
 
 // The navigation bar
 var NavPage = function() {
-    this.container = element(by.css('.container'));
-    this.profileMenu = element(by.id('profile_menu'));
-    this.login = element(by.id('login'));
-    this.logout = element(by.id('logout'));
+    this.logoutButton = element(by.id('nav-logout'));
 
-    this.verify = function() {
-        expect(this.profileMenu);
+    this.logout = function() {
+        this.logoutButton.click();
     }
-
-    this.doLogout = function() {
-        this.profileMenu.click();
-        this.logout.click();
-    }
-
 };
 
 module.exports = new NavPage();

@@ -17,5 +17,7 @@ exports.config = {
 
   cucumberOpts: {
     require: paths.e2e + '/steps/*.js'
-  }
+  },
+
+  resultJsonOutputFile: 'test-report.json'
 };

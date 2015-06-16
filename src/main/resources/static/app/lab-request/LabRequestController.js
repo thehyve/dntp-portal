@@ -97,7 +97,8 @@ angular.module('ProcessApp.controllers')
                         if ($scope.labReqModal) {
                           $scope.labReqModal.hide();
                         }
-                        _loadRequests();
+                        $location.path('/lab-request/view/'+labRequest.id);
+                        //_loadRequests();
                       }
                       , function (err) {
                         console.log('Error: ', err);
@@ -111,7 +112,7 @@ angular.module('ProcessApp.controllers')
       $scope.accept = function (labRequest) {
         labRequest.customPUT({}, 'accept').then(function (result) {
           if ($scope.labReqModal) {
-            $scope.labReqModal.hide();
+              $scope.labReqModal.hide();
           }
           _loadRequests();
         }, function (err) {

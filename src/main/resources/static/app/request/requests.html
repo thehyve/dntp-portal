@@ -54,7 +54,7 @@
                         <th><input st-search="title" placeholder="Filter by Title" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
                         <th>&nbsp;</th>
-                        <th ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1">&nbsp;</th>
+                        <th class="request-vote" ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1">&nbsp;</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="assigneeName" placeholder="Filter by Assignee" class="input-sm form-control" type="search"/></th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1">&nbsp;</th>
@@ -69,13 +69,13 @@
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': req.assignee == globals.currentUser.userid}">
                         <td>{{req.processInstanceId}}</td>
                         <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
-                        <td>{{req.status | translate}}
+                        <td class="request-status">{{req.status | translate}}
                             <span class="badge" ng-if="req.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1" >
                             {{req.numberOfApprovalVotes ? req.numberOfApprovalVotes : 0 }}
                             </span>                        
                         </td>
                         <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
-                        <td ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" >
+                        <td ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="request-vote">
                             {{req.approvalVote}}
                         </td>
                         <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >{{req.requesterName}}</td>

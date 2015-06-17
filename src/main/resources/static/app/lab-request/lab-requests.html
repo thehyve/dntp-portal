@@ -49,7 +49,7 @@
         </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="labRequest in labRequests track by $index" ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid && labRequest.status == 'Waiting for lab approval'}">
+          <tr ng-repeat="labRequest in labRequests track by $index" ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid}">
             <td>
               <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.id}}</a>
             </td>
@@ -74,14 +74,14 @@
             <td>
               <span class="pull-right">
                 <span class="btn-group">
-                    <button ng-if="isLabUser() && labRequest.status != 'Waiting for lab approval'" class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)" >
+                    <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid" class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)" >
                       <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
                     </button>
                     <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
                          class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(labRequest)">
                         <span><i class="glyphicon glyphicon-eye-open"></i></span>
                     </button>
-                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
+                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid"
                          class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(labRequest)">
                         <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     </button>

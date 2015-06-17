@@ -13,6 +13,49 @@
 
             <h2>Lab Request: {{labRequest.taskId}}</h2>
             <br/>
+            <hr>
+
+            <div style="padding-bottom: 25px;">
+                <button class="btn btn-default" type="button"  ng-click="edit(labRequest);" title="Edit"
+                        ng-if="(isLabUser() && isLabUserStatus(labRequest.status))
+                            || (isRequester() && isRequesterStatus(labRequest.status))"
+                        ng-disabled="isLabUser() && (labRequest.assignee != globals.currentUser.userid)">
+                    <span><i class="glyphicon glyphicon-pencil"></i></span>
+                    {{'Edit' | translate}}
+                </button>
+                <button class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
+                    <span><i class="glyphicon glyphicon-comment"></i></span>
+                    {{'Notes' | translate}}
+                </button>
+                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && labRequest.assignee == globals.currentUser.userid">
+                   <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
+                   <span><i class="glyphicon glyphicon-download-alt"></i></span>
+                   Download panumbers_{{labRequest.id}}.csv
+                   </a>
+                 </span>
+                <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}
+                    "
+                    ng-if="labRequest.status=='Rejected'">
+                <button
+                class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    {{'Compose rejection mail' | translate}}
+                </button></a>
+                <button ng-if="isLabUser() && lab_user_statuses.indexOf(labRequest.status) != -1" 
+                    ng-show="labRequest.assignee != globals.currentUser.userid"
+                    class="btn btn-default" type="button"  
+                    ng-click="claim(labRequest);" title="Claim">
+                    <span><i class="glyphicon glyphicon-eye-open"></i></span>
+                    {{'Claim' | translate}}
+                </button>
+                <button ng-if="isLabUser() && lab_user_statuses.indexOf(labRequest.status) != -1"
+                    ng-show="labRequest.assignee == globals.currentUser.userid" 
+                    class="btn btn-default" type="button"  
+                    ng-click="unclaim(labRequest);" title="Unclaim">
+                    <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                    {{'Unclaim' | translate}}
+                </button>
+            </div>
 
             <div bs-tabs>
 
@@ -83,7 +126,7 @@
                       </p>
                     </div>
                   </div>
-
+        
                   <div class="form-group">
                     <label class="control-label col-md-2">{{ 'Created Date' | translate }}</label>
                     <div class="col-md-10">

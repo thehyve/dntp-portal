@@ -22,8 +22,10 @@ public class LabRequest {
 
     private String taskId;
 
+    private Date timeCreated;
+    
     @Column
-    private boolean isPaReportsSent;
+    private Boolean isPaReportsSent;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
@@ -32,7 +34,7 @@ public class LabRequest {
 
     private Date rejectDate;
 
-    @OrderBy("timeCreated")
+    @OrderBy("timeCreated DESC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
 
@@ -64,13 +66,13 @@ public class LabRequest {
         this.processInstanceId = processInstanceId;
     }
 
-    public boolean isPaReportsSent() {
-    return isPaReportsSent;
-  }
+    public Boolean isPaReportsSent() {
+        return isPaReportsSent;
+    }
 
-    public void setPaReportsSent(boolean isPaReportsSent) {
-    this.isPaReportsSent = isPaReportsSent;
-  }
+    public void setPaReportsSent(Boolean isPaReportsSent) {
+        this.isPaReportsSent = isPaReportsSent;
+    }
 
     public String getTaskId() {
         return taskId;
@@ -116,4 +118,12 @@ public class LabRequest {
         this.comments.add(comment);
     }
 
+    public Date getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(Date timeCreated) {
+        this.timeCreated = timeCreated;
+    }
+    
 }

@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.RequestNotFound;
+import business.exceptions.TaskNotFound;
 import business.models.Comment;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
@@ -192,6 +193,7 @@ public class LabRequestService {
         }
 
         labRequestRepresentation.setDateCreated(task.getCreateTime());
+        labRequestRepresentation.setEndDate(task.getEndTime());
         labRequestRepresentation.setAssignee(task.getAssignee());
 
         // set pa number count
@@ -246,6 +248,7 @@ public class LabRequestService {
 
                 // create lab requests
                 LabRequest labRequest = new LabRequest();
+                labRequest.setTimeCreated(new Date());
                 labRequest.setLab(lab);
                 labRequest.setProcessInstanceId(processInstanceId);
                 labRequest.setTaskId(task.getId());

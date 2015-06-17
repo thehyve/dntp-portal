@@ -2,6 +2,8 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
 
+    <form class="form-horizontal" role="form" name="labRequestEditForm" novalidate ng-keypress="cancelByEscKey($event, request);">
+
       <!--HEADER-->
       <div class="modal-header">
         <h3 class="modal-title">Lab Request : {{labRequest.taskId}}</h3>
@@ -100,7 +102,10 @@
           </p>
         </div>
 
-        <div class="form-group" ng-class="" ng-if="labRequest.status == 'Approved'">
+        <div class="form-group" ng-class="" ng-if="
+            (labRequest.status == 'Approved' || labRequest.status == 'Sending') 
+            && labRequest.request.paReportRequest"
+          >
           <label class="control-label col-sm-3" for="paReportsSent">
             &nbsp;
           </label>
@@ -112,7 +117,7 @@
 
         <!--Excerpt List Details-->
 
-        <div style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">
+        <div ng-if="false" style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">
           <table st-table="rowCollection" class="table">
             <thead>
             <tr>
@@ -132,9 +137,29 @@
 
         </div>
         <br>
-         <span ng-if="labRequest.status == 'Approved' && labRequest.assignee == globals.currentUser.userid">
+         <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && labRequest.assignee == globals.currentUser.userid">
            <a class="btn btn-success" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">Download panumbers_{{labRequest.id}}.csv</a>
          </span>
+
+        <div class="form-group"
+            ng-class="{ 'has-error' : labRequestEditForm.missingSamples.$invalid }"
+            ng-if="(isRequester() && labRequest.status == 'Sending') || (isLabUser() && labRequest.status == 'Returning')">
+          <label class="control-label col-sm-3" for="samplesMissing">
+            &nbsp;
+          </label>
+          <div class="col-sm-8">
+            <input type="checkbox" id="samplesMissing" name="samplesMissing"
+                   ng-model="labRequest.samplesMissing"> &nbsp; {{ 'Materials are missing.' | translate }}
+            <textarea class="form-control" id="missingSamples" name="missingSamples" placeholder="{{'Missing materials'|translate}}"
+              ng-model="labRequest.missingSamples.contents"
+              ng-required="labRequest.samplesMissing"
+              ng-show="labRequest.samplesMissing"
+              >
+            </textarea>
+          </div>
+        </div>
+
+
       </div>
 
       <!--FOOTER-->
@@ -145,13 +170,29 @@
             <button class="btn btn-default btn-warning"
                     ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
         </span>
-        <span ng-if="labRequest.status == 'Approved'">
-            <button class="btn btn-default btn-success"
+        <span ng-if="isLabUser() && labRequest.status == 'Approved' && labRequest.request.materialsRequest">
+            <button class="btn btn-default btn-primary"
+                    ng-click="sending(labRequest);">{{'Send materials'|translate}}</button>
+            <button class="btn btn-default btn-primary"
                     ng-click="update(labRequest);">{{'Update'|translate}}</button>
+        </span>
+        <span ng-if="isRequester() && labRequest.status == 'Sending'">
+            <button class="btn btn-default btn-primary"
+                ng-disabled="labRequestEditForm.$invalid"
+                ng-click="received(labRequest);">{{'Materials received'|translate}}</button>
+        </span>
+        <span ng-if="isRequester() && labRequest.status == 'Received'">
+            <button class="btn btn-default btn-primary"
+                    ng-click="returning(labRequest);">{{'Return materials'|translate}}</button>
+        </span>
+        <span ng-if="isLabUser() && labRequest.status == 'Returning'">
+            <button class="btn btn-default btn-primary"
+                    ng-click="returned(labRequest);">{{'Materials returned'|translate}}</button>
         </span>
         <button class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</button>
       </div>
 
+    </form>
     </div>
   </div>
 </div>

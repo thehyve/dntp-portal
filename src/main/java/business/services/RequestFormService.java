@@ -105,6 +105,10 @@ public class RequestFormService {
                     request.setRequesterName(getName(user));
                 }
             }
+            request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
+            request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
+            request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
+            request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
 
             Task task = null;
             if (request.getStatus() != null) {

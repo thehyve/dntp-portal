@@ -14,7 +14,7 @@
     angular.module('ProcessApp', [ 'flow',
                                    'mgcrea.ngStrap',
                                    'ngResource', 'ngRoute', 'ngCookies',
-                                   'pascalprecht.translate',
+                                   'pascalprecht.translate', 'ngTagsInput',
                                    'smart-table', 'ngSanitize',
                                    'ProcessApp.services',
                                    'ProcessApp.controllers',

@@ -1,0 +1,28 @@
+<h3>{{ 'PA Numbers' | translate}}</h3>
+<hr>
+<table st-table="paNumbersDisplayedCollection" st-safe-src="labRequest.pathologyList" class="table table-striped">
+  <thead>
+  <tr>
+    <th>{{'#' | translate}}</th>
+    <th st-sort="paNumber">{{'PA-Number' | translate}}</th>
+    <th>{{'Samples' | translate}}</th>
+  </tr>
+  <tr>
+    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
+  </tr>  </thead>
+  <tbody>
+  <tr ng-repeat="pathology in paNumbersDisplayedCollection">
+    <td>
+      {{pathology.id}}
+    </td>
+    <td>
+      {{pathology.paNumber}}
+    </td>
+    <td>
+
+      <tags-input ng-model="pathology.samples" placeholder="Enter sample codes"></tags-input>
+
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -14,7 +14,7 @@
     angular.module('ProcessApp', [ 'flow',
                                    'mgcrea.ngStrap',
                                    'ngResource', 'ngRoute', 'ngCookies',
-                                   'pascalprecht.translate',
+                                   'pascalprecht.translate', 'ngTagsInput',
                                    'smart-table', 'ngSanitize',
                                    'ProcessApp.services',
                                    'ProcessApp.controllers',
@@ -50,8 +50,8 @@
                 templateUrl : 'app/lab-request/lab-requests.html',
                 controller : ''
             }).when('/lab-request/view/:labRequestId', {
-              templateUrl : 'app/lab-request/lab-request.html',
-              controller : ''
+                templateUrl : 'app/lab-request/lab-request.html',
+                controller : ''
             }).when('/request/view/:requestId', {
                 templateUrl : 'app/request/request.html',
                 controller : 'RequestController'

@@ -100,6 +100,16 @@
           </p>
         </div>
 
+        <div class="form-group" ng-class="" ng-if="labRequest.status == 'Approved'">
+          <label class="control-label col-sm-3" for="paReportsSent">
+            &nbsp;
+          </label>
+          <div class="col-sm-8">
+            <input type="checkbox" id="paReportsSent" name="paReportsSent"
+                   ng-model="labRequest.paReportsSent"> &nbsp; {{ 'PA Reports has been sent to requester.' | translate }}
+          </div>
+        </div>
+
         <!--Excerpt List Details-->
 
         <div style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">
@@ -122,22 +132,24 @@
 
         </div>
         <br>
-         <span ng-if="labRequest.status == 'Sending' && labRequest.assignee == globals.currentUser.userid">
+         <span ng-if="labRequest.status == 'Approved' && labRequest.assignee == globals.currentUser.userid">
            <a class="btn btn-success" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">Download panumbers_{{labRequest.id}}.csv</a>
          </span>
       </div>
 
       <!--FOOTER-->
       <div class="modal-footer">
-        <span ng-if="!(isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid)">
-            <button class="btn btn-default" ng-click="cancel();">{{'Close'|translate}}</button>
-        </span>
         <span ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid">
             <button class="btn btn-default btn-primary"
                     ng-click="accept(labRequest);">{{'Accept'|translate}}</button>
             <button class="btn btn-default btn-warning"
                     ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
         </span>
+        <span ng-if="labRequest.status == 'Approved'">
+            <button class="btn btn-default btn-success"
+                    ng-click="update(labRequest);">{{'Update'|translate}}</button>
+        </span>
+        <button class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</button>
       </div>
 
     </div>

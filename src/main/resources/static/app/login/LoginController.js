@@ -98,8 +98,12 @@ angular.module('ProcessApp.controllers')
                 }).success(function(data) {
                     authenticate(function() {
                         if ($rootScope.authenticated) {
-                            $location.path('/');
                             $scope.error = false;
+                            if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
+                              $location.path('/');
+                            } else {
+                              $location.path('/lab-requests');
+                            }
                         } else {
                             $location.path('/login');
                             $scope.error = true;

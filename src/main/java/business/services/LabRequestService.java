@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.RequestNotFound;
-import business.exceptions.TaskNotFound;
 import business.models.Comment;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
@@ -78,7 +77,7 @@ public class LabRequestService {
 
     @Autowired
     private LabRequestRepository labRequestRepository;
-    
+
     @Autowired
     private PathologyItemRepository pathologyItemRepository;
 
@@ -110,7 +109,7 @@ public class LabRequestService {
         Map<String, Object> variables = instance.getProcessVariables();
         labRequestRepresentation
                 .setRequesterId(variables.get("requester_id") == null ? ""
-                        : variables.get("requester_id").toString());
+                  : variables.get("requester_id").toString());
         Long userId = null;
         try {
             userId = Long.valueOf(labRequestRepresentation.getRequesterId());
@@ -163,7 +162,7 @@ public class LabRequestService {
         }
         list.setEntries(entries);
     }
-    
+
     public void transferExcerptListData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         // set excerpt list data
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(labRequestRepresentation.getProcessInstanceId());
@@ -195,7 +194,7 @@ public class LabRequestService {
 
         // set pa number count
         labRequestRepresentation.setPathologyCount(pathologyItemRepository.countByLabRequestId(labRequestRepresentation.getId()));
-        
+
         // set request data
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);

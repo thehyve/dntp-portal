@@ -6,16 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 
 @Entity
 public class LabRequest {
@@ -23,27 +14,30 @@ public class LabRequest {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Lab lab;
-   
+
     private String processInstanceId;
-    
+
     private String taskId;
-    
+
+    @Column
+    private boolean isPaReportsSent;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
-    
+
     private String rejectReason;
-    
+
     private Date rejectDate;
-    
+
     @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<Comment>();
-    
+
     public LabRequest() {
-        
+
     }
 
     public Long getId() {
@@ -69,7 +63,15 @@ public class LabRequest {
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
     }
-    
+
+    public boolean isPaReportsSent() {
+    return isPaReportsSent;
+  }
+
+    public void setPaReportsSent(boolean isPaReportsSent) {
+    this.isPaReportsSent = isPaReportsSent;
+  }
+
     public String getTaskId() {
         return taskId;
     }
@@ -113,5 +115,5 @@ public class LabRequest {
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
-    
+
 }

@@ -31,7 +31,7 @@ angular.module('ProcessApp.controllers')
               ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
               (user.lastName === null ? '' : user.lastName);
       };
-      
+
       /**
        * To load lab request list
        * @private
@@ -39,40 +39,81 @@ angular.module('ProcessApp.controllers')
       var _loadRequests = function() {
           var deferred = $q.defer();
           Restangular.all('labrequests').getList().then(function (labRequests) {
-            $scope.labRequests = labRequests;
+            //console.log(labRequests);
+            $rootScope.labRequests = labRequests;
             deferred.resolve($scope.labRequests);
           }, function (err) {
-            deferred.reject("Cannot load lab requests ");
+            deferred.reject('Cannot load lab requests. ' + err);
           });
         return deferred.promise;
+      };
+
+      /**
+       * Get address in html format
+       * @param contactData
+       * @returns {string}
+       */
+      var getHTMLRequesterAddress = function (contactData) {
+
+        var _createEmailTmp = function (email) {
+          return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' + email
+            +'">' + email + '</a>';
+        };
+
+        var _createPhoneTmp = function (phone) {
+          return '<span><i class="glyphicon glyphicon-earphone"></i></span> ' + phone;
+        };
+
+        return ''
+          .concat(contactData.address1 !== null ? contactData.address1 + '<br>' : '')
+          .concat(contactData.address2 !== null ? contactData.address2 + '<br>' : '')
+          .concat(contactData.city !== null ? contactData.city + ' ' : '')
+          .concat(contactData.postalCode !== null ? contactData.postalCode + '<br>' : '')
+          .concat(contactData.stateProvince !== null ? contactData.stateProvince + ', ' : '')
+          .concat(contactData.stateProvince !== null ? contactData.country + '<br>' : '')
+          .concat(contactData.telephone !== null ? _createPhoneTmp(contactData.telephone) + '<br>' : '')
+          .concat(contactData.email !== null ? _createEmailTmp(contactData.email) + '<br>' : '');
       };
 
       /**
        * To load lab request
        * @private
        */
-      var _loadRequest = function(labRequest) {
-        var deferred = $q.defer();
-        Restangular.one('labrequests', labRequest.id).get().then(function (result) {
-          $scope.labRequest = result;
-          deferred.resolve($scope.labRequest);
-        }, function (error) {
-          var err_msg = 'Error : ' + err.data.status  + ' - ' + err.data.error;
-          deferred.reject(err_msg);
-          $scope.alerts.push({type: 'danger', msg: err_msg });
+      var _loadRequest = function(obj) {
+        var restInstance, deferred = $q.defer();
+
+        if (obj.hasOwnProperty('get')) {
+          restInstance = obj;
+        } else {
+          restInstance = Restangular.one('labrequests', obj);
+        }
+
+        restInstance.get().then(function (result) {
+            //console.log(result);
+            $scope.labRequest = result;
+            $scope.labRequest.htmlRequesterAddress = getHTMLRequesterAddress($scope.labRequest.requesterLab.contactData);
+            $scope.labRequest.htmlRequesterLabAddress = getHTMLRequesterAddress($scope.labRequest.requesterLab.contactData);
+            $scope.labRequest.htmlLabAddress = getHTMLRequesterAddress($scope.labRequest.lab.contactData);
+            $scope.paNumbersDisplayedCollection = [].concat($scope.labRequest.pathologyList);
+            deferred.resolve($scope.labRequest);
+        }, function (err) {
+          var errMsg = 'Error : ' + err.data.status  + ' - ' + err.data.error;
+          $scope.alerts.push({type: 'danger', msg: errMsg });
+          deferred.reject(errMsg);
         });
         return deferred.promise;
       };
 
       if ($routeParams.labRequestId) {
-          _loadRequest({id: $routeParams.labRequestId});
+        _loadRequest($routeParams.labRequestId);
+
       } else {
-          _loadRequests();
+        _loadRequests();
       }
 
       $scope.edit = function (labRequest) {
-        console.log("about to edit", labRequest);
-        _loadRequest(labRequest).then (function (s) {
+        console.log('about to edit', labRequest);
+        _loadRequest(labRequest).then (function () {
             $scope.labReqModal.show();
         });
       };
@@ -93,8 +134,7 @@ angular.module('ProcessApp.controllers')
             callback: function(result) {
                 if (result) {
                     labRequest.rejectReason = result;
-                    labRequest.customPUT(labRequest, 'reject').then(function (d) {
-                        //console.log("after reject", result);
+                    labRequest.customPUT(labRequest, 'reject').then(function (result) {
                         if ($scope.labReqModal) {
                           $scope.labReqModal.hide();
                         }
@@ -102,7 +142,8 @@ angular.module('ProcessApp.controllers')
                         //_loadRequests();
                       }
                       , function (err) {
-                        console.log("Error: ", response);
+                        console.log('Error: ', err);
+                        $scope.alerts.push({type: 'danger', msg: err });
                       });
                 }
             }
@@ -110,34 +151,47 @@ angular.module('ProcessApp.controllers')
       };
 
       $scope.accept = function (labRequest) {
-        labRequest.customPUT({}, 'accept').then(function (d) {
-          //console.log("after accept", result);
+        labRequest.customPUT({}, 'accept').then(function (result) {
           if ($scope.labReqModal) {
               $scope.labReqModal.hide();
           }
-          $location.path('/lab-request/view/'+labRequest.id);
-          //_loadRequests();
+          _loadRequests();
+        }, function (err) {
+          $scope.alerts.push({type: 'danger', msg: err });
         });
       };
 
       $scope.claim = function (labRequest) {
         labRequest.customPUT({}, 'claim')
           .then(function (result) {
-            //console.log("after claim", result);
             _loadRequests();
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: err });
           });
       };
 
       $scope.unclaim = function (labRequest) {
         labRequest.customPUT({}, 'unclaim')
           .then(function (result) {
-            //console.log("after unclaim", result);
             _loadRequests();
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: err });
+          });
+      };
+
+      $scope.update = function (labRequest) {
+          labRequest.save().then(function (result) {
+            console.log(result);
+            if ($scope.labReqModal) {
+              $scope.labReqModal.hide();
+            }
+          }, function (err) {
+            $scope.alerts.push({type: 'danger', msg: err });
           });
       };
 
       $scope.isLabUser = function () {
-       return $rootScope.globals.currentUser.roles.indexOf('lab_user') != -1
+        return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
       };
 
     }]);

@@ -50,8 +50,8 @@
                 templateUrl : 'app/lab-request/lab-requests.html',
                 controller : ''
             }).when('/lab-request/view/:labRequestId', {
-              templateUrl : 'app/lab-request/lab-request.html',
-              controller : ''
+                templateUrl : 'app/lab-request/lab-request.html',
+                controller : ''
             }).when('/request/view/:requestId', {
                 templateUrl : 'app/request/request.html',
                 controller : 'RequestController'

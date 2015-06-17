@@ -186,11 +186,11 @@ public class LabRequestController {
       + ")")
     @RequestMapping (value = "/labrequests/{id}", method = RequestMethod.PUT)
     public LabRequestRepresentation update (UserAuthenticationToken user,
-                                            @RequestBody LabRequestRepresentation labRequestRepresentation) {
+        @RequestBody LabRequestRepresentation labRequestRepresentation) {
         log.info("PUT /labrequests/" + labRequestRepresentation.getId() + " for userId " + user.getId());
         LabRequest labRequest = labRequestRepository.findOne(labRequestRepresentation.getId());
-
-        // TODO update labRequest with updated information from labRequestRepresentation
+        labRequest.setPaReportsSent(labRequestRepresentation.isPaReportsSent());
+        labRequestRepository.save(labRequest);
 
         return labRequestRepresentation;
     }

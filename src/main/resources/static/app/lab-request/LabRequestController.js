@@ -39,7 +39,8 @@ angular.module('ProcessApp.controllers')
       var _loadRequests = function() {
           var deferred = $q.defer();
           Restangular.all('labrequests').getList().then(function (labRequests) {
-            $scope.labRequests = labRequests;
+            //console.log(labRequests);
+            $rootScope.labRequests = labRequests;
             deferred.resolve($scope.labRequests);
           }, function (err) {
             deferred.reject('Cannot load lab requests. ' + err);
@@ -47,14 +48,47 @@ angular.module('ProcessApp.controllers')
         return deferred.promise;
       };
 
+      var getHTMLRequesterAddress = function (contactData) {
+
+        var _createEmailTmp = function (email) {
+          return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' + email
+            +'">' + email + '</a>';
+        };
+
+        var _createPhoneTmp = function (phone) {
+          return '<span><i class="glyphicon glyphicon-earphone"></i></span> ' + phone;
+        };
+
+        return ''
+          .concat(contactData.address1 !== null ? contactData.address1 + '<br>' : '')
+          .concat(contactData.address2 !== null ? contactData.address2 + '<br>' : '')
+          .concat(contactData.city !== null ? contactData.city + ' ' : '')
+          .concat(contactData.postalCode !== null ? contactData.postalCode + '<br>' : '')
+          .concat(contactData.stateProvince !== null ? contactData.stateProvince + ', ' : '')
+          .concat(contactData.stateProvince !== null ? contactData.country + '<br>' : '')
+          .concat(contactData.telephone !== null ? _createPhoneTmp(contactData.telephone) + '<br>' : '')
+          .concat(contactData.email !== null ? _createEmailTmp(contactData.email) + '<br>' : '');
+
+      };
+
       /**
        * To load lab request
        * @private
        */
-      var _loadRequest = function(labRequest) {
-        var deferred = $q.defer();
-        labRequest.get().then(function (result) {
+      var _loadRequest = function(obj) {
+        var restInstance, deferred = $q.defer();
+
+        if (obj.hasOwnProperty('get')) {
+          restInstance = obj;
+        } else {
+          restInstance = Restangular.one('labrequests', obj);
+        }
+
+        restInstance.get().then(function (result) {
             $scope.labRequest = result;
+            $scope.labRequest.htmlRequesterAddress = getHTMLRequesterAddress($scope.labRequest.requesterLab.contactData);
+            $scope.labRequest.htmlRequesterLabAddress = getHTMLRequesterAddress($scope.labRequest.requesterLab.contactData);
+            $scope.labRequest.htmlLabAddress = getHTMLRequesterAddress($scope.labRequest.lab.contactData);
             deferred.resolve($scope.labRequest);
         }, function (err) {
           var errMsg = 'Error : ' + err.data.status  + ' - ' + err.data.error;
@@ -65,9 +99,10 @@ angular.module('ProcessApp.controllers')
       };
 
       if ($routeParams.labRequestId) {
-          _loadRequest({id: $routeParams.labRequestId});
+        _loadRequest($routeParams.labRequestId);
+
       } else {
-          _loadRequests();
+        _loadRequests();
       }
 
       $scope.edit = function (labRequest) {
@@ -138,16 +173,19 @@ angular.module('ProcessApp.controllers')
           });
       };
 
-      $scope.isLabUser = function () {
-       return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
-      };
-
       $scope.update = function (labRequest) {
           labRequest.save().then(function (result) {
             console.log(result);
+            if ($scope.labReqModal) {
+              $scope.labReqModal.hide();
+            }
           }, function (err) {
             $scope.alerts.push({type: 'danger', msg: err });
           });
+      };
+
+      $scope.isLabUser = function () {
+        return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
       };
 
     }]);

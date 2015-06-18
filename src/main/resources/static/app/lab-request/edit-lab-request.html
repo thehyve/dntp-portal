@@ -6,7 +6,7 @@
 
       <!--HEADER-->
       <div class="modal-header">
-        <h3 class="modal-title">Lab Request : {{labRequest.taskId}}</h3>
+        <h3 class="modal-title">{{'Lab request' | translate}}: {{labRequest.id}}</h3>
       </div>
 
       <!--BODY-->
@@ -103,7 +103,8 @@
         </div>
 
         <div class="form-group" ng-class="" ng-if="
-            (labRequest.status == 'Approved' || labRequest.status == 'Sending') 
+            (labRequest.status == 'Approved' || labRequest.status == 'Sending')
+            && isLabUser()
             && labRequest.request.paReportRequest"
           >
           <label class="control-label col-sm-3" for="paReportsSent">
@@ -137,9 +138,6 @@
 
         </div>
         <br>
-         <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && labRequest.assignee == globals.currentUser.userid">
-           <a class="btn btn-success" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">Download panumbers_{{labRequest.id}}.csv</a>
-         </span>
 
         <div class="form-group"
             ng-class="{ 'has-error' : labRequestEditForm.missingSamples.$invalid }"
@@ -170,10 +168,12 @@
             <button class="btn btn-default btn-warning"
                     ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
         </span>
-        <span ng-if="isLabUser() && labRequest.status == 'Approved' && labRequest.request.materialsRequest">
+        <span ng-if="isLabUser() && labRequest.status == 'Approved'">
             <button class="btn btn-default btn-primary"
+                    ng-if="labRequest.request.materialsRequest"
                     ng-click="sending(labRequest);">{{'Send materials'|translate}}</button>
             <button class="btn btn-default btn-primary"
+                    ng-if="labRequest.request.paReportRequest"
                     ng-click="update(labRequest);">{{'Update'|translate}}</button>
         </span>
         <span ng-if="isRequester() && labRequest.status == 'Sending'">

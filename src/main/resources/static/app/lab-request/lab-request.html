@@ -11,7 +11,7 @@
         <!--Main-->
         <div class="col-md-10 col-md-offset-2 form-horizontal main ">
 
-            <h2>Lab Request: {{labRequest.taskId}}</h2>
+            <h2>{{'Lab request' | translate}}: {{labRequest.id}}</h2>
             <br/>
             <hr>
 
@@ -27,7 +27,7 @@
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}
                 </button>
-                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && labRequest.assignee == globals.currentUser.userid">
+                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && (isRequester() || isLabUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                    <span><i class="glyphicon glyphicon-download-alt"></i></span>
                    Download panumbers_{{labRequest.id}}.csv

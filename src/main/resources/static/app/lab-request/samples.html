@@ -1,0 +1,82 @@
+<div class="container-fluid" ng-controller="LabRequestController">
+    <div class="row">
+
+        <!--Side Bar-->
+        <div class="col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#/">View</a></li>
+            </ul>
+        </div>
+
+        <!--Main-->
+        <div class="col-md-10 col-md-offset-2 form-horizontal main ">
+
+        <h3>{{ 'PA numbers' | translate}}</h3>
+        <hr>
+        <table st-table="paNumbersDisplayedCollection"
+            st-safe-src="samples"
+            class="table table-striped">
+            <thead>
+                <tr>
+                    <th st-sort="id">{{'#' | translate}}</th>
+                    <th st-sort="paNumber">{{'PA-Number' | translate}}</th>
+                    <th>{{'Samples' | translate}}</th>
+                    <th st-sort="processInstanceId">{{'Request' | translate}}</th>
+                    <th st-sort="labRequestId">{{'Lab request' | translate}}</th>
+                    <th st-sort="status">{{'Status' | translate}}</th>
+                    <th>{{'Actions' | translate}}</th>
+                </tr>
+                <tr>
+                    <th colspan="5"><input id="request-search"
+                        st-search="" class="form-control"
+                        placeholder="Search ..." type="text" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    ng-repeat="pathology in paNumbersDisplayedCollection">
+                    <td>{{pathology.id}}</td>
+                    <td>{{pathology.paNumber}}</td>
+                    <td><tags-input
+                            on-tag-added="updatePathology(labRequest, pathology)"
+                            on-tag-removed="updatePathology(labRequest, pathology)"
+                            replace-spaces-with-dashes="false"
+                            ng-model="pathology.samples"
+                            placeholder="Enter sample codes"
+                            add-on-enter="true" add-on-blur="true"
+                            add-on-paste="true"
+                            ng-if="labRequest.assignee == globals.currentUser.userid"></tags-input>
+                        <span
+                        ng-if="labRequest.assignee != globals.currentUser.userid">
+                            <span
+                            ng-repeat="sample in pathology.samples">
+                                <label class="label label-primary">{{sample}}</label>
+                        </span>
+                    </span></td>
+                    <td><a ng-href="/#/request/view/{{pathology.processInstanceId}}">{{pathology.processInstanceId}}</a></td>
+                    <td><a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestId}}</a></td>
+                    <td>{{pathology.status}}</td>
+                    <td>
+                        <span class="pull-right">
+                        <span class="btn-group">
+                            <a href="mailto:{{pathology.email}}?subject=Recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p.
+                                "
+                                ng-if="pathology.status=='Received'">
+                            <button
+                                class="btn btn-default" type="button" title="{{'Recall sample' | translate}}">
+                                <span><i class="glyphicon glyphicon-envelope"></i></span>
+                                {{'Compose recall mail' | translate}}
+                            </button></a>
+                        </span>
+                        </span>
+                    
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        </div> <!-- end of main -->
+    </div> <!--end row-->
+</div> <!--end container-->
+<br>
+<br>

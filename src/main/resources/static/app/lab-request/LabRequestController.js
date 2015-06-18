@@ -51,6 +51,29 @@ angular.module('ProcessApp.controllers')
           Restangular.all('labrequests').getList().then(function (labRequests) {
             //console.log(labRequests);
             $rootScope.labRequests = labRequests;
+            
+            if ($route.current.templateUrl === 'app/lab-request/samples.html') {
+                console.log($route.current.templateUrl);
+                $scope.samples = [];
+                for (var i=0; i<labRequests.length; i++) {
+                    console.log(i + ': ', labRequests[i]);
+                    var pathologyList = labRequests[i].pathologyList;
+                    if (pathologyList != null) {
+                        for (var j in pathologyList) {
+                            var item = pathologyList[j];
+                            item.labRequestId = labRequests[i].id;
+                            item.processInstanceId = labRequests[i].processInstanceId;
+                            item.status = labRequests[i].status;
+                            item.email = labRequests[i].requesterLab.contactData.email 
+                                ? labRequests[i].requesterLab.contactData.email 
+                                : labRequests[i].requesterEmail;
+                            console.log(i + ', '+ j + ': ' + item);
+                            $scope.samples.push(item);
+                        }
+                    }
+                }
+                $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
+            }
             deferred.resolve($scope.labRequests);
           }, function (err) {
             deferred.reject('Cannot load lab requests. ' + err);
@@ -74,7 +97,7 @@ angular.module('ProcessApp.controllers')
           return '<span><i class="glyphicon glyphicon-earphone"></i></span> ' + phone;
         };
 
-        return ''
+        return contactData ? ''
           .concat(contactData.address1 !== null ? contactData.address1 + '<br>' : '')
           .concat(contactData.address2 !== null ? contactData.address2 + '<br>' : '')
           .concat(contactData.city !== null ? contactData.city + ' ' : '')
@@ -82,7 +105,8 @@ angular.module('ProcessApp.controllers')
           .concat(contactData.stateProvince !== null ? contactData.stateProvince + ', ' : '')
           .concat(contactData.stateProvince !== null ? contactData.country + '<br>' : '')
           .concat(contactData.telephone !== null ? _createPhoneTmp(contactData.telephone) + '<br>' : '')
-          .concat(contactData.email !== null ? _createEmailTmp(contactData.email) + '<br>' : '');
+          .concat(contactData.email !== null ? _createEmailTmp(contactData.email) + '<br>' : '')
+          : '';
       };
 
       /**
@@ -277,6 +301,23 @@ angular.module('ProcessApp.controllers')
             _loadData();
           }, function (err) {
             $scope.alerts.push({type: 'danger', msg: err });
+          });
+      };
+      
+      $scope.updatePathology = function(labRequest, pathology) {
+          console.log('update pathology: ', pathology);
+          //labrequests/{id}/pathology/{pathologyId}
+          var obj = {};
+          obj.samples = [];
+          for(var i in pathology.samples) {
+              obj.samples.push(pathology.samples[i].text);
+          }
+          Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
+              .customPUT(obj).then(function(result) {
+              console.log(result);
+          },
+          function(err) {
+              $scope.alerts.push({type: 'danger', msg: err });
           });
       };
       

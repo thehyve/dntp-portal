@@ -52,6 +52,9 @@
             }).when('/lab-request/view/:labRequestId', {
                 templateUrl : 'app/lab-request/lab-request.html',
                 controller : ''
+            }).when('/samples', {
+                templateUrl : 'app/lab-request/samples.html',
+                controller : ''
             }).when('/request/view/:requestId', {
                 templateUrl : 'app/request/request.html',
                 controller : 'RequestController'

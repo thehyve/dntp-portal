@@ -289,6 +289,8 @@ public class LabRequestService {
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
+                // FIXME: this should not be fetched by default
+                transferLabRequestDetails(representation);
                 representations.add(representation);
             }
         } else if (user.isPalga()) {

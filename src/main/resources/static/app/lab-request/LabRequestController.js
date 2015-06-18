@@ -51,6 +51,25 @@ angular.module('ProcessApp.controllers')
           Restangular.all('labrequests').getList().then(function (labRequests) {
             //console.log(labRequests);
             $rootScope.labRequests = labRequests;
+            
+            if ($route.current.templateUrl === 'app/lab-request/samples.html') {
+                console.log($route.current.templateUrl);
+                $scope.samples = [];
+                for (var i=0; i<labRequests.length; i++) {
+                    console.log(i + ': ', labRequests[i]);
+                    var pathologyList = labRequests[i].pathologyList;
+                    if (pathologyList != null) {
+                        for (var j in pathologyList) {
+                            var item = pathologyList[j];
+                            item.labRequestId = labRequests[i].id;
+                            item.processInstanceId = labRequests[i].processInstanceId;
+                            console.log(i + ', '+ j + ': ' + item);
+                            $scope.samples.push(item);
+                        }
+                    }
+                }
+                $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
+            }
             deferred.resolve($scope.labRequests);
           }, function (err) {
             deferred.reject('Cannot load lab requests. ' + err);

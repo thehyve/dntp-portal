@@ -20,6 +20,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.RequestNotFound;
@@ -276,11 +277,15 @@ public class LabRequestService {
         }
     }
 
+    private Sort sortByIdDesc() {
+        return new Sort(Sort.Direction.DESC, "id");
+    }
+    
     public List<LabRequestRepresentation> findLabRequestsForUser(User user) {
         List<LabRequestRepresentation> representations = new ArrayList<LabRequestRepresentation>();
         if (user.isLabUser()) {
             // Lab user
-            List<LabRequest> labRequests = labRequestRepository.findAllByLab(user.getLab());
+            List<LabRequest> labRequests = labRequestRepository.findAllByLab(user.getLab(), sortByIdDesc());
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
@@ -288,12 +293,11 @@ public class LabRequestService {
             }
         } else if (user.isPalga()) {
             // Palga
-            List<LabRequest> labRequests = labRequestRepository.findAll();
+            List<LabRequest> labRequests = labRequestRepository.findAll(sortByIdDesc());
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
                 representations.add(representation);
-
             }
         } else {
             // fetch requests in status "LabRequest" for requester
@@ -306,13 +310,11 @@ public class LabRequestService {
             log.info("#instances: " + historicInstances.size());
             // find associated lab requests
             for (HistoricProcessInstance instance : historicInstances) {
-
-                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId());
+                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
                 for (LabRequest labRequest : labRequests) {
                     LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                     transferLabRequestData(representation);
                     representations.add(representation);
-
                 }
             }
         }

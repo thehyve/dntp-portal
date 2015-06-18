@@ -19,7 +19,8 @@ import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
 
-@Profile("dev")
+// FIXME: only generate users in dev and test. always generate roles.
+//@Profile({"dev", "test"})
 @Service
 public class DefaultUsers {
 
@@ -78,6 +79,7 @@ public class DefaultUsers {
                 contactData.setEmail(username);
                 user.setContactData(contactData);
                 user.setEmailValidated(true);
+                user.activate();
                 if (r.equals("lab_user")) {
                     Lab lab = labRepository.findByName(defaultLabs[0]);
                     user.setLab(lab);

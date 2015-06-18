@@ -159,6 +159,13 @@ public class LabRequestController {
         if (!representation.getStatus().equals("Approved")) {
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
+
+        RequestRepresentation request = new RequestRepresentation();
+        HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
+        requestFormService.transferData(instance, request, user.getUser());
+        if (!request.isMaterialsRequest()) {
+            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        }
         
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");

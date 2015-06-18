@@ -63,6 +63,10 @@ angular.module('ProcessApp.controllers')
                             var item = pathologyList[j];
                             item.labRequestId = labRequests[i].id;
                             item.processInstanceId = labRequests[i].processInstanceId;
+                            item.status = labRequests[i].status;
+                            item.email = labRequests[i].requesterLab.contactData.email 
+                                ? labRequests[i].requesterLab.contactData.email 
+                                : labRequests[i].requesterEmail;
                             console.log(i + ', '+ j + ': ' + item);
                             $scope.samples.push(item);
                         }

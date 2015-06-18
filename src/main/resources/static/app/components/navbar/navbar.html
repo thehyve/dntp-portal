@@ -18,7 +18,7 @@
                 <li ng-show="isViewLabRequestsAllowed();" class="{{$route.current.templateUrl=='app/lab-request/lab-requests.html' ? 'active': ''}}">
                     <a href="#/lab-requests">{{'Lab requests'|translate}}</a>
                 </li>
-                <li ng-show="isViewLabRequestsAllowed();" class="{{$route.current.templateUrl=='app/lab-request/samples.html' ? 'active': ''}}">
+                <li ng-show="isViewSamplesAllowed();" class="{{$route.current.templateUrl=='app/lab-request/samples.html' ? 'active': ''}}">
                     <a href="#/samples">{{'Samples'|translate}}</a>
                 </li>
                 <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">

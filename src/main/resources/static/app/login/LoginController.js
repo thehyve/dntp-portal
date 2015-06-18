@@ -18,7 +18,8 @@ angular.module('ProcessApp.controllers')
                     HAS_MANAGE_LAB_PAGE_AUTH : 'HAS_MANAGE_LAB_PAGE_AUTH',
                     HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
                     HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH',
-                    HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH'
+                    HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH',
+                    HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH'
                 };
 
                 if (currentUser.roles[0] === 'palga') {
@@ -27,10 +28,12 @@ angular.module('ProcessApp.controllers')
                     currentUser.features.push(globalFeatures.HAS_MANAGE_USER_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
                 } else if (currentUser.roles[0] === 'lab_user') {
                     currentUser.features.push(globalFeatures.HAS_MANAGE_OWN_LAB_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
                 } else if (currentUser.roles[0] === 'requester') {
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);

@@ -30,6 +30,10 @@ angular.module('ProcessApp.controllers')
               return checkRoles(['HAS_MANAGE_LAB_REQUEST_PAGE_AUTH']);
             };
 
+            $scope.isViewSamplesAllowed = function() {
+                return checkRoles(['HAS_MANAGE_SAMPLES_PAGE_AUTH']);
+            };
+
             $scope.isViewUsersAllowed = function() {
                 return checkRoles(['HAS_MANAGE_USER_PAGE_AUTH']);
             };

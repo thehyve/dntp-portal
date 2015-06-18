@@ -70,11 +70,11 @@ angular.module('ProcessApp.controllers')
                             request.excerptListRemark = result;
                             request.$submitExcerptSelection(function(result) {
                                 console.log('Selection submitted: ' + result);
+                                $location.path('/');
+                                $scope.$apply();
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
-                            $location.path('/');
-                            $scope.$apply();
                         } else {
                             $scope.enableSpaceSelects();
                         }

@@ -155,12 +155,16 @@ public class RequestController {
                     .desc()
                     .list();
             Date endQ2 = new Date();
-            Collections.sort(list, requestComparator);
+            if (list != null) {
+                Collections.sort(list, requestComparator);
+            }
             Date endSort = new Date();
             log.info("GET: query 1 took " + (endQ1.getTime() - start.getTime()) + " ms.");
             log.info("GET: query 2 took " + (endQ2.getTime() - endQ1.getTime()) + " ms.");
             log.info("GET: sorting took " + (endSort.getTime() - endQ2.getTime()) + " ms.");
-            processInstances.addAll(list);
+            if (list != null) {
+                processInstances.addAll(list);
+            }
         } else if (user.getUser().isLabUser()) {
             List<Task> tasks = taskService
                     .createTaskQuery()

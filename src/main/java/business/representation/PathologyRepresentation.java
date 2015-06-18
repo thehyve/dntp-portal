@@ -1,5 +1,6 @@
 package business.representation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import business.models.PathologyItem;
@@ -10,7 +11,7 @@ public class PathologyRepresentation {
     
     String paNumber;
     
-    List<String> samples;
+    List<String> samples = new ArrayList<String>();
 
     public PathologyRepresentation() {
         

@@ -19,8 +19,22 @@
       {{pathology.paNumber}}
     </td>
     <td>
-
-      <tags-input ng-model="pathology.samples" placeholder="Enter sample codes"></tags-input>
+      <tags-input 
+        on-tag-added="updatePathology(labRequest, pathology)" 
+        on-tag-removed="updatePathology(labRequest, pathology)"
+        replace-spaces-with-dashes="false"
+        ng-model="pathology.samples" 
+        placeholder="Enter sample codes"
+        add-on-enter="true"
+        add-on-blur="true"
+        add-on-paste="true"
+        ng-if="labRequest.assignee == globals.currentUser.userid"
+        ></tags-input>
+        <span ng-if="labRequest.assignee != globals.currentUser.userid">
+            <span ng-repeat="sample in pathology.samples">
+                <label class="label label-primary">{{sample}}</label>
+            </span>
+        </span>
 
     </td>
   </tr>

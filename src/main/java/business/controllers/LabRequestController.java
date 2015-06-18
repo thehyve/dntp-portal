@@ -22,12 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 import business.exceptions.EmptyInput;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.PaNumbersDownloadError;
+import business.exceptions.PathologyNotFound;
 import business.models.Comment;
 import business.models.CommentRepository;
 import business.models.LabRequest;
 import business.models.LabRequestRepository;
+import business.models.PathologyItem;
+import business.models.PathologyItemRepository;
 import business.models.User;
 import business.representation.LabRequestRepresentation;
+import business.representation.PathologyRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.LabRequestService;
@@ -49,6 +53,9 @@ public class LabRequestController {
     @Autowired
     private LabRequestRepository labRequestRepository;
 
+    @Autowired
+    private PathologyItemRepository pathologyItemRepository;
+    
     @Autowired
     private PaNumberService paNumberService;
 
@@ -82,7 +89,7 @@ public class LabRequestController {
     public LabRequestRepresentation getLabRequest(
             UserAuthenticationToken user,
             @PathVariable Long id) {
-        log.info("GET /labrequest" + id);
+        log.info("GET /labrequests/" + id);
         LabRequest labRequest = labRequestRepository.findOne(id);
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
@@ -361,4 +368,28 @@ public class LabRequestController {
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
+    
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    @RequestMapping (value = "/labrequests/{id}/pathology/{pathologyId}", method = RequestMethod.PUT)
+    public PathologyRepresentation updatePathology (UserAuthenticationToken user,
+            @PathVariable Long id,
+            @PathVariable Long pathologyId,
+            @RequestBody PathologyRepresentation body) {
+        log.info("PUT /labrequests/" + id + "/pathology/ " + pathologyId + " for userId " + user.getId());
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        
+        PathologyItem pathology = pathologyItemRepository.findOne(pathologyId);
+        if (pathology == null) {
+            throw new PathologyNotFound();
+        }
+        if (!labRequest.getPathologyList().contains(pathology)) {
+            throw new PathologyNotFound();
+        }
+        
+        pathology.setSamples(body.getSamples());
+        pathology = pathologyItemRepository.save(pathology);
+        
+        return new PathologyRepresentation(pathology);
+    }
+    
 }

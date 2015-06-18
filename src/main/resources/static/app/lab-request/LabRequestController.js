@@ -5,11 +5,13 @@ angular.module('ProcessApp.controllers')
        '$q','$rootScope', '$scope',
        '$modal',
        '$location', '$route', '$routeParams',
+       'Request',
        'Restangular',
     function (
             $q, $rootScope, $scope,
             $modal,
             $location, $route, $routeParams,
+            Request,
             Restangular) {
 
            $scope.login = function() {
@@ -98,6 +100,7 @@ angular.module('ProcessApp.controllers')
 
         restInstance.get().then(function (result) {
             //console.log(result);
+            result.request.type = Request.convertRequestOptsToType(result.request);
             $scope.labRequest = result;
             $scope.labRequest.htmlRequesterAddress = getHTMLRequesterAddress($scope.labRequest.requesterLab.contactData);
             $scope.labRequest.htmlRequesterLabAddress = getHTMLRequesterAddress($scope.labRequest.requesterLab.contactData);
@@ -173,7 +176,7 @@ angular.module('ProcessApp.controllers')
 
     
     $scope.sending = function(labRequest) {
-        labRequest.customPUT('sending').then(function(result) {
+        labRequest.customPUT({}, 'sending').then(function(result) {
             if ($scope.labReqModal) {
                 $scope.labReqModal.hide();
             }
@@ -255,12 +258,12 @@ angular.module('ProcessApp.controllers')
       }
       
       $scope.isLabUser = function () {
-          if (!$rootScope.globals.currentUser) { $scope.login(); }
+          if (!$rootScope.globals.currentUser) { $scope.login(); return; }
           return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
       };
       
       $scope.isRequester = function () {
-          if (!$rootScope.globals.currentUser) { $scope.login(); }
+          if (!$rootScope.globals.currentUser) { $scope.login(); return; }
           return $rootScope.globals.currentUser.roles.indexOf('requester') !== -1;
       };
 

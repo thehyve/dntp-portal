@@ -15,6 +15,10 @@ public class RequestListRepresentation {
     private Date dateAssigned;
 
     private String title;
+    private String background;
+    private String researchQuestion;
+    private String hypothesis;
+    private String methods;
 
     private boolean statisticsRequest;
     private boolean excerptsRequest;
@@ -75,7 +79,38 @@ public class RequestListRepresentation {
     public void setTitle(String title) {
         this.title = title;
     }
+    
+    public String getBackground() {
+        return background;
+    }
 
+    public void setBackground(String background) {
+        this.background = background;
+    }
+
+    public String getResearchQuestion() {
+        return researchQuestion;
+    }
+
+    public void setResearchQuestion(String researchQuestion) {
+        this.researchQuestion = researchQuestion;
+    }
+
+    public String getHypothesis() {
+        return hypothesis;
+    }
+
+    public void setHypothesis(String hypothesis) {
+        this.hypothesis = hypothesis;
+    }
+
+    public String getMethods() {
+        return methods;
+    }
+
+    public void setMethods(String methods) {
+        this.methods = methods;
+    }
 
     public String getAssignee() {
         return assignee;

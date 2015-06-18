@@ -42,7 +42,8 @@
           <th>{{'Request Title' | translate}}</th>
           <th>{{'Requester' | translate}}</th>
           <th>{{'Lab' | translate}}</th>
-          <th>{{'Created Date' | translate}}</th>
+          <th>{{'Create date' | translate}}</th>
+          <th>{{'End date' | translate}}</th>
           <th>{{'#PA Numbers' | translate}}</th>
           <th>{{'Status' | translate}}</th>
           <th>{{'' | translate}}</th>
@@ -64,6 +65,9 @@
             </td>
             <td>
               {{labRequest.dateCreated |  date: 'EEE, dd MMMM yyyy H:mm'}}
+            </td>
+            <td>
+              {{labRequest.endDate |  date: 'EEE, dd MMMM yyyy H:mm'}}
             </td>
             <td>
               {{labRequest.pathologyCount}}

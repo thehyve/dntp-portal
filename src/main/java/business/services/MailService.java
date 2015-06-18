@@ -3,6 +3,7 @@ package business.services;
 import java.util.Set;
 
 import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.logging.Log;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import business.exceptions.EmailError;
 import business.models.ActivationLink;
 import business.models.Lab;
-import business.models.LabRequest;
 import business.models.NewPasswordRequest;
 import business.models.Role;
 import business.models.RoleRepository;
@@ -44,6 +44,7 @@ public class MailService {
     @Value("${dntp.reply-address}")
     String replyAddress;
     
+    @Transactional
     public void notifyScientificCouncil(@NotNull RequestRepresentation request) {
         log.info("Notify scientic council for request " + request.getProcessInstanceId() + ".");
 

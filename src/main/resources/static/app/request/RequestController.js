@@ -11,6 +11,14 @@ angular.module('ProcessApp.controllers')
                   ApprovalComment, ApprovalVote,
                   FlowOptionService, $routeParams) {
 
+            $scope.login = function() {
+                $location.path('/login');
+            };
+
+            if (!$rootScope.globals.currentUser) {
+                $scope.login();
+            }
+        
             $scope.serverurl = $location.protocol()+'://'+$location.host()+':'+$location.port();
 
             $scope.error = '';
@@ -66,10 +74,6 @@ angular.module('ProcessApp.controllers')
                     request.informedConsent = false;
                 }
                 request.reasonUsingPersonalData = '';
-            };
-
-            $scope.login = function() {
-                $location.path('/login');
             };
 
             $scope.flow_options = function(options) {

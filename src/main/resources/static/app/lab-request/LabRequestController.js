@@ -12,6 +12,14 @@ angular.module('ProcessApp.controllers')
             $location, $route, $routeParams,
             Restangular) {
 
+           $scope.login = function() {
+               $location.path('/login');
+           };
+           
+           if (!$rootScope.globals.currentUser) {
+               $scope.login();
+           }
+           
       $scope.labReqModal = $modal({
         id: 'labRequestWindow',
         scope: $scope,
@@ -85,7 +93,7 @@ angular.module('ProcessApp.controllers')
         if (obj.hasOwnProperty('get')) {
           restInstance = obj;
         } else {
-          restInstance = Restangular.one('labrequests', obj);
+          restInstance = Restangular.one('labrequests', obj.id);
         }
 
         restInstance.get().then(function (result) {
@@ -104,12 +112,14 @@ angular.module('ProcessApp.controllers')
         return deferred.promise;
       };
 
-      if ($routeParams.labRequestId) {
-        _loadRequest($routeParams.labRequestId);
-
-      } else {
-        _loadRequests();
+      var _loadData = function() {
+          if ($routeParams.labRequestId) {
+              _loadRequest({id: $routeParams.labRequestId});
+          } else {
+              _loadRequests();
+          }
       }
+      _loadData();
 
       $scope.edit = function (labRequest) {
         console.log('about to edit', labRequest);
@@ -155,16 +165,62 @@ angular.module('ProcessApp.controllers')
           if ($scope.labReqModal) {
               $scope.labReqModal.hide();
           }
-          _loadRequests();
+          _loadData();
         }, function (err) {
           $scope.alerts.push({type: 'danger', msg: err });
         });
       };
 
+    
+    $scope.sending = function(labRequest) {
+        labRequest.customPUT('sending').then(function(result) {
+            if ($scope.labReqModal) {
+                $scope.labReqModal.hide();
+            }
+            _loadData();
+        }, function(err) {
+            $scope.alerts.push({type: 'danger', msg: err});
+        });
+    };
+
+    $scope.received = function(labRequest) {
+        labRequest.customPUT(labRequest, 'received').then(function(result) {
+            if ($scope.labReqModal) {
+                $scope.labReqModal.hide();
+            }
+            _loadData();
+        }, function(err) {
+            $scope.alerts.push({type: 'danger', msg: err});
+        });
+    };
+
+    $scope.returning = function(labRequest) {
+        labRequest.customPUT({}, 'returning').then(function(result) {
+            if ($scope.labReqModal) {
+                $scope.labReqModal.hide();
+            }
+            _loadData();
+        }, function(err) {
+            $scope.alerts.push({type: 'danger', msg: err});
+        });
+    };
+
+    $scope.returned = function(labRequest) {
+        labRequest.customPUT(labRequest, 'returned').then(function(result) {
+            if ($scope.labReqModal) {
+                $scope.labReqModal.hide();
+            }
+            _loadData();
+        }, function(err) {
+            $scope.alerts.push({type: 'danger', msg: err});
+        });
+    };
+
+      
       $scope.claim = function (labRequest) {
         labRequest.customPUT({}, 'claim')
           .then(function (result) {
-            _loadRequests();
+              _loadData();
           }, function (err) {
             $scope.alerts.push({type: 'danger', msg: err });
           });
@@ -173,25 +229,56 @@ angular.module('ProcessApp.controllers')
       $scope.unclaim = function (labRequest) {
         labRequest.customPUT({}, 'unclaim')
           .then(function (result) {
-            _loadRequests();
+              _loadData();
           }, function (err) {
             $scope.alerts.push({type: 'danger', msg: err });
           });
       };
+      
+      $scope.lab_user_statuses = [
+          'Waiting for lab approval',
+          'Approved',
+          'Returning'
+      ];
+
+      $scope.isLabUserStatus = function(status) {
+          return $scope.lab_user_statuses.indexOf(status) !== -1;
+      }
+      
+      $scope.requester_statuses = [
+          'Sending',
+          'Received'
+      ];
+
+      $scope.isRequesterStatus = function(status) {
+          return $scope.requester_statuses.indexOf(status) !== -1;
+      }
+      
+      $scope.isLabUser = function () {
+          if (!$rootScope.globals.currentUser) { $scope.login(); }
+          return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
+      };
+      
+      $scope.isRequester = function () {
+          if (!$rootScope.globals.currentUser) { $scope.login(); }
+          return $rootScope.globals.currentUser.roles.indexOf('requester') !== -1;
+      };
+
 
       $scope.update = function (labRequest) {
-          labRequest.save().then(function (result) {
+          labRequest.put().then(function (result) {
             console.log(result);
             if ($scope.labReqModal) {
               $scope.labReqModal.hide();
             }
+            _loadData();
           }, function (err) {
             $scope.alerts.push({type: 'danger', msg: err });
           });
       };
-
-      $scope.isLabUser = function () {
-        return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
+      
+      $scope.focus = function (el) {
+          $(el).focus();
       };
-
+      
     }]);

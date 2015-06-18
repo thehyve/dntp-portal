@@ -16,6 +16,11 @@ public class RequestListRepresentation {
 
     private String title;
 
+    private boolean statisticsRequest;
+    private boolean excerptsRequest;
+    private boolean paReportRequest;
+    private boolean materialsRequest;
+    
     private String approvalVote;
     private Long numberOfApprovalVotes;
     
@@ -112,4 +117,36 @@ public class RequestListRepresentation {
         this.numberOfApprovalVotes = numberOfApprovalVotes;
     }
 
+    public boolean isStatisticsRequest() {
+        return statisticsRequest;
+    }
+
+    public void setStatisticsRequest(boolean statisticsRequest) {
+        this.statisticsRequest = statisticsRequest;
+    }
+
+    public boolean isExcerptsRequest() {
+        return excerptsRequest;
+    }
+
+    public void setExcerptsRequest(boolean excerptsRequest) {
+        this.excerptsRequest = excerptsRequest;
+    }
+
+    public boolean isPaReportRequest() {
+        return paReportRequest;
+    }
+
+    public void setPaReportRequest(boolean paReportRequest) {
+        this.paReportRequest = paReportRequest;
+    }
+
+    public boolean isMaterialsRequest() {
+        return materialsRequest;
+    }
+
+    public void setMaterialsRequest(boolean materialsRequest) {
+        this.materialsRequest = materialsRequest;
+    }
+    
 }

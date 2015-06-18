@@ -30,7 +30,9 @@ public class LabRequestRepresentation {
     private String status;
 
     private Date dateCreated;
-
+    
+    private Date endDate;
+    
     private Lab lab;
 
     private ExcerptListRepresentation excerptList;
@@ -44,10 +46,14 @@ public class LabRequestRepresentation {
 
     private Date rejectDate;
 
-    private boolean isPaReportsSent;
+    private Boolean isPaReportsSent;
 
     private List<CommentRepresentation> comments;
-
+    
+    private Boolean samplesMissing;
+    
+    private CommentRepresentation missingSamples;
+    
     public LabRequestRepresentation() {
 
     }
@@ -207,11 +213,11 @@ public class LabRequestRepresentation {
         this.rejectReason = rejectReason;
     }
 
-    public boolean isPaReportsSent() {
+    public Boolean isPaReportsSent() {
       return isPaReportsSent;
     }
 
-    public void setPaReportsSent(boolean isPaReportsSent) {
+    public void setPaReportsSent(Boolean isPaReportsSent) {
         this.isPaReportsSent = isPaReportsSent;
     }
 
@@ -231,4 +237,28 @@ public class LabRequestRepresentation {
         this.comments = comments;
     }
 
+    public Boolean isSamplesMissing() {
+        return samplesMissing;
+    }
+
+    public void setSamplesMissing(Boolean samplesMissing) {
+        this.samplesMissing = samplesMissing;
+    }
+
+    public CommentRepresentation getMissingSamples() {
+        return missingSamples;
+    }
+
+    public void setMissingSamples(CommentRepresentation missingSamples) {
+        this.missingSamples = missingSamples;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+    
 }

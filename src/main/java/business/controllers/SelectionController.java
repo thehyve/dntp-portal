@@ -74,7 +74,7 @@ public class SelectionController {
         if (excerptList == null) {
             throw new RequestNotFound();
         }
-        return new ExcerptListRepresentation(excerptList);
+        return excerptListService.findRepresentationByProcessInstanceId(id);
     }
 
     // not tested yet
@@ -94,15 +94,15 @@ public class SelectionController {
         }
         //list.getEntries().get(body.get)
         for (ExcerptEntryRepresentation entry: body.getEntries()) {
-            ExcerptEntry excerptEntry = excerptList.getEntries().get(entry.getSequenceNumber());
+            ExcerptEntry excerptEntry = excerptList.getEntries().get(entry.getSequenceNumber()-1);
             if (entry.getId().equals(excerptEntry.getId())) {
                 // indeed the same entry
                 excerptEntry.setSelected(entry.isSelected());
             }
         }
-        properties = requestPropertiesService.save(properties);
+        excerptList = excerptListService.save(excerptList);
 
-        return new ExcerptListRepresentation(excerptList);
+        return excerptListService.findRepresentationByProcessInstanceId(id);
     }
 
     @PreAuthorize("isAuthenticated() and "
@@ -128,7 +128,7 @@ public class SelectionController {
             log.info("Sequence number not properly set: body.id = " + body.getId() + ", excerpt.id = " + excerptEntry.getId());
             log.info("body.seqNr = " + body.getSequenceNumber() + ", excerpt.seqNr = " + excerptEntry.getSequenceNumber());
         }
-        excerptList = excerptListRepository.save(excerptList);
+        excerptList = excerptListService.save(excerptList);
 
         return new ExcerptListRepresentation(excerptList);
     }
@@ -143,7 +143,7 @@ public class SelectionController {
             @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/submitExcerptSelection");
         
-        // FIXME: claim task for requester
+        // FIXME: check if request type is pa reports or materials
         
         ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
         if (excerptList == null) {

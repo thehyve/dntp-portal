@@ -3,11 +3,7 @@ package business.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import business.models.ExcerptEntry;
-import business.models.ExcerptList;
 
 public class ExcerptEntryRepresentation {
 

@@ -180,6 +180,8 @@ public class RequestController {
                         .notDeleted()
                         .includeProcessVariables()
                         .processInstanceIds(processInstanceIds)
+                        .orderByProcessInstanceStartTime()
+                        .desc()
                         .list();
             } else {
                 processInstances = new ArrayList<HistoricProcessInstance>();

@@ -24,7 +24,7 @@ Feature: Log in
   Scenario: Correct log in 4
     Given I am on the login page
     When I log in as the lab user
-    Then I should be on the requests page
+    Then I should be on the lab requests page
 
   Scenario: Incorrect log in
     Given I am on the login page

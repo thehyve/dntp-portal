@@ -52,10 +52,10 @@
         <tbody>
           <tr ng-repeat="labRequest in labRequests track by $index" ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid}">
             <td>
-              <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.id}}</a>
+              {{labRequest.id}}
             </td>
             <td>
-              <a ng-href="#/request/view/{{labRequest.processInstanceId}}">{{labRequest.request.title}}</a>
+              <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.request.title}}</a>
             </td>
             <td>
               {{labRequest.request.requesterName}}

@@ -28,6 +28,7 @@
         add-on-enter="true"
         add-on-blur="true"
         add-on-paste="true"
+        min-length="1"
         ng-if="labRequest.assignee == globals.currentUser.userid"
         ></tags-input>
         <span ng-if="labRequest.assignee != globals.currentUser.userid">

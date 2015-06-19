@@ -35,7 +35,7 @@
                  </span>
                 <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}
                     "
-                    ng-if="labRequest.status=='Rejected'">
+                    ng-if="labRequest.status=='Rejected' && isLabUser()">
                 <button
                 class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
@@ -245,7 +245,8 @@
 
               </div>
 
-              <div title="Excerpt list" name="Excerpt list" bs-pane>
+              <div title="Excerpt list" name="Excerpt list" bs-pane 
+                ng-if="labRequest.status != 'Rejected' && labRequest.status != 'Waiting for approval'">
 
                   <h3>{{ 'Excerpt list' | translate}}</h3>
                   <hr>
@@ -271,7 +272,8 @@
 
               </div>
 
-              <div title="PA Numbers" name="PA Numbers" bs-pane>
+              <div title="PA Numbers" name="PA Numbers" bs-pane
+                ng-if="labRequest.status != 'Rejected' && labRequest.status != 'Waiting for approval'">
                 <div ng-include="'app/lab-request/pa-numbers.html'"></div>
               </div>
 

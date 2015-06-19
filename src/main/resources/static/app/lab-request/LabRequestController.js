@@ -42,6 +42,28 @@ angular.module('ProcessApp.controllers')
               (user.lastName === null ? '' : user.lastName);
       };
 
+      var _createSampleList = function(labRequests) {
+          $scope.samples = [];
+          for (var i=0; i<labRequests.length; i++) {
+              //console.log(i + ': ', labRequests[i]);
+              var pathologyList = labRequests[i].pathologyList;
+              if (pathologyList != null) {
+                  for (var j in pathologyList) {
+                      var item = pathologyList[j];
+                      item.labRequestId = labRequests[i].id;
+                      item.processInstanceId = labRequests[i].processInstanceId;
+                      item.status = labRequests[i].status;
+                      item.email = labRequests[i].requesterLab.contactData.email 
+                          ? labRequests[i].requesterLab.contactData.email 
+                          : labRequests[i].requesterEmail;
+                      //console.log(i + ', '+ j + ': ' + item);
+                      $scope.samples.push(item);
+                  }
+              }
+          }
+          $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
+      }
+      
       /**
        * To load lab request list
        * @private
@@ -54,25 +76,7 @@ angular.module('ProcessApp.controllers')
             
             if ($route.current.templateUrl === 'app/lab-request/samples.html') {
                 console.log($route.current.templateUrl);
-                $scope.samples = [];
-                for (var i=0; i<labRequests.length; i++) {
-                    console.log(i + ': ', labRequests[i]);
-                    var pathologyList = labRequests[i].pathologyList;
-                    if (pathologyList != null) {
-                        for (var j in pathologyList) {
-                            var item = pathologyList[j];
-                            item.labRequestId = labRequests[i].id;
-                            item.processInstanceId = labRequests[i].processInstanceId;
-                            item.status = labRequests[i].status;
-                            item.email = labRequests[i].requesterLab.contactData.email 
-                                ? labRequests[i].requesterLab.contactData.email 
-                                : labRequests[i].requesterEmail;
-                            console.log(i + ', '+ j + ': ' + item);
-                            $scope.samples.push(item);
-                        }
-                    }
-                }
-                $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
+                _createSampleList(labRequests);
             }
             deferred.resolve($scope.labRequests);
           }, function (err) {
@@ -243,6 +247,16 @@ angular.module('ProcessApp.controllers')
         });
     };
 
+    $scope.complete = function(labRequest) {
+        labRequest.customPUT(labRequest, 'complete').then(function(result) {
+            if ($scope.labReqModal) {
+                $scope.labReqModal.hide();
+            }
+            _loadData();
+        }, function(err) {
+            $scope.alerts.push({type: 'danger', msg: err});
+        });
+    };
       
       $scope.claim = function (labRequest) {
         labRequest.customPUT({}, 'claim')
@@ -265,6 +279,8 @@ angular.module('ProcessApp.controllers')
       $scope.lab_user_statuses = [
           'Waiting for lab approval',
           'Approved',
+          'Sending',
+          'Received',
           'Returning'
       ];
 

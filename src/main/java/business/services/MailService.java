@@ -1,6 +1,6 @@
 package business.services;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -18,8 +18,6 @@ import business.exceptions.EmailError;
 import business.models.ActivationLink;
 import business.models.Lab;
 import business.models.NewPasswordRequest;
-import business.models.Role;
-import business.models.RoleRepository;
 import business.models.User;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestRepresentation;
@@ -30,7 +28,7 @@ public class MailService {
     Log log = LogFactory.getLog(getClass());
     
     @Autowired
-    RoleRepository roleRepository;
+    UserService userService;
     
     @Autowired
     JavaMailSender mailSender;
@@ -48,8 +46,7 @@ public class MailService {
     public void notifyScientificCouncil(@NotNull RequestRepresentation request) {
         log.info("Notify scientic council for request " + request.getProcessInstanceId() + ".");
 
-        Role role = roleRepository.findByName("scientific_council");
-        Set<User> members = role.getUsers();
+        List<User> members = userService.findScientificCouncilMembers();
         for (User member: members) {
             log.info("Sending notification to user " + member.getUsername());
             try {

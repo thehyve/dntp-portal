@@ -254,11 +254,13 @@ public class LabRequestController {
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         if (!representation.getStatus().equals("Returning")) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
         
         if (body.isSamplesMissing()) {
             if (body.getMissingSamples() == null || body.getMissingSamples().getContents().trim().isEmpty()) {
+                log.error("Empty field 'missing samples'");
                 throw new EmptyInput("Empty field 'missing samples'");
             }
             Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getMissingSamples().getContents());
@@ -266,6 +268,8 @@ public class LabRequestController {
             labRequest.addComment(comment);
             labRequest = labRequestRepository.save(labRequest);
         }
+        
+        transferLabRequestFormData(body, labRequest, user.getUser());
         
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
@@ -282,6 +286,47 @@ public class LabRequestController {
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
+
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+    @RequestMapping(value = "/labrequests/{id}/complete", method = RequestMethod.PUT)
+    public LabRequestRepresentation complete(UserAuthenticationToken user,
+            @PathVariable Long id,
+            @RequestBody LabRequestRepresentation body
+            ) {
+        log.info("PUT /labrequests/" + id + "/complete");
+
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestData(representation);
+        if (!representation.getStatus().equals("Approved")) {
+            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        }
+
+        RequestRepresentation request = new RequestRepresentation();
+        HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
+        requestFormService.transferData(instance, request, user.getUser());
+        if (request.isMaterialsRequest()) {
+            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        }
+
+        transferLabRequestFormData(body, labRequest, user.getUser());
+        
+        Task task = labRequestService.getTask(labRequest.getTaskId(),
+                "lab_request");
+        taskService.setVariableLocal(labRequest.getTaskId(),
+                "labrequest_status", "Completed");
+
+        // complete task
+        if (task.getDelegationState() == DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+        
+        representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestData(representation);
+        return representation;
+    }
+    
     
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
     @RequestMapping(value = "/labrequests/{id}/claim", method = RequestMethod.PUT)

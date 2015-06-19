@@ -1,5 +1,6 @@
 package business.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import business.exceptions.EmailAddressNotAvailable;
 import business.exceptions.EmailAddressNotUnique;
+import business.models.Role;
+import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
 
@@ -18,6 +21,9 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    RoleRepository roleRepository;
     
     public User save(User user) throws EmailAddressNotAvailable {
         User result = userRepository.save(user);
@@ -43,5 +49,12 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findByDeletedFalse();
     }
+    
+    public List<User> findScientificCouncilMembers() {
+        Role role = roleRepository.findByName("scientific_council");
+        List<User> members = new ArrayList<User>(role.getUsers());
+        return members;
+    }
+
     
 }

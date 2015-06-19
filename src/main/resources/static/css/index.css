@@ -140,3 +140,7 @@ h3 { color: #949494; }
 .smart-table-not-selected {
     background-color: #ffffff;
 }
+
+label.normal {
+    font-weight: normal !important;
+}

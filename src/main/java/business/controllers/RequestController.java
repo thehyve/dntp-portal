@@ -41,7 +41,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import business.exceptions.AttachmentNotFound;
 import business.exceptions.ExcerptListNotFound;
-import business.exceptions.ExcerptListUploadError;
 import business.exceptions.FileUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.NotLoggedInException;
@@ -51,13 +50,16 @@ import business.exceptions.TaskNotFound;
 import business.models.CommentRepository;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
+import business.models.LabRequest;
 import business.models.RequestProperties;
 import business.models.RoleRepository;
 import business.models.UserRepository;
+import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.ExcerptListService;
+import business.services.LabRequestService;
 import business.services.MailService;
 import business.services.RequestFormService;
 import business.services.RequestPropertiesService;
@@ -115,6 +117,9 @@ public class RequestController {
 
     @Autowired
     private ExcerptListRepository excerptListRepository;
+    
+    @Autowired
+    private LabRequestService labRequestService;
 
     @RequestMapping(value = "requests", method = RequestMethod.GET)
     public List<RequestListRepresentation> getRequestList(UserAuthenticationToken user) {
@@ -166,13 +171,10 @@ public class RequestController {
                 processInstances.addAll(list);
             }
         } else if (user.getUser().isLabUser()) {
-            List<Task> tasks = taskService
-                    .createTaskQuery()
-                    .processVariableValueEquals("lab", user.getUser().getLab().getNumber())
-                    .list();
+            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser());
             Set<String> processInstanceIds = new HashSet<String>();
-            for (Task task: tasks) {
-                processInstanceIds.add(task.getProcessInstanceId());
+            for (LabRequestRepresentation labRequest: labRequests) {
+                processInstanceIds.add(labRequest.getProcessInstanceId());
             }
             if (!processInstanceIds.isEmpty()) {
                 processInstances = historyService
@@ -180,6 +182,8 @@ public class RequestController {
                         .notDeleted()
                         .includeProcessVariables()
                         .processInstanceIds(processInstanceIds)
+                        .orderByProcessInstanceStartTime()
+                        .desc()
                         .list();
             } else {
                 processInstances = new ArrayList<HistoricProcessInstance>();

@@ -4,7 +4,7 @@
   <thead>
   <tr>
     <th>{{'#' | translate}}</th>
-    <th st-sort="paNumber">{{'PA-Number' | translate}}</th>
+    <th st-sort="paNumber">{{'PA number' | translate}}</th>
     <th>{{'Samples' | translate}}</th>
   </tr>
   <tr>
@@ -28,6 +28,7 @@
         add-on-enter="true"
         add-on-blur="true"
         add-on-paste="true"
+        min-length="1"
         ng-if="labRequest.assignee == globals.currentUser.userid"
         ></tags-input>
         <span ng-if="labRequest.assignee != globals.currentUser.userid">

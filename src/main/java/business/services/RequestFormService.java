@@ -180,6 +180,11 @@ public class RequestFormService {
             request.setResearchQuestion((String)variables.get("research_question"));
             request.setHypothesis((String) variables.get("hypothesis"));
             request.setMethods((String) variables.get("methods"));
+            
+            request.setPathologistName((String)variables.get("pathologist_name"));
+            request.setPathologistEmail((String)variables.get("pathologist_email"));
+            request.setPreviousContact(fetchBooleanVariable("previous_contact", variables));
+            request.setPreviousContactDescription((String)variables.get("previous_contact_description"));
 
             request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
@@ -335,6 +340,11 @@ public class RequestFormService {
             variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
             variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
 
+            variables.put("pathologist_name", request.getPathologistName());
+            variables.put("pathologist_email", request.getPathologistEmail());
+            variables.put("previous_contact",(Boolean) request.isPreviousContact());
+            variables.put("previous_contact_description", request.getPreviousContactDescription());
+            
             variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
             variables.put("linkage_with_personal_data_notes", request.getLinkageWithPersonalDataNotes());
             variables.put("is_informed_consent", (Boolean)request.isInformedConsent());

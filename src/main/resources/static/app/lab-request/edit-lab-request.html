@@ -48,14 +48,14 @@
 
         <!--Parent request details-->
         <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Request Title' | translate }}</label>
+          <label class="control-label col-sm-3">{{ 'Request title' | translate }}</label>
           <p class="col-sm-7">
             {{labRequest.request.title}}
             <br>
           </p>
         </div>
         <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Created Date' | translate }}</label>
+          <label class="control-label col-sm-3">{{ 'Creation date' | translate }}</label>
           <p class="col-sm-7">
             {{labRequest.request.dateCreated | date }}
             <br>
@@ -66,7 +66,7 @@
           <!--Requester info-->
           <!--Displayed only to users with non requester role-->
           <div class="form-group">
-            <label class="control-label col-sm-3">{{ 'Requester Name' | translate }}</label>
+            <label class="control-label col-sm-3">{{ 'Requester name' | translate }}</label>
             <p class="col-sm-7">
               {{labRequest.requesterName}}
               <br>
@@ -102,17 +102,16 @@
           </p>
         </div>
 
-        <div class="form-group" ng-class="" ng-if="
-            (labRequest.status == 'Approved' || labRequest.status == 'Sending')
-            && isLabUser()
+        <div class="form-group" ng-class="" ng-if="isLabUser() && isLabUserStatus(labRequest.status)
             && labRequest.request.paReportRequest"
           >
-          <label class="control-label col-sm-3" for="paReportsSent">
+          <label class="control-label col-sm-3">
             &nbsp;
           </label>
           <div class="col-sm-8">
             <input type="checkbox" id="paReportsSent" name="paReportsSent"
-                   ng-model="labRequest.paReportsSent"> &nbsp; {{ 'PA Reports has been sent to requester.' | translate }}
+                   ng-model="labRequest.paReportsSent"> &nbsp; 
+            <label class="normal" for="paReportsSent">{{ 'PA reports has been sent to requester.' | translate }}</label>
           </div>
         </div>
 
@@ -142,12 +141,12 @@
         <div class="form-group"
             ng-class="{ 'has-error' : labRequestEditForm.missingSamples.$invalid }"
             ng-if="(isRequester() && labRequest.status == 'Sending') || (isLabUser() && labRequest.status == 'Returning')">
-          <label class="control-label col-sm-3" for="samplesMissing">
+          <label class="control-label col-sm-3">
             &nbsp;
           </label>
           <div class="col-sm-8">
             <input type="checkbox" id="samplesMissing" name="samplesMissing"
-                   ng-model="labRequest.samplesMissing"> &nbsp; {{ 'Materials are missing.' | translate }}
+                   ng-model="labRequest.samplesMissing"> &nbsp; <label class="normal" for="samplesMissing">{{ 'Materials are missing.' | translate }}</label>
             <textarea class="form-control" id="missingSamples" name="missingSamples" placeholder="{{'Missing materials'|translate}}"
               ng-model="labRequest.missingSamples.contents"
               ng-required="labRequest.samplesMissing"
@@ -173,8 +172,13 @@
                     ng-if="labRequest.request.materialsRequest"
                     ng-click="sending(labRequest);">{{'Send materials'|translate}}</button>
             <button class="btn btn-default btn-primary"
+                    ng-if="!labRequest.request.materialsRequest"
+                    ng-click="complete(labRequest);">{{'Complete'|translate}}</button>
+        </span>
+        <span ng-if="isLabUser() && isLabUserStatus(labRequest.status)">
+            <button class="btn btn-default btn-primary"
                     ng-if="labRequest.request.paReportRequest"
-                    ng-click="update(labRequest);">{{'Update'|translate}}</button>
+                    ng-click="update(labRequest);">{{'Update PA reports status'|translate}}</button>
         </span>
         <span ng-if="isRequester() && labRequest.status == 'Sending'">
             <button class="btn btn-default btn-primary"

@@ -2,10 +2,41 @@
 
 angular.module('ProcessApp.controllers')
     .controller('ApprovalController',['$rootScope', '$scope', '$modal', '$location', '$route',
-        'Request', 'ApprovalComment', 'ApprovalVote',
+        'User', 'Request', 'ApprovalComment', 'ApprovalVote',
 
         function ($rootScope, $scope, $modal, $location, $route,
-                  Request, ApprovalComment, ApprovalVote) {
+                User, Request, ApprovalComment, ApprovalVote) {
+
+            if ($rootScope.globals.currentUser.roles.indexOf('palga') !== -1) {
+                User.queryScientificCouncil().$promise.then(function(response) {
+                    console.log(response);
+                    $scope.scientificCouncil = response ? response : [];
+                    $scope.scientificCouncilEmail = '';
+                    for (var i=0; i < response.length; i++) {
+                        if (response[i].contactData) {
+                            if ($scope.scientificCouncilEmail.length > 0) {
+                                $scope.scientificCouncilEmail += ', ';
+                            }
+                            var name = $.trim($rootScope.getName(response[i]));
+                            if (name.length > 0) {
+                                $scope.scientificCouncilEmail += name 
+                                + ' <'
+                                + response[i].contactData.email
+                                + '>';
+                            } else {
+                                $scope.scientificCouncilEmail += response[i].contactData.email;
+                            }
+                        }
+                    }
+                }, function(response) {
+                    if (response.data) {
+                        $scope.error = response.data.message + '\n';
+                        if (response.data.error === 302) {
+                            $scope.accessDenied = true;
+                        }
+                    }
+                });
+            }
 
             $scope.updateVote = function(request, value) {
                 var vote = new ApprovalVote();

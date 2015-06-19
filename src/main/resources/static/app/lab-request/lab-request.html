@@ -16,12 +16,12 @@
             <hr>
 
             <div style="padding-bottom: 25px;">
-                <button class="btn btn-default" type="button"  ng-click="edit(labRequest);" title="Edit"
+                <button class="btn btn-default" type="button"  ng-click="edit(labRequest);" title="Actions"
                         ng-if="(isLabUser() && isLabUserStatus(labRequest.status))
                             || (isRequester() && isRequesterStatus(labRequest.status))"
                         ng-disabled="isLabUser() && (labRequest.assignee != globals.currentUser.userid)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
-                    {{'Edit' | translate}}
+                    {{'Actions' | translate}}
                 </button>
                 <button class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
@@ -111,13 +111,13 @@
                 </div>
 
 
-                <h3> Parent Details </h3>
+                <h3> Parent details </h3>
                 <hr>
 
                 <!--Parent request details-->
                 <div>
                   <div class="form-group">
-                    <label class="control-label col-md-2">{{ 'Request Title' | translate }}</label>
+                    <label class="control-label col-md-2">{{ 'Request title' | translate }}</label>
                     <div class="col-md-10">
                       <p class="form-control-static">
                         <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
@@ -128,7 +128,7 @@
                   </div>
         
                   <div class="form-group">
-                    <label class="control-label col-md-2">{{ 'Created Date' | translate }}</label>
+                    <label class="control-label col-md-2">{{ 'Creation date' | translate }}</label>
                     <div class="col-md-10">
                       <p class="form-control-static">
                         {{labRequest.request.dateCreated | date }}
@@ -150,7 +150,7 @@
 
             <!-- Research Question -->
             <div class="form-group">
-                <label class="control-label col-md-2">{{ ' Research Question' | translate }}</label>
+                <label class="control-label col-md-2">{{ ' Research question' | translate }}</label>
                 <div class="col-md-10">
                 <p class="form-control-static">
                     {{labRequest.request.researchQuestion}}
@@ -178,7 +178,7 @@
 
             <!-- Request Type -->
             <div class="form-group">
-                <label class="control-label col-md-2">{{ 'Request Type' | translate }}</label>
+                <label class="control-label col-md-2">{{ 'Request type' | translate }}</label>
                 <div class="col-md-10" ng-init="">
                 <p class="form-control-static">
                     {{"Request_Type_" + labRequest.request.type | translate}}
@@ -246,7 +246,7 @@
               </div>
 
               <div title="Excerpt list" name="Excerpt list" bs-pane 
-                ng-if="labRequest.status != 'Rejected' && labRequest.status != 'Waiting for approval'">
+                ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
 
                   <h3>{{ 'Excerpt list' | translate}}</h3>
                   <hr>
@@ -273,7 +273,7 @@
               </div>
 
               <div title="PA Numbers" name="PA Numbers" bs-pane
-                ng-if="labRequest.status != 'Rejected' && labRequest.status != 'Waiting for approval'">
+                ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
                 <div ng-include="'app/lab-request/pa-numbers.html'"></div>
               </div>
 

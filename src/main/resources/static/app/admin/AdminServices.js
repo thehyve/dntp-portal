@@ -6,6 +6,11 @@
         return $resource('/admin/users/:id', {
             id : '@id'
         }, {
+            queryScientificCouncil : {
+                method : 'GET',
+                url : '/admin/users/scientific_council',
+                isArray : true
+            },
             update : {
                 method : 'PUT'
             },

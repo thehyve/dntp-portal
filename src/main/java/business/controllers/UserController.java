@@ -118,6 +118,16 @@ public class UserController {
         }
         return users;
     }
+
+    @RequestMapping(value = "/admin/users/scientific_council", method = RequestMethod.GET)
+    public List<ProfileRepresentation> getScientificCouncilMembers(Principal principal) {
+        log.info("GET /admin/users/scientific_council (for user: " + principal.getName() + ")");
+        List<ProfileRepresentation> users = new ArrayList<ProfileRepresentation>();
+        for(User user: userService.findScientificCouncilMembers()) {
+            users.add(new ProfileRepresentation(user));
+        }
+        return users;
+    }
     
     public void transferUserData(ProfileRepresentation body, User user) {
         user.setFirstName(body.getFirstName());

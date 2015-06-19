@@ -31,6 +31,10 @@
                 url : '/labrequests/:id/returned',
                 method : 'PUT'
             },
+            complete : {
+                url : '/labrequests/:id/complete',
+                method : 'PUT'
+            },
             claim : {
                 url : '/labrequests/:id/claim',
                 method : 'PUT'

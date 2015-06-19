@@ -28,7 +28,7 @@
             <li role="presentation" title="Create a new request">
                     <a href="#/" ng-click="start()" id="new-request">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                        {{'Create New Request'|translate}}
+                        {{'Create new request'|translate}}
                     </a>
                 </li>
             </ul>
@@ -42,7 +42,7 @@
                         <th st-sort="processInstanceId">#</th>
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
-                        <th st-sort="dateCreated">{{'Created Date'|translate}}</th>
+                        <th st-sort="dateCreated">{{'Creation date'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" st-sort="vote">{{'Vote'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"  st-sort="requesterName">{{'Requester'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="assigneeName">{{'Assignee'|translate}}</th>

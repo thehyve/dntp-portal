@@ -17,9 +17,11 @@ angular.module('ProcessApp.controllers')
 
             if (!$rootScope.globals.currentUser) {
                 $scope.login();
+                return;
             }
         
-            $scope.serverurl = $location.protocol()+'://'+$location.host()+':'+$location.port();
+            $scope.serverurl = $location.protocol()+'://'+$location.host()
+                +(($location.port()===80) ? '' : ':'+$location.port());
 
             $scope.error = '';
             $rootScope.tempRequest = null;
@@ -407,6 +409,7 @@ angular.module('ProcessApp.controllers')
                     ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
                     (user.lastName === null ? '' : user.lastName);
             };
+            $rootScope.getName = $scope.getName;
 
             $scope.size = function(obj) {
                 var size = 0, key;

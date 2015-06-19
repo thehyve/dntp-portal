@@ -14,6 +14,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I fill the form with the following data
         """
         contactPersonName: Nobody
+        pathologistName: Nobody
+        pathologistEmail: nobody@nowhere.org
         requestTitle: Request 1
         background: None
         researchQuestion: test
@@ -22,6 +24,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
         """
     And I click on the following objects
     """
+    previousContactNo
     radio-excerpts-PA-materials
     linkageWithPersonalDataYes
     informedConsentNo

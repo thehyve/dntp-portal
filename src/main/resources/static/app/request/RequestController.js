@@ -76,6 +76,10 @@ angular.module('ProcessApp.controllers')
                 request.reasonUsingPersonalData = '';
             };
 
+            $scope.resetPreviousContactValues = function (request) {
+                request.previousContactDescription = '';
+            };
+            
             $scope.flow_options = function(options) {
                 return FlowOptionService.get_default(options);
             };

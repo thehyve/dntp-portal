@@ -124,6 +124,44 @@
                 </p>
             </div>
 
+            <!-- Pathologist name -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Pathologist' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.pathologistName}}
+                </p>
+            </div>
+
+            <!-- Pathologist email -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Pathologist email' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.pathologistEmail}}
+                </p>
+            </div>
+
+            <!-- Previous contact -->
+            <div class="row">
+                <label class="control-label col-sm-3">
+                    {{'Previous contact'|translate}}
+                </label>
+
+                <div class="col-sm-7">
+                    <span><i class="glyphicon {{request.previousContact ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                    &nbsp;{{'Previous contact'|translate}}
+                    <br>
+                    <span ng-if="request.previousContact"><br><em>{{ 'Previous contact' |
+                    translate }}</em>:</span><span
+                    ng-if="!request.previousContact">(<em>{{ 'No previous contact.' |
+                    translate }}</em>)</span>
+                    <div ng-if="request.previousContact">
+                    {{request.previousContactDescription}}
+                    <br>
+                    <br>
+                    </div>
+                </div>
+            </div>
+
             <!-- Title -->
             <div class="row">
                 <label class="control-label col-sm-3">{{ 'Title' | translate }}</label>

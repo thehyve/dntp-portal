@@ -28,6 +28,11 @@ public class RequestRepresentation {
     private String hypothesis;
     private String methods;
 
+    private String pathologistName;
+    private String pathologistEmail;
+    private boolean previousContact;
+    private String previousContactDescription;
+    
     private boolean statisticsRequest;
     private boolean excerptsRequest;
     private boolean paReportRequest;
@@ -486,6 +491,38 @@ public class RequestRepresentation {
 
     public void setExcerptListRemark(String excerptListRemark) {
         this.excerptListRemark = excerptListRemark;
+    }
+
+    public String getPathologistName() {
+        return pathologistName;
+    }
+
+    public void setPathologistName(String pathologistName) {
+        this.pathologistName = pathologistName;
+    }
+
+    public String getPathologistEmail() {
+        return pathologistEmail;
+    }
+
+    public void setPathologistEmail(String pathologistEmail) {
+        this.pathologistEmail = pathologistEmail;
+    }
+
+    public boolean isPreviousContact() {
+        return previousContact;
+    }
+
+    public void setPreviousContact(boolean previousContact) {
+        this.previousContact = previousContact;
+    }
+
+    public String getPreviousContactDescription() {
+        return previousContactDescription;
+    }
+
+    public void setPreviousContactDescription(String previousContactDescription) {
+        this.previousContactDescription = previousContactDescription;
     } 
     
 }

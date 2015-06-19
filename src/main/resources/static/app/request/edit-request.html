@@ -15,12 +15,62 @@
 
                     <!-- Principal Investigator -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonName.$invalid && requestEditForm.contactPersonName.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Principal Investigator' | translate }}</label>
+                        <label class="control-label col-sm-3" for="contactPersonName">{{ 'Principal Investigator' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" placeholder="{{ 'Principal Investigator' | translate }}"
                                    ng-model="request.contactPersonName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Pathologist name -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.pathologistName.$invalid && requestEditForm.pathologistName.$dirty }">
+                        <label class="control-label col-sm-3" for="pathologistName">{{ 'Pathologist' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="pathologistName" name="pathologistName" placeholder="{{ 'Pathologist' | translate }}"
+                                   ng-model="request.pathologistName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.pathologistName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Pathologist email -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.pathologistEmail.$invalid && requestEditForm.pathologistEmail.$dirty }">
+                        <label class="control-label col-sm-3" for="pathologistEmail"></label>
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail" placeholder="{{ 'Pathologist email' | translate }}"
+                                   ng-model="request.pathologistEmail" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Previous contact -->
+                    <div class="form-group" ng-class="">
+                        <label class="control-label col-sm-3" for="previousContact">
+                            {{'Previous contact' | translate}}
+                        </label>
+                        <div class="col-sm-8">
+                            {{'Did you contact Palga previously?' | translate}}
+                            &nbsp;
+                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact" > {{'Yes' | translate}}
+                            &nbsp; 
+                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);"> {{'No' | translate}} <br>
+                        </div>
+                    </div>
+
+                    <!-- Previous contact description  -->
+                    <div class="form-group" ng-show="request.previousContact"
+                         ng-class="{ 'has-error' : requestEditForm.previousContactDescription.$invalid  && requestEditForm.previousContactDescription.$dirty }">
+                        <label class="control-label col-sm-3" for="previousContactDescription"></label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" placeholder="{{ 'Description of previous contact' | translate }}"
+                                  ng-model="request.previousContactDescription" ng-required="request.previousContact"></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required && requestEditForm.previousContactDescription.$dirty">
+                                {{ 'Required field' | translate }}
+                            </span>
                         </div>
                     </div>
 

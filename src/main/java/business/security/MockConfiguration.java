@@ -37,6 +37,10 @@ public class MockConfiguration {
             return messages;
         }
         
+        public void clear() {
+            messages = new ArrayList<MimeMessage>();
+        }
+        
         @Override
         public void send(MimeMessage mimeMessage) throws MailException {
             log.info("MockMailSender: send mime mail message.");

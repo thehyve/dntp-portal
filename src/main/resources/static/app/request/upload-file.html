@@ -1,10 +1,13 @@
   <!-- If the request is not a statistics request (but also requires uploading an excerpt list) -->
-  <div ng-if="!request.statisticsRequest">
+  <div ng-if="!request.statisticsRequest && 
+        (globals.currentUser.roles.indexOf('palga') != -1
+         || globals.currentUser.roles.indexOf('requester') != -1
+        )">
 
     <h3>{{'Excerpt List'|translate}}</h3>
     <hr>
     <label ng-if="request.excerptList">
-      <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv">excerpts_{{request.processInstanceId}}.csv</a>
+      <a ng-href="/requests/{{request.processInstanceId}}/excerptList/csv" id="attached-excerpt-list">excerpts_{{request.processInstanceId}}.csv</a>
     </label>
 
     <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
@@ -21,7 +24,8 @@
       </div>
 
       <div>
-                          <span class="btn btn-default" flow-btn
+          <input type="file" flow-btn id="test-upload-excerpt-list" style="display:none" />
+                          <span class="btn btn-primary" flow-btn
                                 ng-disabled="request.assignee != globals.currentUser.userid"
                             >{{'Upload excerpt list'|translate}}</span>
       </div>
@@ -40,10 +44,8 @@
                       && globals.currentUser.roles.indexOf('requester') != -1
                       && request.status=='DataDelivery'
                       ">
-      <a ng-href="/#/request/{{request.processInstanceId}}/selection">
-        <button type="button" class="btn btn-primary">
-          {{'Select PA numbers'|translate}}
-        </button>
+      <a ng-href="/#/request/{{request.processInstanceId}}/selection" id="select-pa-numbers" class="btn btn-primary">
+        {{'Select PA numbers'|translate}}
       </a>
     </div>
 

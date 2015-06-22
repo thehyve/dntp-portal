@@ -15,7 +15,16 @@ public class RequestListRepresentation {
     private Date dateAssigned;
 
     private String title;
+    private String background;
+    private String researchQuestion;
+    private String hypothesis;
+    private String methods;
 
+    private boolean statisticsRequest;
+    private boolean excerptsRequest;
+    private boolean paReportRequest;
+    private boolean materialsRequest;
+    
     private String approvalVote;
     private Long numberOfApprovalVotes;
     
@@ -70,7 +79,38 @@ public class RequestListRepresentation {
     public void setTitle(String title) {
         this.title = title;
     }
+    
+    public String getBackground() {
+        return background;
+    }
 
+    public void setBackground(String background) {
+        this.background = background;
+    }
+
+    public String getResearchQuestion() {
+        return researchQuestion;
+    }
+
+    public void setResearchQuestion(String researchQuestion) {
+        this.researchQuestion = researchQuestion;
+    }
+
+    public String getHypothesis() {
+        return hypothesis;
+    }
+
+    public void setHypothesis(String hypothesis) {
+        this.hypothesis = hypothesis;
+    }
+
+    public String getMethods() {
+        return methods;
+    }
+
+    public void setMethods(String methods) {
+        this.methods = methods;
+    }
 
     public String getAssignee() {
         return assignee;
@@ -112,4 +152,36 @@ public class RequestListRepresentation {
         this.numberOfApprovalVotes = numberOfApprovalVotes;
     }
 
+    public boolean isStatisticsRequest() {
+        return statisticsRequest;
+    }
+
+    public void setStatisticsRequest(boolean statisticsRequest) {
+        this.statisticsRequest = statisticsRequest;
+    }
+
+    public boolean isExcerptsRequest() {
+        return excerptsRequest;
+    }
+
+    public void setExcerptsRequest(boolean excerptsRequest) {
+        this.excerptsRequest = excerptsRequest;
+    }
+
+    public boolean isPaReportRequest() {
+        return paReportRequest;
+    }
+
+    public void setPaReportRequest(boolean paReportRequest) {
+        this.paReportRequest = paReportRequest;
+    }
+
+    public boolean isMaterialsRequest() {
+        return materialsRequest;
+    }
+
+    public void setMaterialsRequest(boolean materialsRequest) {
+        this.materialsRequest = materialsRequest;
+    }
+    
 }

@@ -2,16 +2,19 @@
 
 (function(angular) {
 
-    angular.module('ProcessApp.services', []);
+    angular.module('ProcessApp.services', ['restangular'])
+      .config(function(RestangularProvider) {
+        RestangularProvider.setBaseUrl('/');
+      });
     angular.module('ProcessApp.directives', []);
     angular.module('ProcessApp.controllers', ['restangular'])
-        .config(function(RestangularProvider) {
-            RestangularProvider.setBaseUrl('/');
-        });
+      .config(function(RestangularProvider) {
+        RestangularProvider.setBaseUrl('/');
+      });
     angular.module('ProcessApp', [ 'flow',
                                    'mgcrea.ngStrap',
                                    'ngResource', 'ngRoute', 'ngCookies',
-                                   'pascalprecht.translate',
+                                   'pascalprecht.translate', 'ngTagsInput',
                                    'smart-table', 'ngSanitize',
                                    'ProcessApp.services',
                                    'ProcessApp.controllers',
@@ -44,8 +47,17 @@
             }).when('/labs', {
                 templateUrl : 'app/admin/lab/labs.html'
             }).when('/lab-requests', {
-              templateUrl : 'app/lab-request/lab-requests.html',
-              controller : 'LabRequestController'
+                templateUrl : 'app/lab-request/lab-requests.html',
+                controller : ''
+            }).when('/lab-request/view/:labRequestId', {
+                templateUrl : 'app/lab-request/lab-request.html',
+                controller : ''
+            }).when('/samples', {
+                templateUrl : 'app/lab-request/samples.html',
+                controller : ''
+            }).when('/request/view/:requestId', {
+                templateUrl : 'app/request/request.html',
+                controller : 'RequestController'
             }).when('/request/view/:requestId', {
                 templateUrl : 'app/request/request.html',
                 controller : 'RequestController'
@@ -70,6 +82,7 @@
             $translateProvider.translations('en', messagesEN)
                               .translations('nl', messagesNL);
             $translateProvider.preferredLanguage('en');
+            $translateProvider.useSanitizeValueStrategy('escaped');
 
             // default popover setting to have html friendly content
             angular.extend($popoverProvider.defaults, {

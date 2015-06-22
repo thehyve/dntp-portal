@@ -1,5 +1,6 @@
 package business.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -7,7 +8,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import business.controllers.UserController.EmailAddressNotAvailableException;
+import business.exceptions.EmailAddressNotAvailable;
+import business.exceptions.EmailAddressNotUnique;
+import business.models.Role;
+import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
 
@@ -18,17 +22,10 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
     
-    public class EmailAddressNotUnique extends RuntimeException {
-        private static final long serialVersionUID = 6789077965053928047L;
-        public EmailAddressNotUnique(String message) {
-            super(message);
-        }
-        public EmailAddressNotUnique() {
-            super("Email address not available.");
-        }
-    }
+    @Autowired
+    RoleRepository roleRepository;
     
-    public User save(User user) throws EmailAddressNotAvailableException {
+    public User save(User user) throws EmailAddressNotAvailable {
         User result = userRepository.save(user);
         long count = userRepository.countByUsernameAndDeletedFalse(user.getUsername());
         if (count <= 1) {
@@ -52,5 +49,12 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findByDeletedFalse();
     }
+    
+    public List<User> findScientificCouncilMembers() {
+        Role role = roleRepository.findByName("scientific_council");
+        List<User> members = new ArrayList<User>(role.getUsers());
+        return members;
+    }
+
     
 }

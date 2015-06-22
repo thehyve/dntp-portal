@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.transaction.Transactional;
+
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Attachment;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 import business.models.ApprovalVote;
 import business.models.ApprovalVoteRepository;
 import business.models.Comment;
+import business.models.ExcerptList;
+import business.models.ExcerptListRepository;
 import business.models.RequestProperties;
 import business.models.User;
 import business.models.UserRepository;
@@ -43,6 +47,9 @@ public class RequestFormService {
 
     @Autowired
     private RequestPropertiesService requestPropertiesService;
+
+    @Autowired
+    private ExcerptListService excerptListService;
   
     @Autowired
     private ApprovalVoteRepository approvalVoteRepository;
@@ -86,6 +93,10 @@ public class RequestFormService {
 
         if (variables != null) {
             request.setTitle((String)variables.get("title"));
+            request.setBackground((String)variables.get("background"));
+            request.setResearchQuestion((String)variables.get("research_question"));
+            request.setHypothesis((String) variables.get("hypothesis"));
+            request.setMethods((String) variables.get("methods"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
@@ -98,6 +109,10 @@ public class RequestFormService {
                     request.setRequesterName(getName(user));
                 }
             }
+            request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
+            request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
+            request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
+            request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
 
             Task task = null;
             if (request.getStatus() != null) {
@@ -118,6 +133,9 @@ public class RequestFormService {
                                 request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
                             }
                         }
+                        break;
+                    case "DataDelivery":
+                        task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
                         break;
                 }
             }
@@ -141,6 +159,7 @@ public class RequestFormService {
         }
     }
 
+    @Transactional
     public void transferData(HistoricProcessInstance instance, RequestRepresentation request, User currentUser) {
         boolean is_palga = currentUser == null ? false : currentUser.isPalga();
         boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();
@@ -161,6 +180,11 @@ public class RequestFormService {
             request.setResearchQuestion((String)variables.get("research_question"));
             request.setHypothesis((String) variables.get("hypothesis"));
             request.setMethods((String) variables.get("methods"));
+            
+            request.setPathologistName((String)variables.get("pathologist_name"));
+            request.setPathologistEmail((String)variables.get("pathologist_email"));
+            request.setPreviousContact(fetchBooleanVariable("previous_contact", variables));
+            request.setPreviousContactDescription((String)variables.get("previous_contact_description"));
 
             request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
@@ -284,9 +308,10 @@ public class RequestFormService {
 
             request.setDataAttachments(dataAttachments);
             
-            if (properties.getExcerptList() != null) {
+            ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
+            if (excerptList != null) {
                 log.info("Set excerpt list.");
-                request.setExcerptList(new ExcerptListRepresentation(properties.getExcerptList()));
+                request.setExcerptList(new ExcerptListRepresentation(excerptList));
                 @SuppressWarnings("unchecked")
                 Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
                 Set<Integer> selectedLabSet = new TreeSet<Integer>();
@@ -294,7 +319,7 @@ public class RequestFormService {
                     for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
                 }
                 request.setSelectedLabs(selectedLabSet);
-                request.setExcerptListRemark(properties.getExcerptListRemark());
+                request.setExcerptListRemark(excerptList.getRemark());
             }
         }
     }
@@ -315,6 +340,11 @@ public class RequestFormService {
             variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
             variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
 
+            variables.put("pathologist_name", request.getPathologistName());
+            variables.put("pathologist_email", request.getPathologistEmail());
+            variables.put("previous_contact",(Boolean) request.isPreviousContact());
+            variables.put("previous_contact_description", request.getPreviousContactDescription());
+            
             variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
             variables.put("linkage_with_personal_data_notes", request.getLinkageWithPersonalDataNotes());
             variables.put("is_informed_consent", (Boolean)request.isInformedConsent());

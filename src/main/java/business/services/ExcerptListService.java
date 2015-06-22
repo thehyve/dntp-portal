@@ -10,6 +10,8 @@ import java.io.Writer;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,10 @@ import business.exceptions.ExcerptListUploadError;
 import business.exceptions.FileUploadError;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
+import business.models.ExcerptListRepository;
 import business.models.Lab;
 import business.models.LabRepository;
+import business.representation.ExcerptListRepresentation;
 
 @Service
 public class ExcerptListService {
@@ -36,6 +40,30 @@ public class ExcerptListService {
     Log log = LogFactory.getLog(getClass());
     
     @Autowired LabRepository labRepository;
+    
+    @Autowired ExcerptListRepository excerptListRepository;
+    
+    @Transactional
+    public ExcerptList findByProcessInstanceId(String processInstanceId) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
+        return excerptList;
+    }
+    
+    @Transactional
+    public ExcerptListRepresentation findRepresentationByProcessInstanceId(String processInstanceId) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
+        return new ExcerptListRepresentation(excerptList);
+    }
+    
+    @Transactional
+    public void deleteByProcessInstanceId(String processInstanceId) {
+        excerptListRepository.deleteByProcessInstanceId(processInstanceId);
+    }
+    
+    @Transactional
+    public ExcerptList save(ExcerptList list) {
+        return excerptListRepository.save(list);
+    }
     
     public ExcerptList processExcerptList(MultipartFile file) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
@@ -83,7 +111,7 @@ public class ExcerptListService {
         }
     }
     
-    public HttpEntity<InputStreamResource> writeExcerptList(ExcerptList list, String id) {
+    public HttpEntity<InputStreamResource> writeExcerptList(ExcerptList list) {
         ByteArrayOutputStream out = new ByteArrayOutputStream(); 
         Writer writer = new PrintWriter(out);
         CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
@@ -103,7 +131,7 @@ public class ExcerptListService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.valueOf("text/csv"));
             headers.set("Content-Disposition",
-                       "attachment; filename=excerpts_" + id + ".csv");
+                       "attachment; filename=excerpts_" + list.getProcessInstanceId() + ".csv");
             HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
             log.info("Returning reponse.");
             return response;

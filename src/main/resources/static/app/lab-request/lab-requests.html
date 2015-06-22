@@ -21,7 +21,7 @@
         {{ error | translate }}
       </div>
 
-      <h1>{{ 'Lab Requests' | translate }}</h1>
+      <h1>{{ 'Lab requests' | translate }}</h1>
       <hr>
 
       <!-- Alert -->
@@ -32,7 +32,6 @@
         {{alert.msg | translate}}
       </div>
 
-
       <!--List of Lab Requests-->
       <div class="table-responsive" ng-if="authenticated">
 
@@ -40,25 +39,26 @@
         <thead>
         <tr>
           <th>{{'#' | translate}}</th>
-          <th>{{'Request Title' | translate}}</th>
+          <th>{{'Request title' | translate}}</th>
           <th>{{'Requester' | translate}}</th>
           <th>{{'Lab' | translate}}</th>
-          <th>{{'Created Date' | translate}}</th>
-          <th>{{'#PA Numbers' | translate}}</th>
+          <th>{{'Creation date' | translate}}</th>
+          <th>{{'End date' | translate}}</th>
+          <th>{{'# PA numbers' | translate}}</th>
           <th>{{'Status' | translate}}</th>
           <th>{{'' | translate}}</th>
         </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="labRequest in labRequests track by $index">
+          <tr ng-repeat="labRequest in labRequests track by $index" ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid}">
             <td>
-              {{labRequest.taskId}}
+              {{labRequest.id}}
             </td>
             <td>
-              <a href="#/request/view/{{labRequest.processInstanceId}}">{{labRequest.requestListRepresentation.title}}</a>
+              <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.request.title}}</a>
             </td>
             <td>
-              {{labRequest.requestListRepresentation.requesterName}}
+              {{labRequest.request.requesterName}}
             </td>
             <td>
               {{labRequest.lab.name}}
@@ -67,18 +67,29 @@
               {{labRequest.dateCreated |  date: 'EEE, dd MMMM yyyy H:mm'}}
             </td>
             <td>
-              {{labRequest.excerptList.entries.length}}
+              {{labRequest.endDate |  date: 'EEE, dd MMMM yyyy H:mm'}}
+            </td>
+            <td>
+              {{labRequest.pathologyCount}}
             </td>
             <td>
               {{labRequest.status}}
             </td>
             <td>
               <span class="pull-right">
-              <span class="btn-group">
-                  <button class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)">
-                    <span><i class="glyphicon glyphicon-pencil"></i></span>
-                  </button>
-              </span>
+                <span class="btn-group">
+                    <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid" class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(labRequest)" >
+                      <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
+                    </button>
+                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
+                         class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(labRequest)">
+                        <span><i class="glyphicon glyphicon-eye-open"></i></span>
+                    </button>
+                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid"
+                         class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(labRequest)">
+                        <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                    </button>
+                </span>
               </span>
             </td>
           </tr>

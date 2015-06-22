@@ -4,6 +4,15 @@
     <h3>{{'Approval by the scientific council'|translate}}</h3>
     <hr>
 
+    <a href="mailto:{{scientificCouncilEmail}}?subject=Request {{request.processInstanceId}}&amp;body=Request {{request.processInstanceId}}%0AView: {{serverurl}}/#/request/view/{{request.processInstanceId}}
+    "
+        ng-if="globals.currentUser.roles.indexOf('palga') != -1 && scientificCouncilEmail"
+    >
+    <button class="btn btn-default" type="button" title="{{'Compose mail to members' | translate}}">
+        <span><i class="glyphicon glyphicon-envelope"></i></span>
+        {{'Compose mail to members' | translate}}
+    </button></a>
+
     <h4>{{'Votes'|translate}}</h4>
     <hr>
 
@@ -33,14 +42,14 @@
         <div class="col-sm-8">
             <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
-                    type="button" title="{{'Accepted'|translate}}"
+                    type="button" title="{{'Accepted'|translate}}" id="vote-accepted"
                     ng-click="updateVote(request, 'ACCEPTED')"
                     ng-if="!editComment.id">
                 <span><i class="glyphicon glyphicon-ok-circle"></i></span>
                 {{'Accepted'|translate}}
             </button>
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
-                    type="button" title="{{'Rejected'|translate}}"
+                    type="button" title="{{'Rejected'|translate}}" id="vote-rejected"
                     ng-click="updateVote(request, 'REJECTED')"
                     ng-if="!editComment.id">
                 <span><i class="glyphicon glyphicon-ban-circle"></i></span>

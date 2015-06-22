@@ -26,7 +26,7 @@ public class User implements Serializable {
     private Long id;    
     private String username;
     private String password;
-    private boolean active = true;
+    private boolean active = false;
     private boolean deleted = false;
     private boolean emailValidated = false;
 

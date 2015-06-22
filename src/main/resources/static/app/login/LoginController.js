@@ -18,7 +18,8 @@ angular.module('ProcessApp.controllers')
                     HAS_MANAGE_LAB_PAGE_AUTH : 'HAS_MANAGE_LAB_PAGE_AUTH',
                     HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
                     HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH',
-                    HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH'
+                    HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH',
+                    HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH'
                 };
 
                 if (currentUser.roles[0] === 'palga') {
@@ -27,10 +28,12 @@ angular.module('ProcessApp.controllers')
                     currentUser.features.push(globalFeatures.HAS_MANAGE_USER_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
                 } else if (currentUser.roles[0] === 'lab_user') {
                     currentUser.features.push(globalFeatures.HAS_MANAGE_OWN_LAB_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                    currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
                 } else if (currentUser.roles[0] === 'requester') {
                     currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
@@ -98,8 +101,12 @@ angular.module('ProcessApp.controllers')
                 }).success(function(data) {
                     authenticate(function() {
                         if ($rootScope.authenticated) {
-                            $location.path('/');
                             $scope.error = false;
+                            if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
+                              $location.path('/');
+                            } else {
+                              $location.path('/lab-requests');
+                            }
                         } else {
                             $location.path('/login');
                             $scope.error = true;

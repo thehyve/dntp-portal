@@ -3,11 +3,7 @@ package business.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import business.models.ExcerptEntry;
-import business.models.ExcerptList;
 
 public class ExcerptEntryRepresentation {
 
@@ -60,6 +56,10 @@ public class ExcerptEntryRepresentation {
 
     public void setValues(List<String> values) {
         this.values = values;
+    }
+    
+    public String getPaNumber() {
+        return values.get(2);
     }
     
 }

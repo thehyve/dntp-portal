@@ -4,6 +4,8 @@ angular.module('ProcessApp.controllers')
     .controller('NavigationController',['$rootScope', '$scope', '$http', '$location', '$route', '$translate', '$cookieStore',
         function ($rootScope, $scope, $http, $location, $route, $translate, $cookieStore) {
 
+            $scope.$route = $route;
+            
             var checkRoles = function (requirements) {
                 if ($rootScope.globals.hasOwnProperty('currentUser')) {
                     var userFeatures = $rootScope.globals.currentUser.features;
@@ -26,6 +28,10 @@ angular.module('ProcessApp.controllers')
 
             $scope.isViewLabRequestsAllowed = function() {
               return checkRoles(['HAS_MANAGE_LAB_REQUEST_PAGE_AUTH']);
+            };
+
+            $scope.isViewSamplesAllowed = function() {
+                return checkRoles(['HAS_MANAGE_SAMPLES_PAGE_AUTH']);
             };
 
             $scope.isViewUsersAllowed = function() {

@@ -118,10 +118,48 @@
 
             <!-- Principal Investigator -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Principal Investigator' | translate }}</label>
+                <label class="control-label col-sm-3">{{ 'Principal investigator' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.contactPersonName}}
                 </p>
+            </div>
+
+            <!-- Pathologist name -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Pathologist' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.pathologistName}}
+                </p>
+            </div>
+
+            <!-- Pathologist email -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Pathologist email' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.pathologistEmail}}
+                </p>
+            </div>
+
+            <!-- Previous contact -->
+            <div class="row">
+                <label class="control-label col-sm-3">
+                    {{'Previous contact'|translate}}
+                </label>
+
+                <div class="col-sm-7">
+                    <span><i class="glyphicon {{request.previousContact ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                    &nbsp;{{'Previous contact'|translate}}
+                    <br>
+                    <span ng-if="request.previousContact"><br><em>{{ 'Previous contact' |
+                    translate }}</em>:</span><span
+                    ng-if="!request.previousContact">(<em>{{ 'No previous contact.' |
+                    translate }}</em>)</span>
+                    <div ng-if="request.previousContact">
+                    {{request.previousContactDescription}}
+                    <br>
+                    <br>
+                    </div>
+                </div>
             </div>
 
             <!-- Title -->
@@ -142,7 +180,7 @@
 
             <!-- Research Question -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ ' Research Question' | translate }}</label>
+                <label class="control-label col-sm-3">{{ ' Research question' | translate }}</label>
                 <div class="col-sm-7">
                     {{request.researchQuestion}}
                 </div>
@@ -166,7 +204,7 @@
 
             <!-- Request Type -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Request Type' | translate }}</label>
+                <label class="control-label col-sm-3">{{ 'Request type' | translate }}</label>
                 <div class="col-sm-7" ng-init="">
                     {{"Request_Type_" + request.type | translate}}
                 </div>
@@ -197,7 +235,7 @@
 
                 <div class="col-sm-7">
                     <span><i class="glyphicon {{request.informedConsent ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'Informed Consent.' |
+                    &nbsp; {{ 'Informed consent.' |
                     translate }}
                 </div>
             </div>
@@ -284,7 +322,7 @@
                     </div>
                 </div>
 
-                <h3>{{'Signed Agreement'|translate}}</h3>
+                <h3>{{'Signed agreement'|translate}}</h3>
                 <hr>
 
                 <!-- Agreement reached -->
@@ -326,7 +364,7 @@
                     </label>
                     <div class="col-sm-7">
                         <span><i class="glyphicon {{request.sentToPrivacyComm ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'This request has been sent to Privacy Committee to be checked.' | translate }}
+                        &nbsp; {{ 'This request has been sent to privacy committee to be checked.' | translate }}
                     </div>
                 </div>
 
@@ -340,7 +378,7 @@
 
                 <!-- Outcome Reference -->
                 <div class="row">
-                    <label class="control-label col-sm-3">{{ 'Outcome Reference' | translate }}</label>
+                    <label class="control-label col-sm-3">{{ 'Outcome reference' | translate }}</label>
                     <div class="col-sm-7">
                         {{request.privacyCommitteeOutcomeRef}}
                     </div>
@@ -348,7 +386,7 @@
 
                 <!-- Outcome Emails -->
                 <div class="row">
-                    <label class="control-label col-sm-3">{{ 'Emailing History' | translate }}</label>
+                    <label class="control-label col-sm-3">{{ 'Emailing history' | translate }}</label>
                     <div class="col-sm-7">
                         {{request.privacyCommitteeEmails}}
                     </div>

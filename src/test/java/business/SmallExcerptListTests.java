@@ -51,7 +51,18 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         InputStream input = resource.openStream();
         MultipartFile file = new MockMultipartFile(resource.getFile(), input);
         
-        representation = requestController.uploadExcerptList(palga, processInstanceId, resource.getFile(), file);
+        Integer flowTotalChunks = 1;
+        Integer flowChunkNumber = 1;
+        String flowIdentifier = "flow";
+        
+        representation = requestController.uploadExcerptList(
+                palga, 
+                processInstanceId, 
+                resource.getFile(),
+                flowTotalChunks,
+                flowChunkNumber, 
+                flowIdentifier,
+                file);
         
         assertEquals(3, representation.getExcerptList().getEntries().size());
         

@@ -220,7 +220,7 @@
                             <span class="btn-group">
                                 <button class="btn btn-default" type="button" title="Delete"
                                         ng-click="removeFile(file)"
-                                        ng-if="request.status=='Open'"
+                                        ng-if="request.status=='Open' || (isPalga() && request.status=='Review')"
                                         >
                                     Delete
                                 </button>
@@ -233,7 +233,7 @@
                          flow-name="agreementFlow"
                          flow-files-submitted="$flow.upload()"
                          flow-file-success="fileuploadsuccess(request, $message)"
-                         ng-if="request.status=='Open'">
+                         ng-if="request.status=='Open' || (isPalga() && request.status=='Review')">
                         <div>
                             <span class="btn btn-default" flow-btn>{{'Upload file'|translate}}</span>
                         </div>

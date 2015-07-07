@@ -276,6 +276,7 @@
                     };
                 };
                 options.testChunks = false;
+                options.forceChunkSize = true;
                 return options;
             }
         };

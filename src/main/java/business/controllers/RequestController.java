@@ -20,7 +20,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -28,8 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,18 +38,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import business.exceptions.AttachmentNotFound;
 import business.exceptions.ExcerptListNotFound;
-import business.exceptions.FileUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.NotLoggedInException;
 import business.exceptions.RequestNotAdmissible;
 import business.exceptions.RequestNotFound;
-import business.exceptions.TaskNotFound;
 import business.models.CommentRepository;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
 import business.models.File;
 import business.models.FileRepository;
-import business.models.LabRequest;
 import business.models.RequestProperties;
 import business.models.RoleRepository;
 import business.models.UserRepository;
@@ -338,6 +332,8 @@ public class RequestController {
             throw new RequestNotAdmissible();
         }
         
+        claimCurrentPalgaTask(id, user);
+        
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
@@ -388,6 +384,8 @@ public class RequestController {
             log.warn("Finalisation failed because of lacking approval.");
         }
 
+        claimCurrentPalgaTask(id, user);
+        
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
@@ -474,6 +472,15 @@ public class RequestController {
         return updatedRequest;
     }
     
+    private void claimCurrentPalgaTask(String id, UserAuthenticationToken user) {
+        Task task = requestService.getCurrentPalgaTaskByRequestId(id);
+        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
+            taskService.claim(task.getId(), user.getId().toString());
+        } else {
+            taskService.delegateTask(task.getId(), user.getId().toString());
+        }
+    }
+    
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/claim", method = RequestMethod.PUT)
     public RequestRepresentation claim(
@@ -482,12 +489,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/claim");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        Task task = requestService.getCurrentPalgaTaskByRequestId(id);
-        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-            taskService.claim(task.getId(), user.getId().toString());
-        } else {
-            taskService.delegateTask(task.getId(), user.getId().toString());
-        }
+        claimCurrentPalgaTask(id, user);
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             variables.put("assigned_date", new Date());

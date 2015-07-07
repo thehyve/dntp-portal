@@ -121,6 +121,7 @@ public class RequestController {
     @Autowired
     private LabRequestService labRequestService;
 
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "requests", method = RequestMethod.GET)
     public List<RequestListRepresentation> getRequestList(UserAuthenticationToken user) {
         log.info(
@@ -209,6 +210,7 @@ public class RequestController {
         return result;
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}", method = RequestMethod.GET)
     public RequestRepresentation getRequestById(UserAuthenticationToken user,
                                                 @PathVariable String id) {
@@ -225,6 +227,7 @@ public class RequestController {
         return request;
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('requester')")
     @RequestMapping(value = "/requests", method = RequestMethod.POST)
     public RequestRepresentation start(
             UserAuthenticationToken user,

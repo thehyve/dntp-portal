@@ -18,9 +18,12 @@
                         <label class="control-label col-sm-3" for="contactPersonName">{{ 'Principal investigator' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" placeholder="{{ 'Principal investigator' | translate }}"
-                                   ng-model="request.contactPersonName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
+                                   ng-model="request.contactPersonName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
                         </div>
                     </div>
 
@@ -29,9 +32,12 @@
                         <label class="control-label col-sm-3" for="pathologistName">{{ 'Pathologist' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="pathologistName" name="pathologistName" placeholder="{{ 'Pathologist' | translate }}"
-                                   ng-model="request.pathologistName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
+                                   ng-model="request.pathologistName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.pathologistName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistName.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
                         </div>
                     </div>
 
@@ -40,9 +46,12 @@
                         <label class="control-label col-sm-3" for="pathologistEmail"></label>
                         <div class="col-sm-8">
                             <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail" placeholder="{{ 'Pathologist email' | translate }}"
-                                   ng-model="request.pathologistEmail" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
+                                   ng-model="request.pathologistEmail" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
                         </div>
                     </div>
 
@@ -71,7 +80,7 @@
                         <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" placeholder="{{ 'Description of previous contact' | translate }}"
                                   ng-model="request.previousContactDescription" ng-required="request.previousContact"></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required && requestEditForm.previousContactDescription.$dirty">
+                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
                         </div>
@@ -84,7 +93,7 @@
                             <input type="text" class="form-control" id="requestTitle" name="requestTitle" placeholder="{{ 'Title' | translate }}"
                                    ng-model="request.title" ng-maxlength="50" required>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required && requestEditForm.requestTitle.$dirty">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                         </div>
                     </div>
@@ -96,7 +105,7 @@
                         <textarea type="text" class="form-control" id="background" name="background" placeholder="{{ 'Background' | translate }}"
                             ng-model="request.background" required></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.background.$error.required && requestEditForm.background.$dirty">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
                     </div>
 
@@ -107,7 +116,7 @@
                         <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" placeholder="{{ 'Research question' | translate }}"
                             ng-model="request.researchQuestion" required></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required && requestEditForm.researchQuestion.$dirty">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
                     </div>
 
@@ -118,7 +127,7 @@
                         <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" placeholder="{{ 'Hypothesis' | translate }}"
                             ng-model="request.hypothesis" required></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required && requestEditForm.hypothesis.$dirty">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
                     </div>
 
@@ -129,7 +138,7 @@
                         <textarea type="text" class="form-control" id="methods" name="methods" placeholder="{{ 'Methods' | translate }}"
                             ng-model="request.methods" required></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.methods.$error.required && requestEditForm.methods.$dirty">
+                            <span class="help-block" ng-show="requestEditForm.methods.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
                         </div>
@@ -177,7 +186,7 @@
                         <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes" placeholder="{{ 'Notes for linkage with personal data' | translate }}"
                                   ng-model="request.linkageWithPersonalDataNotes" ng-required="request.linkageWithPersonalData"></textarea>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.linkageWithPersonalDataNotes.$error.required && requestEditForm.linkageWithPersonalDataNotes.$dirty">
+                            <span class="help-block" ng-show="requestEditForm.linkageWithPersonalDataNotes.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
                         </div>
@@ -202,7 +211,11 @@
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Reason using personal data' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" placeholder="{{ 'Reason using personal data' | translate }}"
-                                  ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"></textarea>
+                                  ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"  ng-required="(request.type != 1 && request.linkageWithPersonalData && !request.informedConsent)"></textarea>
+                        <!-- errors -->
+                        <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.required">
+                            {{ 'Required field' | translate }}
+                        </span>
                         </div>
                     </div>
 

@@ -57,7 +57,7 @@ public class ProcessControllerTests {
     
     @Test
     public void getUser() throws Exception {
-        User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse("palga@dntp.thehyve.nl");
+        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("palga@dntp.thehyve.nl");
         Role role = null;
         for(Role r: user.getRoles()) {
             role = r;
@@ -95,7 +95,7 @@ public class ProcessControllerTests {
     
     @Test
     public void serialiseUser() throws Exception {
-        User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse("scientific_council@dntp.thehyve.nl");
+        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("scientific_council@dntp.thehyve.nl");
                 
         String test_string = String.format(json_put_test_template, user.getId());
         String expected = String.format(json_put_test_expected_template, user.getId());

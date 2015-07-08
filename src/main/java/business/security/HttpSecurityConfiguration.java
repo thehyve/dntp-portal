@@ -76,7 +76,6 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/public/labs/**",
                         "/password/request-new",
                         "/password/reset",
-//                        "/dashboard/workflow.html",
                         "/index.html",
                         "/login.html",
                         "/registration.html",
@@ -84,6 +83,7 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/app/**",
                         "/messages/**",
                         "/css/**",
+                        "/*.ico",
                         "/images/**"
                 ).permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users").permitAll()

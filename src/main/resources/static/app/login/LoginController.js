@@ -127,5 +127,9 @@ angular.module('ProcessApp.controllers')
                     $rootScope.authenticated = false;
                 });
             };
+            
+            angular.element(document).ready(function() {
+                $('#username').focus();
+              });
 
         }]);

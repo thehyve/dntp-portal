@@ -47,7 +47,6 @@ public class DefaultRolesUsersLabs {
      */
     @PostConstruct
     private void initDatabase() {
-
         log.info("Creating default roles...");
         for (String r: defaultRoles) {
             Role role = roleRepository.findByName(r);
@@ -64,37 +63,30 @@ public class DefaultRolesUsersLabs {
                 "Laboratorium voor Pathologie (PAL), Dordrecht"
         };
         int labIdx = 99;
+        // Create default labs
         for (String r: defaultLabs) {
             if (labRepository.findByName(r) == null) {
                 Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
+                ContactData cd = new ContactData();
+                cd.setEmail(l.getName() + "@labs.dntp.thehyve.nl");
+                l.setContactData(cd);
                 labRepository.save(l);
             }
         }
-        
+
         log.warn("Creating default users...");
+        // Create default roles and users for each role
         for (String r: defaultRoles) {
+            // Save the role if it doesn't exist yet
             Role role = roleRepository.findByName(r);
+
+            // Create a user for the role if it doesn't exist yet
             String username = r + "@dntp.thehyve.nl";
             User user = userService.findByUsername(username);
             if (user == null) {
-                Set<Role> roles = new HashSet<Role>();
-                roles.add(role);
-                String password = passwordEncoder.encode(r);
-                user = new User(username, password, true, roles);
-                user.setFirstName(r);
-                ContactData contactData = new ContactData();
-                contactData.setEmail(username);
-                user.setContactData(contactData);
-                user.setEmailValidated(true);
-                user.activate();
-                if (r.equals("lab_user")) {
-                    Lab lab = labRepository.findByName(defaultLabs[0]);
-                    user.setLab(lab);
-                }
+                user = createUser(r, role);
+                user.setLab(defaultLab);
                 userService.save(user);
-            } else if (!user.getPassword().startsWith("$")) {
-                // Detect and encrypt old plain-text passwords
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
                 userService.save(user);
             }
         }
@@ -105,16 +97,27 @@ public class DefaultRolesUsersLabs {
 
             if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
                 Set<Role> roles = Collections.singleton(roleRepository.findByName("lab_user"));
-                String password = passwordEncoder.encode("lab_user");
-                User user = new User(username, password, true, roles);
-                user.setFirstName("lab_user" + labNumber);
-                ContactData contactData = new ContactData();
-                contactData.setEmail(username);
-                user.setContactData(contactData);
+                User user = createUser("lab_user" + labNumber, roles.stream().findFirst().get());
                 user.setLab(lab);
                 userRepository.save(user);
             }
         }
+
+        LogFactory.getLog(getClass()).info("Created default users and roles");
+    }
+
+    private User createUser(String username, Role role) {
+        Set<Role> roles = new HashSet<Role>();
+        roles.add(role);
+        String password = passwordEncoder.encode(role.getName());
+        User user = new User(username + "@dntp.thehyve.nl", password, true, roles);
+        user.setFirstName(username);
+        ContactData contactData = new ContactData();
+        contactData.setEmail(user.getUsername());
+        user.setContactData(contactData);
+        user.setEmailValidated(true);
+        user.activate();
+        return user;
     }
 
 }

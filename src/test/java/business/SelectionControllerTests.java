@@ -95,6 +95,9 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     @Test(groups = "request")
     public void createRequest() {
         UserAuthenticationToken requester = getRequester();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(requester);
+        
         RequestRepresentation representation = new RequestRepresentation();
         representation.setTitle("Test request");
         representation = requestController.start(requester, representation);
@@ -107,6 +110,8 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         //testController.clearAll();
         //List<RequestListRepresentation> requestList = requestController.getRequestList(requester);
         //assertEquals(0, requestList.size());
+        
+        SecurityContextHolder.clearContext();
     }
     
     @Test(groups = "request", dependsOnMethods = "createRequest")

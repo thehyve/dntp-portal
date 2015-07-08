@@ -65,11 +65,11 @@ public class ExcerptListService {
         return excerptListRepository.save(list);
     }
     
-    public ExcerptList processExcerptList(MultipartFile file) {
+    public ExcerptList processExcerptList(InputStream input) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
         log.info("Processing excerpt list");
         try {
-            CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()), ';', '"');
+            CSVReader reader = new CSVReader(new InputStreamReader(input), ';', '"');
             ExcerptList list = new ExcerptList();
             String [] nextLine;
             log.info("Column names.");

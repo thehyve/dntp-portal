@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 

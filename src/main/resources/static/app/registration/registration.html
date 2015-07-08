@@ -133,21 +133,14 @@
             </div>
 
             <!-- Pathology Dept. Member -->
-            <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required}">
-                <label class="control-label col-sm-2" for="isPathologyLabMember">
-                    &nbsp;
+            <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required && registrationForm.lab.$dirty}">
+                <label class="control-label col-sm-2" for="lab">
+                    {{'Pathology lab'|translate}}
                 </label>
 
                 <div class="col-sm-10">
-                    <input type="checkbox" id="isPathologyLabMember" name="isPathologyLabMember" value="1"
-                           ng-model="user.pathologist"> &nbsp; {{ 'I am member of a pathology department' |
-                    translate }}
-                </div>
-                <div class="col-sm-10" ng-show="user.pathologist">
-                    <br>
-                    <em>{{'Specify department'|translate}}</em>:
                     <select class="form-control" name="lab" ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
-                             ng-required="user.pathologist">
+                             ng-required="true">
                         <option value="" ng-selected="selected">-- Select lab --</option>
                     </select>
                     <!-- errors -->

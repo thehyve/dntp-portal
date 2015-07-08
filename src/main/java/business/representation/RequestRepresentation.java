@@ -46,9 +46,9 @@ public class RequestRepresentation {
     private Date returnDate;
     private String contactPersonName;
 
-    private List<AttachmentRepresentation> attachments;
-    private List<AttachmentRepresentation> agreementAttachments;
-    private List<AttachmentRepresentation> dataAttachments;
+    private List<FileRepresentation> attachments;
+    private List<FileRepresentation> agreementAttachments;
+    private List<FileRepresentation> dataAttachments;
     private List<CommentRepresentation> comments;
 
     private List<CommentRepresentation> approvalComments;
@@ -316,28 +316,29 @@ public class RequestRepresentation {
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
     }
-
-    public List<AttachmentRepresentation> getAttachments() {
+    
+    public List<FileRepresentation> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<AttachmentRepresentation> attachments) {
+    public void setAttachments(List<FileRepresentation> attachments) {
         this.attachments = attachments;
     }
 
-    public List<AttachmentRepresentation> getAgreementAttachments() {
+    public List<FileRepresentation> getAgreementAttachments() {
         return agreementAttachments;
     }
 
-    public void setAgreementAttachments(List<AttachmentRepresentation> agreementAttachments) {
+    public void setAgreementAttachments(
+            List<FileRepresentation> agreementAttachments) {
         this.agreementAttachments = agreementAttachments;
     }
 
-    public List<AttachmentRepresentation> getDataAttachments() {
+    public List<FileRepresentation> getDataAttachments() {
         return dataAttachments;
     }
 
-    public void setDataAttachments(List<AttachmentRepresentation> dataAttachments) {
+    public void setDataAttachments(List<FileRepresentation> dataAttachments) {
         this.dataAttachments = dataAttachments;
     }
 

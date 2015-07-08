@@ -11,6 +11,8 @@ import org.activiti.engine.task.Task;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.testng.annotations.Test;
 
@@ -51,7 +53,18 @@ public class LargerExcerptListTests extends SelectionControllerTests {
         InputStream input = resource.openStream();
         MultipartFile file = new MockMultipartFile(resource.getFile(), input);
         
-        representation = requestController.uploadExcerptList(palga, processInstanceId, resource.getFile(), file);
+        Integer flowTotalChunks = 1;
+        Integer flowChunkNumber = 1;
+        String flowIdentifier = "flow";
+        
+        representation = requestController.uploadExcerptList(
+                palga, 
+                processInstanceId, 
+                resource.getFile(),
+                flowTotalChunks,
+                flowChunkNumber, 
+                flowIdentifier,
+                file);
         
         assertEquals(6, representation.getExcerptList().getEntries().size());
         

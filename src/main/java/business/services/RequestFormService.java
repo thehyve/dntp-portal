@@ -25,14 +25,14 @@ import business.models.ApprovalVote;
 import business.models.ApprovalVoteRepository;
 import business.models.Comment;
 import business.models.ExcerptList;
-import business.models.ExcerptListRepository;
+import business.models.File;
 import business.models.RequestProperties;
 import business.models.User;
 import business.models.UserRepository;
 import business.representation.ApprovalVoteRepresentation;
-import business.representation.AttachmentRepresentation;
 import business.representation.CommentRepresentation;
 import business.representation.ExcerptListRepresentation;
+import business.representation.FileRepresentation;
 import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
@@ -238,34 +238,24 @@ public class RequestFormService {
                     }
                 }
             }
-            List<Attachment> attachments = taskService.getProcessInstanceAttachments(instance.getId());
-            List<AttachmentRepresentation> requesterAttachments = new ArrayList<AttachmentRepresentation>();
-            List<AttachmentRepresentation> agreementAttachments = new ArrayList<AttachmentRepresentation>();
-            List<AttachmentRepresentation> dataAttachments = new ArrayList<AttachmentRepresentation>();
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
-
-            Set<String> agreementAttachmentIds = properties.getAgreementAttachmentIds();
-            Set<String> dataAttachmentIds = properties.getDataAttachmentIds();
-            for (Attachment attachment: attachments) {
-                if (properties.getExcerptListAttachmentId() != null && 
-                        properties.getExcerptListAttachmentId().equals(attachment.getId())) {
-                    //
-                } else if (agreementAttachmentIds.contains(attachment.getId())) {
-                    agreementAttachments.add(new AttachmentRepresentation(attachment));
-                } else if (dataAttachmentIds.contains(attachment.getId())) {
-                    dataAttachments.add(new AttachmentRepresentation(attachment));
-                } else {
-                    requesterAttachments.add(new AttachmentRepresentation(attachment));
-                }
+            List<FileRepresentation> requestAttachments = new ArrayList<FileRepresentation>();
+            for(File file: properties.getRequestAttachments()) {
+                requestAttachments.add(new FileRepresentation(file));
             }
+
             request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
             request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
             request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
             request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
             
-            request.setAttachments(requesterAttachments);
+            request.setAttachments(requestAttachments);
             if (is_palga) {
+                List<FileRepresentation> agreementAttachments = new ArrayList<FileRepresentation>();
+                for(File file: properties.getAgreementAttachments()) {
+                    agreementAttachments.add(new FileRepresentation(file));
+                }
                 request.setAgreementAttachments(agreementAttachments);
             }
 
@@ -306,6 +296,10 @@ public class RequestFormService {
                 request.setRejectDate((Date)variables.get("reject_date"));
             }
 
+            List<FileRepresentation> dataAttachments = new ArrayList<FileRepresentation>();
+            for(File file: properties.getDataAttachments()) {
+                dataAttachments.add(new FileRepresentation(file));
+            }
             request.setDataAttachments(dataAttachments);
             
             ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());

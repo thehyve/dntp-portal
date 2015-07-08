@@ -199,7 +199,7 @@ public class LabRequestController {
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
         
-        if (body.isSamplesMissing()) {
+        if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
             if (body.getMissingSamples() == null || body.getMissingSamples().getContents().trim().isEmpty()) {
                 throw new EmptyInput("Empty field 'missing samples'");
             }
@@ -258,7 +258,7 @@ public class LabRequestController {
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
         
-        if (body.isSamplesMissing()) {
+        if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
             if (body.getMissingSamples() == null || body.getMissingSamples().getContents().trim().isEmpty()) {
                 log.error("Empty field 'missing samples'");
                 throw new EmptyInput("Empty field 'missing samples'");

@@ -92,8 +92,8 @@ public class MailService {
         log.info("Notify lab for lab request " + labRequest.getId() + ".");
 
         Lab lab = labRequest.getLab();
-        if (lab.getContactData() == null) {
-            log.warn("No contact data set for lab " + lab.getNumber());
+        if (lab.getContactData() == null || lab.getContactData().getEmail() == null) {
+            log.warn("No email address set for lab " + lab.getNumber());
             return;
         }
         log.info("Sending notification to " + lab.getContactData().getEmail());

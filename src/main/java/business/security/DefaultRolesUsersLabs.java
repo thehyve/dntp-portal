@@ -1,5 +1,6 @@
 package business.security;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -95,6 +96,23 @@ public class DefaultRolesUsersLabs {
                 // Detect and encrypt old plain-text passwords
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 userService.save(user);
+            }
+        }
+        // Create default lab users for each lab (if they don't exist)
+        for (Lab lab: labRepository.findAll()) {
+            String labNumber = lab.getNumber().toString();
+            String username = "lab_user" + labNumber + "@dntp.thehyve.nl";
+
+            if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
+                Set<Role> roles = Collections.singleton(roleRepository.findByName("lab_user"));
+                String password = passwordEncoder.encode("lab_user");
+                User user = new User(username, password, true, roles);
+                user.setFirstName("lab_user" + labNumber);
+                ContactData contactData = new ContactData();
+                contactData.setEmail(username);
+                user.setContactData(contactData);
+                user.setLab(lab);
+                userRepository.save(user);
             }
         }
     }

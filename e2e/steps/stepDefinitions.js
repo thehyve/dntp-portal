@@ -3,6 +3,7 @@
 var util = require('../util.js');
 var expect = util.chai.expect;
 var path = require('path');
+var readline = require('readline');
 
 module.exports = function() {
     var pages = require('../pages/pages');
@@ -156,6 +157,16 @@ module.exports = function() {
     this.When(/^debug$/, function(next) {
         browser.debugger();
         next();
+    });
+
+    this.When(/^testing is paused (.*)$/, function(extra, next) {
+        var resume = false;
+        browser.driver.wait(function() { return resume; }, 3600 * 1000).then(function() { next(); });
+        var rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+        rl.question("Testing is paused " + extra + ", press enter to continue", function() {
+            rl.close();
+            resume = true;
+        });
     });
 
     this.Then(/^I should see an? (.+) message$/, function(msgType, next) {

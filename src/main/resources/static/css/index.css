@@ -144,3 +144,9 @@ h3 { color: #949494; }
 label.normal {
     font-weight: normal !important;
 }
+
+address {margin-bottom: 0px;}
+
+.print-only {
+    display: none;
+}

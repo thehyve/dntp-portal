@@ -42,7 +42,6 @@ angular.module('ProcessApp.controllers')
                         $scope.error = response.data.message + '\n';
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
-                            console.log("ACCESS DENIED");
                         }
                     } else {
                         $scope.login();
@@ -50,7 +49,6 @@ angular.module('ProcessApp.controllers')
                 });
             } else {
                 Request.query().$promise.then(function(response) {
-                    console.log(response);
                     $scope.requests = response ? response : [];
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
@@ -64,11 +62,6 @@ angular.module('ProcessApp.controllers')
                     }
                 });
             }
-
-            $scope.popover = {
-                'title': 'Info',
-                'content': ''
-            };
 
             $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {
                 if (!isOnlyResetReason) {
@@ -120,7 +113,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.filterEmptyRequests = function(value, index) {
                 return !value;
-            }
+            };
             
             $scope.refresh = function(request, result) {
                 result.type = Request.convertRequestOptsToType(result);
@@ -236,6 +229,8 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.editRequestModal.show();
                         }
                     });
             };
@@ -307,7 +302,6 @@ angular.module('ProcessApp.controllers')
             $scope.uploadDataFile = function(flow) {
                 var max_size = 1024*1024*10;
                 if (flow.getSize() > max_size) {
-                    console.log('size: '+ flow.getSize());
                     var mb_size = (flow.getSize()/(1024*1024)).toFixed(1);
                     bootbox.alert('File too large (' + mb_size + ' MB). Maximum size is 10 MB.');
                     flow.cancel();
@@ -318,13 +312,6 @@ angular.module('ProcessApp.controllers')
 
             $scope.view = function(request) {
                 $location.path('/request/view/' + request.processInstanceId);
-            };
-
-            $scope.cancelByEscKey = function (key, request) {
-                console.log('In cancelByEscKey');
-                if (key.which === 27) {
-                    console.log('Escape key');
-                }
             };
 
             $scope.cancel = function (request) {

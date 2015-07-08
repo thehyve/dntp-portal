@@ -11,6 +11,8 @@ angular.module('ProcessApp.controllers')
                   ApprovalComment, ApprovalVote,
                   FlowOptionService, $routeParams) {
 
+            $rootScope.redirectUrl = $location.path();
+        
             $scope.login = function() {
                 $location.path('/login');
             };
@@ -43,8 +45,13 @@ angular.module('ProcessApp.controllers')
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
                         }
+                        else if (response.status === 403) {
+                            $scope.login();
+                            return;
+                        }
                     } else {
                         $scope.login();
+                        return;
                     }
                 });
             } else {
@@ -56,9 +63,15 @@ angular.module('ProcessApp.controllers')
                         $scope.error = response.data.message + '\n';
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
+                            console.log("ACCESS DENIED");
+                        }
+                        else if (response.status === 403) {
+                            $scope.login();
+                            return;
                         }
                     } else {
                         $scope.login();
+                        return;
                     }
                 });
             }

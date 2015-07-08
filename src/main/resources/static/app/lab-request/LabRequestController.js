@@ -6,6 +6,8 @@ angular.module('ProcessApp.controllers')
         'Restangular', function ($q, $rootScope, $scope, $modal, $location, $route, $routeParams, $window, Request,
                                  Restangular) {
 
+            $rootScope.redirectUrl = $location.path();
+
             $scope.login = function () {
                 $location.path('/login');
             };
@@ -71,6 +73,10 @@ angular.module('ProcessApp.controllers')
                     }
                     deferred.resolve($scope.labRequests);
                 }, function (err) {
+                    if (err.status === 403) {
+                        $scope.login();
+                        return;
+                    }
                     deferred.reject('Cannot load lab requests. ' + err);
                 });
                 return deferred.promise;
@@ -125,6 +131,10 @@ angular.module('ProcessApp.controllers')
                     $scope.labRequest.htmlLabAddress = getHTMLRequesterAddress($scope.labRequest.lab.contactData);
                     deferred.resolve($scope.labRequest);
                 }, function (err) {
+                    if (err.status === 403) {
+                        $scope.login();
+                        return;
+                    }
                     var errMsg = 'Error : ' + err.data.status + ' - ' + err.data.error;
                     $scope.alerts.push({type: 'danger', msg: errMsg});
                     deferred.reject(errMsg);

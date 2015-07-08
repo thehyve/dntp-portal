@@ -60,7 +60,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
         log.info("username: " + authentication.getName());
-        User user = userRepository.findByUsernameAndActiveTrueAndDeletedFalse(authentication.getName());
+        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse(authentication.getName());
         if (user != null) {
             if (user.isAccountTemporarilyBlocked()) {
                 Date now = new Date();

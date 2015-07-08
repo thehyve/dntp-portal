@@ -310,6 +310,7 @@ angular.module('ProcessApp.controllers')
                     console.log('size: '+ flow.getSize());
                     var mb_size = (flow.getSize()/(1024*1024)).toFixed(1);
                     bootbox.alert('File too large (' + mb_size + ' MB). Maximum size is 10 MB.');
+                    flow.cancel();
                 } else {
                     flow.upload();
                 }
@@ -418,5 +419,21 @@ angular.module('ProcessApp.controllers')
                 }
                 return size;
             };
+            
+            $scope.isPalga = function() {
+                return $scope.globals.currentUser.roles.indexOf('palga') != -1;
+            }
 
+            $scope.isRequester = function() {
+                return $scope.globals.currentUser.roles.indexOf('requester') != -1;
+            }
+            
+            $scope.isScientificCouncil = function() {
+                return $scope.globals.currentUser.roles.indexOf('scientific_council') != -1;
+            }
+
+            $scope.isLabuser = function() {
+                return $scope.globals.currentUser.roles.indexOf('lab_user') != -1;
+            }
+            
 }]);

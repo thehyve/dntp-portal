@@ -71,7 +71,9 @@ angular.module('ProcessApp.controllers')
                             request.$submitExcerptSelection(function(result) {
                                 console.log('Selection submitted: ' + result);
                                 $location.path('/');
-                                $scope.$apply();
+                                _.defer(function(){
+                                    $scope.$apply();
+                                });
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });

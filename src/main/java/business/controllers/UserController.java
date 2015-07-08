@@ -163,14 +163,16 @@ public class UserController {
             user.setRoles(roles);
         }
         
-        Lab lab = null;
-        if (user.isLabUser() || user.isPathologist()) {
-            lab = labRepository.findOne(body.getLabId());
+        if (user.isRequester() || user.isLabUser()) {
+            if (body.getLabId() == null) {
+                throw new InvalidUserData("No lab selected.");
+            }
+            Lab lab = labRepository.findOne(body.getLabId());
             if (lab == null) {
                 throw new InvalidUserData("No lab selected.");
             }
+            user.setLab(lab);
         }
-        user.setLab(lab);
         
         if (body.getContactData() == null) {
             throw new InvalidUserData("No contact data entered.");

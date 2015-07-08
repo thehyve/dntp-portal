@@ -11,7 +11,9 @@
         <!--Main-->
         <div class="col-md-10 col-md-offset-2 form-horizontal main ">
 
-            <h2>{{'Lab request' | translate}}: {{labRequest.id}}</h2>
+            <h2 id="lab-request-title">
+                {{labRequest.request.processInstanceId}}-{{labRequest.lab.number}}
+            </h2>
             <br/>
             <hr>
 
@@ -55,15 +57,30 @@
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
+                <!--<button ng-if="isLabUser()"-->
+                <button
+                    class="btn btn-default" type="button"
+                    ng-click="printPreview();" title="printView">
+                    <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                    {{'Print Preview' | translate}}
+                </button>
             </div>
 
-            <div bs-tabs>
+            <div bs-tabs id="lab-request-details">
 
               <div title="Details" name="Details" bs-pane>
-                <h3>{{ 'Details' | translate}}</h3>
+                <h3 >{{ 'Details' | translate}}</h3>
                 <hr>
-                <!--Status-->
+                <!--Lab Request Id-->
                 <div class="form-group">
+                  <label class="control-label col-md-2">{{ 'Lab Request Code' | translate }}</label>
+                  <div class="col-md-10">
+                    <p class="form-control-static"> {{labRequest.request.processInstanceId}}-{{labRequest.lab.number}} </p>
+                  </div>
+                </div>
+
+                <!--Status-->
+                <div class="form-group no-print">
                   <label class="control-label col-md-2">{{ 'Status' | translate }}</label>
                   <div class="col-md-10">
                     <p class="form-control-static"> {{labRequest.status}} </p>
@@ -71,7 +88,7 @@
                 </div>
 
                 <!--Rejected details-->
-                <div ng-if="labRequest.status == 'Rejected'">
+                <div ng-if="labRequest.status == 'Rejected'" class="no-print">
                   <div class="form-group">
                     <label class="control-label col-md-2">{{ 'Reject date' | translate }}</label>
                     <div class="col-md-10">
@@ -99,47 +116,48 @@
                 </div>
 
                 <!-- PA Reports Status -->
-                <div class="form-group">
+                <div class="form-group no-print">
                   <label class="control-label col-md-2">{{ 'PA reports' | translate }}</label>
                   <div class="col-md-10">
                     <p class="form-control-static">
-                      <span><i class="glyphicon {{labRequest.paReportsSent ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                      &nbsp; {{ 'PA Reports has been sent to requester.' |
-                      translate }}
+                        <span ng-if="labRequest.paReportsSent">
+                            {{ 'PA Reports has been sent to requester.' | translate }}
+                        </span>
+                        <span ng-if="!labRequest.paReportsSent">
+                            {{ 'PA Reports has NOT been sent to requester.' | translate }}
+                        </span>
                     </p>
                   </div>
                 </div>
 
 
-                <h3> Parent details </h3>
-                <hr>
+                <h3 class="no-print"> {{'Parent details' | translate}} </h3>
+                <hr class="no-print">
 
                 <!--Parent request details-->
-                <div>
-                  <div class="form-group">
+                <div class="form-group no-print">
                     <label class="control-label col-md-2">{{ 'Request title' | translate }}</label>
                     <div class="col-md-10">
-                      <p class="form-control-static">
-                        <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
-                          {{labRequest.request.title}}
-                        </a>
-                      </p>
+                        <p class="form-control-static">
+                            <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
+                            {{labRequest.request.title}}
+                            </a>
+                        </p>
                     </div>
-                  </div>
-        
-                  <div class="form-group">
+                </div>
+
+                <div class="form-group no-print">
                     <label class="control-label col-md-2">{{ 'Creation date' | translate }}</label>
                     <div class="col-md-10">
-                      <p class="form-control-static">
-                        {{labRequest.request.dateCreated | date }}
-                      </p>
+                        <p class="form-control-static">
+                            {{labRequest.request.dateCreated | date }}
+                        </p>
                     </div>
-                  </div>
                 </div>
 
 
             <!--Background -->
-            <div class="form-group">
+            <div class="form-group no-print">
                 <label class="control-label col-md-2">{{ 'Background' | translate }}</label>
                 <div class="col-md-10">
                 <p class="form-control-static">
@@ -149,7 +167,7 @@
             </div>
 
             <!-- Research Question -->
-            <div class="form-group">
+            <div class="form-group no-print">
                 <label class="control-label col-md-2">{{ ' Research question' | translate }}</label>
                 <div class="col-md-10">
                 <p class="form-control-static">
@@ -159,7 +177,7 @@
             </div>
 
             <!-- Hypothesis -->
-            <div class="form-group">
+            <div class="form-group no-print">
                 <label class="control-label col-md-2">{{ 'Hypothesis' | translate }}</label>
                 <div class="col-md-10">
                 <p class="form-control-static">
@@ -169,7 +187,7 @@
             </div>
 
             <!-- Methods -->
-            <div class="form-group">
+            <div class="form-group no-print">
                 <label class="control-label col-md-2">{{ 'Methods' | translate }}</label>
                 <div class="col-md-10">
                     {{labRequest.request.methods}}
@@ -177,7 +195,7 @@
             </div>
 
             <!-- Request Type -->
-            <div class="form-group">
+            <div class="form-group no-print">
                 <label class="control-label col-md-2">{{ 'Request type' | translate }}</label>
                 <div class="col-md-10" ng-init="">
                 <p class="form-control-static">
@@ -193,38 +211,34 @@
                   <div class="form-group">
                     <label class="control-label col-md-2">{{ 'Requester' | translate }}</label>
                     <div class="col-md-10">
-                      <p class="form-control-static">
-                        {{labRequest.requesterName}}
-                      </p>
+                        <p class="form-control-static">
+                            {{labRequest.requesterName}}
+                            <address ng-bind-html="labRequest.htmlRequesterAddress"></address>
+                        </p>
                     </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="control-label col-md-2">{{ 'Contact' | translate }}</label>
-                    <address class="col-md-10">
-                      <p class="form-control-static" ng-bind-html="labRequest.htmlRequesterAddress"></p>
-                    </address>
                   </div>
                 </div> <!-- end if -->
 
                 <!--Requester lab Info-->
                 <div class="form-group">
-                  <label class="control-label col-md-2">{{ 'Requester lab' | translate }}</label>
+                  <label class="control-label col-md-2 no-print">{{ 'Requester Lab' | translate }}</label>
+                  <label class="control-label col-md-2 print-only">{{ 'Delivery Address' | translate }}</label>
                   <div class="col-md-10">
                     <p class="form-control-static">
                       {{"Lab" | translate}} {{labRequest.requesterLab.number}} - {{labRequest.requesterLab.name}}
+                      <address ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
                     </p>
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label class="control-label col-md-2">{{ 'Contact' | translate }}</label>
-                  <address  class="col-md-10">
-                    <p class="form-control-static" ng-bind-html="labRequest.htmlRequesterLabAddress"></p>
-                  </address>
-                </div>
+                <!--<div class="form-group" id="lab-address">-->
+                  <!--<label class="control-label col-md-2">{{ 'Contact' | translate }}</label>-->
+                  <!--<address class="col-md-10" >-->
+                    <!--<p class="form-control-static" ng-bind-html="labRequest.htmlRequesterLabAddress"></p>-->
+                  <!--</address>-->
+                <!--</div>-->
 
-                <div ng-if="!isLabUser()" >
+                <div ng-if="!isLabUser()"class="no-print">
                   <!--Lab Info-->
                   <!--Displayed only to users with non lab user role-->
                   <div class="form-group">
@@ -245,34 +259,34 @@
 
               </div>
 
-              <div title="Excerpt list" name="Excerpt list" bs-pane 
-                ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
+              <!--<div title="Excerpt list" name="Excerpt list" bs-pane  class="no-print"-->
+                <!--ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">-->
 
-                  <h3>{{ 'Excerpt list' | translate}}</h3>
-                  <hr>
+                  <!--<h3>{{ 'Excerpt list' | translate}}</h3>-->
+                  <!--<hr>-->
 
-                  <div style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">
-                    <table st-table="rowCollection" class="table">
-                      <thead>
-                      <tr>
-                        <th></th>
-                        <th ng-repeat="value in labRequest.excerptList.columnNames track by $index">{{value}}</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr ng-repeat="excerpt in labRequest.excerptList.entries track by excerpt.id" >
-                        <td cs-select="row"></td>
-                        <td  ng-repeat="value in excerpt.values track by $index">
-                          {{value}}
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <!--<div style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">-->
+                    <!--<table st-table="rowCollection" class="table">-->
+                      <!--<thead>-->
+                      <!--<tr>-->
+                        <!--<th></th>-->
+                        <!--<th ng-repeat="value in labRequest.excerptList.columnNames track by $index">{{value}}</th>-->
+                      <!--</tr>-->
+                      <!--</thead>-->
+                      <!--<tbody>-->
+                      <!--<tr ng-repeat="excerpt in labRequest.excerptList.entries track by excerpt.id" >-->
+                        <!--<td cs-select="row"></td>-->
+                        <!--<td  ng-repeat="value in excerpt.values track by $index">-->
+                          <!--{{value}}-->
+                        <!--</td>-->
+                      <!--</tr>-->
+                      <!--</tbody>-->
+                    <!--</table>-->
+                  <!--</div>-->
 
-              </div>
+              <!--</div>-->
 
-              <div title="PA Numbers" name="PA Numbers" bs-pane
+              <div title="{{'Samples' | translate}}" name="PA Numbers" bs-pane id="pa-numbers"
                 ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
                 <div ng-include="'app/lab-request/pa-numbers.html'"></div>
               </div>

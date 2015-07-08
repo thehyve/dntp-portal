@@ -1,0 +1,68 @@
+/* Print Preview Stylings */
+
+h3 {
+    font-size: 12pt;
+    clear: left;
+}
+body, table {
+    font-family: verdana, arial, sans-serif ;
+    font-size: 8pt ;
+}
+th,
+td {
+    padding: 4px 4px 4px 4px ;
+}
+
+th {
+    border-bottom: 2px solid #333333 ;
+}
+
+td {
+    border-bottom: 1px dotted #999999 ;
+}
+
+tfoot td {
+    border-bottom-width: 0px ;
+    border-top: 2px solid #333333 ;
+    padding-top: 20px ;
+}
+
+.no-print,
+.print-pa-id-col,
+.nav,
+input[type='text'] {
+    display: none !important;
+}
+
+.print-pa-no-col { width: 15%;}
+.print-pa-samples-col { width: 85%;}
+
+
+ul li { display: inline; }
+.remove-button {display: none; }
+
+.form-group label {
+    height: 30px;
+    width: 200px;
+    margin-left: 10px;
+    text-align: right;
+    margin-right: 15px;
+    float: left;
+    font-weight: bold;
+    display: block;
+}
+
+.col-md-10 {
+    height: 30px;
+    margin-top: 0px;
+    display: inline-table;
+    float: left;
+}
+
+.form-group{
+    clear: left;
+}
+
+address {
+    margin-bottom: 20px;
+}

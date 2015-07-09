@@ -295,12 +295,16 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.reject = function(request) {
-                bootbox.prompt({
-                    title: 'Are you sure you want to reject the request?\n<br>' +
-                    'Please enter a reject reason:',
-                    callback: function(result) {
+                bootbox.confirm(
+                    '<h4>Are you sure you want to reject the request?</h4>\n' +
+                    '<form id="reject" action="">' +
+                    'Please enter a reject reason:\n<br><br>\n' +
+                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
+                    '</form>',
+                    function(result) {
                         if (result) {
-                            request.rejectReason = result;
+                            request.rejectReason = $('#rejectReason').val();
+                            console.log('Rejected. Reason: ' + request.rejectReason);
                             request.$reject(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
@@ -309,7 +313,7 @@ angular.module('ProcessApp.controllers')
                             });
                         }
                     }
-                });
+                );
             };
 
             $scope.uploadDataFile = function(flow) {

@@ -183,26 +183,28 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.reject = function (labRequest) {
-                bootbox.prompt({
-                    title: 'Are you sure you want to reject the lab request?\n<br>' +
-                    'Please enter a reject reason:',
-                    callback: function (result) {
+                bootbox.confirm(
+                    '<h4>Are you sure you want to reject the lab request?</h4>\n' +
+                    '<form id="reject" action="">' +
+                    'Please enter a reject reason:\n<br><br>\n' +
+                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
+                    '</form>',
+                    function(result) {
                         if (result) {
-                            labRequest.rejectReason = result;
+                            labRequest.rejectReason = $('#rejectReason').val();
+                            console.log('Rejected. Reason: ' + labRequest.rejectReason);
                             labRequest.customPUT(labRequest, 'reject').then(function (result) {
-                                    if ($scope.labReqModal) {
-                                        $scope.labReqModal.hide();
-                                    }
-                                    $location.path('/lab-request/view/' + labRequest.id);
-                                    //_loadRequests();
+                                if ($scope.labReqModal) {
+                                    $scope.labReqModal.hide();
                                 }
-                                , function (err) {
-                                    console.error('Error: ', err);
-                                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
-                                });
+                                _loadData();
+                            }
+                            , function (err) {
+                                $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                            });
                         }
                     }
-                });
+                );
             };
 
             $scope.accept = function (labRequest) {

@@ -36,25 +36,44 @@
             <!--List of Lab Requests-->
             <div class="table-responsive" ng-if="authenticated">
 
-                <table st-table="rowCollection" class="table">
+                <table st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
                     <thead>
-                    <tr>
-                        <th>{{'#' | translate}}</th>
-                        <th>{{'Request title' | translate}}</th>
-                        <th>{{'Requester' | translate}}</th>
-                        <th>{{'Lab' | translate}}</th>
-                        <th>{{'Creation date' | translate}}</th>
-                        <th>{{'End date' | translate}}</th>
-                        <th>{{'# PA numbers' | translate}}</th>
-                        <th>{{'Status' | translate}}</th>
-                        <th>{{'' | translate}}</th>
-                    </tr>
+                        <tr>
+                            <th>{{'Lab Request ID' | translate}}</th>
+                            <th>{{'Request title' | translate}}</th>
+                            <th>{{'Requester' | translate}}</th>
+                            <th>{{'Lab' | translate}}</th>
+                            <th>{{'Creation date' | translate}}</th>
+                            <th>{{'End date' | translate}}</th>
+                            <th>{{'# PA numbers' | translate}}</th>
+                            <th>{{'Status' | translate}}</th>
+                            <th>{{'' | translate}}</th>
+                        </tr>
+                        <tr>
+                            <!--TODO-->
+                            <!--<th><input st-search="labRequest.labReqId" placeholder="Filter by id" class="input-sm form-control" type="search"/></th>-->
+                            <th><input st-search="labRequest.request.title" placeholder="Filter by Request Title" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="labRequest.request.requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="labRequest.lab.name" placeholder="Filter by Lab" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="labRequest.dateCreated" placeholder="Filter Creation Date" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="labRequest.endDate" placeholder="Filter by End Date" class="input-sm form-control" type="search"/></th>
+                            <th>&nbsp;</th>
+                            <th><input st-search="labRequest.status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <th colspan="8"><input id="lab-request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
+                            <th>&nbsp;</th>
+                        </tr>
+
                     </thead>
                     <tbody>
-                    <tr ng-repeat="labRequest in labRequests track by $index"
+                    <tr ng-repeat="labRequest in displayedLabRequests track by $index"
                         ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid}">
                         <td>
-                            {{labRequest.id}}
+                            <!--{{labRequest.id}}-->
+                            <!--{{labRequest.request.processInstanceId}} - {{labRequest.lab.number}}-->
+                            {{labRequest.labReqId}}
                         </td>
                         <td>
                             <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.request.title}}</a>

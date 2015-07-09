@@ -1,7 +1,10 @@
 package business.controllers;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -157,6 +160,7 @@ public class LabRequestController {
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         if (!representation.getStatus().equals("Approved")) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
 
@@ -164,6 +168,7 @@ public class LabRequestController {
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user.getUser());
         if (!request.isMaterialsRequest()) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'. Not a materials request.");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
         
@@ -189,6 +194,7 @@ public class LabRequestController {
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         if (!representation.getStatus().equals("Sending")) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
         
@@ -196,6 +202,7 @@ public class LabRequestController {
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user.getUser());
         if (!request.isMaterialsRequest()) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'. Not a materials request.");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
         
@@ -229,6 +236,7 @@ public class LabRequestController {
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         if (!representation.getStatus().equals("Received")) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
 
@@ -299,6 +307,7 @@ public class LabRequestController {
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         if (!representation.getStatus().equals("Approved")) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
 
@@ -306,6 +315,7 @@ public class LabRequestController {
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user.getUser());
         if (request.isMaterialsRequest()) {
+            log.error("Action not allowed in status '" + representation.getStatus() + "'. Not a materials request.");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }
 
@@ -383,6 +393,7 @@ public class LabRequestController {
 
         if (representation.getStatus().equals("Waiting for lab approval")
             || representation.getStatus().equals("Rejected")) {
+            log.error("Download not allowed in status '" + representation.getStatus() + "'");
             throw new InvalidActionInStatus("Download not allowed in status '" + representation.getStatus() + "'");
         }
         HttpEntity<InputStreamResource> file = null;
@@ -396,11 +407,22 @@ public class LabRequestController {
         return file;
     }
     
+    static Set<String> paReportSendingStatuses;
+    {
+        paReportSendingStatuses = new HashSet<String>(Arrays.asList("Approved", "Sending", "Received", "Returning"));
+    }
+    
     private void transferLabRequestFormData(LabRequestRepresentation body, LabRequest labRequest, User user) {
         RequestRepresentation request = new RequestRepresentation();
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user);
         if (request.isPaReportRequest()) {
+            LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+            labRequestService.transferLabRequestData(representation);
+            if (!paReportSendingStatuses.contains(representation.getStatus())) {
+                log.error("Action not allowed in status '" + representation.getStatus() + "'");
+                throw new InvalidActionInStatus();
+            }
             labRequest.setPaReportsSent(body.isPaReportsSent());
             labRequest = labRequestRepository.save(labRequest);
         }

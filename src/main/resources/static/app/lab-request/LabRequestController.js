@@ -77,7 +77,7 @@ angular.module('ProcessApp.controllers')
                         $scope.login();
                         return;
                     }
-                    deferred.reject('Cannot load lab requests. ' + err);
+                    deferred.reject('Cannot load lab requests. ' + _flattenError(err));
                 });
                 return deferred.promise;
             };
@@ -162,6 +162,22 @@ angular.module('ProcessApp.controllers')
                 $scope.labReqModal.hide();
             };
 
+            var _flattenError = function(err) {
+                if (err instanceof Object) {
+                    if ('message' in err) {
+                        return err.message;
+                    } else if ('data' in err) {
+                        if ('message' in err.data) {
+                            return err.data.message;
+                        }
+                        return JSON.stringify(err.data);
+                    } 
+                    return JSON.stringify(err);
+                } else {
+                    return err;
+                }
+            }
+            
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
             };
@@ -182,7 +198,7 @@ angular.module('ProcessApp.controllers')
                                 }
                                 , function (err) {
                                     console.error('Error: ', err);
-                                    $scope.alerts.push({type: 'danger', msg: err});
+                                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                                 });
                         }
                     }
@@ -196,7 +212,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -208,7 +224,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -219,7 +235,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -230,7 +246,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -241,7 +257,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -252,7 +268,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -261,7 +277,7 @@ angular.module('ProcessApp.controllers')
                     .then(function (result) {
                         _loadData();
                     }, function (err) {
-                        $scope.alerts.push({type: 'danger', msg: err});
+                        $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
 
@@ -270,7 +286,7 @@ angular.module('ProcessApp.controllers')
                     .then(function (result) {
                         _loadData();
                     }, function (err) {
-                        $scope.alerts.push({type: 'danger', msg: err});
+                        $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
 
@@ -318,7 +334,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -334,7 +350,7 @@ angular.module('ProcessApp.controllers')
                         //console.log(result);
                     },
                     function (err) {
-                        $scope.alerts.push({type: 'danger', msg: err});
+                        $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
 

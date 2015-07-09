@@ -39,26 +39,27 @@
                 <table st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
                     <thead>
                         <tr>
-                            <th>{{'Lab Request ID' | translate}}</th>
-                            <th>{{'Request title' | translate}}</th>
-                            <th>{{'Requester' | translate}}</th>
-                            <th>{{'Lab' | translate}}</th>
-                            <th>{{'Creation date' | translate}}</th>
-                            <th>{{'End date' | translate}}</th>
-                            <th>{{'# PA numbers' | translate}}</th>
-                            <th>{{'Status' | translate}}</th>
-                            <th>{{'' | translate}}</th>
+                            <th st-sort="labReqId">{{'Lab Request ID' | translate}}</th>
+                            <th st-sort="request.title">{{'Request title' | translate}}</th>
+                            <th st-sort="request.requesterName">{{'Requester' | translate}}</th>
+                            <th st-sort="lab.name">{{'Lab' | translate}}</th>
+                            <th st-sort="dateCreated">{{'Creation date' | translate}}</th>
+                            <th st-sort="endDate">{{'End date' | translate}}</th>
+                            <th st-sort="pathologyCount">{{'# PA numbers' | translate}}</th>
+                            <th st-sort="status">{{'Status' | translate}}</th>
+                            <th st-sort="labReqId">{{'' | translate}}</th>
                         </tr>
                         <tr>
-                            <!--TODO-->
                             <!--<th><input st-search="labRequest.labReqId" placeholder="Filter by id" class="input-sm form-control" type="search"/></th>-->
-                            <th><input st-search="labRequest.request.title" placeholder="Filter by Request Title" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="labRequest.request.requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="labRequest.lab.name" placeholder="Filter by Lab" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="labRequest.dateCreated" placeholder="Filter Creation Date" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="labRequest.endDate" placeholder="Filter by End Date" class="input-sm form-control" type="search"/></th>
                             <th>&nbsp;</th>
-                            <th><input st-search="labRequest.status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="request.title" placeholder="Filter by Request Title" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="request.requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="lab.name" placeholder="Filter by Lab" class="input-sm form-control" type="search"/></th>
+                            <!--<th><input st-search="dateCreated" placeholder="Filter by Date" class="input-sm form-control" type="search"/></th>-->
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th><input st-search="status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
                             <th>&nbsp;</th>
                         </tr>
                         <tr>
@@ -97,25 +98,25 @@
                             {{labRequest.status}}
                         </td>
                         <td>
-              <span class="pull-right">
-                <span class="btn-group">
-                    <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid"
-                            class="btn btn-default" type="button" title="{{'Edit'|translate}}"
-                            ng-click="edit(labRequest)">
-                        <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
-                    </button>
-                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
-                            class="btn btn-default" type="button" title="{{'Claim'|translate}}"
-                            ng-click="claim(labRequest)">
-                        <span><i class="glyphicon glyphicon-eye-open"></i></span>
-                    </button>
-                    <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid"
-                            class="btn btn-default" type="button" title="{{'Unclaim'|translate}}"
-                            ng-click="unclaim(labRequest)">
-                        <span><i class="glyphicon glyphicon-eye-close"></i></span>
-                    </button>
-                </span>
-              </span>
+                            <span class="pull-right">
+                                <span class="btn-group">
+                                <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Edit'|translate}}"
+                                    ng-click="edit(labRequest)">
+                                <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
+                                </button>
+                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Claim'|translate}}"
+                                    ng-click="claim(labRequest)">
+                                <span><i class="glyphicon glyphicon-eye-open"></i></span>
+                                </button>
+                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Unclaim'|translate}}"
+                                    ng-click="unclaim(labRequest)">
+                                <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                                </button>
+                                </span>
+                            </span>
                         </td>
                     </tr>
                     </tbody>

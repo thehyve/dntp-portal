@@ -10,14 +10,16 @@ module.exports = function() {
     var baseUrl = util.baseUrl;
 
     this.Given(/^I am on the (.*) page$/, function(pageName, next) {
-        util.getPage(pageName);
-        next();
+        util.getPage(pageName).then(function() {
+            next();
+        });
     });
 
     this.Given(/^I am logged in as the (.*) user$/, function(user, next) {
-        util.login(user);
-        browser.sleep(500);
-        next();
+        util.login(user).then(function() {
+            browser.sleep(500);
+            next();
+        });
     });
 
     this.Given('I am logged out', function(next) {
@@ -27,33 +29,41 @@ module.exports = function() {
     });
 
     this.Given('there are no requests', function(next) {
-        util.clearRequests();
-        next();
+        util.clearRequests().then(function() {
+            next();
+        });
     });
 
     this.When(/^I log in as (?:the|an?) (.*) user$/, function(user, next) {
-        util.login(user);
-        next();
+        util.login(user).then(function() {
+            next();
+        });
     });
 
     this.When(/^I go from the (.*) page to the (.*) page$/, function(from, to, next) {
         // Check if the mapping is defined
+        var mapping;
         for (var i in util.mappings) {
             var m = util.mappings[i];
             if (m.from === from && m.to === to) {
-                m.action();
-                next();
-                return;
+                mapping = m;
+                break;
             }
         }
 
-        // At this point we know the mapping doesn't exist!
-        util.fatalError('There is no way to go from `' + from + '` to `' + to + '`');
+        if (mapping === undefined) {
+            util.fatalError('There is no way to go from `' + from + '` to `' + to + '`');
+        }
+
+        mapping.action().then(function() {
+            next();
+        });
     });
 
     this.When(/^I go to the '(.+)' page$/, function(to, next) {
-        util.getPage(to);
-        next();
+        util.getPage(to).then(function() {
+            next();
+        });
     });
 
     this.When(/^I fill the form with the following data\w*$/, function(fields, next) {
@@ -62,68 +72,84 @@ module.exports = function() {
         var regex = /^(.+): (.+)\s*$/;
 
         var lines = fields.split('\n');
+
+        // Put all promises in the array
+        var promises = [];
         for (var i in lines) {
             var matches = lines[i].match(regex);
             var id = matches[1];
             var content = matches[2];
-            element(by.id(id)).sendKeys(content);
+            promises.push(element(by.id(id)).sendKeys(content));
         }
-        next();
+
+        // Resolve all promises and call next at the end
+        Promise.all(promises).then(function() {
+            next();
+        });
     });
 
     this.When(/^I click on the following objects\w*$/, function(fields, next) {
         var lines = fields.split('\n');
 
+        var promises = [];
         for (var id in lines) {
-            element(by.id(lines[id].trim())).click();
+            promises.push(element(by.id(lines[id].trim())).click());
         }
-        next();
+        Promise.all(promises).then(function() {
+            next();
+        });
     });
 
     this.When(/^I click on the object with id '(.+)'$/, function(id, next) {
-        //browser.actions().mouseMove(element(by.id(id))).click().perform();
-        element(by.id(id)).click();
-        next();
+        element(by.id(id)).click().then(function() {
+            next();
+        });
     });
 
     this.When(/^I claim the request with title '(.+)'$/, function(reqName, next) {
         // We assume that we are on the requests page
         var req = pages.requests.getRequestWithTitle(reqName);
-        req.claimButton.click();
-        next();
+        req.claimButton.click().then(function() {
+            next();
+        });
     });
 
     this.When('I claim the current request', function(next) {
-        pages.request.claimButton.click();
-        next();
+        pages.request.claimButton.click().then(function() {
+            next();
+        });
     });
 
     this.When(/^I click on the request with title '(.+)'$/, function(reqName, next) {
         // We assume that we are on the requests page
         var req = pages.requests.getRequestWithTitle(reqName);
-        req.title.click();
-        next();
+        req.title.click().then(function() {
+            next();
+        });
     });
 
     this.When(/^I click on the '(.+)' button$/, function(btnText, next) {
         browser.sleep(500);
-        var btn = element(by.buttonText(btnText));
-        browser.actions().mouseMove(btn).click().perform();
-        next();
+        element(by.buttonText(btnText)).click().then(function() {
+            next();
+        });
     });
 
     this.When(/^I click on all '(.+)' buttons$/, function(btnText, next) {
-        element.all(by.buttonText(btnText)).each(function(btn) {
-            browser.actions().mouseMove(btn).click().perform();
+        console.log('btnText: ' + btnText);
+        element.all(by.buttonText(btnText)).count().then(function(x) {
+            console.log('Buttons found: ' + x);
         });
-        
-        browser.sleep(500);
-        next();
-    });
+        var promises = [];
+        element.all(by.buttonText(btnText)).each(function(btn) {
+            console.log('found button!');
+            promises.push(btn.click());
+        });
 
-    this.When(/^there is a pause of (\d+) milliseconds$/, function(milliseconds, next) {
-        browser.sleep(parseInt(milliseconds));
-        next();
+        Promise.all(promises).then(function() {
+            browser.sleep(500);
+            next();
+        });
     });
 
     this.When(/^I upload the file '(.+)' to the element with id '(.+)'$/, function(fileName, id, next) {
@@ -131,12 +157,11 @@ module.exports = function() {
         var file = path.normalize(__dirname + '/../files/' + fileName);
 
         // Write the full route to the object
-        element(by.id(id)).sendKeys(file);
-
-        // Wait for the file to upload
-        browser.sleep(1000);
-
-        next();
+        element(by.id(id)).sendKeys(file).then(function() {
+            // Wait for the file to upload
+            browser.sleep(1000);
+            next();
+        });
     });
     
     this.When('I go to select PA numbers of the current request', function(next) {
@@ -144,29 +169,80 @@ module.exports = function() {
         var regex = /\/(\d+)$/;
         browser.getCurrentUrl().then(function(url) {
             var id = url.match(regex)[1];
-            browser.get('http://localhost:8092/#/request/' + id + '/selection');
-            next();
+            browser.get('http://localhost:8092/#/request/' + id + '/selection').then(function() {
+                next();
+            });
         });
     });
     
     this.When(/^I fill the text box with the words '(.+)'$/, function(text, next) {
-        element(by.css('[type=text]')).sendKeys(text);
-        next();
+        element(by.css('[type=text]')).sendKeys(text).then(function() {
+            next();
+        });
     });
 
     this.When(/^debug$/, function(next) {
-        browser.debugger();
-        next();
+        browser.debugger().then(function() {
+            next();
+        });
     });
 
     this.When(/^testing is paused (.*)$/, function(extra, next) {
         var resume = false;
+
+        // Wait until resume becomes true
         browser.driver.wait(function() { return resume; }, 3600 * 1000).then(function() { next(); });
+
+        // Set resume to true the first time a line is read
         var rl = readline.createInterface({ input: process.stdin, output: process.stdout });
         rl.question("Testing is paused " + extra + ", press enter to continue", function() {
             rl.close();
             resume = true;
         });
+    });
+
+    this.When(/^I enter the text '(.*)'$/, function(text, next) {
+        browser.sleep(500);
+        browser.driver.switchTo().activeElement().then(function(element) {
+            element.sendKeys(text).then(function() {
+                next();
+            });
+        });
+    });
+
+    this.When('I scroll to the bottom of the page', function(next) {
+        // Press the End key
+        element(by.css('body')).sendKeys(protractor.Key.END).then(function() {
+            next();
+        });
+    });
+
+    // Should work, but doesn't...
+    this.When('I select all PA numbers', function(next) {
+        // Count the amount of excerpts
+        var list = element(by.id('excerpt-list'));
+        list.evaluate('request.excerptList.entries.length').then(function(amount) {
+            console.log('Found ' + amount + ' excerpts');
+
+            // For each one, press space and go down
+            var promises = [];
+            for (var i = 0; i < amount; i++) {
+                promises.push(list.sendKeys(protractor.Key.SPACE),
+                    list.sendKeys(protractor.Key.DOWN));
+            }
+
+            Promise.all(promises).then(function() {
+                next();
+            });
+        });
+    });
+
+    this.Then(/^the page should contain the text '(.*)'$/, function(text, next) {
+        expect(element(by.css('body')).getInnerHtml()).to.eventually.contain(text).and.notify(next);
+    });
+
+    this.Then(/^the page should not contain the text '(.*)'$/, function(text, next) {
+        expect(element(by.css('body')).getInnerHtml()).to.eventually.not.contain(text).and.notify(next);
     });
 
     this.Then(/^I should see an? (.+) message$/, function(msgType, next) {
@@ -213,11 +289,27 @@ module.exports = function() {
         expect(req.vote.getText()).to.eventually.equal(vote).and.notify(next);
     });
 
+    this.Then(/^the current request should have '(.+)' status$/, function(status, next) {
+        expect(element(by.id('requestStatus')).getText()).to.eventually.contain(status).and.notify(next);
+    });
+
     this.Then(/^I should see (\d+) links? with title '(.+)'$/, function(reqAmount, reqName, next) {
-        expect(element.all(by.linkText(reqName)).count()).to.eventually.equal(reqAmount).and.notify(next);
+        expect(element.all(by.linkText(reqName)).count()).to.eventually.equal(parseInt(reqAmount)).and.notify(next);
     });
 
     this.Then('an excerpt should be attached to the request', function(next) {
         expect(pages.request.attachedExcerpt.isPresent()).to.eventually.be.true.and.notify(next);
+    });
+
+    this.Then('the scenario should always succeed', function(next) {
+        next();
+    });
+
+    this.Then(/^the object with id '(.+)' should be ticked$/, function(id, next) {
+        expect(element(by.id(id)).getAttribute('class')).to.eventually.contain('glyphicon-check').and.notify(next);
+    });
+
+    this.Then(/^the object with id '(.+)' should not be ticked$/, function(id, next) {
+        expect(element(by.id(id)).getAttribute('class')).to.eventually.not.contain('glyphicon-check').and.notify(next);
     });
 };

@@ -21,7 +21,7 @@ var LoginPage = function() {
     }
 
     this.login = function() {
-        this.loginButton.click();
+        return this.loginButton.click();
     }
 };
 

@@ -14,7 +14,7 @@
         </div>
     </div>
     
-    <ul class="list-group">
+    <ul class="list-group" id="excerpt-list">
         <li class="list-group-item {{excerpt.selected ? 'list-group-item-info' : ''}} {{$index == currentIndex ? 'active':''}}"
             ng-repeat="excerpt in request.excerptList.entries track by excerpt.id"
             id="excerpt_{{excerpt.id}}">

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -17,15 +18,16 @@ import business.models.LabRepository;
 import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
-import business.models.UserRepository;
+import business.services.UserService;
 
-// FIXME: only generate users in dev and test. always generate roles.
-//@Profile({"dev", "test"})
+@Profile({"default", "dev", "test"})
 @Service
-public class DefaultUsers {
+public class DefaultRolesUsersLabs {
 
+    Log log = LogFactory.getLog(getClass());
+    
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     RoleRepository roleRepository;
@@ -36,20 +38,31 @@ public class DefaultUsers {
     @Autowired
     PasswordEncoder passwordEncoder;
     
+    static final String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
+    
+    /**
+     * Generates default users and labs in the 'dev' and 'test' profiles.
+     * Always generates default roles (if not already present).
+     */
     @PostConstruct
     private void initDatabase() {
 
-        LogFactory.getLog(getClass()).info("Creating default labs...");
-
+        log.info("Creating default roles...");
+        for (String r: defaultRoles) {
+            Role role = roleRepository.findByName(r);
+            if (role == null) {
+                role = roleRepository.save(new Role(r));
+            }
+        }
+        
+        log.warn("Creating default labs...");
         String[] defaultLabs = new String[] {
                 "AMC, afd. Pathologie",
                 "Meander Medisch Centrum, afd. Klinische Pathologie",
                 "Canisius-Wilhelmina Ziekenhuis, afd. Pathologie",
                 "Laboratorium voor Pathologie (PAL), Dordrecht"
         };
-
         int labIdx = 99;
-
         for (String r: defaultLabs) {
             if (labRepository.findByName(r) == null) {
                 Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
@@ -57,18 +70,11 @@ public class DefaultUsers {
             }
         }
         
-        
-        LogFactory.getLog(getClass()).info("Creating default users and roles...");
-
-        String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
-
+        log.warn("Creating default users...");
         for (String r: defaultRoles) {
             Role role = roleRepository.findByName(r);
-            if (role == null) {
-                role = roleRepository.save(new Role(r));
-            }
             String username = r + "@dntp.thehyve.nl";
-            User user = userRepository.findByUsernameAndDeletedFalse(username);
+            User user = userService.findByUsername(username);
             if (user == null) {
                 Set<Role> roles = new HashSet<Role>();
                 roles.add(role);
@@ -84,14 +90,13 @@ public class DefaultUsers {
                     Lab lab = labRepository.findByName(defaultLabs[0]);
                     user.setLab(lab);
                 }
-                userRepository.save(user);
+                userService.save(user);
             } else if (!user.getPassword().startsWith("$")) {
                 // Detect and encrypt old plain-text passwords
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
-                userRepository.save(user);
+                userService.save(user);
             }
         }
-
     }
 
 }

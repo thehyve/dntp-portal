@@ -1,37 +1,37 @@
 <div class="container-fluid">
-  <div class="row">
+    <div class="row">
 
-    <!--Side Bar-->
-    <div class="col-sm-3 col-md-2 sidebar">
-      <ul class="nav nav-sidebar">
-        <li class="active"><a href="#/">{{'Overview'|translate}} <span class="sr-only">(current)</span></a></li>
-      </ul>
-    </div>
+        <!--Side Bar-->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#/">{{'Overview'|translate}} <span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
 
-    <div ng-show="!authenticated">
-      <div class="alert alert-danger" role="alert">
-        {{ 'Not logged in' | translate }}
-      </div>
-    </div>
+        <div ng-show="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{ 'Not logged in' | translate }}
+            </div>
+        </div>
 
-    <!--Main Content-->
-    <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-controller="LabRequestController">
+        <!--Main Content-->
+        <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"
+             ng-controller="LabRequestController">
 
-      <div ng-show="error" class="alert alert-danger" role="alert">
-        {{ error | translate }}
-      </div>
+            <div ng-show="error" class="alert alert-danger" role="alert">
+                {{ error | translate }}
+            </div>
 
-      <h1>{{ 'Lab requests' | translate }}</h1>
-      <hr>
+            <h1>{{ 'Lab requests' | translate }}</h1>
+            <hr>
 
-      <!-- Alert -->
-      <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeAlert();">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        {{alert.msg | translate}}
-      </div>
-
+            <!-- Alert -->
+            <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeAlert();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{alert.msg | translate}}
+            </div>
                 <table st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
                     <thead>
                         <tr>
@@ -62,7 +62,6 @@
                             <th colspan="8"><input id="lab-request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
-
                     </thead>
                     <tbody>
                     <tr ng-repeat="labRequest in displayedLabRequests track by $index"
@@ -119,7 +118,64 @@
                 </table>
             </div>
 
-    </div> <!--end Main Content-->
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="labRequest in displayedLabRequests track by $index"
+                        ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid}">
+                        <td>
+                            <!--{{labRequest.id}}-->
+                            <!--{{labRequest.request.processInstanceId}} - {{labRequest.lab.number}}-->
+                            {{labRequest.labReqId}}
+                        </td>
+                        <td>
+                            <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.request.title}}</a>
+                        </td>
+                        <td>
+                            {{labRequest.request.requesterName}}
+                        </td>
+                        <td>
+                            {{labRequest.lab.name}}
+                        </td>
+                        <td>
+                            {{labRequest.dateCreated | date: 'EEE, dd MMMM yyyy H:mm'}}
+                        </td>
+                        <td>
+                            {{labRequest.endDate | date: 'EEE, dd MMMM yyyy H:mm'}}
+                        </td>
+                        <td>
+                            {{labRequest.pathologyCount}}
+                        </td>
+                        <td>
+                            {{labRequest.status}}
+                        </td>
+                        <td>
+                            <span class="pull-right">
+                                <span class="btn-group">
+                                <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Edit'|translate}}"
+                                    ng-click="edit(labRequest)">
+                                <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
+                                </button>
+                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Claim'|translate}}"
+                                    ng-click="claim(labRequest)">
+                                <span><i class="glyphicon glyphicon-eye-open"></i></span>
+                                </button>
+                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Unclaim'|translate}}"
+                                    ng-click="unclaim(labRequest)">
+                                <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                                </button>
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-  </div>
+        </div>
+        <!--end Main Content-->
+
+    </div>
 </div>

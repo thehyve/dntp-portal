@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-controller="RequestController">
+<div class="container-fluid">
     <div class="row">
 
         <!--Side Bar-->
@@ -8,8 +8,24 @@
             </ul>
         </div>
 
+        <div ng-show="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{ 'Not logged in' | translate }}
+            </div>
+        </div>
+
+        <div ng-if="!request" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div ng-show="error" class="alert alert-danger" role="alert">
+                {{ error | translate }}
+            </div>
+        </div>
+
         <!--Main-->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div ng-if="authenticated && request" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <div ng-show="error" class="alert alert-danger" role="alert">
+                {{ error | translate }}
+            </div>
 
             <h2>{{request.processInstanceId}} - {{ 'Request' | translate }} {{request.title}}</h2>
             <hr>
@@ -173,33 +189,33 @@
             <!--Background -->
             <div class="row">
                 <label class="control-label col-sm-3">{{ 'Background' | translate }}</label>
-                <div class="col-sm-7">
+                <p class="col-sm-7">
                     {{request.background}}
-                </div>
+                </p>
             </div>
 
             <!-- Research Question -->
             <div class="row">
                 <label class="control-label col-sm-3">{{ ' Research question' | translate }}</label>
-                <div class="col-sm-7">
+                <p class="col-sm-7">
                     {{request.researchQuestion}}
-                </div>
+                </p>
             </div>
 
             <!-- Hypothesis -->
             <div class="row">
                 <label class="control-label col-sm-3">{{ 'Hypothesis' | translate }}</label>
-                <div class="col-sm-7">
+                <p class="col-sm-7">
                     {{request.hypothesis}}
-                </div>
+                </p>
             </div>
 
             <!-- Methods -->
             <div class="row">
                 <label class="control-label col-sm-3">{{ 'Methods' | translate }}</label>
-                <div class="col-sm-7">
+                <p class="col-sm-7">
                     {{request.methods}}
-                </div>
+                </p>
             </div>
 
             <!-- Request Type -->
@@ -243,9 +259,9 @@
             <!-- Reason Using Personal Data -->
             <div class="row" ng-show="request.type != '1'">
                 <label class="control-label col-sm-3">{{ 'Reason using personal data' | translate }}</label>
-                <div class="col-sm-7">
+                <p class="col-sm-7">
                     {{request.reasonUsingPersonalData}}
-                </div>
+                </p>
             </div>
 
             <br>
@@ -371,25 +387,25 @@
                 <!-- Outcome -->
                 <div class="row">
                     <label class="control-label col-sm-3">{{ 'Outcome' | translate }}</label>
-                    <div class="col-sm-7">
+                    <p class="col-sm-7">
                         {{request.privacyCommitteeOutcome}}
-                    </div>
+                    </p>
                 </div>
 
                 <!-- Outcome Reference -->
                 <div class="row">
                     <label class="control-label col-sm-3">{{ 'Outcome reference' | translate }}</label>
-                    <div class="col-sm-7">
+                    <p class="col-sm-7">
                         {{request.privacyCommitteeOutcomeRef}}
-                    </div>
+                    </p>
                 </div>
 
                 <!-- Outcome Emails -->
                 <div class="row">
                     <label class="control-label col-sm-3">{{ 'Emailing history' | translate }}</label>
-                    <div class="col-sm-7">
+                    <p class="col-sm-7">
                         {{request.privacyCommitteeEmails}}
-                    </div>
+                    </p>
                 </div>
 
                 <br>
@@ -416,9 +432,9 @@
             <!-- Excerpt list remark -->
             <div class="row">
                 <label class="control-label col-sm-3">{{ 'Remark' | translate }}</label>
-                <div class="col-sm-7">
+                <p class="col-sm-7">
                     {{request.excerptListRemark}}
-                </div>
+                </p>
             </div>
 
             </div> <!-- endif LabRequest -->

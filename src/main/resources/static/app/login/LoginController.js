@@ -102,11 +102,16 @@ angular.module('ProcessApp.controllers')
                     authenticate(function() {
                         if ($rootScope.authenticated) {
                             $scope.error = false;
-                            if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
-                              $location.path('/');
-                            } else {
-                              $location.path('/lab-requests');
+                            var redirectUrl = $rootScope.redirectUrl;
+                            if (!redirectUrl) {
+                                if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
+                                    redirectUrl = '/';
+                                } else {
+                                    redirectUrl = '/lab-requests';
+                                }
                             }
+                            console.log("Redirecting to "+redirectUrl);
+                            $location.path(redirectUrl);
                         } else {
                             $location.path('/login');
                             $scope.error = true;
@@ -122,5 +127,9 @@ angular.module('ProcessApp.controllers')
                     $rootScope.authenticated = false;
                 });
             };
+            
+            angular.element(document).ready(function() {
+                $('#username').focus();
+              });
 
         }]);

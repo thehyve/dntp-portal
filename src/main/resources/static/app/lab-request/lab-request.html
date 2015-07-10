@@ -8,8 +8,20 @@
             </ul>
         </div>
 
+        <div ng-show="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{ 'Not logged in' | translate }}
+            </div>
+        </div>
+
+        <div ng-if="!labRequest" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div ng-show="error" class="alert alert-danger" role="alert">
+                {{ error | translate }}
+            </div>
+        </div>
+
         <!--Main-->
-        <div class="col-md-10 col-md-offset-2 form-horizontal main ">
+        <div ng-if="labRequest" class="col-md-10 col-md-offset-2 form-horizontal main">
 
             <h2 id="lab-request-title">
                 {{labRequest.request.processInstanceId}}-{{labRequest.lab.number}}
@@ -189,9 +201,9 @@
             <!-- Methods -->
             <div class="form-group no-print">
                 <label class="control-label col-md-2">{{ 'Methods' | translate }}</label>
-                <div class="col-md-10">
+                <p class="col-md-10">
                     {{labRequest.request.methods}}
-                </div>
+                </p>
             </div>
 
             <!-- Request Type -->

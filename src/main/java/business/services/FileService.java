@@ -71,6 +71,8 @@ public class FileService {
     public File uploadPart(User user, String name, File.AttachmentType type, MultipartFile file,
             Integer chunk, Integer chunks, String flowIdentifier) {
         try {
+            String identifier = user.getId().toString() + "_" +flowIdentifier;
+            
             String contentType = file.getContentType();
             InputStream input = file.getInputStream();
 
@@ -99,10 +101,10 @@ public class FileService {
             synchronized(uploadChunks) {
                 // FIXME: perhaps use a better identifier? Not sure if this one 
                 // is unique enough...
-                chunkMap = uploadChunks.get(flowIdentifier);
+                chunkMap = uploadChunks.get(identifier);
                 if (chunkMap == null) {
                     chunkMap = new TreeMap<Integer, Path>();
-                    uploadChunks.put(flowIdentifier, chunkMap);
+                    uploadChunks.put(identifier, chunkMap);
                 }
             }
             chunkMap.put(chunk, f);

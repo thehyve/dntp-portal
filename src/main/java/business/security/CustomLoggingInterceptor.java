@@ -27,10 +27,11 @@ public class CustomLoggingInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
-        log.trace(String.format("%s\t%s\t%s\t%s", 
+        log.trace(String.format("%s\t%s\t%s\t%s\t%s", 
                 new Date(), 
                 request.getRemoteAddr(), 
                 request.getUserPrincipal() == null ? " - " : request.getUserPrincipal().getName(),
+                request.getMethod(),
                 request.getRequestURI())
                 );
         return super.preHandle(request, response, handler);

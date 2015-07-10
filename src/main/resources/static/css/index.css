@@ -12,6 +12,7 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
+    padding-bottom: 40px;
 }
 
 h1, h2, h3 { color: steelblue; }
@@ -157,4 +158,8 @@ address {margin-bottom: 0px;}
 
 .st-sort-descent:before{
     content: '\25BC';
+}
+
+.row p {
+	word-wrap: break-word;
 }

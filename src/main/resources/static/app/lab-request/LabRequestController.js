@@ -6,6 +6,8 @@ angular.module('ProcessApp.controllers')
         'Restangular', function ($q, $rootScope, $scope, $modal, $location, $route, $routeParams, $window, Request,
                                  Restangular) {
 
+            $rootScope.redirectUrl = $location.path();
+
             $scope.login = function () {
                 $location.path('/login');
             };
@@ -64,6 +66,9 @@ angular.module('ProcessApp.controllers')
                     $rootScope.labRequests = labRequests;
                     $rootScope.labRequests.forEach (function (labReq) {
                         labReq.labReqId = labReq.request.processInstanceId +  '-' + labReq.lab.number;
+                        labReq.requestTitle = labReq.request.title;
+                        labReq.requesterName = labReq.request.requesterName;
+                        labReq.labName = labReq.lab.name;
                     });
                     $scope.displayedLabRequests = [].concat($rootScope.labRequests);
                     if ($route.current.templateUrl === 'app/lab-request/samples.html') {
@@ -71,7 +76,12 @@ angular.module('ProcessApp.controllers')
                     }
                     deferred.resolve($scope.labRequests);
                 }, function (err) {
-                    deferred.reject('Cannot load lab requests. ' + err);
+                    if (err.status === 403) {
+                        $rootScope.errormessage = err.data.message;
+                        $scope.login();
+                        return;
+                    }
+                    deferred.reject('Cannot load lab requests. ' + _flattenError(err));
                 });
                 return deferred.promise;
             };
@@ -95,8 +105,9 @@ angular.module('ProcessApp.controllers')
                 return contactData ? ''
                     .concat(contactData.address1 !== null ? contactData.address1 + '<br>' : '')
                     .concat(contactData.address2 !== null ? contactData.address2 + '<br>' : '')
-                    .concat(contactData.city !== null ? contactData.city + ' ' : '')
-                    .concat(contactData.postalCode !== null ? contactData.postalCode + '<br>' : '')
+                    .concat(contactData.postalCode !== null ? contactData.postalCode + '  ' : '')
+                    .concat(contactData.city !== null ? contactData.city : '')
+                    .concat(contactData.city !== null || contactData.postalCode !== null ? '<br>' : '')
                     .concat(contactData.stateProvince !== null ? contactData.stateProvince + ', ' : '')
                     .concat(contactData.stateProvince !== null ? contactData.country + '<br>' : '')
                     .concat(contactData.telephone !== null ? _createPhoneTmp(contactData.telephone) + '<br>' : '')
@@ -125,6 +136,11 @@ angular.module('ProcessApp.controllers')
                     $scope.labRequest.htmlLabAddress = getHTMLRequesterAddress($scope.labRequest.lab.contactData);
                     deferred.resolve($scope.labRequest);
                 }, function (err) {
+                    if (err.status === 403) {
+                        $rootScope.errormessage = err.data.message;
+                        $scope.login();
+                        return;
+                    }
                     var errMsg = 'Error : ' + err.data.status + ' - ' + err.data.error;
                     $scope.alerts.push({type: 'danger', msg: errMsg});
                     deferred.reject(errMsg);
@@ -152,31 +168,49 @@ angular.module('ProcessApp.controllers')
                 $scope.labReqModal.hide();
             };
 
+            var _flattenError = function(err) {
+                if (err instanceof Object) {
+                    if ('message' in err) {
+                        return err.message;
+                    } else if ('data' in err) {
+                        if ('message' in err.data) {
+                            return err.data.message;
+                        }
+                        return JSON.stringify(err.data);
+                    } 
+                    return JSON.stringify(err);
+                } else {
+                    return err;
+                }
+            }
+            
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
             };
 
             $scope.reject = function (labRequest) {
-                bootbox.prompt({
-                    title: 'Are you sure you want to reject the lab request?\n<br>' +
-                    'Please enter a reject reason:',
-                    callback: function (result) {
+                bootbox.confirm(
+                    '<h4>Are you sure you want to reject the lab request?</h4>\n' +
+                    '<form id="reject" action="">' +
+                    'Please enter a reject reason:\n<br><br>\n' +
+                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
+                    '</form>',
+                    function(result) {
                         if (result) {
-                            labRequest.rejectReason = result;
+                            labRequest.rejectReason = $('#rejectReason').val();
+                            console.log('Rejected. Reason: ' + labRequest.rejectReason);
                             labRequest.customPUT(labRequest, 'reject').then(function (result) {
-                                    if ($scope.labReqModal) {
-                                        $scope.labReqModal.hide();
-                                    }
-                                    $location.path('/lab-request/view/' + labRequest.id);
-                                    //_loadRequests();
+                                if ($scope.labReqModal) {
+                                    $scope.labReqModal.hide();
                                 }
-                                , function (err) {
-                                    console.error('Error: ', err);
-                                    $scope.alerts.push({type: 'danger', msg: err});
-                                });
+                                _loadData();
+                            }
+                            , function (err) {
+                                $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                            });
                         }
                     }
-                });
+                );
             };
 
             $scope.accept = function (labRequest) {
@@ -186,7 +220,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -198,7 +232,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -209,7 +243,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -220,7 +254,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -231,7 +265,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -242,7 +276,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -251,7 +285,7 @@ angular.module('ProcessApp.controllers')
                     .then(function (result) {
                         _loadData();
                     }, function (err) {
-                        $scope.alerts.push({type: 'danger', msg: err});
+                        $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
 
@@ -260,7 +294,7 @@ angular.module('ProcessApp.controllers')
                     .then(function (result) {
                         _loadData();
                     }, function (err) {
-                        $scope.alerts.push({type: 'danger', msg: err});
+                        $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
 
@@ -308,7 +342,7 @@ angular.module('ProcessApp.controllers')
                     }
                     _loadData();
                 }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: err});
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
@@ -324,7 +358,7 @@ angular.module('ProcessApp.controllers')
                         //console.log(result);
                     },
                     function (err) {
-                        $scope.alerts.push({type: 'danger', msg: err});
+                        $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
 

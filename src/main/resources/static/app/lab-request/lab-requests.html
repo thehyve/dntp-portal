@@ -32,14 +32,10 @@
                 </button>
                 {{alert.msg | translate}}
             </div>
-
-            <!--List of Lab Requests-->
-            <div class="table-responsive" ng-if="authenticated">
-
                 <table st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
                     <thead>
                         <tr>
-                            <th st-sort="labReqId">{{'Lab Request ID' | translate}}</th>
+                            <th st-sort="labRequestCode">{{'Lab Request ID' | translate}}</th>
                             <th st-sort="request.title">{{'Request title' | translate}}</th>
                             <th st-sort="request.requesterName">{{'Requester' | translate}}</th>
                             <th st-sort="lab.name">{{'Lab' | translate}}</th>
@@ -47,14 +43,14 @@
                             <th st-sort="endDate">{{'End date' | translate}}</th>
                             <th st-sort="pathologyCount">{{'# PA numbers' | translate}}</th>
                             <th st-sort="status">{{'Status' | translate}}</th>
-                            <th st-sort="labReqId">{{'' | translate}}</th>
+                            <th>&nbsp;</th>
                         </tr>
                         <tr>
-                            <!--<th><input st-search="labRequest.labReqId" placeholder="Filter by id" class="input-sm form-control" type="search"/></th>-->
-                            <th>&nbsp;</th>
-                            <th><input st-search="requestTitle" placeholder="Filter by Request Title" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="labName" placeholder="Filter by Lab" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="labRequestCode" placeholder="Filter by id" class="input-sm form-control" type="search"/></th>
+                            <!--<th>&nbsp;</th>-->
+                            <th><input st-search="request.title" placeholder="Filter by Request Title" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="request.requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="lab.name" placeholder="Filter by Lab" class="input-sm form-control" type="search"/></th>
                             <!--<th><input st-search="dateCreated" placeholder="Filter by Date" class="input-sm form-control" type="search"/></th>-->
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
@@ -66,6 +62,61 @@
                             <th colspan="8"><input id="lab-request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="labRequest in displayedLabRequests track by $index"
+                        ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid}">
+                        <td>
+                            <!--{{labRequest.id}}-->
+                            <!--{{labRequest.request.processInstanceId}} - {{labRequest.lab.number}}-->
+                          <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.labRequestCode}}</a>
+                        </td>
+                        <td>
+                           {{labRequest.request.title}}
+                        </td>
+                        <td>
+                            {{labRequest.request.requesterName}}
+                        </td>
+                        <td>
+                            {{labRequest.lab.name}}
+                        </td>
+                        <td>
+                            {{labRequest.dateCreated | date: 'EEE, dd MMMM yyyy H:mm'}}
+                        </td>
+                        <td>
+                            {{labRequest.endDate | date: 'EEE, dd MMMM yyyy H:mm'}}
+                        </td>
+                        <td>
+                            {{labRequest.pathologyCount}}
+                        </td>
+                        <td>
+                            {{labRequest.status}}
+                        </td>
+                        <td>
+                            <span class="pull-right">
+                                <span class="btn-group">
+                                <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Edit'|translate}}"
+                                    ng-click="edit(labRequest)">
+                                <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
+                                </button>
+                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Claim'|translate}}"
+                                    ng-click="claim(labRequest)">
+                                <span><i class="glyphicon glyphicon-eye-open"></i></span>
+                                </button>
+                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid"
+                                    class="btn btn-default" type="button" title="{{'Unclaim'|translate}}"
+                                    ng-click="unclaim(labRequest)">
+                                <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                                </button>
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
                     </thead>
                     <tbody>

@@ -7,7 +7,7 @@
         {{'There was a problem logging in.' | translate}}
         {{errormessage | translate}}
     </div>
-    <div class="alert alert-danger" ng-show="errormessage">
+    <div class="alert alert-danger" ng-show="!error && errormessage">
         {{errormessage | translate}}
     </div>
 

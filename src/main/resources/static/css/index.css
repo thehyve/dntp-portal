@@ -159,3 +159,7 @@ address {margin-bottom: 0px;}
 .st-sort-descent:before{
     content: '\25BC';
 }
+
+.row p {
+	word-wrap: break-word;
+}

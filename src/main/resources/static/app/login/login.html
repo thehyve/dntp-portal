@@ -7,6 +7,9 @@
         {{'There was a problem logging in.' | translate}}
         {{errormessage | translate}}
     </div>
+    <div class="alert alert-danger" ng-show="errormessage">
+        {{errormessage | translate}}
+    </div>
 
     <form role="form" ng-submit="login()">
         <div class="form-group">

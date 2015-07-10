@@ -74,6 +74,7 @@ angular.module('ProcessApp.controllers')
                     deferred.resolve($scope.labRequests);
                 }, function (err) {
                     if (err.status === 403) {
+                        $rootScope.errormessage = err.data.message;
                         $scope.login();
                         return;
                     }
@@ -132,6 +133,7 @@ angular.module('ProcessApp.controllers')
                     deferred.resolve($scope.labRequest);
                 }, function (err) {
                     if (err.status === 403) {
+                        $rootScope.errormessage = err.data.message;
                         $scope.login();
                         return;
                     }

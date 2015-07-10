@@ -66,6 +66,9 @@ angular.module('ProcessApp.controllers')
                     $rootScope.labRequests = labRequests;
                     $rootScope.labRequests.forEach (function (labReq) {
                         labReq.labReqId = labReq.request.processInstanceId +  '-' + labReq.lab.number;
+                        labReq.requestTitle = labReq.request.title;
+                        labReq.requesterName = labReq.request.requesterName;
+                        labReq.labName = labReq.lab.name;
                     });
                     $scope.displayedLabRequests = [].concat($rootScope.labRequests);
                     if ($route.current.templateUrl === 'app/lab-request/samples.html') {

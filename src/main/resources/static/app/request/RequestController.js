@@ -67,7 +67,7 @@ angular.module('ProcessApp.controllers')
                             console.log("ACCESS DENIED");
                         }
                         else if (response.status === 403) {
-                            $rootScope.errormessage = response.data.message;
+                            //$rootScope.errormessage = response.data.message;
                             $scope.login();
                             return;
                         }

@@ -6,6 +6,9 @@ angular.module('ProcessApp.controllers')
         $scope.done = false;
 
         $scope.submitForm = function () {
+
+            var regex = /(?=.*[!*'();:@&=+$,/?#[\]])+[a-zA-Z0-9!*'();:@&=+$,/?#[\]]{8,}/;
+
             // Validate
             if ($scope.password !== $scope.repeatPassword) {
                 error('Passwords do not match');
@@ -15,6 +18,9 @@ angular.module('ProcessApp.controllers')
                 return;
             } else if ($scope.password.length < 8) {
                 error('Passwords must be at least 8 characters long');
+                return;
+            } else if (!regex.test($scope.password)) {
+                console.log("regex2 is not succesful");
                 return;
             }
 

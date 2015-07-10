@@ -62,7 +62,7 @@ angular.module('ProcessApp.controllers')
                 var deferred = $q.defer();
                 Restangular.all('labrequests').getList().then(function (labRequests) {
                     $rootScope.labRequests = labRequests;
-
+                    $scope.displayedLabRequests = [].concat($rootScope.labRequests);
                     if ($route.current.templateUrl === 'app/lab-request/samples.html') {
                         _createSampleList(labRequests);
                     }

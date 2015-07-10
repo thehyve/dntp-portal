@@ -60,7 +60,9 @@
                 <!--<button ng-if="isLabUser()"-->
                 <button
                     class="btn btn-default" type="button"
-                    ng-click="printPreview();" title="printView">
+                    ng-click="printPreview();"
+                    title="printView"
+                    ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Print Preview' | translate}}
                 </button>
@@ -131,10 +133,19 @@
                 </div>
 
 
-                <h3 class="no-print"> {{'Parent details' | translate}} </h3>
+                <h3 class="no-print"> {{'Request Details' | translate}} </h3>
                 <hr class="no-print">
 
                 <!--Parent request details-->
+                <div class="form-group no-print">
+                    <label class="control-label col-md-2">{{ 'Request ID' | translate }}</label>
+                    <div class="col-md-10">
+                        <p class="form-control-static">
+                            {{labRequest.request.processInstanceId}}
+                        </p>
+                    </div>
+                </div>
+
                 <div class="form-group no-print">
                     <label class="control-label col-md-2">{{ 'Request title' | translate }}</label>
                     <div class="col-md-10">
@@ -231,29 +242,18 @@
                   </div>
                 </div>
 
-                <!--<div class="form-group" id="lab-address">-->
-                  <!--<label class="control-label col-md-2">{{ 'Contact' | translate }}</label>-->
-                  <!--<address class="col-md-10" >-->
-                    <!--<p class="form-control-static" ng-bind-html="labRequest.htmlRequesterLabAddress"></p>-->
-                  <!--</address>-->
-                <!--</div>-->
-
-                <div ng-if="!isLabUser()"class="no-print">
+                <div ng-show="!isLabUser()">
                   <!--Lab Info-->
                   <!--Displayed only to users with non lab user role-->
                   <div class="form-group">
-                    <label class="control-label col-md-2">{{ 'Lab' | translate }}</label>
-                    <div class="col-md-10">
-                      <p class="form-control-static">
-                        {{"Lab" | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label col-md-2">{{ 'Contact' | translate }}</label>
-                    <address  class="col-md-10">
-                      <p class="form-control-static" ng-bind-html="labRequest.htmlLabAddress"></p>
-                    </address>
+                        <label class="control-label col-md-2 no-print">{{ 'Sender Lab' | translate }}</label>
+                        <label class="control-label col-md-2 print-only">{{ 'Sender' | translate }}</label>
+                        <div class="col-md-10">
+                          <p class="form-control-static">
+                            {{"Lab" | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
+                            <address ng-bind-html="labRequest.htmlLabAddress"></address>
+                          </p>
+                        </div>
                   </div>
                 </div>
 

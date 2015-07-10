@@ -19,6 +19,8 @@ public class LabRequestRepresentation {
 
     private String processInstanceId;
 
+    private String labRequestCode;
+
     private RequestListRepresentation request;
 
     private String requesterId;
@@ -67,6 +69,7 @@ public class LabRequestRepresentation {
         this.setRejectDate(labRequest.getRejectDate());
         this.setRejectReason(labRequest.getRejectReason());
         this.setPaReportsSent(labRequest.isPaReportsSent());
+        this.setLabRequestCode(this.getProcessInstanceId(), this.getLab().getNumber().toString());
     }
 
     public Long getId() {
@@ -260,5 +263,18 @@ public class LabRequestRepresentation {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-    
+
+    public String getLabRequestCode() {
+        return labRequestCode;
+    }
+
+    public void setLabRequestCode(String processInstanceId, String labNumber) {
+        String labRequestCode = "";
+        if (!processInstanceId.isEmpty() && !labNumber.isEmpty()) {
+            labRequestCode = processInstanceId
+                    .concat("-")
+                    .concat(labNumber);
+        }
+        this.labRequestCode = labRequestCode;
+    }
 }

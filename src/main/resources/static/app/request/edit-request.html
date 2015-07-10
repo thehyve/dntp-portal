@@ -52,6 +52,9 @@
                             <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$invalid && requestEditForm.pathologistEmail.$dirty">
+                                {{ 'Email format is invalid' | translate }}
+                            </span>
                         </div>
                     </div>
 

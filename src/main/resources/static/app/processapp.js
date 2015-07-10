@@ -113,7 +113,9 @@
                     !startsWith($location.path(), '/activate/')
                     ) &&
                     !$rootScope.globals.currentUser) {
-                    $location.path('/login');
+                      $rootScope.redirectUrl = $location.path();
+                      console.log('redirectUrl set to: ' + $rootScope.redirectUrl);
+                      $location.path('/login');
                   }
                 });
             }]);

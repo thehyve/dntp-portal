@@ -42,6 +42,18 @@ angular.module('ProcessApp.controllers')
                 return checkRoles(['HAS_MANAGE_OWN_LAB_PAGE_AUTH']);
             };
 
+            $scope.isRequestsPage = function() {
+                return $route.current.templateUrl=='app/request/edit-request.html'
+                    || $route.current.templateUrl=='app/request/requests.html'
+                    || $route.current.templateUrl=='app/request/request.html';
+            }
+            
+            $scope.isLabRequestsPage = function() {
+                return $route.current.templateUrl=='app/lab-request/edit-lab-request.html'
+                    || $route.current.templateUrl=='app/lab-request/lab-requests.html'
+                    || $route.current.templateUrl=='app/lab-request/lab-request.html';
+            }
+            
             $scope.login = function() {
                 $location.path('/login');
             };

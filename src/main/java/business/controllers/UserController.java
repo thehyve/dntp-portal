@@ -153,7 +153,7 @@ public class UserController {
 
         // change role
         ProfileRepresentation representation = new ProfileRepresentation(user);
-        if (!representation.getCurrentRole().equals(body)) {
+        if (!representation.getCurrentRole().equals(body.getCurrentRole())) {
             Role role = roleRepository.findByName(body.getCurrentRole());
             if (role == null) {
                 throw new InvalidUserData("Unknown role selected.");

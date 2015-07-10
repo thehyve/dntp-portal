@@ -11,6 +11,8 @@ angular.module('ProcessApp.controllers')
                   ApprovalComment, ApprovalVote,
                   FlowOptionService, $routeParams) {
 
+            $rootScope.redirectUrl = $location.path();
+        
             $scope.login = function() {
                 $location.path('/login');
             };
@@ -43,8 +45,14 @@ angular.module('ProcessApp.controllers')
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
                         }
+                        else if (response.status === 403) {
+                            $rootScope.errormessage = response.data.message;
+                            $scope.login();
+                            return;
+                        }
                     } else {
                         $scope.login();
+                        return;
                     }
                 });
             } else {
@@ -56,9 +64,16 @@ angular.module('ProcessApp.controllers')
                         $scope.error = response.data.message + '\n';
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
+                            console.log("ACCESS DENIED");
+                        }
+                        else if (response.status === 403) {
+                            //$rootScope.errormessage = response.data.message;
+                            $scope.login();
+                            return;
                         }
                     } else {
                         $scope.login();
+                        return;
                     }
                 });
             }
@@ -282,12 +297,16 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.reject = function(request) {
-                bootbox.prompt({
-                    title: 'Are you sure you want to reject the request?\n<br>' +
-                    'Please enter a reject reason:',
-                    callback: function(result) {
+                bootbox.confirm(
+                    '<h4>Are you sure you want to reject the request?</h4>\n' +
+                    '<form id="reject" action="">' +
+                    'Please enter a reject reason:\n<br><br>\n' +
+                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
+                    '</form>',
+                    function(result) {
                         if (result) {
-                            request.rejectReason = result;
+                            request.rejectReason = $('#rejectReason').val();
+                            console.log('Rejected. Reason: ' + request.rejectReason);
                             request.$reject(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
@@ -296,7 +315,7 @@ angular.module('ProcessApp.controllers')
                             });
                         }
                     }
-                });
+                );
             };
 
             $scope.uploadDataFile = function(flow) {

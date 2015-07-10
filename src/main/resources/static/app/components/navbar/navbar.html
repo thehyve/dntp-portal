@@ -21,10 +21,10 @@
                 <li ng-show="isViewSamplesAllowed();" class="{{$route.current.templateUrl=='app/lab-request/samples.html' ? 'active': ''}}">
                     <a href="#/samples">{{'Samples'|translate}}</a>
                 </li>
-                <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">
+                <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='app/admin/user/users.html' ? 'active': ''}}">
                     <a href="#/users">{{'Users'|translate}}</a>
                 </li>
-                <li ng-show="isViewLabsAllowed();" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
+                <li ng-show="isViewLabsAllowed();" class="{{$route.current.templateUrl=='app/admin/lab/labs.html' ? 'active': ''}}">
                     <a href="#/labs">{{'Labs'|translate}}</a>
                 </li>
                 <li ng-show="isViewOwnLabAllowed();" class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">

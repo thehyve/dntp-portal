@@ -26,6 +26,7 @@ public class UserService {
     RoleRepository roleRepository;
     
     public User save(User user) throws EmailAddressNotAvailable {
+        assert(user.getRoles().size() == 1);
         User result = userRepository.save(user);
         long count = userRepository.countByUsernameAndDeletedFalse(user.getUsername());
         if (count <= 1) {

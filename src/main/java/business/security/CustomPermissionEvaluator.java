@@ -75,6 +75,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             checkTargetDomainObjectNotNull(targetDomainObject);
             String taskId = (String)targetDomainObject;
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            if (task == null) {
+                return false;
+            }
             log.info("isAssignedToTask: " + authentication.getName()
                     + ", " + task.getAssignee());
             return authentication.getName().equals(task.getAssignee());
@@ -97,7 +100,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             Long labRequestId = (Long)targetDomainObject;
             log.info("labRequestAssignedToUser: user = " + user.getId()
                     + ", labRequestId = " + labRequestId);
-            LabRequest labRequest = labRequestRepository.findOne(labRequestId); 
+            LabRequest labRequest = labRequestRepository.findOne(labRequestId);
+            if (labRequest == null) {
+                return false;
+            }
             long count = taskService.createTaskQuery().taskId(labRequest.getTaskId())
                     .active()
                     .taskAssignee(user.getId().toString())
@@ -119,6 +125,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             log.info("isRequester: user = " + user.getId()
                     + ", requestId = " + requestId);
             HistoricProcessInstance instance = requestService.findProcessInstance(requestId);
+            if (instance == null) {
+                return false;
+            }
             RequestRepresentation request = new RequestRepresentation();
             requestFormService.transferData(instance, request, user);
             return request.getRequesterId().equals(user.getId().toString());
@@ -133,7 +142,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 return false;
             }
             Task task = requestService.findTaskByRequestId(requestId, "scientific_council_approval");
-            log.info("Task: " + task);
+            //log.info("Task: " + task);
             return (task != null);
         } 
         else if ("isLabuser".equals(permission)) 
@@ -161,6 +170,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 return false;
             }
             LabRequest labRequest = labRequestRepository.findOne(labRequestId);
+            if (labRequest == null) {
+                return false;
+            }
             if (!labRequest.getLab().getNumber().equals(user.getLab().getNumber())) {
                 return false;
             }
@@ -177,6 +189,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             }
             LabRequest labRequest = labRequestRepository.findOne(labRequestId);
             HistoricProcessInstance instance = requestService.findProcessInstance(labRequest.getProcessInstanceId());
+            if (instance == null) {
+                return false;
+            }
             RequestRepresentation request = new RequestRepresentation();
             requestFormService.transferData(instance, request, user);
             return request.getRequesterId().equals(user.getId().toString());

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import business.models.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import business.models.ContactData;
-import business.models.Lab;
-import business.models.LabRepository;
-import business.models.Role;
-import business.models.RoleRepository;
-import business.models.User;
 import business.services.UserService;
 
 @Profile({"default", "dev", "test"})
@@ -29,6 +24,9 @@ public class DefaultRolesUsersLabs {
     
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -75,6 +73,7 @@ public class DefaultRolesUsersLabs {
         }
 
         log.warn("Creating default users...");
+        Lab defaultLab = labRepository.findByName(defaultLabs[0]);
         // Create default roles and users for each role
         for (String r: defaultRoles) {
             // Save the role if it doesn't exist yet

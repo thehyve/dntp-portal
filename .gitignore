@@ -17,3 +17,8 @@
 *.ipr
 *.iws
 test-report.json
+/doc/security-documentation/dntp-security.aux
+/doc/security-documentation/dntp-security.bbl
+/doc/security-documentation/dntp-security.blg
+/doc/security-documentation/dntp-security.log
+/doc/security-documentation/dntp-security.out

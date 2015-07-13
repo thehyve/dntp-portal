@@ -332,7 +332,7 @@ public class RequestController {
             throw new RequestNotAdmissible();
         }
         
-        claimCurrentPalgaTask(id, user);
+        requestService.claimCurrentPalgaTask(id, user.getUser());
         
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
@@ -384,7 +384,7 @@ public class RequestController {
             log.warn("Finalisation failed because of lacking approval.");
         }
 
-        claimCurrentPalgaTask(id, user);
+        requestService.claimCurrentPalgaTask(id, user.getUser());
         
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
@@ -472,15 +472,6 @@ public class RequestController {
         return updatedRequest;
     }
     
-    private void claimCurrentPalgaTask(String id, UserAuthenticationToken user) {
-        Task task = requestService.getCurrentPalgaTaskByRequestId(id);
-        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-            taskService.claim(task.getId(), user.getId().toString());
-        } else {
-            taskService.delegateTask(task.getId(), user.getId().toString());
-        }
-    }
-    
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/claim", method = RequestMethod.PUT)
     public RequestRepresentation claim(
@@ -489,7 +480,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/claim");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        claimCurrentPalgaTask(id, user);
+        requestService.claimCurrentPalgaTask(id, user.getUser());
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             variables.put("assigned_date", new Date());
@@ -805,6 +796,7 @@ public class RequestController {
     private static final Set<String> excerptListStatuses = new HashSet<String>();
     {
         excerptListStatuses.add("DataDelivery");
+        excerptListStatuses.add("SelectionReview");
         excerptListStatuses.add("LabRequest");
         excerptListStatuses.add("Closed");
     }
@@ -827,7 +819,7 @@ public class RequestController {
         if (excerptList == null) {
             throw new ExcerptListNotFound();
         }
-        return excerptListService.writeExcerptList(excerptList);
+        return excerptListService.writeExcerptList(excerptList, /* selectedOnly = */ false );
     }
     
     @PreAuthorize("isAuthenticated() and "

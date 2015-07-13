@@ -3,9 +3,9 @@ package business.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -49,7 +49,7 @@ public class ExcerptList implements Serializable {
      * Maps sequence numbers to entries.
      */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Map<Integer, ExcerptEntry> entries = new TreeMap<Integer, ExcerptEntry>();
+    private Map<Integer, ExcerptEntry> entries = new HashMap<Integer, ExcerptEntry>();
 
     public ExcerptList() {
         
@@ -192,4 +192,17 @@ public class ExcerptList implements Serializable {
         this.entries.put(this.entries.size(), entry);
         return entry;
     }
+
+    public void deselectAll() {
+        for (ExcerptEntry entry: entries.values()) {
+            entry.setSelected(false);
+        }
+    }
+    
+    public void selectAll() {
+        for (ExcerptEntry entry: entries.values()) {
+            entry.setSelected(true);
+        }
+    }
+
 }

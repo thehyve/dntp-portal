@@ -44,6 +44,10 @@
             submitExcerptSelection : {
                 url : '/requests/:id/submitExcerptSelection',
                 method : 'PUT'
+            },
+            updateExcerptSelectionApproval : {
+                url : '/requests/:id/excerptSelectionApproval',
+                method : 'PUT'
             }
         });
 

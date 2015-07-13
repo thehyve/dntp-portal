@@ -73,6 +73,8 @@ public class RequestRepresentation {
     private String rejectReason;
     private Date rejectDate;
 
+    private boolean selectionApproved;
+    
     // Privacy Committee
     private boolean sentToPrivacyCommittee;
     private String privacyCommitteeOutcome;
@@ -524,6 +526,14 @@ public class RequestRepresentation {
 
     public void setPreviousContactDescription(String previousContactDescription) {
         this.previousContactDescription = previousContactDescription;
+    }
+
+    public boolean isSelectionApproved() {
+        return selectionApproved;
+    }
+
+    public void setSelectionApproved(boolean selectionApproved) {
+        this.selectionApproved = selectionApproved;
     } 
     
 }

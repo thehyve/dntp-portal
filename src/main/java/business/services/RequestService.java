@@ -1,7 +1,5 @@
 package business.services;
 
-import java.util.List;
-
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -9,7 +7,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
+import business.exceptions.UserUnauthorised;
+import business.models.User;
 
 @Service
 public class RequestService {
@@ -114,7 +113,28 @@ public class RequestService {
         if (task == null) {
             task = findTaskByRequestId(requestId, "data_delivery");
         }
+        if (task == null) {
+            task = findTaskByRequestId(requestId, "selection_review");
+        }
         return task;
+    }
+    
+    /**
+     * Claims current Palga task.
+     * @param requestId
+     * @param the Palga user token.
+     */
+    public void claimCurrentPalgaTask(String requestId, User user) {
+        if (user.isPalga()) {
+            Task task = this.getCurrentPalgaTaskByRequestId(requestId);
+            if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
+                taskService.claim(task.getId(), user.getId().toString());
+            } else {
+                taskService.delegateTask(task.getId(), user.getId().toString());
+            }
+        } else {
+            throw new UserUnauthorised("User not allowed to claim task.");
+        }
     }
     
     /**
@@ -149,5 +169,4 @@ public class RequestService {
         return instance;
     }
 
-    
 }

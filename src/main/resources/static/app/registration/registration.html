@@ -164,7 +164,7 @@
                 <div class="col-sm-10">
                     <input type="password" class="form-control" id="password" name="password"
                            placeholder="{{ 'Enter 8 characters long password' | translate }}" ng-model="user.password1"
-                           ng-minlength="8" required >
+                           ng-minlength="8" validate-password required >
                     <!-- errors -->
                     <span ng-show="registrationForm.password.$error.required && registrationForm.password.$dirty"
                           class="help-block">
@@ -173,6 +173,11 @@
                     <span ng-show="registrationForm.password.$invalid && registrationForm.password.$dirty"
                           class="help-block">
                         {{ 'Password must be min 8 characters long.' | translate }}
+                    </span>
+                    <span ng-show="registrationForm.password.$error.validatePassword && registrationForm.password.$dirty"
+                          class="help-block">
+                        {{ 'Password must be 8 or more characters long,
+                            contain numbers, letters, and a special character.' | translate }}
                     </span>
                 </div>
             </div>

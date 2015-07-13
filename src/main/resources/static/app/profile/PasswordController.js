@@ -6,17 +6,11 @@ angular.module('ProcessApp.controllers')
         $scope.submitted = false;
         $scope.done = false;
 
-        var regex2 = /(?=.*[!*'();:@&=+$,/?#[\]])+[a-zA-Z0-9!*'();:@&=+$,/?#[\]]{8,}/;
-
         // This function will try to validate the data and then make the request
         $scope.submitForm = function () {
             // Validation
             if ($scope.form.newPassword !== $scope.form.repeatNewPassword) {
                 error('Passwords do not match');
-                return;
-            } else if (regex2.test($scope.form.newPassword) === false) {
-                error('Password must be minimum 8 characters long, alphanumeric, and contains ' +
-                    'at least one of the following characters !*\'();:@&=+$,/?#[]');
                 return;
             } else if ($scope.form.oldPassword === $scope.form.newPassword) {
                 error('New password cannot be the same as old password');
@@ -24,8 +18,8 @@ angular.module('ProcessApp.controllers')
             }
 
             var numericalRegex = /(?=.*[0-9])/, // at least one numerical
-                alphabeticalRegex = /(?=.*[a-z])/, // at least one alphabet
-                specialCharsRegex = /(?=.*[?=!*'();:@&=+$,/?#])/; // at least one special chars
+                alphabeticalRegex = /(?=.*[a-zA-Z])/, // at least one alphabet
+                specialCharsRegex = /(?=.*[^a-zA-Z0-9 ])/; // at least one special chars
 
             // Validate
             if ($scope.form.newPassword !== $scope.form.repeatNewPassword) {

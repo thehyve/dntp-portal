@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import business.exceptions.EmailAddressNotAvailable;
 import business.exceptions.EmailAddressNotUnique;
+import business.exceptions.InvalidPassword;
 import business.exceptions.InvalidUserData;
 import business.exceptions.UserNotFound;
 import business.models.ActivationLink;
@@ -41,6 +42,7 @@ import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.MailService;
 import business.services.UserService;
+import business.validation.PasswordValidator;
 
 @RestController
 public class UserController {
@@ -199,6 +201,10 @@ public class UserController {
                 roles.add(role);
             }
 
+            if (!PasswordValidator.validate(body.getPassword1())) {
+                throw new InvalidPassword();
+            }
+            
             User user = new User(body.getUsername(), passwordEncoder.encode(body.getPassword1()), true, roles);
 
             transferUserData(body, user);

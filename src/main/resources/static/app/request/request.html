@@ -277,6 +277,17 @@
                 </li>
             </ul>
 
+            <h3>{{ 'Medical ethical committee approval' | translate }}</h3>
+            <hr>
+
+            <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+
+            <ul class="list-group" id="medicalEthicalCommitteeApprovalAttachments">
+                <li class="list-group-item" ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments">
+                    <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                </li>
+            </ul>
+
 
             <div ng-if="request.status=='Review' && isPalga()">
                 <br>

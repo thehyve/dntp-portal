@@ -317,26 +317,33 @@ public class SelectionController {
             @PathVariable String id) {
         log.info("PUT /requests/" + id + "/selectAll");
         
-        // set lab numbers for creating lab requests.
-        ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
-        if (excerptList == null) {
-            throw new RequestNotFound();
-        }
-        excerptList.selectAll();
-        excerptList = excerptListService.save(excerptList);
-        
-        Task task = requestService.getTaskByRequestId(id, "data_delivery");
-        if (task.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(task.getId());
-        }
-        taskService.complete(task.getId());
-        
-        requestService.claimCurrentPalgaTask(id, user.getUser());
-        
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        RequestRepresentation updatedRequest = new RequestRepresentation();
-        requestFormService.transferData(instance, updatedRequest, user.getUser());
-        return updatedRequest;
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+        
+        if (request.isPaReportRequest() || request.isMaterialsRequest()) {
+        
+            // set lab numbers for creating lab requests.
+            ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
+            if (excerptList == null) {
+                throw new RequestNotFound();
+            }
+            excerptList.selectAll();
+            excerptList = excerptListService.save(excerptList);
+            
+            Task task = requestService.getTaskByRequestId(id, "data_delivery");
+            if (task.getDelegationState()==DelegationState.PENDING) {
+                taskService.resolveTask(task.getId());
+            }
+            taskService.complete(task.getId());
+            
+            requestService.claimCurrentPalgaTask(id, user.getUser());
+            
+            instance = requestService.getProcessInstance(id);
+            request = new RequestRepresentation();
+            requestFormService.transferData(instance, request, user.getUser());
+        }
+        return request;
     }
     
 }

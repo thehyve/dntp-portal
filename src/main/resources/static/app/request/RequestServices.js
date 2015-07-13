@@ -191,8 +191,11 @@
             removeAgreementFile : {
                 url : '/requests/:requestId/agreementFiles/:id',
                 method : 'DELETE'
+            },
+            removeMECFile : {
+                url : '/requests/:requestId/mecFiles/:id',
+                method : 'DELETE'
             }
-
         });
     };
 

@@ -263,6 +263,58 @@
                         </div>
                     </div>
 
+                    <h3>{{ 'Medical ethical committee approval' | translate }}</h3>
+                    <hr>
+
+                    <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments">
+                            <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                            <span class="pull-right">
+                            <span class="btn-group">
+                                <button class="btn btn-default" type="button" title="Delete"
+                                        ng-click="removeMECFile(file)"
+                                        ng-if="isRequester() && (
+                                            request.status=='Open' 
+                                            || request.status=='Review'
+                                            || request.status=='Approval'
+                                            || request.status=='DataDelivery'
+                                            || request.status=='SelectionReview'
+                                            )"
+                                        >
+                                    Delete
+                                </button>
+                            </span>
+                            </span>
+                        </li>
+                    </ul>
+
+                    <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/mecFiles'})"
+                         flow-name="agreementFlow"
+                         flow-files-submitted="$flow.upload()"
+                         flow-file-success="fileuploadsuccess(request, $message)"
+                         ng-if="isRequester() && (
+                                            request.status=='Open' 
+                                            || request.status=='Review'
+                                            || request.status=='Approval'
+                                            || request.status=='DataDelivery'
+                                            || request.status=='SelectionReview'
+                                            )">
+                        <div>
+                            <input type="file" flow-btn id="test-upload-attachment" style="display:none" />
+                            <span class="btn btn-default" flow-btn>{{'Upload medical ethical committee approval'|translate}}</span>
+                        </div>
+                        <br>
+                        <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                             flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                             flow-drag-leave="style={border: '2px dashed gray'}"
+                             ng-style="style">
+                            ({{'drag and drop your file here'|translate}})
+                        </div>
+                    </div>
+
+
                     <div ng-include="'app/request/request-review.html'" ng-if="request.status=='Review'"></div>
 
                     <div ng-if="request.status=='Approval' &&

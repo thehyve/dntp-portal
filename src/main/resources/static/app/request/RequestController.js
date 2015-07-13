@@ -106,6 +106,7 @@ angular.module('ProcessApp.controllers')
                 request.agreementAttachments = result.agreementAttachments;
                 request.excerptList = result.excerptList;
                 request.dataAttachments = result.dataAttachments;
+                request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 
             $scope.fileuploaderror = function(data, excerpts) {
@@ -180,6 +181,24 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.removeMECFile = function(f) {
+                bootbox.confirm('Are you sure you want to delete file ' +
+                f.name +
+                '?', function(result) {
+                    if (result) {
+                        var attachment = new RequestAttachment();
+                        attachment.requestId = $scope.request.processInstanceId;
+                        attachment.id = f.id;
+                        attachment.$removeMECFile(function(result) {
+                            $scope.request.medicalEthicalCommitteeApprovalAttachments.splice($scope.request.medicalEthicalCommitteeApprovalAttachments.indexOf(f), 1);
+                            bootbox.alert('File ' + f.name + ' deleted.');
+                        }, function(response) {
+                            $scope.error = response.statusText;
+                        });
+                    }
+                });
+            };
+            
             $scope.removeDataFile = function(f) {
                 bootbox.confirm('Are you sure you want to delete file ' +
                 f.name +

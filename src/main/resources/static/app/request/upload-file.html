@@ -27,7 +27,10 @@
     <br>
     </div>
 
-    <div ng-if="request.excerptList && request.status == 'DataDelivery' && isPalga()" ng-controller="SelectionController">
+    <div ng-if="request.excerptList && request.status == 'DataDelivery'
+        && (request.paReportRequest || request.materialsRequest) 
+        && isPalga()" 
+        ng-controller="SelectionController">
     <a class="btn btn-primary" title="Select all"
         ng-click="selectAllExcerpts(request)"
         ng-disabled="request.assignee != globals.currentUser.userid">

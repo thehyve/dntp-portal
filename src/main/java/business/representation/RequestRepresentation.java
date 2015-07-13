@@ -49,6 +49,7 @@ public class RequestRepresentation {
     private List<FileRepresentation> attachments;
     private List<FileRepresentation> agreementAttachments;
     private List<FileRepresentation> dataAttachments;
+    private List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments;
     private List<CommentRepresentation> comments;
 
     private List<CommentRepresentation> approvalComments;
@@ -534,6 +535,15 @@ public class RequestRepresentation {
 
     public void setSelectionApproved(boolean selectionApproved) {
         this.selectionApproved = selectionApproved;
+    }
+
+    public List<FileRepresentation> getMedicalEthicalCommitteeApprovalAttachments() {
+        return medicalEthicalCommitteeApprovalAttachments;
+    }
+
+    public void setMedicalEthicalCommitteeApprovalAttachments(
+            List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments) {
+        this.medicalEthicalCommitteeApprovalAttachments = medicalEthicalCommitteeApprovalAttachments;
     } 
     
 }

@@ -33,11 +33,11 @@ import business.models.LabRepository;
 import business.models.LabRequestRepository;
 import business.models.PathologyItemRepository;
 import business.models.User;
-import business.models.UserRepository;
 import business.representation.RequestRepresentation;
 import business.security.MockConfiguration.MockMailSender;
 import business.security.UserAuthenticationToken;
 import business.services.LabRequestService;
+import business.services.UserService;
 
 @Profile("dev")
 @SpringApplicationConfiguration(classes = {Application.class})
@@ -48,7 +48,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     
     FileSystem fileSystem = FileSystems.getDefault();
     
-    @Autowired UserRepository userRepository;
+    @Autowired UserService userService;
 
     @Autowired LabRepository labRepository;
 
@@ -81,13 +81,13 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     protected String processInstanceId;
     
     protected UserAuthenticationToken getRequester() {
-        User user = userRepository.findByUsername("requester@dntp.thehyve.nl");
+        User user = userService.findByUsername("requester@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
     }
 
     protected UserAuthenticationToken getPalga() {
-        User user = userRepository.findByUsername("palga@dntp.thehyve.nl");
+        User user = userService.findByUsername("palga@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "palga"); // because of password tests
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
     }

@@ -13,11 +13,11 @@ function newMapping(from, to, action) {
 var mappings = [
     newMapping('login', 'forgot password', function() {
         var pages = require('./pages/pages');
-        pages.login.forgotPasswordButton.click();
+        return pages.login.forgotPasswordButton.click();
     }),
     newMapping('requests', 'create new request', function() {
         var pages = require('./pages/pages');
-        pages.requests.createNewRequest.click();
+        return pages.requests.createNewRequest.click();
     })
 ];
 
@@ -27,7 +27,8 @@ module.exports = {
         'login': 'login',
         'forgot password': 'login/forgot-password',
         'requests': '',
-        'lab requests': 'lab-requests'
+        'lab requests': 'lab-requests',
+        'samples': 'samples'
     },
     users: {
         'palga': { username: 'palga@dntp.thehyve.nl', password: 'palga' },
@@ -41,19 +42,29 @@ module.exports = {
     getPage: function(page) {
         var relativeUrl = this.relativeUrls[page];
         if (relativeUrl !== undefined) {
-            browser.get(this.baseUrl + this.relativeUrls[page]);
+            return browser.get(this.baseUrl + this.relativeUrls[page]);
         } else {
             this.fatalError('The page ' + page + ' doesn\'t exist');
         }
     },
     login: function(user) {
-        var userObj = this.users[user];
+        var userObj;
+
+        // Special case for lab users
+        var matches = user.match(/^lab (\d+)$/);
+        if (matches !== null) {
+            var labId = matches[1];
+            userObj = { username: 'lab_user' + labId + '@dntp.thehyve.nl', password: 'lab_user' };
+        } else {
+            userObj = this.users[user];
+        }
+
         if (userObj !== undefined) {
             this.getPage('login');
             var pages = require('./pages/pages');
             pages.login.setUsername(userObj.username);
             pages.login.setPassword(userObj.password);
-            pages.login.login();
+            return pages.login.login();
         } else {
             this.fatalError('The user ' + user + ' doesn\'t exist');
         }
@@ -66,17 +77,15 @@ module.exports = {
             .then(function(response) {
                 // Click on the logout button of the navbar to logout!
                 var pages = require('./pages/pages');
-                pages.nav.logout();
+                return pages.nav.logout();
             })
             .catch(function() {}); // This will catch a possible 403 error;
     },
     clearRequests: function() {
         // Get a page to have the CSRF token
-        this.getPage('login');
-        browser.sleep(500);
-        
-        browser.driver.get('http://localhost:8092/test/clear');
-        browser.sleep(500);
+        return this.getPage('login').then(function() {
+            return browser.driver.get('http://localhost:8092/test/clear');
+        });
     },
     fatalError: function(message) {
         throw 'Fatal error: the specification is incorrectly expressed! ' + message;

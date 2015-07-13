@@ -251,6 +251,7 @@
                          flow-file-success="fileuploadsuccess(request, $message)"
                          ng-if="request.status=='Open' || (isPalga() && request.status=='Review')">
                         <div>
+                            <input type="file" flow-btn id="test-upload-attachment" style="display:none" />
                             <span class="btn btn-default" flow-btn>{{'Upload file'|translate}}</span>
                         </div>
                         <br>

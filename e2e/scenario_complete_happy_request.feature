@@ -77,8 +77,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
 
   Scenario: 4a attach excerpt list
     Given I am logged in as the palga user
-    When I claim the request with title 'Request 1'
-    And I click on the request with title 'Request 1'
+    When I click on the request with title 'Request 1'
     And I click on the 'Edit' button
     And I click on the following objects
       """
@@ -87,8 +86,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
       """
     And I click on the 'Finalise' button
     And I click on the 'OK' button
-    And I claim the current request
-    And I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
+    When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And I go to the 'requests' page
     Then request 'Request 1' should have status 'DataDelivery'
 
@@ -110,22 +108,22 @@ Feature: scenario request Request for excerpts + PA reports + materials
    And I enter the text 'no remarks'
    And I click on the 'OK' button
    And I go to the 'lab requests' page
-   Then I should see 2 links with title 'Request 1'
+   Then I should see 2 lab requests in the list
 
   Scenario: 7 accept request as lab user
     Given I am logged in as the lab 106 user
     And I am on the lab requests page
-    And I click on the request with title 'Request 1'
+    And I click on the lab request with id '4-106'
     And I claim the current request
     And I click on the 'Actions' button
     And I click on the 'Accept' button
     Then the current request should have 'Approved' status
-    And the object with id 'paReportTick' should not be ticked
+    Then the page should contain the text 'PA Reports has NOT been sent to requester.'
 
   Scenario: 8 reject request as a lab user
     Given I am logged in as the lab 104 user
     And I am on the lab requests page
-    And I click on the request with title 'Request 1'
+    And I click on the lab request with id '4-104'
     And I claim the current request
     And I click on the 'Actions' button
     And I click on the 'Reject' button
@@ -142,8 +140,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 10 requester can comment on lab request and see its status
     Given I am logged in as the requester user
     And I am on the lab requests page
-    # The following command will click on the first link (there are two 'Request 1' links, but we use the first one)
-    And I click on the request with title 'Request 1'
+    And I click on the lab request with id '4-106'
     And I click on the 'Notes' button
     And I fill the form with the following data
     """
@@ -151,26 +148,26 @@ Feature: scenario request Request for excerpts + PA reports + materials
     """
     And I click on the 'Add note' button
     And I go to the 'lab requests' page
-    Then I should see 2 links with title 'Request 1'
+    Then I should see 2 lab requests in the list
     And the page should contain the text 'Approved'
     And the page should contain the text 'Rejected'
 
   Scenario: 11 lab user can download PA list (manual check)
     Given I am logged in as the lab 106 user
     And I am on the lab requests page
-    When I click on the request with title 'Request 1'
+    When I click on the lab request with id '4-106'
     And testing is paused to download the PA list and check its contents
     Then the scenario should always succeed
 
   Scenario: 12 lab user can mark PA numbers as sent
     Given I am logged in as the lab 106 user
     And I am on the lab requests page
-    When I click on the request with title 'Request 1'
+    When I click on the lab request with id '4-106'
     And I click on the 'Actions' button
     And I click on the object with id 'paReportsSent'
     And I click on the 'Update PA reports status' button
     Then the page should contain the text 'Approved'
-    And the object with id 'paReportTick' should be ticked
+    And the page should contain the text 'PA Reports has been sent to requester.'
 
   Scenario: 13 samples are visible for the lab user and can be filtered
     Given I am logged in as the lab 106 user
@@ -187,7 +184,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 14 lab user can register which samples will be sent
     Given I am logged in as the lab 106 user
     And I am on the lab requests page
-    And I click on the request with title 'Request 1'
+    And I click on the lab request with id '4-106'
     And testing is paused to enter the sample codes manually
     Then the scenario should always succeed
 
@@ -200,7 +197,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 16 lab user can register that samples have been sent
     Given I am logged in as the lab 106 user
     And I am on the lab requests page
-    And I click on the request with title 'Request 1'
+    And I click on the lab request with id '4-106'
     And I click on the 'Actions' button
     And I click on the 'Send materials' button
     Then the current request should have 'Sending' status
@@ -213,8 +210,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 18 requester can register that samples have been received
     Given I am logged in as the requester user
     And I am on the lab requests page
-    # There are two requests, but the first one is the approved one
-    When I click on the request with title 'Request 1'
+    When I click on the lab request with id '4-106'
     And I click on the 'Actions' button
     And I click on the object with id 'samplesMissing'
     And I fill the form with the following data
@@ -238,7 +234,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 21 requester can register samples as returning
     Given I am logged in as the requester user
     And I am on the lab requests page
-    When I click on the request with title 'Request 1'
+    When I click on the lab request with id '4-106'
     And I click on the 'Actions' button
     And I click on the 'Return materials' button
     Then the current request should have 'Returning' status
@@ -251,7 +247,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 23 lab user can register samples as returned
     Given I am logged in as the lab 106 user
     And I am on the lab requests page
-    When I click on the request with title 'Request 1'
+    When I click on the lab request with id '4-106'
     And I click on the 'Actions' button
     And I click on the object with id 'samplesMissing'
     And I fill the form with the following data

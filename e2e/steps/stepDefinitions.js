@@ -128,6 +128,12 @@ module.exports = function() {
         });
     });
 
+    this.When(/^I click on the lab request with id '(.+)'$/, function(id, next) {
+        element(by.linkText(id)).click().then(function() {
+            next()
+        });
+    });
+
     this.When(/^I click on the '(.+)' button$/, function(btnText, next) {
         browser.sleep(500);
         element(by.buttonText(btnText)).click().then(function() {
@@ -161,17 +167,6 @@ module.exports = function() {
             // Wait for the file to upload
             browser.sleep(1000);
             next();
-        });
-    });
-    
-    this.When('I go to select PA numbers of the current request', function(next) {
-        // The id of the request is contained at the end of the url
-        var regex = /\/(\d+)$/;
-        browser.getCurrentUrl().then(function(url) {
-            var id = url.match(regex)[1];
-            browser.get('http://localhost:8092/#/request/' + id + '/selection').then(function() {
-                next();
-            });
         });
     });
     
@@ -219,21 +214,13 @@ module.exports = function() {
 
     // Should work, but doesn't...
     this.When('I select all PA numbers', function(next) {
-        // Count the amount of excerpts
-        var list = element(by.id('excerpt-list'));
-        list.evaluate('request.excerptList.entries.length').then(function(amount) {
-            console.log('Found ' + amount + ' excerpts');
+        var btns = element.all(by.className('select-pa-number'));
 
-            // For each one, press space and go down
-            var promises = [];
-            for (var i = 0; i < amount; i++) {
-                promises.push(list.sendKeys(protractor.Key.SPACE),
-                    list.sendKeys(protractor.Key.DOWN));
-            }
-
-            Promise.all(promises).then(function() {
-                next();
-            });
+        btns.map(function (btn) {
+            return btn.click();
+        }).then(function (clicks) {
+            // This will only be executed when the clicks have been performed
+            next();
         });
     });
 
@@ -257,6 +244,12 @@ module.exports = function() {
 
         // This point is only reached if the message type exists
         expect(element(by.css("." + divClass)).isPresent()).to.become(true).and.notify(next);
+    });
+
+    this.Then(/^I should see (\d+) lab requests in the list$/, function(amount, next) {
+        amount = parseInt(amount);
+        expect(element.all(by.repeater('labRequest in displayedLabRequests track by $index')).count())
+            .to.eventually.equal(amount).and.notify(next);
     });
 
     this.Then(/^I should be on the (.+) page$/, function(pageName, next) {

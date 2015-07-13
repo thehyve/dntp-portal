@@ -83,5 +83,9 @@ public class PasswordValidatorTests {
     public void testValidPasswordWithSpaceValidation() throws Exception {
         assertTrue(PasswordValidator.validate("abc 123 !@#"));
     }
+    @Test
+    public void testValidAllSpecialCharsValidation() throws Exception {
+        assertTrue(PasswordValidator.validate("?=!*'();:@&=+$,/?#a0"));
+    }
 
 }

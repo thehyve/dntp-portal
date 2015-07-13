@@ -7,7 +7,11 @@ angular.module('ProcessApp.controllers')
 
         $scope.submitForm = function () {
 
-            var regex = /(?=.*[!*'();:@&=+$,/?#[\]])+[a-zA-Z0-9!*'();:@&=+$,/?#[\]]{8,}/;
+            //var regex = /(?=.*[!*'();:@&=+$,/?#[\]])+[a-zA-Z0-9!*'();:@&=+$,/?#[\]]{8,}/;
+
+            var numericalRegex = /(?=.*[0-9])/, // at least one numerical
+             alphabeticalRegex = /(?=.*[a-z])/, // at least one alphabet
+             specialCharsRegex = /(?=.*[?=!*'();:@&=+$,/?#])/; // at least one special chars
 
             // Validate
             if ($scope.password !== $scope.repeatPassword) {
@@ -19,10 +23,15 @@ angular.module('ProcessApp.controllers')
             } else if ($scope.password.length < 8) {
                 error('Passwords must be at least 8 characters long');
                 return;
-            } else if (!regex.test($scope.password)) {
-                console.log("regex2 is not succesful");
+            } else if (!specialCharsRegex.test($scope.password)) {
+                error("Password must have at least one special chars ?=!*'();:@&=+$,/?#");
                 return;
+            } else if (specialCharsRegex.test($scope.password)) {
+                if (!(numericalRegex.test($scope.password) || alphabeticalRegex.test($scope.password))) {
+                    error("Password must contains at least one character or one number");
+                }
             }
+
 
             $scope.submitted = true;
 

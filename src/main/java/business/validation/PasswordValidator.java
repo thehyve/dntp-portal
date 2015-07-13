@@ -33,10 +33,10 @@ public class PasswordValidator {
 
         if (password != null) {
 
-            String numericalRegex = "(?=.*[0-9])";
-            String alphabeticalRegex = "(?=.*[a-z])";
-            String specialCharsRegex = "(?=.*[@#$%^&+=])";
-            String atLeastEightCharsRegex = ".{8,}";
+            String numericalRegex = "(?=.*[0-9])"; // at least one numerical
+            String alphabeticalRegex = "(?=.*[a-z])"; // at least one alphabet
+            String specialCharsRegex = "(?=.*[@#$%^&+=])"; // at least one special chars
+            String atLeastEightCharsRegex = ".{8,}"; // minimal 8 chars length
 
             Matcher numericalMatcher = createMatcher(numericalRegex, password);
             Matcher alphabeticalMatcher = createMatcher(alphabeticalRegex, password);

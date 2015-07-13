@@ -95,8 +95,8 @@ public class DefaultRolesUsersLabs {
             String username = "lab_user" + labNumber + "@dntp.thehyve.nl";
 
             if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
-                Set<Role> roles = Collections.singleton(roleRepository.findByName("lab_user"));
-                User user = createUser("lab_user" + labNumber, roles.stream().findFirst().get());
+                Role role = roleRepository.findByName("lab_user");
+                User user = createUser("lab_user" + labNumber, role);
                 user.setLab(lab);
                 userRepository.save(user);
             }

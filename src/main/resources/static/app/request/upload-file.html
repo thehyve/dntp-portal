@@ -23,8 +23,20 @@
     {{'Download selection' |translate }}
     <span class="badge">{{(request.excerptList.entries | filter: {selected: true}).length}}</span>
     </a>
-    </div>
     <br>
+    <br>
+    </div>
+
+    <div ng-if="request.excerptList && request.status == 'DataDelivery' && isPalga()" ng-controller="SelectionController">
+    <a class="btn btn-primary" title="Select all"
+        ng-click="selectAllExcerpts(request)"
+        ng-disabled="request.assignee != globals.currentUser.userid">
+    <i class="glyphicon glyphicon-check"></i>
+    {{'Select all excerpts and continue'|translate}}
+    </a>
+    <br>
+    <br>
+    </div>
 
     <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
          flow-name="excerptListFlow"

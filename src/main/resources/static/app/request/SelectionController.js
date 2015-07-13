@@ -59,6 +59,14 @@ angular.module('ProcessApp.controllers')
                 //console.log('Deselect excerpt: ' + excerpt.id + ' for request ' + request.processInstanceId);
                 $scope.updateSelection(request, excerpt, false);
             };
+            
+            $scope.selectAllExcerpts = function(request) {
+                request.$selectAll(function(result) {
+                    $scope.request = result;
+                }, function(response) {
+                    $scope.error = $scope.error + response.data.message + '\n';
+                });
+            }
 
             $scope.submitExcerptSelection = function(request) {
                 $scope.disableSpaceSelects();

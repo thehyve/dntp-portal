@@ -31,7 +31,6 @@ import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
-import business.models.ExcerptListRepository;
 import business.models.File;
 import business.models.RequestProperties;
 import business.models.User;
@@ -55,9 +54,6 @@ public class SelectionController {
     @Autowired
     private ExcerptListService excerptListService;
     
-    @Autowired 
-    ExcerptListRepository excerptListRepository;
-
     @Autowired
     private LabRequestService labRequestService;
     
@@ -90,7 +86,7 @@ public class SelectionController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("GET /requests/" + id + "/selection");
-        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
         if (excerptList == null) {
             throw new RequestNotFound();
         }
@@ -108,7 +104,7 @@ public class SelectionController {
             @RequestBody ExcerptListRepresentation body) {
         log.info("PUT /requests/" + id + "/selection");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
         if (excerptList == null) {
             throw new RequestNotFound();
         }
@@ -228,7 +224,7 @@ public class SelectionController {
         if (!excerptSelectionStatuses.contains(request.getStatus())) {
             throw new InvalidActionInStatus();
         }
-        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
         if (excerptList == null) {
             throw new ExcerptListNotFound();
         }
@@ -247,12 +243,12 @@ public class SelectionController {
         
         // FIXME: check if request type is pa reports or materials
         
-        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
         if (excerptList == null) {
             throw new RequestNotFound();
         }
         excerptList.setRemark(body.getExcerptListRemark());
-        excerptList = excerptListRepository.save(excerptList);
+        excerptList = excerptListService.save(excerptList);
         
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
         User palgaUser = userService.findOne(Long.valueOf(task.getAssignee()));
@@ -284,7 +280,7 @@ public class SelectionController {
 
         if (body.isSelectionApproved()) {
             // set lab numbers for creating lab requests.
-            ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+            ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
             if (excerptList == null) {
                 throw new RequestNotFound();
             }
@@ -312,5 +308,35 @@ public class SelectionController {
         return updatedRequest;
     }
 
+    @PreAuthorize("isAuthenticated() and "
+            + "hasRole('palga') and "
+            + "hasPermission(#id, 'requestAssignedToUser')")
+    @RequestMapping(value = "/requests/{id}/selectAll", method = RequestMethod.PUT)
+    public RequestRepresentation selectAll(
+            UserAuthenticationToken user,
+            @PathVariable String id) {
+        log.info("PUT /requests/" + id + "/selectAll");
+        
+        // set lab numbers for creating lab requests.
+        ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
+        if (excerptList == null) {
+            throw new RequestNotFound();
+        }
+        excerptList.selectAll();
+        excerptList = excerptListService.save(excerptList);
+        
+        Task task = requestService.getTaskByRequestId(id, "data_delivery");
+        if (task.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+        
+        requestService.claimCurrentPalgaTask(id, user.getUser());
+        
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
+        RequestRepresentation updatedRequest = new RequestRepresentation();
+        requestFormService.transferData(instance, updatedRequest, user.getUser());
+        return updatedRequest;
+    }
     
 }

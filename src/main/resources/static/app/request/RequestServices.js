@@ -41,6 +41,10 @@
                 url : '/requests/:id/unclaim',
                 method : 'PUT'
             },
+            selectAll : {
+                url : '/requests/:id/selectAll',
+                method : 'PUT'
+            },
             submitExcerptSelection : {
                 url : '/requests/:id/submitExcerptSelection',
                 method : 'PUT'

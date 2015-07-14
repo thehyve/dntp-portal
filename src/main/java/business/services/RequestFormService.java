@@ -223,6 +223,9 @@ public class RequestFormService {
                 case "DataDelivery":
                     task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
                     break;
+                case "SelectionReview":
+                    task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
+                    break;
             }
             if (task != null) {
                 request.setAssignee(task.getAssignee());
@@ -302,6 +305,13 @@ public class RequestFormService {
             }
             request.setDataAttachments(dataAttachments);
             
+            List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments = new ArrayList<FileRepresentation>();
+            for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
+                medicalEthicalCommitteeApprovalAttachments.add(new FileRepresentation(file));
+            }
+            request.setMedicalEthicalCommitteeApprovalAttachments(medicalEthicalCommitteeApprovalAttachments);
+            
+            Date start = new Date();
             ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
             if (excerptList != null) {
                 log.info("Set excerpt list.");
@@ -315,6 +325,8 @@ public class RequestFormService {
                 request.setSelectedLabs(selectedLabSet);
                 request.setExcerptListRemark(excerptList.getRemark());
             }
+            Date end = new Date();
+            log.info("Fetching excerpt list took " + (end.getTime() - start.getTime()) + " ms.");
         }
     }
 

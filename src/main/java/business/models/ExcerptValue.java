@@ -1,25 +1,18 @@
 package business.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.ElementCollection;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 
 @Entity
-public class ExcerptValue implements Serializable {
-
-    private static final long serialVersionUID = -8349346200142613552L;
+public class ExcerptValue {
 
     @Id
     @GeneratedValue
     private Long id;
     
-    @Lob
+    @Column(columnDefinition="TEXT")
     private String value = "";
 
     public ExcerptValue() {

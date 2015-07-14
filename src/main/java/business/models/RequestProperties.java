@@ -40,7 +40,10 @@ public class RequestProperties {
 
     @OneToMany
     private List<File> dataAttachments = new ArrayList<File>();
-    
+
+    @OneToMany
+    private List<File> medicalEthicalCommiteeApprovalAttachments = new ArrayList<File>();
+
     @OneToOne
     private File excerptListAttachment;
     
@@ -189,6 +192,15 @@ public class RequestProperties {
 
     public void setPrivacyCommitteeEmails(String privacyCommitteeEmails) {
         this.privacyCommitteeEmails = privacyCommitteeEmails;
+    }
+
+    public List<File> getMedicalEthicalCommiteeApprovalAttachments() {
+        return medicalEthicalCommiteeApprovalAttachments;
+    }
+
+    public void setMedicalEthicalCommiteeApprovalAttachments(
+            List<File> medicalEthicalCommiteeApprovalAttachments) {
+        this.medicalEthicalCommiteeApprovalAttachments = medicalEthicalCommiteeApprovalAttachments;
     }
     
 }

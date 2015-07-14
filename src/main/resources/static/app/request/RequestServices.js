@@ -41,8 +41,16 @@
                 url : '/requests/:id/unclaim',
                 method : 'PUT'
             },
+            selectAll : {
+                url : '/requests/:id/selectAll',
+                method : 'PUT'
+            },
             submitExcerptSelection : {
                 url : '/requests/:id/submitExcerptSelection',
+                method : 'PUT'
+            },
+            updateExcerptSelectionApproval : {
+                url : '/requests/:id/excerptSelectionApproval',
                 method : 'PUT'
             }
         });
@@ -183,8 +191,11 @@
             removeAgreementFile : {
                 url : '/requests/:requestId/agreementFiles/:id',
                 method : 'DELETE'
+            },
+            removeMECFile : {
+                url : '/requests/:requestId/mecFiles/:id',
+                method : 'DELETE'
             }
-
         });
     };
 

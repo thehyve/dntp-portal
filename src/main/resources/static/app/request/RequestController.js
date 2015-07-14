@@ -106,6 +106,7 @@ angular.module('ProcessApp.controllers')
                 request.agreementAttachments = result.agreementAttachments;
                 request.excerptList = result.excerptList;
                 request.dataAttachments = result.dataAttachments;
+                request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 
             $scope.fileuploaderror = function(data, excerpts) {
@@ -180,6 +181,24 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.removeMECFile = function(f) {
+                bootbox.confirm('Are you sure you want to delete file ' +
+                f.name +
+                '?', function(result) {
+                    if (result) {
+                        var attachment = new RequestAttachment();
+                        attachment.requestId = $scope.request.processInstanceId;
+                        attachment.id = f.id;
+                        attachment.$removeMECFile(function(result) {
+                            $scope.request.medicalEthicalCommitteeApprovalAttachments.splice($scope.request.medicalEthicalCommitteeApprovalAttachments.indexOf(f), 1);
+                            bootbox.alert('File ' + f.name + ' deleted.');
+                        }, function(response) {
+                            $scope.error = response.statusText;
+                        });
+                    }
+                });
+            };
+            
             $scope.removeDataFile = function(f) {
                 bootbox.confirm('Are you sure you want to delete file ' +
                 f.name +
@@ -318,6 +337,38 @@ angular.module('ProcessApp.controllers')
                 );
             };
 
+            $scope.approveSelection = function(request) {
+                bootbox.confirm(
+                    'Are you sure you want to approve the selection?\n<br>' +
+                    'After approving, lab requests will be generated.',
+                    function(confirmed) {
+                        if (confirmed) {
+                            request.selectionApproved = true;
+                            request.$updateExcerptSelectionApproval(function(result) {
+                                $scope.refresh(request, result);
+                            }, function(response) {
+                                $scope.error = $scope.error + response.data.message + '\n';
+                            });
+                        }
+                    });
+            };
+            
+            $scope.rejectSelection = function(request) {
+                bootbox.confirm(
+                    'Are you sure you want to reject the selection?\n<br>' +
+                    'After rejecting, the status will return to \'Data delivery.\'',
+                    function(confirmed) {
+                        if (confirmed) {
+                            request.selectionApproved = false;
+                            request.$updateExcerptSelectionApproval(function(result) {
+                                $scope.refresh(request, result);
+                            }, function(response) {
+                                $scope.error = $scope.error + response.data.message + '\n';
+                            });
+                        }
+                    });
+            };
+            
             $scope.uploadDataFile = function(flow) {
                 var max_size = 1024*1024*10;
                 if (flow.getSize() > max_size) {

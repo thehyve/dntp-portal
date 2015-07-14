@@ -1,6 +1,5 @@
 package business.models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +12,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class ExcerptEntry implements Serializable {
-
-    private static final long serialVersionUID = -2703523787993359530L;
+public class ExcerptEntry {
 
     @Id
     @GeneratedValue

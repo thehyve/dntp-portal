@@ -12,9 +12,9 @@ angular.module('ProcessApp.controllers')
                 entry.selected = selected;
                 entry.processInstanceId = request.processInstanceId;
                 entry.$update(function(result) {
-                    //$scope.request.excerptListSelection[excerpt.sequenceNumber] = result;
-                    //console.log('Selection updated: ' + result);
-                    request.excerptList = result;
+                    var index = request.excerptList.entries.indexOf(excerpt); 
+                    //console.log('selection updated at index ' + index);
+                    request.excerptList.entries[index] = result;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
                 });
@@ -59,6 +59,14 @@ angular.module('ProcessApp.controllers')
                 //console.log('Deselect excerpt: ' + excerpt.id + ' for request ' + request.processInstanceId);
                 $scope.updateSelection(request, excerpt, false);
             };
+            
+            $scope.selectAllExcerpts = function(request) {
+                request.$selectAll(function(result) {
+                    $scope.request = result;
+                }, function(response) {
+                    $scope.error = $scope.error + response.data.message + '\n';
+                });
+            }
 
             $scope.submitExcerptSelection = function(request) {
                 $scope.disableSpaceSelects();

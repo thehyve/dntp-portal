@@ -148,9 +148,11 @@ public class PasswordControllerTests {
         User user = userRepository.findByUsername("palga@dntp.thehyve.nl");
         NewPasswordRequest npr = new NewPasswordRequest(user);
         passwordRequestRepository.saveAndFlush(npr);
-
+        
+        String newPassword = "12345678%ABCdef";
+        
         // Call password reset with the token
-        NewPasswordRepresentation npRepr = new NewPasswordRepresentation("12345678", npr.getToken());
+        NewPasswordRepresentation npRepr = new NewPasswordRepresentation(newPassword, npr.getToken());
         mockMvc.perform(MockMvcRequestBuilders.post("/password/reset")
                 .content(new ObjectMapper().writeValueAsString(npRepr))
                 .contentType("application/json")
@@ -168,7 +170,7 @@ public class PasswordControllerTests {
 
         // Check that the password has been changed
         user = userRepository.findOne(user.getId());
-        Assert.assertTrue(passwordEncoder.matches("12345678", user.getPassword()));
+        Assert.assertTrue(passwordEncoder.matches(newPassword, user.getPassword()));
 
         // Check that the reset link doesn't exist anymore
         Assert.assertNull(passwordRequestRepository.findByToken(npr.getToken()));

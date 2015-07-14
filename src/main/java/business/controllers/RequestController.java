@@ -332,7 +332,7 @@ public class RequestController {
             throw new RequestNotAdmissible();
         }
         
-        claimCurrentPalgaTask(id, user);
+        requestService.claimCurrentPalgaTask(id, user.getUser());
         
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
@@ -384,7 +384,7 @@ public class RequestController {
             log.warn("Finalisation failed because of lacking approval.");
         }
 
-        claimCurrentPalgaTask(id, user);
+        requestService.claimCurrentPalgaTask(id, user.getUser());
         
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
@@ -472,15 +472,6 @@ public class RequestController {
         return updatedRequest;
     }
     
-    private void claimCurrentPalgaTask(String id, UserAuthenticationToken user) {
-        Task task = requestService.getCurrentPalgaTaskByRequestId(id);
-        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-            taskService.claim(task.getId(), user.getId().toString());
-        } else {
-            taskService.delegateTask(task.getId(), user.getId().toString());
-        }
-    }
-    
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
     @RequestMapping(value = "/requests/{id}/claim", method = RequestMethod.PUT)
     public RequestRepresentation claim(
@@ -489,7 +480,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/claim");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        claimCurrentPalgaTask(id, user);
+        requestService.claimCurrentPalgaTask(id, user.getUser());
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             variables.put("assigned_date", new Date());
@@ -672,6 +663,60 @@ public class RequestController {
         return request;
     }
 
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
+    @RequestMapping(value = "/requests/{id}/mecFiles", method = RequestMethod.POST)
+    public RequestRepresentation uploadMECAttachment(
+            UserAuthenticationToken user, 
+            @PathVariable String id,
+            @RequestParam("flowFilename") String name,
+            @RequestParam("flowTotalChunks") Integer chunks,
+            @RequestParam("flowChunkNumber") Integer chunk,
+            @RequestParam("flowIdentifier") String flowIdentifier,
+            @RequestParam("file") MultipartFile file) {
+        log.info("POST /requests/" + id + "/mecFiles: chunk " + chunk + " / " + chunks);
+
+        File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.MEDICAL_ETHICAL_COMMITEE_APPROVAL, file, chunk, chunks, flowIdentifier);
+        if (attachment != null) {
+            // add attachment id to the set of ids of the agreement attachments.
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+            properties.getMedicalEthicalCommiteeApprovalAttachments().add(attachment);
+            requestPropertiesService.save(properties);
+        }
+        
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+        return request;
+    }
+    
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
+    @RequestMapping(value = "/requests/{id}/mecFiles/{attachmentId}", method = RequestMethod.DELETE)
+    public RequestRepresentation removeMECAttachment(UserAuthenticationToken user, @PathVariable String id,
+            @PathVariable Long attachmentId) {
+        log.info("DELETE /requests/" + id + "/mecFiles/" + attachmentId);
+
+        // remove existing agreement attachment.
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        File toBeRemoved = null;
+        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                toBeRemoved = file;
+                break;
+            }
+        }
+        if (toBeRemoved != null) {
+            properties.getMedicalEthicalCommiteeApprovalAttachments().remove(toBeRemoved);
+            requestPropertiesService.save(properties);
+            fileService.removeAttachment(toBeRemoved);
+        }
+
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+        return request;
+    }
+    
+    
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadDataAttachment(
@@ -805,6 +850,7 @@ public class RequestController {
     private static final Set<String> excerptListStatuses = new HashSet<String>();
     {
         excerptListStatuses.add("DataDelivery");
+        excerptListStatuses.add("SelectionReview");
         excerptListStatuses.add("LabRequest");
         excerptListStatuses.add("Closed");
     }
@@ -827,7 +873,7 @@ public class RequestController {
         if (excerptList == null) {
             throw new ExcerptListNotFound();
         }
-        return excerptListService.writeExcerptList(excerptList);
+        return excerptListService.writeExcerptList(excerptList, /* selectedOnly = */ false );
     }
     
     @PreAuthorize("isAuthenticated() and "
@@ -853,6 +899,11 @@ public class RequestController {
             }
         }
         for (File file: properties.getDataAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                return fileService.download(file.getId());
+            }
+        }
+        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
             if (file.getId().equals(attachmentId)) {
                 return fileService.download(file.getId());
             }

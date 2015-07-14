@@ -34,38 +34,38 @@
                 <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit"
                         ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
                         (
-                        (request.status == 'Open' && globals.currentUser.roles.indexOf('requester') != -1)
-                        || (request.status != 'DataDelivery' && globals.currentUser.roles.indexOf('palga') != -1)
+                        (request.status == 'Open' && isRequester())
+                        || (request.status != 'DataDelivery' && request.status != 'SelectionReview' && isPalga())
                         )"
                         ng-disabled="globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Edit' | translate}}
                 </button>
-                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1"  class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
+                <button ng-if="isPalga()"  class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}
                 </button>
                 <a href="mailto:{{request.requesterEmail}}?subject=Request rejected&amp;body=Request rejected.%0AReject reason: {{request.rejectReason}}
                 ">
-                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1 && request.status == 'Rejected'"
+                <button ng-if="isPalga() && request.status == 'Rejected'"
                 class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose rejection mail' | translate}}
                 </button></a>
                 <a href="mailto:{{request.requesterEmail}}?subject=Excerpt list ready&amp;body=The excerpt list for request {{request.processInstanceId}} (&ldquo;{{request.title}}&rdquo;) is ready for download.%0ALink: {{serverurl}}/#/request/view/{{request.processInstanceId}}
                 ">
-                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1 && request.status == 'DataDelivery' && request.excerptList"
+                <button ng-if="isPalga() && request.status == 'DataDelivery' && request.excerptList"
                 class="btn btn-default" type="button" title="{{'Compose notification mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose notification mail' | translate}}
                 </button></a>
                 <button ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
-                (globals.currentUser.roles.indexOf('palga') != -1)" ng-show="request.assignee != globals.currentUser.userid"
+                (isPalga())" ng-show="request.assignee != globals.currentUser.userid"
                 class="btn btn-default" type="button"  ng-click="claim(request);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
                     {{'Claim' | translate}}
                 </button>
-                <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" ng-show="request.assignee == globals.currentUser.userid" class="btn btn-default" type="button"  ng-click="unclaim(request);" title="Claim">
+                <button ng-if="isPalga()" ng-show="request.assignee == globals.currentUser.userid" class="btn btn-default" type="button"  ng-click="unclaim(request);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
@@ -277,8 +277,19 @@
                 </li>
             </ul>
 
+            <h3>{{ 'Medical ethical committee approval' | translate }}</h3>
+            <hr>
 
-            <div ng-if="request.status=='Review' && roles.indexOf('palga') != -1">
+            <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+
+            <ul class="list-group" id="medicalEthicalCommitteeApprovalAttachments">
+                <li class="list-group-item" ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments">
+                    <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+                </li>
+            </ul>
+
+
+            <div ng-if="request.status=='Review' && isPalga()">
                 <br>
 
                 <h3>{{'Checks by Palga'|translate}}</h3>
@@ -363,7 +374,7 @@
             </div>
 
 
-            <div ng-if="request.status=='Approval' && roles.indexOf('palga') != -1">
+            <div ng-if="request.status=='Approval' && isPalga()">
 
                 <!--*****************-->
                 <!--Privacy Committee-->
@@ -415,14 +426,13 @@
             <!--Approvals-->
             <div ng-include="'app/request/approvals.html'"
                  ng-if="request.status=='Approval' &&
-                         (  globals.currentUser.roles.indexOf('palga') != -1 ||
-                            globals.currentUser.roles.indexOf('scientific_council') != -1)"></div>
+                         ( isPalga() || isScientificCouncil() )"></div>
             <!--Comments-->
-            <div ng-include="'app/request/comments.html'" ng-if="globals.currentUser.roles.indexOf('palga') != -1"></div>
+            <div ng-include="'app/request/comments.html'" ng-if="isPalga()"></div>
 
             <!--Upload Files if in 'DataDelivery' status-->
             <div ng-include="'app/request/upload-file.html'" 
-                ng-if="request.status=='DataDelivery' || request.status=='LabRequest' || request.status=='Closed'"></div>
+                ng-if="request.status=='DataDelivery' || request.status=='SelectionReview' || request.status=='LabRequest' || request.status=='Closed'"></div>
 
             <div ng-if="request.status == 'LabRequest'">
 

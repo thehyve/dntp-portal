@@ -20,6 +20,7 @@ public class RequestComparator implements Comparator<HistoricProcessInstance> {
         statuses.add("Review");
         statuses.add("Approval");
         statuses.add("DataDelivery");
+        statuses.add("SelectionReview");
         statuses.add("LabRequest");
         statuses.add("Rejected");
         statuses.add("Closed");

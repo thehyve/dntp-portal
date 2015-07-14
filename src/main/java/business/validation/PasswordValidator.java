@@ -5,24 +5,21 @@ import java.util.regex.Pattern;
 
 public class PasswordValidator {
 
-    /**
-     * Create Matcher
-     *
-     * @param regex
-     * @param password
-     * @return
-     */
-    private static Matcher createMatcher(String regex, String password) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(password);
-        return matcher;
-    }
-
+    private static int MIN_PASSWORD_LENGTH = 8;
+    
+    private static String numericalRegex = "(?=.*[0-9])"; // at least one numerical
+    private static String alphabeticalRegex = "(?=.*[a-zA-Z])"; // at least one alphabet
+    private static String specialCharsRegex = "(?=.*[^a-zA-Z0-9 ])"; // at least one special chars
+    
+    private static Pattern numericalPattern = Pattern.compile(numericalRegex);
+    private static Pattern alphabeticalPattern = Pattern.compile(alphabeticalRegex);
+    private static Pattern specialsCharsPattern = Pattern.compile(specialCharsRegex);
+    
     /**
      * Password should contains following characters
      * - alphabets in lower or capital letters
      * - numerical chars
-     * - special chars ?=!*'();:@&=+$,/?#
+     * - special chars (not numerical or alphabetical)
      *
      * @param password
      * @return true if valid, false if not valid
@@ -33,17 +30,11 @@ public class PasswordValidator {
 
         if (password != null) {
 
-            String numericalRegex = "(?=.*[0-9])"; // at least one numerical
-            String alphabeticalRegex = "(?=.*[a-z])"; // at least one alphabet
-            String specialCharsRegex = "(?=.*[?=!*'();:@&=+$,/?#])"; // at least one special chars
-            String atLeastEightCharsRegex = ".{8,}"; // minimal 8 chars length
+            Matcher numericalMatcher = numericalPattern.matcher(password);
+            Matcher alphabeticalMatcher = alphabeticalPattern.matcher(password);
+            Matcher specialCharsMatcher = specialsCharsPattern.matcher(password);
 
-            Matcher numericalMatcher = createMatcher(numericalRegex, password);
-            Matcher alphabeticalMatcher = createMatcher(alphabeticalRegex, password);
-            Matcher specialCharsMatcher = createMatcher(specialCharsRegex, password);
-            Matcher minLengthMatcher = createMatcher(atLeastEightCharsRegex, password);
-
-            if (minLengthMatcher.find()) {
+            if (password.length() >= MIN_PASSWORD_LENGTH) {
                 if (specialCharsMatcher.find()) {
                     if (alphabeticalMatcher.find() || numericalMatcher.find()) {
                         validPassword = true;

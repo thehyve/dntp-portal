@@ -172,7 +172,6 @@
         <script>execution.setVariable("status", "DataDelivery")</script>
     </scriptTask>
 
-
     <sequenceFlow id="status_delivery_to_delivery_task" sourceRef="status_data_delivery" targetRef="data_delivery"></sequenceFlow>
 
     <userTask id="data_delivery" name="Data delivery" activiti:candidateGroups="palga">
@@ -181,18 +180,52 @@
         </documentation>
     </userTask>
 
-    <sequenceFlow id="data_delivery_to_lab_request_or_closed" sourceRef="data_delivery" targetRef="to_lab_request_or_closed"></sequenceFlow>
 
-    <!-- Choice between 'lab request' (if is_pa_report_request or is_materials_request) or 'closed' status. -->
-    <exclusiveGateway id="to_lab_request_or_closed" name="Lab request or closed" />
-    <sequenceFlow id="data_delivery_to_status_lab_request" sourceRef="to_lab_request_or_closed" targetRef="status_lab_request">
+    <sequenceFlow id="data_delivery_to_selection_review_or_closed" sourceRef="data_delivery" targetRef="to_selection_review_or_closed"></sequenceFlow>
+
+    <!-- Choice between 'selection review' (if is_pa_report_request or is_materials_request) or 'closed' status. -->
+    <exclusiveGateway id="to_selection_review_or_closed" name="Selection review or closed" />
+    <sequenceFlow id="data_delivery_to_status_selection_review" sourceRef="to_selection_review_or_closed" targetRef="status_selection_review">
         <conditionExpression xsi:type="tFormalExpression">
             <![CDATA[ ${is_pa_report_request == true || is_materials_request == true} ]]>
         </conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="data_delivery_to_status_closed" sourceRef="to_lab_request_or_closed" targetRef="status_closed">
+    <sequenceFlow id="data_delivery_to_status_closed" sourceRef="to_selection_review_or_closed" targetRef="status_closed">
         <conditionExpression xsi:type="tFormalExpression">
             <![CDATA[ ${is_pa_report_request == false && is_materials_request == false} ]]>
+        </conditionExpression>
+    </sequenceFlow>
+
+
+    <scriptTask id="status_selection_review" name="Update status to SelectionReview" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "SelectionReview")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_selection_review_to_selection_review_task" sourceRef="status_selection_review" targetRef="selection_review"></sequenceFlow>
+
+    <userTask id="selection_review" name="Selection review" activiti:candidateGroups="palga">
+        <documentation>
+        Review of the PA number selection.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="selection_approved" name="Selection approved" type="boolean" variable="selection_approved" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+
+    <sequenceFlow id="data_delivery_to_lab_request_or_closed" sourceRef="selection_review" targetRef="to_data_delivery_or_lab_request"></sequenceFlow>
+
+    <!-- Choice between returning to 'data delivery' or move on to 'lab request' (if selection_approved) status. -->
+    <exclusiveGateway id="to_data_delivery_or_lab_request" name="Data delivery or lab request" />
+    <sequenceFlow id="selection_review_to_status_data_delivery" sourceRef="to_data_delivery_or_lab_request" targetRef="status_data_delivery">
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${selection_approved == false} ]]>
+        </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="selection_review_to_status_lab_request" sourceRef="to_data_delivery_or_lab_request" targetRef="status_lab_request">
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${selection_approved == true} ]]>
         </conditionExpression>
     </sequenceFlow>
 

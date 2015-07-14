@@ -17,6 +17,8 @@ public class File {
         REQUEST,
         AGREEMENT,
         EXCERPT_LIST,
+        EXCERPT_SELECTION,
+        MEDICAL_ETHICAL_COMMITEE_APPROVAL,
         DATA
     };
 

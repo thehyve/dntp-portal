@@ -33,6 +33,8 @@ public class LabRequest {
     private String rejectReason;
 
     private Date rejectDate;
+    
+    private Date sendDate;
 
     @OrderBy("timeCreated DESC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -124,6 +126,14 @@ public class LabRequest {
 
     public void setTimeCreated(Date timeCreated) {
         this.timeCreated = timeCreated;
+    }
+
+    public Date getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(Date sendDate) {
+        this.sendDate = sendDate;
     }
     
 }

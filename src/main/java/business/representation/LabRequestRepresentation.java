@@ -47,6 +47,8 @@ public class LabRequestRepresentation {
     private String rejectReason;
 
     private Date rejectDate;
+    
+    private Date sendDate;
 
     private Boolean isPaReportsSent;
 
@@ -67,6 +69,7 @@ public class LabRequestRepresentation {
         this.setLab(labRequest.getLab());
         //this.pathologyCount = labRequest.getPathologyList().size();
         this.setRejectDate(labRequest.getRejectDate());
+        this.setSendDate(labRequest.getSendDate());
         this.setRejectReason(labRequest.getRejectReason());
         this.setPaReportsSent(labRequest.isPaReportsSent());
         this.setLabRequestCode(this.getProcessInstanceId(), this.getLab().getNumber().toString());
@@ -277,4 +280,13 @@ public class LabRequestRepresentation {
         }
         this.labRequestCode = labRequestCode;
     }
+
+    public Date getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(Date sendDate) {
+        this.sendDate = sendDate;
+    }
+    
 }

@@ -155,8 +155,6 @@ public class LabRequestController {
 
         LabRequest labRequest = labRequestRepository.findOne(id);
         
-        transferLabRequestFormData(body, labRequest, user.getUser());
-        
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         if (!representation.getStatus().equals("Approved")) {
@@ -177,6 +175,9 @@ public class LabRequestController {
         taskService.setVariableLocal(labRequest.getTaskId(),
                 "labrequest_status", "Sending");
 
+        labRequest.setSendDate(new Date());
+        labRequest = labRequestRepository.save(labRequest);
+        
         representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;

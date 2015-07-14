@@ -19,7 +19,7 @@ angular.module('ProcessApp.controllers')
 
                 var numericalRegex = /(?=.*[0-9])/, // at least one numerical
                     alphabeticalRegex = /(?=.*[a-z])/, // at least one alphabet
-                    specialCharsRegex = /(?=.*[?=!*'();:@&=+$,/?#])/; // at least one special chars
+                    specialCharsRegex = /(?=.*[^a-zA-Z0-9 ])/; // at least one special chars
 
                 // Validate
                 if (user.password1 !== user.password2) {
@@ -32,7 +32,7 @@ angular.module('ProcessApp.controllers')
                     alert('Passwords must be at least 8 characters long');
                     return;
                 } else if (!specialCharsRegex.test(user.password1)) {
-                    alert("Password must have at least one special chars ?=!*'();:@&=+$,/?#");
+                    alert("Password must have at least one special chars");
                     return;
                 } else if (specialCharsRegex.test(user.password1)) {
                     if (!(numericalRegex.test(user.password1) || alphabeticalRegex.test(user.password1))) {

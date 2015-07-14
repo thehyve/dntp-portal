@@ -356,6 +356,38 @@ angular.module('ProcessApp.controllers')
                     });
             };
 
+            $scope.editPathology = {};
+            
+            $scope.addPathology = function (labRequest, pathology) {
+                Restangular.one('labrequests', labRequest.id).post('pathology', pathology)
+                    .then(function (result) {
+                        console.log(result);
+                        $scope.editPathology = {};
+                        _loadData();
+                    },
+                    function (err) {
+                        $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                    });
+            };
+            
+            $scope.deletePathology = function (labRequest, pathology) {
+                bootbox.confirm(
+                    '<h4>Are you sure you want to delete the PA number?</h4>',
+                    function(result) {
+                        if (result) {
+                            Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
+                            .remove().then(function (result) {
+                                console.log(result);
+                                _loadData();
+                            },
+                            function (err) {
+                                $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                            });
+                        }
+                    }
+                );
+            };
+            
             $scope.focus = function (el) {
                 $(el).focus();
             };

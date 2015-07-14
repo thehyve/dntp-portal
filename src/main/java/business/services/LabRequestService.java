@@ -86,6 +86,17 @@ public class LabRequestService {
     @Autowired
     private ExcerptListService excerptListService;
 
+    @Transactional
+    public LabRequest save(LabRequest labRequest) {
+        return this.labRequestRepository.save(labRequest);
+    }
+
+    @Transactional
+    public LabRequest findOne(Long id) {
+        return this.labRequestRepository.findOne(id);
+    }
+    
+    
     /**
      * Finds task.
      * @param taskId

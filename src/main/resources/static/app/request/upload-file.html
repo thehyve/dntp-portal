@@ -191,7 +191,7 @@
   <div ng-if="(!request.paReportRequest && !request.materialsRequest)
                     && isRequester()">
     <button type="button" class="btn btn-warning"
-            ng-disabled="request.assignee != globals.currentUser.userid"
+            ng-disabled="request.assignee != globals.currentUser.userid || dataLoading"
             ng-click="closeRequest(request)"
       >
       {{'Close request'|translate}}

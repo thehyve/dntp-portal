@@ -412,7 +412,9 @@
                     <button id="submit-new-request" class="btn btn-warning" type="button"
                         ng-if="request.status=='Open'"
                         ng-click="submitRequest(request)"
-                        ng-disabled="requestEditForm.$invalid">{{'Submit'|translate}}</button>
+                        ng-disabled="requestEditForm.$invalid || dataLoading">
+                        {{'Submit'|translate}}
+                    </button>
                     <button class="btn btn-warning" type="button"
                         ng-if="request.status=='Review' && globals.currentUser.roles.indexOf('palga') != -1"
                         ng-click="submitForApproval(request)"
@@ -422,6 +424,7 @@
                             || !request.requesterAllowed
                             || !request.contactPersonAllowed
                             || !request.requesterLabValid
+                            || dataLoading
                         ">
                             {{'Submit for approval'|translate}}
                     </button>
@@ -431,18 +434,19 @@
                         ng-disabled="requestEditForm.$invalid
                             || !request.scientificCouncilApproved
                             || !request.privacyCommitteeApproved
+                            || dataLoading
                         ">
                             {{'Finalise'|translate}}
                     </button>
                     <button class="btn btn-danger" type="button"
                         ng-if="(request.status=='Review' || request.status=='Approval') && globals.currentUser.roles.indexOf('palga') != -1"
                         ng-click="reject(request)"
-                        ng-disabled="requestEditForm.$invalid
-                        ">
+                        ng-disabled="requestEditForm.$invalid || dataLoading">
                             {{'Reject'|translate}}
                     </button>
                     <button class="btn btn-info" type="submit" ng-click="update(request);"
-                            ng-disabled="requestEditForm.$invalid">{{'Save'|translate}}</button>
+                            ng-disabled="requestEditForm.$invalid || dataLoading">{{'Save'|translate}}
+                    </button>
                     <button id="cancel-new-request" class="btn btn-default" ng-click="cancel(request);">
                         {{'Cancel'|translate}}
                     </button>

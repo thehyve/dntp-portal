@@ -26,10 +26,10 @@
             <!--Tool bar-->
           <ul class="nav nav-pills" ng-if="globals.currentUser.roles.indexOf('requester') != -1" >
             <li role="presentation" title="Create a new request">
-                    <a href="#/" ng-click="start()" id="new-request">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                        {{'Create new request'|translate}}
-                    </a>
+                <button class="btn btn-default"  ng-click="start()" id="new-request">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    {{'Create new request'|translate}}
+                </button>
                 </li>
             </ul>
 

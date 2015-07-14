@@ -4,6 +4,8 @@ angular.module('ProcessApp.controllers')
     .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookieStore',
         function ($scope, $http, $rootScope, $location, $cookieStore) {
 
+
+
             /**
              * To authorize feature based on role
              * @param role
@@ -55,7 +57,6 @@ angular.module('ProcessApp.controllers')
                                 $rootScope.roles.push(data.roles[i].name);
                             }
                         }
-                        //console.log('User "' +  data.username + '" has roles: ' + JSON.stringify($rootScope.roles, null, 2));
 
                         $rootScope.globals = {
                             currentUser: {
@@ -77,7 +78,6 @@ angular.module('ProcessApp.controllers')
                                 $rootScope.roles.push(data.authorities[j].authority);
                             }
                         }
-                        //console.log('User '' +  data.name + '' has roles: ' + JSON.stringify($rootScope.roles, null, 2));
                     } else {
                         $rootScope.authenticated = false;
                     }
@@ -94,12 +94,14 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.login = function() {
+                $scope.dataLoading = true;
                 $http.post('login', jQuery.param($scope.credentials), {
                     headers : {
                         'content-type' : 'application/x-www-form-urlencoded'
                     }
                 }).success(function(data) {
                     authenticate(function() {
+                        $scope.dataLoading = false;
                         if ($rootScope.authenticated) {
                             $scope.error = false;
                             var redirectUrl = $rootScope.redirectUrl;
@@ -110,7 +112,6 @@ angular.module('ProcessApp.controllers')
                                     redirectUrl = '/lab-requests';
                                 }
                             }
-                            console.log("Redirecting to "+redirectUrl);
                             $location.path(redirectUrl);
                         } else {
                             $location.path('/login');

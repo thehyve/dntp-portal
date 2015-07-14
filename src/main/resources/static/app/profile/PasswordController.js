@@ -35,7 +35,7 @@ angular.module('ProcessApp.controllers')
                 error('Passwords must be at least 8 characters long');
                 return;
             } else if (!specialCharsRegex.test($scope.form.newPassword)) {
-                error("Password must have at least one special chars ?=!*'();:@&=+$,/?#");
+                error("Password must have at least one special chars");
                 return;
             } else if (specialCharsRegex.test($scope.form.newPassword)) {
                 if (!(numericalRegex.test($scope.form.newPassword) || alphabeticalRegex.test($scope.form.newPassword))) {

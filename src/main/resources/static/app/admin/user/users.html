@@ -28,15 +28,15 @@
                 <div ng-hide="error">
 
                     <div class="input-group">
-                        <button class="btn btn-info" ng-click="add()" title="Add user">
-                            <span class="glyphicon glyphicon-plus"></span> add user
+                        <button class="btn btn-default" ng-click="add()" title="{{'Add User' | translate}}">
+                            <span class="glyphicon glyphicon-plus-sign"></span> {{'Add User' | translate}}
                         </button>
                     </div>
 
                     <p></p>
 
                     <div class="alert alert-info" role="alert" ng-hide="users.length">
-                        There are no users yet.
+                        {{'There are no users yet.' | translate}}
                     </div>
 
                     <table st-table="displayedCollection" st-safe-src="users" class="table table-striped">
@@ -50,8 +50,8 @@
                             <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
                         </tr>
                         <tr>
-                            <th colspan="7"><input st-search="" class="form-control" placeholder="global search ..."
-                                                   type="text"/></th>
+                            <th colspan="7"><input st-search="" class="form-control"
+                                                   placeholder="{{'Search' | translate}} .." type="text"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -66,25 +66,25 @@
                                 {{user.created | date: 'HH:mm'}}
                             </td>
                             <td>
-            <span class="pull-right">
-            <span class="btn-group">
-                <button class="btn btn-default" type="button" title="Edit" ng-click="edit(user)">
-                    Edit
-                </button>
-                <button class="btn btn-default {{user.active ? 'disabled' : ''}}" type="button" title="Activate"
-                        ng-click="activate(user)">
-                    Activate
-                </button>
-                <button class="btn btn-default {{user.active ? '' : 'disabled'}}" type="button" title="Dectivate"
-                        ng-click="deactivate(user)">
-                    Deactivate
-                </button>
-                <button class="btn btn-default" type="button" title="Remove"
-                        ng-click="remove(user)">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </button>
-            </span>
-            </span>
+                                <span class="pull-right">
+                                <span class="btn-group">
+                                    <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(user)">
+                                        <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                    </button>
+                                    <button class="btn btn-default {{user.active ? 'disabled' : ''}}" type="button" title="Activate"
+                                            ng-click="activate(user)" ng-disabled="dataLoading">
+                                        {{'Activate' | translate}}
+                                    </button>
+                                    <button class="btn btn-default {{user.active ? '' : 'disabled'}}" type="button" title="Dectivate"
+                                            ng-click="deactivate(user)" ng-disabled="dataLoading">
+                                        {{'Deactivate' | translate}}
+                                    </button>
+                                    <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
+                                            ng-click="remove(user)">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </span>
+                                </span>
                             </td>
                         </tr>
                         </tbody>

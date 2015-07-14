@@ -22,32 +22,41 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.update = function(labdata) {
+                $scope.dataLoading = true;
                 if (labdata.id > 0) {
                     labdata.$update(function(result) {
                         $scope.editLabModal.hide();
+                        $scope.dataLoading = false;
                     }, function(response) {
                         $scope.error = $scope.error + response.data.message + '\n';
+                        $scope.dataLoading = false;
                     });
                 } else {
                     var lab = new Lab(labdata);
                     lab.$save(function(result) {
                         $scope.editLabModal.hide();
                         $scope.labs.unshift(result);
+                        $scope.dataLoading = false;
                     }, function(response) {
                         $scope.error = response.data.message + '\n';
+                        $scope.dataLoading = false;
                     });
                 }
             };
 
             $scope.activate = function(lab) {
+                $scope.dataLoading = true;
                 lab.$activate(function(result) {
                     $scope.labs[$scope.labs.indexOf(lab)] = result;
+                    $scope.dataLoading = false;
                 });
             };
 
             $scope.deactivate = function(lab) {
+                $scope.dataLoading = true;
                 lab.$deactivate(function(result) {
                     $scope.labs[$scope.labs.indexOf(lab)] = result;
+                    $scope.dataLoading = false;
                 });
             };
 

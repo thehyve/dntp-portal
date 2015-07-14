@@ -119,11 +119,13 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.start = function() {
+                $scope.dataLoading = true;
                 new Request().$save(function(request) {
                     //$scope.requests.unshift(request);
                     $scope.edit(request);
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
+                    $scope.dataLoading = false;
                 });
             };
 
@@ -154,12 +156,15 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.update = function(request) {
+                $scope.dataLoading = true;
                 Request.convertRequestTypeToOpts(request); // convert request type
                 request.$update(function(result) {
                     $scope.refresh(request, result);
                     $scope.editRequestModal.hide();
+                    $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
+                    $scope.dataLoading = false;
                 });
             };
 
@@ -251,6 +256,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.submitRequest = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to submit the request?\n ' +
                     'After submission the request cannot be edited anymore.',
@@ -264,19 +270,19 @@ angular.module('ProcessApp.controllers')
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
                         } else {
-                            $scope.editRequestModal.show();
+                            $scope.$apply();
                         }
                     });
             };
 
             $scope.submitForApproval = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to submit the request for approval?',
                     function(confirmed) {
                         if (confirmed) {
                             request.$submitForApproval(function(result) {
                                 $scope.refresh(request, result);
-                                $scope.editRequestModal.hide();
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
@@ -285,6 +291,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.finalise = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to finalise the request?',
                     function(confirmed) {
@@ -292,6 +299,7 @@ angular.module('ProcessApp.controllers')
                             request.$finalise(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
+                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
@@ -300,6 +308,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.closeRequest = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to close the request?\n<br>' +
                     'After closing, no data files can be added.',
@@ -316,6 +325,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.reject = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     '<h4>Are you sure you want to reject the request?</h4>\n' +
                     '<form id="reject" action="">' +
@@ -325,12 +335,13 @@ angular.module('ProcessApp.controllers')
                     function(result) {
                         if (result) {
                             request.rejectReason = $('#rejectReason').val();
-                            console.log('Rejected. Reason: ' + request.rejectReason);
                             request.$reject(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
+                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
+                                $scope.dataLoading = false;
                             });
                         }
                     }
@@ -346,8 +357,10 @@ angular.module('ProcessApp.controllers')
                             request.selectionApproved = true;
                             request.$updateExcerptSelectionApproval(function(result) {
                                 $scope.refresh(request, result);
+                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
+                                $scope.dataLoading = false;
                             });
                         }
                     });
@@ -362,8 +375,10 @@ angular.module('ProcessApp.controllers')
                             request.selectionApproved = false;
                             request.$updateExcerptSelectionApproval(function(result) {
                                 $scope.refresh(request, result);
+                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
+                                $scope.dataLoading = false;
                             });
                         }
                     });
@@ -400,7 +415,6 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.edit = function(request) {
-
                 if (request) {
                     Request.get({id:request.processInstanceId}, function (data) {
                         data.type = Request.convertRequestOptsToType(data);
@@ -426,7 +440,13 @@ angular.module('ProcessApp.controllers')
                         if (data.returnDate === null) {
                             data.returnDate = new Date();
                         }
-                        $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/edit-request.html', backdrop: 'static'});
+                        $scope.editRequestModal = $modal({
+                            id: 'editRequestWindow',
+                            scope: $scope,
+                            template: '/app/request/edit-request.html',
+                            backdrop: 'static'
+                        });
+                        $scope.dataLoading = false;
                     });
                 }
             };

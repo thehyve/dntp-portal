@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,6 +23,8 @@ import org.springframework.stereotype.Service;
 import business.models.ApprovalVote;
 import business.models.ApprovalVoteRepository;
 import business.models.Comment;
+import business.models.ContactData;
+import business.models.ContactDataRepository;
 import business.models.ExcerptList;
 import business.models.File;
 import business.models.RequestProperties;
@@ -59,6 +60,9 @@ public class RequestFormService {
 
     @Autowired
     private TaskService taskService;
+    
+    @Autowired
+    private ContactDataRepository contactDataRepository;
 
     /**
      * Casts variable 'name' to type Boolean if it exists as key in the variable map;
@@ -156,6 +160,7 @@ public class RequestFormService {
                     request.setDateAssigned((Date)variables.get("assigned_date"));
                 }
             }
+            
         }
     }
 
@@ -243,6 +248,10 @@ public class RequestFormService {
             }
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
+            request.setBillingAddress(properties.getBillingAddress());
+            request.setChargeNumber(properties.getChargeNumber());
+            request.setResearchNumber(properties.getReseachNumber());
+            
             List<FileRepresentation> requestAttachments = new ArrayList<FileRepresentation>();
             for(File file: properties.getRequestAttachments()) {
                 requestAttachments.add(new FileRepresentation(file));
@@ -359,6 +368,11 @@ public class RequestFormService {
             variables.put("return_date", request.getReturnDate());
             variables.put("contact_person_name", request.getContactPersonName());
 
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
+            properties.setChargeNumber(request.getChargeNumber());
+            properties.setReseachNumber(request.getResearchNumber());
+            ContactData billingAddress = contactDataRepository.save(request.getBillingAddress());
+            properties.setBillingAddress(billingAddress);
             if (is_palga) {
                 variables.put("requester_is_valid", (Boolean)request.isRequesterValid());
                 variables.put("requester_is_allowed", (Boolean)request.isRequesterAllowed());
@@ -383,13 +397,12 @@ public class RequestFormService {
                     log.info("Request not admissible");
                     variables.put("request_is_admissible", Boolean.FALSE);
                 }
-                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
                 properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
                 properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
                 properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
                 properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
-                requestPropertiesService.save(properties);
             }
+            requestPropertiesService.save(properties);
         }
         return variables;
     }

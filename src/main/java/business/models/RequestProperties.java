@@ -32,6 +32,13 @@ public class RequestProperties {
     @Column(unique = true)
     private String processInstanceId;
 
+    @OneToOne
+    ContactData billingAddress;
+    
+    String chargeNumber;
+    
+    String reseachNumber;
+    
     @OneToMany
     private List<File> requestAttachments = new ArrayList<File>();
     
@@ -201,6 +208,30 @@ public class RequestProperties {
     public void setMedicalEthicalCommiteeApprovalAttachments(
             List<File> medicalEthicalCommiteeApprovalAttachments) {
         this.medicalEthicalCommiteeApprovalAttachments = medicalEthicalCommiteeApprovalAttachments;
+    }
+
+    public ContactData getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(ContactData billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public String getChargeNumber() {
+        return chargeNumber;
+    }
+
+    public void setChargeNumber(String chargeNumber) {
+        this.chargeNumber = chargeNumber;
+    }
+
+    public String getReseachNumber() {
+        return reseachNumber;
+    }
+
+    public void setReseachNumber(String reseachNumber) {
+        this.reseachNumber = reseachNumber;
     }
     
 }

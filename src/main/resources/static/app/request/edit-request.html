@@ -58,6 +58,100 @@
                         </div>
                     </div>
 
+
+                    <h3>{{'Billing address'|translate}}</h3>
+                    <!-- Address -->
+                    <div class="form-group"
+                        ng-class="{ 'has-error' : requestEditForm.address1.$invalid && requestEditForm.address1.$dirty }">>
+                        <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="address1" id="address1" placeholder="{{ 'Address' | translate }}"
+                            ng-model="request.billingAddress.address1" required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.address1.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <input type="text" class="form-control" id="address2"
+                            ng-model="request.billingAddress.address2" >
+                        </div>
+                    </div>
+            
+                    <!-- Postal code -->
+                    <div class="form-group" 
+                        ng-class="{ 'has-error' : (requestEditForm.postalcode.$invalid && requestEditForm.postalcode.$dirty)
+                            || (requestEditForm.city.$invalid && requestEditForm.city.$dirty) }">>
+                        <label class="control-label col-sm-3" for="postalcode">{{ 'Postal code' | translate }}, {{ 'City' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="postalcode" id="postalcode" placeholder="{{ 'Postal code' | translate }}"
+                            ng-model="request.billingAddress.postalCode" required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.postalcode.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <input type="text" class="form-control" name="city" id="city" placeholder="{{ 'City' | translate }}"
+                            ng-model="request.billingAddress.city" required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.city.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+            
+                    <!-- State / Province -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="stateProvince">{{ 'Province' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="stateProvince" placeholder="{{ 'Province' | translate }}"
+                            ng-model="request.billingAddress.stateProvince" >
+                        </div>
+                    </div>
+            
+                    <!-- E-mail -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="email">{{ 'E-mail' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control" id="email" placeholder="{{ 'E-mail' | translate }}"
+                            ng-model="request.billingAddress.email" >
+                        </div>
+                    </div>
+            
+                    <!-- Telephone -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="telephone" placeholder="{{ 'Telephone' | translate }}"
+                            ng-model="request.billingAddress.telephone" >
+                        </div>
+                    </div>
+                    
+                    <h3>{{'Billing information' | translate}}</h3>
+                    <!-- Charge number -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.chargeNumber.$invalid && requestEditForm.chargeNumber.$dirty }">
+                        <label class="control-label col-sm-3" for="chargeNumber">{{ 'Charge number' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="chargeNumber" name="chargeNumber" placeholder="{{ 'Charge number' | translate }}"
+                                   ng-model="request.chargeNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Research number -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.researchNumber.$invalid && requestEditForm.researchNumber.$dirty }">
+                        <label class="control-label col-sm-3" for="researchNumber">{{ 'Research number' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="researchNumber" name="researchNumber" placeholder="{{ 'Research number' | translate }}"
+                                   ng-model="request.researchNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.researchNumber.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+            
+            
+                    <h3>{{'Previous contact' |translate}}</h3>
                     <!-- Previous contact -->
                     <div class="form-group" ng-class="">
                         <label class="control-label col-sm-3">

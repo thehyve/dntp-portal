@@ -155,8 +155,6 @@ public class LabRequestController {
 
         LabRequest labRequest = labRequestRepository.findOne(id);
         
-        transferLabRequestFormData(body, labRequest, user.getUser());
-        
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         if (!representation.getStatus().equals("Approved")) {
@@ -177,6 +175,9 @@ public class LabRequestController {
         taskService.setVariableLocal(labRequest.getTaskId(),
                 "labrequest_status", "Sending");
 
+        labRequest.setSendDate(new Date());
+        labRequest = labRequestRepository.save(labRequest);
+        
         representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
@@ -434,13 +435,53 @@ public class LabRequestController {
             @PathVariable Long id,
             @RequestBody LabRequestRepresentation body) {
         log.info("PUT /labrequests/" + id + " for userId " + user.getId());
-        LabRequest labRequest = labRequestRepository.findOne(id);
+        LabRequest labRequest = labRequestService.findOne(id);
         
         transferLabRequestFormData(body, labRequest, user.getUser());
         
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    @RequestMapping (value = "/labrequests/{id}/pathology", method = RequestMethod.POST)
+    public PathologyRepresentation addPathology (UserAuthenticationToken user,
+            @PathVariable Long id,
+            @RequestBody PathologyRepresentation body) {
+        log.info("POST /labrequests/" + id + "/pathology for userId " + user.getId());
+        LabRequest labRequest = labRequestService.findOne(id);
+        
+        PathologyItem pathology = new PathologyItem();
+        pathology.setLabRequestId(id);
+        pathology.setPaNumber(body.getPaNumber());
+        pathology.setSamples(body.getSamples());
+        pathology = pathologyItemRepository.save(pathology);
+        
+        labRequest.getPathologyList().add(pathology);
+        labRequest = labRequestService.save(labRequest);
+        
+        return new PathologyRepresentation(pathology);
+    }
+    
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    @RequestMapping (value = "/labrequests/{id}/pathology/{pathologyId}", method = RequestMethod.DELETE)
+    public void removePathology (UserAuthenticationToken user,
+            @PathVariable Long id,
+            @PathVariable Long pathologyId) {
+        log.info("PUT /labrequests/" + id + "/pathology/ " + pathologyId + " for userId " + user.getId());
+        LabRequest labRequest = labRequestRepository.findOne(id);
+        
+        PathologyItem pathology = pathologyItemRepository.findOne(pathologyId);
+        if (pathology == null) {
+            throw new PathologyNotFound();
+        }
+        if (!labRequest.getPathologyList().remove(pathology)) {
+            throw new PathologyNotFound();
+        }
+        labRequest = labRequestService.save(labRequest);
+        
+        pathologyItemRepository.delete(pathologyId);
     }
     
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
@@ -450,7 +491,7 @@ public class LabRequestController {
             @PathVariable Long pathologyId,
             @RequestBody PathologyRepresentation body) {
         log.info("PUT /labrequests/" + id + "/pathology/ " + pathologyId + " for userId " + user.getId());
-        LabRequest labRequest = labRequestRepository.findOne(id);
+        LabRequest labRequest = labRequestService.findOne(id);
         
         PathologyItem pathology = pathologyItemRepository.findOne(pathologyId);
         if (pathology == null) {

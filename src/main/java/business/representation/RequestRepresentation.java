@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import business.models.ContactData;
 import business.models.Lab;
 
 public class RequestRepresentation {
@@ -32,6 +33,10 @@ public class RequestRepresentation {
     private String pathologistEmail;
     private boolean previousContact;
     private String previousContactDescription;
+    
+    private ContactData billingAddress;
+    private String chargeNumber;
+    private String researchNumber;
     
     private boolean statisticsRequest;
     private boolean excerptsRequest;
@@ -544,6 +549,30 @@ public class RequestRepresentation {
     public void setMedicalEthicalCommitteeApprovalAttachments(
             List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments) {
         this.medicalEthicalCommitteeApprovalAttachments = medicalEthicalCommitteeApprovalAttachments;
+    }
+
+    public ContactData getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(ContactData billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public String getChargeNumber() {
+        return chargeNumber;
+    }
+
+    public void setChargeNumber(String chargeNumber) {
+        this.chargeNumber = chargeNumber;
+    }
+
+    public String getResearchNumber() {
+        return researchNumber;
+    }
+
+    public void setResearchNumber(String researchNumber) {
+        this.researchNumber = researchNumber;
     } 
     
 }

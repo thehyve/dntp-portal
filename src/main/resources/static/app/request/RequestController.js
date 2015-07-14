@@ -266,13 +266,10 @@ angular.module('ProcessApp.controllers')
                             request.$submit(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
-                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
-                                $scope.dataLoading = false;
                             });
                         } else {
-                            $scope.dataLoading = false;
                             $scope.$apply();
                         }
                     });
@@ -286,14 +283,10 @@ angular.module('ProcessApp.controllers')
                         if (confirmed) {
                             request.$submitForApproval(function(result) {
                                 $scope.refresh(request, result);
-                                $scope.editRequestModal.hide();
-                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
-                                $scope.dataLoading = false;
                             });
                         }
-                        $scope.dataLoading = false;
                     });
             };
 
@@ -306,11 +299,11 @@ angular.module('ProcessApp.controllers')
                             request.$finalise(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
+                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
                         }
-                        $scope.dataLoading = false;
                     });
             };
 
@@ -328,7 +321,6 @@ angular.module('ProcessApp.controllers')
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
                         }
-                        $scope.dataLoading = false;
                     });
             };
 
@@ -448,7 +440,12 @@ angular.module('ProcessApp.controllers')
                         if (data.returnDate === null) {
                             data.returnDate = new Date();
                         }
-                        $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/edit-request.html', backdrop: 'static'});
+                        $scope.editRequestModal = $modal({
+                            id: 'editRequestWindow',
+                            scope: $scope,
+                            template: '/app/request/edit-request.html',
+                            backdrop: 'static'
+                        });
                         $scope.dataLoading = false;
                     });
                 }

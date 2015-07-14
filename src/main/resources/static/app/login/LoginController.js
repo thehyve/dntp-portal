@@ -117,6 +117,7 @@ angular.module('ProcessApp.controllers')
                             $location.path('/login');
                             $scope.error = true;
                             $scope.errormessage = '';
+                            $scope.dataLoading = false;
                         }
                     });
                 }).error(function(data) {
@@ -126,6 +127,7 @@ angular.module('ProcessApp.controllers')
                         $scope.errormessage = data.message;
                     }
                     $rootScope.authenticated = false;
+                    $scope.dataLoading = false;
                 });
             };
             

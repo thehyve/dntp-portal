@@ -10,12 +10,12 @@
             <li class="list-group-item" ng-repeat="comment in request.comments">
                 <p><div ng-show="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
                 <div ng-show="commentEditVisibility[comment.id]">
-                                   <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add note'|translate}}"
-                                             ng-model="comment.contents">
-                                   </textarea>
-                    <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
-                            ng-click="updateComment(request, comment)">
-                        {{'Update note'|translate}}
+                   <textarea id="editCommentText" class="form-control" name="editCommentText" placeholder="{{'Add note'|translate}}"
+                             ng-model="comment.contents">
+                   </textarea>
+                    <button class="btn btn-primary btn-xs" type="button" title="{{'Update note'|translate}}"
+                            ng-click="updateComment(request, comment)" ng-disabled="dataLoading">
+                        <span><i class="glyphicon glyphicon-pencil"></i></span> {{'Update'|translate}}
                     </button>
                 </div>
                       <span class="pull-right">
@@ -25,7 +25,7 @@
                                   <span><i class="glyphicon glyphicon-pencil"></i></span>
                               </button>
                               <button class="btn btn-danger" type="button" title="Delete"
-                                      ng-click="removeComment(comment)">
+                                      ng-click="removeComment(comment)" ng-disabled="dataLoading">
                                   <span><i class="glyphicon glyphicon-remove-circle"></i></span>
                               </button>
                           </span>
@@ -53,12 +53,12 @@
     <br>
     <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
             ng-click="addComment(request, editComment)"
-            ng-if="!editComment.id">
+            ng-if="!editComment.id" ng-disabled="dataLoading">
         {{'Add note'|translate}}
     </button>
     <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
             ng-click="updateComment(request, editComment)"
-            ng-if="editComment.id">
+            ng-if="editComment.id" ng-disabled="dataLoading">
         {{'Update note'|translate}}
     </button>
 </div>

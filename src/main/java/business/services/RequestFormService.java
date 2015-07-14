@@ -371,7 +371,14 @@ public class RequestFormService {
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
             properties.setChargeNumber(request.getChargeNumber());
             properties.setReseachNumber(request.getResearchNumber());
-            ContactData billingAddress = contactDataRepository.save(request.getBillingAddress());
+            ContactData billingAddress;
+            if (request.getBillingAddress() != null) {
+                billingAddress = request.getBillingAddress();
+            } else {
+                billingAddress = new ContactData();
+                // FIXME: should throw exception
+            }
+            billingAddress = contactDataRepository.save(billingAddress);
             properties.setBillingAddress(billingAddress);
             if (is_palga) {
                 variables.put("requester_is_valid", (Boolean)request.isRequesterValid());

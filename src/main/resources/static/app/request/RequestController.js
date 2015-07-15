@@ -284,6 +284,7 @@ angular.module('ProcessApp.controllers')
                         if (confirmed) {
                             request.$submitForApproval(function(result) {
                                 $scope.refresh(request, result);
+                                $scope.editRequestModal.hide();
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });

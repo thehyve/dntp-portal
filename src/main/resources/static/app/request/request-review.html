@@ -21,7 +21,7 @@
     <label class="control-label col-sm-3">
       {{'Lab' | translate}}
     </label>
-    <div class="col-sm-8">
+    <div class="col-sm-8 form-control-static" >
       <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
       <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
     </div>

@@ -270,6 +270,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
                         } else {
+                            $scope.dataLoading = false;
                             $scope.$apply();
                         }
                     });
@@ -286,6 +287,9 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     });
             };
@@ -303,6 +307,9 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     });
             };
@@ -320,6 +327,9 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     });
             };
@@ -499,15 +509,15 @@ angular.module('ProcessApp.controllers')
             
             $scope.isPalga = function() {
                 return $scope.globals.currentUser.roles.indexOf('palga') != -1;
-            }
+            };
 
             $scope.isRequester = function() {
                 return $scope.globals.currentUser.roles.indexOf('requester') != -1;
-            }
+            };
             
             $scope.isScientificCouncil = function() {
                 return $scope.globals.currentUser.roles.indexOf('scientific_council') != -1;
-            }
+            };
 
             $scope.isLabuser = function() {
                 return $scope.globals.currentUser.roles.indexOf('lab_user') != -1;

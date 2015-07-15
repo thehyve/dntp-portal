@@ -24,7 +24,7 @@
         <!--Status-->
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
-          <p class="col-sm-7">
+          <p class="col-sm-7 form-control-static">
             {{labRequest.status}}
             <br>
           </p>
@@ -34,14 +34,14 @@
         <div ng-if="labRequest.status == 'Rejected'">
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Reject date' | translate }}</label>
-          <p class="col-sm-7">
+          <p class="col-sm-7 form-control-static">
             {{labRequest.rejectDate | date}}
             <br>
           </p>
         </div>
         <div class="form-group" ng-if="isLabUser()">
           <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
-          <p class="col-sm-7">
+          <p class="col-sm-7 form-control-static">
             {{labRequest.rejectReason}}
             <br><br>
             <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}
@@ -58,14 +58,14 @@
         <!--Parent request details-->
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Request title' | translate }}</label>
-          <p class="col-sm-7">
+          <p class="col-sm-7 form-control-static">
             {{labRequest.request.title}}
             <br>
           </p>
         </div>
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Creation date' | translate }}</label>
-          <p class="col-sm-7">
+          <p class="col-sm-7 form-control-static">
             {{labRequest.request.dateCreated | date }}
             <br>
           </p>
@@ -76,7 +76,7 @@
           <!--Displayed only to users with non requester role-->
           <div class="form-group">
             <label class="control-label col-sm-3">{{ 'Requester name' | translate }}</label>
-            <p class="col-sm-7">
+            <p class="col-sm-7 form-control-static">
               {{labRequest.requesterName}}
               <br>
             </p>
@@ -84,7 +84,7 @@
 
           <div class="form-group">
             <label class="control-label col-sm-3">{{ 'Email' | translate }}</label>
-            <p class="col-sm-7">
+            <p class="col-sm-7 form-control-static">
               {{labRequest.requesterEmail}}
               <br>
             </p>
@@ -96,7 +96,7 @@
           <!--Displayed only to users with non lab user role-->
           <div class="form-group">
             <label class="control-label col-sm-3">{{ 'Lab' | translate }}</label>
-            <p class="col-sm-7">
+            <p class="col-sm-7 form-control-static">
               {{"Lab" | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
               <br>
             </p>
@@ -105,7 +105,7 @@
 
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
-          <p class="col-sm-7">
+          <p class="col-sm-7 form-control-static">
             {{labRequest.requesterEmail}}
             <br>
           </p>

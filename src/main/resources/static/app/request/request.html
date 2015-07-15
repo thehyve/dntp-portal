@@ -156,36 +156,7 @@
                 </p>
             </div>
 
-            <!-- Billing address -->
-            <div class="row">
-                <label class="control-label col-sm-3">{{ 'Billing address' | translate }}</label>
-                <div class="col-sm-7">
-                    <address>
-                    {{request.billingAddress.address1}}<br>
-                    {{request.billingAddress.address2}}<br>
-                    {{request.billingAddress.postalCode}}<br>
-                    {{request.billingAddress.city}}<br>
-                    {{request.billingAddress.email}}<br>
-                    {{request.billingAddress.telephone}}
-                    </address>
-                </div>
-            </div>
 
-            <!-- Charge number -->
-            <div class="row">
-                <label class="control-label col-sm-3">{{ 'Charge number' | translate }}</label>
-                <p class="col-sm-7">
-                    {{request.chargeNumber}}
-                </p>
-            </div>
-
-            <!-- Research number -->
-            <div class="row">
-                <label class="control-label col-sm-3">{{ 'Research number' | translate }}</label>
-                <p class="col-sm-7">
-                    {{request.researchNumber}}
-                </p>
-            </div>
 
 
             <!-- Previous contact -->
@@ -257,6 +228,38 @@
                     {{"Request_Type_" + request.type | translate}}
                 </div>
             </div>
+
+            <!-- Billing address -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Billing address' | translate }}</label>
+                <div class="col-sm-7">
+                    <address>
+                        {{request.billingAddress.address1}}<br>
+                        {{request.billingAddress.address2}}<br>
+                        {{request.billingAddress.postalCode}}<br>
+                        {{request.billingAddress.city}}<br>
+                        {{request.billingAddress.email}}<br>
+                        {{request.billingAddress.telephone}}
+                    </address>
+                </div>
+            </div>
+
+            <!-- Charge number -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Charge number' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.chargeNumber}}
+                </p>
+            </div>
+
+            <!-- Research number -->
+            <div class="row">
+                <label class="control-label col-sm-3">{{ 'Research number' | translate }}</label>
+                <p class="col-sm-7">
+                    {{request.researchNumber}}
+                </p>
+            </div>
+
 
             <!-- Data Linkage -->
             <div class="row" ng-show="request.type != '1'">

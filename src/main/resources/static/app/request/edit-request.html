@@ -13,6 +13,9 @@
                         {{ error }}
                     </div>
 
+                    <h3>{{'General Details' |translate}}</h3>
+                    <hr>
+
                     <!-- Principal Investigator -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonName.$invalid && requestEditForm.contactPersonName.$dirty }">
                         <label class="control-label col-sm-3" for="contactPersonName">{{ 'Principal investigator' | translate }}</label>
@@ -26,6 +29,7 @@
                             </span>
                         </div>
                     </div>
+
 
                     <!-- Pathologist name -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.pathologistName.$invalid && requestEditForm.pathologistName.$dirty }">
@@ -58,11 +62,120 @@
                         </div>
                     </div>
 
+                    <div class="form-group" ng-class="">
+                        <label class="control-label col-sm-3">
+                            {{'Previous contact' | translate}}
+                        </label>
+                        <div class="col-sm-8 form-control-static" >
+                            {{'Did you contact Palga previously?' | translate}}
+                            &nbsp;
+                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact" >
+                            <label class="normal" for="previousContactYes">{{'Yes' | translate}}</label>
+                            &nbsp;
+                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);">
+                            <label class="normal" for="previousContactNo">{{'No' | translate}}</label>
+                            <br>
+                        </div>
+                    </div>
+
+                    <!-- Previous contact -->
+                    <!-- Previous contact description  -->
+                    <div class="form-group" ng-show="request.previousContact"
+                         ng-class="{ 'has-error' : requestEditForm.previousContactDescription.$invalid  && requestEditForm.previousContactDescription.$dirty }">
+                        <label class="control-label col-sm-3" for="previousContactDescription"></label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" placeholder="{{ 'Description of previous contact' | translate }}"
+                                  ng-model="request.previousContactDescription" ng-required="request.previousContact"></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.requestTitle.$invalid || requestEditForm.requestTitle.$error.required) && requestEditForm.requestTitle.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Running title' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="requestTitle" name="requestTitle" placeholder="{{ 'Title' | translate }}"
+                                   ng-model="request.title" ng-maxlength="50" required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Background -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.background.$invalid || requestEditForm.background.$error.required) && requestEditForm.background.$dirty }">
+                        <label class="control-label col-sm-3" for="background">{{ 'Background' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="background" name="background" placeholder="{{ 'Background' | translate }}"
+                                  ng-model="request.background" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Research Question -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.researchQuestion.$invalid || requestEditForm.researchQuestion.$error.required) && requestEditForm.researchQuestion.$dirty }">
+                        <label class="control-label col-sm-3" for="researchQuestion">{{ 'Research question' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" placeholder="{{ 'Research question' | translate }}"
+                                  ng-model="request.researchQuestion" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Hypothesis -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.hypothesis.$invalid || requestEditForm.hypothesis.$error.required) && requestEditForm.hypothesis.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Hypothesis' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" placeholder="{{ 'Hypothesis' | translate }}"
+                                  ng-model="request.hypothesis" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Methods -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.methods.$invalid || requestEditForm.methods.$error.required) && requestEditForm.methods.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Methods' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="methods" name="methods" placeholder="{{ 'Methods' | translate }}"
+                                  ng-model="request.methods" required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.methods.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!--Request Type-->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">{{'Request type' | translate}}</label>
+                        <div class="col-sm-8">
+                            <input type="radio" ng-model="request.type" value="1" id="radio-numbers" >
+                            <label class="normal" for="radio-numbers">{{'Request for numbers only' | translate}}</label><br>
+                            <input type="radio" ng-model="request.type" value="2" id="radio-excerpts">
+                            <label class="normal" for="radio-excerpts">{{'Request for excerpts' | translate}}</label><br>
+                            <input type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA">
+                            <label class="normal" for="radio-excerpts-PA">{{'Request for excerpts + PA reports' | translate}}</label><br>
+                            <input type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials">
+                            <label class="normal" for="radio-excerpts-materials">{{'Request for excerpts + materials' | translate}}</label><br>
+                            <input type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials">
+                            <label class="normal" for="radio-excerpts-PA-materials">{{'Request for excerpts + PA reports + materials' | translate}}</label><br>
+                            <input type="radio" ng-model="request.type" value="6" id="radio-PA">
+                            <label class="normal" for="radio-PA">{{'Request for PA-reports only' | translate}}</label><br>
+                            <input type="radio" ng-model="request.type" value="7" id="radio-materials">
+                            <label class="normal" for="radio-materials">{{'Request for materials only' | translate}}</label>
+                        </div>
+                    </div>
 
                     <h3>{{'Billing address'|translate}}</h3>
                     <!-- Address -->
                     <div class="form-group"
-                        ng-class="{ 'has-error' : requestEditForm.address1.$invalid && requestEditForm.address1.$dirty }">>
+                        ng-class="{ 'has-error' : requestEditForm.address1.$invalid && requestEditForm.address1.$dirty }">
                         <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="address1" id="address1" placeholder="{{ 'Address' | translate }}"
@@ -79,7 +192,7 @@
                     <!-- Postal code -->
                     <div class="form-group" 
                         ng-class="{ 'has-error' : (requestEditForm.postalcode.$invalid && requestEditForm.postalcode.$dirty)
-                            || (requestEditForm.city.$invalid && requestEditForm.city.$dirty) }">>
+                            || (requestEditForm.city.$invalid && requestEditForm.city.$dirty) }">
                         <label class="control-label col-sm-3" for="postalcode">{{ 'Postal code' | translate }}, {{ 'City' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="postalcode" id="postalcode" placeholder="{{ 'Postal code' | translate }}"
@@ -149,118 +262,11 @@
                             <span class="help-block" ng-show="requestEditForm.researchNumber.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                         </div>
                     </div>
-            
-            
-                    <h3>{{'Previous contact' |translate}}</h3>
-                    <!-- Previous contact -->
-                    <div class="form-group" ng-class="">
-                        <label class="control-label col-sm-3">
-                            {{'Previous contact' | translate}}
-                        </label>
-                        <div class="col-sm-8">
-                            {{'Did you contact Palga previously?' | translate}}
-                            &nbsp;
-                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact" >
-                            <label class="normal" for="previousContactYes">{{'Yes' | translate}}</label>
-                            &nbsp; 
-                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);">
-                            <label class="normal" for="previousContactNo">{{'No' | translate}}</label>
-                            <br>
-                        </div>
-                    </div>
 
-                    <!-- Previous contact description  -->
-                    <div class="form-group" ng-show="request.previousContact"
-                         ng-class="{ 'has-error' : requestEditForm.previousContactDescription.$invalid  && requestEditForm.previousContactDescription.$dirty }">
-                        <label class="control-label col-sm-3" for="previousContactDescription"></label>
-                        <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" placeholder="{{ 'Description of previous contact' | translate }}"
-                                  ng-model="request.previousContactDescription" ng-required="request.previousContact"></textarea>
-                            <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required">
-                                {{ 'Required field' | translate }}
-                            </span>
-                        </div>
-                    </div>
 
-                    <!-- Title -->
-                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.requestTitle.$invalid || requestEditForm.requestTitle.$error.required) && requestEditForm.requestTitle.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Running title' | translate }}</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="requestTitle" name="requestTitle" placeholder="{{ 'Title' | translate }}"
-                                   ng-model="request.title" ng-maxlength="50" required>
-                            <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
-                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
-                        </div>
-                    </div>
+                    <h3>{{ 'Data Linkage' | translate }}</h3>
+                    <hr>
 
-                    <!-- Background -->
-                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.background.$invalid || requestEditForm.background.$error.required) && requestEditForm.background.$dirty }">
-                        <label class="control-label col-sm-3" for="background">{{ 'Background' | translate }}</label>
-                        <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="background" name="background" placeholder="{{ 'Background' | translate }}"
-                            ng-model="request.background" required></textarea>
-                            <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Research Question -->
-                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.researchQuestion.$invalid || requestEditForm.researchQuestion.$error.required) && requestEditForm.researchQuestion.$dirty }">
-                        <label class="control-label col-sm-3" for="researchQuestion">{{ 'Research question' | translate }}</label>
-                        <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" placeholder="{{ 'Research question' | translate }}"
-                            ng-model="request.researchQuestion" required></textarea>
-                            <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Hypothesis -->
-                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.hypothesis.$invalid || requestEditForm.hypothesis.$error.required) && requestEditForm.hypothesis.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Hypothesis' | translate }}</label>
-                        <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" placeholder="{{ 'Hypothesis' | translate }}"
-                            ng-model="request.hypothesis" required></textarea>
-                            <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Methods -->
-                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.methods.$invalid || requestEditForm.methods.$error.required) && requestEditForm.methods.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Methods' | translate }}</label>
-                        <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="methods" name="methods" placeholder="{{ 'Methods' | translate }}"
-                            ng-model="request.methods" required></textarea>
-                            <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.methods.$error.required">
-                                {{ 'Required field' | translate }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!--Request Type-->
-                    <div class="form-group">
-                        <label class="control-label col-sm-3">{{'Request type' | translate}}</label>
-                        <div class="col-sm-8">
-                            <input type="radio" ng-model="request.type" value="1" id="radio-numbers" >
-                            <label class="normal" for="radio-numbers">{{'Request for numbers only' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="2" id="radio-excerpts">
-                            <label class="normal" for="radio-excerpts">{{'Request for excerpts' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA">
-                            <label class="normal" for="radio-excerpts-PA">{{'Request for excerpts + PA reports' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials">
-                            <label class="normal" for="radio-excerpts-materials">{{'Request for excerpts + materials' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials">
-                            <label class="normal" for="radio-excerpts-PA-materials">{{'Request for excerpts + PA reports + materials' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="6" id="radio-PA">
-                            <label class="normal" for="radio-PA">{{'Request for PA-reports only' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="7" id="radio-materials">
-                            <label class="normal" for="radio-materials">{{'Request for materials only' | translate}}</label>
-                        </div>
-                    </div>
 
                     <!-- Data Linkage -->
                     <div class="form-group" ng-class="" ng-show="request.type != 1">
@@ -345,7 +351,7 @@
                          flow-file-success="fileuploadsuccess(request, $message)"
                          ng-if="request.status=='Open' || (isPalga() && request.status=='Review')">
                         <div>
-                            <input type="file" flow-btn id="test-upload-attachment" style="display:none" />
+                            <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
                             <span class="btn btn-default" flow-btn>{{'Upload file'|translate}}</span>
                         </div>
                         <br>
@@ -396,7 +402,7 @@
                                             || request.status=='SelectionReview'
                                             )">
                         <div>
-                            <input type="file" flow-btn id="test-upload-attachment" style="display:none" />
+                            <input type="file" flow-btn id="test-upload-attachment2" style="display:none" />
                             <span class="btn btn-default" flow-btn>{{'Upload medical ethical committee approval'|translate}}</span>
                         </div>
                         <br>

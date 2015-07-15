@@ -245,7 +245,8 @@
                 <!--Requester lab Info-->
                 <div class="form-group">
                   <label class="control-label col-md-2 no-print">{{ 'Requester Lab' | translate }}</label>
-                  <label class="control-label col-md-2 print-only">{{ 'Delivery Address' | translate }}</label>
+                  <label class="control-label col-md-2 print-only" ng-if="isLabUser()">{{ 'Delivery Address' | translate }}</label>
+                  <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Sender Address' | translate }}</label>
                   <div class="col-md-10">
                     <p class="form-control-static">
                       {{"Lab" | translate}} {{labRequest.requesterLab.number}} - {{labRequest.requesterLab.name}}
@@ -259,7 +260,8 @@
                   <!--Displayed only to users with non lab user role-->
                   <div class="form-group">
                         <label class="control-label col-md-2 no-print">{{ 'Sender Lab' | translate }}</label>
-                        <label class="control-label col-md-2 print-only">{{ 'Sender' | translate }}</label>
+                        <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Delivery Address' | translate }}</label>
+                        <label class="control-label col-md-2 print-only" ng-if="isLabUser()">{{ 'Sender' | translate }}</label>
                         <div class="col-md-10">
                           <p class="form-control-static">
                             {{"Lab" | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
@@ -270,33 +272,6 @@
                 </div>
 
               </div>
-
-              <!--<div title="Excerpt list" name="Excerpt list" bs-pane  class="no-print"-->
-                <!--ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">-->
-
-                  <!--<h3>{{ 'Excerpt list' | translate}}</h3>-->
-                  <!--<hr>-->
-
-                  <!--<div style="overflow: scroll; border: 5px #CCC solid; font-size: smaller;">-->
-                    <!--<table st-table="rowCollection" class="table">-->
-                      <!--<thead>-->
-                      <!--<tr>-->
-                        <!--<th></th>-->
-                        <!--<th ng-repeat="value in labRequest.excerptList.columnNames track by $index">{{value}}</th>-->
-                      <!--</tr>-->
-                      <!--</thead>-->
-                      <!--<tbody>-->
-                      <!--<tr ng-repeat="excerpt in labRequest.excerptList.entries track by excerpt.id" >-->
-                        <!--<td cs-select="row"></td>-->
-                        <!--<td  ng-repeat="value in excerpt.values track by $index">-->
-                          <!--{{value}}-->
-                        <!--</td>-->
-                      <!--</tr>-->
-                      <!--</tbody>-->
-                    <!--</table>-->
-                  <!--</div>-->
-
-              <!--</div>-->
 
               <div title="{{'Samples' | translate}}" name="PA Numbers" bs-pane id="pa-numbers"
                 ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">

@@ -62,7 +62,7 @@
                     <h3>{{'Billing address'|translate}}</h3>
                     <!-- Address -->
                     <div class="form-group"
-                        ng-class="{ 'has-error' : requestEditForm.address1.$invalid && requestEditForm.address1.$dirty }">>
+                        ng-class="{ 'has-error' : requestEditForm.address1.$invalid && requestEditForm.address1.$dirty }">
                         <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="address1" id="address1" placeholder="{{ 'Address' | translate }}"
@@ -79,7 +79,7 @@
                     <!-- Postal code -->
                     <div class="form-group" 
                         ng-class="{ 'has-error' : (requestEditForm.postalcode.$invalid && requestEditForm.postalcode.$dirty)
-                            || (requestEditForm.city.$invalid && requestEditForm.city.$dirty) }">>
+                            || (requestEditForm.city.$invalid && requestEditForm.city.$dirty) }">
                         <label class="control-label col-sm-3" for="postalcode">{{ 'Postal code' | translate }}, {{ 'City' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="postalcode" id="postalcode" placeholder="{{ 'Postal code' | translate }}"

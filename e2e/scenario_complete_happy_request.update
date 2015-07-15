@@ -43,8 +43,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     linkageWithPersonalDataNotes: notes
     reasonUsingPersonalData: reason
     """
-    And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment'
-    And I upload the file 'test-attachment.txt' to the element with id '??'
+    And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment1'
+    And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment2'
     And I click on the object with id 'submit-new-request'
     And I click on the 'OK' button
     Then I should be on the requests page

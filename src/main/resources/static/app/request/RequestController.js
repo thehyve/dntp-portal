@@ -353,6 +353,9 @@ angular.module('ProcessApp.controllers')
                                 $scope.error = $scope.error + response.data.message + '\n';
                                 $scope.dataLoading = false;
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     }
                 );

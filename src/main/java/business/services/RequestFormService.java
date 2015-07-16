@@ -128,15 +128,6 @@ public class RequestFormService {
                         task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
 
                         request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
-                        if (currentUser.isScientificCouncilMember()) {
-                            // fetch my vote, number of votes
-                            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                                    instance.getId());
-                            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
-                            if (votes.containsKey(currentUser.getId())) {
-                                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
-                            }
-                        }
                         break;
                     case "DataDelivery":
                         task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
@@ -158,6 +149,16 @@ public class RequestFormService {
                         }
                     }
                     request.setDateAssigned((Date)variables.get("assigned_date"));
+                }
+            }
+            
+            if (currentUser.isScientificCouncilMember()) {
+                // fetch my vote
+                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                        instance.getId());
+                Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+                if (votes.containsKey(currentUser.getId())) {
+                    request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
                 }
             }
             

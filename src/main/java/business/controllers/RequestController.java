@@ -146,14 +146,15 @@ public class RequestController {
                     .list();
         } else if (user.getUser().isScientificCouncilMember()) {
             Date start = new Date();
-            processInstances = historyService
+            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
                     .variableValueEquals("status", "Approval")
                     .orderByProcessInstanceStartTime()
                     .desc()
-                    .list();
+                    .list());
             Date endQ1 = new Date();
             List<HistoricProcessInstance> list = historyService
                     .createHistoricProcessInstanceQuery()

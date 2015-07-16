@@ -18,13 +18,8 @@
 
     <!-- Status -->
     <div class="row">
-        <label class="control-label col-sm-3">{{ 'Votes' | translate }}</label>
+        <label class="control-label col-sm-3">{{ 'Votes' | translate }} <span class="badge">{{size(request.approvalVotes)}}</span></label>
         <div class="col-sm-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    {{size(request.approvalVotes)}} votes.
-                </div>
-            </div>
             <div class="panel panel-default" ng-repeat="(user_id, vote) in request.approvalVotes">
                 <div class="panel-body">
                     <span ng-if="vote.value=='ACCEPTED'"><i class="glyphicon glyphicon-ok-circle"></i></span>
@@ -38,7 +33,7 @@
     </div>
 
     <!-- Add vote -->
-    <div ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="row" ng-class="">
+    <div ng-if="isScientificCouncil() && request.status == 'Approval'" class="row" ng-class="">
         <div class="col-sm-8">
             <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
@@ -102,7 +97,7 @@
     </ul>
 
     <!-- Add approval comment -->
-    <div class="row" ng-class="">
+    <div class="row" ng-class="" ng-if="request.status=='Approval'">
         <div class="col-sm-12">
             <input type="hidden" ng-model="approvalComment.processInstanceId" value="{{request.processInstanceId}}">
                 <textarea class="form-control" id="commentText" name="commentText"
@@ -111,7 +106,7 @@
                 </textarea>
         </div>
     </div>
-    <div class="row" ng-class="">
+    <div class="row" ng-class="" ng-if="request.status=='Approval'">
         <div class="col-sm-12 text-justify">
             <br>
             <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"

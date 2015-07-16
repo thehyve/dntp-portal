@@ -2,6 +2,7 @@ package business.security;
 
 import java.io.Serializable;
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -28,6 +29,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private RuntimeService runtimeService;
 
+    @Autowired
+    private HistoryService historyService;
+    
     @Autowired 
     private RequestService requestService;
 
@@ -143,7 +147,18 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             }
             Task task = requestService.findTaskByRequestId(requestId, "scientific_council_approval");
             //log.info("Task: " + task);
-            return (task != null);
+            if (task != null) {
+                return true;
+            } else {
+                return historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .processInstanceId(requestId)
+                    .includeProcessVariables()
+                    .variableValueNotEquals("status", "Approval")
+                    .variableValueNotEquals("scientific_council_approved", null)
+                    .count() > 0;
+            }
         } 
         else if ("isLabuser".equals(permission)) 
         {

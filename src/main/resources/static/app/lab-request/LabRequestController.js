@@ -44,6 +44,7 @@ angular.module('ProcessApp.controllers')
                         for (var j in pathologyList) {
                             var item = pathologyList[j];
                             item.labRequestId = labRequests[i].id;
+                            item.labRequestCode = labRequests[i].labRequestCode;
                             item.processInstanceId = labRequests[i].processInstanceId;
                             item.status = labRequests[i].status;
                             item.email = labRequests[i].requesterLab.contactData.email
@@ -192,7 +193,7 @@ angular.module('ProcessApp.controllers')
                     function(result) {
                         if (result) {
                             labRequest.rejectReason = $('#rejectReason').val();
-                            console.log('Rejected. Reason: ' + labRequest.rejectReason);
+                            //console.log('Rejected. Reason: ' + labRequest.rejectReason);
                             labRequest.customPUT(labRequest, 'reject').then(function (result) {
                                 if ($scope.labReqModal) {
                                     $scope.labReqModal.hide();
@@ -361,7 +362,7 @@ angular.module('ProcessApp.controllers')
             $scope.addPathology = function (labRequest, pathology) {
                 Restangular.one('labrequests', labRequest.id).post('pathology', pathology)
                     .then(function (result) {
-                        console.log(result);
+                        //console.log(result);
                         $scope.editPathology = {};
                         _loadData();
                     },
@@ -377,7 +378,7 @@ angular.module('ProcessApp.controllers')
                         if (result) {
                             Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
                             .remove().then(function (result) {
-                                console.log(result);
+                                //console.log(result);
                                 _loadData();
                             },
                             function (err) {

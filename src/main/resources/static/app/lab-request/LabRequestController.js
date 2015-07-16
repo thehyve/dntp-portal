@@ -331,7 +331,9 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.update = function (labRequest) {
-                labRequest.put().then(function (result) {
+                var obj = {'paReportsSent': labRequest.paReportsSent};
+                Restangular.one('labrequests', labRequest.id)
+                    .customPUT(obj).then(function (result) {
                     if ($scope.labReqModal) {
                         $scope.labReqModal.hide();
                     }

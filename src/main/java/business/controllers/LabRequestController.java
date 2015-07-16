@@ -251,6 +251,13 @@ public class LabRequestController {
         return representation;
     }
 
+    private static final Set<String> labRequestReturnedEnabledStatuses = new HashSet<String>();
+    {
+        labRequestReturnedEnabledStatuses.add("Sending");
+        labRequestReturnedEnabledStatuses.add("Received");
+        labRequestReturnedEnabledStatuses.add("Returning");
+    }
+    
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
     @RequestMapping(value = "/labrequests/{id}/returned", method = RequestMethod.PUT)
     public LabRequestRepresentation returned(UserAuthenticationToken user,
@@ -262,7 +269,7 @@ public class LabRequestController {
         LabRequest labRequest = labRequestRepository.findOne(id);
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
-        if (!representation.getStatus().equals("Returning")) {
+        if (!labRequestReturnedEnabledStatuses.contains(representation.getStatus())) {
             log.error("Action not allowed in status '" + representation.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
         }

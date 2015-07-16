@@ -312,34 +312,36 @@ public class RequestFormService {
                 request.setRejectDate((Date)variables.get("reject_date"));
             }
 
-            List<FileRepresentation> dataAttachments = new ArrayList<FileRepresentation>();
-            for(File file: properties.getDataAttachments()) {
-                dataAttachments.add(new FileRepresentation(file));
-            }
-            request.setDataAttachments(dataAttachments);
-            
             List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments = new ArrayList<FileRepresentation>();
             for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
                 medicalEthicalCommitteeApprovalAttachments.add(new FileRepresentation(file));
             }
             request.setMedicalEthicalCommitteeApprovalAttachments(medicalEthicalCommitteeApprovalAttachments);
-            
-            Date start = new Date();
-            ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
-            if (excerptList != null) {
-                log.info("Set excerpt list.");
-                request.setExcerptList(new ExcerptListRepresentation(excerptList));
-                @SuppressWarnings("unchecked")
-                Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
-                Set<Integer> selectedLabSet = new TreeSet<Integer>();
-                if (selectedLabs != null) {
-                    for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+
+            if (!is_scientific_council) {
+                List<FileRepresentation> dataAttachments = new ArrayList<FileRepresentation>();
+                for(File file: properties.getDataAttachments()) {
+                    dataAttachments.add(new FileRepresentation(file));
                 }
-                request.setSelectedLabs(selectedLabSet);
-                request.setExcerptListRemark(excerptList.getRemark());
+                request.setDataAttachments(dataAttachments);
+            
+                Date start = new Date();
+                ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
+                if (excerptList != null) {
+                    log.info("Set excerpt list.");
+                    request.setExcerptList(new ExcerptListRepresentation(excerptList));
+                    @SuppressWarnings("unchecked")
+                    Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
+                    Set<Integer> selectedLabSet = new TreeSet<Integer>();
+                    if (selectedLabs != null) {
+                        for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                    }
+                    request.setSelectedLabs(selectedLabSet);
+                    request.setExcerptListRemark(excerptList.getRemark());
+                }
+                Date end = new Date();
+                log.info("Fetching excerpt list took " + (end.getTime() - start.getTime()) + " ms.");
             }
-            Date end = new Date();
-            log.info("Fetching excerpt list took " + (end.getTime() - start.getTime()) + " ms.");
         }
     }
 

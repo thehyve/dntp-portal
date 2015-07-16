@@ -859,7 +859,6 @@ public class RequestController {
     @PreAuthorize("isAuthenticated() and "
             + "(hasPermission(#id, 'isPalgaUser') "
             + " or hasPermission(#id, 'isRequester') "
-            //+ " or hasPermission(#id, 'isLabuser') "
             + ")")
     @RequestMapping(value = "/requests/{id}/excerptList/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadExcerptList(UserAuthenticationToken user, @PathVariable String id) {
@@ -899,9 +898,11 @@ public class RequestController {
                 return fileService.download(file.getId());
             }
         }
-        for (File file: properties.getDataAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
+        if (!user.getUser().isScientificCouncilMember()) {
+            for (File file: properties.getDataAttachments()) {
+                if (file.getId().equals(attachmentId)) {
+                    return fileService.download(file.getId());
+                }
             }
         }
         for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {

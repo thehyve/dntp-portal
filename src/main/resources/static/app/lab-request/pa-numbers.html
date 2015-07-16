@@ -1,7 +1,8 @@
 <h3>{{ 'Samples' | translate}}</h3>
 <hr>
 
-<form class="form-horizontal no-print" role="form" name="pathologyForm" novalidate>
+<form class="form-horizontal no-print" role="form" name="pathologyForm" novalidate
+    ng-if="isLabUser()">
     <!-- PA number -->
     <div class="form-group">
         <div class="col-sm-8">

@@ -419,9 +419,9 @@ angular.module('ProcessApp.controllers')
             };
             
             $scope.cancelByEscKey = function (key, request) {
-                console.log('In cancelByEscKey');
-                if (key.which === 27) {
-                    console.log('Escape key');
+                //console.log('In cancelByEscKey');
+                if (key.keyCode === 27) {
+                    //console.log('Escape key');
                     $scope.cancel(request);
                 }
             };

@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -92,6 +94,7 @@ public class FileService {
             if (!path.toFile().exists()) {
                 Files.createDirectory(path);
             }
+            name = URLEncoder.encode(name, "utf-8");
             
             String prefix = getBasename(name);
             String suffix = getExtension(name);
@@ -150,7 +153,7 @@ public class FileService {
                 // Save assembled file name to database
                 log.info("Saving attachment to database...");
                 File attachment = new File();
-                attachment.setName(name);
+                attachment.setName(URLDecoder.decode(name, "utf-8"));
                 attachment.setType(type);
                 attachment.setMimeType(contentType);
                 attachment.setDate(new Date());

@@ -232,7 +232,10 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.received = function (labRequest) {
-                labRequest.customPUT(labRequest, 'received').then(function (result) {
+                var obj = { id: labRequest.id,
+                            samplesMissing: labRequest.samplesMissing,
+                            missingSamples: labRequest.missingSamples};
+                labRequest.customPUT(obj, 'received').then(function (result) {
                     if ($scope.labReqModal) {
                         $scope.labReqModal.hide();
                     }
@@ -254,7 +257,10 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.returned = function (labRequest) {
-                labRequest.customPUT(labRequest, 'returned').then(function (result) {
+                var obj = { id: labRequest.id,
+                        samplesMissing: labRequest.samplesMissing,
+                        missingSamples: labRequest.missingSamples};
+                labRequest.customPUT(obj, 'returned').then(function (result) {
                     if ($scope.labReqModal) {
                         $scope.labReqModal.hide();
                     }

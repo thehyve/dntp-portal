@@ -203,7 +203,11 @@
 
         <div class="panel panel-default" 
             ng-if=" isRequester() && labRequest.status == 'Sending' || 
-                    isLabUser() && labRequest.status == 'Returning'">
+                    isLabUser() && (
+                            labRequest.status == 'Returning'
+                            || labRequest.status == 'Sending'
+                            || labRequest.status == 'Received'
+                        )">
           <div class="panel-heading">
             <h4>{{labRequest.status|translate}}</h4>
           </div>
@@ -228,11 +232,7 @@
                     ng-disabled="labRequestEditForm.$invalid"
                     ng-click="received(labRequest);">{{'Materials received'|translate}}</button>
             </span>
-            <span ng-if="isLabUser() && (
-                            labRequest.status == 'Returning'
-                            || labRequest.status == 'Sending'
-                            || labRequest.status == 'Received'
-                        )">
+            <span ng-if="isLabUser()">
                 <button class="btn btn-default btn-primary"
                         ng-click="returned(labRequest);">{{'Materials returned'|translate}}</button>
             </span>

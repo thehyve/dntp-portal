@@ -460,8 +460,9 @@
 
             <!--Approvals-->
             <div ng-include="'app/request/approvals.html'"
-                 ng-if="(request.status=='Approval' || request.approvalVotes != null) &&
-                         ( isPalga() || isScientificCouncil() )"></div>
+                 ng-if="(request.status=='Approval' && isPalga()) || 
+                        ((request.status=='Approval' || request.approvalVotes != null) && isScientificCouncil() )">
+            </div>
             <!--Comments-->
             <div ng-include="'app/request/comments.html'" ng-if="isPalga()"></div>
 

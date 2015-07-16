@@ -1,7 +1,7 @@
-<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto" ng-keypress="cancelByEscKey($event, request);">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form class="form-horizontal" role="form" name="requestEditForm" novalidate ng-keypress="cancelByEscKey($event, request);">
+            <form class="form-horizontal" role="form" name="requestEditForm" novalidate>
                 <div class="modal-header">
                     <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'New request' | translate }}</h3>
                     <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit request' | translate }}: {{request.title}}</h3>

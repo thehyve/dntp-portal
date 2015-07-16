@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import business.exceptions.ExcerptListNotFound;
+import business.exceptions.ExcerptListUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.models.ExcerptEntry;
@@ -182,9 +183,14 @@ public class SelectionController {
                 excerptList.deselectAll();
                 log.info("Saving selection.");
                 for(Integer number: selected) {
-                    ExcerptEntry entry = excerptList.getEntries().get(number);
+                    ExcerptEntry entry = excerptList.getEntries().get(number - 1);
                     if (entry == null) {
                         log.warn("Null entry in selection (for number '" + number + "').");
+                    } else if (!number.equals(entry.getSequenceNumber())) {
+                        log.error("Excerpt list " + excerptList.getId() + " is inconsistent: "
+                                + "entry with sequence number " + entry.getSequenceNumber() 
+                                + " at index " + number);
+                        throw new ExcerptListUploadError("Excerpt list is inconsistent.");
                     } else { 
                         entry.setSelected(true);
                     }

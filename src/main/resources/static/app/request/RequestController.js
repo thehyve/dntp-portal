@@ -94,12 +94,15 @@ angular.module('ProcessApp.controllers')
                 return FlowOptionService.get_default(options);
             };
 
-            $scope.fileuploadsuccess = function(request, data, excerpts) {
+            $scope.fileuploadsuccess = function(request, data, excerpts, flow) {
+                $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
                 if (excerpts) {
                     $scope.excerptlist_upload_result = "success";
+                    $scope.excerptselection_upload_result = 'success';
                 } else {
                     $scope.fileupload_result = "success";
                 }
+                $scope.$apply();
                 var result = new Request(JSON.parse(data));
                 //$scope.refresh(request, result);
                 request.attachments = result.attachments;
@@ -113,6 +116,8 @@ angular.module('ProcessApp.controllers')
                 if (excerpts) {
                     $scope.excerptlist_upload_error = data;
                     $scope.excerptlist_upload_result = "error";
+                    $scope.excerptselection_upload_result = 'error';
+                    $scope.excerptselection_upload_error = data;
                 } else {
                     $scope.fileupload_result = "error";
                 }

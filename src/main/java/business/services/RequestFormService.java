@@ -132,6 +132,9 @@ public class RequestFormService {
                     case "DataDelivery":
                         task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
                         break;
+                    case "SelectionReview":
+                        task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
+                        break;
                 }
             }
             if (task != null) {

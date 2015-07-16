@@ -354,7 +354,7 @@
                     <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/files'})"
                          flow-name="agreementFlow"
                          flow-files-submitted="$flow.upload()"
-                         flow-file-success="fileuploadsuccess(request, $message)"
+                         flow-file-success="fileuploadsuccess(request, $message, false, $flow)"
                          ng-if="request.status=='Open' || (isPalga() && request.status=='Review')">
                         <div>
                             <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
@@ -399,7 +399,7 @@
                     <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/mecFiles'})"
                          flow-name="agreementFlow"
                          flow-files-submitted="$flow.upload()"
-                         flow-file-success="fileuploadsuccess(request, $message)"
+                         flow-file-success="fileuploadsuccess(request, $message, false, $flow)"
                          ng-if="isRequester() && (
                                             request.status=='Open' 
                                             || request.status=='Review'

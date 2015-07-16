@@ -29,7 +29,7 @@ angular.module('ProcessApp.controllers')
                                      'Conclusie'
                                      ];
             $scope.relevantIndexes = [];
-            if ($scope.request) {
+            if ($scope.request && $scope.request.excerptList) {
                 for (var field in $scope.relevantFields) {
                     var index = $scope.request.excerptList.columnNames.indexOf($scope.relevantFields[field]);
                     //console.log('field '+field+': index = '+index);

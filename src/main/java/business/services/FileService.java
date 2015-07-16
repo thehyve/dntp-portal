@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,15 @@ public class FileService {
 
     @Value("${dntp.upload-path}")
     String uploadPath;
+    
+    @PostConstruct
+    public void init() throws IOException {
+        Path path = fileSystem.getPath(uploadPath).normalize();
+        if (!path.toFile().exists()) {
+            Files.createDirectory(path);
+        }
+        log.info("File upload path: " + path.toAbsolutePath());
+    }
     
     public static String getBasename(String name) {
         String[] tokens = name.split("\\.(?=[^\\.]+$)");
@@ -81,6 +92,7 @@ public class FileService {
             if (!path.toFile().exists()) {
                 Files.createDirectory(path);
             }
+            
             String prefix = getBasename(name);
             String suffix = getExtension(name);
             Path f = Files.createTempFile(path, prefix, suffix + "." + chunk + ".chunk").normalize();

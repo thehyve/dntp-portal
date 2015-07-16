@@ -46,7 +46,6 @@ angular.module('ProcessApp.controllers')
                 password: '='
             },
             link: function(scope, element, attributes, ngModel) {
-
                 ngModel.$validators.validatePassword = function(modelValue) {
                     return _validatePassword(modelValue);
                 };

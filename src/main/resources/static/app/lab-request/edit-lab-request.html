@@ -228,7 +228,11 @@
                     ng-disabled="labRequestEditForm.$invalid"
                     ng-click="received(labRequest);">{{'Materials received'|translate}}</button>
             </span>
-            <span ng-if="isLabUser() && labRequest.status == 'Returning'">
+            <span ng-if="isLabUser() && (
+                            labRequest.status == 'Returning'
+                            || labRequest.status == 'Sending'
+                            || labRequest.status == 'Received'
+                        )">
                 <button class="btn btn-default btn-primary"
                         ng-click="returned(labRequest);">{{'Materials returned'|translate}}</button>
             </span>

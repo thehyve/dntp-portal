@@ -3,6 +3,11 @@
 
         <h2>{{ 'Registration' | translate }}</h2>
         <hr>
+
+        <div class="alert alert-danger" ng-show="validationError">
+            {{ validationError | translate }}
+        </div>
+
         <form class="form-horizontal" role="form" name="registrationForm" ng-submit="submit(user)" novalidate>
 
             <!-- First Name -->
@@ -169,10 +174,6 @@
                     <span ng-show="registrationForm.password.$error.required && registrationForm.password.$dirty"
                           class="help-block">
                         {{ 'Required field' | translate }}
-                    </span>
-                    <span ng-show="registrationForm.password.$invalid && registrationForm.password.$dirty"
-                          class="help-block">
-                        {{ 'Password must be min 8 characters long.' | translate }}
                     </span>
                     <span ng-show="registrationForm.password.$error.validatePassword && registrationForm.password.$dirty"
                           class="help-block">

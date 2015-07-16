@@ -18,7 +18,7 @@ angular.module('ProcessApp.controllers')
                 $scope.submitted = false;
                 $scope.done = true;
             }, function restError(response) {
-                console.log(JSON.stringify(response));
+                //console.log(JSON.stringify(response));
                 if (response.data) {
                     $scope.error = response.data.message;
                 }

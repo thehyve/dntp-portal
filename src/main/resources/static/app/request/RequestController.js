@@ -417,7 +417,15 @@ angular.module('ProcessApp.controllers')
             $scope.view = function(request) {
                 $location.path('/request/view/' + request.processInstanceId);
             };
-
+            
+            $scope.cancelByEscKey = function (key, request) {
+                console.log('In cancelByEscKey');
+                if (key.which === 27) {
+                    console.log('Escape key');
+                    $scope.cancel(request);
+                }
+            };
+            
             $scope.cancel = function (request) {
                 if ($rootScope.tempRequest.title === null) {
                     request.$remove(function (result) {

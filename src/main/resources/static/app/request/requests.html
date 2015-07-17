@@ -95,14 +95,12 @@
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                             </button>
                             <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
-                                ng-disabled="req.assignee == globals.currentUser.userid
-                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery')"
+                                ng-disabled="req.assignee == globals.currentUser.userid || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery' || req.status == 'SelectionReview')"
                                  class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
                             </button>
                             <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
-                                ng-disabled="req.assignee != globals.currentUser.userid
-                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery')"
+                                ng-disabled="req.assignee != globals.currentUser.userid || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery' || req.status == 'SelectionReview')"
                                  class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>
                             </button>

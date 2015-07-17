@@ -242,7 +242,11 @@ angular.module('ProcessApp.controllers')
             $scope.received = function (labRequest) {
                 bootbox.confirm('Is the lab request received?'  , function (result) {
                     if (result) {
-                        labRequest.customPUT(labRequest, 'received').then(function (result) {
+                        var obj = { id: labRequest.id,
+                            samplesMissing: labRequest.samplesMissing,
+                            missingSamples: labRequest.missingSamples};
+
+                        labRequest.customPUT(obj, 'received').then(function (result) {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -272,7 +276,10 @@ angular.module('ProcessApp.controllers')
             $scope.returned = function (labRequest) {
                 bootbox.confirm('Is the lab request returned?'  , function (result) {
                     if (result) {
-                        labRequest.customPUT(labRequest, 'returned').then(function (result) {
+                        var obj = { id: labRequest.id,
+                            samplesMissing: labRequest.samplesMissing,
+                            missingSamples: labRequest.missingSamples};
+                        labRequest.customPUT(obj, 'returned').then(function (result) {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }

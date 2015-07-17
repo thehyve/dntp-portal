@@ -468,9 +468,9 @@
 
             <!--Upload Files if in 'DataDelivery' status-->
             <div ng-include="'app/request/upload-file.html'" 
-                ng-if="request.status=='DataDelivery' || request.status=='SelectionReview' || request.status=='LabRequest' || request.status=='Closed'"></div>
+                ng-if="!isScientificCouncil() && (request.status=='DataDelivery' || request.status=='SelectionReview' || request.status=='LabRequest' || request.status=='Closed')"></div>
 
-            <div ng-if="request.status == 'LabRequest'">
+            <div ng-if="!isScientificCouncil() && request.status == 'LabRequest'">
 
             <h3>{{ 'Lab request details' | translate }}</h3>
             <hr>

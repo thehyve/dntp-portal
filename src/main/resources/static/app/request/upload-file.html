@@ -71,7 +71,9 @@
         <br>
     </div>
 
-    <div ng-if="request.status == 'DataDelivery' && request.materialsRequest && request.excerptList && isRequester()"
+    <div ng-if="request.status == 'DataDelivery' 
+        && (request.paReportRequest || request.materialsRequest) 
+        && request.excerptList && isRequester()"
         ng-controller="SelectionController">
 
         <h3>{{'Excerpt Selection'|translate}}</h3>

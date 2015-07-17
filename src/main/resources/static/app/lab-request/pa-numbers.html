@@ -50,8 +50,7 @@
         add-on-blur="true"
         add-on-paste="true"
         min-length="1"
-        ng-if="labRequest.assignee == globals.currentUser.userid"
-        ></tags-input>
+        ng-if="(labRequest.assignee == globals.currentUser.userid) && labRequest.request.materialsRequest"></tags-input>
         <span ng-if="labRequest.assignee != globals.currentUser.userid">
             <span ng-repeat="sample in pathology.samples">
                 <label class="label label-primary">{{sample}}</label>

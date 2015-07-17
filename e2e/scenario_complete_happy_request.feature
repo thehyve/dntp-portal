@@ -21,6 +21,14 @@ Feature: scenario request Request for excerpts + PA reports + materials
     researchQuestion: test
     hypothesis: theory
     methods: Modern methods
+    address1: dreef
+    postalcode: 1234
+    city: Amsterdam
+    stateProvince: NH
+    email: fin@f.f
+    telephone: 1234567890
+    chargeNumber: 1234
+    researchNumber: 10    
     """
     And I click on the following objects
     """
@@ -35,7 +43,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     linkageWithPersonalDataNotes: notes
     reasonUsingPersonalData: reason
     """
-    And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment'
+    #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment1'
+    #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment2'
     And I click on the object with id 'submit-new-request'
     And I click on the 'OK' button
     Then I should be on the requests page
@@ -107,10 +116,19 @@ Feature: scenario request Request for excerpts + PA reports + materials
    And I click on the 'Submit selection' button
    And I enter the text 'no remarks'
    And I click on the 'OK' button
+   Then I should see 0 lab requests in the list
+
+  Scenario: 6a Palga approves selection
+   Given I am logged in as the palga user
+   And I am on the requests page
+   When I click on the request with title 'Request 1'
+   And I scroll to the bottom of the page
+   And I click on the 'Approve selection' button
+   And I click on the 'OK' button
    And I go to the 'lab requests' page
    Then I should see 2 lab requests in the list
-
-  Scenario: 7 accept request as lab user
+   
+   Scenario: 7 accept request as lab user
     Given I am logged in as the lab 106 user
     And I am on the lab requests page
     And I click on the lab request with id '4-106'
@@ -245,19 +263,20 @@ Feature: scenario request Request for excerpts + PA reports + materials
     Then the page should contain the text 'Returning'
 
   Scenario: 23 lab user can register samples as returned
-    Given I am logged in as the lab 106 user
-    And I am on the lab requests page
-    When I click on the lab request with id '4-106'
-    And I click on the 'Actions' button
-    And I click on the object with id 'samplesMissing'
-    And I fill the form with the following data
-    """
-    missingSamples: 1, 2, 3
-    """
-    And I click on the 'Materials returned' button
-    Then the current request should have 'Returned' status
+   Given I am logged in as the lab 106 user
+   And I am on the lab requests page
+   When I click on the lab request with id '4-106'
+   And I click on the 'Actions' button
+   And I click on the object with id 'samplesMissing'
+   And I fill the form with the following data
+   """
+   missingSamples: 1, 2, 3
+   """
+   And I click on the 'Materials returned' button
+   And I am on the lab requests page
+   Then the page should contain the text 'Returned'
 
   Scenario: 24 palga is able to see Request 1 as completed
-    Given I am logged in as the palga user
-    And I am on the requests page
-    Then the page should contain the text 'Closed'
+   Given I am logged in as the palga user
+   And I am on the requests page
+   Then the page should contain the text 'Closed'

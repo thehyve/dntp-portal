@@ -72,12 +72,6 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     @Autowired
     AuthenticationProvider authenticationProvider;
     
-    @BeforeClass
-    public void setUp() throws Exception {
-        ((MockMailSender)this.mailSender).clear();
-        log.info("TEST  Test: " + this.getClass().toString());
-    }
-
     protected String processInstanceId;
     
     protected UserAuthenticationToken getRequester() {
@@ -90,6 +84,12 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         User user = userService.findByUsername("palga@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "palga"); // because of password tests
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
+    }
+    
+    @BeforeClass
+    public void setUp() throws Exception {
+        ((MockMailSender)this.mailSender).clear();
+        log.info("TEST  Test: " + this.getClass().toString());
     }
     
     @Test(groups = "request")
@@ -143,6 +143,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         
         representation = requestController.claim(palga, processInstanceId, representation);
         
+        ((MockMailSender)mailSender).clear();
         
         // only enforced in front end, not in back end
         representation.setBackground("Background is testing.");

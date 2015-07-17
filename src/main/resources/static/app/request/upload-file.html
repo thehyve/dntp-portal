@@ -26,21 +26,6 @@
     </div>
     
 
-    <div ng-if="request.excerptList && request.status == 'DataDelivery'
-        && (request.paReportRequest || request.materialsRequest) 
-        && isPalga()" 
-        ng-controller="SelectionController">
-        <a class="btn btn-primary" title="Select all"
-            ng-click="selectAllExcerpts(request)"
-            ng-disabled="request.assignee != globals.currentUser.userid">
-        <i class="glyphicon glyphicon-check"></i>
-        {{'Select all excerpts and continue'|translate}}
-        </a>
-        <br>
-        <br>
-    </div>
-
-
     <div ng-if="request.status == 'DataDelivery' && isPalga()">
         <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
              flow-name="excerptListFlow"
@@ -72,7 +57,24 @@
         </div>
     </div>
 
-    <div ng-if="request.status == 'DataDelivery' && request.materialsRequest && request.excerptList && isRequester()">
+    <div ng-if="request.excerptList && request.status == 'DataDelivery'
+        && (request.paReportRequest || request.materialsRequest) 
+        && isPalga()" 
+        ng-controller="SelectionController">
+        <a class="btn btn-primary" title="Select all"
+            ng-click="selectAllExcerpts(request)"
+            ng-disabled="request.assignee != globals.currentUser.userid">
+        <i class="glyphicon glyphicon-check"></i>
+        {{'Select all excerpts and continue'|translate}}
+        </a>
+        <br>
+        <br>
+    </div>
+
+    <div ng-if="request.status == 'DataDelivery' 
+        && (request.paReportRequest || request.materialsRequest) 
+        && request.excerptList && isRequester()"
+        ng-controller="SelectionController">
 
         <h3>{{'Excerpt Selection'|translate}}</h3>
         <hr>
@@ -92,22 +94,21 @@
                 {{ excerptselection_upload_error | translate }}
             </div>
     
-            <div ng-controller="SelectionController">
-                <a ng-if="request.excerptList
-                          && (request.paReportRequest || request.materialsRequest)
-                          && isRequester()
-                          && request.status=='DataDelivery'
-                          " ng-href="/#/request/{{request.processInstanceId}}/selection" id="select-pa-numbers" class="btn btn-primary">
-                    <i class="glyphicon glyphicon-edit"></i>
-                    {{'Select PA numbers'|translate}}
-                </a>
-                <input type="file" flow-btn id="test-upload-excerpt-selection" style="display:none" />
-                <span class="btn btn-default" flow-btn>
-                    <i class="glyphicon glyphicon-import"></i>
-                    {{'Upload excerpt selection'|translate}}
-                </span>
-            </div>
+            <a ng-if="request.excerptList
+                      && (request.paReportRequest || request.materialsRequest)
+                      && isRequester()
+                      && request.status=='DataDelivery'
+                      " ng-href="/#/request/{{request.processInstanceId}}/selection" id="select-pa-numbers" class="btn btn-primary">
+                <i class="glyphicon glyphicon-edit"></i>
+                {{'Select PA numbers'|translate}}
+            </a>
+            <input type="file" flow-btn id="test-upload-excerpt-selection" style="display:none" />
+            <span class="btn btn-default" flow-btn>
+                <i class="glyphicon glyphicon-import"></i>
+                {{'Upload excerpt selection'|translate}}
+            </span>
     
+            <br>
             <br>
     
             <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
@@ -116,7 +117,7 @@
                 ng-style="style">
                 ({{'drag and drop your file here'|translate}})
             </div>
-        
+            
         </div>
     
         <div>

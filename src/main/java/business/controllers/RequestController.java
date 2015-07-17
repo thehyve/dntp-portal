@@ -216,8 +216,8 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and ("
-            + "     hasPermission(#id, 'isRequester') "
-            + "  or hasPermission(#id, 'isPalgaUser')"
+            + "     hasRole('palga')"
+            + "  or hasPermission(#id, 'isRequester') "
             + "  or hasPermission(#id, 'isScientificCouncil')"
             + "  or hasPermission(#id, 'isLabuser')"
             + ")")
@@ -831,7 +831,7 @@ public class RequestController {
         return request;
     }
 
-    @PreAuthorize("isAuthenticated() and (hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isRequester'))")
+    @PreAuthorize("isAuthenticated() and (hasRole('palga') or hasPermission(#id, 'isRequester'))")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.GET)
     public ExcerptList getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
         log.info("GET /requests/" + id + "/excerptList");
@@ -877,7 +877,7 @@ public class RequestController {
     }
     
     @PreAuthorize("isAuthenticated() and "
-            + "(hasPermission(#id, 'isPalgaUser') "
+            + "(hasRole('palga') "
             + " or hasPermission(#id, 'isRequester') "
             + " or hasPermission(#id, 'isScientificCouncil') "
             + " or hasPermission(#id, 'isLabuser') "

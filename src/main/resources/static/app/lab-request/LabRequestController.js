@@ -209,75 +209,100 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.accept = function (labRequest) {
-                labRequest.customPUT({}, 'accept').then(function (result) {
-                    if ($scope.labReqModal) {
-                        $scope.labReqModal.hide();
+                bootbox.confirm('Accept this lab request?' , function (result) {
+                    if (result) {
+                        labRequest.customPUT({}, 'accept').then(function (result) {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
                     }
-                    _loadData();
-                }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
 
             $scope.sending = function (labRequest) {
-                labRequest.customPUT({}, 'sending').then(function (result) {
-                    if ($scope.labReqModal) {
-                        $scope.labReqModal.hide();
+                bootbox.confirm('Send this lab request?'  , function (result) {
+                    if (result) {
+                        labRequest.customPUT({}, 'sending').then(function (result) {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
                     }
-                    _loadData();
-                }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
             $scope.received = function (labRequest) {
-                var obj = { id: labRequest.id,
+                bootbox.confirm('Is the lab request received?'  , function (result) {
+                    if (result) {
+                        var obj = { id: labRequest.id,
                             samplesMissing: labRequest.samplesMissing,
                             missingSamples: labRequest.missingSamples};
-                labRequest.customPUT(obj, 'received').then(function (result) {
-                    if ($scope.labReqModal) {
-                        $scope.labReqModal.hide();
+
+                        labRequest.customPUT(obj, 'received').then(function (result) {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
                     }
-                    _loadData();
-                }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
             $scope.returning = function (labRequest) {
-                labRequest.customPUT({}, 'returning').then(function (result) {
-                    if ($scope.labReqModal) {
-                        $scope.labReqModal.hide();
+                bootbox.confirm('Return this lab request?'  , function (result) {
+                    if (result) {
+                        labRequest.customPUT({}, 'returning').then(function (result) {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
                     }
-                    _loadData();
-                }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
             $scope.returned = function (labRequest) {
-                var obj = { id: labRequest.id,
-                        samplesMissing: labRequest.samplesMissing,
-                        missingSamples: labRequest.missingSamples};
-                labRequest.customPUT(obj, 'returned').then(function (result) {
-                    if ($scope.labReqModal) {
-                        $scope.labReqModal.hide();
+                bootbox.confirm('Is the lab request returned?'  , function (result) {
+                    if (result) {
+                        var obj = { id: labRequest.id,
+                            samplesMissing: labRequest.samplesMissing,
+                            missingSamples: labRequest.missingSamples};
+                        labRequest.customPUT(obj, 'returned').then(function (result) {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
                     }
-                    _loadData();
-                }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 
             $scope.complete = function (labRequest) {
-                labRequest.customPUT(labRequest, 'complete').then(function (result) {
-                    if ($scope.labReqModal) {
-                        $scope.labReqModal.hide();
+                bootbox.confirm('Complete lab request?'  , function (result) {
+                    if (result) {
+                        labRequest.customPUT(labRequest, 'complete').then(function (result) {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
                     }
-                    _loadData();
-                }, function (err) {
-                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                 });
             };
 

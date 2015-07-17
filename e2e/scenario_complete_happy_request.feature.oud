@@ -16,14 +16,6 @@ Feature: scenario request Request for excerpts + PA reports + materials
     contactPersonName: Nobody
     pathologistName: Nobody
     pathologistEmail: nobody@nowhere.org
-    address1: dreef
-    postalcode: 1234
-    city: Amsterdam
-    stateProvince: NH
-    email: fin@f.f
-    telephone: 1234567890
-    chargeNumber: 1234
-    researchNumber:10    
     requestTitle: Request 1
     background: None
     researchQuestion: test
@@ -43,8 +35,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     linkageWithPersonalDataNotes: notes
     reasonUsingPersonalData: reason
     """
-    And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment1'
-    And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment2'
+    And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment'
     And I click on the object with id 'submit-new-request'
     And I click on the 'OK' button
     Then I should be on the requests page

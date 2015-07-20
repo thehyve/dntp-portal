@@ -89,8 +89,7 @@ public class RequestFormService {
                 + (user.getLastName() == null ? "" : user.getLastName());
     }
     
-    public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
-
+    public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
 
         Map<String, Object> variables = instance.getProcessVariables();
@@ -103,13 +102,14 @@ public class RequestFormService {
             request.setMethods((String) variables.get("methods"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
-            request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
+            String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();
             Long userId = null;
-            try { userId = Long.valueOf(request.getRequesterId()); }
+            try { userId = Long.valueOf(requesterId); }
             catch(NumberFormatException e) {}
             if (userId != null) {
                 User user = userRepository.findOne(userId);
                 if (user != null) {
+                    request.setRequesterId(userId);
                     request.setRequesterName(getName(user));
                 }
             }
@@ -118,54 +118,60 @@ public class RequestFormService {
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
 
-            Task task = null;
-            if (request.getStatus() != null) {
-                switch(request.getStatus()) {
-                    case "Review":
-                        task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
-                        break;
-                    case "Approval":
-                        task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
-
-                        request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
-                        break;
-                    case "DataDelivery":
-                        task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
-                        break;
-                    case "SelectionReview":
-                        task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
-                        break;
-                }
-            }
-            if (task != null) {
-                request.setAssignee(task.getAssignee());
-                if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
-                    Long assigneeId = null;
-                    try {
-                        assigneeId = Long.valueOf(task.getAssignee());
-                    } catch (NumberFormatException e) {
-                    }
-                    if (assigneeId != null) {
-                        User assignee = userRepository.findOne(assigneeId);
-                        if (assignee != null) {
-                            request.setAssigneeName(getName(assignee));
-                        }
-                    }
-                    request.setDateAssigned((Date)variables.get("assigned_date"));
-                }
-            }
-            
-            if (currentUser.isScientificCouncilMember()) {
-                // fetch my vote
-                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                        instance.getId());
-                Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
-                if (votes.containsKey(currentUser.getId())) {
-                    request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
-                }
-            }
-            
+            request.setDateAssigned((Date)variables.get("assigned_date"));
         }
+    }
+    
+    public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
+
+        transferBasicData(instance, request);
+            
+        Task task = null;
+        if (request.getStatus() != null) {
+            switch(request.getStatus()) {
+                case "Review":
+                    task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
+                    break;
+                case "Approval":
+                    task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
+
+                    request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
+                    break;
+                case "DataDelivery":
+                    task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
+                    break;
+                case "SelectionReview":
+                    task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
+                    break;
+            }
+        }
+        if (task != null) {
+            request.setAssignee(task.getAssignee());
+            if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
+                Long assigneeId = null;
+                try {
+                    assigneeId = Long.valueOf(task.getAssignee());
+                } catch (NumberFormatException e) {
+                }
+                if (assigneeId != null) {
+                    User assignee = userRepository.findOne(assigneeId);
+                    if (assignee != null) {
+                        request.setAssigneeName(getName(assignee));
+                    }
+                }
+            }
+        }
+        
+        if (currentUser.isScientificCouncilMember()) {
+            // fetch my vote
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                    instance.getId());
+            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+            if (votes.containsKey(currentUser.getId())) {
+                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+            }
+        }
+        
     }
 
     @Transactional

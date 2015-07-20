@@ -26,6 +26,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.alerts = [];
             $scope.labRequest = {};
+            $scope.itemsPerPage = 20;
 
             $scope.getName = function (user) {
                 if (user === null) {
@@ -37,6 +38,7 @@ angular.module('ProcessApp.controllers')
             };
 
             var _createSampleList = function (labRequests) {
+                //console.log('_createSampleList: ' + labRequests.length + ' lab requests.');
                 $scope.samples = [];
                 for (var i = 0; i < labRequests.length; i++) {
                     var pathologyList = labRequests[i].pathologyList;
@@ -54,6 +56,7 @@ angular.module('ProcessApp.controllers')
                         }
                     }
                 }
+                //console.log('_createSampleList: ' + $scope.samples.length + ' samples.');
                 $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
             };
 
@@ -63,10 +66,12 @@ angular.module('ProcessApp.controllers')
              */
             var _loadRequests = function () {
                 var deferred = $q.defer();
-                Restangular.all('labrequests').getList().then(function (labRequests) {
+                var fetchSampleList = ($route.current.templateUrl === 'app/lab-request/samples.html');
+                Restangular.all(fetchSampleList ? 'labrequests/detailed' : 'labrequests')
+                .getList().then(function (labRequests) {
                     $rootScope.labRequests = labRequests;
                     $scope.displayedLabRequests = [].concat($rootScope.labRequests);
-                    if ($route.current.templateUrl === 'app/lab-request/samples.html') {
+                    if (fetchSampleList) {
                         _createSampleList(labRequests);
                     }
                     deferred.resolve($scope.labRequests);

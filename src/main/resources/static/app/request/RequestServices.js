@@ -45,6 +45,10 @@
                 url : '/requests/:id/selectAll',
                 method : 'PUT'
             },
+            useExampleExcerptList : {
+                url : '/requests/:id/excerptList/useExample',
+                method : 'POST'
+            },
             submitExcerptSelection : {
                 url : '/requests/:id/submitExcerptSelection',
                 method : 'PUT'

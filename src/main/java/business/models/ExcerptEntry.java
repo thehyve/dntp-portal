@@ -3,12 +3,11 @@ package business.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -26,8 +25,10 @@ public class ExcerptEntry {
     
     private Boolean selected;
     
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<ExcerptValue> values = new ArrayList<ExcerptValue>();
+    //@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ElementCollection
+    @Column(length = 32767)
+    private List<String> values = new ArrayList<String>();
 
     public ExcerptEntry() {
         
@@ -73,24 +74,24 @@ public class ExcerptEntry {
         this.selected = selected;
     }
 
-    public List<ExcerptValue> getValues() {
+    public List<String> getValues() {
         return values;
     }
 
-    public void setValues(List<ExcerptValue> values) {
+    public void setValues(List<String> values) {
         this.values = values;
     }
     
     public void addValue(String value) {
-        this.values.add(new ExcerptValue(value));
+        this.values.add(value);
     }
     
     public String[] getCsvValues() {
         String[] result = new String[this.getValues().size() + 1];
         result[0] = this.sequenceNumber.toString();
         int i = 1;
-        for (ExcerptValue value: this.getValues()) {
-            result[i] = value.getValue();
+        for (String value: this.getValues()) {
+            result[i] = value;
             i++;
         }
         return result;
@@ -102,8 +103,8 @@ public class ExcerptEntry {
         result[1] = this.labNumber.toString();
         result[2] = this.paNumber;
         int i = 3;
-        for (ExcerptValue value: this.getValues()) {
-            result[i] = value.getValue();
+        for (String value: this.getValues()) {
+            result[i] = value;
             i++;
         }
         return result;

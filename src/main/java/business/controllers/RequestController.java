@@ -2,6 +2,7 @@ package business.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
@@ -25,8 +27,10 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import business.exceptions.AttachmentNotFound;
 import business.exceptions.ExcerptListNotFound;
+import business.exceptions.FileUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.NotLoggedInException;
 import business.exceptions.RequestNotAdmissible;
@@ -126,10 +131,10 @@ public class RequestController {
 
 
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "requests", method = RequestMethod.GET)
+    @RequestMapping(value = "/requests", method = RequestMethod.GET)
     public List<RequestListRepresentation> getRequestList(UserAuthenticationToken user) {
         log.info(
-                "GET /requests/ (for user: " + (user == null ? "null" : user.getId()) + ")");
+                "GET /requests (for user: " + (user == null ? "null" : user.getId()) + ")");
 
         List<HistoricProcessInstance> processInstances;
 
@@ -177,7 +182,7 @@ public class RequestController {
                 processInstances.addAll(list);
             }
         } else if (user.getUser().isLabUser()) {
-            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser());
+            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
             Set<String> processInstanceIds = new HashSet<String>();
             for (LabRequestRepresentation labRequest: labRequests) {
                 processInstanceIds.add(labRequest.getProcessInstanceId());
@@ -225,7 +230,7 @@ public class RequestController {
     public RequestRepresentation getRequestById(UserAuthenticationToken user,
                                                 @PathVariable String id) {
         log.info(
-                "GET /requests/{" + id + "} (for user: " + (user == null ? "null" : user.getId()) + ")");
+                "GET /requests/" + id + " (for user: " + (user == null ? "null" : user.getId()) + ")");
         RequestRepresentation request = new RequestRepresentation();
         if (user == null) {
             throw new NotLoggedInException();
@@ -290,6 +295,7 @@ public class RequestController {
         log.info("PUT /requests/" + id + "/submit");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
+        //FIXME: validation of the data
         runtimeService.setVariables(instance.getId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
             log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
@@ -774,6 +780,38 @@ public class RequestController {
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
         return request;
+    }
+
+    @Profile("dev")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
+    @RequestMapping(value = "/requests/{id}/excerptList/useExample", method = RequestMethod.POST)
+    public RequestRepresentation useExampleExcerptList (
+            UserAuthenticationToken user, 
+            @PathVariable String id
+            ) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        String filename = "Example excerptlist groot bestand.csv";
+        URL resource = classLoader.getResource("test/" + filename); 
+        try {
+            InputStream input = resource.openStream();
+            MultipartFile file = new MockMultipartFile(resource.getFile(), input);
+        
+            Integer flowTotalChunks = 1;
+            Integer flowChunkNumber = 1;
+            String flowIdentifier = "flow_" + UUID.randomUUID().toString();
+            
+            return this.uploadExcerptList(
+                user, 
+                id, 
+                filename,
+                flowTotalChunks,
+                flowChunkNumber, 
+                flowIdentifier,
+                file);
+        } catch (IOException e) {
+            log.error("Error while uploading example file: " + e.getMessage());
+            throw new FileUploadError(e.getMessage());
+        }
     }
     
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")

@@ -80,7 +80,16 @@ public class LabRequestController {
     public List<LabRequestRepresentation> getLabRequests(
             UserAuthenticationToken user) {
         log.info("GET /labrequests");
-        return labRequestService.findLabRequestsForUser(user.getUser());
+        return labRequestService.findLabRequestsForUser(user.getUser(), false);
+    }
+
+    @PreAuthorize("isAuthenticated() and (" + "hasRole('requester')" + " or "
+            + "hasRole('palga')" + " or " + "hasRole('lab_user')" + ")")
+    @RequestMapping(value = "/labrequests/detailed", method = RequestMethod.GET)
+    public List<LabRequestRepresentation> getDetailedLabRequests(
+            UserAuthenticationToken user) {
+        log.info("GET /labrequests/detailed");
+        return labRequestService.findLabRequestsForUser(user.getUser(), true);
     }
 
     @PreAuthorize("isAuthenticated() and "
@@ -155,30 +164,25 @@ public class LabRequestController {
 
         LabRequest labRequest = labRequestRepository.findOne(id);
         
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
-        if (!representation.getStatus().equals("Approved")) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        if (!labRequest.getStatus().equals("Approved")) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
 
         RequestRepresentation request = new RequestRepresentation();
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user.getUser());
         if (!request.isMaterialsRequest()) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'. Not a materials request.");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'. Not a materials request.");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
         
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
-        taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Sending");
+        labRequestService.updateStatus(labRequest, "Sending");
 
         labRequest.setSendDate(new Date());
         labRequest = labRequestRepository.save(labRequest);
         
-        representation = new LabRequestRepresentation(labRequest);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
@@ -192,19 +196,17 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/received");
 
         LabRequest labRequest = labRequestRepository.findOne(id);
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
-        if (!representation.getStatus().equals("Sending")) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        if (!labRequest.getStatus().equals("Sending")) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
         
         RequestRepresentation request = new RequestRepresentation();
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user.getUser());
         if (!request.isMaterialsRequest()) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'. Not a materials request.");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'. Not a materials request.");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
         
         if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
@@ -217,12 +219,9 @@ public class LabRequestController {
             labRequest = labRequestRepository.save(labRequest);
         }
         
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
-        taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Received");
+        labRequest = labRequestService.updateStatus(labRequest, "Received");
 
-        representation = new LabRequestRepresentation(labRequest);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
@@ -234,19 +233,14 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/returning");
 
         LabRequest labRequest = labRequestRepository.findOne(id);
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
-        if (!representation.getStatus().equals("Received")) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        if (!labRequest.getStatus().equals("Received")) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
 
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
-        taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Returning");
+        labRequest = labRequestService.updateStatus(labRequest, "Returning");
 
-        representation = new LabRequestRepresentation(labRequest);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
@@ -267,11 +261,9 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/returned");
 
         LabRequest labRequest = labRequestRepository.findOne(id);
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
-        if (!labRequestReturnedEnabledStatuses.contains(representation.getStatus())) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        if (!labRequestReturnedEnabledStatuses.contains(labRequest.getStatus())) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
         
         if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
@@ -285,20 +277,19 @@ public class LabRequestController {
             labRequest = labRequestRepository.save(labRequest);
         }
         
-        transferLabRequestFormData(body, labRequest, user.getUser());
+        labRequest = transferLabRequestFormData(body, labRequest, user.getUser());
+        
+        labRequest = labRequestService.updateStatus(labRequest, "Returned");
         
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
-        taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Returned");
-
         // complete task
         if (task.getDelegationState() == DelegationState.PENDING) {
             taskService.resolveTask(task.getId());
         }
         taskService.complete(task.getId());
         
-        representation = new LabRequestRepresentation(labRequest);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
@@ -312,27 +303,25 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/complete");
 
         LabRequest labRequest = labRequestRepository.findOne(id);
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
-        if (!representation.getStatus().equals("Approved")) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+        if (!labRequest.getStatus().equals("Approved")) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
 
         RequestRepresentation request = new RequestRepresentation();
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user.getUser());
         if (request.isMaterialsRequest()) {
-            log.error("Action not allowed in status '" + representation.getStatus() + "'. Not a materials request.");
-            throw new InvalidActionInStatus("Action not allowed in status '" + representation.getStatus() + "'");
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'. Not a materials request.");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
 
-        transferLabRequestFormData(body, labRequest, user.getUser());
+        labRequest = transferLabRequestFormData(body, labRequest, user.getUser());
+        
+        labRequest = labRequestService.updateStatus(labRequest, "Completed");
         
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
-        taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Completed");
 
         // complete task
         if (task.getDelegationState() == DelegationState.PENDING) {
@@ -340,7 +329,7 @@ public class LabRequestController {
         }
         taskService.complete(task.getId());
         
-        representation = new LabRequestRepresentation(labRequest);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
@@ -396,13 +385,10 @@ public class LabRequestController {
         log.info("GET /labrequests/" + id + "/panumbers/csv for userId " + user.getId());
 
         LabRequest labRequest = labRequestRepository.findOne(id);
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
-
-        if (representation.getStatus().equals("Waiting for lab approval")
-            || representation.getStatus().equals("Rejected")) {
-            log.error("Download not allowed in status '" + representation.getStatus() + "'");
-            throw new InvalidActionInStatus("Download not allowed in status '" + representation.getStatus() + "'");
+        if (labRequest.getStatus().equals("Waiting for lab approval")
+            || labRequest.getStatus().equals("Rejected")) {
+            log.error("Download not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Download not allowed in status '" + labRequest.getStatus() + "'");
         }
         HttpEntity<InputStreamResource> file = null;
 
@@ -420,20 +406,19 @@ public class LabRequestController {
         paReportSendingStatuses = new HashSet<String>(Arrays.asList("Approved", "Sending", "Received", "Returning"));
     }
     
-    private void transferLabRequestFormData(LabRequestRepresentation body, LabRequest labRequest, User user) {
+    private LabRequest transferLabRequestFormData(LabRequestRepresentation body, LabRequest labRequest, User user) {
         RequestRepresentation request = new RequestRepresentation();
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user);
         if (request.isPaReportRequest()) {
-            LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-            labRequestService.transferLabRequestData(representation);
-            if (!paReportSendingStatuses.contains(representation.getStatus())) {
-                log.error("Action not allowed in status '" + representation.getStatus() + "'");
+            if (!paReportSendingStatuses.contains(labRequest.getStatus())) {
+                log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
                 throw new InvalidActionInStatus();
             }
             labRequest.setPaReportsSent(body.isPaReportsSent());
             labRequest = labRequestRepository.save(labRequest);
         }
+        return labRequest;
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")

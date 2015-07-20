@@ -22,6 +22,8 @@ public class LabRequest {
 
     private String taskId;
 
+    private String status;
+    
     private Date timeCreated;
     
     @Column
@@ -134,6 +136,14 @@ public class LabRequest {
 
     public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
 }

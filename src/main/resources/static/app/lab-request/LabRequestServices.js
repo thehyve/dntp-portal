@@ -7,6 +7,11 @@
         return $resource('/labrequests/:id', {
             id : '@id'
         }, {
+            getDetailed : {
+                url : '/labrequests/detailed',
+                method : 'GET',
+                isArray: true
+            },
             accept : {
                 url : '/labrequests/:id/accept',
                 method : 'PUT'

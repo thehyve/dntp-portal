@@ -12,7 +12,8 @@ public class ExcerptValue {
     @GeneratedValue
     private Long id;
     
-    @Column(columnDefinition="TEXT")
+    //@Column(columnDefinition="TEXT")
+    @Column(length = 32767)
     private String value = "";
 
     public ExcerptValue() {

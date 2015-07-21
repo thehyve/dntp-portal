@@ -70,10 +70,22 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            $scope.currentLanguage = $translate.use();
-
+            var _languages = ['nl', 'en'];
+            
             $scope.changeLanguage = function(langKey) {
-                $translate.use(langKey);
-                $scope.currentLanguage = langKey;
+                if (_languages.indexOf(langKey) != -1) {
+                    console.log('change language: ' + langKey);
+                    $scope.currentLanguage = langKey;
+                    $cookieStore.put('lang', $scope.currentLanguage);
+                    $translate.use(langKey);
+                }
             };
+
+            $scope.currentLanguage = $cookieStore.get('lang');
+            if ($scope.currentLanguage) {
+                $translate.use($scope.currentLanguage);
+            } else {
+                $scope.changeLanguage($translate.use());
+            }
+
         }]);

@@ -291,7 +291,7 @@ public class SelectionController {
                 throw new RequestNotFound();
             }
             Set<Integer> selectedLabNumbers = new TreeSet<Integer>();
-            for(ExcerptEntry entry: excerptList.getEntryValues()) {
+            for(ExcerptEntry entry: excerptList.getEntries()) {
                 selectedLabNumbers.add(entry.getLabNumber());
             }
             runtimeService.setVariable(id, "lab_request_labs", selectedLabNumbers);

@@ -5,7 +5,7 @@ import java.util.Date;
 public class RequestListRepresentation {
 
     private String processInstanceId;
-    private String requesterId;
+    private Long requesterId;
     private String requesterName;
     private String status;
     private Date dateCreated;
@@ -40,11 +40,11 @@ public class RequestListRepresentation {
         this.processInstanceId = processInstanceId;
     }
 
-    public String getRequesterId() {
+    public Long getRequesterId() {
         return requesterId;
     }
 
-    public void setRequesterId(String requesterId) {
+    public void setRequesterId(Long requesterId) {
         this.requesterId = requesterId;
     }
 

@@ -24,12 +24,20 @@
             <h1>{{ 'Requests' | translate }}</h1>
             <hr>
             <!--Tool bar-->
-          <ul class="nav nav-pills" ng-if="globals.currentUser.roles.indexOf('requester') != -1" >
+          <ul class="nav nav-pills" ng-if="isRequester()">
             <li role="presentation" title="Create a new request">
                 <button class="btn btn-default"  ng-click="start()" id="new-request">
                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     {{'Create new request'|translate}}
                 </button>
+            </li>
+            <li ng-if="loadTestEnabled()">
+                <span class="btn btn-warning" ng-click="loadTest()">Load test</span>
+            </li>
+            </ul>
+            <ul class="nav nav-pills" ng-if="isPalga() && loadTestEnabled()">
+                <li>
+                    <span class="btn btn-warning" ng-click="loadTestPalga()">Load test Palga</span>
                 </li>
             </ul>
 
@@ -117,7 +125,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="8" class="text-center">
-                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                             </td>
                         </tr>
                     </tfoot>

@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +13,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -118,32 +115,17 @@ public class LabRequestService {
             LabRequestRepresentation labRequestRepresentation,
             HistoricProcessInstance instance
             ) {
-        // set requester id
-        Map<String, Object> variables = instance.getProcessVariables();
-        labRequestRepresentation
-                .setRequesterId(variables.get("requester_id") == null ? ""
-                  : variables.get("requester_id").toString());
-        Long userId = null;
-        try {
-            userId = Long.valueOf(labRequestRepresentation.getRequesterId());
-        } catch (NumberFormatException e) {
-            log.error(e.getMessage());
-        }
-
-        if (userId != null) {
-            User user = userRepository.findOne(userId);
-            if (user != null) {
-                labRequestRepresentation.setRequesterId(user.getId().toString());
-                labRequestRepresentation.setRequesterName(RequestFormService
-                        .getName(user));
-                labRequestRepresentation.setRequesterEmail(user.getContactData().getEmail());
-                labRequestRepresentation.setRequester(new ProfileRepresentation(user));
-                labRequestRepresentation.setRequesterLab(user.getLab());
-            }
-            // copy request list representation data
-            RequestListRepresentation requestListRepresentation = new RequestListRepresentation();
-            requestFormService.transferData(instance, requestListRepresentation, user);
-            labRequestRepresentation.setRequest(requestListRepresentation);
+        // copy request list representation data
+        RequestListRepresentation request = new RequestListRepresentation();
+        requestFormService.transferBasicData(instance, request);
+        labRequestRepresentation.setRequest(request);
+        if (request.getRequesterId() != null) {
+            labRequestRepresentation.setRequesterId(request.getRequesterId());
+            labRequestRepresentation.setRequesterName(request.getRequesterName());
+            User user = userRepository.findOne(request.getRequesterId());
+            labRequestRepresentation.setRequesterEmail(user.getContactData().getEmail());
+            labRequestRepresentation.setRequester(new ProfileRepresentation(user));
+            labRequestRepresentation.setRequesterLab(user.getLab());
         }
     }
 
@@ -160,8 +142,9 @@ public class LabRequestService {
             columnNames.add(name);
         }
         list.setColumnNames(columnNames);
-        List<ExcerptEntryRepresentation> entries = new ArrayList<ExcerptEntryRepresentation>();
-        for (ExcerptEntry entry : excerptList.getEntryValues()) {
+        List<ExcerptEntryRepresentation> representations = new ArrayList<ExcerptEntryRepresentation>();
+        List<ExcerptEntry> entries = excerptList.getEntries();
+        for (ExcerptEntry entry : entries) {
             if (entry.isSelected() && entry.getLabNumber().equals(labNumber)) {
                 ExcerptEntryRepresentation representation = new ExcerptEntryRepresentation(
                         entry);
@@ -171,10 +154,10 @@ public class LabRequestService {
                 }
                 representation.setValues(values);
                 assert(representation.getPaNumber().equals(entry.getPaNumber()));
-                entries.add(representation);
+                representations.add(representation);
             }
         }
-        list.setEntries(entries);
+        list.setEntries(representations);
     }
 
     
@@ -191,20 +174,12 @@ public class LabRequestService {
 
         labRequestRepresentation.setExcerptList(list);
     }
-
+    
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         Date start = new Date();
 
         // get task data
         HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request");
-        HistoricVariableInstance status_variable = historyService.createHistoricVariableInstanceQuery()
-                .taskId(labRequestRepresentation.getTaskId())
-                .variableName("labrequest_status")
-                .singleResult();
-        if (status_variable != null) {
-            labRequestRepresentation.setStatus((String)status_variable.getValue());
-        }
-
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setEndDate(task.getEndTime());
         labRequestRepresentation.setAssignee(task.getAssignee());
@@ -241,7 +216,13 @@ public class LabRequestService {
         return task;
     }
 
-    // FIXME: add unit test
+    @Transactional
+    public LabRequest updateStatus(LabRequest labRequest, String status) {
+        taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", status);
+        labRequest.setStatus(status);
+        return labRequestRepository.save(labRequest);
+    }
+    
     @SuppressWarnings("unchecked")
     @Transactional
     public void generateLabRequests(String processInstanceId) {
@@ -256,9 +237,6 @@ public class LabRequestService {
                 Lab lab = labRepository.findByNumber(labNumber);
                 HistoricTaskInstance task = findLabRequestTaskForLab(labNumber, instance.getId());
 
-                // set initial status
-                taskService.setVariableLocal(task.getId(), "labrequest_status", "Waiting for lab approval");
-
                 // create lab requests
                 LabRequest labRequest = new LabRequest();
                 labRequest.setTimeCreated(new Date());
@@ -266,6 +244,9 @@ public class LabRequestService {
                 labRequest.setProcessInstanceId(processInstanceId);
                 labRequest.setTaskId(task.getId());
                 labRequest = labRequestRepository.save(labRequest);
+                // set initial status
+                labRequest = updateStatus(labRequest, "Waiting for lab approval");
+
 
                 ExcerptList excerptList = excerptListService.findByProcessInstanceId(processInstanceId);
                 ExcerptListRepresentation list = new ExcerptListRepresentation();
@@ -293,7 +274,8 @@ public class LabRequestService {
         return new Sort(Sort.Direction.DESC, "id");
     }
     
-    public List<LabRequestRepresentation> findLabRequestsForUser(User user) {
+    @Transactional
+    public List<LabRequestRepresentation> findLabRequestsForUser(User user, boolean fetchDetails) {
         List<LabRequestRepresentation> representations = new ArrayList<LabRequestRepresentation>();
         if (user.isLabUser()) {
             // Lab user
@@ -301,8 +283,9 @@ public class LabRequestService {
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
-                // FIXME: this should not be fetched by default
-                transferLabRequestDetails(representation);
+                if (fetchDetails) {
+                    transferLabRequestDetails(representation, labRequest);
+                }
                 representations.add(representation);
             }
         } else if (user.isPalga()) {
@@ -311,8 +294,9 @@ public class LabRequestService {
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
-                // FIXME: this should not be fetched by default
-                transferLabRequestDetails(representation);
+                if (fetchDetails) {
+                    transferLabRequestDetails(representation, labRequest);
+                }
                 representations.add(representation);
             }
         } else {
@@ -330,6 +314,9 @@ public class LabRequestService {
                 for (LabRequest labRequest : labRequests) {
                     LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                     transferLabRequestData(representation);
+                    if (fetchDetails) {
+                        transferLabRequestDetails(representation, labRequest);
+                    }
                     representations.add(representation);
                 }
             }
@@ -356,6 +343,10 @@ public class LabRequestService {
     @Transactional
     public void transferLabRequestDetails(LabRequestRepresentation representation) {
         LabRequest labRequest = labRequestRepository.findOne(representation.getId());
+        transferLabRequestDetails(representation, labRequest);
+    }
+    
+    private void transferLabRequestDetails(LabRequestRepresentation representation, LabRequest labRequest) {
         List<PathologyRepresentation> pathologyList = new ArrayList<PathologyRepresentation>();
         for (PathologyItem item : labRequest.getPathologyList()) {
             pathologyList.add(new PathologyRepresentation(item));

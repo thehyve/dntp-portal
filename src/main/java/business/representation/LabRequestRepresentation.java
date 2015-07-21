@@ -23,7 +23,7 @@ public class LabRequestRepresentation {
 
     private RequestListRepresentation request;
 
-    private String requesterId;
+    private Long requesterId;
     private String requesterName;
     private String requesterEmail;
     private ProfileRepresentation requester;
@@ -66,6 +66,7 @@ public class LabRequestRepresentation {
         this.setId(labRequest.getId());
         this.setProcessInstanceId(labRequest.getProcessInstanceId());
         this.setTaskId(labRequest.getTaskId());
+        this.setStatus(labRequest.getStatus());
         this.setLab(labRequest.getLab());
         //this.pathologyCount = labRequest.getPathologyList().size();
         this.setRejectDate(labRequest.getRejectDate());
@@ -107,11 +108,11 @@ public class LabRequestRepresentation {
         this.processInstanceId = processInstanceId;
     }
 
-    public String getRequesterId() {
+    public Long getRequesterId() {
         return requesterId;
     }
 
-    public void setRequesterId(String requesterId) {
+    public void setRequesterId(Long requesterId) {
         this.requesterId = requesterId;
     }
 

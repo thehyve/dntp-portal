@@ -123,6 +123,124 @@ angular.module('ProcessApp.controllers')
                 }
             };
 
+            var patt = /gijs(\+)?[a-zA-Z0-9]*@thehyve.nl/g;
+            var result = patt.test($rootScope.globals.currentUser.username);
+            //console.log('pattern: ' + patt.source + ', username: ' + $rootScope.globals.currentUser.username + ', match: ' + result);
+            $scope.loadTestCounter = 1;
+            
+            $scope.loadTestEnabled = function() {
+                return result;
+            };
+            
+            $scope.loadTest = function() {
+                for(var i=0; i<20; i++) {
+                    var req = new Request();
+                    req.$save(function(req) {
+                        console.log('created: ' + req.processInstanceId);
+                        req.title = 'Test ' + ($scope.loadTestCounter++);
+                        req.contactPersonName = 'Contact Person';
+                        req.pathologistName = 'P.A. Thologist';
+                        req.pathologistEmail = 'p.a.thologist@test.org';
+                        
+                        req.background = 'Load testing';
+                        req.researchQuestion = 'How does the system perform under heavy load?';
+                        req.hypothesis = 'Overall okay, but slow in dealing with lab requests.';
+                        req.methods = 'Javascript test script emulating many requests.'
+                        req.type = '4';
+                        
+                        req.billingAddress = {};
+                        req.billingAddress.address1 = 'Teststraat 123';
+                        req.billingAddress.postalCode = '1234 AB';
+                        req.billingAddress.city = 'Utrecht';
+                        
+                        req.chargeNumber = 'PROJ-567890';
+                        req.linkageWithPersonalData = false;
+                        
+                        Request.convertRequestTypeToOpts(req); // convert request type
+                        
+                        req.$submit(function(result) {
+                            console.log('submitted: ' + result);
+                        }, function(err) {
+                            console.log('err: '+ err);
+                        });
+                    }, function(err) {
+                        console.log('err: ' + err);
+                    });
+                }
+                $route.reload();
+            }
+
+            var _claimableStatuses = ['Review', 'Approval', 'DataDelivery', 'SelectionReview'];
+            
+            $scope.loadTestPalga = function() {
+                // claim all
+                for(var i=0; i < $scope.requests.length; i++) {
+                    var req = $scope.requests[i];
+                    console.log('considering request ' + req);
+                    if (req.assignee == null && _claimableStatuses.indexOf(req.status) != -1) {
+                        req.$claim(function(res) {
+                            console.log('task claimed: ' + res);
+                        }, function(err) {
+                            console.log('err:' + err);
+                        });
+                    }
+                }
+                for(var i=0; i < $scope.requests.length; i++) {
+                    var req = $scope.requests[i];
+                    console.log('considering request ' + req);
+                    if (req.assignee == $rootScope.globals.currentUser.userid) {
+                        if (req.status == 'Review') {
+                            req.requesterLabValid = true;
+                            req.requesterValid = true;
+                            req.requesterAllowed = true;
+                            req.contactPersonAllowed = true;
+                            req.agreementReached = true;
+    
+                            req.$submitForApproval(function(result) {
+                                console.log('submitted for approval: ' + result);
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        }
+                        else if (req.status == 'Approval') {
+                            req.scientificCouncilApproved = true;
+                            req.privacyCommitteeApproved = true;
+                            req.$finalise(function(result) {
+                                console.log('finalised: ' + result);
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        } else if (req.status == 'DataDelivery') {
+                            req.$get(function(res) {
+                                if (res.excerptList == null) {
+                                    res.$useExampleExcerptList(function(result) {
+                                        console.log('using example excerpt list:' + result);
+                                    }, function(err) {
+                                        console.log('err:' + err);
+                                    });
+                                } else {
+                                    res.$selectAll(function(result) {
+                                        console.log('select all:' + result);
+                                    }, function(err) {
+                                        console.log('err:' + err);
+                                    });
+                                }
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        } else if (req.status == 'SelectionReview') {
+                            req.selectionApproved = true;
+                            req.$updateExcerptSelectionApproval(function(result) {
+                                console.log('excerpt selection approved: ' + result);
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        }
+                    }
+                }
+                $route.reload();
+            }
+
             $scope.start = function() {
                 $scope.dataLoading = true;
                 new Request().$save(function(request) {

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import business.exceptions.EmailAddressNotAvailable;
 import business.exceptions.EmailAddressNotUnique;
+import business.exceptions.InvalidPassword;
 import business.exceptions.InvalidUserData;
 import business.exceptions.UserNotFound;
 import business.models.ActivationLink;
@@ -41,6 +42,7 @@ import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.MailService;
 import business.services.UserService;
+import business.validation.PasswordValidator;
 
 @RestController
 public class UserController {
@@ -153,7 +155,7 @@ public class UserController {
 
         // change role
         ProfileRepresentation representation = new ProfileRepresentation(user);
-        if (!representation.getCurrentRole().equals(body)) {
+        if (!representation.getCurrentRole().equals(body.getCurrentRole())) {
             Role role = roleRepository.findByName(body.getCurrentRole());
             if (role == null) {
                 throw new InvalidUserData("Unknown role selected.");
@@ -163,14 +165,16 @@ public class UserController {
             user.setRoles(roles);
         }
         
-        Lab lab = null;
-        if (user.isLabUser() || user.isPathologist()) {
-            lab = labRepository.findOne(body.getLabId());
+        if (user.isRequester() || user.isLabUser()) {
+            if (body.getLabId() == null) {
+                throw new InvalidUserData("No lab selected.");
+            }
+            Lab lab = labRepository.findOne(body.getLabId());
             if (lab == null) {
                 throw new InvalidUserData("No lab selected.");
             }
+            user.setLab(lab);
         }
-        user.setLab(lab);
         
         if (body.getContactData() == null) {
             throw new InvalidUserData("No contact data entered.");
@@ -197,6 +201,10 @@ public class UserController {
                 roles.add(role);
             }
 
+            if (!PasswordValidator.validate(body.getPassword1())) {
+                throw new InvalidPassword();
+            }
+            
             User user = new User(body.getUsername(), passwordEncoder.encode(body.getPassword1()), true, roles);
 
             transferUserData(body, user);

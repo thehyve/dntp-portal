@@ -1,7 +1,9 @@
 package business.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +25,8 @@ public class PathologyItem {
     String paNumber;
     
     @ElementCollection
-    List<String> samples;
+    @CollectionTable(indexes = @Index(columnList="pathology_item_id"))
+    List<String> samples = new ArrayList<String>();
     
     public PathologyItem() {
         

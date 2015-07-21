@@ -33,11 +33,11 @@ import business.models.LabRepository;
 import business.models.LabRequestRepository;
 import business.models.PathologyItemRepository;
 import business.models.User;
-import business.models.UserRepository;
 import business.representation.RequestRepresentation;
 import business.security.MockConfiguration.MockMailSender;
 import business.security.UserAuthenticationToken;
 import business.services.LabRequestService;
+import business.services.UserService;
 
 @Profile("dev")
 @SpringApplicationConfiguration(classes = {Application.class})
@@ -48,7 +48,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     
     FileSystem fileSystem = FileSystems.getDefault();
     
-    @Autowired UserRepository userRepository;
+    @Autowired UserService userService;
 
     @Autowired LabRepository labRepository;
 
@@ -72,29 +72,32 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     @Autowired
     AuthenticationProvider authenticationProvider;
     
-    @BeforeClass
-    public void setUp() throws Exception {
-        ((MockMailSender)this.mailSender).clear();
-        log.info("TEST  Test: " + this.getClass().toString());
-    }
-
     protected String processInstanceId;
     
     protected UserAuthenticationToken getRequester() {
-        User user = userRepository.findByUsername("requester@dntp.thehyve.nl");
+        User user = userService.findByUsername("requester@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
     }
 
     protected UserAuthenticationToken getPalga() {
-        User user = userRepository.findByUsername("palga@dntp.thehyve.nl");
+        User user = userService.findByUsername("palga@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "palga"); // because of password tests
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
+    }
+    
+    @BeforeClass
+    public void setUp() throws Exception {
+        ((MockMailSender)this.mailSender).clear();
+        log.info("TEST  Test: " + this.getClass().toString());
     }
     
     @Test(groups = "request")
     public void createRequest() {
         UserAuthenticationToken requester = getRequester();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(requester);
+        
         RequestRepresentation representation = new RequestRepresentation();
         representation.setTitle("Test request");
         representation = requestController.start(requester, representation);
@@ -107,6 +110,8 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         //testController.clearAll();
         //List<RequestListRepresentation> requestList = requestController.getRequestList(requester);
         //assertEquals(0, requestList.size());
+        
+        SecurityContextHolder.clearContext();
     }
     
     @Test(groups = "request", dependsOnMethods = "createRequest")
@@ -138,6 +143,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         
         representation = requestController.claim(palga, processInstanceId, representation);
         
+        ((MockMailSender)mailSender).clear();
         
         // only enforced in front end, not in back end
         representation.setBackground("Background is testing.");

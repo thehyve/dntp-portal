@@ -1,24 +1,45 @@
-<h3>{{ 'PA numbers' | translate}}</h3>
+<h3>{{ 'Samples' | translate}}</h3>
 <hr>
+
+<form class="form-horizontal no-print" role="form" name="pathologyForm" novalidate
+    ng-if="isLabUser()">
+    <!-- PA number -->
+    <div class="form-group">
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="paNumber" name="paNumber" placeholder="{{ 'PA number' | translate }}"
+                   ng-model="editPathology.paNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" required>
+        </div>
+        <button class="btn btn-primary" title="{{'Add'|translate}}"
+            ng-click="addPathology(labRequest, editPathology)"
+            ng-disabled="pathologyForm.paNumber.$invalid">
+            {{'Add PA number'|translate}}
+        </button>
+    </div>
+</form>
+
+
 <table st-table="paNumbersDisplayedCollection" st-safe-src="labRequest.pathologyList" class="table table-striped">
   <thead>
   <tr>
-    <th>{{'#' | translate}}</th>
-    <th st-sort="paNumber">{{'PA number' | translate}}</th>
-    <th>{{'Samples' | translate}}</th>
+    <th class="print-pa-id-col">{{'ID' | translate}}</th>
+    <th class="print-pa-no-col" st-sort="paNumber" width="10%">{{'PA number' | translate}}</th>
+    <th class="print-pa-samples-col">{{'Samples' | translate}}</th>
+    <th class="" width="10%">{{'Total Samples' | translate}}</th>
+    <th class="no-print" class="" ng-if="isLabUser() && labRequest.status == 'Approved' && labRequest.assignee == globals.currentUser.userid">{{'Actions' | translate}}</th>
   </tr>
-  <tr>
+  <tr class="no-print">
     <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
-  </tr>  </thead>
+  </tr>
+  </thead>
   <tbody>
   <tr ng-repeat="pathology in paNumbersDisplayedCollection">
-    <td>
+    <td class="print-pa-id-col">
       {{pathology.id}}
     </td>
-    <td>
+    <td class="print-pa-no-col">
       {{pathology.paNumber}}
     </td>
-    <td>
+    <td class="print-pa-samples-col">
       <tags-input 
         on-tag-added="updatePathology(labRequest, pathology)" 
         on-tag-removed="updatePathology(labRequest, pathology)"
@@ -29,14 +50,24 @@
         add-on-blur="true"
         add-on-paste="true"
         min-length="1"
-        ng-if="labRequest.assignee == globals.currentUser.userid"
-        ></tags-input>
+        ng-if="(labRequest.assignee == globals.currentUser.userid) && labRequest.request.materialsRequest"></tags-input>
         <span ng-if="labRequest.assignee != globals.currentUser.userid">
             <span ng-repeat="sample in pathology.samples">
                 <label class="label label-primary">{{sample}}</label>
             </span>
         </span>
-
+    </td>
+    <td>{{pathology.samples.length}}</td>
+    <td class="no-print" ng-if="isLabUser() && labRequest.status == 'Approved' && labRequest.assignee == globals.currentUser.userid">
+    <span class="pull-right">
+        <span class="btn-group">
+        <button
+            class="btn btn-default" type="button" title="{{'Delete'|translate}}"
+            ng-click="deletePathology(labRequest, pathology)">
+        <span><i class="glyphicon glyphicon-trash"></i></span>
+        </button>
+        </span>
+    </span>
     </td>
   </tr>
   </tbody>

@@ -24,12 +24,20 @@
             <h1>{{ 'Requests' | translate }}</h1>
             <hr>
             <!--Tool bar-->
-          <ul class="nav nav-pills" ng-if="globals.currentUser.roles.indexOf('requester') != -1" >
+          <ul class="nav nav-pills" ng-if="isRequester()">
             <li role="presentation" title="Create a new request">
-                    <a href="#/" ng-click="start()" id="new-request">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                        {{'Create new request'|translate}}
-                    </a>
+                <button class="btn btn-default"  ng-click="start()" id="new-request">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    {{'Create new request'|translate}}
+                </button>
+            </li>
+            <li ng-if="loadTestEnabled()">
+                <span class="btn btn-warning" ng-click="loadTest()">Load test</span>
+            </li>
+            </ul>
+            <ul class="nav nav-pills" ng-if="isPalga() && loadTestEnabled()">
+                <li>
+                    <span class="btn btn-warning" ng-click="loadTestPalga()">Load test Palga</span>
                 </li>
             </ul>
 
@@ -95,14 +103,12 @@
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                             </button>
                             <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
-                                ng-disabled="req.assignee == globals.currentUser.userid
-                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery')"
+                                ng-disabled="req.assignee == globals.currentUser.userid || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery' || req.status == 'SelectionReview')"
                                  class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
                             </button>
                             <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
-                                ng-disabled="req.assignee != globals.currentUser.userid
-                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery')"
+                                ng-disabled="req.assignee != globals.currentUser.userid || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery' || req.status == 'SelectionReview')"
                                  class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>
                             </button>
@@ -119,7 +125,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="8" class="text-center">
-                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                             </td>
                         </tr>
                     </tfoot>

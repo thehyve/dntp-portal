@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,15 +23,18 @@ import org.springframework.stereotype.Service;
 import business.models.ApprovalVote;
 import business.models.ApprovalVoteRepository;
 import business.models.Comment;
+import business.models.ContactData;
+import business.models.ContactDataRepository;
+import business.models.ExcerptEntry;
 import business.models.ExcerptList;
-import business.models.ExcerptListRepository;
+import business.models.File;
 import business.models.RequestProperties;
 import business.models.User;
 import business.models.UserRepository;
 import business.representation.ApprovalVoteRepresentation;
-import business.representation.AttachmentRepresentation;
 import business.representation.CommentRepresentation;
 import business.representation.ExcerptListRepresentation;
+import business.representation.FileRepresentation;
 import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
@@ -59,6 +61,9 @@ public class RequestFormService {
 
     @Autowired
     private TaskService taskService;
+    
+    @Autowired
+    private ContactDataRepository contactDataRepository;
 
     /**
      * Casts variable 'name' to type Boolean if it exists as key in the variable map;
@@ -85,8 +90,7 @@ public class RequestFormService {
                 + (user.getLastName() == null ? "" : user.getLastName());
     }
     
-    public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
-
+    public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
 
         Map<String, Object> variables = instance.getProcessVariables();
@@ -99,13 +103,14 @@ public class RequestFormService {
             request.setMethods((String) variables.get("methods"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
-            request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
+            String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();
             Long userId = null;
-            try { userId = Long.valueOf(request.getRequesterId()); }
+            try { userId = Long.valueOf(requesterId); }
             catch(NumberFormatException e) {}
             if (userId != null) {
                 User user = userRepository.findOne(userId);
                 if (user != null) {
+                    request.setRequesterId(userId);
                     request.setRequesterName(getName(user));
                 }
             }
@@ -114,49 +119,60 @@ public class RequestFormService {
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
 
-            Task task = null;
-            if (request.getStatus() != null) {
-                switch(request.getStatus()) {
-                    case "Review":
-                        task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
-                        break;
-                    case "Approval":
-                        task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
+            request.setDateAssigned((Date)variables.get("assigned_date"));
+        }
+    }
+    
+    public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
 
-                        request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
-                        if (currentUser.isScientificCouncilMember()) {
-                            // fetch my vote, number of votes
-                            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                                    instance.getId());
-                            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
-                            if (votes.containsKey(currentUser.getId())) {
-                                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
-                            }
-                        }
-                        break;
-                    case "DataDelivery":
-                        task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
-                        break;
-                }
+        transferBasicData(instance, request);
+            
+        Task task = null;
+        if (request.getStatus() != null) {
+            switch(request.getStatus()) {
+                case "Review":
+                    task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
+                    break;
+                case "Approval":
+                    task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
+
+                    request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
+                    break;
+                case "DataDelivery":
+                    task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
+                    break;
+                case "SelectionReview":
+                    task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
+                    break;
             }
-            if (task != null) {
-                request.setAssignee(task.getAssignee());
-                if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
-                    Long assigneeId = null;
-                    try {
-                        assigneeId = Long.valueOf(task.getAssignee());
-                    } catch (NumberFormatException e) {
+        }
+        if (task != null) {
+            request.setAssignee(task.getAssignee());
+            if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
+                Long assigneeId = null;
+                try {
+                    assigneeId = Long.valueOf(task.getAssignee());
+                } catch (NumberFormatException e) {
+                }
+                if (assigneeId != null) {
+                    User assignee = userRepository.findOne(assigneeId);
+                    if (assignee != null) {
+                        request.setAssigneeName(getName(assignee));
                     }
-                    if (assigneeId != null) {
-                        User assignee = userRepository.findOne(assigneeId);
-                        if (assignee != null) {
-                            request.setAssigneeName(getName(assignee));
-                        }
-                    }
-                    request.setDateAssigned((Date)variables.get("assigned_date"));
                 }
             }
         }
+        
+        if (currentUser.isScientificCouncilMember()) {
+            // fetch my vote
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                    instance.getId());
+            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+            if (votes.containsKey(currentUser.getId())) {
+                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+            }
+        }
+        
     }
 
     @Transactional
@@ -223,6 +239,9 @@ public class RequestFormService {
                 case "DataDelivery":
                     task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
                     break;
+                case "SelectionReview":
+                    task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
+                    break;
             }
             if (task != null) {
                 request.setAssignee(task.getAssignee());
@@ -238,34 +257,28 @@ public class RequestFormService {
                     }
                 }
             }
-            List<Attachment> attachments = taskService.getProcessInstanceAttachments(instance.getId());
-            List<AttachmentRepresentation> requesterAttachments = new ArrayList<AttachmentRepresentation>();
-            List<AttachmentRepresentation> agreementAttachments = new ArrayList<AttachmentRepresentation>();
-            List<AttachmentRepresentation> dataAttachments = new ArrayList<AttachmentRepresentation>();
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
-
-            Set<String> agreementAttachmentIds = properties.getAgreementAttachmentIds();
-            Set<String> dataAttachmentIds = properties.getDataAttachmentIds();
-            for (Attachment attachment: attachments) {
-                if (properties.getExcerptListAttachmentId() != null && 
-                        properties.getExcerptListAttachmentId().equals(attachment.getId())) {
-                    //
-                } else if (agreementAttachmentIds.contains(attachment.getId())) {
-                    agreementAttachments.add(new AttachmentRepresentation(attachment));
-                } else if (dataAttachmentIds.contains(attachment.getId())) {
-                    dataAttachments.add(new AttachmentRepresentation(attachment));
-                } else {
-                    requesterAttachments.add(new AttachmentRepresentation(attachment));
-                }
+            request.setBillingAddress(properties.getBillingAddress());
+            request.setChargeNumber(properties.getChargeNumber());
+            request.setResearchNumber(properties.getReseachNumber());
+            
+            List<FileRepresentation> requestAttachments = new ArrayList<FileRepresentation>();
+            for(File file: properties.getRequestAttachments()) {
+                requestAttachments.add(new FileRepresentation(file));
             }
+
             request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
             request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
             request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
             request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
             
-            request.setAttachments(requesterAttachments);
+            request.setAttachments(requestAttachments);
             if (is_palga) {
+                List<FileRepresentation> agreementAttachments = new ArrayList<FileRepresentation>();
+                for(File file: properties.getAgreementAttachments()) {
+                    agreementAttachments.add(new FileRepresentation(file));
+                }
                 request.setAgreementAttachments(agreementAttachments);
             }
 
@@ -306,20 +319,41 @@ public class RequestFormService {
                 request.setRejectDate((Date)variables.get("reject_date"));
             }
 
-            request.setDataAttachments(dataAttachments);
-            
-            ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
-            if (excerptList != null) {
-                log.info("Set excerpt list.");
-                request.setExcerptList(new ExcerptListRepresentation(excerptList));
-                @SuppressWarnings("unchecked")
-                Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
-                Set<Integer> selectedLabSet = new TreeSet<Integer>();
-                if (selectedLabs != null) {
-                    for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+            List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments = new ArrayList<FileRepresentation>();
+            for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
+                medicalEthicalCommitteeApprovalAttachments.add(new FileRepresentation(file));
+            }
+            request.setMedicalEthicalCommitteeApprovalAttachments(medicalEthicalCommitteeApprovalAttachments);
+
+            if (!is_scientific_council) {
+                List<FileRepresentation> dataAttachments = new ArrayList<FileRepresentation>();
+                for(File file: properties.getDataAttachments()) {
+                    dataAttachments.add(new FileRepresentation(file));
                 }
-                request.setSelectedLabs(selectedLabSet);
-                request.setExcerptListRemark(excerptList.getRemark());
+                request.setDataAttachments(dataAttachments);
+            
+                Date start = new Date();
+                if ("DataDelivery".equals(request.getStatus())) {
+                    ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
+                    if (excerptList != null) {
+                        log.info("Set excerpt list.");
+                        ExcerptListRepresentation excerptListRepresentation
+                            = new ExcerptListRepresentation(excerptList);
+                        List<ExcerptEntry> list = excerptList.getEntries();
+                        excerptListRepresentation.setEntryList(list);
+                        request.setExcerptList(excerptListRepresentation);
+                        @SuppressWarnings("unchecked")
+                        Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
+                        Set<Integer> selectedLabSet = new TreeSet<Integer>();
+                        if (selectedLabs != null) {
+                            for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                        }
+                        request.setSelectedLabs(selectedLabSet);
+                        request.setExcerptListRemark(excerptList.getRemark());
+                    }
+                    Date end = new Date();
+                    log.info("Fetching excerpt list took " + (end.getTime() - start.getTime()) + " ms.");
+                }
             }
         }
     }
@@ -353,6 +387,18 @@ public class RequestFormService {
             variables.put("return_date", request.getReturnDate());
             variables.put("contact_person_name", request.getContactPersonName());
 
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
+            properties.setChargeNumber(request.getChargeNumber());
+            properties.setReseachNumber(request.getResearchNumber());
+            ContactData billingAddress;
+            if (request.getBillingAddress() != null) {
+                billingAddress = request.getBillingAddress();
+            } else {
+                billingAddress = new ContactData();
+                // FIXME: should throw exception
+            }
+            billingAddress = contactDataRepository.save(billingAddress);
+            properties.setBillingAddress(billingAddress);
             if (is_palga) {
                 variables.put("requester_is_valid", (Boolean)request.isRequesterValid());
                 variables.put("requester_is_allowed", (Boolean)request.isRequesterAllowed());
@@ -377,13 +423,12 @@ public class RequestFormService {
                     log.info("Request not admissible");
                     variables.put("request_is_admissible", Boolean.FALSE);
                 }
-                RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
                 properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
                 properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
                 properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
                 properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
-                requestPropertiesService.save(properties);
             }
+            requestPropertiesService.save(properties);
         }
         return variables;
     }

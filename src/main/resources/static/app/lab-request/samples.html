@@ -8,8 +8,20 @@
             </ul>
         </div>
 
+        <div ng-show="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{ 'Not logged in' | translate }}
+            </div>
+        </div>
+
+        <div ng-if="!samples" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div ng-show="error" class="alert alert-danger" role="alert">
+                {{ error | translate }}
+            </div>
+        </div>
+
         <!--Main-->
-        <div class="col-md-10 col-md-offset-2 form-horizontal main ">
+        <div ng-if="samples" class="col-md-10 col-md-offset-2 form-horizontal main ">
 
         <h3>{{ 'PA numbers' | translate}}</h3>
         <hr>
@@ -18,13 +30,18 @@
             class="table table-striped">
             <thead>
                 <tr>
-                    <th st-sort="id">{{'#' | translate}}</th>
+                    <th st-sort="labRequestCode">{{'Lab request' | translate}}</th>
                     <th st-sort="paNumber">{{'PA-Number' | translate}}</th>
                     <th>{{'Samples' | translate}}</th>
-                    <th st-sort="processInstanceId">{{'Request' | translate}}</th>
-                    <th st-sort="labRequestId">{{'Lab request' | translate}}</th>
                     <th st-sort="status">{{'Status' | translate}}</th>
                     <th>{{'Actions' | translate}}</th>
+                </tr>
+                <tr>
+                    <th><input st-search="labRequestCode" placeholder="Filter by id" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="paNumber" placeholder="Filter by PA Number" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="samples" placeholder="Filter by Samples" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
+                    <th>&nbsp;</th>
                 </tr>
                 <tr>
                     <th colspan="6"><input id="request-search"
@@ -33,9 +50,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
-                    ng-repeat="pathology in paNumbersDisplayedCollection">
-                    <td>{{pathology.id}}</td>
+                <tr ng-repeat="pathology in paNumbersDisplayedCollection">
+                    <td>
+                        <a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestCode}}</a>
+                    </td>
                     <td>{{pathology.paNumber}}</td>
                     <td><tags-input
                             on-tag-added="updatePathology(labRequest, pathology)"
@@ -53,14 +71,12 @@
                                 <label class="label label-primary">{{sample}}</label>
                         </span>
                     </span></td>
-                    <td><a ng-href="/#/request/view/{{pathology.processInstanceId}}">{{pathology.processInstanceId}}</a></td>
-                    <td><a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestId}}</a></td>
                     <td>{{pathology.status}}</td>
                     <td>
                         <span class="pull-right">
                         <span class="btn-group">
-                            <a href="mailto:{{pathology.email}}?subject=Recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p.
-                                "
+                            <a href="mailto:{{pathology.email}}?subject=Recall sample {{pathology.paNumber}}&amp;
+                            body=Please return sample {{pathology.paNumber}} a.s.a.p."
                                 ng-if="pathology.status=='Received'">
                             <button
                                 class="btn btn-default" type="button" title="{{'Recall sample' | translate}}">
@@ -73,6 +89,13 @@
                     </td>
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
 
         </div> <!-- end of main -->

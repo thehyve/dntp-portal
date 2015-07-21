@@ -12,19 +12,19 @@
         <div id="navbar" class="navbar-collapse collapse">
 
             <ul ng-if="authenticated" class="nav navbar-nav" >
-                <li ng-show="isViewRequestsAllowed();" class="{{$route.current.templateUrl=='app/request/requests.html' ? 'active': ''}}">
+                <li ng-show="isViewRequestsAllowed();" class="{{isRequestsPage() ? 'active': ''}}">
                     <a href="#/">{{'Requests'|translate}}</a>
                 </li>
-                <li ng-show="isViewLabRequestsAllowed();" class="{{$route.current.templateUrl=='app/lab-request/lab-requests.html' ? 'active': ''}}">
+                <li ng-show="isViewLabRequestsAllowed();" class="{{isLabRequestsPage() ? 'active': ''}}">
                     <a href="#/lab-requests">{{'Lab requests'|translate}}</a>
                 </li>
                 <li ng-show="isViewSamplesAllowed();" class="{{$route.current.templateUrl=='app/lab-request/samples.html' ? 'active': ''}}">
                     <a href="#/samples">{{'Samples'|translate}}</a>
                 </li>
-                <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='components/admin/users.html' ? 'active': ''}}">
+                <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='app/admin/user/users.html' ? 'active': ''}}">
                     <a href="#/users">{{'Users'|translate}}</a>
                 </li>
-                <li ng-show="isViewLabsAllowed();" class="{{$route.current.templateUrl=='components/admin/labs.html' ? 'active': ''}}">
+                <li ng-show="isViewLabsAllowed();" class="{{$route.current.templateUrl=='app/admin/lab/labs.html' ? 'active': ''}}">
                     <a href="#/labs">{{'Labs'|translate}}</a>
                 </li>
                 <li ng-show="isViewOwnLabAllowed();" class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">
@@ -63,9 +63,6 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li>
-                    <a role="button">{{'About' | translate}}</a>
                 </li>
             </ul>
             &nbsp;

@@ -21,7 +21,7 @@
     <label class="control-label col-sm-3">
       {{'Lab' | translate}}
     </label>
-    <div class="col-sm-8">
+    <div class="col-sm-8 form-control-static" >
       <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
       <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
     </div>
@@ -63,7 +63,7 @@
 
   <br>
 
-  <h4>{{'Signed agreement'|translate}}</h4>
+  <h3>{{'Signed agreement'|translate}}</h3>
   <hr>
 
   <!-- Agreement reached -->
@@ -97,7 +97,7 @@
   <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
        flow-name="agreementFlow"
        flow-files-submitted="$flow.upload()"
-       flow-file-success="fileuploadsuccess(request, $message)"
+       flow-file-success="fileuploadsuccess(request, $message, false, $flow)"
     >
     <div>
       <span class="btn btn-default" flow-btn>{{'Upload agreement files'|translate}}</span>

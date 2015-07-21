@@ -13,6 +13,7 @@ angular.module('ProcessApp.controllers')
             });
 
         $scope.submit = function (user) {
+
             if ($scope.registrationForm.$valid) {
 
                 user.currentRole = 'requester';
@@ -24,10 +25,21 @@ angular.module('ProcessApp.controllers')
                     .then(function (data) {
                         $location.path('/register/success');
                     }, function (response) {
-                        // Fixme : change to proper bootstraped alert
-                        alert(response.data.message);
-                        console.log(response.data.message);
+                        if (response.data) {
+                            _error(response.data.message);
+                        } else {
+                            _error('Error');
+                        }
+
                     });
             }
         };
+
+        var _error = function (msg) {
+            $scope.validationError = msg;
+            $timeout(function () {
+                $scope.validationError = undefined;
+            }, 3000);
+        };
+
 }]);

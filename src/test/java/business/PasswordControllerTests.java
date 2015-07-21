@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +39,7 @@ import business.security.MockConfiguration.MockMailSender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Profile("dev")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class})
 @WebIntegrationTest("server.port = 8093")
@@ -148,9 +150,11 @@ public class PasswordControllerTests {
         User user = userRepository.findByUsername("palga@dntp.thehyve.nl");
         NewPasswordRequest npr = new NewPasswordRequest(user);
         passwordRequestRepository.saveAndFlush(npr);
-
+        
+        String newPassword = "12345678%ABCdef";
+        
         // Call password reset with the token
-        NewPasswordRepresentation npRepr = new NewPasswordRepresentation("12345678", npr.getToken());
+        NewPasswordRepresentation npRepr = new NewPasswordRepresentation(newPassword, npr.getToken());
         mockMvc.perform(MockMvcRequestBuilders.post("/password/reset")
                 .content(new ObjectMapper().writeValueAsString(npRepr))
                 .contentType("application/json")
@@ -168,7 +172,7 @@ public class PasswordControllerTests {
 
         // Check that the password has been changed
         user = userRepository.findOne(user.getId());
-        Assert.assertTrue(passwordEncoder.matches("12345678", user.getPassword()));
+        Assert.assertTrue(passwordEncoder.matches(newPassword, user.getPassword()));
 
         // Check that the reset link doesn't exist anymore
         Assert.assertNull(passwordRequestRepository.findByToken(npr.getToken()));

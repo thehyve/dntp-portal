@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import business.models.ContactData;
 import business.models.Lab;
 
 public class RequestRepresentation {
@@ -33,6 +34,10 @@ public class RequestRepresentation {
     private boolean previousContact;
     private String previousContactDescription;
     
+    private ContactData billingAddress;
+    private String chargeNumber;
+    private String researchNumber;
+    
     private boolean statisticsRequest;
     private boolean excerptsRequest;
     private boolean paReportRequest;
@@ -46,9 +51,10 @@ public class RequestRepresentation {
     private Date returnDate;
     private String contactPersonName;
 
-    private List<AttachmentRepresentation> attachments;
-    private List<AttachmentRepresentation> agreementAttachments;
-    private List<AttachmentRepresentation> dataAttachments;
+    private List<FileRepresentation> attachments;
+    private List<FileRepresentation> agreementAttachments;
+    private List<FileRepresentation> dataAttachments;
+    private List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments;
     private List<CommentRepresentation> comments;
 
     private List<CommentRepresentation> approvalComments;
@@ -73,6 +79,8 @@ public class RequestRepresentation {
     private String rejectReason;
     private Date rejectDate;
 
+    private boolean selectionApproved;
+    
     // Privacy Committee
     private boolean sentToPrivacyCommittee;
     private String privacyCommitteeOutcome;
@@ -316,28 +324,29 @@ public class RequestRepresentation {
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
     }
-
-    public List<AttachmentRepresentation> getAttachments() {
+    
+    public List<FileRepresentation> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<AttachmentRepresentation> attachments) {
+    public void setAttachments(List<FileRepresentation> attachments) {
         this.attachments = attachments;
     }
 
-    public List<AttachmentRepresentation> getAgreementAttachments() {
+    public List<FileRepresentation> getAgreementAttachments() {
         return agreementAttachments;
     }
 
-    public void setAgreementAttachments(List<AttachmentRepresentation> agreementAttachments) {
+    public void setAgreementAttachments(
+            List<FileRepresentation> agreementAttachments) {
         this.agreementAttachments = agreementAttachments;
     }
 
-    public List<AttachmentRepresentation> getDataAttachments() {
+    public List<FileRepresentation> getDataAttachments() {
         return dataAttachments;
     }
 
-    public void setDataAttachments(List<AttachmentRepresentation> dataAttachments) {
+    public void setDataAttachments(List<FileRepresentation> dataAttachments) {
         this.dataAttachments = dataAttachments;
     }
 
@@ -523,6 +532,47 @@ public class RequestRepresentation {
 
     public void setPreviousContactDescription(String previousContactDescription) {
         this.previousContactDescription = previousContactDescription;
+    }
+
+    public boolean isSelectionApproved() {
+        return selectionApproved;
+    }
+
+    public void setSelectionApproved(boolean selectionApproved) {
+        this.selectionApproved = selectionApproved;
+    }
+
+    public List<FileRepresentation> getMedicalEthicalCommitteeApprovalAttachments() {
+        return medicalEthicalCommitteeApprovalAttachments;
+    }
+
+    public void setMedicalEthicalCommitteeApprovalAttachments(
+            List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments) {
+        this.medicalEthicalCommitteeApprovalAttachments = medicalEthicalCommitteeApprovalAttachments;
+    }
+
+    public ContactData getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(ContactData billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public String getChargeNumber() {
+        return chargeNumber;
+    }
+
+    public void setChargeNumber(String chargeNumber) {
+        this.chargeNumber = chargeNumber;
+    }
+
+    public String getResearchNumber() {
+        return researchNumber;
+    }
+
+    public void setResearchNumber(String researchNumber) {
+        this.researchNumber = researchNumber;
     } 
     
 }

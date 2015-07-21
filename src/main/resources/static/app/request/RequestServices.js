@@ -41,8 +41,20 @@
                 url : '/requests/:id/unclaim',
                 method : 'PUT'
             },
+            selectAll : {
+                url : '/requests/:id/selectAll',
+                method : 'PUT'
+            },
+            useExampleExcerptList : {
+                url : '/requests/:id/excerptList/useExample',
+                method : 'POST'
+            },
             submitExcerptSelection : {
                 url : '/requests/:id/submitExcerptSelection',
+                method : 'PUT'
+            },
+            updateExcerptSelectionApproval : {
+                url : '/requests/:id/excerptSelectionApproval',
                 method : 'PUT'
             }
         });
@@ -183,8 +195,11 @@
             removeAgreementFile : {
                 url : '/requests/:requestId/agreementFiles/:id',
                 method : 'DELETE'
+            },
+            removeMECFile : {
+                url : '/requests/:requestId/mecFiles/:id',
+                method : 'DELETE'
             }
-
         });
     };
 
@@ -276,6 +291,7 @@
                     };
                 };
                 options.testChunks = false;
+                options.forceChunkSize = true;
                 return options;
             }
         };

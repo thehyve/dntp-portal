@@ -14,7 +14,7 @@
         </div>
     </div>
     
-    <ul class="list-group">
+    <ul class="list-group" id="excerpt-list">
         <li class="list-group-item {{excerpt.selected ? 'list-group-item-info' : ''}} {{$index == currentIndex ? 'active':''}}"
             ng-repeat="excerpt in request.excerptList.entries track by excerpt.id"
             id="excerpt_{{excerpt.id}}">
@@ -24,7 +24,7 @@
                 <i ng-if="excerpt.selected" class="glyphicon glyphicon-check"></i>
                 <span class="pull-right">
                 <span class="btn-group">
-                    <button class="btn btn-default" type="button" title="Select"
+                    <button class="btn btn-default select-pa-number" type="button" title="Select"
                             ng-click="selectExcerpt(request, excerpt)"
                             ng-disabled="excerpt.selected">
                         Select

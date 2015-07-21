@@ -3,6 +3,11 @@
 
         <h2>{{ 'Registration' | translate }}</h2>
         <hr>
+
+        <div class="alert alert-danger" ng-show="validationError">
+            {{ validationError | translate }}
+        </div>
+
         <form class="form-horizontal" role="form" name="registrationForm" ng-submit="submit(user)" novalidate>
 
             <!-- First Name -->
@@ -45,7 +50,7 @@
                         {{ 'Required field' | translate }}
                     </span>
                     <span class="help-block" ng-show="registrationForm.lastName.$error.maxlength">
-                        { 'Input value is too long' | translate }}
+                        {{ 'Input value is too long' | translate }}
                     </span>
                     <span ng-show="registrationForm.lastName.$error.required" class="help-block">
                         {{ 'Required field' | translate }}
@@ -62,11 +67,15 @@
                 <div class="col-sm-10">
                     <input type="email" class="form-control" id="email" name="email"
                            placeholder="{{ 'E-mail' | translate }}"
+                           ng-maxlength="255"
                            ng-model="user.contactData.email" required>
                     <!-- errors -->
                     <span class="help-block"
                           ng-show="registrationForm.email.$error.required">
                         {{ 'Required field' | translate }}
+                    </span>
+                    <span class="help-block" ng-show="registrationForm.email.$error.maxlength">
+                        {{ 'Input value is too long' | translate }}
                     </span>
                     <span class="help-block" ng-show="registrationForm.email.$invalid && registrationForm.email.$dirty">
                         {{ 'Email format is invalid' | translate }}
@@ -123,7 +132,7 @@
                 <label class="control-label col-sm-2" for="specialism">{{ 'Specialism' | translate }}</label>
 
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="specialism" placeholder="{{ 'Specialism' | translate }}"
+                    <input type="text" class="form-control" name="specialism" id="specialism" placeholder="{{ 'Specialism' | translate }}"
                            ng-model="user.specialism" ng-maxlength="100">
                     <!-- errors -->
                     <span class="help-block" ng-show="registrationForm.specialism.$error.maxlength">
@@ -133,21 +142,14 @@
             </div>
 
             <!-- Pathology Dept. Member -->
-            <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required}">
-                <label class="control-label col-sm-2" for="isPathologyLabMember">
-                    &nbsp;
+            <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required && registrationForm.lab.$dirty}">
+                <label class="control-label col-sm-2" for="lab">
+                    {{'Pathology lab'|translate}}
                 </label>
 
                 <div class="col-sm-10">
-                    <input type="checkbox" id="isPathologyLabMember" name="isPathologyLabMember" value="1"
-                           ng-model="user.pathologist"> &nbsp; {{ 'I am member of a pathology department' |
-                    translate }}
-                </div>
-                <div class="col-sm-10" ng-show="user.pathologist">
-                    <br>
-                    <em>{{'Specify department'|translate}}</em>:
                     <select class="form-control" name="lab" ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
-                             ng-required="user.pathologist">
+                             ng-required="true">
                         <option value="" ng-selected="selected">-- Select lab --</option>
                     </select>
                     <!-- errors -->
@@ -167,15 +169,16 @@
                 <div class="col-sm-10">
                     <input type="password" class="form-control" id="password" name="password"
                            placeholder="{{ 'Enter 8 characters long password' | translate }}" ng-model="user.password1"
-                           ng-minlength="8" required >
+                           ng-minlength="8" validate-password required >
                     <!-- errors -->
                     <span ng-show="registrationForm.password.$error.required && registrationForm.password.$dirty"
                           class="help-block">
                         {{ 'Required field' | translate }}
                     </span>
-                    <span ng-show="registrationForm.password.$invalid && registrationForm.password.$dirty"
+                    <span ng-show="registrationForm.password.$error.validatePassword && registrationForm.password.$dirty"
                           class="help-block">
-                        {{ 'Password must be min 8 characters long.' | translate }}
+                        {{ 'Password must be 8 or more characters long,
+                            contain numbers, letters, and a special character.' | translate }}
                     </span>
                 </div>
             </div>

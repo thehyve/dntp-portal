@@ -4,6 +4,8 @@ angular.module('ProcessApp.controllers')
     .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookieStore',
         function ($scope, $http, $rootScope, $location, $cookieStore) {
 
+
+
             /**
              * To authorize feature based on role
              * @param role
@@ -55,7 +57,6 @@ angular.module('ProcessApp.controllers')
                                 $rootScope.roles.push(data.roles[i].name);
                             }
                         }
-                        //console.log('User "' +  data.username + '" has roles: ' + JSON.stringify($rootScope.roles, null, 2));
 
                         $rootScope.globals = {
                             currentUser: {
@@ -77,7 +78,6 @@ angular.module('ProcessApp.controllers')
                                 $rootScope.roles.push(data.authorities[j].authority);
                             }
                         }
-                        //console.log('User '' +  data.name + '' has roles: ' + JSON.stringify($rootScope.roles, null, 2));
                     } else {
                         $rootScope.authenticated = false;
                     }
@@ -94,23 +94,30 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.login = function() {
+                $scope.dataLoading = true;
                 $http.post('login', jQuery.param($scope.credentials), {
                     headers : {
                         'content-type' : 'application/x-www-form-urlencoded'
                     }
                 }).success(function(data) {
                     authenticate(function() {
+                        $scope.dataLoading = false;
                         if ($rootScope.authenticated) {
                             $scope.error = false;
-                            if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
-                              $location.path('/');
-                            } else {
-                              $location.path('/lab-requests');
+                            var redirectUrl = $rootScope.redirectUrl;
+                            if (!redirectUrl) {
+                                if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
+                                    redirectUrl = '/';
+                                } else {
+                                    redirectUrl = '/lab-requests';
+                                }
                             }
+                            $location.path(redirectUrl);
                         } else {
                             $location.path('/login');
                             $scope.error = true;
                             $scope.errormessage = '';
+                            $scope.dataLoading = false;
                         }
                     });
                 }).error(function(data) {
@@ -120,7 +127,12 @@ angular.module('ProcessApp.controllers')
                         $scope.errormessage = data.message;
                     }
                     $rootScope.authenticated = false;
+                    $scope.dataLoading = false;
                 });
             };
+            
+            angular.element(document).ready(function() {
+                $('#username').focus();
+              });
 
         }]);

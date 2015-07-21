@@ -33,11 +33,14 @@ angular.module('ProcessApp.controllers')
             });
 
             $scope.update = function(userdata) {
+                $scope.dataLoading = true;
                 if (userdata.id > 0) {
                     userdata.$update(function(result) {
+                        $scope.dataLoading = false;
                         $scope.editerror = '';
                         $scope.editUserModal.hide();
                     }, function(response) {
+                        $scope.dataLoading = false;
                         if (response.status === 304) { // not modified
                             //console.log(JSON.stringify(response));
                             $scope.editerror = 'Email address not available.';
@@ -46,10 +49,12 @@ angular.module('ProcessApp.controllers')
                 } else {
                     var user = new User(userdata);
                     user.$save(function(result) {
+                        $scope.dataLoading = false;
                         $scope.editerror = '';
                         $scope.editUserModal.hide();
                         $scope.users.unshift(result);
                     }, function(response) {
+                        $scope.dataLoading = false;
                         if (response.status === 304) { // not modified
                             //console.log(JSON.stringify(response));
                             $scope.editerror = 'Email address not available.';
@@ -66,14 +71,18 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.activate = function(user) {
+                $scope.dataLoading = true;
                 user.$activate(function(result) {
                     $scope.users[$scope.users.indexOf(user)] = result;
+                    $scope.dataLoading = false;
                 });
             };
 
             $scope.deactivate = function(user) {
+                $scope.dataLoading = true;
                 user.$deactivate(function(result) {
                     $scope.users[$scope.users.indexOf(user)] = result;
+                    $scope.dataLoading = false;
                 });
             };
 

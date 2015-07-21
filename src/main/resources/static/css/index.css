@@ -12,6 +12,7 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
+    padding-bottom: 40px;
 }
 
 h1, h2, h3 { color: steelblue; }
@@ -144,3 +145,23 @@ h3 { color: #949494; }
 label.normal {
     font-weight: normal !important;
 }
+
+address {margin-bottom: 0px;}
+
+.print-only {
+    display: none;
+}
+
+.st-sort-ascent:before{
+    content: '\25B2';
+}
+
+.st-sort-descent:before{
+    content: '\25BC';
+}
+
+.row p {
+	word-wrap: break-word;
+}
+
+#editCommentText {margin-bottom: 5px;}

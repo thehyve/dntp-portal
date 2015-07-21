@@ -18,13 +18,8 @@
 
     <!-- Status -->
     <div class="row">
-        <label class="control-label col-sm-3">{{ 'Votes' | translate }}</label>
+        <label class="control-label col-sm-3">{{ 'Votes' | translate }} <span class="badge">{{size(request.approvalVotes)}}</span></label>
         <div class="col-sm-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    {{size(request.approvalVotes)}} votes.
-                </div>
-            </div>
             <div class="panel panel-default" ng-repeat="(user_id, vote) in request.approvalVotes">
                 <div class="panel-body">
                     <span ng-if="vote.value=='ACCEPTED'"><i class="glyphicon glyphicon-ok-circle"></i></span>
@@ -38,20 +33,20 @@
     </div>
 
     <!-- Add vote -->
-    <div ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="row" ng-class="">
+    <div ng-if="isScientificCouncil() && request.status == 'Approval'" class="row" ng-class="">
         <div class="col-sm-8">
             <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
                     type="button" title="{{'Accepted'|translate}}" id="vote-accepted"
                     ng-click="updateVote(request, 'ACCEPTED')"
-                    ng-if="!editComment.id">
+                    ng-if="!editComment.id" ng-disabled="dataLoading">
                 <span><i class="glyphicon glyphicon-ok-circle"></i></span>
                 {{'Accepted'|translate}}
             </button>
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='REJECTED'?'active':''}}"
                     type="button" title="{{'Rejected'|translate}}" id="vote-rejected"
                     ng-click="updateVote(request, 'REJECTED')"
-                    ng-if="!editComment.id">
+                    ng-if="!editComment.id" ng-disabled="dataLoading">
                 <span><i class="glyphicon glyphicon-ban-circle"></i></span>
                 {{'Rejected'|translate}}
             </button>
@@ -66,11 +61,11 @@
             <p>
             <div ng-show="!approval_comment_edit_visibility[comment.id]">{{comment.contents}}</div>
             <div ng-show="approval_comment_edit_visibility[comment.id]">
-                               <textarea name="commentText" placeholder="{{'Add comment'|translate}}"
-                                         ng-model="comment.contents">
-                               </textarea>
+                   <textarea class="form-control" name="commentText" placeholder="{{'Add comment'|translate}}"
+                             ng-model="comment.contents">
+                   </textarea>
                 <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
-                        ng-click="updateComment(request, comment)">
+                        ng-click="updateComment(request, comment)" ng-disabled="dataLoading">
                     {{'Update comment'|translate}}
                 </button>
             </div>
@@ -82,7 +77,7 @@
                         <span><i class="glyphicon glyphicon-pencil"></i></span>
                     </button>
                     <button class="btn btn-danger" type="button" title="Delete"
-                            ng-click="removeApprovalComment(comment)">
+                            ng-click="removeApprovalComment(comment)" ng-disabled="dataLoading">
                         <span><i class="glyphicon glyphicon-remove-circle"></i></span>
                     </button>
                 </span>
@@ -102,26 +97,26 @@
     </ul>
 
     <!-- Add approval comment -->
-    <div class="row" ng-class="">
+    <div class="row" ng-class="" ng-if="request.status=='Approval'">
         <div class="col-sm-12">
             <input type="hidden" ng-model="approvalComment.processInstanceId" value="{{request.processInstanceId}}">
-                            <textarea class="form-control" id="commentText" name="commentText"
-                                      placeholder="{{'Add comment'|translate}}"
-                                      ng-model="approvalComment.contents">
-                            </textarea>
+                <textarea class="form-control" id="commentText" name="commentText"
+                          placeholder="{{'Add comment'|translate}}"
+                          ng-model="approvalComment.contents">
+                </textarea>
         </div>
     </div>
-    <div class="row" ng-class="">
+    <div class="row" ng-class="" ng-if="request.status=='Approval'">
         <div class="col-sm-12 text-justify">
             <br>
             <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
                     ng-click="addApprovalComment(request, approvalComment)"
-                    ng-if="!approvalComment.id">
+                    ng-if="!approvalComment.id" ng-disabled="dataLoading">
                 {{'Add comment'|translate}}
             </button>
             <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
                     ng-click="updateApprovalComment(request, approvalComment)"
-                    ng-if="approvalComment.id">
+                    ng-if="approvalComment.id" ng-disabled="dataLoading">
                 {{'Update comment'|translate}}
             </button>
         </div>

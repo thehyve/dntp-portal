@@ -19,8 +19,8 @@ import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestRepresentation;
-import business.security.UserAuthenticationToken;
 import business.security.MockConfiguration.MockMailSender;
+import business.security.UserAuthenticationToken;
 
 public class SmallExcerptListTests extends SelectionControllerTests {
 
@@ -51,7 +51,18 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         InputStream input = resource.openStream();
         MultipartFile file = new MockMultipartFile(resource.getFile(), input);
         
-        representation = requestController.uploadExcerptList(palga, processInstanceId, resource.getFile(), file);
+        Integer flowTotalChunks = 1;
+        Integer flowChunkNumber = 1;
+        String flowIdentifier = "flow";
+        
+        representation = requestController.uploadExcerptList(
+                palga, 
+                processInstanceId, 
+                resource.getFile(),
+                flowTotalChunks,
+                flowChunkNumber, 
+                flowIdentifier,
+                file);
         
         assertEquals(3, representation.getExcerptList().getEntries().size());
         
@@ -64,8 +75,6 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
 
-        ((MockMailSender)mailSender).clear();
-        
         RequestRepresentation representation = 
                 requestController.getRequestById(requester, processInstanceId);
         
@@ -80,6 +89,28 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         representation = selectionController.submitExcerptSelection(requester, processInstanceId, representation);
 
         log.info("Status: " + representation.getStatus());
+        
+        assertEquals("SelectionReview", representation.getStatus());
+        
+        SecurityContextHolder.clearContext();
+    }
+    
+    @Test(groups="request", dependsOnMethods="selectExcerpts")
+    public void approveSelection() {
+        UserAuthenticationToken requester = getRequester();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(requester);
+     
+        ((MockMailSender)mailSender).clear();
+        
+        RequestRepresentation representation = 
+                requestController.getRequestById(requester, processInstanceId);
+        
+        log.info("Status: " + representation.getStatus());
+
+        representation.setSelectionApproved(true);
+        representation = selectionController.setExcerptSelectionApproval(requester, processInstanceId, representation);
+
         assertEquals("LabRequest", representation.getStatus());
         
         assertEquals(2, labRequestRepository.count());
@@ -101,7 +132,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         
         // fails because contact data for labs is not set
         //assertEquals(2, ((MockMailSender)mailSender).getMessages().size());
-        
+
         SecurityContextHolder.clearContext();
     }    
     

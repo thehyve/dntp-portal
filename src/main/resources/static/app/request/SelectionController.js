@@ -12,9 +12,9 @@ angular.module('ProcessApp.controllers')
                 entry.selected = selected;
                 entry.processInstanceId = request.processInstanceId;
                 entry.$update(function(result) {
-                    //$scope.request.excerptListSelection[excerpt.sequenceNumber] = result;
-                    //console.log('Selection updated: ' + result);
-                    request.excerptList = result;
+                    var index = request.excerptList.entries.indexOf(excerpt); 
+                    //console.log('selection updated at index ' + index);
+                    request.excerptList.entries[index] = result;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
                 });
@@ -29,7 +29,7 @@ angular.module('ProcessApp.controllers')
                                      'Conclusie'
                                      ];
             $scope.relevantIndexes = [];
-            if ($scope.request) {
+            if ($scope.request && $scope.request.excerptList) {
                 for (var field in $scope.relevantFields) {
                     var index = $scope.request.excerptList.columnNames.indexOf($scope.relevantFields[field]);
                     //console.log('field '+field+': index = '+index);
@@ -59,6 +59,14 @@ angular.module('ProcessApp.controllers')
                 //console.log('Deselect excerpt: ' + excerpt.id + ' for request ' + request.processInstanceId);
                 $scope.updateSelection(request, excerpt, false);
             };
+            
+            $scope.selectAllExcerpts = function(request) {
+                request.$selectAll(function(result) {
+                    $scope.request = result;
+                }, function(response) {
+                    $scope.error = $scope.error + response.data.message + '\n';
+                });
+            }
 
             $scope.submitExcerptSelection = function(request) {
                 $scope.disableSpaceSelects();
@@ -71,7 +79,9 @@ angular.module('ProcessApp.controllers')
                             request.$submitExcerptSelection(function(result) {
                                 console.log('Selection submitted: ' + result);
                                 $location.path('/');
-                                $scope.$apply();
+                                _.defer(function(){
+                                    $scope.$apply();
+                                });
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
@@ -86,9 +96,12 @@ angular.module('ProcessApp.controllers')
                 var elementId = '#excerpt_'+$scope.request.excerptList.entries[$scope.currentIndex].id;
                 if ($(elementId + ':not(:visible)')) {
                     //console.log('scroll to: ' + elementId);
-                    $('html, body').animate({
-                        scrollTop: $(elementId).offset().top - 100
-                    }, 200);
+                    var element = $(elementId);
+                    if (element) {
+                        $('html, body').animate({
+                            scrollTop: element.offset().top - 200
+                        }, 200);
+                    }
                 }
             };
 

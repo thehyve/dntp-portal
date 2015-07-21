@@ -19,9 +19,11 @@ public class LabRequestRepresentation {
 
     private String processInstanceId;
 
+    private String labRequestCode;
+
     private RequestListRepresentation request;
 
-    private String requesterId;
+    private Long requesterId;
     private String requesterName;
     private String requesterEmail;
     private ProfileRepresentation requester;
@@ -45,6 +47,8 @@ public class LabRequestRepresentation {
     private String rejectReason;
 
     private Date rejectDate;
+    
+    private Date sendDate;
 
     private Boolean isPaReportsSent;
 
@@ -62,11 +66,14 @@ public class LabRequestRepresentation {
         this.setId(labRequest.getId());
         this.setProcessInstanceId(labRequest.getProcessInstanceId());
         this.setTaskId(labRequest.getTaskId());
+        this.setStatus(labRequest.getStatus());
         this.setLab(labRequest.getLab());
         //this.pathologyCount = labRequest.getPathologyList().size();
         this.setRejectDate(labRequest.getRejectDate());
+        this.setSendDate(labRequest.getSendDate());
         this.setRejectReason(labRequest.getRejectReason());
         this.setPaReportsSent(labRequest.isPaReportsSent());
+        this.setLabRequestCode(this.getProcessInstanceId(), this.getLab().getNumber().toString());
     }
 
     public Long getId() {
@@ -101,11 +108,11 @@ public class LabRequestRepresentation {
         this.processInstanceId = processInstanceId;
     }
 
-    public String getRequesterId() {
+    public Long getRequesterId() {
         return requesterId;
     }
 
-    public void setRequesterId(String requesterId) {
+    public void setRequesterId(Long requesterId) {
         this.requesterId = requesterId;
     }
 
@@ -259,6 +266,28 @@ public class LabRequestRepresentation {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getLabRequestCode() {
+        return labRequestCode;
+    }
+
+    public void setLabRequestCode(String processInstanceId, String labNumber) {
+        String labRequestCode = "";
+        if (!processInstanceId.isEmpty() && !labNumber.isEmpty()) {
+            labRequestCode = processInstanceId
+                    .concat("-")
+                    .concat(labNumber);
+        }
+        this.labRequestCode = labRequestCode;
+    }
+
+    public Date getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(Date sendDate) {
+        this.sendDate = sendDate;
     }
     
 }

@@ -51,7 +51,18 @@ public class LargerExcerptListTests extends SelectionControllerTests {
         InputStream input = resource.openStream();
         MultipartFile file = new MockMultipartFile(resource.getFile(), input);
         
-        representation = requestController.uploadExcerptList(palga, processInstanceId, resource.getFile(), file);
+        Integer flowTotalChunks = 1;
+        Integer flowChunkNumber = 1;
+        String flowIdentifier = "flow";
+        
+        representation = requestController.uploadExcerptList(
+                palga, 
+                processInstanceId, 
+                resource.getFile(),
+                flowTotalChunks,
+                flowChunkNumber, 
+                flowIdentifier,
+                file);
         
         assertEquals(6, representation.getExcerptList().getEntries().size());
         
@@ -64,8 +75,6 @@ public class LargerExcerptListTests extends SelectionControllerTests {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
 
-        ((MockMailSender)mailSender).clear();
-        
         RequestRepresentation representation = 
                 requestController.getRequestById(requester, processInstanceId);
         
@@ -80,6 +89,28 @@ public class LargerExcerptListTests extends SelectionControllerTests {
         representation = selectionController.submitExcerptSelection(requester, processInstanceId, representation);
 
         log.info("Status: " + representation.getStatus());
+        
+        assertEquals("SelectionReview", representation.getStatus());
+        
+        SecurityContextHolder.clearContext();
+    }
+    
+    @Test(groups="request", dependsOnMethods="selectExcerpts")
+    public void approveSelection() {
+        UserAuthenticationToken requester = getRequester();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(requester);
+     
+        ((MockMailSender)mailSender).clear();
+        
+        RequestRepresentation representation = 
+                requestController.getRequestById(requester, processInstanceId);
+        
+        log.info("Status: " + representation.getStatus());
+
+        representation.setSelectionApproved(true);
+        representation = selectionController.setExcerptSelectionApproval(requester, processInstanceId, representation);
+        
         assertEquals("LabRequest", representation.getStatus());
         
         assertEquals(2, labRequestRepository.count());

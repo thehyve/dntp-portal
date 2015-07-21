@@ -33,7 +33,7 @@
 
         <!-- Address -->
         <div class="form-group">
-            <label class="control-label col-sm-4" for="address">{{ 'Address' | translate }}</label>
+            <label class="control-label col-sm-4" for="address1">{{ 'Address' | translate }}</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="address1" placeholder="{{ 'Address' | translate }}"
                 ng-model="editlab.contactData.address1" >
@@ -82,7 +82,7 @@
 
 </div>
 <div class="modal-footer">
-    <button class="btn btn-info" type="submit">{{'Save'|translate}}</button>
+    <button class="btn btn-info" type="submit" ng-disabled="dataLoading">{{'Save'|translate}}</button>
     <button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>
 </div>
 </form>

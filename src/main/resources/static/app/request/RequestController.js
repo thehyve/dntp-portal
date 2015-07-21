@@ -11,6 +11,8 @@ angular.module('ProcessApp.controllers')
                   ApprovalComment, ApprovalVote,
                   FlowOptionService, $routeParams) {
 
+            $rootScope.redirectUrl = $location.path();
+        
             $scope.login = function() {
                 $location.path('/login');
             };
@@ -42,15 +44,19 @@ angular.module('ProcessApp.controllers')
                         $scope.error = response.data.message + '\n';
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
-                            console.log("ACCESS DENIED");
+                        }
+                        else if (response.status === 403) {
+                            $rootScope.errormessage = response.data.message;
+                            $scope.login();
+                            return;
                         }
                     } else {
                         $scope.login();
+                        return;
                     }
                 });
             } else {
                 Request.query().$promise.then(function(response) {
-                    console.log(response);
                     $scope.requests = response ? response : [];
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
@@ -58,17 +64,19 @@ angular.module('ProcessApp.controllers')
                         $scope.error = response.data.message + '\n';
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
+                            console.log("ACCESS DENIED");
+                        }
+                        else if (response.status === 403) {
+                            //$rootScope.errormessage = response.data.message;
+                            $scope.login();
+                            return;
                         }
                     } else {
                         $scope.login();
+                        return;
                     }
                 });
             }
-
-            $scope.popover = {
-                'title': 'Info',
-                'content': ''
-            };
 
             $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {
                 if (!isOnlyResetReason) {
@@ -86,41 +94,167 @@ angular.module('ProcessApp.controllers')
                 return FlowOptionService.get_default(options);
             };
 
-            $scope.fileuploadsuccess = function(request, data, excerpts) {
+            $scope.fileuploadsuccess = function(request, data, excerpts, flow) {
+                $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
                 if (excerpts) {
                     $scope.excerptlist_upload_result = "success";
+                    $scope.excerptselection_upload_result = 'success';
                 } else {
                     $scope.fileupload_result = "success";
                 }
+                $scope.$apply();
                 var result = new Request(JSON.parse(data));
                 //$scope.refresh(request, result);
                 request.attachments = result.attachments;
                 request.agreementAttachments = result.agreementAttachments;
                 request.excerptList = result.excerptList;
                 request.dataAttachments = result.dataAttachments;
+                request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 
             $scope.fileuploaderror = function(data, excerpts) {
                 if (excerpts) {
                     $scope.excerptlist_upload_error = data;
                     $scope.excerptlist_upload_result = "error";
+                    $scope.excerptselection_upload_result = 'error';
+                    $scope.excerptselection_upload_error = data;
                 } else {
                     $scope.fileupload_result = "error";
                 }
             };
 
+            var patt = /gijs(\+)?[a-zA-Z0-9]*@thehyve.nl/g;
+            var result = patt.test($rootScope.globals.currentUser.username);
+            //console.log('pattern: ' + patt.source + ', username: ' + $rootScope.globals.currentUser.username + ', match: ' + result);
+            $scope.loadTestCounter = 1;
+            
+            $scope.loadTestEnabled = function() {
+                return result;
+            };
+            
+            $scope.loadTest = function() {
+                for(var i=0; i<20; i++) {
+                    var req = new Request();
+                    req.$save(function(req) {
+                        console.log('created: ' + req.processInstanceId);
+                        req.title = 'Test ' + ($scope.loadTestCounter++);
+                        req.contactPersonName = 'Contact Person';
+                        req.pathologistName = 'P.A. Thologist';
+                        req.pathologistEmail = 'p.a.thologist@test.org';
+                        
+                        req.background = 'Load testing';
+                        req.researchQuestion = 'How does the system perform under heavy load?';
+                        req.hypothesis = 'Overall okay, but slow in dealing with lab requests.';
+                        req.methods = 'Javascript test script emulating many requests.'
+                        req.type = '4';
+                        
+                        req.billingAddress = {};
+                        req.billingAddress.address1 = 'Teststraat 123';
+                        req.billingAddress.postalCode = '1234 AB';
+                        req.billingAddress.city = 'Utrecht';
+                        
+                        req.chargeNumber = 'PROJ-567890';
+                        req.linkageWithPersonalData = false;
+                        
+                        Request.convertRequestTypeToOpts(req); // convert request type
+                        
+                        req.$submit(function(result) {
+                            console.log('submitted: ' + result);
+                        }, function(err) {
+                            console.log('err: '+ err);
+                        });
+                    }, function(err) {
+                        console.log('err: ' + err);
+                    });
+                }
+                $route.reload();
+            }
+
+            var _claimableStatuses = ['Review', 'Approval', 'DataDelivery', 'SelectionReview'];
+            
+            $scope.loadTestPalga = function() {
+                // claim all
+                for(var i=0; i < $scope.requests.length; i++) {
+                    var req = $scope.requests[i];
+                    console.log('considering request ' + req);
+                    if (req.assignee == null && _claimableStatuses.indexOf(req.status) != -1) {
+                        req.$claim(function(res) {
+                            console.log('task claimed: ' + res);
+                        }, function(err) {
+                            console.log('err:' + err);
+                        });
+                    }
+                }
+                for(var i=0; i < $scope.requests.length; i++) {
+                    var req = $scope.requests[i];
+                    console.log('considering request ' + req);
+                    if (req.assignee == $rootScope.globals.currentUser.userid) {
+                        if (req.status == 'Review') {
+                            req.requesterLabValid = true;
+                            req.requesterValid = true;
+                            req.requesterAllowed = true;
+                            req.contactPersonAllowed = true;
+                            req.agreementReached = true;
+    
+                            req.$submitForApproval(function(result) {
+                                console.log('submitted for approval: ' + result);
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        }
+                        else if (req.status == 'Approval') {
+                            req.scientificCouncilApproved = true;
+                            req.privacyCommitteeApproved = true;
+                            req.$finalise(function(result) {
+                                console.log('finalised: ' + result);
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        } else if (req.status == 'DataDelivery') {
+                            req.$get(function(res) {
+                                if (res.excerptList == null) {
+                                    res.$useExampleExcerptList(function(result) {
+                                        console.log('using example excerpt list:' + result);
+                                    }, function(err) {
+                                        console.log('err:' + err);
+                                    });
+                                } else {
+                                    res.$selectAll(function(result) {
+                                        console.log('select all:' + result);
+                                    }, function(err) {
+                                        console.log('err:' + err);
+                                    });
+                                }
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        } else if (req.status == 'SelectionReview') {
+                            req.selectionApproved = true;
+                            req.$updateExcerptSelectionApproval(function(result) {
+                                console.log('excerpt selection approved: ' + result);
+                            }, function(err) {
+                                console.log('err:' + err);
+                            });
+                        }
+                    }
+                }
+                $route.reload();
+            }
+
             $scope.start = function() {
+                $scope.dataLoading = true;
                 new Request().$save(function(request) {
                     //$scope.requests.unshift(request);
                     $scope.edit(request);
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
+                    $scope.dataLoading = false;
                 });
             };
 
             $scope.filterEmptyRequests = function(value, index) {
                 return !value;
-            }
+            };
             
             $scope.refresh = function(request, result) {
                 result.type = Request.convertRequestOptsToType(result);
@@ -145,12 +279,15 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.update = function(request) {
+                $scope.dataLoading = true;
                 Request.convertRequestTypeToOpts(request); // convert request type
                 request.$update(function(result) {
                     $scope.refresh(request, result);
                     $scope.editRequestModal.hide();
+                    $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
+                    $scope.dataLoading = false;
                 });
             };
 
@@ -172,6 +309,24 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.removeMECFile = function(f) {
+                bootbox.confirm('Are you sure you want to delete file ' +
+                f.name +
+                '?', function(result) {
+                    if (result) {
+                        var attachment = new RequestAttachment();
+                        attachment.requestId = $scope.request.processInstanceId;
+                        attachment.id = f.id;
+                        attachment.$removeMECFile(function(result) {
+                            $scope.request.medicalEthicalCommitteeApprovalAttachments.splice($scope.request.medicalEthicalCommitteeApprovalAttachments.indexOf(f), 1);
+                            bootbox.alert('File ' + f.name + ' deleted.');
+                        }, function(response) {
+                            $scope.error = response.statusText;
+                        });
+                    }
+                });
+            };
+            
             $scope.removeDataFile = function(f) {
                 bootbox.confirm('Are you sure you want to delete file ' +
                 f.name +
@@ -224,6 +379,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.submitRequest = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to submit the request?\n ' +
                     'After submission the request cannot be edited anymore.',
@@ -236,11 +392,15 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     });
             };
 
             $scope.submitForApproval = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to submit the request for approval?',
                     function(confirmed) {
@@ -251,11 +411,15 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     });
             };
 
             $scope.finalise = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to finalise the request?',
                     function(confirmed) {
@@ -263,14 +427,19 @@ angular.module('ProcessApp.controllers')
                             request.$finalise(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
+                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     });
             };
 
             $scope.closeRequest = function(request) {
+                $scope.dataLoading = true;
                 bootbox.confirm(
                     'Are you sure you want to close the request?\n<br>' +
                     'After closing, no data files can be added.',
@@ -282,34 +451,82 @@ angular.module('ProcessApp.controllers')
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     });
             };
 
             $scope.reject = function(request) {
-                bootbox.prompt({
-                    title: 'Are you sure you want to reject the request?\n<br>' +
-                    'Please enter a reject reason:',
-                    callback: function(result) {
+                $scope.dataLoading = true;
+                bootbox.confirm(
+                    '<h4>Are you sure you want to reject the request?</h4>\n' +
+                    '<form id="reject" action="">' +
+                    'Please enter a reject reason:\n<br><br>\n' +
+                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
+                    '</form>',
+                    function(result) {
                         if (result) {
-                            request.rejectReason = result;
+                            request.rejectReason = $('#rejectReason').val();
                             request.$reject(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
+                                $scope.dataLoading = false;
                             }, function(response) {
                                 $scope.error = $scope.error + response.data.message + '\n';
+                                $scope.dataLoading = false;
                             });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
                         }
                     }
-                });
+                );
             };
 
+            $scope.approveSelection = function(request) {
+                bootbox.confirm(
+                    'Are you sure you want to approve the selection?\n<br>' +
+                    'After approving, lab requests will be generated.',
+                    function(confirmed) {
+                        if (confirmed) {
+                            request.selectionApproved = true;
+                            request.$updateExcerptSelectionApproval(function(result) {
+                                $scope.refresh(request, result);
+                                $scope.dataLoading = false;
+                            }, function(response) {
+                                $scope.error = $scope.error + response.data.message + '\n';
+                                $scope.dataLoading = false;
+                            });
+                        }
+                    });
+            };
+            
+            $scope.rejectSelection = function(request) {
+                bootbox.confirm(
+                    'Are you sure you want to reject the selection?\n<br>' +
+                    'After rejecting, the status will return to \'Data delivery.\'',
+                    function(confirmed) {
+                        if (confirmed) {
+                            request.selectionApproved = false;
+                            request.$updateExcerptSelectionApproval(function(result) {
+                                $scope.refresh(request, result);
+                                $scope.dataLoading = false;
+                            }, function(response) {
+                                $scope.error = $scope.error + response.data.message + '\n';
+                                $scope.dataLoading = false;
+                            });
+                        }
+                    });
+            };
+            
             $scope.uploadDataFile = function(flow) {
                 var max_size = 1024*1024*10;
                 if (flow.getSize() > max_size) {
-                    console.log('size: '+ flow.getSize());
                     var mb_size = (flow.getSize()/(1024*1024)).toFixed(1);
                     bootbox.alert('File too large (' + mb_size + ' MB). Maximum size is 10 MB.');
+                    flow.cancel();
                 } else {
                     flow.upload();
                 }
@@ -318,14 +535,15 @@ angular.module('ProcessApp.controllers')
             $scope.view = function(request) {
                 $location.path('/request/view/' + request.processInstanceId);
             };
-
+            
             $scope.cancelByEscKey = function (key, request) {
-                console.log('In cancelByEscKey');
-                if (key.which === 27) {
-                    console.log('Escape key');
+                //console.log('In cancelByEscKey');
+                if (key.keyCode === 27) {
+                    //console.log('Escape key');
+                    $scope.cancel(request);
                 }
             };
-
+            
             $scope.cancel = function (request) {
                 if ($rootScope.tempRequest.title === null) {
                     request.$remove(function (result) {
@@ -342,7 +560,6 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.edit = function(request) {
-
                 if (request) {
                     Request.get({id:request.processInstanceId}, function (data) {
                         data.type = Request.convertRequestOptsToType(data);
@@ -368,7 +585,13 @@ angular.module('ProcessApp.controllers')
                         if (data.returnDate === null) {
                             data.returnDate = new Date();
                         }
-                        $scope.editRequestModal = $modal({id: 'editRequestWindow', scope: $scope, template: '/app/request/edit-request.html', backdrop: 'static'});
+                        $scope.editRequestModal = $modal({
+                            id: 'editRequestWindow',
+                            scope: $scope,
+                            template: '/app/request/edit-request.html',
+                            backdrop: 'static'
+                        });
+                        $scope.dataLoading = false;
                     });
                 }
             };
@@ -418,5 +641,21 @@ angular.module('ProcessApp.controllers')
                 }
                 return size;
             };
+            
+            $scope.isPalga = function() {
+                return $scope.globals.currentUser.roles.indexOf('palga') != -1;
+            };
 
+            $scope.isRequester = function() {
+                return $scope.globals.currentUser.roles.indexOf('requester') != -1;
+            };
+            
+            $scope.isScientificCouncil = function() {
+                return $scope.globals.currentUser.roles.indexOf('scientific_council') != -1;
+            };
+
+            $scope.isLabuser = function() {
+                return $scope.globals.currentUser.roles.indexOf('lab_user') != -1;
+            }
+            
 }]);

@@ -1,7 +1,9 @@
 package business.security;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -10,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -26,21 +29,146 @@ import business.services.RequestService;
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Autowired
-    private RuntimeService runtimeService;
+    CustomPermissionService permissionService;
 
-    @Autowired 
-    private RequestService requestService;
-
-    @Autowired
-    private RequestFormService requestFormService;
-    
-    @Autowired
-    private LabRequestRepository labRequestRepository;
-    
-    @Autowired 
-    private TaskService taskService;
-    
     Log log = LogFactory.getLog(getClass());
+    
+    /**
+     * Use the annotation {@link PreAuthorize} with the permission rules below
+     * for data access control to secure controller functions.<br>
+     * Example: {@code @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")}<br>
+     * Usage of id {@code id} in the documentation actually refers to the
+     * {@code processInstanceId} of the request.
+     * <ul>
+     * <li><strong>isAssignedToTask</strong>:
+     *      Usage: {@code hasPermission(#taskId, 'isAssignedToTask')}<br>
+     *      Checks if the user is assigned to the (single) task with the id
+     *      {@code taskId}.
+     * </li>     
+     * <li><strong>requestAssignedToUser</strong>: 
+     *      Usage: {@code hasPermission(#id, 'requestAssignedToUser')}<br>
+     *      Checks if there exists a running task that is associated with the request
+     *      with id {@code id} and is assigned to the user.
+     * </li>
+     * <li><strong>labRequestAssignedToUser</strong>:
+     *      Usage: {@code hasPermission(#labRequestId, 'requestAssignedToUser')}<br>
+     *      Checks if there exists a running task that is associated with the lab request
+     *      with id {@code labRequestId} and is assigned to the user.
+     * </li>
+     * <li><strong>isPalgaUser</strong>:
+     *      Usage: {@code hasPermission(#id, 'isPalgaUser')}<br>
+     *      Checks if the user is a palga user.
+     *      Equivalent to {@code hasRole('palga')}.
+     * </li>
+     * <li><strong>isRequester</strong>:
+     *      Usage: {@code hasPermission(#id, 'isRequester')}<br>
+     *      Checks if the user is the requester of the request with id {@code id}.
+     * </li>
+     * <li><strong>isScientificCouncil</strong>:
+     *      Usage: {@code hasPermission(#id, 'isScientificCouncil')}<br>
+     *      Checks if the request with id {@code id} is in status 'Approval'
+     *      (actually, if an approval task is associated with the request)
+     *      or if the request has already past the approval phase (i.e., 
+     *      an approval decision is associated with the request).
+     * </li>
+     * <li><strong>isLabuser</strong>:
+     *      Usage: {@code hasPermission(#id, 'isLabuser')}<br>
+     *      Checks if the user is a lab user 
+     *      and if there is a task that is both associated with 
+     *          the request with id {@code id}
+     *          and with the lab of the user.
+     * </li>
+     * <li><strong>isLabRequestLabuser</strong>:
+     *      Usage: {@code hasPermission(#labRequestId, 'isLabRequestLabuser')}<br>
+     *      Checks if the user is a lab user and if the lab request with id {@code labRequestId}
+     *      is associated with the lab of the user. 
+     * </li>
+     * <li><strong>isLabRequestRequester</strong>:
+     *      Usage: {@code hasPermission(#labRequestId, 'isLabRequestRequester')}<br>
+     *      Checks if the user is a requester and if the user is the requester of
+     *      the main request to which the lab request with id {@code labRequestId}
+     *      belongs.
+     * </li>
+     * </ul>
+     * 
+     * @param targetDomainObject - the request id ({@code processInstanceId}) or
+     *        the lab request id, depending on the value of {@code permission}
+     * @param permission - the permission rule name, see above.
+     */
+    @Override
+    public boolean hasPermission(Authentication authentication,
+            Object targetDomainObject, Object permission) {
+
+        if (!authentication.isAuthenticated()) {
+            permissionService.logDecision(permission.toString(), null, "", "DENIED (user not authenticated).");
+            return false;
+        }
+        User user = (User)authentication.getPrincipal();
+        permissionService.logDecision(permission.toString(), user, ((targetDomainObject==null) ? "" : targetDomainObject.toString()), "");
+        if ("isAssignedToTask".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String taskId = (String)targetDomainObject;
+            return permissionService.checkIsAssignedToTask(user, taskId);
+        } 
+        else if ("requestAssignedToUser".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkRequestAssignedToUser(user, requestId);
+        } 
+        else if ("labRequestAssignedToUser".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            return permissionService.checkLabRequestAssignedToUser(user, labRequestId);
+        } 
+        else if ("isPalgaUser".equals(permission)) 
+        {
+            String requestId = (String)targetDomainObject;
+            if (user.isPalga()) {
+                permissionService.logDecision("isPalgaUser", user, requestId, "OK.");
+                return true;
+            } else {
+                permissionService.logDecision("isPalgaUser", user, requestId, "DENIED (not a Palga user).");
+                return false;
+            }
+        }
+        else if ("isRequester".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkIsRequester(user, requestId);
+        } 
+        else if ("isScientificCouncil".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkIsScientificCouncil(user, requestId);
+        } 
+        else if ("isLabuser".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkIsLabuser(user, requestId);
+        } 
+        else if ("isLabRequestLabuser".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            return permissionService.checkIsLabRequestLabuser(user, labRequestId);
+        } 
+        else if ("isLabRequestRequester".equals(permission)) 
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            return permissionService.checkIsLabRequestRequester(user, labRequestId);
+        } 
+        else 
+        {
+            throw new InvalidPermissionExpression();
+        }
+    }
     
     private void checkTargetDomainObjectNotNull(Object targetDomainObject) {
         if (targetDomainObject == null) {
@@ -48,149 +176,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
     }
     
-    /**
-     * FIXME: documentation:
-     * - isAssignedToTask
-     * - requestAssignedToUser: hasPermission(#id, 'requestAssignedToUser')
-     * - isPalgaUser
-     * - isRequester
-     * - isScientificCouncil
-     * - isLabuser
-     */
-    @Override
-    public boolean hasPermission(Authentication authentication,
-            Object targetDomainObject, Object permission) {
-
-        if (!authentication.isAuthenticated()) {
-            log.info("CustomPermissionEvaluator: User not authenticated.");
-            return false;
-        }
-        User user = (User)authentication.getPrincipal();
-        log.info("CustomPermissionEvaluator: user = " + user.getId()
-                + ", targetDomainObject = " + 
-                    ((targetDomainObject==null) ? "" : targetDomainObject.toString())
-                + ", permission = " + permission.toString());
-        if ("isAssignedToTask".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            String taskId = (String)targetDomainObject;
-            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-            log.info("isAssignedToTask: " + authentication.getName()
-                    + ", " + task.getAssignee());
-            return authentication.getName().equals(task.getAssignee());
-        } 
-        else if ("requestAssignedToUser".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            String requestId = (String)targetDomainObject;
-            log.info("requestAssignedToUser: user = " + user.getId()
-                    + ", requestId = " + requestId);
-            long count = taskService.createTaskQuery().processInstanceId(requestId)
-                    .active()
-                    .taskAssignee(user.getId().toString())
-                    .count();
-            return (count > 0);
-        } 
-        else if ("labRequestAssignedToUser".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            Long labRequestId = (Long)targetDomainObject;
-            log.info("labRequestAssignedToUser: user = " + user.getId()
-                    + ", labRequestId = " + labRequestId);
-            LabRequest labRequest = labRequestRepository.findOne(labRequestId); 
-            long count = taskService.createTaskQuery().taskId(labRequest.getTaskId())
-                    .active()
-                    .taskAssignee(user.getId().toString())
-                    .count();
-            return (count > 0);
-        } 
-        else if ("isPalgaUser".equals(permission)) 
-        {
-            String requestId = (String)targetDomainObject;
-            log.info("isPalgaUser: user = " + user.getId()
-                    + ", requestId = " + requestId);
-            return user.isPalga();
-        }
-        else if ("isRequester".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            String requestId = (String)targetDomainObject;
-            if (requestId == null)
-            log.info("isRequester: user = " + user.getId()
-                    + ", requestId = " + requestId);
-            HistoricProcessInstance instance = requestService.findProcessInstance(requestId);
-            RequestRepresentation request = new RequestRepresentation();
-            requestFormService.transferData(instance, request, user);
-            return request.getRequesterId().equals(user.getId().toString());
-        } 
-        else if ("isScientificCouncil".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            String requestId = (String)targetDomainObject;
-            log.info("isScientificCouncil: user = " + user.getId()
-                    + ", requestId = " + requestId);
-            if (!user.isScientificCouncilMember()) {
-                return false;
-            }
-            Task task = requestService.findTaskByRequestId(requestId, "scientific_council_approval");
-            log.info("Task: " + task);
-            return (task != null);
-        } 
-        else if ("isLabuser".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            String requestId = (String)targetDomainObject;
-            log.info("isLabuser: user = " + user.getId());
-            if (!user.isLabUser()) {
-                return false;
-            }
-            long count = taskService
-                    .createTaskQuery()
-                    .processInstanceId(requestId)
-                    .processVariableValueEquals("lab", user.getLab().getNumber())
-                    .count();
-            return (count > 0);
-        } 
-        else if ("isLabRequestLabuser".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            Long labRequestId = (Long)targetDomainObject;
-            log.info("isLabRequestLabuser: user = " + user.getId()
-                    + ", labRequestId = " + labRequestId);
-            if (!user.isLabUser()) {
-                return false;
-            }
-            LabRequest labRequest = labRequestRepository.findOne(labRequestId);
-            if (!labRequest.getLab().getNumber().equals(user.getLab().getNumber())) {
-                return false;
-            }
-            return true;
-        } 
-        else if ("isLabRequestRequester".equals(permission)) 
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            Long labRequestId = (Long)targetDomainObject;
-            log.info("isLabRequestRequester: user = " + user.getId()
-                    + ", labRequestId = " + labRequestId);
-            if (!user.isRequester()) {
-                return false;
-            }
-            LabRequest labRequest = labRequestRepository.findOne(labRequestId);
-            HistoricProcessInstance instance = requestService.findProcessInstance(labRequest.getProcessInstanceId());
-            RequestRepresentation request = new RequestRepresentation();
-            requestFormService.transferData(instance, request, user);
-            return request.getRequesterId().equals(user.getId().toString());
-        } 
-        else 
-        {
-            throw new InvalidPermissionExpression();
-        }
-    }
-
     @Override
     public boolean hasPermission(Authentication authentication,
             Serializable targetId, String targetType, Object permission) {
-        log.info("hasPermission[2]: user = " + authentication.getName()
+        log.trace("hasPermission[2]: user = " + authentication.getName()
                 + ", targetId = " + targetId.toString() 
                 + ", targetType = " + targetType 
                 + ", permission = " + permission.toString());

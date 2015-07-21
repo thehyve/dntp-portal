@@ -2,14 +2,11 @@ package business.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,13 +29,27 @@ public class RequestProperties {
     @Column(unique = true)
     private String processInstanceId;
 
-    @ElementCollection
-    private Set<String> agreementAttachmentIds = new HashSet<String>();
-
-    @ElementCollection
-    private Set<String> dataAttachmentIds = new HashSet<String>();
+    @OneToOne
+    ContactData billingAddress;
     
-    private String excerptListAttachmentId;
+    String chargeNumber;
+    
+    String reseachNumber;
+    
+    @OneToMany
+    private List<File> requestAttachments = new ArrayList<File>();
+    
+    @OneToMany
+    private List<File> agreementAttachments = new ArrayList<File>();
+
+    @OneToMany
+    private List<File> dataAttachments = new ArrayList<File>();
+
+    @OneToMany
+    private List<File> medicalEthicalCommiteeApprovalAttachments = new ArrayList<File>();
+
+    @OneToOne
+    private File excerptListAttachment;
     
     @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -123,20 +134,36 @@ public class RequestProperties {
         this.approvalVotes = approvalVotes;
     }
 
-    public Set<String> getAgreementAttachmentIds() {
-        return agreementAttachmentIds;
+    public List<File> getRequestAttachments() {
+        return requestAttachments;
     }
 
-    public void setAgreementAttachmentIds(Set<String> agreementAttachmentIds) {
-        this.agreementAttachmentIds = agreementAttachmentIds;
+    public void setRequestAttachments(List<File> requestAttachments) {
+        this.requestAttachments = requestAttachments;
     }
 
-    public Set<String> getDataAttachmentIds() {
-        return dataAttachmentIds;
+    public List<File> getAgreementAttachments() {
+        return agreementAttachments;
     }
 
-    public void setDataAttachmentIds(Set<String> dataAttachmentIds) {
-        this.dataAttachmentIds = dataAttachmentIds;
+    public void setAgreementAttachments(List<File> agreementAttachments) {
+        this.agreementAttachments = agreementAttachments;
+    }
+
+    public List<File> getDataAttachments() {
+        return dataAttachments;
+    }
+
+    public void setDataAttachments(List<File> dataAttachments) {
+        this.dataAttachments = dataAttachments;
+    }
+
+    public File getExcerptListAttachment() {
+        return excerptListAttachment;
+    }
+
+    public void setExcerptListAttachment(File excerptListAttachment) {
+        this.excerptListAttachment = excerptListAttachment;
     }
 
     public boolean isSentToPrivacyCommittee() {
@@ -171,12 +198,37 @@ public class RequestProperties {
         this.privacyCommitteeEmails = privacyCommitteeEmails;
     }
 
-    public String getExcerptListAttachmentId() {
-        return excerptListAttachmentId;
+    public List<File> getMedicalEthicalCommiteeApprovalAttachments() {
+        return medicalEthicalCommiteeApprovalAttachments;
     }
 
-    public void setExcerptListAttachmentId(String excerptListAttachmentId) {
-        this.excerptListAttachmentId = excerptListAttachmentId;
+    public void setMedicalEthicalCommiteeApprovalAttachments(
+            List<File> medicalEthicalCommiteeApprovalAttachments) {
+        this.medicalEthicalCommiteeApprovalAttachments = medicalEthicalCommiteeApprovalAttachments;
+    }
+
+    public ContactData getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(ContactData billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public String getChargeNumber() {
+        return chargeNumber;
+    }
+
+    public void setChargeNumber(String chargeNumber) {
+        this.chargeNumber = chargeNumber;
+    }
+
+    public String getReseachNumber() {
+        return reseachNumber;
+    }
+
+    public void setReseachNumber(String reseachNumber) {
+        this.reseachNumber = reseachNumber;
     }
     
 }

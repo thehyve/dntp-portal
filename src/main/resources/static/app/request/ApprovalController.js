@@ -39,46 +39,57 @@ angular.module('ProcessApp.controllers')
             }
 
             $scope.updateVote = function(request, value) {
+                $scope.dataLoading = true;
                 var vote = new ApprovalVote();
                 vote.value = value;
                 vote.processInstanceId = request.processInstanceId;
                 vote.$save(function(result) {
                     $scope.request.approvalVotes[$scope.globals.currentUser.userid] = result;
-                    //console.log('Updating vote');
+                    $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
+                    $scope.dataLoading = false;
                 });
             };
 
             $scope.addApprovalComment = function(request, body) {
+                $scope.dataLoading = true;
                 var comment = new ApprovalComment(body);
                 comment.processInstanceId = request.processInstanceId;
                 comment.$save(function(result) {
                     request.approvalComments.push(result);
                     $scope.approvalComment = {};
+                    $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = response.statusText;
+                    $scope.dataLoading = false;
                 });
             };
 
             $scope.updateApprovalComment = function(request, body) {
+                $scope.dataLoading = true;
                 var comment = new ApprovalComment(body);
                 comment.$update(function(result) {
                     var index = $scope.request.approvalComments.indexOf(body);
                     //console.log('Updating comment at index ' + index);
                     $scope.request.approvalComments[index] = result;
                     $scope.approval_comment_edit_visibility[comment.id] = 0;
+                    $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
+                    $scope.dataLoading = false;
                 });
             };
 
             $scope.removeApprovalComment = function(comment) {
+                $scope.dataLoading = true;
                 new ApprovalComment(comment).$remove(function(result) {
                     $scope.request.approvalComments.splice(
                         $scope.request.approvalComments.indexOf(comment), 1);
+                    $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
+                    $scope.dataLoading = false;
                 });
             };
 }]);

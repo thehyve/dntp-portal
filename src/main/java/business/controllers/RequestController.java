@@ -844,7 +844,11 @@ public class RequestController {
             // process list
             try {
                 InputStream input = fileService.getInputStream(attachment);
-                ExcerptList list = excerptListService.processExcerptList(input);
+                ExcerptList list = new ExcerptList();
+                list.setProcessInstanceId(id);
+                list.setPropertiesId(properties.getId());
+                list = excerptListService.save(list);
+                list = excerptListService.processExcerptList(list, input);
                 try {
                     input.close();
                 } catch (IOException e) {
@@ -852,7 +856,6 @@ public class RequestController {
                 }
                 // if not exception thrown, save list and attachment
                 properties.setExcerptListAttachment(attachment);
-                list.setProcessInstanceId(id);
                 log.info("Saving excerpt list.");
                 list = excerptListService.save(list);
                 log.info("Done.");

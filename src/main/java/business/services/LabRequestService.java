@@ -142,8 +142,9 @@ public class LabRequestService {
             columnNames.add(name);
         }
         list.setColumnNames(columnNames);
-        List<ExcerptEntryRepresentation> entries = new ArrayList<ExcerptEntryRepresentation>();
-        for (ExcerptEntry entry : excerptList.getEntryValues()) {
+        List<ExcerptEntryRepresentation> representations = new ArrayList<ExcerptEntryRepresentation>();
+        List<ExcerptEntry> entries = excerptList.getEntries();
+        for (ExcerptEntry entry : entries) {
             if (entry.isSelected() && entry.getLabNumber().equals(labNumber)) {
                 ExcerptEntryRepresentation representation = new ExcerptEntryRepresentation(
                         entry);
@@ -153,10 +154,10 @@ public class LabRequestService {
                 }
                 representation.setValues(values);
                 assert(representation.getPaNumber().equals(entry.getPaNumber()));
-                entries.add(representation);
+                representations.add(representation);
             }
         }
-        list.setEntries(entries);
+        list.setEntries(representations);
     }
 
     

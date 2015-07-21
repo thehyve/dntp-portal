@@ -1,11 +1,7 @@
 package business.models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,16 +10,20 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-@Entity
-public class ExcerptList implements Serializable {
+import business.exceptions.InvalidRow;
 
-    private static final long serialVersionUID = -3801412654264700878L;
+@Entity
+@Table(indexes = @Index(columnList="propertiesId"))
+public class ExcerptList {
 
     @Transient
     Log log = LogFactory.getLog(getClass());
@@ -32,10 +32,13 @@ public class ExcerptList implements Serializable {
     @GeneratedValue
     private Long id;
     
+    private Long propertiesId;
+    
     @Column(unique = true)
     private String processInstanceId;
 
     @Column(columnDefinition="TEXT")
+    //@Column(length = 32767)
     private String remark;
     
     @ElementCollection
@@ -48,8 +51,9 @@ public class ExcerptList implements Serializable {
     /**
      * Maps sequence numbers to entries.
      */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Map<Integer, ExcerptEntry> entries = new HashMap<Integer, ExcerptEntry>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="excerptListId")
+    @OrderBy("sequenceNumber ASC")
+    private List<ExcerptEntry> entries = new ArrayList<ExcerptEntry>();
 
     public ExcerptList() {
         
@@ -63,6 +67,14 @@ public class ExcerptList implements Serializable {
         this.id = id;
     }
     
+    public Long getPropertiesId() {
+        return propertiesId;
+    }
+
+    public void setPropertiesId(Long requestId) {
+        this.propertiesId = requestId;
+    }
+
     public String getProcessInstanceId() {
         return processInstanceId;
     }
@@ -141,32 +153,20 @@ public class ExcerptList implements Serializable {
     /**
      * Maps sequence numbers to entries.
      */
-    public Map<Integer, ExcerptEntry> getEntries() {
+    public List<ExcerptEntry> getEntries() {
         return entries;
     }
     
-    public Collection<ExcerptEntry> getEntryValues() {
-        return entries.values();
-    }
-
-    public void setEntries(Map<Integer, ExcerptEntry> entries) {
+    public void setEntries(List<ExcerptEntry> entries) {
         this.entries = entries;
     }
 
-    public class InvalidRow extends RuntimeException {
-        private static final long serialVersionUID = 4962263427071738791L;
-        
-        public InvalidRow(String message) {
-            super(message);
-        }
-        
-        public InvalidRow() {
-            super("Invalid row.");
-        }
-    }   
-    
     public void addEntry(ExcerptEntry entry) {
-        this.entries.put(this.entries.size(), entry);
+        synchronized (this.entries) {
+            entry.setExcerptListId(this.id);
+            entry.setSequenceNumber(this.entries.size() + 1);
+            this.entries.add(entry);
+        }
     }
     
     public ExcerptEntry addEntry(String[] data) {
@@ -187,20 +187,18 @@ public class ExcerptList implements Serializable {
                 entry.addValue(data[i]);
             }
         }
-        // not thread-safe, but that is not required here anyway.
-        entry.setSequenceNumber(this.entries.size() + 1);
-        this.entries.put(this.entries.size(), entry);
+        addEntry(entry);
         return entry;
     }
 
     public void deselectAll() {
-        for (ExcerptEntry entry: entries.values()) {
+        for (ExcerptEntry entry: entries) {
             entry.setSelected(false);
         }
     }
     
     public void selectAll() {
-        for (ExcerptEntry entry: entries.values()) {
+        for (ExcerptEntry entry: entries) {
             entry.setSelected(true);
         }
     }

@@ -96,9 +96,12 @@ angular.module('ProcessApp.controllers')
                 var elementId = '#excerpt_'+$scope.request.excerptList.entries[$scope.currentIndex].id;
                 if ($(elementId + ':not(:visible)')) {
                     //console.log('scroll to: ' + elementId);
-                    $('html, body').animate({
-                        scrollTop: $(elementId).offset().top - 100
-                    }, 200);
+                    var element = $(elementId);
+                    if (element) {
+                        $('html, body').animate({
+                            scrollTop: element.offset().top - 200
+                        }, 200);
+                    }
                 }
             };
 

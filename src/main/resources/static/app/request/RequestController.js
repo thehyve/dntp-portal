@@ -123,7 +123,6 @@ angular.module('ProcessApp.controllers')
                 }
             };
 
-            $scope.loadTestEnabled = $rootScope.globals.currentUser.username;
             var patt = /gijs(\+)?[a-zA-Z0-9]*@thehyve.nl/g;
             var result = patt.test($rootScope.globals.currentUser.username);
             //console.log('pattern: ' + patt.source + ', username: ' + $rootScope.globals.currentUser.username + ', match: ' + result);

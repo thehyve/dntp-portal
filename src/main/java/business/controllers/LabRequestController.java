@@ -120,8 +120,9 @@ public class LabRequestController {
         LabRequest labRequest = labRequestRepository.findOne(id);
         labRequest.setRejectReason(body.getRejectReason());
         labRequest.setRejectDate(new Date());
-        taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Rejected");
+        
+        labRequest = labRequestService.updateStatus(labRequest, "Rejected");
+        
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
         // complete task
@@ -144,10 +145,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/accept");
 
         LabRequest labRequest = labRequestRepository.findOne(id);
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
-        taskService.setVariableLocal(labRequest.getTaskId(),
-                "labrequest_status", "Approved");
+        labRequest = labRequestService.updateStatus(labRequest, "Approved");
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);

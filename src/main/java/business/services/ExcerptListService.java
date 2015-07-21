@@ -54,7 +54,10 @@ public class ExcerptListService {
     @Transactional
     public ExcerptListRepresentation findRepresentationByProcessInstanceId(String processInstanceId) {
         ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
-        return new ExcerptListRepresentation(excerptList);
+        ExcerptListRepresentation result = new ExcerptListRepresentation(excerptList);
+        List<ExcerptEntry> list = excerptList.getEntries();
+        result.setEntryList(list);
+        return result;
     }
     
     @Transactional
@@ -67,12 +70,11 @@ public class ExcerptListService {
         return excerptListRepository.save(list);
     }
     
-    public ExcerptList processExcerptList(InputStream input) {
+    public ExcerptList processExcerptList(ExcerptList list, InputStream input) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
         log.info("Processing excerpt list");
         try {
             CSVReader reader = new CSVReader(new InputStreamReader(input), ';', '"');
-            ExcerptList list = new ExcerptList();
             String [] nextLine;
             log.info("Column names.");
             if ((nextLine = reader.readNext()) != null) {
@@ -107,6 +109,7 @@ public class ExcerptListService {
             }
             reader.close();
             log.info("Added " + list.getEntries().size() + " entries.");
+            list = excerptListRepository.save(list);
             return list;
         } catch(IOException e) {
             throw new FileUploadError(e.getMessage());
@@ -165,7 +168,7 @@ public class ExcerptListService {
         Writer writer = new PrintWriter(out);
         CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
         csvwriter.writeNext(list.getCsvColumnNames());
-        for (ExcerptEntry entry: list.getEntryValues()) {
+        for (ExcerptEntry entry: list.getEntries()) {
             if (!selectedOnly || entry.isSelected()) {
                 csvwriter.writeNext(entry.getCsvValues());
             }

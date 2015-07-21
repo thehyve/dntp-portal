@@ -3,19 +3,25 @@ package business.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(indexes = @Index(columnList="excerptListId"))
 public class ExcerptEntry {
 
     @Id
     @GeneratedValue
     private Long id;
+    
+    private Long excerptListId;
     
     private Integer labNumber;
     
@@ -25,9 +31,10 @@ public class ExcerptEntry {
     
     private Boolean selected;
     
-    //@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ElementCollection
-    @Column(length = 32767)
+    //@Column(length = 32767)
+    @Column(columnDefinition="TEXT")
+    @CollectionTable(indexes = @Index(columnList="excerpt_entry_id"))
     private List<String> values = new ArrayList<String>();
 
     public ExcerptEntry() {
@@ -42,6 +49,14 @@ public class ExcerptEntry {
         this.id = id;
     }
     
+    public Long getExcerptListId() {
+        return excerptListId;
+    }
+
+    public void setExcerptListId(Long excerptListId) {
+        this.excerptListId = excerptListId;
+    }
+
     public Integer getLabNumber() {
         return labNumber;
     }

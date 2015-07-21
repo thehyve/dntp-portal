@@ -25,6 +25,7 @@ import business.models.ApprovalVoteRepository;
 import business.models.Comment;
 import business.models.ContactData;
 import business.models.ContactDataRepository;
+import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.File;
 import business.models.RequestProperties;
@@ -332,21 +333,27 @@ public class RequestFormService {
                 request.setDataAttachments(dataAttachments);
             
                 Date start = new Date();
-                ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
-                if (excerptList != null) {
-                    log.info("Set excerpt list.");
-                    request.setExcerptList(new ExcerptListRepresentation(excerptList));
-                    @SuppressWarnings("unchecked")
-                    Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
-                    Set<Integer> selectedLabSet = new TreeSet<Integer>();
-                    if (selectedLabs != null) {
-                        for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                if ("DataDelivery".equals(request.getStatus())) {
+                    ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
+                    if (excerptList != null) {
+                        log.info("Set excerpt list.");
+                        ExcerptListRepresentation excerptListRepresentation
+                            = new ExcerptListRepresentation(excerptList);
+                        List<ExcerptEntry> list = excerptList.getEntries();
+                        excerptListRepresentation.setEntryList(list);
+                        request.setExcerptList(excerptListRepresentation);
+                        @SuppressWarnings("unchecked")
+                        Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
+                        Set<Integer> selectedLabSet = new TreeSet<Integer>();
+                        if (selectedLabs != null) {
+                            for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                        }
+                        request.setSelectedLabs(selectedLabSet);
+                        request.setExcerptListRemark(excerptList.getRemark());
                     }
-                    request.setSelectedLabs(selectedLabSet);
-                    request.setExcerptListRemark(excerptList.getRemark());
+                    Date end = new Date();
+                    log.info("Fetching excerpt list took " + (end.getTime() - start.getTime()) + " ms.");
                 }
-                Date end = new Date();
-                log.info("Fetching excerpt list took " + (end.getTime() - start.getTime()) + " ms.");
             }
         }
     }

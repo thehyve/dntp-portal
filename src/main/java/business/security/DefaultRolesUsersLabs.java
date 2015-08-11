@@ -1,19 +1,26 @@
 package business.security;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import business.models.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import business.models.ContactData;
+import business.models.Lab;
+import business.models.LabRepository;
+import business.models.Role;
+import business.models.RoleRepository;
+import business.models.User;
+import business.models.UserRepository;
 import business.services.UserService;
 
 @Profile({"default", "dev", "test"})
@@ -37,6 +44,9 @@ public class DefaultRolesUsersLabs {
     @Autowired
     PasswordEncoder passwordEncoder;
     
+    @Autowired
+    private Environment env;
+    
     static final String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
     
     /**
@@ -51,6 +61,10 @@ public class DefaultRolesUsersLabs {
             if (role == null) {
                 role = roleRepository.save(new Role(r));
             }
+        }
+
+        if (env.acceptsProfiles("prod")) {
+            return;
         }
         
         log.warn("Creating default labs...");

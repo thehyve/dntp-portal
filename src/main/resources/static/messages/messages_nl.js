@@ -98,7 +98,7 @@ var messagesNL =
     Username: 'Gebruikersnaam',
     Login: 'Aanmelden',
     login: 'aanmelden',
-    logout: 'afmelden',
+    Logout: 'Afmelden',
     'Forgot Password' : 'Wachwoord vergeten',
     'Create an account' : 'Een account maken',
     'Bad credentials': 'Ongeldige logingegevens.',

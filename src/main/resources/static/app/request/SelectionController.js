@@ -106,6 +106,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.enableSpaceSelects = function() {
+                $(document).off('keydown.selection');
                 $(document).on('keydown.selection', function(e){
                     if(e.which === 40) { // down
                         //console.log('down: ' + $scope.request.excerptList.entries.length);

@@ -1,13 +1,13 @@
 package business.security;
 
-import business.models.Role;
-import business.models.User;
-import business.models.UserRepository;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,9 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import business.models.Role;
+import business.models.User;
+import business.models.UserRepository;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -33,9 +33,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Autowired
     PasswordEncoder passwordEncoder;

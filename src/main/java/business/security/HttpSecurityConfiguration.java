@@ -16,8 +16,11 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -49,6 +52,8 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
         public void onAuthenticationFailure(HttpServletRequest request,
                 HttpServletResponse response, AuthenticationException e)
                 throws IOException, ServletException {
+            log.error("Error: " + e.getMessage());
+            response.setContentType(MediaType.TEXT_PLAIN_VALUE);
             response.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         }
     };

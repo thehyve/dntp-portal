@@ -20,8 +20,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonName.$invalid && requestEditForm.contactPersonName.$dirty }">
                         <label class="control-label col-sm-3" for="contactPersonName">{{ 'Principal investigator' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" placeholder="{{ 'Principal investigator' | translate }}"
-                                   ng-model="request.contactPersonName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
+                            <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" 
+                                placeholder="{{ 'Principal investigator' | translate }}" title="{{ 'Principal investigator' | translate }}"
+                                ng-model="request.contactPersonName" ng-maxlength="100" 
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Principal investigator'|translate}}" data-trigger="focus" bs-popover 
+                                required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.required">
@@ -35,8 +38,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.pathologistName.$invalid && requestEditForm.pathologistName.$dirty }">
                         <label class="control-label col-sm-3" for="pathologistName">{{ 'Pathologist' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="pathologistName" name="pathologistName" placeholder="{{ 'Pathologist' | translate }}"
-                                   ng-model="request.pathologistName" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
+                            <input type="text" class="form-control" id="pathologistName" name="pathologistName" 
+                                placeholder="{{ 'Pathologist' | translate }}" title="{{ 'Pathologist' | translate }}"
+                                ng-model="request.pathologistName" ng-maxlength="100" 
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Pathologist'|translate}}" data-trigger="focus" bs-popover
+                                required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.pathologistName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.pathologistName.$error.required">
@@ -49,8 +55,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.pathologistEmail.$invalid && requestEditForm.pathologistEmail.$dirty }">
                         <label class="control-label col-sm-3" for="pathologistEmail"></label>
                         <div class="col-sm-8">
-                            <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail" placeholder="{{ 'Pathologist email' | translate }}"
-                                   ng-model="request.pathologistEmail" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
+                            <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail" 
+                                placeholder="{{ 'Pathologist email' | translate }}" title="{{ 'Pathologist email' | translate }}"
+                                ng-model="request.pathologistEmail" ng-maxlength="100"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Pathologist email'|translate}}" data-trigger="focus" bs-popover
+                                required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.required">
@@ -62,30 +71,37 @@
                         </div>
                     </div>
 
-                    <div class="form-group" ng-class="">
+                    <!-- Previous contact -->
+                    <div class="form-group" ng-mouseover="showPopover('previousContact')" ng-mouseleave="hidePopover('previousContact')">
                         <label class="control-label col-sm-3">
                             {{'Previous contact' | translate}}
                         </label>
-                        <div class="col-sm-8 form-control-static" >
+                        <div class="col-sm-8 form-control-static"
+                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Previous contact'|translate}}" data-trigger="manual" bs-show="popover.previousContact" bs-popover>
                             {{'Did you contact Palga previously?' | translate}}
                             &nbsp;
-                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact" >
+                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact" 
+                            ng-focus="showPopover('previousContact')" ng-blur="hidePopover('previousContact')">
                             <label class="normal" for="previousContactYes">{{'Yes' | translate}}</label>
                             &nbsp;
-                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);">
+                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);"
+                             ng-focus="showPopover('previousContact')" ng-blur="hidePopover('previousContact')">
                             <label class="normal" for="previousContactNo">{{'No' | translate}}</label>
                             <br>
                         </div>
                     </div>
 
-                    <!-- Previous contact -->
                     <!-- Previous contact description  -->
                     <div class="form-group" ng-show="request.previousContact"
                          ng-class="{ 'has-error' : requestEditForm.previousContactDescription.$invalid  && requestEditForm.previousContactDescription.$dirty }">
                         <label class="control-label col-sm-3" for="previousContactDescription"></label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" placeholder="{{ 'Description of previous contact' | translate }}"
-                                  ng-model="request.previousContactDescription" ng-required="request.previousContact"></textarea>
+                        <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" 
+                            placeholder="{{ 'Description of previous contact' | translate }}" title="{{ 'Description of previous contact' | translate }}"
+                            ng-model="request.previousContactDescription" 
+                            ng-required="request.previousContact"
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Description of previous contact'|translate}}" data-trigger="focus" bs-popover
+                            ></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required">
                                 {{ 'Required field' | translate }}
@@ -97,8 +113,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.requestTitle.$invalid || requestEditForm.requestTitle.$error.required) && requestEditForm.requestTitle.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Running title' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="requestTitle" name="requestTitle" placeholder="{{ 'Title' | translate }}"
-                                   ng-model="request.title" ng-maxlength="50" required>
+                            <input type="text" class="form-control" id="requestTitle" name="requestTitle" 
+                                placeholder="{{ 'Title' | translate }}" title="{{ 'Title' | translate }}"
+                                ng-model="request.title" ng-maxlength="50"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Title'|translate}}" data-trigger="focus" bs-popover 
+                                required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
@@ -109,8 +128,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.background.$invalid || requestEditForm.background.$error.required) && requestEditForm.background.$dirty }">
                         <label class="control-label col-sm-3" for="background">{{ 'Background' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="background" name="background" placeholder="{{ 'Background' | translate }}"
-                                  ng-model="request.background" required></textarea>
+                        <textarea type="text" class="form-control" id="background" name="background" 
+                            placeholder="{{ 'Background' | translate }}" title="{{ 'Background' | translate }}"
+                            ng-model="request.background" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Background'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
@@ -120,8 +142,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.researchQuestion.$invalid || requestEditForm.researchQuestion.$error.required) && requestEditForm.researchQuestion.$dirty }">
                         <label class="control-label col-sm-3" for="researchQuestion">{{ 'Research question' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" placeholder="{{ 'Research question' | translate }}"
-                                  ng-model="request.researchQuestion" required></textarea>
+                        <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" 
+                            placeholder="{{ 'Research question' | translate }}" title="{{ 'Research question' | translate }}"
+                            ng-model="request.researchQuestion" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Research question'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
@@ -131,8 +156,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.hypothesis.$invalid || requestEditForm.hypothesis.$error.required) && requestEditForm.hypothesis.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Hypothesis' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" placeholder="{{ 'Hypothesis' | translate }}"
-                                  ng-model="request.hypothesis" required></textarea>
+                        <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" 
+                            placeholder="{{ 'Hypothesis' | translate }}" title="{{ 'Hypothesis' | translate }}"
+                            ng-model="request.hypothesis" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Hypothesis'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
                         </div>
@@ -142,8 +170,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.methods.$invalid || requestEditForm.methods.$error.required) && requestEditForm.methods.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Methods' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="methods" name="methods" placeholder="{{ 'Methods' | translate }}"
-                                  ng-model="request.methods" required></textarea>
+                        <textarea type="text" class="form-control" id="methods" name="methods" 
+                            placeholder="{{ 'Methods' | translate }}" title="{{ 'Methods' | translate }}"
+                            ng-model="request.methods" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Methods'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.methods.$error.required">
                                 {{ 'Required field' | translate }}
@@ -152,22 +183,33 @@
                     </div>
 
                     <!--Request Type-->
-                    <div class="form-group">
-                        <label class="control-label col-sm-3">{{'Request type' | translate}}</label>
-                        <div class="col-sm-8">
-                            <input type="radio" ng-model="request.type" value="1" id="radio-numbers" >
+                    <div class="form-group"
+                        ng-mouseover="showPopover('requestType')" ng-mouseleave="hidePopover('requestType')">
+                        <label class="control-label col-sm-3">
+                            {{'Request type' | translate}}
+                        </label>
+                        <div class="col-sm-8"
+                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Request type'|translate}}" data-trigger="manual" bs-show="popover.requestType" bs-popover>
+                            <input name="requestType" type="radio" ng-model="request.type" value="1" id="radio-numbers" 
+                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-numbers">{{'Request for numbers only' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="2" id="radio-excerpts">
+                            <input name="requestType" type="radio" ng-model="request.type" value="2" id="radio-excerpts"
+                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-excerpts">{{'Request for excerpts' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA">
+                            <input name="requestType" type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA"
+                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-excerpts-PA">{{'Request for excerpts + PA reports' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials">
+                            <input name="requestType" type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials"
+                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-excerpts-materials">{{'Request for excerpts + materials' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials">
+                            <input name="requestType" type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials"
+                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-excerpts-PA-materials">{{'Request for excerpts + PA reports + materials' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="6" id="radio-PA">
+                            <input name="requestType" type="radio" ng-model="request.type" value="6" id="radio-PA"
+                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-PA">{{'Request for PA-reports only' | translate}}</label><br>
-                            <input type="radio" ng-model="request.type" value="7" id="radio-materials">
+                            <input name="requestType" type="radio" ng-model="request.type" value="7" id="radio-materials"
+                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-materials">{{'Request for materials only' | translate}}</label>
                         </div>
                     </div>
@@ -179,8 +221,11 @@
                         ng-class="{ 'has-error' : requestEditForm.address1.$invalid && requestEditForm.address1.$dirty }">
                         <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="address1" id="address1" placeholder="{{ 'Address' | translate }}"
-                            ng-model="request.billingAddress.address1" required>
+                            <input type="text" class="form-control" name="address1" id="address1" 
+                            placeholder="{{ 'Address' | translate }}" title="{{ 'Address' | translate }}"
+                            ng-model="request.billingAddress.address1" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Address'|translate}}" data-trigger="focus" bs-popover
+                            required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.address1.$error.required">
                                 {{ 'Required field' | translate }}
@@ -196,14 +241,20 @@
                             || (requestEditForm.city.$invalid && requestEditForm.city.$dirty) }">
                         <label class="control-label col-sm-3" for="postalcode">{{ 'Postal code' | translate }}, {{ 'City' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="postalcode" id="postalcode" placeholder="{{ 'Postal code' | translate }}"
-                            ng-model="request.billingAddress.postalCode" required>
+                            <input type="text" class="form-control" name="postalcode" id="postalcode" 
+                            placeholder="{{ 'Postal code' | translate }}" title="{{ 'Postal code' | translate }}"
+                            ng-model="request.billingAddress.postalCode" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Postal code'|translate}}" data-trigger="focus" bs-popover
+                            required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.postalcode.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
-                            <input type="text" class="form-control" name="city" id="city" placeholder="{{ 'City' | translate }}"
-                            ng-model="request.billingAddress.city" required>
+                            <input type="text" class="form-control" name="city" id="city" 
+                            placeholder="{{ 'City' | translate }}" title="{{ 'City' | translate }}"
+                            ng-model="request.billingAddress.city" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: City'|translate}}" data-trigger="focus" bs-popover
+                            required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.city.$error.required">
                                 {{ 'Required field' | translate }}
@@ -215,8 +266,11 @@
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="stateProvince">{{ 'Province' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="stateProvince" placeholder="{{ 'Province' | translate }}"
-                            ng-model="request.billingAddress.stateProvince" >
+                            <input type="text" class="form-control" id="stateProvince" 
+                            placeholder="{{ 'Province' | translate }}" title="{{ 'Province' | translate }}"
+                            ng-model="request.billingAddress.stateProvince" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Province'|translate}}" data-trigger="focus" bs-popover
+                            >
                         </div>
                     </div>
             
@@ -224,8 +278,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.billingEmail.$invalid && requestEditForm.billingEmail.$dirty }">
                         <label class="control-label col-sm-3" for="billingEmail">{{ 'E-mail' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="email" class="form-control" name="billingEmail" id="billingEmail" placeholder="{{ 'E-mail' | translate }}"
-                            ng-model="request.billingAddress.email" ng-maxlength="255">
+                            <input type="email" class="form-control" name="billingEmail" id="billingEmail" 
+                            placeholder="{{ 'E-mail' | translate }}" title="{{ 'E-mail' | translate }}"
+                            ng-model="request.billingAddress.email" ng-maxlength="255"
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: E-mail'|translate}}" data-trigger="focus" bs-popover
+                            >
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.billingEmail.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.billingEmail.$invalid && requestEditForm.billingEmail.$dirty">
@@ -239,8 +296,11 @@
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="telephone">{{ 'Telephone' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="telephone" placeholder="{{ 'Telephone' | translate }}"
-                            ng-model="request.billingAddress.telephone" >
+                            <input type="text" class="form-control" id="telephone" 
+                            placeholder="{{ 'Telephone' | translate }}" title="{{ 'Telephone' | translate }}"
+                            ng-model="request.billingAddress.telephone" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Telephone'|translate}}" data-trigger="focus" bs-popover
+                            >
                         </div>
                     </div>
                     
@@ -250,8 +310,11 @@
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.chargeNumber.$invalid && requestEditForm.chargeNumber.$dirty }">
                         <label class="control-label col-sm-3" for="chargeNumber">{{ 'Charge number' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="chargeNumber" name="chargeNumber" placeholder="{{ 'Charge number' | translate }}"
-                                   ng-model="request.chargeNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover" required>
+                            <input type="text" class="form-control" id="chargeNumber" name="chargeNumber" 
+                                placeholder="{{ 'Charge number' | translate }}" title="{{ 'Charge number' | translate }}"
+                                ng-model="request.chargeNumber" ng-maxlength="100"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Charge number'|translate}}" data-trigger="focus" bs-popover
+                                required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.required">
@@ -264,29 +327,36 @@
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.researchNumber.$invalid && requestEditForm.researchNumber.$dirty }">
                         <label class="control-label col-sm-3" for="researchNumber">{{ 'Research number' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="researchNumber" name="researchNumber" placeholder="{{ 'Research number' | translate }}"
-                                   ng-model="request.researchNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" bs-popover="popover">
+                            <input type="text" class="form-control" id="researchNumber" name="researchNumber" 
+                                placeholder="{{ 'Research number' | translate }}" title="{{ 'Research number' | translate }}"
+                                ng-model="request.researchNumber" ng-maxlength="100"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Research number'|translate}}" data-trigger="focus" bs-popover
+                                >
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.researchNumber.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
                         </div>
                     </div>
 
 
+                    <div ng-show="request.type != 1">
                     <h3>{{ 'Data Linkage' | translate }}</h3>
                     <hr>
 
-
                     <!-- Data Linkage -->
-                    <div class="form-group" ng-class="" ng-show="request.type != 1">
+                    <div class="form-group" ng-mouseover="showPopover('dataLinkage')" ng-mouseleave="hidePopover('dataLinkage')">
                         <label class="control-label col-sm-3">
                             {{'Data linkage' | translate}}
                         </label>
-                        <div class="col-sm-8">
-                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData" >
+                        <div class="col-sm-8"
+                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Data linkage'|translate}}" data-trigger="manual" bs-show="popover.dataLinkage" bs-popover>
+                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData" 
+                                ng-focus="showPopover('dataLinkage')" ng-blur="hidePopover('dataLinkage')">
                             <label class="normal" for="linkageWithPersonalDataYes">{{'Linkage with own or external personal data' | translate}}</label><br>
-                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);">
+                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);"
+                                ng-focus="showPopover('dataLinkage')" ng-blur="hidePopover('dataLinkage')">
                             <label class="normal" for="linkageWithPersonalDataNo">{{'No data linkage required' | translate}}</label><br>
                         </div>
+                    </div>
                     </div>
 
                     <!-- Data Linkage Notes  -->
@@ -294,8 +364,11 @@
                          ng-class="{ 'has-error' : requestEditForm.linkageWithPersonalDataNotes.$invalid  && requestEditForm.linkageWithPersonalDataNotes.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Data linkage notes' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes" placeholder="{{ 'Notes for linkage with personal data' | translate }}"
-                                  ng-model="request.linkageWithPersonalDataNotes" ng-required="request.linkageWithPersonalData"></textarea>
+                        <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes" 
+                            placeholder="{{ 'Notes for linkage with personal data' | translate }}" title="{{ 'Notes for linkage with personal data' | translate }}"
+                            ng-model="request.linkageWithPersonalDataNotes" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Notes for linkage with personal data'|translate}}" data-trigger="focus" bs-popover
+                            ng-required="request.linkageWithPersonalData"></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.linkageWithPersonalDataNotes.$error.required">
                                 {{ 'Required field' | translate }}
@@ -304,14 +377,18 @@
                     </div>
 
                     <!-- Informed Consent  -->
-                    <div class="form-group" ng-class="" ng-show="request.type != 1 && request.linkageWithPersonalData">
+                    <div class="form-group" ng-class="" ng-show="request.type != 1 && request.linkageWithPersonalData"
+                        ng-mouseover="showPopover('informedConsent')" ng-mouseleave="hidePopover('informedConsent')">
                         <label class="control-label col-sm-3" for="informedConsentYes">
                             {{'Informed consent' | translate}}
                         </label>
-                        <div class="col-sm-8">
-                            <input type="radio" id="informedConsentYes" name="informedConsent" ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);">
+                        <div class="col-sm-8"
+                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Informed consent'|translate}}" data-trigger="manual" bs-show="popover.informedConsent" bs-popover>
+                            <input type="radio" id="informedConsentYes" name="informedConsent" ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);"
+                                ng-focus="showPopover('informedConsent')" ng-blur="hidePopover('informedConsent')">
                             <label class="normal" for="informedConsentYes">{{'Yes' | translate}}</label><br>
-                            <input type="radio" id="informedConsentNo" name="informedConsent" ng-model="request.informedConsent" ng-value="false" ng-checked="!request.informedConsent">
+                            <input type="radio" id="informedConsentNo" name="informedConsent" ng-model="request.informedConsent" ng-value="false" ng-checked="!request.informedConsent"
+                                ng-focus="showPopover('informedConsent')" ng-blur="hidePopover('informedConsent')">
                             <label class="normal" for="informedConsentNo">{{'No' | translate}}</label>
                         </div>
                     </div>
@@ -321,8 +398,11 @@
                          ng-class="{ 'has-error' : requestEditForm.reasonUsingPersonalData.$invalid && requestEditForm.reasonUsingPersonalData.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Reason using personal data' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" placeholder="{{ 'Reason using personal data' | translate }}"
-                                  ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"  ng-required="(request.type != 1 && request.linkageWithPersonalData && !request.informedConsent)"></textarea>
+                        <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" 
+                            placeholder="{{ 'Reason using personal data' | translate }}" title="{{ 'Reason using personal data' | translate }}"
+                            ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent" 
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Reason using personal data'|translate}}" data-trigger="focus" bs-popover
+                            ng-required="(request.type != 1 && request.linkageWithPersonalData && !request.informedConsent)"></textarea>
                         <!-- errors -->
                         <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.required">
                             {{ 'Required field' | translate }}
@@ -360,7 +440,9 @@
                          ng-if="request.status=='Open' || (isPalga() && request.status=='Review')">
                         <div>
                             <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
-                            <span class="btn btn-default" flow-btn>{{'Upload file'|translate}}</span>
+                            <button class="btn btn-default" 
+                                data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Upload file'|translate}}" data-trigger="hover focus" bs-popover
+                                flow-btn>{{'Upload file'|translate}}</button>
                         </div>
                         <br>
                         <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
@@ -374,7 +456,7 @@
                     <h3>{{ 'Medical ethical committee approval' | translate }}</h3>
                     <hr>
 
-                    <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+                    <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
 
                     <ul class="list-group">
                         <li class="list-group-item" ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments">
@@ -411,7 +493,9 @@
                                             )">
                         <div>
                             <input type="file" flow-btn id="test-upload-attachment2" style="display:none" />
-                            <span class="btn btn-default" flow-btn>{{'Upload medical ethical committee approval'|translate}}</span>
+                            <button class="btn btn-default" 
+                                data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Upload medical ethical committee approval'|translate}}" data-trigger="hover focus" bs-popover
+                                flow-btn>{{'Upload medical ethical committee approval'|translate}}</button>
                         </div>
                         <br>
                         <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
@@ -517,6 +601,9 @@
                 </div> <!--end modal-body-->
 
                 <div class="modal-footer">
+                    <a id="cancel-new-request" class="btn btn-default pull-left" ng-click="cancel(request);">
+                        {{'Cancel'|translate}}
+                    </a>
                     <button id="submit-new-request" class="btn btn-warning" type="button"
                         ng-if="request.status=='Open'"
                         ng-click="submitRequest(request)"
@@ -554,9 +641,6 @@
                     </button>
                     <button class="btn btn-info" type="submit" ng-click="update(request);"
                             ng-disabled="requestEditForm.$invalid || dataLoading">{{'Save'|translate}}
-                    </button>
-                    <button id="cancel-new-request" class="btn btn-default" ng-click="cancel(request);">
-                        {{'Cancel'|translate}}
                     </button>
                 </div>
             </form>

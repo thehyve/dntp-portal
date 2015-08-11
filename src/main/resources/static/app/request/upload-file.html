@@ -71,9 +71,9 @@
         <br>
     </div>
 
-    <div ng-if="request.status == 'DataDelivery' 
+    <div ng-if="isExcerptSelectionState(request.status) 
         && (request.paReportRequest || request.materialsRequest) 
-        && request.excerptList && isRequester()"
+        && request.excerptList"
         ng-controller="SelectionController">
 
         <h3>{{'Excerpt Selection'|translate}}</h3>
@@ -84,7 +84,8 @@
              flow-files-submitted="$scope.excerptselection_upload_error = ''; $scope.fileupload_result = ''; $flow.upload()"
              flow-file-success="fileuploadsuccess(request, $message, true, $flow)"
              flow-file-error="fileuploaderror($message, true)"
-              >
+             ng-if="isRequester() && request.status=='DataDelivery'"
+            >
     
             <div class="alert alert-success" role="alert" ng-show="excerptselection_upload_result == 'success'">
                 {{ 'Excerpt selection file is uploaded. (' + lastUploadedFileName + ')'  | translate }}
@@ -94,11 +95,7 @@
                 {{ excerptselection_upload_error | translate }}
             </div>
     
-            <a ng-if="request.excerptList
-                      && (request.paReportRequest || request.materialsRequest)
-                      && isRequester()
-                      && request.status=='DataDelivery'
-                      " ng-href="/#/request/{{request.processInstanceId}}/selection" id="select-pa-numbers" class="btn btn-primary">
+            <a ng-href="/#/request/{{request.processInstanceId}}/selection" id="select-pa-numbers" class="btn btn-primary">
                 <i class="glyphicon glyphicon-edit"></i>
                 {{'Select PA numbers'|translate}}
             </a>
@@ -120,20 +117,21 @@
             
         </div>
     
-        <div>
-            <a class="btn btn-default pull-right" ng-href="/requests/{{request.processInstanceId}}/selection/csv"
-                id="attached-excerpt-list-2"
-                style="margin-left: 5px;">
+        <div ng-class="{ 'pull-right' : isRequester() && request.status=='DataDelivery' }">
+            <a class="btn btn-default" ng-href="/requests/{{request.processInstanceId}}/selection/csv"
+                id="attached-excerpt-list-2">
                 <i class="glyphicon glyphicon-download-alt"></i>
                 {{'Download selection' |translate }}
                 <span class="badge">{{(request.excerptList.entries | filter: {selected: true}).length}}</span>
             </a>
-            <span type="button" class="btn btn-primary pull-right" title="Submit"
+            <span type="button" class="btn btn-primary" title="Submit"
+                ng-if="isRequester() && request.status=='DataDelivery'"
                 ng-click="submitExcerptSelection(request)">
                 {{'Submit selection'|translate}}
             </span>
-            <p style="clear: both;"></p>
         </div>
+        <div class="clearfix"/>
+        <p style="clear: both;"></p>
     </div>
 
     <div ng-if="request.status == 'SelectionReview' && isPalga()">

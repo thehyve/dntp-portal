@@ -643,19 +643,43 @@ angular.module('ProcessApp.controllers')
             };
             
             $scope.isPalga = function() {
-                return $scope.globals.currentUser.roles.indexOf('palga') != -1;
+                return $scope.globals.currentUser.roles.indexOf('palga') !== -1;
             };
 
             $scope.isRequester = function() {
-                return $scope.globals.currentUser.roles.indexOf('requester') != -1;
+                return $scope.globals.currentUser.roles.indexOf('requester') !== -1;
             };
             
             $scope.isScientificCouncil = function() {
-                return $scope.globals.currentUser.roles.indexOf('scientific_council') != -1;
+                return $scope.globals.currentUser.roles.indexOf('scientific_council') !== -1;
             };
 
             $scope.isLabuser = function() {
-                return $scope.globals.currentUser.roles.indexOf('lab_user') != -1;
-            }
+                return $scope.globals.currentUser.roles.indexOf('lab_user') !== -1;
+            };
             
+            $scope.excerptSelectionStates = [
+                'DataDelivery',
+                'SelectionReview',
+                'LabRequest'
+            ];
+            $scope.isExcerptSelectionState = function(state) {
+                return $scope.excerptSelectionStates.indexOf(state) !== -1;
+            };
+            
+            $scope.popover = {
+                previousContact: false,
+                requestType: false,
+                dataLinkage: false,
+                informedConsent: false
+            };
+            
+            $scope.showPopover = function(name) {
+                $scope.popover[name] = true;
+            };
+
+            $scope.hidePopover = function(name) {
+                $scope.popover[name] = false;
+            };
+
 }]);

@@ -257,13 +257,23 @@ public class SelectionController {
         excerptList = excerptListService.save(excerptList);
         
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
-        User palgaUser = userService.findOne(Long.valueOf(task.getAssignee()));
+        User palgaUser = null;
+        try {
+            Long palgaUserId = Long.valueOf(task.getAssignee());
+            palgaUser = userService.findOne(palgaUserId);
+        } catch (NumberFormatException e) {
+            ///
+        }
+        
         if (task.getDelegationState()==DelegationState.PENDING) {
             taskService.resolveTask(task.getId());
         }
         taskService.complete(task.getId());
 
-        requestService.claimCurrentPalgaTask(id, palgaUser);
+        // claim next task
+        if (palgaUser != null) {
+            requestService.claimCurrentPalgaTask(id, palgaUser);
+        }
         
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();

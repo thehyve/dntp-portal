@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -174,6 +175,13 @@ public class RequestFormService {
         }
         
     }
+    
+    private static Set<String> excerptListStatuses = new HashSet<String>();
+    {
+        excerptListStatuses.add("DataDelivery");
+        excerptListStatuses.add("SelectionReview");
+        excerptListStatuses.add("LabRequest");
+    }
 
     @Transactional
     public void transferData(HistoricProcessInstance instance, RequestRepresentation request, User currentUser) {
@@ -333,7 +341,7 @@ public class RequestFormService {
                 request.setDataAttachments(dataAttachments);
             
                 Date start = new Date();
-                if ("DataDelivery".equals(request.getStatus())) {
+                if (excerptListStatuses.contains(request.getStatus())) {
                     ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
                     if (excerptList != null) {
                         log.info("Set excerpt list.");

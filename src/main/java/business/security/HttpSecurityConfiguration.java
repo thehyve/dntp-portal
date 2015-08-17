@@ -78,12 +78,11 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/",
+                        "/robots.txt",
                         "/public/labs/**",
                         "/password/request-new",
                         "/password/reset",
                         "/index.html",
-                        "/login.html",
-                        "/registration.html",
                         "/bower_components/**",
                         "/app/**",
                         "/messages/**",

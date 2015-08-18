@@ -4,7 +4,7 @@
         <!--Side Bar-->
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li class="active"><a href="#/">View</a></li>
+                <li class="active"><a href="#/">{{'View'|translate}}</a></li>
             </ul>
         </div>
 
@@ -88,7 +88,7 @@
             <div class="row">
                 <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
                 <p class="col-sm-7">
-                    {{request.status}}
+                    {{request.status |translate}}
                     <br>
                 </p>
             </div>
@@ -273,8 +273,8 @@
                     <br>
                     (<em><span ng-if="request.linkageWithPersonalData">{{ 'Linkage with own or external personal data.' |
                     translate }}</span><span
-                    ng-if="!request.linkageWithPersonalData">{{ 'No data linkage required.' |
-                    translate }}</span></em>)
+                    ng-if="!request.linkageWithPersonalData">{{ 'No data linkage required' |
+                    translate }}</span>.</em>)
                 </div>
             </div>
 

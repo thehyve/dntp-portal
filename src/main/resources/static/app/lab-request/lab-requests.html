@@ -35,7 +35,7 @@
                 <table st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
                     <thead>
                         <tr>
-                            <th st-sort="labRequestCode">{{'Lab Request ID' | translate}}</th>
+                            <th st-sort="labRequestCode">{{'Lab request ID' | translate}}</th>
                             <th st-sort="request.title">{{'Request title' | translate}}</th>
                             <th st-sort="requesterName">{{'Requester' | translate}}</th>
                             <th st-sort="lab.name">{{'Lab' | translate}}</th>
@@ -46,16 +46,16 @@
                             <th>&nbsp;</th>
                         </tr>
                         <tr>
-                            <th><input st-search="labRequestCode" placeholder="Filter by id" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
                             <!--<th>&nbsp;</th>-->
-                            <th><input st-search="request.title" placeholder="Filter by Request Title" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="lab.name" placeholder="Filter by Lab" class="input-sm form-control" type="search"/></th>
-                            <!--<th><input st-search="dateCreated" placeholder="Filter by Date" class="input-sm form-control" type="search"/></th>-->
+                            <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <!--<th><input st-search="dateCreated" placeholder="Filter by date" class="input-sm form-control" type="search"/></th>-->
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
-                            <th><input st-search="status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
+                            <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th>&nbsp;</th>
                         </tr>
                         <tr>
@@ -90,7 +90,7 @@
                             {{labRequest.pathologyCount}}
                         </td>
                         <td>
-                            {{labRequest.status}}
+                            {{labRequest.status | translate}}
                         </td>
                         <td>
                             <span class="pull-right">

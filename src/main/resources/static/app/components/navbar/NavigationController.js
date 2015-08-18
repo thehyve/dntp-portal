@@ -78,12 +78,14 @@ angular.module('ProcessApp.controllers')
                     $scope.currentLanguage = langKey;
                     $cookieStore.put('lang', $scope.currentLanguage);
                     $translate.use(langKey);
+                    bootbox.setDefaults({locale: langKey});
                 }
             };
 
             $scope.currentLanguage = $cookieStore.get('lang');
             if ($scope.currentLanguage) {
                 $translate.use($scope.currentLanguage);
+                bootbox.setDefaults({locale: $scope.currentLanguage});
             } else {
                 $scope.changeLanguage($translate.use());
             }

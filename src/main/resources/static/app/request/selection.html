@@ -19,7 +19,7 @@
             ng-repeat="excerpt in request.excerptList.entries track by excerpt.id"
             id="excerpt_{{excerpt.id}}">
             <h4 class="list-group-item-heading">
-                Excerpt {{excerpt.values[0]}}
+                {{'Excerpt'|translate}} {{excerpt.values[0]}}
                 &nbsp;
                 <i ng-if="excerpt.selected" class="glyphicon glyphicon-check"></i>
                 <span class="pull-right">
@@ -65,7 +65,7 @@
     <button type="button" class="btn btn-primary" title="Submit"
         ng-click="submitExcerptSelection(request)"
         >
-        Submit selection
+        {{'Submit selection'|translate}}
     </button>
     </div>
 

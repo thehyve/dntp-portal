@@ -13,7 +13,7 @@
                         {{ error }}
                     </div>
 
-                    <h3>{{'General Details' |translate}}</h3>
+                    <h3>{{'General details' |translate}}</h3>
                     <hr>
 
                     <!-- Principal Investigator -->
@@ -422,11 +422,11 @@
                             <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
                             <span class="pull-right">
                             <span class="btn-group">
-                                <button class="btn btn-default" type="button" title="Delete"
+                                <button class="btn btn-default" type="button" title="{{'Delete'|translate}}"
                                         ng-click="removeFile(file)"
                                         ng-if="request.status=='Open' || (isPalga() && request.status=='Review')"
                                         >
-                                    Delete
+                                    {{'Delete'|translate}}
                                 </button>
                             </span>
                             </span>
@@ -463,7 +463,7 @@
                             <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
                             <span class="pull-right">
                             <span class="btn-group">
-                                <button class="btn btn-default" type="button" title="Delete"
+                                <button class="btn btn-default" type="button" title="{{'Delete'|translate}}"
                                         ng-click="removeMECFile(file)"
                                         ng-if="isRequester() && (
                                             request.status=='Open' 
@@ -473,7 +473,7 @@
                                             || request.status=='SelectionReview'
                                             )"
                                         >
-                                    Delete
+                                    {{'Delete'|translate}}
                                 </button>
                             </span>
                             </span>

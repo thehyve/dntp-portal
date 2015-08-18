@@ -4,20 +4,25 @@ var messagesNL =
     /* Global    */
     /* ========= */
 
-    'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
+    'DNTP' : 'DNTP', 
+    'DNTP &mdash; Dutch National Tissuebank Portal' : 'DNTP &mdash; Dutch National Tissuebank Portal',
+    'PALGA' : 'PALGA',
     'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
-    'Loading': 'Laden',
+    'There was a problem logging in.' : 'Er is een probleem met inloggen.',
     'Passwords must be at least 8 characters long': 'Wachtwoorden moeten minstens 8 tekens lang zijn',
     'No lab associated with lab user.' : 'Deze gebruiker is niet verbonden aan een lab.',
     'Search' : 'Zoeken',
-	'Lab requests' : 'Labverzoeken',
-	'About' : 'Over',
-	'Gebruikersnaam:' : 'E-mailadres',
-	'Users' : 'Gebruikersbeheer',
-	'Labs' : 'Laboratoriumbeheer',
-		
- 
-
+    'Lab requests' : 'Labverzoeken',
+    'About' : 'Over',
+    'Username' : 'E-mailadres', 
+    'Users' : 'Gebruikersbeheer',
+    'Labs' : 'Laboratoriumbeheer',
+    'Passwords must be at least 8 characters long': 'Wachtwoorden moeten minstens 8 tekens lang zijn',
+    'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
+    'Thank you' : 'Bedankt',
+    'Registration is successful and confirmation email should be sent to' : 'Registratie succesvol afgerond, activatie link gestuurd naar', 
+    'Account activation' : 'Account activatie',
+    'Your account has been successfully activated' : 'Account succesvol geactiveerd!',
 
     /* ========= */
     /* Request   */
@@ -33,7 +38,7 @@ var messagesNL =
 	'Billing information': 'Facturatiedetails',
     'Charge number': 'Kostenplaats',
     'Research number': 'Onderzoeksnummer',
-	'Previous contact': 'Aanvraag details',
+	'Previous contact': 'Vorig contact',
     'Did you contact Palga previously?': 'Heeft u contact gehad met PALGA over deze aanvraag?',
     'Description of previous contact': 'Beschrijf het contact',
 	'Yes': 'Ja',
@@ -46,15 +51,15 @@ var messagesNL =
     'Request type': 'Aanvraagtype',
     
 	'Request for numbers only' : 'Getallen PALGA-database (OZV)',
-	'Request for excerpts' : 'Request for excerpts (LZV=Landelijke zoekvraag)',
+	'Request for excerpts' : 'Request for excerpts (LZV = Landelijke zoekvraag)',
     'Request for excerpts + PA reports' : 'Excerpten en complete PA-verslagen',
     'Request for excerpts + materials' : 'Excerpten en materiaal',
     'Request for excerpts + PA reports + materials' : 'Excerpten en complete pathologie rapporten en materiaal',
-    'Request for PA-reports only' : 'Alleen PA verslagen',
+    'Request for PA-reports only' : 'Alleen PA-verslagen',
     'Request for materials only' : 'Alleen materiaal aanvragen',
 
 	'Request_Type_1' : 'Getallen PALGA-database (OZV)',
-	'Request_Type_2' : 'Request for excerpts (LZV=Landelijke zoekvraag)',
+	'Request_Type_2' : 'Request for excerpts (LZV = Landelijke zoekvraag)',
     'Request_Type_3' : 'Excerpten en complete PA-verslagen',
     'Request_Type_4' : 'Excerpten en materiaal',
     'Request_Type_5' : 'Excerpten en complete pathologierapporten en materiaal',
@@ -62,6 +67,7 @@ var messagesNL =
     'Request_Type_7' : 'Alleen materiaal aanvragen',
 
     'Upload file': 'Upload bestand(en)',
+    'drag and drop your file here': 'sleep bestanden hierheen',
     'No attachment found.': 'Nog geen attachments geüpload.',
     'Medical ethical committee approval': 'METC toetsing',
     'Upload medical ethical committee approval': 'Upload METC-toetsing',
@@ -69,6 +75,21 @@ var messagesNL =
 	'Save' : 'Opslaan',
 	'Cancel' : 'Annuleren',
 	'Are you sure you want to submit the request? After submission the request cannot be edited anymore.': 'Weet u zeker dat u deze aanvraag wil indienen? Na het indienen van een aanvraag is het niet mogelijk deze nog te wijzigen.',
+	'Are you sure you want to delete file ?' : 'Weet u zeker dat u het bestand {{name}} wilt verwijderen?', 
+	'File too large': 'Het bestand is te groot ({{mb_size}} MB). Het maximum is 10 MB.',
+	'Are you sure you want to approve the selection?<br>After approving, lab requests will be generated.' :
+	    'Weet u zeker dat u de selectie wilt goedkeuren?<br>Na goedkeuring worden labverzoeken aangemaakt.',
+	'Are you sure you want to delete request ?' : 'Weet u zeker dat u aanvraag {{id}} wilt verwijderen?',
+	'Are you sure you want to submit the request? After submission the request cannot be edited anymore.' :
+	    'Weet u zeker dat u de aanvraag wilt indienen? Na het indienen kan de aanvraag niet meer bewerkt worden.',
+    'Are you sure you want to submit the request for approval?' : 'Weet u zeker dat u de aanvraag voor goedkeuring wilt doorsturen?',
+    'Are you sure you want to finalise the request?' : 'Weet u zeker dat u de aanvraag wilt afronden?',
+    'Are you sure you want to close the request?<br>After closing, no data files can be added.' : 'Weet u zeker dat u de aanvraag wilt sluiten?<br>Na het sluiten kunnen geen bestanden worden toegevoegd.',
+    'Are you sure you want to reject the request?' : 'Weet u zeker dat u de aanvraag wilt afwijzen?',
+    'Please enter a reject reason:' : 'Reden van afwijzing:',
+    'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Data delivery.\'' : 
+        'Weet u zeker dat u de selectie wilt afwijzen?<br>' +
+        'Na afwijzing wordt de status veranderd naar \'Datauitgifte.\'',
 
 	'Checks by Palga' : 'Controles door PALGA uitgevoerd', 
 	'The requester has been checked and is valid.' : 'De identiteit van de aanvrager is vastgesteld/gecontrolleerd.',
@@ -79,23 +100,29 @@ var messagesNL =
 	'Agreement has been reached.' : 'Formulier ontvangen',
 	'Upload agreement files' : 'Upload handtekeningenformulier',
 	'Reject' : 'Afwijzen',
-	'Submit for approval' : 'Doorsturen naar WR',
+	'Submit for approval' : 'Doorsturen naar wetenschappelijke raad',
 	'No previous contact.' : 'Aanvrager heeft niet eerder contact gehad met betrekking tot deze aanvraag',
 	'Data linkage' : 'Koppeling met externe databronnen',
-	'No data linkage required.' : 'Geen koppelingen met externe data vereist.',
+	'No data linkage required' : 'Geen koppelingen met externe data vereist',
 	'Informed consent.' : 'Informed consent',
 	'Reason using personal data' : 'Reason using personal data',
 	'Notes' : 'Notities',
 	'Add note' : 'Notitie toevoegen',
 	'Edit request' : 'Aanvraag bewerken',
 	'Pathologist email' : '',
+	'General details': 'Algemene details',
 
+	'Votes' : 'Stemmen',
+	'Approval by the scientific council' : 'Beoordeling door de wetenschappelijke raad',
+	'Discussion' : 'Discussie',
+	'Update comment' : 'Opmerking bewerken',
+	'Add comment' : 'Opmerking plaatsen',
 
     /* ========= */
     /* Login     */
     /* ========= */
 
-    Username: 'Gebruikersnaam',
+    //Username: 'Gebruikersnaam',
     Login: 'Aanmelden',
     login: 'aanmelden',
     Logout: 'Afmelden',
@@ -195,30 +222,43 @@ var messagesNL =
     'Actions': 'Acties',
     'Details': 'Details',
     'Claim': 'Claim',
+    'Unclaim': 'Vrijgeven',
     'Edit': 'Bewerk',
     'Delete': 'Verwijder',
-    'Filter by Title': 'Filteren op Titel',
-    'Filter by Status': 'Filteren op Status',
-    'Filter by Requester': 'Filteren op Aanvrager',
-    'Filter by Asignee': 'Filteren op Gevolmachtigde',
+    'Filter by title': 'Filteren op titel',
+    'Filter by status': 'Filteren op status',
+    'Filter by requester': 'Filteren op aanvrager',
+    'Filter by assignee': 'Filteren op gevolmachtigde',
 	'Date assigned' : 'Toegekend op' ,
 	'Vote' : 'Stem(men)' ,
 
-
     /* ===================== */
-    /* Labrequest Overview			*/
+    /* Labrequest overview			*/
     /* ===================== */
 	'Request title' : 'Titel',
-	'Lab Request ID' : 'Lab aanvraag ID',
+	'Lab request ID' : 'Labverzoek ID',
 	'End date' : 'Einddatum',
 	'# PA numbers' : '# PA-nummers',
-	'Search ...' : 'Zoeken ...' ,
+	'Filter by id' : 'Filteren op ID',
+	'Filter by request title' : 'Filteren op titel',
+	'Filter by lab' : 'Filteren op lab',
 
 
+    /* ===================== */
+    /* Labrequest details          */
+    /* ===================== */
+	'Request details': 'Aanvraagdetails',
+	'Request ID': 'Aanvraag ID',
+	'Requester lab': 'Lab aanvrager',
+	'Sender lab': 'Versturend lab',
+	'Lab request code' : 'Labverzoekcode',
+	
+	
+	
     /* ===================== */
     /* User Overview			*/
     /* ===================== */
-	'Add User' : 'Gebruiker toevoegen', 
+	'Add user' : 'Gebruiker toevoegen', 
 	'Name' : 'Naam',
 	'Email' : 'E-mail',
 	'Role' : 'Rol',
@@ -231,6 +271,7 @@ var messagesNL =
     /* Add user   			*/
     /* ===================== */
 	'Edit user' : 'Bewerk gebruiker',
+	'Edit user ...' : 'Bewerk gebruiker {{username}}',
 	'Please complete all required fields.' : 'Alle velden invullen a.u.b.', 
 	'Repeat password' : 'Herhaal wachtwoord',	
 	'Lab' : 'Laboratorium',
@@ -241,20 +282,44 @@ var messagesNL =
     /* Sample overview		*/
     /* ===================== */
 
-	'PA-Number' : 'PA-Nummer',
+	'PA number' : 'PA-nummer',
+	'PA numbers' : 'PA-nummers',
 	'Samples' : 'Monsters',
-	'Lab request' : 'Lab aanvraag',
-	'Filter by Request Title' :  "Filter op  titel",
+	'Lab request' : 'Labverzoek',
+	'Filter by samples' : 'Filteren op monsters',
+	'Filter by PA number' : 'Filteren op PA-nummer',
 
 	/* ===================== */
     /* Sample overview		*/
     /* ===================== */
 	'Add lab' : 'Lab toevoegen',
-	'Add Lab' : 'Lab toevoegen',
+	'Edit lab' : 'Lab bewerken',
 	'Number' : 'Labnummer',
 	 
+	/* ===================== */
+	/* scientific council   */
+	/* ===================== */
+	'Accepted' : 'Instemmen',
+	'Rejected' : 'Afwijzen', 
+	'ACCEPTED' : 'Akkoord', 
+	'REJECTED' : 'Afgewezen', 
 
+	/* ===================== */
+	/* status       */
+	/* ===================== */
+    'Open' : 'Open',
+    'Review' : 'Beoordeling',
+	'Approval': 'Goedkeuring', 
+	'DataDelivery' : 'Datauitgifte', 
+	'SelectionReview' : 'Beoordeling selectie',
+	'LabRequest' : 'Verstuurd aan labs',
+	'Waiting for lab approval' : 'In afwachting beoordeling lab', //werkt niet, in laboverview en lab request details, en in samples overzicht
+	'Approved' : 'Goedgekeurd', //werkt niet in overzichten en details
+	'Sending' : 'Materiaal verstuurd', //werkt niet in overzichten en details ( lab verzoeken en samples )
+	'Received':'Ontvangen', //werkt niet 
+	'Returning' : 'Retour verzonden', //werkt ook niet :P
 	
+	'Download ...' : '{{filename}} downloaden',
 
     null : null
 };

@@ -2,12 +2,12 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
+                <span class="sr-only">{{'Toggle navigation'|translate}}</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" ng-href="#/">DNTP Portal</a>
+            <a class="navbar-brand" ng-href="#/">{{'DNTP'|translate}}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
@@ -34,7 +34,7 @@
 
             <ul ng-if="!authenticated" class="nav navbar-nav navbar-right">
                 <li><a href="" ng-click="login()" id="login"><span class="glyphicon glyphicon-log-in"></span>
-                    {{'login'|translate}}
+                    {{'Login'|translate}}
                 </a></li>
             </ul>
 

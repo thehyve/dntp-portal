@@ -89,8 +89,8 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.credentials = {
-                username: 'palga@dntp.thehyve.nl',
-                password: 'palga'
+                //username: 'palga@dntp.thehyve.nl',
+                //password: 'palga'
             };
 
             $scope.login = function() {

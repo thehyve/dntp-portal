@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @Component
@@ -37,4 +38,17 @@ public class CustomLoggingInterceptor extends HandlerInterceptorAdapter {
         return super.preHandle(request, response, handler);
     }
     
+    @Override
+    public void postHandle(HttpServletRequest request,
+            HttpServletResponse response, Object handler, ModelAndView model) throws Exception {
+        log.trace(String.format("%s\t%s\t%s\t%s\t%s\t%d", 
+                new Date(), 
+                request.getRemoteAddr(), 
+                request.getUserPrincipal() == null ? " - " : request.getUserPrincipal().getName(),
+                request.getMethod(),
+                request.getRequestURI(),
+                response.getStatus())
+                );
+        super.postHandle(request, response, handler, model);
+    }
 }

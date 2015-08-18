@@ -25,7 +25,7 @@
                     <span ng-if="vote.value=='ACCEPTED'"><i class="glyphicon glyphicon-ok-circle"></i></span>
                     <span ng-if="vote.value=='REJECTED'"><i class="glyphicon glyphicon-ban-circle"></i></span>
                     <span ng-if="vote.value=='NONE'"><i class="glyphicon glyphicon-question-sign"></i></span>
-                    {{vote.value}} &nbsp;
+                    {{vote.value | translate}} &nbsp;
                     <small ng-if="getName(vote.creator)">({{getName(vote.creator)}})</small>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                             ng-click="commentEditVisibility[comment.id] = 1">
                         <span><i class="glyphicon glyphicon-pencil"></i></span>
                     </button>
-                    <button class="btn btn-danger" type="button" title="Delete"
+                    <button class="btn btn-danger" type="button" title="{{'Delete'|translate}}"
                             ng-click="removeApprovalComment(comment)" ng-disabled="dataLoading">
                         <span><i class="glyphicon glyphicon-remove-circle"></i></span>
                     </button>

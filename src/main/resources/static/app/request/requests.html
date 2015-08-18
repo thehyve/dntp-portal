@@ -59,12 +59,12 @@
                     </tr>
                     <tr>
                         <th>&nbsp;</th>
-                        <th><input st-search="title" placeholder="Filter by Title" class="input-sm form-control" type="search"/></th>
-                        <th><input st-search="status" placeholder="Filter by Status" class="input-sm form-control" type="search"/></th>
+                        <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th>&nbsp;</th>
                         <th class="request-vote" ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1">&nbsp;</th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="requesterName" placeholder="Filter by Requester" class="input-sm form-control" type="search"/></th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="assigneeName" placeholder="Filter by Assignee" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1">&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>

@@ -44,7 +44,7 @@
                  <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && (isRequester() || isLabUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                    <span><i class="glyphicon glyphicon-download-alt"></i></span>
-                   Download panumbers_{{labRequest.id}}.csv
+                   {{'Download ...' |translate: {filename: 'panumbers_' + labRequest.id + '.csv'} }}
                    </a>
                  </span>
                 <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}
@@ -87,7 +87,7 @@
                 <hr>
                 <!--Lab Request Id-->
                 <div class="form-group">
-                  <label class="control-label col-md-2">{{ 'Lab Request Code' | translate }}</label>
+                  <label class="control-label col-md-2">{{ 'Lab request code' | translate }}</label>
                   <div class="col-md-10">
                     <p class="form-control-static"> {{labRequest.request.processInstanceId}}-{{labRequest.lab.number}} </p>
                   </div>
@@ -97,7 +97,7 @@
                 <div class="form-group no-print">
                   <label class="control-label col-md-2">{{ 'Status' | translate }}</label>
                   <div class="col-md-10">
-                    <p class="form-control-static" id="requestStatus"> {{labRequest.status}} </p>
+                    <p class="form-control-static" id="requestStatus"> {{labRequest.status | translate}} </p>
                   </div>
                 </div>
 
@@ -145,7 +145,7 @@
                 </div>
 
 
-                <h3 class="no-print"> {{'Request Details' | translate}} </h3>
+                <h3 class="no-print"> {{'Request details' | translate}} </h3>
                 <hr class="no-print">
 
                 <!--Parent request details-->
@@ -191,7 +191,7 @@
 
             <!-- Research Question -->
             <div class="form-group no-print">
-                <label class="control-label col-md-2">{{ ' Research question' | translate }}</label>
+                <label class="control-label col-md-2">{{ 'Research question' | translate }}</label>
                 <div class="col-md-10">
                 <p class="form-control-static">
                     {{labRequest.request.researchQuestion}}
@@ -244,12 +244,12 @@
 
                 <!--Requester lab Info-->
                 <div class="form-group">
-                  <label class="control-label col-md-2 no-print">{{ 'Requester Lab' | translate }}</label>
+                  <label class="control-label col-md-2 no-print">{{ 'Requester lab' | translate }}</label>
                   <label class="control-label col-md-2 print-only" ng-if="isLabUser()">{{ 'Delivery Address' | translate }}</label>
                   <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Sender Address' | translate }}</label>
                   <div class="col-md-10">
                     <p class="form-control-static">
-                      {{"Lab" | translate}} {{labRequest.requesterLab.number}} - {{labRequest.requesterLab.name}}
+                      {{'Lab' | translate}} {{labRequest.requesterLab.number}} - {{labRequest.requesterLab.name}}
                       <address ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
                     </p>
                   </div>
@@ -259,12 +259,12 @@
                   <!--Lab Info-->
                   <!--Displayed only to users with non lab user role-->
                   <div class="form-group">
-                        <label class="control-label col-md-2 no-print">{{ 'Sender Lab' | translate }}</label>
-                        <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Delivery Address' | translate }}</label>
+                        <label class="control-label col-md-2 no-print">{{ 'Sender lab' | translate }}</label>
+                        <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Delivery address' | translate }}</label>
                         <label class="control-label col-md-2 print-only" ng-if="isLabUser()">{{ 'Sender' | translate }}</label>
                         <div class="col-md-10">
                           <p class="form-control-static">
-                            {{"Lab" | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
+                            {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
                             <address ng-bind-html="labRequest.htmlLabAddress"></address>
                           </p>
                         </div>

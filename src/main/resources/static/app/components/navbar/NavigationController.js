@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('NavigationController',['$rootScope', '$scope', '$http', '$location', '$route', '$translate', '$cookieStore',
-        function ($rootScope, $scope, $http, $location, $route, $translate, $cookieStore) {
+    .controller('NavigationController',['$rootScope', '$scope', '$http', '$location', '$route', '$translate', '$cookies',
+        function ($rootScope, $scope, $http, $location, $route, $translate, $cookies) {
 
             $scope.$route = $route;
             
@@ -76,13 +76,14 @@ angular.module('ProcessApp.controllers')
                 if (_languages.indexOf(langKey) != -1) {
                     console.log('change language: ' + langKey);
                     $scope.currentLanguage = langKey;
-                    $cookieStore.put('lang', $scope.currentLanguage);
+                    $cookies.put('lang', $scope.currentLanguage);
+                    console.log($cookies.get('lang'));
                     $translate.use(langKey);
                     bootbox.setDefaults({locale: langKey});
                 }
             };
 
-            $scope.currentLanguage = $cookieStore.get('lang');
+            $scope.currentLanguage = $cookies.get('lang');
             if ($scope.currentLanguage) {
                 $translate.use($scope.currentLanguage);
                 bootbox.setDefaults({locale: $scope.currentLanguage});

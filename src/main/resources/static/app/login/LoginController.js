@@ -1,49 +1,23 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookieStore',
-        function ($scope, $http, $rootScope, $location, $cookieStore) {
+    .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookies',
+        function ($scope, $http, $rootScope, $location, $cookies) {
 
-
-
-            /**
-             * To authorize feature based on role
-             * @param role
-             */
-            function setCurrentUserAuthorizations (currentUser) {
-
-                // ========================================================================
-                // TODO This might something that're organized in the backend in the future
-                // ========================================================================
-                var globalFeatures = {
-                    HAS_MANAGE_OWN_LAB_PAGE_AUTH : 'HAS_MANAGE_OWN_LAB_PAGE_AUTH',
-                    HAS_MANAGE_LAB_PAGE_AUTH : 'HAS_MANAGE_LAB_PAGE_AUTH',
-                    HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
-                    HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH',
-                    HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH',
-                    HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH'
-                };
-
-                if (currentUser.roles[0] === 'palga') {
-                    currentUser.features.push();
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_USER_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
-                } else if (currentUser.roles[0] === 'lab_user') {
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_OWN_LAB_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
-                } else if (currentUser.roles[0] === 'requester') {
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
-                } else if (currentUser.roles[0] === 'scientific_council') {
-                    currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+            var _serialiseRoles = function(roles) {
+                if (!$.isArray(roles)) { 
+                    return ''; 
+                } else {
+                    return roles.join(',');
                 }
             }
 
+            var _storeUserdata = function(userdata) {
+                $cookies.put('userid', userdata.userid);
+                $cookies.put('username', userdata.username);
+                $cookies.put('roles', _serialiseRoles(userdata.roles));
+            }
+            
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
                     // console.log('Login succes: ' + JSON.stringify(data));
@@ -62,16 +36,16 @@ angular.module('ProcessApp.controllers')
                             currentUser: {
                                 userid: $rootScope.userid,
                                 username: $rootScope.username,
-                                credentials: $scope.credentials,
+                                //credentials: $scope.credentials,
                                 roles: $rootScope.roles,
                                 features : [],
                                 lab : null
                             }
                         };
 
-                        setCurrentUserAuthorizations($rootScope.globals.currentUser);
+                        $rootScope.setCurrentUserAuthorizations($rootScope.globals.currentUser);
 
-                        $cookieStore.put('globals', $rootScope.globals);
+                        _storeUserdata($rootScope.globals.currentUser);
 
                         if (data.authorities) {
                             for(var j in data.authorities) {

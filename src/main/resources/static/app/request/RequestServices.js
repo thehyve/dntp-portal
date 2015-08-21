@@ -283,7 +283,7 @@
         return {
             get_default: function(options) {
                 options.headers = function (file, chunk, isTest) {
-                    var csrftoken = $cookies['XSRF-TOKEN'];
+                    var csrftoken = $cookies.get('XSRF-TOKEN');
                     console.log('csrftoken: ' + csrftoken);
                     return {
                         'X-CSRFToken': csrftoken,

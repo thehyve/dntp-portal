@@ -63,7 +63,9 @@ angular.module('ProcessApp.controllers')
                     $location.path('/login');
                     $rootScope.authenticated = false;
                     $rootScope.globals = {};
-                    $cookieStore.remove('globals');
+                    $cookies.remove('userid');
+                    $cookies.remove('username');
+                    $cookies.remove('roles');
                 }).error(function(data) {
                     $rootScope.authenticated = false;
                     console.log('logout error', data);

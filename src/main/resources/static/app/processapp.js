@@ -92,17 +92,76 @@
 
         })
 
-        .run(['$rootScope', '$location', '$cookieStore', '$http',
-            function ($rootScope, $location, $cookieStore, $http) {
+        .run(['$rootScope', '$location', '$cookies', '$http',
+            function ($rootScope, $location, $cookies, $http) {
 
+                /**
+                 * To authorize feature based on role
+                 * @param role
+                 */
+                $rootScope.setCurrentUserAuthorizations = function(currentUser) {
+    
+                    // ========================================================================
+                    // TODO This might something that're organized in the backend in the future
+                    // ========================================================================
+                    var globalFeatures = {
+                        HAS_MANAGE_OWN_LAB_PAGE_AUTH : 'HAS_MANAGE_OWN_LAB_PAGE_AUTH',
+                        HAS_MANAGE_LAB_PAGE_AUTH : 'HAS_MANAGE_LAB_PAGE_AUTH',
+                        HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
+                        HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH',
+                        HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH',
+                        HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH'
+                    };
+    
+                    if (currentUser.roles[0] === 'palga') {
+                        currentUser.features.push();
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_USER_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
+                    } else if (currentUser.roles[0] === 'lab_user') {
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_OWN_LAB_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
+                    } else if (currentUser.roles[0] === 'requester') {
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                    } else if (currentUser.roles[0] === 'scientific_council') {
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                    }
+                }
+            
+                var _deserialiseRoles = function(text) {
+                    var result = text.split(',');
+                    console.log('split \'' + text + '\' into: ', result);
+                    return result;
+                }
+                
+                var _fetchUserdata = function() {
+                    var userid = $cookies.get('userid');
+                    if (!userid) { return null; }
+                    var userdata = {
+                        userid: userid,
+                        username: $cookies.get('username'),
+                        roles: _deserialiseRoles($cookies.get('roles')),
+                        features : [],
+                        lab : null
+                    };
+                    return userdata;
+                }
+            
                 // keep user logged in after page refresh
-                $rootScope.globals = $cookieStore.get('globals') || {};
+                var userdata = _fetchUserdata();
+                $rootScope.globals = userdata ? { currentUser: userdata } : {};
 
                 if ($rootScope.globals.currentUser) {
                     $rootScope.authenticated = true;
-                    $http.defaults.headers.common.Authorization = 'Basic ' + $rootScope.globals.currentUser.credentials;
+                    $rootScope.setCurrentUserAuthorizations($rootScope.globals.currentUser);
+                    //$http.defaults.headers.common.Authorization = 'Basic ' + $rootScope.globals.currentUser.credentials;
                 }
-
+                
                 $rootScope.$on('$locationChangeStart', function () {
                     // redirect to login page if not logged in
                   if (($location.path() !== '/login' &&

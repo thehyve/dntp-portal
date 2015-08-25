@@ -16,10 +16,16 @@
                                    'ngResource', 'ngRoute', 'ngCookies',
                                    'pascalprecht.translate', 'ngTagsInput',
                                    'smart-table', 'ngSanitize',
+                                   'angular-loading-bar',
                                    'ProcessApp.services',
                                    'ProcessApp.controllers',
                                    'ProcessApp.directives'])
-        .config(function($routeProvider, $translateProvider, $popoverProvider) {
+        .config(function(
+                $routeProvider, 
+                $translateProvider, 
+                $popoverProvider,
+                cfpLoadingBarProvider
+                ) {
 
             $routeProvider.when('/', {
                 templateUrl : 'app/request/requests.html',
@@ -83,6 +89,7 @@
                               .translations('nl', messagesNL);
             $translateProvider.preferredLanguage('en');
             $translateProvider.useSanitizeValueStrategy('escaped');
+            cfpLoadingBarProvider.includeSpinner = false;
 
             // default popover setting to have html friendly content
             angular.extend($popoverProvider.defaults, {

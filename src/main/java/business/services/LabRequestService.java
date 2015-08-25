@@ -284,7 +284,7 @@ public class LabRequestService {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
                 if (fetchDetails) {
-                    transferLabRequestDetails(representation, labRequest);
+                    transferLabRequestDetails(representation, labRequest, true);
                 }
                 representations.add(representation);
             }
@@ -295,7 +295,7 @@ public class LabRequestService {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
                 if (fetchDetails) {
-                    transferLabRequestDetails(representation, labRequest);
+                    transferLabRequestDetails(representation, labRequest, false);
                 }
                 representations.add(representation);
             }
@@ -315,7 +315,7 @@ public class LabRequestService {
                     LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                     transferLabRequestData(representation);
                     if (fetchDetails) {
-                        transferLabRequestDetails(representation, labRequest);
+                        transferLabRequestDetails(representation, labRequest, true);
                     }
                     representations.add(representation);
                 }
@@ -341,15 +341,19 @@ public class LabRequestService {
     }
 
     @Transactional
-    public void transferLabRequestDetails(LabRequestRepresentation representation) {
+    public void transferLabRequestDetails(LabRequestRepresentation representation, boolean fetchSamples) {
         LabRequest labRequest = labRequestRepository.findOne(representation.getId());
-        transferLabRequestDetails(representation, labRequest);
+        transferLabRequestDetails(representation, labRequest, fetchSamples);
     }
     
-    private void transferLabRequestDetails(LabRequestRepresentation representation, LabRequest labRequest) {
+    private void transferLabRequestDetails(LabRequestRepresentation representation, LabRequest labRequest, boolean fetchSamples) {
         List<PathologyRepresentation> pathologyList = new ArrayList<PathologyRepresentation>();
         for (PathologyItem item : labRequest.getPathologyList()) {
-            pathologyList.add(new PathologyRepresentation(item));
+            PathologyRepresentation pathology = new PathologyRepresentation(item);
+            if (fetchSamples) {
+                pathology.mapSamples(item);
+            }
+            pathologyList.add(pathology);
         }
         representation.setPathologyList(pathologyList);
         List<CommentRepresentation> commentList = new ArrayList<CommentRepresentation>();

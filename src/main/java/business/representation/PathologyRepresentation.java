@@ -20,7 +20,7 @@ public class PathologyRepresentation {
     public PathologyRepresentation(PathologyItem item) {
         this.id = item.getId();
         this.paNumber = item.getPaNumber();
-        this.samples = item.getSamples();
+        //this.samples = item.getSamples();
     }
     
     public Long getId() {
@@ -45,6 +45,10 @@ public class PathologyRepresentation {
 
     public void setSamples(List<String> samples) {
         this.samples = samples;
+    }
+    
+    public void mapSamples(PathologyItem item) {
+        this.samples = item.getSamples();
     }
     
 }

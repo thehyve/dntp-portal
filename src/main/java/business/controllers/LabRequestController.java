@@ -105,7 +105,7 @@ public class LabRequestController {
         LabRequest labRequest = labRequestRepository.findOne(id);
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
-        labRequestService.transferLabRequestDetails(representation);
+        labRequestService.transferLabRequestDetails(representation, true);
         labRequestService.transferExcerptListData(representation);
         return representation;
     }

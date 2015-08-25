@@ -32,7 +32,7 @@
                 <tr>
                     <th st-sort="labRequestCode">{{'Lab request' | translate}}</th>
                     <th st-sort="paNumber">{{'PA number' | translate}}</th>
-                    <th>{{'Samples' | translate}}</th>
+                    <th ng-if="!isPalga()">{{'Samples' | translate}}</th>
                     <th st-sort="status">{{'Status' | translate}}</th>
                     <th>{{'Actions' | translate}}</th>
                 </tr>
@@ -55,7 +55,7 @@
                         <a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestCode}}</a>
                     </td>
                     <td>{{pathology.paNumber}}</td>
-                    <td><tags-input
+                    <td ng-if="!isPalga()"><tags-input
                             on-tag-added="updatePathology(labRequest, pathology)"
                             on-tag-removed="updatePathology(labRequest, pathology)"
                             replace-spaces-with-dashes="false"

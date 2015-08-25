@@ -123,7 +123,7 @@ public class LargerExcerptListTests extends SelectionControllerTests {
                     new LabRequestRepresentation(labRequest);
             labRequestService.transferLabRequestData(labRequestRepresentation);
             labRequestService.transferExcerptListData(labRequestRepresentation);
-            labRequestService.transferLabRequestDetails(labRequestRepresentation);
+            labRequestService.transferLabRequestDetails(labRequestRepresentation, false);
             pathologyCount += labRequestRepresentation.getPathologyCount();
         }
         long pathologyCount2 = pathologyItemRepository.count();

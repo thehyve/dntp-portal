@@ -366,6 +366,14 @@ angular.module('ProcessApp.controllers')
                 return $rootScope.globals.currentUser.roles.indexOf('requester') !== -1;
             };
 
+            $scope.isPalga = function () {
+                if (!$rootScope.globals.currentUser) {
+                    $scope.login();
+                    return;
+                }
+                return $rootScope.globals.currentUser.roles.indexOf('palga') !== -1;
+            };
+            
             $scope.update = function (labRequest) {
                 var obj = {'paReportsSent': labRequest.paReportsSent};
                 Restangular.one('labrequests', labRequest.id)

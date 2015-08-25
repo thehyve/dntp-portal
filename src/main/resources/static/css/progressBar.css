@@ -1,0 +1,135 @@
+.progressBarForm {
+	width: 900px;
+	margin: 50px auto;
+	text-align: center;
+	position: relative;
+}
+
+.progressBarFormSequencing {
+	width: 100%;
+}
+
+.progressBarFormQc {
+	width: 100%;
+}
+
+.progressBarFormDnaIsolation {
+	width: 100%;
+}
+
+.progressBarFormShearing {
+	width: 100%;
+}
+
+.progressBarFormLibraryPrep {
+	width: 100%;
+}
+
+.progressBarForm fieldset {
+	background: white;
+	border: 0 none;
+	border-radius: 3px;
+	box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+	padding: 20px 30px;
+
+	box-sizing: border-box;
+	width: 80%;
+	margin: 0 10%;
+
+	/*stacking fieldsets above each other*/
+	position: absolute;
+}
+/*Hide all except first fieldset*/
+.progressBarForm fieldset:not(:first-of-type) {
+	display: none;
+}
+/*inputs*/
+.progressBarForm input, .progressBarForm textarea {
+	padding: 15px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	color: #2C3E50;
+	font-size: 13px;
+}
+
+/*progressbar*/
+.progressBar {
+	margin-bottom: 30px;
+	overflow: hidden;
+	/*CSS counters to number the steps*/
+	counter-reset: step;
+}
+.progressBar li {
+	list-style-type: none;
+	color: black;
+	text-transform: uppercase;
+	font-size: 11px;
+	float: left;
+	position: relative;
+}
+
+.progressWES li {
+	width: 16%;
+}
+
+.progressQc li {
+	width: 16%;
+}
+
+.progressDnaIsolation li {
+	width: 20%;
+}
+
+.progressShearing li {
+	width: 24%;
+}
+
+.progressLibraryPrep li {
+	width: 16%;
+}
+
+.progressSequencing li {
+	width: 16%;
+}
+
+.progressStandard li {
+	width: 20%;
+}
+
+.progressBar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 20px;
+	line-height: 20px;
+	display: block;
+	color: #333;
+	background: white;
+	border-radius: 3px;
+	border: 2px solid #777;
+	margin: 0 auto 5px auto;
+}
+/*progressbar connectors*/
+.progressBar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: #777;
+	position: absolute;
+	left: -50%;
+	top: 9px;
+	z-index: -1; /*put it behind the numbers*/
+}
+.progressBar li:first-child:after {
+	/*connector not needed before the first step*/
+	content: none;
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+.progressBar li.active:before,  .progressBar li.active:after{
+	background: #27AE60;
+	border: 1px solid #27AE60;
+	color: white;
+}

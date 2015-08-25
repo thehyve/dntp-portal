@@ -1,8 +1,20 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('AdminUserController',['$scope', '$modal', 'User', 'Role', 'UserRole', 'Lab',
-        function ($scope, $modal, User, Role, UserRole, Lab) {
+    .controller('AdminUserController',['$rootScope', '$scope', '$modal', '$location', 
+                                       'User', 'Role', 'UserRole', 'Lab',
+        function ($rootScope, $scope, $modal, $location, 
+                User, Role, UserRole, Lab) {
+
+            $rootScope.redirectUrl = $location.path();
+            
+            $scope.login = function () {
+                $location.path('/login');
+            };
+    
+            if (!$rootScope.globals.currentUser) {
+                $scope.login();
+            }
 
             $scope.error = '';
             $scope.accessDenied = false;
@@ -11,13 +23,13 @@ angular.module('ProcessApp.controllers')
             User.query().$promise.then(function(response) {
                 $scope.users = response ? response : [];
                 $scope.displayedCollection = [].concat($scope.users);
-            }, function(response) {
-                if (response.data) {
-                    $scope.error = $scope.error + response.data.message + '\n';
-                    if (response.data.status === 302 || response.data.status === 403) {
-                        $scope.accessDenied = true;
-                    }
+            }, function(err) {
+                if (err.status === 403) {
+                    $rootScope.errormessage = err.data.message;
+                    $scope.login();
+                    return;
                 }
+                $scope.error = err.data.message;
             });
 
             Role.query(function(response) {

@@ -1,20 +1,32 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('AdminLabController',['$scope', '$modal', 'Lab',
-        function ($scope, $modal, Lab) {
+    .controller('AdminLabController',['$rootScope', '$scope', '$location', '$modal', 'Lab',
+        function ($rootScope, $scope, $location, $modal, Lab) {
 
+            $rootScope.redirectUrl = $location.path();
+    
+            $scope.login = function () {
+                $location.path('/login');
+            };
+    
+            if (!$rootScope.globals.currentUser) {
+                $scope.login();
+            }
+        
             $scope.error = '';
             $scope.accessDenied = false;
             $scope.visibility = {};
 
             Lab.query(function(response) {
                 $scope.labs = response ? response : [];
-            }, function(response) {
-                $scope.error = $scope.error + response.data.message + '\n';
-                if (response.data.status === 302 || response.data.status === 403) {
-                    $scope.accessDenied = true;
+            }, function(err) {
+                if (err.status === 403) {
+                    $rootScope.errormessage = err.data.message;
+                    $scope.login();
+                    return;
                 }
+                $scope.error = err.data.message;
             });
 
             $scope.add = function() {

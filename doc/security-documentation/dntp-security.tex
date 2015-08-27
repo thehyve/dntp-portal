@@ -1,36 +1,51 @@
-\documentclass{report}
+\documentclass[a4paper]{report}
 
 \usepackage{prelude}
 
 \title{DNTP security requirements and testing plan}
 \begin{document}
+\maketitle
 
 \chapter{Security requirements}
 
 \section{Introduction}
-Scope limited to backend and infrastructure.
-The consequence of this is that possible vulnerabilities of the
-Angular frontend application are not considered.
-This means that an authorised user may use the application, which
-may leak the information the user is allows to access, or perform
-actions the user is allowed to perform. E.g., a cross-site scripting
-(XSS) attack scenario where a requester inserts Javascript code into
-a request, which is opened and run by the browser of a Palga user.
+
+Spring Boot and Angular offer out-of-the-box protection against SQL injection attacks, cross-site scripting attacks, and more.
+Spring Boot supports role-based permissions, such that, e.g., only administrators can add and edit user accounts. On top of that, we implemented data-driven access control: users should only be able to access and modify the requests that they own (have created) or are assigned to (e.g., PALGA employees, scientific council, etc.).
+We will use an SSL certificate for securing the communication between user and server.
+
+Possible vulnerabilities/attack scenario's, if the application is not properly secured, include:
+\begin{itemize}
+\item Someone gains access to the server and finds/accesses the database;
+\item Someone finds a vulnerability in Spring Boot/other libraries/our application and exploits it to get access to the data;
+\item Someone sets up a man-in-the-middle attack and can act to the system as the user whose connection is compromised;
+\item Someone acquires authentication credentials of a user (possibly the administrator) and can login and act as the user.
+\end{itemize}
+These and other vulnerabilities/attacks are within the scope of the OWASP Application Security Verification Standard (ASVS) standard. Compliance with the standard should address all of these issues.
+Still, a user may have exposed user credentials to an attacker (e.g., using the same password on a compromised system). Mitigation of such attacks (e.g., using cryptocards for authentication) is out of scope for this system. Included is, however, logging of user activity (enabling analysis of the damage when an intruder has been detected).
+
+We aim at compliance with level 2 of the OWASP Application Security Verification Standard (ASVS), 2014 version \cite{owasp2014:asvs}. Level 2 of the standard contains security verification requirements on several categories: authentication, session management, access control, malicious input handling, cryptography, error handling and logging, data protection, communications, HTTP, business logic, and files and resources.
+In the next section we summarise these requirements. In Chapter~\ref{chapter:measures}
+we describe the measures taken to meet those requirements and list the known weaknesses of the system.
+
+
 
 \section{Security guidelines}
 
-References:
-\begin{itemize}
+We aim at compliance with level 2 from the OWASP Application Security Verification Standard (ASVS) \cite{owasp2014:asvs}. We give a summary of the requirements below.
+OWASP also provides a security testing guide \cite{owasp2013:testing} and
+a Top 10 \cite{owasp2013:top10} of security risks. 
 
-\item OWASP security testing guide \cite{owasp2013:testing};
-\item Top 10 \cite{owasp2013:top10};
-\item Application Security Verification Standard (ASVS) \cite{owasp2014:asvs}.
-\end{itemize}
 
-From the OWASP ASVS we target at complience with Level 2. The detailed requirements
-in the standard \cite{owasp2014:asvs} apply here as well:
+\subsection{Application specific requirements}
+
+The client prioritises security of data over availability
+of the application.
+
+
+\subsection{Summary of security requirements from ASVS, level 2}
+
 \begin{description}
-
 \item[V2: Authentication] Requirements:
 \begin{itemize}
 \item Non-public pages require authentication (enforced server-side); 
@@ -55,9 +70,9 @@ only accept framework generated sessions; session tokens long enough and securel
 limited cookie domain);
 \item Logout links;
 \item No leaking of the session id in URLs;
-\item HttpOnly (?);
-\item Secure properties for session cookies (!);
-\item Disallow duplicate sessions for a user originating from different machines (?).
+\item HttpOnly (V3.14?);
+\item Secure properties for session cookies (V3.15);
+\item Disallow duplicate sessions for a user originating from different machines (V3.16).
 \end{itemize}
 
 \item[V4: Access Control] Requirements:
@@ -70,17 +85,15 @@ for which they have permission;
 \item Verify consistency of client-side and server-side access control;
 all access control enforced server-side;
 \item Access control rules and data not changeable by users (e.g., changing ownership of data);
-\item Logging of access control decisions (!).
+\item Logging of access control decisions;
 \item Strong random tokens against Cross-site Request Forgery (CSRF/XSRF);
-\item Aggregate access control protection  (V4.17), e.g., scraping by generating 
-a large sequence of requests (a possibly authenticated user looking for security holes);
+\item Aggregate access control protection (V4.17), e.g., scraping by generating 
+a large sequence of requests (a possibly authenticated user looking for security holes).
 \end{itemize}
-
-
 
 \item[V5: Malicious Input Handling] Requirements:
 \begin{itemize}
-\item No buffer overflow vulnerabilities (!);
+\item No buffer overflow vulnerabilities (V5.1);
 \item UTF8 specified for input;
 \item Input validation on server-side. Failure rejects input;
 \item Protection agains injection attacks (SQL, OS);
@@ -89,7 +102,7 @@ a large sequence of requests (a possibly authenticated user looking for security
 \item Protection against parameter pollution attacks (V5.18).
 \end{itemize}
 
-\item[V7: Cryptography at Rest]
+\item[V7: Cryptography at Rest] Requirements:
 \begin{itemize}
 \item Cryptography performed server-side;
 \item Cryptography functions fail securely;
@@ -99,94 +112,160 @@ XSRF tokens) generated by secure cryptographic functions;
 \item Policy for managing cryptographic keys (creating, distributing, revoking, expiry).
 \end{itemize}
 
-\item[V8: Error Handling and Logging] 
+\item[V8: Error Handling and Logging] Requirements:
 \begin{itemize}
 \item No logging of sensitive data, session id, personal details, credentials, stack traces;
 \item Logging implemented server-side, only on trusted devices;
-\item Error handling logic should deny access by default (e.g., throw exception which is not caught);
+\item Error handling logic should deny access by default (e.g., throw exception which is not caught).
 \end{itemize}
 
-
-\item[V9: Data Protection]
+\item[V9: Data Protection] Requirements:
 \begin{itemize}
+\item No client side caching, autocomplete features on sensitive fields;
+\item Sensitive data in body, not in URL parameters;
+\item \texttt{no-cache} and \texttt{no-store} Cache-Control headers for sensitive data (V9.4);
+\item Protection of cached data server side.
 \end{itemize}
 
-
-\item[V10: Communications Security]
+\item[V10: Communications Security] Requirements:
 \begin{itemize}
+\item Valid SSL certificate chain (V10.1);
+\item Use SSL for all connections (V10.3);
+\item SSL connection failures are logged (V10.4);
+\item Connections to external systems are authenticated (V10.6);
+\item Connections to external systems use an account with minimum privileges (V10.7).
 \end{itemize}
 
-
-\item[V11: HTTP Security]
+\item[V11: HTTP Security] Requirements:
 \begin{itemize}
+\item Only accept defined set of request methods;
+\item Response headers contain content type header with safe character set;
+\item Headers contain only printable ASCII characters (V11.6?);
+\item Use X-Frame-Options header to prevent clickjacking;
+\item Do not allow HTTP headers to be spoofed (V11.9?);
+\item Do not expose system information in HTTP headers.
 \end{itemize}
 
-
-\item[V13: Malicious Controls]
+\item[V15: Business Logic] Requirements:
 \begin{itemize}
+\item Business logic handled in a protected environment;
+\item Do not allow spoofing of actions as another user, e.g., hijacking another
+user's session, or spoofing a user id;
+\item Do not allow tampering high value parameters (prices, balances, etc.);
+\item Audit trail, system logs, monitoring of user activity;
+\item Protect against disclosure attacks, such as direct object reference, session brute force, etc.;
+\item Detection of and protection against brute force and denial of service attacks (V15.6);
+\item Access control to prevent elevation of prililege attacks;
+\item Process steps in correct order;
+\item Process steps taken in realistic human time 
+(V15.8: Won't verify, would require different setup for automated testing.);
+\item Business limits enforced, such as maximum number of requests.
 \end{itemize}
 
-\item[V15: Business Logic]
+\item[V16: Files and Resources] Requirements:
 \begin{itemize}
+\item URL redirects do not include unvalidated data;
+\item Canonise file names and paths;
+\item Files from untrusted sources scanned by antivirus scanner (V16.3: won't implement,
+client side concern);
+\item No untrusted parameters used in lookup of file locations;
+\item Parameters from untrusted sources canonicalised, input validated, output encoded
+to prevent file inclusion attacks (V16.5);
+\item Use X-Frame-Options header to prevent inclusion of arbitrary remote content;
+\item Files from untrusted sources (uploads) stored outside webroot;
+\item By default access to remote resources or systems is denied by the application;
+\item The application does not execute data from untrusted sources.
 \end{itemize}
-
-
-\item[V16: Files and Resources]
-\begin{itemize}
-\end{itemize}
-
-
-\item[V17: Mobile]
-\begin{itemize}
-\end{itemize}
-
-
 \end{description}
 
 
-\section{Specific requirements}
 
-Security of data more important than availability.
+\chapter{Security measures}\label{chapter:measures}
 
-Encrypting data.
+Most requirements are met by the built-in security of the Spring and Angular
+frameworks and by our server configuration. 
+In Section~\ref{section:implementation} we list the security measures that have been
+taken and cover most of the requirements. 
+In Section~\ref{section:issues} we list the open issues that need to be evaluated.
+In Section~\ref{section:testing} we list the tests that are being performed on
+code and deployment.
+Section~\ref{section:knownproblems} lists the known vulnerabilities.
 
-\chapter{Security measures}
 
-\section{Implementation and frameworks}
+\section{Implementation and frameworks}\label{section:implementation}
 
-Meassures taken:
+The measures that have been taken to secure the application:
 \begin{itemize}
 \item Spring security for authentication and authorization;
-\item Spring does CSRF prevention;
-\item \texttt{mod\_security} in Apache?
-\item Access to functionality in Spring routing;
+\item Spring and Angular prevent Cross-site request forgery (CSRF);
+\item Access to functionality is protected using Spring routing rules;
 \item Access to data in controller logic and using security annotations.
 \item Using JPA derived queries in the repository classes 
 (SQL queries are derived from interface method names), preventing SQL injection.
-\item Input sanitisation by Spring (and Angular?)
+\item Input sanitisation by Spring (and Angular).
 \end{itemize}
 
-Infrastructure:
+For securing the infrastructure:
 \begin{itemize}
-\item Application run in user space;
+\item Application is run in user space;
 \item Apache proxy in between, application not directly approachable;
-\item Only ports 80 and 443 open from the outside (firewall rules);
+\item Only ports 22, 80, and 443 open from the outside (firewall rules);
 \item On port 80, Apache should only forward to https (rewrite rule, 
-status 301 (Moved permanently)).
-\item Access log by Apache, logging all incoming requests (URIs, not data).
+status 301 (Moved permanently)) [TODO];
+\item \texttt{mod\_security} has been added to Apache;
+\item Access log by Apache, logging all incoming requests (URIs, not data),
+\texttt{mod\_security} and by the application.
 \end{itemize}
 
 
-\section{Security testing}
+\section{Open issues}\label{section:issues}
+
+There is a list of requirements for which it is not clear if the they are met and
+they are not included in the checks in the next section.
+
 \begin{itemize}
-\item Check logging of authentication decisions (!) and access to data.
+\item Blocking attacks that try multiple passwords and multiple accounts (V2.20);
+(\textit{Trying multiple passwords will result in blocking; trying multiple accounts not, but there won't be many accounts, so this is OK.})
+\item Possibility to disallow a number of previously chosen passwords (V2.25);
+(\textit{Actually, this requirement does not add security.})
+\item HttpOnly (V3.14);
+\item Secure properties for session cookies (V3.15);
+\item Disallow duplicate sessions for a user originating from different machines (V3.16);
+(\textit{Won't implement.})
+\item Aggregate access control protection  (V4.17), e.g., scraping by generating 
+a large sequence of requests (a possibly authenticated user looking for security holes);
+(\textit{Is not automatically detected. May be detected based on the logs.})
+\item No buffer overflow vulnerabilities (V5.1);
+\item Protect sensitive fields (e.g., role, passwords) from automatic binding (V5.17);
+(\textit{Should be provided by Spring and Angular}.)
+\item Protection against parameter pollution attacks (V5.18).
+(\textit{Should be provided by Spring and Angular}.)
+\item \texttt{no-cache} and \texttt{no-store} Cache-Control headers for sensitive data (V9.4);
+\item SSL connection failures are logged (V10.4);
+\item Headers contain only printable ASCII characters (V11.6); 
+(\textit{For cookies, this is enforced by \texttt{mod\_security}.})
+\item Do not allow HTTP headers to be spoofed (V11.9);
+\item Detection of and protection against brute force and denial of service attacks (V15.6);
+(\textit{Is not automatically detected. May be detected based on the logs.})
+\item Parameters from untrusted sources canonicalised, input validated, output encoded
+to prevent file inclusion attacks (V16.5);
+(\textit{Should be provided by Spring and Angular}.)
+\end{itemize}
+
+
+\section{Security testing}\label{section:testing}
+
+\subsection{Code checks}
+
+The analysis that has been done on code/application level:
+\begin{itemize}
 \item Security code review:
 \begin{itemize}
 \item Proper routes, method annotation on all REST controllers?
-\item How are user roles assigned? Who can change them?
+\item How are user roles assigned? Who can change them? Should only be administrators.
 \item No custom queries or all nicely prepared using prepared statements
 (JPA provides this);
-\item Check if user input is not used for:
+\item Check that user input is not used for:
 demermining filesystem paths, checking for access, determining user id or roles,
 database key in a query.%
 \footnote{A common error: checking access based on the \emph{id} in the url
@@ -198,29 +277,32 @@ but fetching the database object based on the \emph{id} in the request body.}
 \item Test for XSS attacks: try to insert HTML and Javascript in input fields;
 this should be handled automagically by Spring.
 \end{itemize}
-\item Penetration testing?
 \item Regularly check \url{https://pivotal.io/security} for vulnerabilities in Spring.
 \end{itemize}
 
 
-\section{Deployment checks}
-Disable dev/test behaviour:
+\subsection{Deployment checks}
+
+Disable dev/test behaviour on the production environment. 
+Checking this list is part of deployment to production.
 \begin{itemize}
-\item No default users (e.g., \texttt{palga} -- check startup log of application and user administration);
+\item Default users disabled (e.g., \texttt{palga} -- check startup log of application and user administration);
 \item No action \texttt{/test/clear/} available;
 \item Check account blocking period after $n$ failed login attempts.
 \item Check for SSL certificate, make sure key chain is secure and valid.
+\item Check that requests on port 80 are forwarded to https.
 \item Check that the database is not accessible (except from localhost) and passwords are properly set.
 \item Check that database password in the application configuration is not exposed (e.g., in \texttt{puppet}).
-\item Perhaps write a script that checks if the current deployment uses the newest versions of included frameworks?
+\item Perhaps, write a script that checks if the current deployment uses the newest versions of included frameworks.
 \end{itemize}
 
 
-\section{Known weaknesses}
+\section{Known weaknesses}\label{section:knownproblems}
+
 \begin{itemize}
-\item Information sent plain text by email:
-password recovery link.
+\item Information sent plain text by email: password recovery link.
 \end{itemize}
+
 
 \bibliographystyle{plain}
 %\bibliographystyle{alpha}

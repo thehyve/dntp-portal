@@ -289,7 +289,7 @@ Checking this list is part of deployment to production.
 \item Default users disabled (e.g., \texttt{palga} -- check startup log of application and user administration);
 \item No action \texttt{/test/clear/} available;
 \item Check account blocking period after $n$ failed login attempts.
-\item Check for SSL certificate, make sure key chain is secure and valid.
+\item Check for SSL certificate, make sure key chain is secure and valid. Check with: \url{https://www.ssllabs.com/ssltest/}.
 \item Check that requests on port 80 are forwarded to https.
 \item Check that the database is not accessible (except from localhost) and passwords are properly set.
 \item Check that database password in the application configuration is not exposed (e.g., in \texttt{puppet}).

@@ -6,11 +6,16 @@ import java.util.List;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(indexes = @Index(columnList="labRequestId"))
@@ -24,8 +29,10 @@ public class PathologyItem {
     
     String paNumber;
     
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(indexes = @Index(columnList="pathology_item_id"))
+    @Fetch(FetchMode.JOIN)
+    @BatchSize(size = 100)
     List<String> samples = new ArrayList<String>();
     
     public PathologyItem() {

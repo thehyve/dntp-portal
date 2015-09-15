@@ -184,10 +184,6 @@ public class LabRequestService {
         labRequestRepresentation.setEndDate(task.getEndTime());
         labRequestRepresentation.setAssignee(task.getAssignee());
 
-        // set pa number count
-        labRequestRepresentation.setPathologyCount(pathologyItemRepository.countByLabRequestId(labRequestRepresentation.getId()));
-        log.info("pathology count: " + labRequestRepresentation.getPathologyCount());
-        
         // set request data
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);
@@ -295,7 +291,7 @@ public class LabRequestService {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
                 if (fetchDetails) {
-                    transferLabRequestDetails(representation, labRequest, false);
+                    transferLabRequestDetails(representation, labRequest, true);
                 }
                 representations.add(representation);
             }

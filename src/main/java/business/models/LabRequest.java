@@ -8,6 +8,10 @@ import java.util.Map;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
 public class LabRequest {
 
@@ -16,6 +20,7 @@ public class LabRequest {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     private Lab lab;
 
     private String processInstanceId;
@@ -30,6 +35,7 @@ public class LabRequest {
     private Boolean isPaReportsSent;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @BatchSize(size = 100)
     List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
 
     private String rejectReason;
@@ -40,6 +46,8 @@ public class LabRequest {
 
     @OrderBy("timeCreated DESC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @BatchSize(size = 100)
     private List<Comment> comments = new ArrayList<Comment>();
 
     public LabRequest() {

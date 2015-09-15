@@ -68,7 +68,7 @@ public class LabRequestRepresentation {
         this.setTaskId(labRequest.getTaskId());
         this.setStatus(labRequest.getStatus());
         this.setLab(labRequest.getLab());
-        //this.pathologyCount = labRequest.getPathologyList().size();
+        this.pathologyCount = (long)labRequest.getPathologyList().size();
         this.setRejectDate(labRequest.getRejectDate());
         this.setSendDate(labRequest.getSendDate());
         this.setRejectReason(labRequest.getRejectReason());

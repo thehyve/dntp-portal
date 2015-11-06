@@ -1,5 +1,56 @@
 var messagesEN =
 {
+    /* ========= */
+    /* Global    */
+    /* ========= */
+
+    'DNTP' : 'PALGA', 
+    'DNTP &mdash; Dutch National Tissuebank Portal' : 'Research portal',
+    'PALGA' : 'PALGA',
+  
+    /* ========= */
+    /* Request   */
+    /* ========= */
+	'DNTP':'PALGA', 
+	'popover: Principal investigator': 'Principal investigator of this research project.',
+	'popover: Pathologist': 'Pathologist involved in this research project. ',
+	'popover: Pathologist email' : 'E-mail adres of the pathologist.',
+    'popover: Address': 'Address where the invoice should be sent to. ',
+	'popover: E-mail': 'e-mail.',
+	'popover: Province': 'Province.',
+	'popover: Charge number': 'Account where the project can be booked.',
+    'popover: Research number': 'Project number of Subsidy Grant.',
+    'Running title': 'Title.',
+	'popover: Title' : 'Title of the research project.',
+    'popover: Background': 'Project background.',
+    'popover: Research question': 'Research question.',
+    'popover: Hypothesis': 'Hypothesis',
+    'popover: Methods': 'Used techniques ( e.a. germline mutation analysis, moleculair techniques, immuno histochemistry, tissue micro array ). How many patients do you need (at least) to answer this research question?',
+	'popover: Request type': '',
+	'popover: Postal code': 'Postal code',
+	'popover: City': 'City',	
+	'popover: Address': 'Address',
+	'popover: Telephone': 'Telephone',
+	'popover: Previous contact' : '',
+	'popover: Description of previous contact': '',
+	'popover: Request type': 'Request type.',
+	'popover: Data linkage' : 'Linking information',
+	'popover: Notes for linkage with personal data' :  'Indicate the database you want us to link to ',
+	'popover: Reason using personal data': 'Reason for absence IC', 
+	'popover: Upload file' : 'Upload file.',
+	'popover: Upload medical ethical committee approval' : 'Upload medical ethical committee approval.',
+
+
+
+    null : null
+};
+
+
+
+/*
+
+var messagesEN =
+{
         'Username': 'Email address',
         'Bad credentials': 'Bad credentials.',
 
@@ -21,4 +72,5 @@ var messagesEN =
         'Request_Type_7' : 'Request for materials only',
 
         null: null
-};
+}; */
+

@@ -76,10 +76,14 @@
                         <label class="control-label col-sm-3">
                             {{'Previous contact' | translate}}
                         </label>
-                        <div class="col-sm-8 form-control-static"
-                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Previous contact'|translate}}" data-trigger="manual" bs-show="popover.previousContact" bs-popover>
+                        <div class="col-sm-6 form-control-static"
+                            data-placement="top-right" data-animation="am-flip-x" 
+                            data-content="{{'popover: Previous contact'|translate}}" 
+                            data-trigger="manual" bs-show="popover.previousContact" bs-popover
+                            title="{{'Previous contact' | translate}}"
+                            >
                             {{'Did you contact Palga previously?' | translate}}
-                            &nbsp;
+                            <br/>
                             <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact" 
                             ng-focus="showPopover('previousContact')" ng-blur="hidePopover('previousContact')">
                             <label class="normal" for="previousContactYes">{{'Yes' | translate}}</label>
@@ -183,13 +187,17 @@
                     </div>
 
                     <!--Request Type-->
-                    <div class="form-group"
-                        ng-mouseover="showPopover('requestType')" ng-mouseleave="hidePopover('requestType')">
+                    <div class="form-group">
                         <label class="control-label col-sm-3">
                             {{'Request type' | translate}}
                         </label>
-                        <div class="col-sm-8"
-                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Request type'|translate}}" data-trigger="manual" bs-show="popover.requestType" bs-popover>
+                        <div class="col-sm-6"
+                            ng-mouseover="showPopover('requestType')" ng-mouseleave="hidePopover('requestType')"
+                            data-placement="top-right" data-animation="am-flip-x" 
+                            data-content="{{'popover: Request type'|translate}}" 
+                            data-trigger="manual" bs-show="popover.requestType" bs-popover
+                            title="{{'Request type' | translate}}"
+                            >
                             <input name="requestType" type="radio" ng-model="request.type" value="1" id="radio-numbers" 
                                 ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
                             <label class="normal" for="radio-numbers">{{'Request for numbers only' | translate}}</label><br>

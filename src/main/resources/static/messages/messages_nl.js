@@ -4,7 +4,7 @@ var messagesNL =
     /* Global    */
     /* ========= */
 
-    'DNTP' : 'DNTP', 
+    'DNTP' : 'PALGA', 
     'DNTP &mdash; Dutch National Tissuebank Portal' : 'DNTP &mdash; Dutch National Tissuebank Portal',
     'PALGA' : 'PALGA',
     'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
@@ -27,44 +27,66 @@ var messagesNL =
     /* ========= */
     /* Request   */
     /* ========= */
-    'Principal investigator': 'Hoofdaanvrager',
+	'DNTP':'PALGA', 
+	'Principal investigator': 'Hoofdaanvrager',
+	'popover: Principal investigator': 'Hoofdaanvrager is de eindverantwoordelijk onderzoeker.',
+	'popover: Pathologist': 'De patholoog betrokken bij dit onderzoek. ',
 	'Pathologist': 'Patholoog',
+	'popover: Pathologist email' : 'Vul het e-mail adres van de betrokken patholoog in.',
     'Review': 'Beoordelen',
     'Postal code': 'Postcode',
+    'popover: Postal code': 'De postcode.',	
 	'City': 'Plaats',
+	'popover: City': 'De plaats.',	
     'Address': 'Adres',
+    'popover: Address': 'Postadres waar factuur naar verzonden mag worden. ',
     'Province': 'Provincie',
+    'popover: Province': 'De provincie.',		
+	'popover: E-mail': 'E-mail crediteurenadministratie.',
+	'popover: Telephone': 'Het telefoonnummer.',
 	'Billing address': 'Facturatieadres',
 	'Billing information': 'Facturatiedetails',
     'Charge number': 'Kostenplaats',
+    'popover: Charge number': 'Rekening waar het project op geboekt mag worden.',
     'Research number': 'Onderzoeksnummer',
+    'popover: Research number': 'Projectnummer van bijvoorbeeld subsidieverstrekker.',
 	'Previous contact': 'Vorig contact',
+	'popover: Previous contact' : 'Heeft u contact gehad met PALGA over deze aanvraag?',
     'Did you contact Palga previously?': 'Heeft u contact gehad met PALGA over deze aanvraag?',
-    'Description of previous contact': 'Beschrijf het contact',
+	'popover: Description of previous contact': 'Met wie heeft u contact gehad en wat is besproken?',
+    'Description of previous contact': 'Beschrijf het contact.',
 	'Yes': 'Ja',
     'No': 'Nee',
     'Running title': 'Onderzoekstitel',
+	'popover: Title' : 'De titel van het onderzoek.',
     'Background': 'Achtergrond',
+    'popover: Background': 'Achtergrond van het onderzoek.',
     'Research question': 'Onderzoeksvraag',
+    'popover: Research question': 'De onderzoeksvraag.',
     'Hypothesis': 'Hypothese',
+    'popover: Hypothesis': 'De hypothese.',
     'Methods': 'Methode',
-    'Request type': 'Aanvraagtype',
+    'popover: Methods': 'Welke technieken(bv Kiembaan mutatie analyse /moleculaire technieken,immuunhistochemie, tissue micro array enz.) worden gebruikt om tot beantwoording van de hypothese te komen? wat is het minimaal aantal patienten dat nodig is om deze vraag te kunnen beantwoorden?',
+    'Request type': 'Soort aanvraag',
+    'popover: Request type': 'Een excerpt is een samenvatting van het oorspronkelijke pathologie verslag en bevat onder meer de diagnoseregels en de conclusie van de patholoog. Zie voor verdere uitleg palga.nl.',
+
+
     
-	'Request for numbers only' : 'Getallen PALGA-database (OZV)',
-	'Request for excerpts' : 'Request for excerpts (LZV = Landelijke zoekvraag)',
+	'Request for numbers only' : 'Getallen PALGA-database',
+	'Request for excerpts' : 'Excerpten',
     'Request for excerpts + PA reports' : 'Excerpten en complete PA-verslagen',
     'Request for excerpts + materials' : 'Excerpten en materiaal',
-    'Request for excerpts + PA reports + materials' : 'Excerpten en complete pathologie rapporten en materiaal',
+    'Request for excerpts + PA reports + materials' : 'Excerpten, complete PA-verslagen en materiaal',
     'Request for PA-reports only' : 'Alleen PA-verslagen',
-    'Request for materials only' : 'Alleen materiaal aanvragen',
+    'Request for materials only' : 'Alleen materiaal',
 
-	'Request_Type_1' : 'Getallen PALGA-database (OZV)',
-	'Request_Type_2' : 'Request for excerpts (LZV = Landelijke zoekvraag)',
+	'Request_Type_1' : 'Getallen PALGA-database',
+	'Request_Type_2' : 'Excerpten',
     'Request_Type_3' : 'Excerpten en complete PA-verslagen',
     'Request_Type_4' : 'Excerpten en materiaal',
-    'Request_Type_5' : 'Excerpten en complete pathologierapporten en materiaal',
+    'Request_Type_5' : 'Excerpten, complete PA-verslagen en materiaal',
     'Request_Type_6' : 'Alleen PA-verslagen',
-    'Request_Type_7' : 'Alleen materiaal aanvragen',
+    'Request_Type_7' : 'Alleen materiaal',
 
     'Upload file': 'Upload bestand(en)',
     'drag and drop your file here': 'sleep bestanden hierheen',
@@ -101,15 +123,22 @@ var messagesNL =
 	'Upload agreement files' : 'Upload handtekeningenformulier',
 	'Reject' : 'Afwijzen',
 	'Submit for approval' : 'Doorsturen naar wetenschappelijke raad',
+	
 	'No previous contact.' : 'Aanvrager heeft niet eerder contact gehad met betrekking tot deze aanvraag',
-	'Data linkage' : 'Koppeling met externe databronnen',
-	'No data linkage required' : 'Geen koppelingen met externe data vereist',
-	'Informed consent.' : 'Informed consent',
-	'Reason using personal data' : 'Reason using personal data',
+	'Data linkage' : 'Koppeling',
+	'Linkage with own or external personal data':'Koppeling met eigen of externe data',
+	'No data linkage required' : 'Geen koppelingen met eigen of externe data',
+	'Informed consent' : 'Informed consent (IC)',
+	'Data linkage notes' : 'Koppelingsinformatie',
+	'popover: Data linkage' : 'Koppelingsinformatie',
+	'Notes for linkage with personal data' :  'Geef aan met welk bestand of welke organisatie u wilt koppelen.',
+	'popover: Notes for linkage with personal data' :  'Bijvoorbeeld uw eigen cohort, IKNL, DICA etc. ',	
+	'Reason using personal data' : 'Reden ontbreken IC',
+	'popover: Reason using personal data': 'Geef aan waarom u denk dat informed consent niet nodig is.', 
 	'Notes' : 'Notities',
 	'Add note' : 'Notitie toevoegen',
 	'Edit request' : 'Aanvraag bewerken',
-	'Pathologist email' : '',
+	'Pathologist email' : 'E-mail patholoog',
 	'General details': 'Algemene details',
 
 	'Votes' : 'Stemmen',
@@ -117,6 +146,9 @@ var messagesNL =
 	'Discussion' : 'Discussie',
 	'Update comment' : 'Opmerking bewerken',
 	'Add comment' : 'Opmerking plaatsen',
+	'popover: Upload file' : 'Upload alle relevante bijlagen. ',
+	'popover: Upload medical ethical committee approval' : 'Upload verklaring METC indien van toepassing.',
+
 
     /* ========= */
     /* Login     */
@@ -284,7 +316,7 @@ var messagesNL =
 
 	'PA number' : 'PA-nummer',
 	'PA numbers' : 'PA-nummers',
-	'Samples' : 'Monsters',
+	'Samples' : 'Samples',
 	'Lab request' : 'Labverzoek',
 	'Filter by samples' : 'Filteren op monsters',
 	'Filter by PA number' : 'Filteren op PA-nummer',
@@ -307,12 +339,12 @@ var messagesNL =
 	/* ===================== */
 	/* status       */
 	/* ===================== */
-    'Open' : 'Open',
-    'Review' : 'Beoordeling',
+    'Open' : 'Niet ingestuurd',
+    'Review' : 'In behandeling',
 	'Approval': 'Goedkeuring', 
-	'DataDelivery' : 'Datauitgifte', 
-	'SelectionReview' : 'Beoordeling selectie',
-	'LabRequest' : 'Verstuurd aan labs',
+	'DataDelivery' : 'Output geleverd', 
+	'SelectionReview' : 'Excerptselectie door aanvrager',
+	'LabRequest' : 'Verzoek aan labs',
 	'Waiting for lab approval' : 'In afwachting beoordeling lab', //werkt niet, in laboverview en lab request details, en in samples overzicht
 	'Approved' : 'Goedgekeurd', //werkt niet in overzichten en details
 	'Sending' : 'Materiaal verstuurd', //werkt niet in overzichten en details ( lab verzoeken en samples )

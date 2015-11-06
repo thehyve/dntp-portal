@@ -84,10 +84,23 @@
                 controller : 'ProfileController'
             }).otherwise('/');
 
+            // Try to fetch the preferred language from the browser.
+            var language = window.navigator.userLanguage || window.navigator.language;
+            console.log('Language: ' + language);
+            var preferredLanguage = 'nl';
+            if (language != null && language.length >= 2) {
+                language = language.substring(0, 2);
+                var supported_languages = ['nl', 'en'];
+                if (supported_languages.indexOf(language) != -1)
+                {
+                    preferredLanguage = language;
+                }
+            }
+
             // default lang settings for the localization
             $translateProvider.translations('en', messagesEN)
                               .translations('nl', messagesNL);
-            $translateProvider.preferredLanguage('en');
+            $translateProvider.preferredLanguage(preferredLanguage);
             $translateProvider.useSanitizeValueStrategy('escaped');
             cfpLoadingBarProvider.includeSpinner = false;
 

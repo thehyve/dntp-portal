@@ -155,5 +155,13 @@ public class MailService {
             throw new EmailError("Email error: " + e.getMessage());
         }
     }
+    
+    public boolean checkMailSender() {
+        if (mailSender == null) {
+            return false;
+        }
+        mailSender.createMimeMessage();
+        return true;
+    }
 
 }

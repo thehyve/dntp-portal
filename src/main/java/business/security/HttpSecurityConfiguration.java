@@ -93,6 +93,7 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/register/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/register/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/register/users/activate/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/status").permitAll()
             .anyRequest()
                 .authenticated()
                 .and()

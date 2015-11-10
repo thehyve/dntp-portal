@@ -216,5 +216,14 @@ public class FileService {
             throw new FileDeleteError();
         }
     }
+    
+    public boolean checkUploadPath() {
+        Path path = fileSystem.getPath(uploadPath).normalize();
+        java.io.File f = path.toFile();
+        if (f.exists() && f.isDirectory() && f.canWrite()) {
+            return true;
+        }
+        return false;
+    }
 
 }

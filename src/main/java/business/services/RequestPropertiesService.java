@@ -1,6 +1,7 @@
 package business.services;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import business.models.RequestProperties;
+import business.models.RequestProperties.ReviewStatus;
 import business.models.RequestPropertiesRepository;
 
 @Service
@@ -37,5 +39,13 @@ public class RequestPropertiesService {
         }
         return properties;
     }
-    
+
+    public ReviewStatus getRequestReviewStatus(String id) {
+        return requestPropertiesRepository.getRequestReviewStatusByProcessInstanceId(id);
+    }
+
+    public Set<String> getProcessInstanceIdsByReviewStatus(ReviewStatus reviewStatus) {
+        return requestPropertiesRepository.getProcessInstanceIdsByReviewStatus(reviewStatus);
+    }
+
 }

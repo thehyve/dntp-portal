@@ -164,7 +164,10 @@ public class RequestFormService {
             }
         }
         
-        if (currentUser.isScientificCouncilMember()) {
+        
+        if (currentUser.isPalga()) {
+            request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(instance.getId()));
+        } else if (currentUser.isScientificCouncilMember()) {
             // fetch my vote
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
@@ -173,7 +176,6 @@ public class RequestFormService {
                 request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
             }
         }
-        
     }
     
     private static Set<String> excerptListStatuses = new HashSet<String>();
@@ -267,6 +269,7 @@ public class RequestFormService {
             }
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
+            request.setReviewStatus(properties.getReviewStatus());
             request.setBillingAddress(properties.getBillingAddress());
             request.setChargeNumber(properties.getChargeNumber());
             request.setResearchNumber(properties.getReseachNumber());

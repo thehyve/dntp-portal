@@ -117,6 +117,18 @@
                                  class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>
+                            <button
+                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1"
+                                 ng-disabled="req.reviewStatus =='SUSPENDED' || req.assignee != globals.currentUser.userid"
+                                 class="btn btn-default" type="button" title="{{'Suspend'|translate}}" ng-click="suspend(req)">
+                                <span><i class="glyphicon glyphicon-pause"></i></span>
+                            </button>
+                            <button
+                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1"
+                                 ng-disabled="req.reviewStatus != 'SUSPENDED' || req.assignee != globals.currentUser.userid"
+                                 class="btn btn-default" type="button" title="{{'Resume'|translate}}" ng-click="resume(req)">
+                                <span><i class="glyphicon glyphicon-play"></i></span>
+                            </button>
                         </span>
                         </span>
                         </td>

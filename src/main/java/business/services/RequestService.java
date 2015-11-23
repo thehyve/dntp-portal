@@ -1,5 +1,12 @@
 package business.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -13,10 +20,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import business.controllers.RequestComparator;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
 import business.models.User;
+import business.representation.LabRequestRepresentation;
+import business.security.UserAuthenticationToken;
 
 @Service
 public class RequestService {
@@ -37,6 +47,12 @@ public class RequestService {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private RequestComparator requestComparator;
+
+    @Autowired
+    private LabRequestService labRequestService;
     
     /**
      * Finds task. 
@@ -167,6 +183,89 @@ public class RequestService {
             throw new RequestNotFound();
         }
         return instance;
+    }
+
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    public List<HistoricProcessInstance> getProcessInstancesForUser(
+            UserAuthenticationToken user) {
+        List<HistoricProcessInstance> processInstances;
+
+        if (user == null) {
+            processInstances = new ArrayList<HistoricProcessInstance>();
+        } else if (user.getUser().isPalga()) {
+            processInstances = historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueNotEquals("status", "Open")
+                    .orderByProcessInstanceStartTime()
+                    .desc()
+                    .list();
+        } else if (user.getUser().isScientificCouncilMember()) {
+            Date start = new Date();
+            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstances.addAll(historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Approval")
+                    .orderByProcessInstanceStartTime()
+                    .desc()
+                    .list());
+            Date endQ1 = new Date();
+            List<HistoricProcessInstance> list = historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueNotEquals("status", "Approval")
+                    .variableValueNotEquals("scientific_council_approved", null)
+                    .orderByProcessInstanceStartTime()
+                    .desc()
+                    .list();
+            Date endQ2 = new Date();
+            if (list != null) {
+                Collections.sort(list, requestComparator);
+            }
+            Date endSort = new Date();
+            log.info("GET: query 1 took " + (endQ1.getTime() - start.getTime()) + " ms.");
+            log.info("GET: query 2 took " + (endQ2.getTime() - endQ1.getTime()) + " ms.");
+            log.info("GET: sorting took " + (endSort.getTime() - endQ2.getTime()) + " ms.");
+            if (list != null) {
+                processInstances.addAll(list);
+            }
+        } else if (user.getUser().isLabUser()) {
+            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
+            Set<String> processInstanceIds = new HashSet<String>();
+            for (LabRequestRepresentation labRequest: labRequests) {
+                processInstanceIds.add(labRequest.getProcessInstanceId());
+            }
+            if (!processInstanceIds.isEmpty()) {
+                processInstances = historyService
+                        .createHistoricProcessInstanceQuery()
+                        .notDeleted()
+                        .includeProcessVariables()
+                        .processInstanceIds(processInstanceIds)
+                        .orderByProcessInstanceStartTime()
+                        .desc()
+                        .list();
+            } else {
+                processInstances = new ArrayList<HistoricProcessInstance>();
+            }
+        } else {
+            processInstances = historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .involvedUser(user.getId().toString())
+                    .orderByProcessInstanceStartTime()
+                    .desc()
+                    .list();
+        }
+        return processInstances;
     }
 
 }

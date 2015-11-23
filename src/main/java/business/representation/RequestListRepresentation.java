@@ -2,6 +2,8 @@ package business.representation;
 
 import java.util.Date;
 
+import business.models.RequestProperties.ReviewStatus;
+
 public class RequestListRepresentation {
 
     private String processInstanceId;
@@ -9,6 +11,8 @@ public class RequestListRepresentation {
     private String requesterName;
     private String status;
     private Date dateCreated;
+
+    private ReviewStatus reviewStatus;
 
     private String assignee;
     private String assigneeName;
@@ -70,6 +74,14 @@ public class RequestListRepresentation {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public ReviewStatus getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(ReviewStatus reviewStatus) {
+        this.reviewStatus = reviewStatus;
     }
 
     public String getTitle() {

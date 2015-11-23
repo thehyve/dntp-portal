@@ -42,6 +42,10 @@ angular.module('ProcessApp.controllers')
                 return checkRoles(['HAS_MANAGE_OWN_LAB_PAGE_AUTH']);
             };
 
+            $scope.isViewAccessLogsAllowed = function() {
+                return checkRoles(['HAS_MANAGE_ACCESS_LOG_AUTH']);
+            }
+
             $scope.isRequestsPage = function() {
                 return $route.current.templateUrl=='app/request/edit-request.html'
                     || $route.current.templateUrl=='app/request/requests.html'

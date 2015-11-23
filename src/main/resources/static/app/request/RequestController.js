@@ -26,7 +26,7 @@ angular.module('ProcessApp.controllers')
         
             $scope.translate = function(key, params) {
                 return $translate.instant(key, params);
-            }
+            };
             
             $scope.serverurl = $location.protocol()+'://'+$location.host()
                 +(($location.port()===80) ? '' : ':'+$location.port());
@@ -63,7 +63,9 @@ angular.module('ProcessApp.controllers')
                 });
             } else {
                 Request.query().$promise.then(function(response) {
+                    $scope.activeSidebar = 'overview';
                     $scope.requests = response ? response : [];
+                    $scope.allRequests = $scope.requests;
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
                     if (response.data) {
@@ -174,7 +176,7 @@ angular.module('ProcessApp.controllers')
                     });
                 }
                 $route.reload();
-            }
+            };
 
             var _claimableStatuses = ['Review', 'Approval', 'DataDelivery', 'SelectionReview'];
             
@@ -696,4 +698,28 @@ angular.module('ProcessApp.controllers')
                 $scope.popover[name] = false;
             };
 
-}]);
+            $scope.getAllRequests = function () {
+                $scope.requests = $scope.allRequests;
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'overview';
+            };
+
+            $scope.getSuspended = function () {
+                $scope.requests = _.where($scope.allRequests,  {reviewStatus:'SUSPENDED'});
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'suspended';
+            };
+
+            $scope.getClaimed = function () {
+                $scope.requests = _.where($scope.allRequests,  {assignee:$rootScope.globals.currentUser.userid});
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'claimed';
+            };
+
+            $scope.getUnclaimed = function () {
+                $scope.requests = _.where($scope.allRequests,  {assignee:null});
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'unclaimed';
+            };
+
+        }]);

@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -14,6 +16,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,6 +27,7 @@ import business.controllers.RequestComparator;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
+import business.models.RequestProperties;
 import business.models.User;
 import business.representation.LabRequestRepresentation;
 import business.security.UserAuthenticationToken;
@@ -53,7 +57,13 @@ public class RequestService {
 
     @Autowired
     private LabRequestService labRequestService;
-    
+
+    @Autowired
+    private RequestNumberService requestNumberService;
+
+    @Autowired
+    private RequestPropertiesService requestPropertiesService;
+
     /**
      * Finds task. 
      * @param taskId
@@ -266,6 +276,26 @@ public class RequestService {
                     .list();
         }
         return processInstances;
+    }
+
+    /**
+     * Completes <code>request_form</code> task and generates a
+     * request number for the request with processInstanceId <code>id</code>.
+     * @param id the processInstanceId of the request.
+     */
+    @Transactional
+    public RequestProperties submitRequest(String id) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+
+        Task task = getTaskByRequestId(id, "request_form");
+        if (task.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+
+        String requestNumber = requestNumberService.getNewRequestNumber();
+        properties.setRequestNumber(requestNumber);
+        return requestPropertiesService.save(properties);
     }
 
 }

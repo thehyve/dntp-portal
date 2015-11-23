@@ -18,4 +18,7 @@ public interface RequestPropertiesRepository extends JpaRepository<RequestProper
     @Query("SELECT p.processInstanceId FROM RequestProperties p WHERE reviewStatus = :reviewStatus)")
     Set<String> getProcessInstanceIdsByReviewStatus(@Param("reviewStatus") ReviewStatus reviewStatus);
 
+    @Query("SELECT p.requestNumber FROM RequestProperties p WHERE processInstanceId = :processInstanceId)")
+    String getRequestNumberByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
+
 }

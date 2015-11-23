@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,15 +52,14 @@ import business.models.ExcerptListRepository;
 import business.models.File;
 import business.models.FileRepository;
 import business.models.RequestProperties;
+import business.models.RequestProperties.ReviewStatus;
 import business.models.RoleRepository;
 import business.models.UserRepository;
-import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.ExcerptListService;
 import business.services.FileService;
-import business.services.LabRequestService;
 import business.services.MailService;
 import business.services.RequestFormService;
 import business.services.RequestPropertiesService;
@@ -115,13 +113,7 @@ public class RequestController {
     private CommentRepository commentRepository;
 
     @Autowired
-    private RequestComparator requestComparator;
-
-    @Autowired
     private ExcerptListRepository excerptListRepository;
-    
-    @Autowired
-    private LabRequestService labRequestService;
     
     @Autowired
     private FileService fileService;
@@ -136,88 +128,46 @@ public class RequestController {
         log.info(
                 "GET /requests (for user: " + (user == null ? "null" : user.getId()) + ")");
 
-        List<HistoricProcessInstance> processInstances;
-
-        if (user == null) {
-            processInstances = new ArrayList<HistoricProcessInstance>();
-        } else if (user.getUser().isPalga()) {
-            processInstances = historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueNotEquals("status", "Open")
-                    .orderByProcessInstanceStartTime()
-                    .desc()
-                    .list();
-        } else if (user.getUser().isScientificCouncilMember()) {
-            Date start = new Date();
-            processInstances = new ArrayList<HistoricProcessInstance>();
-            processInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("status", "Approval")
-                    .orderByProcessInstanceStartTime()
-                    .desc()
-                    .list());
-            Date endQ1 = new Date();
-            List<HistoricProcessInstance> list = historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueNotEquals("status", "Approval")
-                    .variableValueNotEquals("scientific_council_approved", null)
-                    .orderByProcessInstanceStartTime()
-                    .desc()
-                    .list();
-            Date endQ2 = new Date();
-            if (list != null) {
-                Collections.sort(list, requestComparator);
-            }
-            Date endSort = new Date();
-            log.info("GET: query 1 took " + (endQ1.getTime() - start.getTime()) + " ms.");
-            log.info("GET: query 2 took " + (endQ2.getTime() - endQ1.getTime()) + " ms.");
-            log.info("GET: sorting took " + (endSort.getTime() - endQ2.getTime()) + " ms.");
-            if (list != null) {
-                processInstances.addAll(list);
-            }
-        } else if (user.getUser().isLabUser()) {
-            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
-            Set<String> processInstanceIds = new HashSet<String>();
-            for (LabRequestRepresentation labRequest: labRequests) {
-                processInstanceIds.add(labRequest.getProcessInstanceId());
-            }
-            if (!processInstanceIds.isEmpty()) {
-                processInstances = historyService
-                        .createHistoricProcessInstanceQuery()
-                        .notDeleted()
-                        .includeProcessVariables()
-                        .processInstanceIds(processInstanceIds)
-                        .orderByProcessInstanceStartTime()
-                        .desc()
-                        .list();
-            } else {
-                processInstances = new ArrayList<HistoricProcessInstance>();
-            }
-        } else {
-            processInstances = historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .involvedUser(user.getId().toString())
-                    .orderByProcessInstanceStartTime()
-                    .desc()
-                    .list();
-        }
-
         List<RequestListRepresentation> result = new ArrayList<RequestListRepresentation>();
 
+        List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user);
         for (HistoricProcessInstance instance : processInstances) {
             RequestListRepresentation request = new RequestListRepresentation();
             requestFormService.transferData(instance, request, user.getUser());
             result.add(request);
         }
         return result;
+    }
+
+    private void incrementCount(Map<String, Long> counts, String key) {
+        Long count = counts.get(key);
+        counts.put(key, ((count == null) ? 0 : count.longValue()) + 1);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @RequestMapping(value = "/requests/counts", method = RequestMethod.GET)
+    public Map<String, Long> getRequestCounts(UserAuthenticationToken user) {
+        log.info(
+                "GET /requests/counts (for user: " + (user == null ? "null" : user.getId()) + ")");
+
+        Date start = new Date();
+        Map<String, Long> counts = new HashMap<String, Long>();
+        List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user);
+        Date middle = new Date();
+        log.info("Fetching process instances took " + (middle.getTime() - start.getTime()) + "ms.");
+        Set<String> suspendedRequestIds = requestPropertiesService.getProcessInstanceIdsByReviewStatus(ReviewStatus.SUSPENDED);
+        for (HistoricProcessInstance instance : processInstances) {
+            RequestListRepresentation request = new RequestListRepresentation();
+            requestFormService.transferBasicData(instance, request);
+            if (user.getUser().isPalga() && suspendedRequestIds.contains(request.getProcessInstanceId())) {
+                incrementCount(counts, "suspended");
+            } else {
+                incrementCount(counts, request.getStatus());
+            }
+        }
+        Date end = new Date();
+        log.info("Counting took " + (end.getTime() - middle.getTime()) + " ms.");
+        return counts;
     }
 
     @PreAuthorize("isAuthenticated() and ("
@@ -281,6 +231,40 @@ public class RequestController {
             log.info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
         instance = requestService.getProcessInstance(id);
+        RequestRepresentation updatedRequest = new RequestRepresentation();
+        requestFormService.transferData(instance, updatedRequest, user.getUser());
+        return updatedRequest;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @RequestMapping(value = "/requests/{id}/suspend", method = RequestMethod.PUT)
+    public RequestRepresentation suspend(
+            UserAuthenticationToken user,
+            @PathVariable String id) {
+        log.info("PUT /requests/" + id + "/suspend");
+
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        properties.setReviewStatus(ReviewStatus.SUSPENDED);
+        requestPropertiesService.save(properties);
+
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
+        RequestRepresentation updatedRequest = new RequestRepresentation();
+        requestFormService.transferData(instance, updatedRequest, user.getUser());
+        return updatedRequest;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @RequestMapping(value = "/requests/{id}/resume", method = RequestMethod.PUT)
+    public RequestRepresentation resume(
+            UserAuthenticationToken user,
+            @PathVariable String id) {
+        log.info("PUT /requests/" + id + "/resume");
+
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+        properties.setReviewStatus(ReviewStatus.ACTIVE);
+        requestPropertiesService.save(properties);
+
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;

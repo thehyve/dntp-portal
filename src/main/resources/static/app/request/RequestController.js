@@ -616,6 +616,24 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.suspend = function(request) {
+                request.$suspend(function(result) {
+                    result.type = Request.convertRequestOptsToType(result);
+                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                }, function(response) {
+                    $scope.error = response.statusText;
+                });
+            };
+
+            $scope.resume = function(request) {
+                request.$resume(function(result) {
+                    result.type = Request.convertRequestOptsToType(result);
+                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                }, function(response) {
+                    $scope.error = response.statusText;
+                });
+            };
+
             $scope.focus = function (el) {
                 $(el).focus();
             };

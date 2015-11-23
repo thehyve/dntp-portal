@@ -41,6 +41,14 @@
                 url : '/requests/:id/unclaim',
                 method : 'PUT'
             },
+            suspend : {
+                url : '/requests/:id/suspend',
+                method : 'PUT'
+            },
+            resume : {
+                url : '/requests/:id/resume',
+                method : 'PUT'
+            },
             selectAll : {
                 url : '/requests/:id/selectAll',
                 method : 'PUT'

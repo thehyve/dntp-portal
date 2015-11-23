@@ -22,12 +22,19 @@ import javax.persistence.Table;
 @Table(indexes = @Index(columnList="processInstanceId"))
 public class RequestProperties {
 
+    public enum ReviewStatus {
+        ACTIVE,
+        SUSPENDED,
+    }
+
     @Id
     @GeneratedValue
     private Long id;
 
     @Column(unique = true)
     private String processInstanceId;
+
+    private ReviewStatus reviewStatus;
 
     @OneToOne
     ContactData billingAddress;
@@ -96,6 +103,14 @@ public class RequestProperties {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public ReviewStatus getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(ReviewStatus reviewStatus) {
+        this.reviewStatus = reviewStatus;
     }
 
     public List<Comment> getComments() {

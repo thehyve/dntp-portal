@@ -93,6 +93,7 @@ public class RequestFormService {
     
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
+        request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
 
         Map<String, Object> variables = instance.getProcessVariables();
 
@@ -269,6 +270,7 @@ public class RequestFormService {
             }
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
+            request.setRequestNumber(properties.getRequestNumber());
             request.setReviewStatus(properties.getReviewStatus());
             request.setBillingAddress(properties.getBillingAddress());
             request.setChargeNumber(properties.getChargeNumber());

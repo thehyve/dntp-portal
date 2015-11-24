@@ -34,6 +34,9 @@ public class RequestProperties {
     @Column(unique = true)
     private String processInstanceId;
 
+    @Column(unique = true, nullable = true)
+    private String requestNumber;
+
     private ReviewStatus reviewStatus;
 
     @OneToOne
@@ -103,6 +106,14 @@ public class RequestProperties {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public String getRequestNumber() {
+        return requestNumber;
+    }
+
+    public void setRequestNumber(String requestNumber) {
+        this.requestNumber = requestNumber;
     }
 
     public ReviewStatus getReviewStatus() {

@@ -285,12 +285,9 @@ public class RequestController {
             log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
 
-        Task task = requestService.getTaskByRequestId(id, "request_form");
-        if (task.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(task.getId());
-        }
+        RequestProperties properties = requestService.submitRequest(id);
+        log.info("Request submitted. Request number: " + properties.getRequestNumber());
 
-        taskService.complete(task.getId());
         instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());

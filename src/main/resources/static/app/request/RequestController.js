@@ -65,6 +65,9 @@ angular.module('ProcessApp.controllers')
                 Request.query().$promise.then(function(response) {
                     $scope.activeSidebar = 'overview';
                     $scope.requests = response ? response : [];
+                    $scope.requests.forEach(function(req) {
+                        req.number = Request.convertRequestNumber(req);
+                    });
                     $scope.allRequests = $scope.requests;
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -121,6 +122,8 @@ public class RequestController {
     @Autowired
     private FileRepository fileRepository;
 
+    @Autowired
+    private RequestListRepresentationComparator requestListRepresentationComparator;
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/requests", method = RequestMethod.GET)
@@ -130,11 +133,19 @@ public class RequestController {
 
         List<RequestListRepresentation> result = new ArrayList<RequestListRepresentation>();
 
+        Date start = new Date();
         List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user);
         for (HistoricProcessInstance instance : processInstances) {
             RequestListRepresentation request = new RequestListRepresentation();
             requestFormService.transferData(instance, request, user.getUser());
             result.add(request);
+        }
+        Date endQ = new Date();
+        log.info("GET: fetching took " + (endQ.getTime() - start.getTime()) + " ms.");
+        if (!user.getUser().isRequester()) {
+            Collections.sort(result, requestListRepresentationComparator);
+            Date endSort = new Date();
+            log.info("GET: sorting took " + (endSort.getTime() - endQ.getTime()) + " ms.");
         }
         return result;
     }

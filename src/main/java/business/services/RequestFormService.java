@@ -103,6 +103,8 @@ public class RequestFormService {
             request.setResearchQuestion((String)variables.get("research_question"));
             request.setHypothesis((String) variables.get("hypothesis"));
             request.setMethods((String) variables.get("methods"));
+            request.setPathologistName((String)variables.get("pathologist_name"));
+            request.setPathologistEmail((String)variables.get("pathologist_email"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();

@@ -24,6 +24,8 @@ public class RequestListRepresentation {
     private String researchQuestion;
     private String hypothesis;
     private String methods;
+    private String pathologistName;
+    private String pathologistEmail;
 
     private boolean statisticsRequest;
     private boolean excerptsRequest;
@@ -131,6 +133,22 @@ public class RequestListRepresentation {
 
     public void setMethods(String methods) {
         this.methods = methods;
+    }
+
+    public String getPathologistName() {
+        return pathologistName;
+    }
+
+    public void setPathologistName(String pathologistName) {
+        this.pathologistName = pathologistName;
+    }
+
+    public String getPathologistEmail() {
+        return pathologistEmail;
+    }
+
+    public void setPathologistEmail(String pathologistEmail) {
+        this.pathologistEmail = pathologistEmail;
     }
 
     public String getAssignee() {

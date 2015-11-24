@@ -52,6 +52,10 @@
                 templateUrl : 'app/admin/user/users.html'
             }).when('/labs', {
                 templateUrl : 'app/admin/lab/labs.html'
+            }).when('/accesslogs', {
+                templateUrl : 'app/admin/accesslogs/accesslogs.html'
+            }).when('/accesslogs/:filename', {
+                templateUrl : 'app/admin/accesslogs/accesslogs.html'
             }).when('/lab-requests', {
                 templateUrl : 'app/lab-request/lab-requests.html',
                 controller : ''
@@ -130,7 +134,8 @@
                         HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
                         HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH',
                         HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH',
-                        HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH'
+                        HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH',
+                        HAS_MANAGE_ACCESS_LOG_AUTH : 'HAS_MANAGE_ACCESS_LOG_AUTH'
                     };
     
                     if (currentUser.roles[0] === 'palga') {
@@ -140,6 +145,7 @@
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_ACCESS_LOG_AUTH);
                     } else if (currentUser.roles[0] === 'lab_user') {
                         currentUser.features.push(globalFeatures.HAS_MANAGE_OWN_LAB_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);

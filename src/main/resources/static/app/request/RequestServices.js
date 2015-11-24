@@ -183,6 +183,16 @@
             }
         };
 
+        _requestFactory.convertRequestNumber = function (request) {
+            var _number = '' + request.requestNumber;
+            if (_number.length > 5) {
+                var value = Number(_number.substring(0,4))*1000000;
+                value += Number(_number.substring(5, _number.length));
+                return value;
+            }
+            return -1;
+        }
+
         return _requestFactory;
     };
     RequestFactory.$inject = [ '$resource' ];

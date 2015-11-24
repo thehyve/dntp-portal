@@ -1,5 +1,6 @@
 package business.models;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,8 @@ import business.models.RequestProperties.ReviewStatus;
 public interface RequestPropertiesRepository extends JpaRepository<RequestProperties, Long> {
 
     RequestProperties findByProcessInstanceId(String processInstanceId);
+
+    List<RequestProperties> findByRequestNumberNull();
 
     @Query("SELECT p.reviewStatus FROM RequestProperties p WHERE processInstanceId = :processInstanceId)")
     ReviewStatus getRequestReviewStatusByProcessInstanceId(@Param("processInstanceId") String processInstanceId);

@@ -81,7 +81,20 @@ public class RequestService {
         }
         return task;
     }
-    
+
+    /**
+     * Finds historic task. Assumes that exactly one task is currently active.
+     * @param requestId
+     * @return the task if it exists; null otherwise.
+     */
+    public HistoricTaskInstance findHistoricTaskByRequestId(String requestId, String taskDefinition) {
+        HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
+                .processInstanceId(requestId)
+                .taskDefinitionKey(taskDefinition)
+                .singleResult();
+        return task;
+    }
+
     /**
      * Finds current task. Assumes that exactly one task is currently active.
      * @param requestId
@@ -212,8 +225,6 @@ public class RequestService {
                     .notDeleted()
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Open")
-                    .orderByProcessInstanceStartTime()
-                    .desc()
                     .list();
         } else if (user.getUser().isScientificCouncilMember()) {
             Date start = new Date();
@@ -223,8 +234,6 @@ public class RequestService {
                     .notDeleted()
                     .includeProcessVariables()
                     .variableValueEquals("status", "Approval")
-                    .orderByProcessInstanceStartTime()
-                    .desc()
                     .list());
             Date endQ1 = new Date();
             List<HistoricProcessInstance> list = historyService
@@ -233,17 +242,10 @@ public class RequestService {
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Approval")
                     .variableValueNotEquals("scientific_council_approved", null)
-                    .orderByProcessInstanceStartTime()
-                    .desc()
                     .list();
             Date endQ2 = new Date();
-            if (list != null) {
-                Collections.sort(list, requestComparator);
-            }
-            Date endSort = new Date();
             log.info("GET: query 1 took " + (endQ1.getTime() - start.getTime()) + " ms.");
             log.info("GET: query 2 took " + (endQ2.getTime() - endQ1.getTime()) + " ms.");
-            log.info("GET: sorting took " + (endSort.getTime() - endQ2.getTime()) + " ms.");
             if (list != null) {
                 processInstances.addAll(list);
             }
@@ -259,8 +261,6 @@ public class RequestService {
                         .notDeleted()
                         .includeProcessVariables()
                         .processInstanceIds(processInstanceIds)
-                        .orderByProcessInstanceStartTime()
-                        .desc()
                         .list();
             } else {
                 processInstances = new ArrayList<HistoricProcessInstance>();

@@ -4,8 +4,8 @@
             <form class="form-horizontal" role="form" name="requestEditForm" novalidate>
                 <div class="modal-header">
                     <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'New request' | translate }}</h3>
-                    <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit request' | translate }}: {{request.title}}</h3>
-                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Evaluate request' |translate }}: {{request.title}}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit' | translate }}: {{request.requestNumber}} {{request.title}}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Evaluate' |translate }}: {{request.requestNumber}} {{request.title}}</h3>
                 </div>
                 <div class="modal-body">
 

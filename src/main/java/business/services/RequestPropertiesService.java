@@ -15,18 +15,19 @@ import business.models.RequestProperties.ReviewStatus;
 import business.models.RequestPropertiesRepository;
 
 @Service
-@Transactional
 public class RequestPropertiesService {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Autowired
     RequestPropertiesRepository requestPropertiesRepository;
-    
+
+    @Transactional
     public RequestProperties save(RequestProperties properties) {
         return requestPropertiesRepository.save(properties);
     }
-    
+
+    @Transactional
     public RequestProperties findByProcessInstanceId(String processInstanceId) {
         Date start = new Date();
         RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(processInstanceId);
@@ -40,8 +41,12 @@ public class RequestPropertiesService {
         return properties;
     }
 
-    public ReviewStatus getRequestReviewStatus(String id) {
-        return requestPropertiesRepository.getRequestReviewStatusByProcessInstanceId(id);
+    public String getRequestNumber(String processInstanceId) {
+        return requestPropertiesRepository.getRequestNumberByProcessInstanceId(processInstanceId);
+    }
+
+    public ReviewStatus getRequestReviewStatus(String processInstanceId) {
+        return requestPropertiesRepository.getRequestReviewStatusByProcessInstanceId(processInstanceId);
     }
 
     public Set<String> getProcessInstanceIdsByReviewStatus(ReviewStatus reviewStatus) {

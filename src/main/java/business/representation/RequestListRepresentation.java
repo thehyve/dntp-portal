@@ -7,6 +7,7 @@ import business.models.RequestProperties.ReviewStatus;
 public class RequestListRepresentation {
 
     private String processInstanceId;
+    private String requestNumber;
     private Long requesterId;
     private String requesterName;
     private String status;
@@ -42,6 +43,14 @@ public class RequestListRepresentation {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public String getRequestNumber() {
+        return requestNumber;
+    }
+
+    public void setRequestNumber(String requestNumber) {
+        this.requestNumber = requestNumber;
     }
 
     public Long getRequesterId() {

@@ -47,7 +47,7 @@
                 <!-- <table st-table="displayedCollection | filter:filterEmptyRequests" st-safe-src="requests" class="table"> -->
                     <thead>
                     <tr>
-                        <th st-sort="processInstanceId">#</th>
+                        <th st-sort="requestNumber">#</th>
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
                         <th st-sort="dateCreated">{{'Creation date'|translate}}</th>
@@ -75,7 +75,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': req.assignee == globals.currentUser.userid}">
-                        <td>{{req.processInstanceId}}</td>
+                        <td>{{req.requestNumber}}</td>
                         <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
                         <td class="request-status">{{req.status | translate}}
                             <span class="badge" ng-if="req.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1" >

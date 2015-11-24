@@ -114,6 +114,29 @@ public class MailService {
           + "Met vriendelijke groet,\n"
           + "Stichting PALGA\n"
           + "088-0402700 / aanvraag@palga.nl\n"
+          + "--\n"
+          + "Dit is een automatisch gegenereerd bericht. "
+          + "Heeft u vragen, stuur dan een mail naar: aanvraag@palga.nl.\n"
+          + "\n"
+          + "=========================\n"
+          + "\n"
+          + "Dear Sir/Madam,\n"
+          + "\n"
+          + "PALGA has received a request for your lab.\n"
+          + "Please follow this link to view the request: %1$s.\n"
+          + "\n"
+          + "Lab request:\t%2$s\n"
+          + "Title:\t%3$s\n"
+          + "Requester:\t%4$s\n"
+          + "Pathologist:\t%5$s\n"
+          + "Institute:\t%6$s\n"
+          + "\n"
+          + "With kind regards,\n"
+          + "Stichting PALGA\n"
+          + "088-0402700 / aanvraag@palga.nl\n"
+          + "--\n"
+          + "This is an automatically generated message. "
+          + "If you have questions, please send an email to aanvraag@palga.nl.\n"
           ;
 
     public void notifyLab(@NotNull LabRequestRepresentation labRequest) {
@@ -136,7 +159,7 @@ public class MailService {
                     labRequest.getLabRequestCode(), // %2
                     labRequest.getRequest().getTitle(), // %3
                     labRequest.getRequesterName(), // %4
-                    labRequest.getRequest().getPathologistName(), // %5
+                    labRequest.getRequest().getPathologistName() == null ? "" : labRequest.getRequest().getPathologistName(), // %5
                     labRequest.getRequesterLab().getName() // %6
                     );
             message.setText(body);

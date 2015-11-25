@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row" ng-controller="AdminAccessLogsController" >
 
-        <div ng-show="!authenticated">
+        <div ng-if="!authenticated">
             <div class="alert alert-danger" role="alert">
                 {{'Not logged in'|translate}}.
             </div>

@@ -27,17 +27,15 @@
     
 
     <div ng-if="request.status == 'DataDelivery' && isPalga()">
-        <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
+        <!-- Excerpt list upload -->
+        <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
              flow-name="excerptListFlow"
-             flow-files-submitted="excerptlist_upload_error = ''; fileupload_result = ''; $flow.upload()"
-             flow-file-success="fileuploadsuccess(request, $message, true, $flow)"
-             flow-file-error="fileuploaderror($message, true)"
+             flow-files-submitted="fileuploadsubmitted('excerpt_list'); Upload.uploadFile($flow)"
+             flow-file-success="Upload.fileUploadSuccess('excerpt list', $message, $file); fileuploadsuccess(request, $message, 'excerpt_list', $flow)"
+             flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'excerpt_list')"
              >
-            <div class="alert alert-success" role="alert" ng-show="excerptlist_upload_result == 'success'">
-                {{ 'Excerpt list uploaded.' | translate }}
-            </div>
-            <div class="alert alert-danger" role="alert" ng-show="excerptlist_upload_result == 'error'">
-                {{ excerptlist_upload_error | translate }}
+            <div class="alert alert-danger" role="alert" ng-if="upload_result['excerpt_list'] == 'error'">
+                <span ng-bind-html="upload_error['excerpt_list']"></span>
             </div>
 
             <div>
@@ -76,25 +74,20 @@
         && request.excerptList"
         ng-controller="SelectionController">
 
-        <h3>{{'Excerpt Selection'|translate}}</h3>
+        <h3>{{'Excerpt selection'|translate}}</h3>
         <hr>
-
-        <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
+        <!-- Excerpt selection upload -->
+        <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
              flow-name="excerptSelectionFlow"
-             flow-files-submitted="$scope.excerptselection_upload_error = ''; $scope.fileupload_result = ''; $flow.upload()"
-             flow-file-success="fileuploadsuccess(request, $message, true, $flow)"
-             flow-file-error="fileuploaderror($message, true)"
+             flow-files-submitted="fileuploadsubmitted('excerpt_selection'); Upload.uploadFile($flow)"
+             flow-file-success="Upload.fileUploadSuccess('excerpt selection', $message, $file); fileuploadsuccess(request, $message, 'excerpt_selection', $flow)"
+             flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'excerpt_selection')"
              ng-if="isRequester() && request.status=='DataDelivery'"
             >
-    
-            <div class="alert alert-success" role="alert" ng-show="excerptselection_upload_result == 'success'">
-                {{ 'Excerpt selection file is uploaded. (' + lastUploadedFileName + ')'  | translate }}
+            <div class="alert alert-danger" role="alert" ng-if="upload_result['excerpt_selection'] == 'error'">
+                <span ng-bind-html="upload_error['excerpt_selection']"></span>
             </div>
-    
-            <div class="alert alert-danger" role="alert" ng-show="excerptselection_upload_result == 'error'">
-                {{ excerptselection_upload_error | translate }}
-            </div>
-    
+
             <a ng-href="/#/request/{{request.processInstanceId}}/selection" id="select-pa-numbers" class="btn btn-primary">
                 <i class="glyphicon glyphicon-edit"></i>
                 {{'Select PA numbers'|translate}}
@@ -171,19 +164,16 @@
   <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">
     <i>{{'No data files.'|translate}}</i>
   </p>
-
-  <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
+  <!-- Data upload -->
+  <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
        flow-name="dataFlow"
-       flow-files-submitted="uploadDataFile($flow)"
-       flow-file-success="fileuploadsuccess(request, $message, false, $flow)"
-       flow-file-error="fileuploaderror($message)"
+       flow-files-submitted="fileuploadsubmitted('data'); Upload.uploadFile($flow)"
+       flow-file-success="Upload.fileUploadSuccess('data', $message, $file); fileuploadsuccess(request, $message, 'data', $flow)"
+       flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'data')"
        ng-if="request.status == 'DataDelivery' && isPalga()"
     >
-    <div class="alert alert-success" role="alert" ng-show="fileupload_result == 'success'">
-      {{ 'File uploaded.' | translate }}
-    </div>
-    <div class="alert alert-danger" role="alert" ng-show="fileupload_result == 'error'">
-      {{ 'Error uploading file.' | translate }}
+    <div class="alert alert-danger" role="alert" ng-if="upload_result['data'] == 'error'">
+        <span ng-bind-html="upload_error['data']"></span>
     </div>
 
     <p>

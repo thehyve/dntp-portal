@@ -4,7 +4,7 @@
 <form class="form-horizontal no-print" role="form" name="pathologyForm" novalidate
     ng-if="isLabUser()">
     <!-- PA number -->
-    <div class="form-group" ng-if="isLabUser() && labRequest.status == 'Approved'>
+    <div class="form-group" ng-if="isLabUser() && labRequest.status == 'Approved'">
         <div class="col-sm-8">
             <input type="text" class="form-control" id="paNumber" name="paNumber" placeholder="{{ 'PA number' | translate }}"
                    ng-model="editPathology.paNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" required

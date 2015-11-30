@@ -33,7 +33,7 @@ angular.module('ProcessApp.controllers')
             function (err) {
                 $scope.error = err.data.message;
             });
-        }
+        };
 
         var _loadData = function() {
             Restangular.one('admin/accesslogs').get()

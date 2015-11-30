@@ -5,13 +5,15 @@ angular.module('ProcessApp.controllers')
         'Request', 'RequestAttachment', 'RequestComment',
         'ApprovalComment', 'ApprovalVote',
         '$translate',
-        'FlowOptionService', '$routeParams',
+        'Upload', '$routeParams',
+        '$alert',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
                   $translate,
-                  FlowOptionService, $routeParams) {
+                  Upload, $routeParams,
+                  $alert) {
 
             $rootScope.redirectUrl = $location.path();
         
@@ -23,13 +25,15 @@ angular.module('ProcessApp.controllers')
                 $scope.login();
                 return;
             }
-        
+
+            $scope.Upload = Upload;
+
             $scope.translate = function(key, params) {
                 return $translate.instant(key, params);
             };
-            
+
             $scope.serverurl = $location.protocol()+'://'+$location.host()
-                +(($location.port()===80) ? '' : ':'+$location.port());
+                +(($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
 
             $scope.error = '';
             $rootScope.tempRequest = null;
@@ -100,19 +104,29 @@ angular.module('ProcessApp.controllers')
             $scope.resetPreviousContactValues = function (request) {
                 request.previousContactDescription = '';
             };
-            
-            $scope.flow_options = function(options) {
-                return FlowOptionService.get_default(options);
+
+            $scope.upload_result = {
+                    'attachment': '',
+                    'agreement': '',
+                    'mec_approval': '',
+                    'excerpt_list': '',
+                    'excerpt_selection': '',
+                    'data': ''
             };
 
-            $scope.fileuploadsuccess = function(request, data, excerpts, flow) {
+            $scope.upload_error = {}
+
+            $scope.fileuploadsubmitted = function(type) {
+                $scope.upload_result[type] = '';
+                if (type in $scope.upload_error) {
+                    delete $scope.upload_error[type];
+                } 
+            }
+
+            $scope.fileuploadsuccess = function(request, data, type, flow) {
                 $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
-                if (excerpts) {
-                    $scope.excerptlist_upload_result = "success";
-                    $scope.excerptselection_upload_result = 'success';
-                } else {
-                    $scope.fileupload_result = "success";
-                }
+                $scope.upload_result[type] = 'success';
+                $scope.upload_error[type] = '';
                 $scope.$apply();
                 var result = new Request(JSON.parse(data));
                 //$scope.refresh(request, result);
@@ -123,15 +137,10 @@ angular.module('ProcessApp.controllers')
                 request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 
-            $scope.fileuploaderror = function(data, excerpts) {
-                if (excerpts) {
-                    $scope.excerptlist_upload_error = data;
-                    $scope.excerptlist_upload_result = "error";
-                    $scope.excerptselection_upload_result = 'error';
-                    $scope.excerptselection_upload_error = data;
-                } else {
-                    $scope.fileupload_result = "error";
-                }
+            $scope.fileuploaderror = function(message, type) {
+                console.log('Upload error: ' + message);
+                $scope.upload_result[type] = 'error';
+                $scope.upload_error[type] = message;
             };
 
             var patt = /gijs(\+)?[a-zA-Z0-9]*@thehyve.nl/g;

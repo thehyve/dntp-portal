@@ -79,6 +79,8 @@
             }).when('/request/:requestId/selection', {
                 templateUrl : 'app/request/selection.html',
                 controller : 'RequestController'
+            }).when('/request/:requestId/agreementform', {
+                templateUrl : 'app/request/agreementform.html'
             }).when('/my-lab', {
                 templateUrl : 'app/lab/my-lab.html',
                 controller : 'MyLabController'

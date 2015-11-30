@@ -7,13 +7,15 @@ angular.module('ProcessApp.controllers')
         '$translate',
         'Upload', '$routeParams',
         '$alert',
+        'AgreementFormTemplate',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
                   $translate,
                   Upload, $routeParams,
-                  $alert) {
+                  $alert,
+                  AgreementFormTemplate) {
 
             $rootScope.redirectUrl = $location.path();
         
@@ -91,6 +93,24 @@ angular.module('ProcessApp.controllers')
                         return;
                     }
                 });
+            }
+
+            $scope.loadTemplate = function() {
+                AgreementFormTemplate.get()
+                .then(function (template) {
+                    $scope.agreementFormTemplate = template;
+                }, function (err) {
+                    if (err.status === 403) {
+                        $rootScope.errormessage = err.response;
+                        $scope.login();
+                        return;
+                    }
+                });
+            };
+
+            if (true) {
+                console.log($routeParams);
+                $scope.loadTemplate();
             }
 
             $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {

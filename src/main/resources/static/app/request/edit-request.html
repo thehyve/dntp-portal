@@ -440,12 +440,17 @@
                             </span>
                         </li>
                     </ul>
-
-                    <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/files'})"
-                         flow-name="agreementFlow"
-                         flow-files-submitted="$flow.upload()"
-                         flow-file-success="fileuploadsuccess(request, $message, false, $flow)"
+                    <!-- Attachment upload -->
+                    <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/files'})"
+                         flow-name="attachmentFlow"
+                         flow-files-submitted="fileuploadsubmitted('attachment'); Upload.uploadFile($flow)"
+                         flow-file-success="Upload.fileUploadSuccess('attachment', $message, $file); fileuploadsuccess(request, $message, 'attachment', $flow)"
+                         flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'attachment')"
                          ng-if="request.status=='Open' || (isPalga() && request.status=='Review')">
+                        <div class="alert alert-danger" role="alert" ng-if="upload_result['attachment'] == 'error'">
+                            <span ng-bind-html="upload_error['attachment']"></span>
+                        </div>
+
                         <div>
                             <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
                             <button class="btn btn-default" 
@@ -487,11 +492,12 @@
                             </span>
                         </li>
                     </ul>
-
-                    <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/mecFiles'})"
-                         flow-name="agreementFlow"
-                         flow-files-submitted="$flow.upload()"
-                         flow-file-success="fileuploadsuccess(request, $message, false, $flow)"
+                    <!-- Medical Ethical Committee approval upload -->
+                    <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/mecFiles'})"
+                         flow-name="mecApprovalFlow"
+                         flow-files-submitted="fileuploadsubmitted('mec_approval'); Upload.uploadFile($flow)"
+                         flow-file-success="Upload.fileUploadSuccess('MEC approval', $message, $file); fileuploadsuccess(request, $message, 'mec_approval', $flow)"
+                         flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'mec_approval')"
                          ng-if="isRequester() && (
                                             request.status=='Open' 
                                             || request.status=='Review'
@@ -499,6 +505,9 @@
                                             || request.status=='DataDelivery'
                                             || request.status=='SelectionReview'
                                             )">
+                        <div class="alert alert-danger" role="alert" ng-if="upload_result['mec_approval'] == 'error'">
+                            <span ng-bind-html="upload_error['mec_approval']"></span>
+                        </div>
                         <div>
                             <input type="file" flow-btn id="test-upload-attachment2" style="display:none" />
                             <button class="btn btn-default" 

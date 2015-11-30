@@ -296,7 +296,7 @@ public class RequestController {
             log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
 
-        RequestProperties properties = requestService.submitRequest(id);
+        RequestProperties properties = requestService.submitRequest(user.getUser(), id);
         log.info("Request submitted. Request number: " + properties.getRequestNumber());
 
         instance = requestService.getProcessInstance(id);

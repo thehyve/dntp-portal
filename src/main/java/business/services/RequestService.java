@@ -1,7 +1,6 @@
 package business.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -63,6 +62,9 @@ public class RequestService {
 
     @Autowired
     private RequestPropertiesService requestPropertiesService;
+
+    @Autowired
+    private MailService mailService;
 
     /**
      * Finds task. 
@@ -279,12 +281,13 @@ public class RequestService {
     }
 
     /**
-     * Completes <code>request_form</code> task and generates a
-     * request number for the request with processInstanceId <code>id</code>.
+     * Completes <code>request_form</code> task, generates a
+     * request number, and sends an email to the requester
+     * for the request with processInstanceId <code>id</code>.
      * @param id the processInstanceId of the request.
      */
     @Transactional
-    public RequestProperties submitRequest(String id) {
+    public RequestProperties submitRequest(User requester, String id) {
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
 
         Task task = getTaskByRequestId(id, "request_form");
@@ -295,7 +298,11 @@ public class RequestService {
 
         String requestNumber = requestNumberService.getNewRequestNumber();
         properties.setRequestNumber(requestNumber);
-        return requestPropertiesService.save(properties);
+        properties =  requestPropertiesService.save(properties);
+
+        mailService.sendAgreementFormLink(requester, properties);
+
+        return properties;
     }
 
 }

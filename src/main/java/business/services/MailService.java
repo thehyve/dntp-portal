@@ -19,6 +19,7 @@ import business.exceptions.EmailError;
 import business.models.ActivationLink;
 import business.models.Lab;
 import business.models.NewPasswordRequest;
+import business.models.RequestProperties;
 import business.models.User;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestRepresentation;
@@ -58,6 +59,64 @@ public class MailService {
                 protocol, serverName, (writePort ? ":"+serverPort : ""), relativeURI);
     }
 
+    static final String requesterAgreementFormLinkTemplate = 
+            "Geachte heer/mevrouw,\n"
+          + "\n"
+          + "PALGA heeft uw aanvraag ontvangen.\n"
+          + "Vul het handtekeningformulier in en stuur het naar PALGA: %1$s.\n"
+          + "\n"
+          + "Met vriendelijke groet,\n"
+          + "Stichting PALGA\n"
+          + "088-0402700 / aanvraag@palga.nl\n"
+          + "--\n"
+          + "Dit is een automatisch gegenereerd bericht. "
+          + "Heeft u vragen, stuur dan een mail naar: aanvraag@palga.nl.\n"
+          + "\n"
+          + "=========================\n"
+          + "\n"
+          + "Dear Sir/Madam,\n"
+          + "\n"
+          + "PALGA has received your request.\n"
+          + "Please complete the agreement form and send it to PALGA: %1$s.\n"
+          + "\n"
+          + "With kind regards,\n"
+          + "Stichting PALGA\n"
+          + "088-0402700 / aanvraag@palga.nl\n"
+          + "--\n"
+          + "This is an automatically generated message. "
+          + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+          ;
+
+    @Transactional
+    public void sendAgreementFormLink(@NotNull User requester,
+            @NotNull RequestProperties request) {
+        log.info("Send agreement form link to requester for request "
+                + request.getRequestNumber() + ".");
+
+        log.info("Sending link to user " + requester.getUsername());
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(
+                    mailSender.createMimeMessage());
+            message.setTo(requester.getContactData().getEmail());
+            message.setFrom(replyAddress, replyName);
+            message.setReplyTo(replyAddress);
+            message.setSubject("Nieuwe PALGA-aanvraag ontvangen");
+            String agreementFormLink = getLink(
+                    "/#/request/"
+                    + request.getProcessInstanceId()
+                    + "/agreementform");
+            message.setText(String.format(
+                    requesterAgreementFormLinkTemplate, agreementFormLink));
+            mailSender.send(message.getMimeMessage());
+        } catch (MessagingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
+        }
+    }
+
     static final String scientificCouncilNotificationTemplate = 
               "Geachte leden van de wetenschappelijke raad,\n"
             + "\n"
@@ -84,7 +143,7 @@ public class MailService {
                 message.setTo(member.getContactData().getEmail());
                 message.setFrom(replyAddress, replyName);
                 message.setReplyTo(replyAddress);
-                message.setSubject("Nieuwe PALGA aanvraag aan u voorgelegd");
+                message.setSubject("Nieuwe PALGA-aanvraag aan u voorgelegd");
                 String requestLink = getLink("/#/request/view/" + request.getProcessInstanceId());
                 message.setText(String.format(scientificCouncilNotificationTemplate, requestLink));
                 mailSender.send(message.getMimeMessage());
@@ -152,7 +211,7 @@ public class MailService {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             message.setTo(lab.getContactData().getEmail());
             message.setFrom(replyAddress, replyName);
-            message.setSubject(String.format("PALGA verzoek aan laboratorium, aanvraagnummer: %s", labRequest.getLabRequestCode()));
+            message.setSubject(String.format("PALGA-verzoek aan laboratorium, aanvraagnummer: %s", labRequest.getLabRequestCode()));
             String labRequestLink = getLink("/#/lab-request/view/" + labRequest.getId());
             String body = String.format(labNotificationTemplate,
                     labRequestLink, // %1
@@ -210,7 +269,7 @@ public class MailService {
             message.setTo(link.getUser().getUsername());
             message.setFrom(replyAddress, replyName);
             message.setReplyTo(replyAddress);
-            message.setSubject("PALGA account activeren / Activate PALGA account");
+            message.setSubject("PALGA-account activeren / Activate PALGA account");
             String activationLink = getLink("/#/activate/" + link.getToken());
             message.setText(String.format(activationEmailTemplate, activationLink));
             mailSender.send(message.getMimeMessage());
@@ -255,7 +314,7 @@ public class MailService {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             message.setTo(npr.getUser().getContactData().getEmail());
             message.setFrom(replyAddress, replyName);
-            message.setSubject("PALGA wachtwoord opnieuw instellen / Reset PALGA password");
+            message.setSubject("PALGA-wachtwoord opnieuw instellen / Reset PALGA password");
             String passwordRecoveryLink = getLink("/#/login/reset-password/" + npr.getToken());
             message.setText(String.format(passwordRecoveryTemplate, passwordRecoveryLink));
             log.info("Sending password recovery token. mailSender: " + mailSender.getClass());

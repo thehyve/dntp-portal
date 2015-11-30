@@ -7,10 +7,12 @@ import java.util.Set;
 
 import business.models.ContactData;
 import business.models.Lab;
+import business.models.RequestProperties.ReviewStatus;
 
 public class RequestRepresentation {
 
     private String processInstanceId;
+    private String requestNumber;
     private String activityId;
     private String requesterId;
     private String requesterName;
@@ -22,6 +24,8 @@ public class RequestRepresentation {
     private String assignee;
     private String assigneeName;
     private Date dateAssigned;
+
+    private ReviewStatus reviewStatus;
 
     private String title;
     private String background;
@@ -99,6 +103,14 @@ public class RequestRepresentation {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public String getRequestNumber() {
+        return requestNumber;
+    }
+
+    public void setRequestNumber(String requestNumber) {
+        this.requestNumber = requestNumber;
     }
 
     public String getActivityId() {
@@ -324,7 +336,15 @@ public class RequestRepresentation {
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
     }
-    
+
+    public ReviewStatus getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(ReviewStatus reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
     public List<FileRepresentation> getAttachments() {
         return attachments;
     }

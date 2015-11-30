@@ -2,13 +2,18 @@ package business.representation;
 
 import java.util.Date;
 
+import business.models.RequestProperties.ReviewStatus;
+
 public class RequestListRepresentation {
 
     private String processInstanceId;
+    private String requestNumber;
     private Long requesterId;
     private String requesterName;
     private String status;
     private Date dateCreated;
+
+    private ReviewStatus reviewStatus;
 
     private String assignee;
     private String assigneeName;
@@ -19,6 +24,8 @@ public class RequestListRepresentation {
     private String researchQuestion;
     private String hypothesis;
     private String methods;
+    private String pathologistName;
+    private String pathologistEmail;
 
     private boolean statisticsRequest;
     private boolean excerptsRequest;
@@ -38,6 +45,14 @@ public class RequestListRepresentation {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public String getRequestNumber() {
+        return requestNumber;
+    }
+
+    public void setRequestNumber(String requestNumber) {
+        this.requestNumber = requestNumber;
     }
 
     public Long getRequesterId() {
@@ -70,6 +85,14 @@ public class RequestListRepresentation {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public ReviewStatus getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(ReviewStatus reviewStatus) {
+        this.reviewStatus = reviewStatus;
     }
 
     public String getTitle() {
@@ -110,6 +133,22 @@ public class RequestListRepresentation {
 
     public void setMethods(String methods) {
         this.methods = methods;
+    }
+
+    public String getPathologistName() {
+        return pathologistName;
+    }
+
+    public void setPathologistName(String pathologistName) {
+        this.pathologistName = pathologistName;
+    }
+
+    public String getPathologistEmail() {
+        return pathologistEmail;
+    }
+
+    public void setPathologistEmail(String pathologistEmail) {
+        this.pathologistEmail = pathologistEmail;
     }
 
     public String getAssignee() {

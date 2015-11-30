@@ -1,5 +1,13 @@
 package business.services;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -7,16 +15,21 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import business.controllers.RequestComparator;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
+import business.models.RequestProperties;
 import business.models.User;
+import business.representation.LabRequestRepresentation;
+import business.security.UserAuthenticationToken;
 
 @Service
 public class RequestService {
@@ -37,7 +50,22 @@ public class RequestService {
 
     @Autowired
     private HistoryService historyService;
-    
+
+    @Autowired
+    private RequestComparator requestComparator;
+
+    @Autowired
+    private LabRequestService labRequestService;
+
+    @Autowired
+    private RequestNumberService requestNumberService;
+
+    @Autowired
+    private RequestPropertiesService requestPropertiesService;
+
+    @Autowired
+    private MailService mailService;
+
     /**
      * Finds task. 
      * @param taskId
@@ -55,7 +83,20 @@ public class RequestService {
         }
         return task;
     }
-    
+
+    /**
+     * Finds historic task. Assumes that exactly one task is currently active.
+     * @param requestId
+     * @return the task if it exists; null otherwise.
+     */
+    public HistoricTaskInstance findHistoricTaskByRequestId(String requestId, String taskDefinition) {
+        HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
+                .processInstanceId(requestId)
+                .taskDefinitionKey(taskDefinition)
+                .singleResult();
+        return task;
+    }
+
     /**
      * Finds current task. Assumes that exactly one task is currently active.
      * @param requestId
@@ -167,6 +208,101 @@ public class RequestService {
             throw new RequestNotFound();
         }
         return instance;
+    }
+
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    public List<HistoricProcessInstance> getProcessInstancesForUser(
+            UserAuthenticationToken user) {
+        List<HistoricProcessInstance> processInstances;
+
+        if (user == null) {
+            processInstances = new ArrayList<HistoricProcessInstance>();
+        } else if (user.getUser().isPalga()) {
+            processInstances = historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueNotEquals("status", "Open")
+                    .list();
+        } else if (user.getUser().isScientificCouncilMember()) {
+            Date start = new Date();
+            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstances.addAll(historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueEquals("status", "Approval")
+                    .list());
+            Date endQ1 = new Date();
+            List<HistoricProcessInstance> list = historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueNotEquals("status", "Approval")
+                    .variableValueNotEquals("scientific_council_approved", null)
+                    .list();
+            Date endQ2 = new Date();
+            log.info("GET: query 1 took " + (endQ1.getTime() - start.getTime()) + " ms.");
+            log.info("GET: query 2 took " + (endQ2.getTime() - endQ1.getTime()) + " ms.");
+            if (list != null) {
+                processInstances.addAll(list);
+            }
+        } else if (user.getUser().isLabUser()) {
+            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
+            Set<String> processInstanceIds = new HashSet<String>();
+            for (LabRequestRepresentation labRequest: labRequests) {
+                processInstanceIds.add(labRequest.getProcessInstanceId());
+            }
+            if (!processInstanceIds.isEmpty()) {
+                processInstances = historyService
+                        .createHistoricProcessInstanceQuery()
+                        .notDeleted()
+                        .includeProcessVariables()
+                        .processInstanceIds(processInstanceIds)
+                        .list();
+            } else {
+                processInstances = new ArrayList<HistoricProcessInstance>();
+            }
+        } else {
+            processInstances = historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .involvedUser(user.getId().toString())
+                    .orderByProcessInstanceStartTime()
+                    .desc()
+                    .list();
+        }
+        return processInstances;
+    }
+
+    /**
+     * Completes <code>request_form</code> task, generates a
+     * request number, and sends an email to the requester
+     * for the request with processInstanceId <code>id</code>.
+     * @param id the processInstanceId of the request.
+     */
+    @Transactional
+    public RequestProperties submitRequest(User requester, String id) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
+
+        Task task = getTaskByRequestId(id, "request_form");
+        if (task.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+
+        String requestNumber = requestNumberService.getNewRequestNumber();
+        properties.setRequestNumber(requestNumber);
+        properties =  requestPropertiesService.save(properties);
+
+        mailService.sendAgreementFormLink(requester, properties);
+
+        return properties;
     }
 
 }

@@ -188,6 +188,8 @@ public class LabRequestService {
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
         setRequestListData(labRequestRepresentation, instance);
 
+        labRequestRepresentation.setLabRequestCode();
+
         Date end = new Date();
         if ((end.getTime() - start.getTime()) > 10) {
             log.warn("transferLabRequestData took " + (end.getTime() - start.getTime()) + " ms "

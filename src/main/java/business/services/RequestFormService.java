@@ -93,6 +93,7 @@ public class RequestFormService {
     
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
+        request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
 
         Map<String, Object> variables = instance.getProcessVariables();
 
@@ -102,6 +103,8 @@ public class RequestFormService {
             request.setResearchQuestion((String)variables.get("research_question"));
             request.setHypothesis((String) variables.get("hypothesis"));
             request.setMethods((String) variables.get("methods"));
+            request.setPathologistName((String)variables.get("pathologist_name"));
+            request.setPathologistEmail((String)variables.get("pathologist_email"));
             request.setStatus((String)variables.get("status"));
             request.setDateCreated((Date)variables.get("date_created"));
             String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();
@@ -164,7 +167,10 @@ public class RequestFormService {
             }
         }
         
-        if (currentUser.isScientificCouncilMember()) {
+        
+        if (currentUser.isPalga()) {
+            request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(instance.getId()));
+        } else if (currentUser.isScientificCouncilMember()) {
             // fetch my vote
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
@@ -173,7 +179,6 @@ public class RequestFormService {
                 request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
             }
         }
-        
     }
     
     private static Set<String> excerptListStatuses = new HashSet<String>();
@@ -267,6 +272,8 @@ public class RequestFormService {
             }
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
+            request.setRequestNumber(properties.getRequestNumber());
+            request.setReviewStatus(properties.getReviewStatus());
             request.setBillingAddress(properties.getBillingAddress());
             request.setChargeNumber(properties.getChargeNumber());
             request.setResearchNumber(properties.getReseachNumber());

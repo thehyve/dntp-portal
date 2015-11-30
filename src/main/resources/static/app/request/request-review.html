@@ -93,12 +93,16 @@
                                 </span>
     </li>
   </ul>
-
-  <div flow-init="flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
+  <!-- Agreement file upload -->
+  <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
        flow-name="agreementFlow"
-       flow-files-submitted="$flow.upload()"
-       flow-file-success="fileuploadsuccess(request, $message, false, $flow)"
+       flow-files-submitted="fileuploadsubmitted('agreement'); Upload.uploadFile($flow)"
+       flow-file-success="Upload.fileUploadSuccess('agreement', $message, $file); fileuploadsuccess(request, $message, 'agreement', $flow)"
+       flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'agreement')"
     >
+    <div class="alert alert-danger" role="alert" ng-if="upload_result['agreement'] == 'error'">
+        <span ng-bind-html="upload_error['agreement']"></span>
+    </div>
     <div>
       <span class="btn btn-default" flow-btn>{{'Upload agreement files'|translate}}</span>
     </div>

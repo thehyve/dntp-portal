@@ -52,6 +52,12 @@
                 templateUrl : 'app/admin/user/users.html'
             }).when('/labs', {
                 templateUrl : 'app/admin/lab/labs.html'
+            }).when('/accesslogs', {
+                templateUrl : 'app/admin/accesslogs/accesslogs.html'
+            }).when('/accesslogs/:filename', {
+                templateUrl : 'app/admin/accesslogs/accesslogs.html'
+            }).when('/agreementformtemplate', {
+                templateUrl : 'app/admin/agreementformtemplate/edit.html'
             }).when('/lab-requests', {
                 templateUrl : 'app/lab-request/lab-requests.html',
                 controller : ''
@@ -73,6 +79,8 @@
             }).when('/request/:requestId/selection', {
                 templateUrl : 'app/request/selection.html',
                 controller : 'RequestController'
+            }).when('/request/:requestId/agreementform', {
+                templateUrl : 'app/request/agreementform.html'
             }).when('/my-lab', {
                 templateUrl : 'app/lab/my-lab.html',
                 controller : 'MyLabController'
@@ -130,7 +138,9 @@
                         HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
                         HAS_MANAGE_REQUEST_PAGE_AUTH : 'HAS_MANAGE_REQUEST_PAGE_AUTH',
                         HAS_MANAGE_LAB_REQUEST_PAGE_AUTH : 'HAS_MANAGE_LAB_REQUEST_PAGE_AUTH',
-                        HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH'
+                        HAS_MANAGE_SAMPLES_PAGE_AUTH : 'HAS_MANAGE_SAMPLES_PAGE_AUTH',
+                        HAS_MANAGE_ACCESS_LOG_AUTH : 'HAS_MANAGE_ACCESS_LOG_AUTH',
+                        HAS_MANAGE_AGREEMENT_FORM_TEMPLATE_AUTH: 'HAS_MANAGE_AGREEMENT_FORM_TEMPLATE_AUTH'
                     };
     
                     if (currentUser.roles[0] === 'palga') {
@@ -140,6 +150,8 @@
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_ACCESS_LOG_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_AGREEMENT_FORM_TEMPLATE_AUTH);
                     } else if (currentUser.roles[0] === 'lab_user') {
                         currentUser.features.push(globalFeatures.HAS_MANAGE_OWN_LAB_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);

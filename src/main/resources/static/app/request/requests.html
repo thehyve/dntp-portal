@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <div ng-show="!authenticated">
+        <div ng-if="!authenticated">
             <div class="alert alert-danger" role="alert">
                 {{ 'Not logged in' | translate }}
             </div>
@@ -47,7 +47,7 @@
                 <!-- <table st-table="displayedCollection | filter:filterEmptyRequests" st-safe-src="requests" class="table"> -->
                     <thead>
                     <tr>
-                        <th st-sort="number">#</th>
+                        <th st-sort="number" style="width: 6em">#</th>
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
                         <th st-sort="dateCreated">{{'Creation date'|translate}}</th>
@@ -55,7 +55,7 @@
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"  st-sort="requesterName">{{'Requester'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="assigneeName">{{'Assignee'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
-                        <th>{{'Actions'|translate}}</th>
+                        <th style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
                     <tr>
                         <th>&nbsp;</th>
@@ -82,7 +82,7 @@
                             {{req.numberOfApprovalVotes ? req.numberOfApprovalVotes : 0 }}
                             </span>                        
                         </td>
-                        <td>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</td>
+                        <td><small>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</small></td>
                         <td ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="request-vote">
                             {{req.approvalVote}}
                         </td>
@@ -118,14 +118,14 @@
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>
                             <button
-                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1"
-                                 ng-disabled="req.reviewStatus =='SUSPENDED' || req.assignee != globals.currentUser.userid"
+                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1 && req.reviewStatus != 'SUSPENDED'"
+                                 ng-disabled="req.assignee != globals.currentUser.userid"
                                  class="btn btn-default" type="button" title="{{'Suspend'|translate}}" ng-click="suspend(req)">
                                 <span><i class="glyphicon glyphicon-pause"></i></span>
                             </button>
                             <button
-                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1"
-                                 ng-disabled="req.reviewStatus != 'SUSPENDED' || req.assignee != globals.currentUser.userid"
+                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1 && req.reviewStatus == 'SUSPENDED'"
+                                 ng-disabled="req.assignee != globals.currentUser.userid"
                                  class="btn btn-default" type="button" title="{{'Resume'|translate}}" ng-click="resume(req)">
                                 <span><i class="glyphicon glyphicon-play"></i></span>
                             </button>

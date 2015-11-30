@@ -8,7 +8,7 @@
             </ul>
         </div>
 
-        <div ng-show="!authenticated">
+        <div ng-if="!authenticated">
             <div class="alert alert-danger" role="alert">
                 {{'Not logged in'|translate}}.
             </div>
@@ -18,7 +18,7 @@
 
             <div ng-controller="AdminUserController" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-                <div class="alert alert-danger" role="alert" ng-show="error.length" id="error">
+                <div class="alert alert-danger" role="alert" ng-if="error.length" id="error">
                     {{error|translate}}.
                 </div>
 

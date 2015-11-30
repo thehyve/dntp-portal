@@ -29,7 +29,7 @@ angular.module('ProcessApp.controllers')
             };
             
             $scope.serverurl = $location.protocol()+'://'+$location.host()
-                +(($location.port()===80) ? '' : ':'+$location.port());
+                +(($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
 
             $scope.error = '';
             $rootScope.tempRequest = null;

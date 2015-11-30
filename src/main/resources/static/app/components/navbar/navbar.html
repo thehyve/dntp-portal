@@ -1,7 +1,8 @@
 <nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationController">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">{{'Toggle navigation'|translate}}</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -11,26 +12,31 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
-            <ul ng-if="authenticated" class="nav navbar-nav" >
+            <ul ng-if="authenticated" class="nav navbar-nav">
                 <li ng-show="isViewRequestsAllowed();" class="{{isRequestsPage() ? 'active': ''}}">
                     <a href="#/">{{'Requests'|translate}}</a>
                 </li>
                 <li ng-show="isViewLabRequestsAllowed();" class="{{isLabRequestsPage() ? 'active': ''}}">
                     <a href="#/lab-requests">{{'Lab requests'|translate}}</a>
                 </li>
-                <li ng-show="isViewSamplesAllowed();" class="{{$route.current.templateUrl=='app/lab-request/samples.html' ? 'active': ''}}">
+                <li ng-show="isViewSamplesAllowed();"
+                    class="{{$route.current.templateUrl=='app/lab-request/samples.html' ? 'active': ''}}">
                     <a href="#/samples">{{'Samples'|translate}}</a>
                 </li>
-                <li ng-show="isViewUsersAllowed();" class="{{$route.current.templateUrl=='app/admin/user/users.html' ? 'active': ''}}">
+                <li ng-show="isViewUsersAllowed();"
+                    class="{{$route.current.templateUrl=='app/admin/user/users.html' ? 'active': ''}}">
                     <a href="#/users">{{'Users'|translate}}</a>
                 </li>
-                <li ng-show="isViewLabsAllowed();" class="{{$route.current.templateUrl=='app/admin/lab/labs.html' ? 'active': ''}}">
+                <li ng-show="isViewLabsAllowed();"
+                    class="{{$route.current.templateUrl=='app/admin/lab/labs.html' ? 'active': ''}}">
                     <a href="#/labs">{{'Labs'|translate}}</a>
                 </li>
-                <li ng-show="isViewOwnLabAllowed();" class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">
+                <li ng-show="isViewOwnLabAllowed();"
+                    class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">
                     <a href="#/my-lab">{{'My lab'|translate}}</a>
                 </li>
-                <li ng-show="isViewAccessLogsAllowed();" class="{{$route.current.templateUrl=='app/admin/accesslogs.html' ? 'active': ''}}">
+                <li ng-show="isViewAccessLogsAllowed();"
+                    class="{{$route.current.templateUrl=='app/admin/accesslogs.html' ? 'active': ''}}">
                     <a href="#/accesslogs">{{'Access logs'|translate}}</a>
                 </li>
             </ul>
@@ -47,16 +53,17 @@
                         {{ 'Language' | translate }}: {{currentLanguage}}
                     </label>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a ng-click="changeLanguage('en')"  ng-disabled="{{currentLanguage=='en'}}">
+                        <li><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
                             {{ 'English' | translate }} (en)
                         </a></li>
-                        <li><a ng-click="changeLanguage('nl')"  ng-disabled="{{currentLanguage=='nl'}}">
+                        <li><a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
                             {{ 'Dutch' | translate }} (nl)
                         </a></li>
                     </ul>
                 </li>
-                <li ng-show="authenticated"   class="dropdown">
-                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="profile_menu"><span class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</a>
+                <li ng-show="authenticated" class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="profile_menu"><span
+                            class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
                         <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>

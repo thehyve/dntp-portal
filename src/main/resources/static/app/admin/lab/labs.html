@@ -94,7 +94,7 @@
 <div class="page-header">
     <h2>{{'Labs'|translate}}</h2>
 </div>
-<div ng-show="!authenticated">
+<div ng-if="!authenticated">
     <div class="alert alert-danger" role="alert">
         {{'Not logged in'|translate}}.
     </div>

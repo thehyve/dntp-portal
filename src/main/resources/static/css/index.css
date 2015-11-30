@@ -176,3 +176,9 @@ address {margin-bottom: 0px;}
 .alert .close { padding-left: 15px; }
 .alert span { display: block; }
 .alert { z-index: 10000; }
+
+.template-preview {
+    padding: 2em;
+    border: 1px solid #bbb;
+    box-shadow: 2px 2px 2px #bbb;
+}

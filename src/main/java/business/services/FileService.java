@@ -12,8 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -51,7 +54,9 @@ public class FileService {
 
     @Value("${dntp.upload-path}")
     String uploadPath;
-    
+
+    private static String accessLogsPath = "./logs/";
+
     @PostConstruct
     public void init() throws IOException {
         Path path = fileSystem.getPath(uploadPath).normalize();
@@ -214,6 +219,66 @@ public class FileService {
         } catch(IOException e) {
             log.error(e);
             throw new FileDeleteError();
+        }
+    }
+    
+    public boolean checkUploadPath() {
+        Path path = fileSystem.getPath(uploadPath).normalize();
+        java.io.File f = path.toFile();
+        if (f.exists() && f.isDirectory() && f.canWrite()) {
+            return true;
+        }
+        return false;
+    }
+
+    public List<String> getAccessLogFilenames() {
+        try {
+            List<String> logFiles = new ArrayList<String>();
+            for (Path p: Files.newDirectoryStream(fileSystem.getPath("./logs/"), "dntp-access*.log")) {
+                logFiles.add(p.getFileName().toString());
+            }
+            Collections.sort(logFiles, Collections.reverseOrder());
+            return logFiles;
+        } catch(IOException e) {
+            log.error(e);
+            throw new FileDownloadError();
+        }
+    }
+
+    public HttpEntity<InputStreamResource> downloadAccessLog(String filename, boolean writeContentDispositionHeader) {
+        try {
+            FileSystem fileSystem = FileSystems.getDefault();
+            Path path = fileSystem.getPath(accessLogsPath).normalize();
+            filename = filename.replace(fileSystem.getSeparator(), "_");
+            filename = URLEncoder.encode(filename, "utf-8");
+
+            Path f = fileSystem.getPath(accessLogsPath, filename).normalize();
+            // filter path names that point to places outside the logs path.
+            // E.g., to prevent that in cases where clients use '../' in the filename
+            // arbitrary locations are reachable.
+            if (!Files.isSameFile(path, f.getParent())) {
+                // Path f is not in the upload path. Maybe 'name' contains '..'?
+                log.error("Invalid filename: " + filename);
+                throw new FileDownloadError("Invalid file name");
+            }
+            if (!Files.isReadable(f)) {
+                log.error("File does not exist: " + filename);
+                throw new FileDownloadError("File does not exist");
+            }
+
+            InputStream input = new FileInputStream(f.toFile());
+            InputStreamResource resource = new InputStreamResource(input);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.TEXT_PLAIN);
+            if (writeContentDispositionHeader) {
+            headers.set("Content-Disposition",
+                    "attachment; filename=" + filename.replace(" ", "_"));
+            }
+            HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
+            return response;
+        } catch(IOException e) {
+            log.error(e);
+            throw new FileDownloadError();
         }
     }
 

@@ -5,13 +5,15 @@ angular.module('ProcessApp.controllers')
         'Request', 'RequestAttachment', 'RequestComment',
         'ApprovalComment', 'ApprovalVote',
         '$translate',
-        'FlowOptionService', '$routeParams',
+        'Upload', '$routeParams',
+        '$alert',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
                   $translate,
-                  FlowOptionService, $routeParams) {
+                  Upload, $routeParams,
+                  $alert) {
 
             $rootScope.redirectUrl = $location.path();
         
@@ -23,13 +25,15 @@ angular.module('ProcessApp.controllers')
                 $scope.login();
                 return;
             }
-        
+
+            $scope.Upload = Upload;
+
             $scope.translate = function(key, params) {
                 return $translate.instant(key, params);
-            }
-            
+            };
+
             $scope.serverurl = $location.protocol()+'://'+$location.host()
-                +(($location.port()===80) ? '' : ':'+$location.port());
+                +(($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
 
             $scope.error = '';
             $rootScope.tempRequest = null;
@@ -63,7 +67,12 @@ angular.module('ProcessApp.controllers')
                 });
             } else {
                 Request.query().$promise.then(function(response) {
+                    $scope.activeSidebar = 'overview';
                     $scope.requests = response ? response : [];
+                    $scope.requests.forEach(function(req) {
+                        req.number = Request.convertRequestNumber(req);
+                    });
+                    $scope.allRequests = $scope.requests;
                     $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
                     if (response.data) {
@@ -95,19 +104,29 @@ angular.module('ProcessApp.controllers')
             $scope.resetPreviousContactValues = function (request) {
                 request.previousContactDescription = '';
             };
-            
-            $scope.flow_options = function(options) {
-                return FlowOptionService.get_default(options);
+
+            $scope.upload_result = {
+                    'attachment': '',
+                    'agreement': '',
+                    'mec_approval': '',
+                    'excerpt_list': '',
+                    'excerpt_selection': '',
+                    'data': ''
             };
 
-            $scope.fileuploadsuccess = function(request, data, excerpts, flow) {
+            $scope.upload_error = {}
+
+            $scope.fileuploadsubmitted = function(type) {
+                $scope.upload_result[type] = '';
+                if (type in $scope.upload_error) {
+                    delete $scope.upload_error[type];
+                } 
+            }
+
+            $scope.fileuploadsuccess = function(request, data, type, flow) {
                 $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
-                if (excerpts) {
-                    $scope.excerptlist_upload_result = "success";
-                    $scope.excerptselection_upload_result = 'success';
-                } else {
-                    $scope.fileupload_result = "success";
-                }
+                $scope.upload_result[type] = 'success';
+                $scope.upload_error[type] = '';
                 $scope.$apply();
                 var result = new Request(JSON.parse(data));
                 //$scope.refresh(request, result);
@@ -118,15 +137,10 @@ angular.module('ProcessApp.controllers')
                 request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 
-            $scope.fileuploaderror = function(data, excerpts) {
-                if (excerpts) {
-                    $scope.excerptlist_upload_error = data;
-                    $scope.excerptlist_upload_result = "error";
-                    $scope.excerptselection_upload_result = 'error';
-                    $scope.excerptselection_upload_error = data;
-                } else {
-                    $scope.fileupload_result = "error";
-                }
+            $scope.fileuploaderror = function(message, type) {
+                console.log('Upload error: ' + message);
+                $scope.upload_result[type] = 'error';
+                $scope.upload_error[type] = message;
             };
 
             var patt = /gijs(\+)?[a-zA-Z0-9]*@thehyve.nl/g;
@@ -174,7 +188,7 @@ angular.module('ProcessApp.controllers')
                     });
                 }
                 $route.reload();
-            }
+            };
 
             var _claimableStatuses = ['Review', 'Approval', 'DataDelivery', 'SelectionReview'];
             
@@ -616,6 +630,24 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.suspend = function(request) {
+                request.$suspend(function(result) {
+                    result.type = Request.convertRequestOptsToType(result);
+                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                }, function(response) {
+                    $scope.error = response.statusText;
+                });
+            };
+
+            $scope.resume = function(request) {
+                request.$resume(function(result) {
+                    result.type = Request.convertRequestOptsToType(result);
+                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                }, function(response) {
+                    $scope.error = response.statusText;
+                });
+            };
+
             $scope.focus = function (el) {
                 $(el).focus();
             };
@@ -678,4 +710,28 @@ angular.module('ProcessApp.controllers')
                 $scope.popover[name] = false;
             };
 
-}]);
+            $scope.getAllRequests = function () {
+                $scope.requests = $scope.allRequests;
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'overview';
+            };
+
+            $scope.getSuspended = function () {
+                $scope.requests = _.where($scope.allRequests,  {reviewStatus:'SUSPENDED'});
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'suspended';
+            };
+
+            $scope.getClaimed = function () {
+                $scope.requests = _.where($scope.allRequests,  {assignee:$rootScope.globals.currentUser.userid});
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'claimed';
+            };
+
+            $scope.getUnclaimed = function () {
+                $scope.requests = _.where($scope.allRequests,  {assignee:null});
+                $scope.displayedCollection = $scope.requests;
+                $scope.activeSidebar = 'unclaimed';
+            };
+
+        }]);

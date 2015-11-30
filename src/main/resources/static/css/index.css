@@ -41,7 +41,7 @@ h3 { color: #949494; }
 
 /* Hide for mobile, show later */
 .sidebar {
-    display: none;
+    display: block;
 }
 @media (min-width: 768px) {
     .sidebar {
@@ -52,6 +52,7 @@ h3 { color: #949494; }
         z-index: 1000;
         display: block;
         padding: 20px;
+        margin-bottom: 40px;
         overflow-x: hidden;
         overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
         background-color: aliceblue;
@@ -88,6 +89,8 @@ h3 { color: #949494; }
     .main {
         padding-right: 40px;
         padding-left: 40px;
+        margin-top: 10px;
+        margin-bottom: 40px;
     }
 }
 .main .page-header {
@@ -165,3 +168,57 @@ address {margin-bottom: 0px;}
 }
 
 #editCommentText {margin-bottom: 5px;}
+
+/*
+* Alert box from angular-strap
+*/
+.top-right { position: fixed; right: 5px; margin-right: 10px; top: 55px; }
+.alert .close { padding-left: 15px; }
+.alert span { display: block; }
+.alert { z-index: 10000; }
+
+.template-preview {
+    padding: 2em;
+    border: 1px solid #bbb;
+    box-shadow: 2px 2px 2px #bbb;
+}
+.markdown-input, .markdown-output {float: left; width: 48%; padding-right: 10px}
+.markdown-textarea {max-height:1000px;min-height: 500px; background-color: antiquewhite; font-family: courier, monospace}
+.markdown-body {
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+    min-width: 200px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px dashed #999 ;
+}
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { color: black !important;}
+.h3-info {color: steelblue}
+
+/* The declarations for print output */
+
+@media print {
+
+    /* Reset quotes */
+    q {
+        quotes: none
+    }
+
+    q:before, q:after {
+        content: ""
+    }
+
+    /* Hide everything unneeded */
+    header h1, header nav, footer, img {
+        display: none
+    }
+
+    /* font sizes */
+    body {
+
+        font: 12pt Georgia, "Times New Roman", Times, serif;
+
+        line-height: 1.3;
+
+    }
+
+}

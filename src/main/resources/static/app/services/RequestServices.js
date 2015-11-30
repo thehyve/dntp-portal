@@ -41,6 +41,14 @@
                 url : '/requests/:id/unclaim',
                 method : 'PUT'
             },
+            suspend : {
+                url : '/requests/:id/suspend',
+                method : 'PUT'
+            },
+            resume : {
+                url : '/requests/:id/resume',
+                method : 'PUT'
+            },
             selectAll : {
                 url : '/requests/:id/selectAll',
                 method : 'PUT'
@@ -174,6 +182,16 @@
                 }
             }
         };
+
+        _requestFactory.convertRequestNumber = function (request) {
+            var _number = '' + request.requestNumber;
+            if (_number.length > 5) {
+                var value = Number(_number.substring(0,4))*1000000;
+                value += Number(_number.substring(5, _number.length));
+                return value;
+            }
+            return -1;
+        }
 
         return _requestFactory;
     };

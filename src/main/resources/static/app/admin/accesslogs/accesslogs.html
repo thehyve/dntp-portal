@@ -1,0 +1,57 @@
+<div class="container-fluid">
+    <div class="row" ng-controller="AdminAccessLogsController" >
+
+        <div ng-if="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{'Not logged in'|translate}}.
+            </div>
+        </div>
+
+        <div ng-if="authenticated">
+
+            <!--Side Bar-->
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li ng-repeat="f in logfiles" class="{{ (logfilename == f) ? 'active': ''}}">
+                        <!-- <a ng-href="/#/accesslogs/{{f}}">{{f}}</a>  -->
+                        <a role="button" ng-click="loadLogfile(f)">{{f}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+                <div class="alert alert-danger" role="alert" ng-show="error.length" id="error">
+                    {{error|translate}}.
+                </div>
+
+                <h1>{{ 'Access logs' | translate }}</h1>
+                <hr>
+
+                <div ng-hide="accessDenied">
+                    <h3>{{logfilename}}</h3>
+                    <p><a class="btn btn-default" ng-href="/admin/accesslogs/{{logfilename}}/download">
+                        <i class="glyphicon glyphicon-download-alt"></i>
+                        Download</a>
+                    </p>
+
+                    <div><samp style="white-space: pre;">{{accesslog}}</samp></div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="page-header">
+    <h2>{{'Access logs'|translate}}</h2>
+</div>
+<div ng-show="!authenticated">
+    <div class="alert alert-danger" role="alert">
+        {{'Not logged in'|translate}}.
+    </div>
+</div>

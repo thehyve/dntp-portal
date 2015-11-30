@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar"  ng-show="userRoles.indexOf('palga') > -1">
+        <li ng-class="{active: $parent.activeSidebar === 'overview'}">
+            <a href="#/" ng-click="$parent.getAllRequests()">{{'All'|translate}}  <span class="badge pull-right">{{allRequests.length}}</span></a>
+        </li>
+        <li  ng-class="{active: $parent.activeSidebar === 'claimed'}">
+            <a href="#/" ng-click="$parent.getClaimed()">{{'Claimed'|translate}} <span class="badge pull-right">{{claimedReqs.length}}</span></a>
+        </li>
+        <li  ng-class="{active: $parent.activeSidebar === 'unclaimed'}">
+            <a href="#/" ng-click="$parent.getUnclaimed()">{{'Unclaimed'|translate}} <span class="badge pull-right">{{unclaimedReqs.length}}</span></a>
+        </li>
+        <li  ng-class="{active: $parent.activeSidebar === 'suspended'}">
+            <a href="#/" ng-click="$parent.getSuspended()" >{{'On Hold'|translate}} <span class="badge pull-right">{{suspendedReqs.length}}</span></a>
+        </li>
+    </ul>
+    <ul class="nav nav-sidebar"  ng-show="userRoles.indexOf('palga') < 0">
+        <li class="active">
+            <a href="#/" ng-click="$parent.getAllRequests()">{{'Overview'|translate}}  <span class="badge pull-right">{{allRequests.length}}</span></a>
+        </li>
+    </ul>
+</div>

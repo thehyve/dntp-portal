@@ -1,0 +1,61 @@
+<div class="container-fluid">
+    <div class="row" ng-controller="AgreementFormTemplateController" ng-if="authenticated">
+
+        <!--Side Bar-->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active">
+                    <a role="button" ng-href="/#/agreementformtemplate">Edit template</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <div class="alert alert-danger" role="alert" ng-show="error.length" id="error">
+                {{error|translate}}.
+            </div>
+
+            <h1>{{ 'Agreement form template' | translate }}</h1>
+            <hr>
+
+            <div>
+                <div class="markdown-input">
+                    <ng-form>
+                        <h3>Edit template <span class="glyphicon glyphicon-info-sign h3-info" aria-hidden="true"
+                                                ng-click="markdownInfo()"
+                                                data-content="{{'popover:Markdown Help'|translate}}"
+                                                bs-popover></span>
+                        </h3>
+                        <textarea class="form-control markdown-textarea" ng-model="template.contents"></textarea>
+                        <br>
+                        <div>
+                            <button ng-click="saveTemplate(template)" type="button" class="btn btn-primary">
+                                {{'Save' | translate}}
+                            </button>
+                            <button ng-click="printTemplate()" type="button" class="btn btn-success">
+                                {{'Print' | translate}}
+                            </button>
+                        </div>
+                    </ng-form>
+                </div>
+                <div class="markdown-output">
+                    <h3>Preview</h3>
+
+                    <!--<div marked="template.contents" class="markdown-body"></div>-->
+                    <p markdown-to-html="template.contents" class="markdown-body"></p>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+<div ng-if="!authenticated">
+    <div class="alert alert-danger" role="alert">
+        {{'Not logged in'|translate}}.
+    </div>
+</div>

@@ -1,5 +1,6 @@
 package business.services;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -41,7 +42,36 @@ public class MailService {
 
     @Value("${dntp.reply-address}")
     String replyAddress;
-    
+
+    static final String replyName = "Stichting PALGA";
+
+    private String getLink(String relativeURI) {
+        String protocol = "http";
+        boolean writePort = true;
+        if (serverPort.equals("443")) {
+            protocol = "https";
+            writePort = false;
+        } else if (serverPort.equals("80")) {
+            writePort = false;
+        }
+        return String.format("%s://%s%s%s", 
+                protocol, serverName, (writePort ? ":"+serverPort : ""), relativeURI);
+    }
+
+    static final String scientificCouncilNotificationTemplate = 
+              "Geachte leden van de wetenschappelijke raad,\n"
+            + "\n"
+            + "Graag uw beoordeling van de volgende aanvraag: %1$s.\n"
+            + "\n"
+            + "Bovenstaande link verwijst naar het beoordelingssysteem. "
+            + "Daar kunt u de aanvraag beoordelen en eventuele opmerkingen plaatsen.\n"
+            + "U kunt inloggen met uw gebruikersnaam en wachtwoord.\n"
+            + "--\n"
+            + "Dit is een automatisch gegenereerd bericht. "
+            + "Indien u vragen heeft kunt u contact opnemen met Stichting PALGA,\n"
+            + "088-0402700 / aanvraag@palga.nl.\n"
+            ;
+
     @Transactional
     public void notifyScientificCouncil(@NotNull RequestRepresentation request) {
         log.info("Notify scientic council for request " + request.getProcessInstanceId() + ".");
@@ -52,42 +82,63 @@ public class MailService {
             try {
                 MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
                 message.setTo(member.getContactData().getEmail());
-                message.setFrom(replyAddress);
+                message.setFrom(replyAddress, replyName);
                 message.setReplyTo(replyAddress);
-                message.setSubject("[DNTP portal] New request open for approval.");
-                String template =
-                        "Request: %s\n"
-                    +   "Requester: %s\n"
-                    +   "Principal Investigator: %s\n"
-                    +   "Title: %s\n"
-                    +   "\nBackground:\n%s\n"
-                    +   "\nResearch Question:\n%s\n"
-                    +   "\nHypothesis:\n%s\n"
-                    +   "\nMethods:\n%s\n"
-                    ;
-                String body = String.format(template,
-                        request.getProcessInstanceId(),
-                        request.getRequesterName(),
-                        request.getContactPersonName(),
-                        request.getTitle(),
-                        request.getBackground(),
-                        request.getResearchQuestion(),
-                        request.getHypothesis(),
-                        request.getMethods()
-                        );
-                message.setText(String.format(
-                        ""
-                        + "Please follow this link to view the new request: http://%s:%s/#/request/view/%s.\n"
-                        + "====\n"
-                        + body,
-                        serverName, serverPort, request.getProcessInstanceId()));
+                message.setSubject("Nieuwe PALGA aanvraag aan u voorgelegd");
+                String requestLink = getLink("/#/request/view/" + request.getProcessInstanceId());
+                message.setText(String.format(scientificCouncilNotificationTemplate, requestLink));
                 mailSender.send(message.getMimeMessage());
-            } catch (MessagingException e) {
-                log.error("MailService: " + e.getMessage());
+            } catch(MessagingException e) {
+                log.error(e.getMessage());
+                throw new EmailError("Email error: " + e.getMessage());
+            } catch(UnsupportedEncodingException e) {
+                log.error(e.getMessage());
+                throw new EmailError("Email error: " + e.getMessage());
             }
         }
     }
-    
+
+    static final String labNotificationTemplate = 
+            "Geachte heer/mevrouw,\n"
+          + "\n"
+          + "PALGA heeft een aanvraag ontvangen bestemd voor uw laboratorium.\n"
+          + "Deze link verwijst naar het verzoek van PALGA aan uw laboratorium:\n"
+          + "  %1$s.\n"
+          + "\n"
+          + "Aanvraagnummer:\t%2$s\n"
+          + "Titel project:\t%3$s\n"
+          + "Onderzoeker:\t%4$s\n"
+          + "Patholoog:\t%5$s\n"
+          + "Instituut:\t%6$s\n"
+          + "\n"
+          + "Met vriendelijke groet,\n"
+          + "Stichting PALGA\n"
+          + "088-0402700 / aanvraag@palga.nl\n"
+          + "--\n"
+          + "Dit is een automatisch gegenereerd bericht. "
+          + "Heeft u vragen, stuur dan een mail naar: aanvraag@palga.nl.\n"
+          + "\n"
+          + "=========================\n"
+          + "\n"
+          + "Dear Sir/Madam,\n"
+          + "\n"
+          + "PALGA has received a request for your lab.\n"
+          + "Please follow this link to view the request: %1$s.\n"
+          + "\n"
+          + "Lab request:\t%2$s\n"
+          + "Title:\t%3$s\n"
+          + "Requester:\t%4$s\n"
+          + "Pathologist:\t%5$s\n"
+          + "Institute:\t%6$s\n"
+          + "\n"
+          + "With kind regards,\n"
+          + "Stichting PALGA\n"
+          + "088-0402700 / aanvraag@palga.nl\n"
+          + "--\n"
+          + "This is an automatically generated message. "
+          + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+          ;
+
     public void notifyLab(@NotNull LabRequestRepresentation labRequest) {
         log.info("Notify lab for lab request " + labRequest.getId() + ".");
 
@@ -100,60 +151,130 @@ public class MailService {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             message.setTo(lab.getContactData().getEmail());
-            message.setFrom(replyAddress);
-            message.setReplyTo(replyAddress);
-            message.setSubject("[DNTP portal] New lab request open for approval.");
-            String template =
-                    "Lab request: %d\n"
-                +   "Title: %s\n"
-                +   "Requester: %s\n"
-                ;
-            String body = String.format(template,
-                    labRequest.getId(),
-                    labRequest.getRequest().getTitle(),
-                    labRequest.getRequesterName()
+            message.setFrom(replyAddress, replyName);
+            message.setSubject(String.format("PALGA verzoek aan laboratorium, aanvraagnummer: %s", labRequest.getLabRequestCode()));
+            String labRequestLink = getLink("/#/lab-request/view/" + labRequest.getId());
+            String body = String.format(labNotificationTemplate,
+                    labRequestLink, // %1
+                    labRequest.getLabRequestCode(), // %2
+                    labRequest.getRequest().getTitle(), // %3
+                    labRequest.getRequesterName(), // %4
+                    labRequest.getRequest().getPathologistName() == null ? "" : labRequest.getRequest().getPathologistName(), // %5
+                    labRequest.getRequesterLab().getName() // %6
                     );
-            message.setText(String.format(
-                    ""
-                    + "Please follow this link to view the new request: http://%s:%s/#/lab-request/view/%d.\n"
-                    + "====\n"
-                    + body,
-                    serverName, serverPort, labRequest.getId()));
+            message.setText(body);
             mailSender.send(message.getMimeMessage());
-        } catch (MessagingException e) {
-            log.error("MailService: " + e.getMessage());
+        } catch(MessagingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
+        } catch(UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
         }
     }
-    
+
+    static final String activationEmailTemplate = 
+              "Geachte heer/mevrouw,\n"
+            + "\n"
+            + "U heeft een account aangemaakt bij Stichting PALGA. "
+            + "Voordat u uw aanvraag bij PALGA in kunt dienen moet dit account nog geactiveerd worden.\n"
+            + "Via deze link activeert u uw account: %1$s.\n"
+            + "\n"
+            + "Met vriendelijke groet,\n"
+            + "Stichting PALGA\n"
+            + "088-0402700 / aanvraag@palga.nl\n"
+            + "--\n"
+            + "Dit is een automatisch gegenereerd bericht. "
+            + "Heeft u vragen, stuur dan een mail naar: aanvraag@palga.nl.\n"
+            + "\n"
+            + "=========================\n"
+            + "\n"
+            + "Dear Sir/Madam,\n"
+            + "\n"
+            + "You have created an account at PALGA. "
+            + "Before you can submit your request to PALGA, your account needs to be activated.\n"
+            + "Please follow this link to activate your account: %1$s.\n"
+            + "\n"
+            + "With kind regards,\n"
+            + "Stichting PALGA\n"
+            + "088-0402700 / aanvraag@palga.nl\n"
+            + "--\n"
+            + "This is an automatically generated message. "
+            + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+            ;
+
     public void sendActivationEmail(@NotNull ActivationLink link) {
         // Send email to user
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             message.setTo(link.getUser().getUsername());
-            message.setFrom(replyAddress);
+            message.setFrom(replyAddress, replyName);
             message.setReplyTo(replyAddress);
-            message.setSubject("Account activation");
-            message.setText(String.format("Please follow this link to activate your account: http://%s:%s/#/activate/%s", serverName, serverPort, link.getToken()));
+            message.setSubject("PALGA account activeren / Activate PALGA account");
+            String activationLink = getLink("/#/activate/" + link.getToken());
+            message.setText(String.format(activationEmailTemplate, activationLink));
             mailSender.send(message.getMimeMessage());
             LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + link.getToken());
         } catch(MessagingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
+        } catch(UnsupportedEncodingException e) {
+            log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
         }
     }
-    
+
+    static final String passwordRecoveryTemplate = 
+              "Geachte heer/mevrouw,\n"
+            + "\n"
+            + "Via deze link kunt u uw PALGA wachtwoord opnieuw instellen: %1$s.\n"
+            + "\n"
+            + "Met vriendelijke groet,\n"
+            + "Stichting PALGA\n"
+            + "088-0402700 / aanvraag@palga.nl\n"
+            + "--\n"
+            + "Dit is een automatisch gegenereerd bericht. "
+            + "Heeft u vragen, stuur dan een mail naar aanvraag@palga.nl.\n"
+            + "\n"
+            + "=========================\n"
+            + "\n"
+            + "Dear Sir/Madam,\n"
+            + "\n"
+            + "Please follow this link to reset your PALGA password: %1$s.\n"
+            + "\n"
+            + "With kind regards,\n"
+            + "Stichting PALGA\n"
+            + "088-0402700 / aanvraag@palga.nl\n"
+            + "--\n"
+            + "This is an automatically generated message. "
+            + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+            ;
+
     public void sendPasswordRecoveryToken(NewPasswordRequest npr) {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             message.setTo(npr.getUser().getContactData().getEmail());
-            message.setFrom(replyAddress);
-            message.setReplyTo(replyAddress);
-            message.setSubject("Password recovery");
-            message.setText(String.format("Please follow this link to reset your password: http://%s:%s/#/login/reset-password/%s", serverName, serverPort, npr.getToken()));
+            message.setFrom(replyAddress, replyName);
+            message.setSubject("PALGA wachtwoord opnieuw instellen / Reset PALGA password");
+            String passwordRecoveryLink = getLink("/#/login/reset-password/" + npr.getToken());
+            message.setText(String.format(passwordRecoveryTemplate, passwordRecoveryLink));
             log.info("Sending password recovery token. mailSender: " + mailSender.getClass());
             mailSender.send(message.getMimeMessage());
         } catch(MessagingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
+        } catch(UnsupportedEncodingException e) {
+            log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
         }
+    }
+    
+    public boolean checkMailSender() {
+        if (mailSender == null) {
+            return false;
+        }
+        mailSender.createMimeMessage();
+        return true;
     }
 
 }

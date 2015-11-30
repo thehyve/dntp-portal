@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import business.models.AgreementFormTemplate;
-import business.models.AgreementFormTemplateRepository;
 import business.representation.AgreementFormTemplateRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.AgreementFormTemplateService;
 
 @RestController
 public class AgreementFormTemplateController {
@@ -23,36 +23,26 @@ public class AgreementFormTemplateController {
     Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private AgreementFormTemplateRepository agreementFormTemplateRepository;
+    private AgreementFormTemplateService agreementFormTemplateService;
 
     @RequestMapping(value = "/public/agreementFormTemplate", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementFormTemplateRepresentation getTemplate(UserAuthenticationToken user) {
         log.info("GET /public/agreementFormTemplate");
 
-        List<AgreementFormTemplate> templates = agreementFormTemplateRepository.findAll();
-        if (templates.size() == 0) {
-            return null;
-        } else {
-            return new AgreementFormTemplateRepresentation(templates.get(0));
-        }
+        AgreementFormTemplate template = agreementFormTemplateService.get();
+        return new AgreementFormTemplateRepresentation(template);
     }
 
     @RequestMapping(value = "/admin/agreementFormTemplate", method = RequestMethod.PUT)
     public AgreementFormTemplateRepresentation saveTemplate(UserAuthenticationToken user, @RequestBody AgreementFormTemplateRepresentation body) {
         log.info("PUT /admin/agreementFormTemplate");
 
-        AgreementFormTemplate template;
-        List<AgreementFormTemplate> templates = agreementFormTemplateRepository.findAll();
-        if (templates.size() == 0) {
-            template = new AgreementFormTemplate();
-        } else {
-            template = templates.get(0);
-        }
+        AgreementFormTemplate template = agreementFormTemplateService.get();
         template.setContents(body.getContents());
         template.setLastEditedBy(user.getUser());
         template.setTimeEdited(new Date());
-        template = agreementFormTemplateRepository.save(template);
+        template = agreementFormTemplateService.update(template);
         return new AgreementFormTemplateRepresentation(template);
     }
 

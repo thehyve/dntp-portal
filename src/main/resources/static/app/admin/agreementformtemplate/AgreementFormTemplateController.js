@@ -3,12 +3,13 @@
 angular.module('ProcessApp.controllers')
     .controller('AgreementFormTemplateController',['$rootScope', '$scope',
                                              '$location',
-                                             '$route', '$routeParams',
+                                             '$route', '$routeParams','AgreementFormTemplate',
                                              'Restangular',
                                              '$alert',
     function ($rootScope, $scope,
             $location,
             $route, $routeParams,
+              AgreementFormTemplate,
             Restangular,
             $alert) {
 
@@ -28,19 +29,15 @@ angular.module('ProcessApp.controllers')
         $scope.helpTxt = '';
 
         $scope.loadTemplate = function() {
-
-            Restangular.one('public/agreementFormTemplate').get()
-            .then(function (response) {
-                $scope.template = response ? response : '';
-            },
-            function (err) {
+            AgreementFormTemplate.get()
+            .then(function (template) {
+                $scope.template = template;
+            }, function (err) {
                 if (err.status === 403) {
-                    $rootScope.errormessage = err.data.message;
+                    $rootScope.errormessage = err.response;
                     $scope.login();
                     return;
                 }
-                console.error(err);
-                $scope.error = err.data.message;
             });
         };
 
@@ -67,13 +64,11 @@ angular.module('ProcessApp.controllers')
         };
 
         $scope.saveTemplate = function(template) {
-            Restangular.one('admin/agreementFormTemplate').customPUT(template)
-            .then(function (response) {
-                $scope.template = response ? response : '';
-                alertSuccess('Template saved.', 'The template has been successfully saved.');
+            AgreementFormTemplate.save(template)
+            .then(function (template) {
+                $scope.template = template;
             }, function (err) {
-                console.error(err);
-                alertError(err.response);
+                //
             });
         };
 

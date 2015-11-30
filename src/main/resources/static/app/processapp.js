@@ -11,21 +11,22 @@
       .config(function(RestangularProvider) {
         RestangularProvider.setBaseUrl('/');
       });
-    angular.module('ProcessApp', [ 'flow',
-                                   'mgcrea.ngStrap',
-                                   'ngResource', 'ngRoute', 'ngCookies',
-                                   'pascalprecht.translate', 'ngTagsInput',
-                                   'smart-table', 'ngSanitize',
-                                   'angular-loading-bar',
-                                   'ProcessApp.services',
-                                   'ProcessApp.controllers',
-                                   'ProcessApp.directives'])
+    angular.module('ProcessApp', ['flow',
+        'mgcrea.ngStrap',
+        'ngResource', 'ngRoute', 'ngCookies',
+        'pascalprecht.translate', 'ngTagsInput',
+        'smart-table', 'ngSanitize',
+        'angular-loading-bar',
+        'ProcessApp.services',
+        'ProcessApp.controllers',
+        'ProcessApp.directives',
+        'ng-showdown'])
         .config(function(
                 $routeProvider, 
                 $translateProvider, 
                 $popoverProvider,
-                cfpLoadingBarProvider
-                ) {
+                cfpLoadingBarProvider,
+                $showdownProvider) {
 
             $routeProvider.when('/', {
                 templateUrl : 'app/request/requests.html',
@@ -58,6 +59,8 @@
                 templateUrl : 'app/admin/accesslogs/accesslogs.html'
             }).when('/agreementformtemplate', {
                 templateUrl : 'app/admin/agreementformtemplate/edit.html'
+            }).when('/agreementformtemplate/:action', {
+                templateUrl : 'app/admin/agreementformtemplate/help.html'
             }).when('/lab-requests', {
                 templateUrl : 'app/lab-request/lab-requests.html',
                 controller : ''
@@ -92,7 +95,6 @@
 
             // Try to fetch the preferred language from the browser.
             var language = window.navigator.userLanguage || window.navigator.language;
-            console.log('Language: ' + language);
             var preferredLanguage = 'nl';
             if (language != null && language.length >= 2) {
                 language = language.substring(0, 2);
@@ -116,6 +118,8 @@
                 trigger: 'hover'
             });
 
+            // set showdown  provider
+            $showdownProvider.setOption('tables', true)
         })
 
         .run(['$rootScope', '$location', '$cookies', '$http',
@@ -161,13 +165,12 @@
                     } else if (currentUser.roles[0] === 'scientific_council') {
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     }
-                }
+                };
             
                 var _deserialiseRoles = function(text) {
                     var result = text.split(',');
-                    console.log('split \'' + text + '\' into: ', result);
                     return result;
-                }
+                };
                 
                 var _fetchUserdata = function() {
                     var userid = $cookies.get('userid');
@@ -180,7 +183,7 @@
                         lab : null
                     };
                     return userdata;
-                }
+                };
             
                 // keep user logged in after page refresh
                 var userdata = _fetchUserdata();
@@ -203,7 +206,6 @@
                     ) &&
                     !$rootScope.globals.currentUser) {
                       $rootScope.redirectUrl = $location.path();
-                      console.log('redirectUrl set to: ' + $rootScope.redirectUrl);
                       $location.path('/login');
                   }
                 });

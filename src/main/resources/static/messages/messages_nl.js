@@ -353,5 +353,12 @@ var messagesNL =
 	
 	'Download ...' : '{{filename}} downloaden',
 
+
+    /* ===================== */
+    /* Agreement overview    */
+    /* ===================== */
+    'popover:Markdown Help': 'Markdown Hulp',
+    'Agreement form template': 'Agreement form template',
+
     null : null
 };

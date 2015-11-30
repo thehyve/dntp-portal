@@ -25,8 +25,10 @@ angular.module('ProcessApp.controllers')
         $scope.error = '';
         $scope.accessDenied = false;
         $scope.visibility = {};
+        $scope.helpTxt = '';
 
         $scope.loadTemplate = function() {
+
             Restangular.one('public/agreementFormTemplate').get()
             .then(function (response) {
                 $scope.template = response ? response : '';
@@ -41,8 +43,6 @@ angular.module('ProcessApp.controllers')
                 $scope.error = err.data.message;
             });
         };
-
-        $scope.loadTemplate();
 
         var alertSuccess = function(title, message) {
             $alert({
@@ -76,6 +76,36 @@ angular.module('ProcessApp.controllers')
                 alertError(err.response);
             });
         };
+
+        $scope.printTemplate = function () {
+            console.log('modal print');
+
+            var table = document.querySelector('.markdown-body').innerHTML;
+            var myWindow = window.open('', '', 'width=800, height=600');
+            myWindow.document.write(table);
+            myWindow.print();
+        }
+
+        $scope.markdownInfo = function () {
+            $location.path('agreementformtemplate/help');
+        };
+
+        if ($routeParams.action ===  'help') {
+            Restangular.one('app/admin/agreementformtemplate/help.txt').get()
+                .then(function (response) {
+                    $scope.helpTxt = response;
+                },
+                function (err) {
+                    if (err.status === 403) {
+                        $rootScope.errormessage = err.data.message;
+                        $scope.login();
+                        return;
+                    }
+                    console.error(err);
+                });
+
+        }
+        $scope.loadTemplate();
 
     }
 ]);

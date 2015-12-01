@@ -99,7 +99,7 @@ angular.module('ProcessApp.controllers')
             var myWindow = window.open('', '', 'width=800, height=600');
             var _contents = '<html><head><link rel="stylesheet" type="text/css" href="css/print.css" />' +
                 '</head><body onload="window.print()">'
-                    .concat($scope.template.contents)
+                    .concat($scope.template_contents)
                     .concat('</body></html>');
             myWindow.document.write(_contents);
             myWindow.document.close();

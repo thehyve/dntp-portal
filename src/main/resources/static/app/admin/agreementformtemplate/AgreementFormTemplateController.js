@@ -1,16 +1,12 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('AgreementFormTemplateController',['$rootScope', '$scope',
-                                             '$location',
-                                             '$route', '$routeParams',
-                                             'AgreementFormTemplate',
-                                             '$alert',
-    function ($rootScope, $scope,
-            $location,
-            $route, $routeParams,
-            AgreementFormTemplate,
-            $alert) {
+    .controller('AgreementFormTemplateController', ['$rootScope', '$scope',
+        '$location',
+        '$route', '$routeParams', 'AgreementFormTemplate',
+        function ($rootScope, $scope,
+                  $location,
+                  $route, $routeParams, AgreementFormTemplate) {
 
         $rootScope.redirectUrl = $location.path();
 
@@ -39,8 +35,6 @@ angular.module('ProcessApp.controllers')
             });
         };
 
-        $scope.loadTemplate();
-
         $scope.saveTemplate = function(template) {
             AgreementFormTemplate.save(template)
             .then(function (template) {
@@ -49,6 +43,14 @@ angular.module('ProcessApp.controllers')
                 //
             });
         };
+
+        $scope.printTemplate = function () {
+            var myWindow = window.open('', '', 'width=800, height=600');
+            myWindow.document.write($scope.template.contents);
+            myWindow.print();
+        };
+
+        $scope.loadTemplate();
 
     }
 ]);

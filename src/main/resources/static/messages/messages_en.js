@@ -56,5 +56,11 @@ var messagesEN =
     'Request_Type_6' : 'Request for PA-reports only',
     'Request_Type_7' : 'Request for materials only',
 
+    /* ===================== */
+    /* Agreement overview    */
+    /* ===================== */
+    'popover:Markdown Help': 'Markdown Help',
+    'Agreement form template': 'Agreement form template',
+
     null: null
 };

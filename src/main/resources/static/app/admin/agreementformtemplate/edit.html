@@ -19,16 +19,18 @@
             <h1>{{ 'Agreement form template' | translate }}</h1>
             <hr>
 
-            <h3>Preview</h3>
-            <div class="template-preview" ng-bind-html="template.contents"></div>
+            <div>
+                <div text-angular ng-model="template.contents" class="dntp-text-angular"></div>
+                <br>
+                <button ng-click="saveTemplate(template)" type="button" class="btn btn-primary">
+                {{'Save' | translate}}
+                </button>
+                <button ng-click="printTemplate()" type="button" class="btn btn-success">
+                {{'Print' | translate}}
+                </button>
+            </div>
 
-            <ng-form>
-            <h3>Edit template</h3>
 
-            <textarea class="form-control" ng-model="template.contents"></textarea>
-
-            <span ng-click="saveTemplate(template)" role="button" class="btn btn-default">{{'Save' | translate}}</span>
-            </ng-form>
         </div>
     </div>
 

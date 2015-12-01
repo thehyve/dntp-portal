@@ -14,13 +14,14 @@
         </div>
 
         <!--Main-->
-        <div ng-if="authenticated && request" class="col-md-8 main">
+        <div ng-if="authenticated && request" class="main">
 
             <div ng-if="error" class="alert alert-danger" role="alert">
                 {{ error | translate }}
             </div>
 
-            <div ng-bind-html="template_contents"></div>
+            <div ng-bind-html="template_contents" class="agreement-form">
+            </div>
 
         </div>
 

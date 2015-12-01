@@ -60,6 +60,20 @@ angular.module('ProcessApp.services')
                 return deferred.promise;
             };
 
+            agreementFormService.getVariableNames = function(obj) {
+                var names = $.map(obj, function(value, key) {
+                    if (value instanceof Object) {
+                        var subnames = agreementFormService.getVariableNames(value);
+                        return $.map(subnames, function(v, k) {
+                            return key + '.' + v;
+                        });
+                    } else {
+                        return key;
+                    }
+                });
+                return names;
+            }
+
             var varsPattern = /{{[\w.]+}}/g;
             var varNamePattern = /{{([\w.]+)}}/;
 
@@ -67,12 +81,12 @@ angular.module('ProcessApp.services')
                 if (!obj || !template) {
                     return template;
                 }
-                var keys = Object.keys(obj);
                 var contents = template;
                 var names = _.uniq(template.match(varsPattern));
                 $(names).each(function(i, name) {
                     var varname = name.match(varNamePattern)[1];
-                    contents = contents.replace('{{'+varname+'}}', _.get(obj, varname));
+                    var varnameRegExp = new RegExp('{{'+varname+'}}', 'g');
+                    contents = contents.replace(varnameRegExp, _.get(obj, varname));
                 });
                 return contents;
             };

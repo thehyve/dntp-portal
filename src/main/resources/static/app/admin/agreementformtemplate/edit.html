@@ -1,16 +1,7 @@
 <div class="container-fluid">
     <div class="row" ng-controller="AgreementFormTemplateController" ng-if="authenticated">
 
-        <!--Side Bar-->
-        <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li class="active">
-                    <a role="button" ng-href="/#/agreementformtemplate">Edit template</a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="main">
 
             <div class="alert alert-danger" role="alert" ng-if="error.length" id="error">
                 {{error|translate}}.
@@ -20,9 +11,19 @@
 
             <hr>
 
-            <div style="width: 50%; float: left;">
-                <div text-angular ng-model="template.contents" class="dntp-text-angular"></div>
+            <div class="template-window">
+                <div id="editor" name="template-editor" text-angular ng-model="template.contents" class="dntp-text-angular"></div>
                 <br>
+                <h4>{{'Insert variables'|translate}}:</h4>
+
+                <div class="well">
+                <span ng-repeat="varname in variableNames"
+                    role="button" class="btn btn-xs btn-default"
+                    ng-click="insertVariable(varname)">
+                    <samp><span ng-non-bindable>{{</span>{{varname}}<span ng-non-bindable>}}</span></samp>
+                </span>
+                </div>
+
                 <button ng-click="saveTemplate(template)" type="button" class="btn btn-primary">
                 {{'Save' | translate}}
                 </button>
@@ -31,7 +32,7 @@
                 </button>
             </div>
 
-            <div style="width: 45%; float: left;">
+            <div class="template-window">
                 <h3 style="text-align: center;">{{'Preview' | translate}}</h3>
                 <div ng-bind-html="template_contents" class="template-preview"></div>
             </div>

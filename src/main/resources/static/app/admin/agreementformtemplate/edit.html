@@ -19,13 +19,11 @@
                 <div class="well">
                 <span ng-repeat="varname in variableNames"
                     role="button" class="btn btn-xs btn-default"
-                    ng-click="insertVariable(varname)"
-                >
+                    ng-click="insertVariable(varname)">
                     <samp><span ng-non-bindable>{{</span>{{varname}}<span ng-non-bindable>}}</span></samp>
                 </span>
                 </div>
 
-                <br>
                 <button ng-click="saveTemplate(template)" type="button" class="btn btn-primary">
                 {{'Save' | translate}}
                 </button>

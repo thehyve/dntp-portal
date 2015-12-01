@@ -205,7 +205,7 @@ address {margin-bottom: 0px;}
     }
 }
 .template-window {
-    display: table;
+    display: block;
     min-width: 40em;
     max-width: 45%;
     margin: 1em;

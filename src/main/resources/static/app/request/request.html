@@ -8,14 +8,14 @@
             </ul>
         </div>
 
-        <div ng-show="!authenticated">
+        <div ng-if="!authenticated">
             <div class="alert alert-danger" role="alert">
                 {{ 'Not logged in' | translate }}
             </div>
         </div>
 
         <div ng-if="!request" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <div ng-show="error" class="alert alert-danger" role="alert">
+            <div ng-if="error" class="alert alert-danger" role="alert">
                 {{ error | translate }}
             </div>
         </div>
@@ -23,7 +23,7 @@
         <!--Main-->
         <div ng-if="authenticated && request" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-            <div ng-show="error" class="alert alert-danger" role="alert">
+            <div ng-if="error" class="alert alert-danger" role="alert">
                 {{ error | translate }}
             </div>
 
@@ -115,6 +115,11 @@ Stichting PALGA%0A
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                     {{'Delete' | translate}}
                 </button>
+                <a class="btn btn-default" role="button" ng-href="/#/request/{{request.processInstanceId}}/agreementform" title="{{'Agreement form' | translate}}"
+                        ng-if="request.status == 'Review'">
+                    <span><i class="glyphicon glyphicon-file"></i></span>
+                    {{'Agreement form' | translate}}
+                </a>
             </div>
 
             <!-- Alert -->

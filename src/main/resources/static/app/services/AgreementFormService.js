@@ -60,5 +60,54 @@ angular.module('ProcessApp.services')
                 return deferred.promise;
             };
 
+            var varsPattern = /{{[\w.]+}}/g;
+            var varNamePattern = /{{([\w.]+)}}/;
+
+            var applyMapping = function(template, obj) {
+                if (!obj || !template) {
+                    return template;
+                }
+                var keys = Object.keys(obj);
+                var contents = template;
+                var names = _.uniq(template.match(varsPattern));
+                $(names).each(function(i, name) {
+                    var varname = name.match(varNamePattern)[1];
+                    contents = contents.replace('{{'+varname+'}}', _.get(obj, varname));
+                });
+                return contents;
+            };
+
+            /**
+             * replaceVariables
+             *
+             * Whenever scope variables <code>template_var</code> or <code>obj_var</code>
+             * change, the value of <code>template_var</code> is copied and in the copy
+             * all strings of the form <code>{{var}}</code> (for which
+             * <var>var</var> is a key in the scope variable <code>obj_var</code>)
+             * are replaced by their value in <code>obj_var</code>.
+             * The output is stored in scope variable <code>output_var</code>.
+             *
+             * @param $scope the angular scope.
+             * @param template_var the scope variable used as input, being watched.
+             * @param obj_var the scope variable that is used as a replacement map,
+             *        being watched.
+             * @param output_var the scope variable to which the result is stored.
+             */
+            agreementFormService.replaceVariables = function($scope, template_var, obj_var, output_var) {
+                console.log('Registering variable replacer for ' + template_var);
+                $scope.$watch(template_var, function(template) {
+                    //console.log(template_var + ' changed.');
+                    var obj = _.get($scope, obj_var);
+                    var contents = applyMapping(template, obj);
+                    $scope[output_var] = contents;
+                });
+                $scope.$watch(obj_var, function(obj) {
+                    //console.log(obj_var + ' changed.');
+                    var template = _.get($scope, template_var);
+                    var contents = applyMapping(template, obj);
+                    $scope[output_var] = contents;
+                });
+            };
+
             return agreementFormService;
     }]);

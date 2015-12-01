@@ -14,7 +14,15 @@ body {
     padding-top: 50px;
     padding-bottom: 40px;
 }
-
+@media print {
+    html {
+        padding: 0;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+    }
+}
 h1, h2, h3 { color: steelblue; }
 h3 { color: #949494; }
 
@@ -85,12 +93,18 @@ h3 { color: #949494; }
 .main {
     padding: 20px;
 }
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
     .main {
         padding-right: 40px;
         padding-left: 40px;
         margin-top: 10px;
         margin-bottom: 40px;
+    }
+}
+@media print {
+    .main {
+        padding: 0;
+        margin: 0;
     }
 }
 .main .page-header {
@@ -177,8 +191,28 @@ address {margin-bottom: 0px;}
 .alert span { display: block; }
 .alert { z-index: 10000; }
 
+.agreement-form {
+    display: table;
+    min-width: 40em;
+    margin: auto;
+    padding: 2em;
+}
+@media print {
+    .agreement-form {
+        display: block;
+        padding: 0;
+        margin: 0;
+    }
+}
+.template-window {
+    display: table;
+    min-width: 40em;
+    max-width: 45%;
+    margin: 1em;
+    float: left;
+}
+
 .template-preview {
-	margin: 1em;
     padding: 2em;
     border: 1px solid #bbb;
     box-shadow: 2px 2px 2px #bbb;

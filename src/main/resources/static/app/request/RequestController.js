@@ -49,6 +49,8 @@ angular.module('ProcessApp.controllers')
                 $scope.commentEditVisibility = {};
                 Request.get({id:$routeParams.requestId}, function (req) {
                     req.type = Request.convertRequestOptsToType(req);
+                    var now = new Date();
+                    req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
                     $scope.request = req;
                     $rootScope.tempRequest = $.extend( true, {}, req ); // deep copy
                 }, function(response) {

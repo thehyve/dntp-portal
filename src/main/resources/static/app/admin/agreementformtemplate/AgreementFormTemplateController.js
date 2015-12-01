@@ -4,9 +4,11 @@ angular.module('ProcessApp.controllers')
     .controller('AgreementFormTemplateController', ['$rootScope', '$scope',
         '$location',
         '$route', '$routeParams', 'AgreementFormTemplate',
+        'taSelection', 'textAngularManager', '$timeout',
         function ($rootScope, $scope,
                   $location,
-                  $route, $routeParams, AgreementFormTemplate) {
+                  $route, $routeParams, AgreementFormTemplate,
+                  taSelection, textAngularManager, $timeout) {
 
         $rootScope.redirectUrl = $location.path();
 
@@ -22,23 +24,15 @@ angular.module('ProcessApp.controllers')
         $scope.accessDenied = false;
         $scope.visibility = {};
 
+        var now = new Date();
+
         $scope.request = {
             requestNumber: '2015-1234',
             requesterName: 'A. Requester',
             requesterEmail: 'requester@dntp.thehyve.nl',
             lab: {
                 number: 100,
-                name: 'Testlab',
-                contactData: {
-                    telephone: null,
-                    email: 'lab100@dntp.thehyve.nl',
-                    address1: null,
-                    address2: null,
-                    postalCode: null,
-                    city: null,
-                    stateProvince: null,
-                    country: 'NL'
-                }
+                name: 'Testlab'
             },
             title: 'Example request',
             background: "Background of the request.",
@@ -58,11 +52,27 @@ angular.module('ProcessApp.controllers')
                 country: 'NL'
             },
             chargeNumber: '12345678',
-            researchNumber: '11111-22222'
+            researchNumber: '11111-22222',
+            date: now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear()
         };
+
+        $scope.variableNames = AgreementFormTemplate.getVariableNames($scope.request);
 
         AgreementFormTemplate.replaceVariables($scope, 'template.contents', 'request', 'template_contents');
 
+        $scope.insertVariable = function(varname) {
+            var editor = jQuery('#editor');
+            var element = taSelection.getSelectionElement();
+            var e = jQuery(element);
+            var result = editor.find(e);
+            if (result.length > 0) {
+                taSelection.insertHtml('<span>{{'+varname+'}}</span>', element);
+            }
+            $timeout(function(){
+                textAngularManager.refreshEditor('template-editor');
+            });
+        };
+        
         $scope.loadTemplate = function() {
             AgreementFormTemplate.get()
             .then(function (template) {

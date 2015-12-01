@@ -186,3 +186,4 @@ address {margin-bottom: 0px;}
 .dntp-text-angular {font-family:  Arial, sans-serif;}
 .dntp-text-angular h1, .dntp-text-angular h2, .dntp-text-angular h3, .dntp-text-angular h4 { color: black !important;}
 .dntp-text-angular .ta-toolbar { padding-bottom: 10px;}
+.dntp-text-angular .ta-toolbar .btn-group { padding-bottom: 5px;}

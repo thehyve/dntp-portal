@@ -1,17 +1,12 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('AgreementFormTemplateController',['$rootScope', '$scope',
-                                             '$location',
-                                             '$route', '$routeParams','AgreementFormTemplate',
-                                             'Restangular',
-                                             '$alert',
-    function ($rootScope, $scope,
-            $location,
-            $route, $routeParams,
-              AgreementFormTemplate,
-            Restangular,
-            $alert) {
+    .controller('AgreementFormTemplateController', ['$rootScope', '$scope',
+        '$location',
+        '$route', '$routeParams', 'AgreementFormTemplate',
+        function ($rootScope, $scope,
+                  $location,
+                  $route, $routeParams, AgreementFormTemplate) {
 
         $rootScope.redirectUrl = $location.path();
 
@@ -37,28 +32,6 @@ angular.module('ProcessApp.controllers')
                     $scope.login();
                     return;
                 }
-            });
-        };
-
-        var alertSuccess = function(title, message) {
-            $alert({
-                title : title,
-                content : message,
-                placement : 'top-right',
-                type : 'success',
-                show : true,
-                duration : 5
-            });
-        };
-
-        var alertError = function(message) {
-            $alert({
-                title : 'Error',
-                content : message,
-                placement : 'top-right',
-                type : 'danger',
-                show : true,
-                duration : 5
             });
         };
 

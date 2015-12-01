@@ -36,6 +36,7 @@ import business.models.UserRepository;
 import business.representation.EmailRepresentation;
 import business.representation.NewPasswordRepresentation;
 import business.security.MockConfiguration.MockMailSender;
+import business.services.MailService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -97,18 +98,19 @@ public class PasswordControllerTests {
         Assert.assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
         Assert.assertEquals(1, emails.size());
-        Assert.assertEquals("Password recovery", emails.get(0).getSubject());
+        Assert.assertEquals(MailService.passwordRecoverySubject, emails.get(0).getSubject());
         Assert.assertEquals(emailForm.getEmail(), emails.get(0).getAllRecipients()[0].toString());
 
         // Check that the link exists in the database and that it is associated to the same username
         String emailBody = emails.get(0).getContent().toString();
-        Pattern r = Pattern.compile("login/reset-password/(.*)");
+        Pattern r = Pattern.compile("login/reset-password/([^\\s\\.]*)");
         Matcher m = r.matcher(emailBody);
         m.find();
 
         log.info("Email body: `" + emailBody + "`");
 
         String link = m.group(1);
+        log.info("link: " + link);
         NewPasswordRequest passwordRequest = passwordRequestRepository.findByToken(link);
         Assert.assertNotNull(passwordRequest);
         Assert.assertEquals(passwordRequest.getUser().getUsername(), emailForm.getEmail());

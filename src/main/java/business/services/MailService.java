@@ -309,12 +309,14 @@ public class MailService {
             + "If you have questions, please send an email to aanvraag@palga.nl.\n"
             ;
 
+    public static final String passwordRecoverySubject = "PALGA-wachtwoord opnieuw instellen / Reset PALGA password";
+
     public void sendPasswordRecoveryToken(NewPasswordRequest npr) {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             message.setTo(npr.getUser().getContactData().getEmail());
             message.setFrom(replyAddress, replyName);
-            message.setSubject("PALGA-wachtwoord opnieuw instellen / Reset PALGA password");
+            message.setSubject(passwordRecoverySubject);
             String passwordRecoveryLink = getLink("/#/login/reset-password/" + npr.getToken());
             message.setText(String.format(passwordRecoveryTemplate, passwordRecoveryLink));
             log.info("Sending password recovery token. mailSender: " + mailSender.getClass());

@@ -20,13 +20,12 @@
         'ProcessApp.services',
         'ProcessApp.controllers',
         'ProcessApp.directives',
-        'ng-showdown'])
+        'textAngular'])
         .config(function(
                 $routeProvider, 
                 $translateProvider, 
                 $popoverProvider,
-                cfpLoadingBarProvider,
-                $showdownProvider) {
+                cfpLoadingBarProvider) {
 
             $routeProvider.when('/', {
                 templateUrl : 'app/request/requests.html',
@@ -59,8 +58,6 @@
                 templateUrl : 'app/admin/accesslogs/accesslogs.html'
             }).when('/agreementformtemplate', {
                 templateUrl : 'app/admin/agreementformtemplate/edit.html'
-            }).when('/agreementformtemplate/:action', {
-                templateUrl : 'app/admin/agreementformtemplate/help.html'
             }).when('/lab-requests', {
                 templateUrl : 'app/lab-request/lab-requests.html',
                 controller : ''
@@ -120,8 +117,6 @@
                 trigger: 'hover'
             });
 
-            // set showdown  provider
-            $showdownProvider.setOption('tables', true)
         })
 
         .run(['$rootScope', '$location', '$cookies', '$http',

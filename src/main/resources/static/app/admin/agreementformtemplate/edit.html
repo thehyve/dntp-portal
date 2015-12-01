@@ -20,32 +20,14 @@
             <hr>
 
             <div>
-                <div class="markdown-input">
-                    <ng-form>
-                        <h3>Edit template <span class="glyphicon glyphicon-info-sign h3-info" aria-hidden="true"
-                                                ng-click="markdownInfo()"
-                                                data-content="{{'popover:Markdown Help'|translate}}"
-                                                bs-popover></span>
-                        </h3>
-                        <textarea class="form-control markdown-textarea" ng-model="template.contents"></textarea>
-                        <br>
-                        <div>
-                            <button ng-click="saveTemplate(template)" type="button" class="btn btn-primary">
-                                {{'Save' | translate}}
-                            </button>
-                            <button ng-click="printTemplate()" type="button" class="btn btn-success">
-                                {{'Print' | translate}}
-                            </button>
-                        </div>
-                    </ng-form>
-                </div>
-                <div class="markdown-output">
-                    <h3>Preview</h3>
-
-                    <!--<div marked="template.contents" class="markdown-body"></div>-->
-                    <p markdown-to-html="template.contents" class="markdown-body"></p>
-
-                </div>
+                <div text-angular ng-model="template.contents" class="dntp-text-angular"></div>
+                <br>
+                <button ng-click="saveTemplate(template)" type="button" class="btn btn-primary">
+                {{'Save' | translate}}
+                </button>
+                <button ng-click="printTemplate()" type="button" class="btn btn-success">
+                {{'Print' | translate}}
+                </button>
             </div>
 
 

@@ -26,7 +26,6 @@ angular.module('ProcessApp.controllers')
         $scope.error = '';
         $scope.accessDenied = false;
         $scope.visibility = {};
-        $scope.helpTxt = '';
 
         $scope.loadTemplate = function() {
             AgreementFormTemplate.get()
@@ -73,33 +72,11 @@ angular.module('ProcessApp.controllers')
         };
 
         $scope.printTemplate = function () {
-            console.log('modal print');
-
-            var table = document.querySelector('.markdown-body').innerHTML;
             var myWindow = window.open('', '', 'width=800, height=600');
-            myWindow.document.write(table);
+            myWindow.document.write($scope.template.contents);
             myWindow.print();
-        }
-
-        $scope.markdownInfo = function () {
-            $location.path('agreementformtemplate/help');
         };
 
-        if ($routeParams.action ===  'help') {
-            Restangular.one('app/admin/agreementformtemplate/help.txt').get()
-                .then(function (response) {
-                    $scope.helpTxt = response;
-                },
-                function (err) {
-                    if (err.status === 403) {
-                        $rootScope.errormessage = err.data.message;
-                        $scope.login();
-                        return;
-                    }
-                    console.error(err);
-                });
-
-        }
         $scope.loadTemplate();
 
     }

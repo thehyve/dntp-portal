@@ -12,14 +12,15 @@
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-            <div class="alert alert-danger" role="alert" ng-show="error.length" id="error">
+            <div class="alert alert-danger" role="alert" ng-if="error.length" id="error">
                 {{error|translate}}.
             </div>
 
             <h1>{{ 'Agreement form template' | translate }}</h1>
+
             <hr>
 
-            <div>
+            <div style="width: 50%; float: left;">
                 <div text-angular ng-model="template.contents" class="dntp-text-angular"></div>
                 <br>
                 <button ng-click="saveTemplate(template)" type="button" class="btn btn-primary">
@@ -30,6 +31,10 @@
                 </button>
             </div>
 
+            <div style="width: 45%; float: left;">
+                <h3 style="text-align: center;">{{'Preview' | translate}}</h3>
+                <div ng-bind-html="template_contents" class="template-preview"></div>
+            </div>
 
         </div>
     </div>

@@ -87,7 +87,7 @@ angular.module('ProcessApp.controllers')
 
         $scope.printTemplate = function () {
             var myWindow = window.open('', '', 'width=800, height=600');
-            myWindow.document.write($scope.template.contents);
+            myWindow.document.write($scope.template_contents);
             myWindow.print();
         };
 

@@ -111,6 +111,7 @@ angular.module('ProcessApp.controllers')
             if (true) {
                 console.log($routeParams);
                 $scope.loadTemplate();
+                AgreementFormTemplate.replaceVariables($scope, 'agreementFormTemplate.contents', 'request', 'template_contents');
             }
 
             $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {

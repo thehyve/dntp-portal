@@ -18,19 +18,24 @@ angular.module('ProcessApp.directives', [])
         return {
             restrict: 'E',
             scope: {
-                allRequests: '='
+                allRequests: '=',
+                activeSidebar: '='
             },
             templateUrl: 'app/components/sidebar/sidebar-template.html',
             link : function ($scope) {
                 var userId = $scope.$root.globals.currentUser.userid;
                 $scope.userRoles = $scope.$root.globals.currentUser.roles;
+
+                $scope.isPalga = function() {
+                    return $scope.userRoles.indexOf('palga') !== -1;
+                };
+
                 $scope.$watch('allRequests', function(newValue, oldValue) {
                     if (newValue) {
                         $scope.unclaimedReqs = _getUnclaimed(newValue);
                         $scope.claimedReqs = _getClaimed(newValue, userId);
                         $scope.suspendedReqs = _getSuspended(newValue);
                     }
-
                 });
             }
         };

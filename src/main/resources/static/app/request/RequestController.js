@@ -40,15 +40,16 @@ angular.module('ProcessApp.controllers')
             $scope.error = '';
             $rootScope.tempRequest = null;
 
-            if ($routeParams.requestId) {
-                if (!$scope.requests) {
-                    $scope.requests = [];
+            $scope.getRequest = function() {
+                if (!$scope.allRequests) {
+                    $scope.allRequests = [];
                 }
                 $scope.editComment = {};
                 $scope.approvalComment = {};
                 $scope.commentEditVisibility = {};
                 Request.get({id:$routeParams.requestId}, function (req) {
                     req.type = Request.convertRequestOptsToType(req);
+                    // set date -- to be used in the agreement form
                     var now = new Date();
                     req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
                     $scope.request = req;
@@ -69,21 +70,20 @@ angular.module('ProcessApp.controllers')
                         return;
                     }
                 });
-            } else {
+            };
+
+            $scope.getRequests = function() {
                 Request.query().$promise.then(function(response) {
-                    $scope.activeSidebar = 'overview';
-                    $scope.requests = response ? response : [];
-                    $scope.requests.forEach(function(req) {
+                    $scope.allRequests = response ? response : [];
+                    $scope.allRequests.forEach(function(req) {
                         req.number = Request.convertRequestNumber(req);
                     });
-                    $scope.allRequests = $scope.requests;
-                    $scope.displayedCollection = [].concat($scope.requests);
                 }, function(response) {
                     if (response.data) {
                         $scope.error = response.data.message + '\n';
                         if (response.data.error === 302) {
                             $scope.accessDenied = true;
-                            console.log("ACCESS DENIED");
+                            console.log("Access denied.");
                         }
                         else if (response.status === 403) {
                             //$rootScope.errormessage = response.data.message;
@@ -95,6 +95,57 @@ angular.module('ProcessApp.controllers')
                         return;
                     }
                 });
+            };
+
+            var selectAll = function (requests) {
+                return requests;
+            };
+
+            var selectSuspended = function (requests) {
+                return _.where(requests,  {reviewStatus:'SUSPENDED'});
+            };
+
+            var selectClaimed = function (requests) {
+                return _.where(requests,  {assignee:$rootScope.globals.currentUser.userid});
+            };
+
+            var selectUnclaimed = function (requests) {
+                return _.where(requests,  {assignee:null});
+            };
+
+            $scope.selections = {
+                overview: selectAll,
+                suspended: selectSuspended,
+                claimed: selectClaimed,
+                unclaimed: selectUnclaimed
+            }
+
+            $scope.showSelection = function(requests) {
+                var selection = $scope.activeSidebar;
+                console.log('showSelection: ' + selection);
+                if (requests && selection in $scope.selections) {
+                    $scope.requests = $scope.selections[selection](requests);
+                } else {
+                    $scope.requests = [];
+                }
+                $scope.displayedCollection = [].concat($scope.requests);
+            }
+
+            $scope.$watch('allRequests', function(newValue) {
+                if (newValue) {
+                    $scope.showSelection(newValue);
+                }
+            });
+
+            if ($routeParams.requestId) {
+                $scope.getRequest();
+            } else {
+                if ($routeParams.selection && $routeParams.selection in $scope.selections) {
+                    $scope.activeSidebar = $routeParams.selection;
+                } else {
+                    $scope.activeSidebar = 'overview';
+                }
+                $scope.getRequests();
             }
 
             $scope.loadTemplate = function() {
@@ -110,8 +161,7 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            if (true) {
-                console.log($routeParams);
+            if ($route.current.templateUrl === 'app/request/agreementform.html') {
                 $scope.loadTemplate();
                 AgreementFormTemplate.replaceVariables($scope, 'agreementFormTemplate.contents', 'request', 'template_contents');
             }
@@ -217,8 +267,8 @@ angular.module('ProcessApp.controllers')
             
             $scope.loadTestPalga = function() {
                 // claim all
-                for(var i=0; i < $scope.requests.length; i++) {
-                    var req = $scope.requests[i];
+                for(var i=0; i < $scope.allRequests.length; i++) {
+                    var req = $scope.allRequests[i];
                     console.log('considering request ' + req);
                     if (req.assignee == null && _claimableStatuses.indexOf(req.status) != -1) {
                         req.$claim(function(res) {
@@ -228,8 +278,8 @@ angular.module('ProcessApp.controllers')
                         });
                     }
                 }
-                for(var i=0; i < $scope.requests.length; i++) {
-                    var req = $scope.requests[i];
+                for(var i=0; i < $scope.allRequests.length; i++) {
+                    var req = $scope.allRequests[i];
                     console.log('considering request ' + req);
                     if (req.assignee == $rootScope.globals.currentUser.userid) {
                         if (req.status == 'Review') {
@@ -287,7 +337,6 @@ angular.module('ProcessApp.controllers')
             $scope.start = function() {
                 $scope.dataLoading = true;
                 new Request().$save(function(request) {
-                    //$scope.requests.unshift(request);
                     $scope.edit(request);
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
@@ -302,22 +351,14 @@ angular.module('ProcessApp.controllers')
             $scope.refresh = function(request, result) {
                 result.type = Request.convertRequestOptsToType(result);
                 var index = -1;
-                for (var i in $scope.requests) {
-                    if ($scope.requests[i].processInstanceId === request.processInstanceId) {
+                for (var i in $scope.allRequests) {
+                    if ($scope.allRequests[i].processInstanceId === request.processInstanceId) {
                         index = i;
                         break;
                     }
                 }
-                $scope.requests[index] = result;
+                $scope.allRequests[index] = result;
                 $route.reload();
-                
-                /* Ugly hack to prevent having to reload the controller. 
-                 * Problem: smart table is only updated after insert or delete,
-                 * not after updating a field. 
-                 * Hack: insert an empty element and filter empty elements out.
-                 */
-                //$scope.requests.push({});
-                
                 $scope.request = result;
             };
 
@@ -402,7 +443,7 @@ angular.module('ProcessApp.controllers')
                 bootbox.confirm($scope.translate('Are you sure you want to delete request ?', {id: request.processInstanceId}), function(result) {
                     if (result) {
                         request.$remove(function(result) {
-                            $scope.requests.splice($scope.requests.indexOf(request), 1);
+                            $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
                             bootbox.alert('Request ' + request.processInstanceId + ' deleted.');
                         }, function(response) {
                             $scope.error = response.statusText;
@@ -580,7 +621,7 @@ angular.module('ProcessApp.controllers')
             $scope.cancel = function (request) {
                 if ($rootScope.tempRequest.title === null) {
                     request.$remove(function (result) {
-                        $scope.requests.splice($scope.requests.indexOf(request), 1);
+                        $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
                         $scope.refresh(request, result);
                     }, function (response) {
                         $scope.error = response.statusText;
@@ -637,8 +678,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.claim = function(request) {
                 request.$claim(function(result) {
-                    result.type = Request.convertRequestOptsToType(result);
-                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                    $scope.refresh(request, result);
                 }, function(response) {
                     $scope.error = response.statusText;
                 });
@@ -646,8 +686,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.unclaim = function(request) {
                 request.$unclaim(function(result) {
-                    result.type = Request.convertRequestOptsToType(result);
-                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                    $scope.refresh(request, result);
                 }, function(response) {
                     $scope.error = response.statusText;
                 });
@@ -655,8 +694,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.suspend = function(request) {
                 request.$suspend(function(result) {
-                    result.type = Request.convertRequestOptsToType(result);
-                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                    $scope.refresh(request, result);
                 }, function(response) {
                     $scope.error = response.statusText;
                 });
@@ -664,8 +702,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.resume = function(request) {
                 request.$resume(function(result) {
-                    result.type = Request.convertRequestOptsToType(result);
-                    $scope.requests[$scope.requests.indexOf(request)] = result;
+                    $scope.refresh(request, result);
                 }, function(response) {
                     $scope.error = response.statusText;
                 });
@@ -731,30 +768,6 @@ angular.module('ProcessApp.controllers')
 
             $scope.hidePopover = function(name) {
                 $scope.popover[name] = false;
-            };
-
-            $scope.getAllRequests = function () {
-                $scope.requests = $scope.allRequests;
-                $scope.displayedCollection = $scope.requests;
-                $scope.activeSidebar = 'overview';
-            };
-
-            $scope.getSuspended = function () {
-                $scope.requests = _.where($scope.allRequests,  {reviewStatus:'SUSPENDED'});
-                $scope.displayedCollection = $scope.requests;
-                $scope.activeSidebar = 'suspended';
-            };
-
-            $scope.getClaimed = function () {
-                $scope.requests = _.where($scope.allRequests,  {assignee:$rootScope.globals.currentUser.userid});
-                $scope.displayedCollection = $scope.requests;
-                $scope.activeSidebar = 'claimed';
-            };
-
-            $scope.getUnclaimed = function () {
-                $scope.requests = _.where($scope.allRequests,  {assignee:null});
-                $scope.displayedCollection = $scope.requests;
-                $scope.activeSidebar = 'unclaimed';
             };
 
         }]);

@@ -30,6 +30,9 @@
             $routeProvider.when('/', {
                 templateUrl : 'app/request/requests.html',
                 controller : ''
+            }).when('/requests/:selection', {
+                templateUrl : 'app/request/requests.html',
+                controller : ''
             }).when('/login', {
                 templateUrl : 'app/login/login.html',
                 controller : 'LoginController'

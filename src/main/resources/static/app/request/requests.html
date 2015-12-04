@@ -58,7 +58,7 @@
                         <th style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
                     <tr>
-                        <th>&nbsp;</th>
+                        <th><input st-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th>&nbsp;</th>
@@ -69,8 +69,7 @@
                         <th>&nbsp;</th>
                     </tr>
                     <tr>
-                        <th>&nbsp;</th>
-                        <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                     </tr>
                     </thead>
                     <tbody>

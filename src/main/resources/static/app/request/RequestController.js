@@ -122,7 +122,6 @@ angular.module('ProcessApp.controllers')
 
             $scope.showSelection = function(requests) {
                 var selection = $scope.activeSidebar;
-                console.log('showSelection: ' + selection);
                 if (requests && selection in $scope.selections) {
                     $scope.requests = $scope.selections[selection](requests);
                 } else {

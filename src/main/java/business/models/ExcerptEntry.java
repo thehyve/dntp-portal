@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -35,6 +36,7 @@ public class ExcerptEntry {
     //@Column(length = 32767)
     @Column(columnDefinition="TEXT")
     @CollectionTable(indexes = @Index(columnList="excerpt_entry_id"))
+    @OrderColumn
     private List<String> values = new ArrayList<String>();
 
     public ExcerptEntry() {

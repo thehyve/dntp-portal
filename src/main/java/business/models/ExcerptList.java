@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -42,6 +43,7 @@ public class ExcerptList {
     private String remark;
     
     @ElementCollection
+    @OrderColumn
     private List<String> columnNames = new ArrayList<String>();
     
     private int labNumberColumn = -1;

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import business.exceptions.ExcerptListDownloadError;
+import business.exceptions.ExcerptListNotFound;
 import business.exceptions.ExcerptListUploadError;
 import business.exceptions.ExcerptSelectionUploadError;
 import business.exceptions.FileUploadError;
@@ -194,7 +195,16 @@ public class ExcerptListService {
         } catch (IOException e) {
             throw new ExcerptListDownloadError();
         }
+    }
 
+    @Transactional
+    public HttpEntity<InputStreamResource> writeExcerptList(String id,
+            boolean selectedOnly) {
+        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        if (excerptList == null) {
+            throw new ExcerptListNotFound();
+        }
+        return writeExcerptList(excerptList, selectedOnly);
     }
 
 }

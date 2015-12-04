@@ -59,7 +59,7 @@ public class ExcerptEntryRepresentation {
     }
     
     public String getPaNumber() {
-        return values.get(2);
+        return (values.size() > 2) ? values.get(2) : "";
     }
     
 }

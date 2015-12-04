@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -33,6 +34,7 @@ public class PathologyItem {
     @CollectionTable(indexes = @Index(columnList="pathology_item_id"))
     @Fetch(FetchMode.JOIN)
     @BatchSize(size = 100)
+    @OrderColumn
     List<String> samples = new ArrayList<String>();
     
     public PathologyItem() {

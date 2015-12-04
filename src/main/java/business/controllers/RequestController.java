@@ -902,11 +902,7 @@ public class RequestController {
         if (!excerptListStatuses.contains(request.getStatus())) {
             throw new InvalidActionInStatus();
         }
-        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
-        if (excerptList == null) {
-            throw new ExcerptListNotFound();
-        }
-        return excerptListService.writeExcerptList(excerptList, /* selectedOnly = */ false );
+        return excerptListService.writeExcerptList(id, /* selectedOnly = */ false );
     }
     
     @PreAuthorize("isAuthenticated() and "

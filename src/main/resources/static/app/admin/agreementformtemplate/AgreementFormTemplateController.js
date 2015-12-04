@@ -20,6 +20,15 @@ angular.module('ProcessApp.controllers')
             $scope.login();
         }
 
+        $scope.isPalga = function() {
+            return $scope.globals.currentUser.roles.indexOf('palga') !== -1;
+        };
+
+        if (!$scope.isPalga()) {
+            $rootScope.errormessage = 'Access is denied';
+            return $scope.login();
+        }
+
         $scope.error = '';
         $scope.accessDenied = false;
         $scope.visibility = {};

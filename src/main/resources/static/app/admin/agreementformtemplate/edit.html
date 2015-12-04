@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row" ng-controller="AgreementFormTemplateController" ng-if="authenticated">
 
-        <div class="main">
+        <div class="main" ng-if="isPalga()" >
 
             <div class="alert alert-danger" role="alert" ng-if="error.length" id="error">
                 {{error|translate}}.

@@ -100,7 +100,7 @@ public class MailService {
             message.setTo(requester.getContactData().getEmail());
             message.setFrom(replyAddress, replyName);
             message.setReplyTo(replyAddress);
-            message.setSubject("Nieuwe PALGA-aanvraag ontvangen");
+            message.setSubject(String.format("Nieuwe PALGA-aanvraag ontvangen, aanvraagnummer: %s", request.getRequestNumber()));
             String agreementFormLink = getLink(
                     "/#/request/"
                     + request.getProcessInstanceId()
@@ -143,7 +143,7 @@ public class MailService {
                 message.setTo(member.getContactData().getEmail());
                 message.setFrom(replyAddress, replyName);
                 message.setReplyTo(replyAddress);
-                message.setSubject("Nieuwe PALGA-aanvraag aan u voorgelegd");
+                message.setSubject(String.format("Nieuwe PALGA-aanvraag aan u voorgelegd, aanvraagnummer: %s", request.getRequestNumber()));
                 String requestLink = getLink("/#/request/view/" + request.getProcessInstanceId());
                 message.setText(String.format(scientificCouncilNotificationTemplate, requestLink));
                 mailSender.send(message.getMimeMessage());

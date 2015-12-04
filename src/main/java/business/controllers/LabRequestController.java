@@ -451,7 +451,9 @@ public class LabRequestController {
         labRequest.getPathologyList().add(pathology);
         labRequest = labRequestService.save(labRequest);
         
-        return new PathologyRepresentation(pathology);
+        PathologyRepresentation result = new PathologyRepresentation(pathology);
+        result.mapSamples(pathology);
+        return result;
     }
     
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
@@ -494,7 +496,9 @@ public class LabRequestController {
         pathology.setSamples(body.getSamples());
         pathology = pathologyItemRepository.save(pathology);
         
-        return new PathologyRepresentation(pathology);
+        PathologyRepresentation result = new PathologyRepresentation(pathology);
+        result.mapSamples(pathology);
+        return result;
     }
     
 }

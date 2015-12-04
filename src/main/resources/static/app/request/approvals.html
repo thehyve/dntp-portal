@@ -4,7 +4,7 @@
     <h3>{{'Approval by the scientific council'|translate}}</h3>
     <hr>
 
-    <a href="mailto:{{scientificCouncilEmail}}?subject=Request {{request.processInstanceId}}&amp;body=Request {{request.processInstanceId}}%0AView: {{serverurl}}/#/request/view/{{request.processInstanceId}}
+    <a href="mailto:{{scientificCouncilEmail}}?subject=Request {{request.requestNumber}}&amp;body=Request {{request.requestNumber}}%0AView: {{serverurl}}/#/request/view/{{request.processInstanceId}}
     "
         ng-if="globals.currentUser.roles.indexOf('palga') != -1 && scientificCouncilEmail"
     >

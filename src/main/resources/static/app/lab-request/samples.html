@@ -77,15 +77,13 @@
                         <span class="btn-group">
                             <a href="mailto:{{pathology.email}}?subject=Recall sample {{pathology.paNumber}}&amp;
                             body=Please return sample {{pathology.paNumber}} a.s.a.p."
-                                ng-if="pathology.status=='Received'">
-                            <button
-                                class="btn btn-default" type="button" title="{{'Recall sample' | translate}}">
+                                ng-if="pathology.status=='Received' || pathology.status=='Sending'"
+                                class="btn btn-default" role="button" title="{{'Recall sample' | translate}}">
                                 <span><i class="glyphicon glyphicon-envelope"></i></span>
                                 {{'Compose recall mail' | translate}}
-                            </button></a>
+                            </a>
                         </span>
                         </span>
-                    
                     </td>
                 </tr>
             </tbody>

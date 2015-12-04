@@ -75,8 +75,7 @@
                     <td>
                         <span class="pull-right">
                         <span class="btn-group">
-                            <a href="mailto:{{pathology.email}}?subject=Recall sample {{pathology.paNumber}}&amp;
-                            body=Please return sample {{pathology.paNumber}} a.s.a.p."
+                            <a href="mailto:{{pathology.email}}?subject=Recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
                                 ng-if="pathology.status=='Received' || pathology.status=='Sending'"
                                 class="btn btn-default" role="button" title="{{'Recall sample' | translate}}">
                                 <span><i class="glyphicon glyphicon-envelope"></i></span>

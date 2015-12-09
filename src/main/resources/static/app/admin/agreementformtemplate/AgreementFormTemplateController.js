@@ -43,6 +43,7 @@ angular.module('ProcessApp.controllers')
                 number: 100,
                 name: 'Testlab'
             },
+            contactPersonName: 'Principal Investigator',
             title: 'Example request',
             background: "Background of the request.",
             researchQuestion: "Example question.",
@@ -105,13 +106,7 @@ angular.module('ProcessApp.controllers')
         };
 
         $scope.printTemplate = function () {
-            var myWindow = window.open('', '', 'width=800, height=600');
-            var _contents = '<html><head><link rel="stylesheet" type="text/css" href="css/print.css" />' +
-                '</head><body onload="window.print()">'
-                    .concat($scope.template_contents)
-                    .concat('</body></html>');
-            myWindow.document.write(_contents);
-            myWindow.document.close();
+            window.print();
         };
 
         $scope.loadTemplate();

@@ -68,12 +68,12 @@ Unfortunately, we your request has been rejected. An explanation will be sent by
 %0A
 With kind regards,%0A
 Stichting PALGA%0A
-088-0402700 / aanvraag@palga.nl%0A">
-                <button ng-if="isPalga() && request.status == 'Rejected'"
-                class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
+088-0402700 / aanvraag@palga.nl%0A"
+                ng-if="isPalga() && request.status == 'Rejected'"
+                class="btn btn-default" role="button" title="{{'Compose rejection mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose rejection mail' | translate}}
-                </button></a>
+                </a>
                 <a href="mailto:{{request.requesterName }} &lt;{{request.requesterEmail}}&gt;?subject=PALGA-gegevens staan voor u klaar, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A
 %0A
 Het bestand met PALGA-gegevens voor aanvraag {{request.requestNumber}} (&ldquo;{{request.title}}&rdquo;) staat voor u klaar.%0A
@@ -94,12 +94,12 @@ The location of the file is: {{serverurl}}/#/request/view/{{request.processInsta
 %0A
 With kind regards,%0A
 Stichting PALGA%0A
-088-0402700 / aanvraag@palga.nl%0A">
-                <button ng-if="isPalga() && request.status == 'DataDelivery' && request.excerptList"
-                class="btn btn-default" type="button" title="{{'Compose notification mail' | translate}}">
+088-0402700 / aanvraag@palga.nl%0A"
+                ng-if="isPalga() && request.status == 'DataDelivery' && request.excerptList"
+                class="btn btn-default" role="button" title="{{'Compose notification mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose notification mail' | translate}}
-                </button></a>
+                </a>
                 <button ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
                 (isPalga())" ng-show="request.assignee != globals.currentUser.userid"
                 class="btn btn-default" type="button"  ng-click="claim(request);" title="Claim">

@@ -7,11 +7,11 @@
                 {{error|translate}}.
             </div>
 
-            <h1>{{ 'Agreement form template' | translate }}</h1>
+            <h1 class="no-print">{{ 'Agreement form template' | translate }}</h1>
 
-            <hr>
+            <hr class="no-print">
 
-            <div class="template-window">
+            <div class="template-window no-print">
                 <div id="editor" name="template-editor" text-angular ng-model="template.contents" class="dntp-text-angular"></div>
                 <br>
                 <h4>{{'Insert variables'|translate}}:</h4>
@@ -33,7 +33,7 @@
             </div>
 
             <div class="template-window">
-                <h3 style="text-align: center;">{{'Preview' | translate}}</h3>
+                <h3 class="no-print" style="text-align: center;">{{'Preview' | translate}}</h3>
                 <div ng-bind-html="template_contents" class="template-preview"></div>
             </div>
 

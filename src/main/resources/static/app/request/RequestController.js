@@ -160,6 +160,10 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.printAgreementForm = function () {
+                window.print();
+            };
+
             if ($route.current.templateUrl === 'app/request/agreementform.html') {
                 $scope.loadTemplate();
                 AgreementFormTemplate.replaceVariables($scope, 'agreementFormTemplate.contents', 'request', 'template_contents');

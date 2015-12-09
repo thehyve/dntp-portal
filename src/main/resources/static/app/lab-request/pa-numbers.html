@@ -74,7 +74,7 @@
             </a>
             <a  ng-if="labRequest.status=='Received' || labRequest.status=='Sending'"
                 href="mailto:{{labRequest.requesterLab.contactData.email ? labRequest.requesterLab.contactData.email
-                                : labRequest.requesterEmail}}?subject=Recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
+                                : labRequest.requesterEmail}}?subject=Regarding request {{labRequest.labRequestCode}}, recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
                 class="btn btn-default" role="button" title="{{'Recall sample' | translate}}">
                 <span><i class="glyphicon glyphicon-envelope"></i></span>
                 {{'Compose recall mail' | translate}}

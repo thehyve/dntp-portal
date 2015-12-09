@@ -204,20 +204,32 @@ address {margin-bottom: 0px;}
         margin: 0;
     }
 }
-.template-window {
-    display: block;
-    min-width: 40em;
-    max-width: 45%;
-    margin: 1em;
-    float: left;
+@media screen{
+    .template-window {
+        display: block;
+        min-width: 40em;
+        max-width: 45%;
+        margin: 1em;
+        float: left;
+    }
+    .template-preview {
+        padding: 2em;
+        border: 1px solid #bbb;
+        box-shadow: 2px 2px 2px #bbb;
+    }
 }
 
-.template-preview {
-    padding: 2em;
-    border: 1px solid #bbb;
-    box-shadow: 2px 2px 2px #bbb;
-}
 .dntp-text-angular {font-family:  Arial, sans-serif;}
 .dntp-text-angular h1, .dntp-text-angular h2, .dntp-text-angular h3, .dntp-text-angular h4 { color: black !important;}
 .dntp-text-angular .ta-toolbar { padding-bottom: 10px;}
 .dntp-text-angular .ta-toolbar .btn-group { padding-bottom: 5px;}
+
+@media print {
+    .sidebar, .form-control, .btn, .no-print, .nav, .solid-footer {
+        display: none !important;
+    }
+    .badge {
+        padding: 2px 6px;
+        border: 1px solid #000;
+    }
+}

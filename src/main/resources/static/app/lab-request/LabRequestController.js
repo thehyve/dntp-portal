@@ -49,6 +49,7 @@ angular.module('ProcessApp.controllers')
                             item.labRequestCode = labRequests[i].labRequestCode;
                             item.processInstanceId = labRequests[i].processInstanceId;
                             item.status = labRequests[i].status;
+                            item.assignee = labRequests[i].assignee;
                             item.email = labRequests[i].requesterLab.contactData.email
                                 ? labRequests[i].requesterLab.contactData.email
                                 : labRequests[i].requesterEmail;

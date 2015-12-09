@@ -55,9 +55,9 @@
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"  st-sort="requesterName">{{'Requester'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="assigneeName">{{'Assignee'|translate}}</th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
-                        <th style="width: 14em">{{'Actions'|translate}}</th>
+                        <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
-                    <tr>
+                    <tr class="no-print">
                         <th><input st-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
@@ -66,9 +66,9 @@
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="globals.currentUser.roles.indexOf('palga') != -1">&nbsp;</th>
-                        <th>&nbsp;</th>
+                        <th class="no-print">&nbsp;</th>
                     </tr>
-                    <tr>
+                    <tr class="no-print">
                         <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                     </tr>
                     </thead>
@@ -90,7 +90,7 @@
                         <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >
                             <small>{{req.dateAssigned | date: 'EEE dd MMMM yyyy  H:mm'}}</small>
                         </td>
-                        <td>
+                        <td class="no-print">
                         <span class="pull-right">
                         <span class="btn-group">
                             <button

@@ -43,9 +43,9 @@
                             <th st-sort="endDate">{{'End date' | translate}}</th>
                             <th st-sort="pathologyCount">{{'# PA numbers' | translate}}</th>
                             <th st-sort="status">{{'Status' | translate}}</th>
-                            <th>&nbsp;</th>
+                            <th class="no-print">&nbsp;</th>
                         </tr>
-                        <tr>
+                        <tr class="no-print">
                             <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
                             <!--<th>&nbsp;</th>-->
                             <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
@@ -56,9 +56,9 @@
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th>&nbsp;</th>
+                            <th class="no-print">&nbsp;</th>
                         </tr>
-                        <tr>
+                        <tr class="no-print">
                             <th colspan="8"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
@@ -92,7 +92,7 @@
                         <td>
                             {{labRequest.status | translate}}
                         </td>
-                        <td>
+                        <td class="no-print">
                             <span class="pull-right">
                                 <span class="btn-group">
                                 <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid"

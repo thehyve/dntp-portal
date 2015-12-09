@@ -20,12 +20,18 @@
                 {{ error | translate }}
             </div>
 
+            <div class="agreement-form">
+                <a ng-click="printAgreementForm()" role="button" class="btn btn-success no-print">
+                    {{'Print' | translate}}
+                </a>
+            </div>
+
             <div ng-bind-html="template_contents" class="agreement-form">
             </div>
 
         </div>
 
-    </div> <!--end row-->
+    </div>
 </div>
 <br>
 <br>

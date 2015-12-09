@@ -34,17 +34,19 @@
                     <th st-sort="paNumber">{{'PA number' | translate}}</th>
                     <th>{{'Samples' | translate}}</th>
                     <th st-sort="status">{{'Status' | translate}}</th>
-                    <th>{{'Actions' | translate}}</th>
+                    <th class="no-print" ng-if="isLabUser()">
+                        {{'Actions' | translate}}
+                    </th>
                 </tr>
-                <tr>
+                <tr class="no-print">
                     <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th>&nbsp;</th>
+                    <th class="no-print" ng-if="isLabUser()">&nbsp;</th>
                 </tr>
-                <tr>
-                    <th colspan="6"><input id="request-search"
+                <tr class="no-print">
+                    <th colspan="4"><input id="request-search"
                         st-search="" class="form-control"
                         placeholder="{{'Search'|translate}} ..." type="text" /></th>
                 </tr>
@@ -55,16 +57,7 @@
                         <a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestCode}}</a>
                     </td>
                     <td>{{pathology.paNumber}}</td>
-                    <td><tags-input
-                            on-tag-added="updatePathology(labRequest, pathology)"
-                            on-tag-removed="updatePathology(labRequest, pathology)"
-                            replace-spaces-with-dashes="false"
-                            ng-model="pathology.samples"
-                            placeholder="Enter sample codes"
-                            add-on-enter="true" add-on-blur="true"
-                            add-on-paste="true"
-                            ng-if="labRequest.assignee == globals.currentUser.userid"></tags-input>
-                        <span
+                    <td><span
                         ng-if="labRequest.assignee != globals.currentUser.userid">
                             <span
                             ng-repeat="sample in pathology.samples">
@@ -72,12 +65,12 @@
                         </span>
                     </span></td>
                     <td>{{pathology.status}}</td>
-                    <td>
+                    <td class="no-print" ng-if="isLabUser()">
                         <span class="pull-right">
                         <span class="btn-group">
-                            <a href="mailto:{{pathology.email}}?subject=Recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
-                                ng-if="pathology.status=='Received' || pathology.status=='Sending'"
-                                class="btn btn-default" role="button" title="{{'Recall sample' | translate}}">
+                            <a href="mailto:{{pathology.email}}?subject=Regarding request {{pathology.labRequestCode}}, recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
+                                ng-if="pathology.assignee == globals.currentUser.userid && (pathology.status=='Received' || pathology.status=='Sending')"
+                                class="btn btn-default btn-sm" role="button" title="{{'Recall sample' | translate}}">
                                 <span><i class="glyphicon glyphicon-envelope"></i></span>
                                 {{'Compose recall mail' | translate}}
                             </a>

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('ProcessApp.services')
-    .factory('AgreementFormTemplate', ['$http', '$alert', 'Restangular', '$q',
-        function($http, $alert, Restangular, $q) {
+    .factory('AgreementFormTemplate', ['$http', '$alert', 'Restangular', '$q', '$sanitize',
+        function($http, $alert, Restangular, $q, $sanitize) {
             var agreementFormService = {};
 
             var alertSuccess = function(title, message) {
@@ -86,7 +86,10 @@ angular.module('ProcessApp.services')
                 $(names).each(function(i, name) {
                     var varname = name.match(varNamePattern)[1];
                     var varnameRegExp = new RegExp('{{'+varname+'}}', 'g');
-                    contents = contents.replace(varnameRegExp, _.get(obj, varname));
+                    var value = _.get(obj, varname);
+                    value = $sanitize(value);
+                    value = _.escape(value);
+                    contents = contents.replace(varnameRegExp, value);
                 });
                 return contents;
             };

@@ -55,7 +55,11 @@
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
-                            <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                                    <option value="">{{'Filter by status' | translate}}</option>
+                                    <option ng-repeat="status in statuses" value="{{status}}">{{ status | translate}}</option>
+                                </select>
+                            </th>
                             <th class="no-print">&nbsp;</th>
                         </tr>
                         <tr class="no-print">

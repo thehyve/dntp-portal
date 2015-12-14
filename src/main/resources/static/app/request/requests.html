@@ -51,21 +51,25 @@
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
                         <th st-sort="dateCreated">{{'Creation date'|translate}}</th>
-                        <th ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" st-sort="vote">{{'Vote'|translate}}</th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"  st-sort="requesterName">{{'Requester'|translate}}</th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="assigneeName">{{'Assignee'|translate}}</th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
+                        <th ng-if="isScientificCouncil()" st-sort="vote">{{'Vote'|translate}}</th>
+                        <th ng-if="isPalga()"  st-sort="requesterName">{{'Requester'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="assigneeName">{{'Assignee'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
                     <tr class="no-print">
                         <th><input st-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><select st-search="status" class="input-sm form-control" type="search" st-input-event="change">
+                                <option value="">{{'Filter by status' | translate}}</option>
+                                <option ng-repeat="status in statuses" value="{{status}}">{{ status | translate}}</option>
+                            </select>
+                        </th>
                         <th>&nbsp;</th>
-                        <th class="request-vote" ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1">&nbsp;</th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1"><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th ng-if="globals.currentUser.roles.indexOf('palga') != -1">&nbsp;</th>
+                        <th class="request-vote" ng-if="isScientificCouncil()">&nbsp;</th>
+                        <th ng-if="isPalga()"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="isPalga()">&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
                     </tr>
                     <tr class="no-print">
@@ -73,41 +77,41 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': req.assignee == globals.currentUser.userid}">
+                    <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': isCurrentUser(req.assignee)}">
                         <td>{{req.requestNumber}}</td>
                         <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
                         <td class="request-status">{{req.status | translate}}
-                            <span class="badge" ng-if="req.status=='Approval' && globals.currentUser.roles.indexOf('palga') != -1" >
+                            <span class="badge" ng-if="req.status=='Approval' && isPalga()" >
                             {{req.numberOfApprovalVotes ? req.numberOfApprovalVotes : 0 }}
                             </span>                        
                         </td>
                         <td><small>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</small></td>
-                        <td ng-if="globals.currentUser.roles.indexOf('scientific_council') != -1" class="request-vote">
+                        <td ng-if="isScientificCouncil()" class="request-vote">
                             {{req.approvalVote}}
                         </td>
-                        <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >{{req.requesterName}}</td>
-                        <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
-                        <td ng-if="globals.currentUser.roles.indexOf('palga') != -1" >
+                        <td ng-if="isPalga()" >{{req.requesterName}}</td>
+                        <td ng-if="isPalga()" >{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
+                        <td ng-if="isPalga()" >
                             <small>{{req.dateAssigned | date: 'EEE dd MMMM yyyy  H:mm'}}</small>
                         </td>
                         <td class="no-print">
                         <span class="pull-right">
                         <span class="btn-group">
                             <button
-                                ng-if="globals.currentUser.roles.indexOf('requester') != -1 || globals.currentUser.roles.indexOf('palga') != -1"
-                                 ng-disabled="(globals.currentUser.roles.indexOf('requester') != -1 && req.status != 'Open')
+                                ng-if="isRequester() || isPalga()"
+                                 ng-disabled="(isRequester() && req.status != 'Open')
                                     || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval')
-                                    || (globals.currentUser.roles.indexOf('palga') != -1 && req.assignee != globals.currentUser.userid)"
+                                    || (isPalga() && !isCurrentUser(req.assignee))"
                                  class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(req)">
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                             </button>
-                            <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
-                                ng-disabled="req.assignee == globals.currentUser.userid || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery' || req.status == 'SelectionReview')"
+                            <button ng-if="isPalga()" 
+                                ng-disabled="isCurrentUser(req.assignee) || !isClaimable(req.status)"
                                  class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
                             </button>
-                            <button ng-if="globals.currentUser.roles.indexOf('palga') != -1" 
-                                ng-disabled="req.assignee != globals.currentUser.userid || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval' || req.status == 'DataDelivery' || req.status == 'SelectionReview')"
+                            <button ng-if="isPalga()" 
+                                ng-disabled="!isCurrentUser(req.assignee) || !isClaimable(req.status)"
                                  class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>
                             </button>
@@ -117,14 +121,14 @@
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>
                             <button
-                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1 && req.reviewStatus != 'SUSPENDED'"
-                                 ng-disabled="req.assignee != globals.currentUser.userid"
+                                 ng-if="isPalga() && req.reviewStatus != 'SUSPENDED'"
+                                 ng-disabled="!isCurrentUser(req.assignee)"
                                  class="btn btn-default" type="button" title="{{'Suspend'|translate}}" ng-click="suspend(req)">
                                 <span><i class="glyphicon glyphicon-pause"></i></span>
                             </button>
                             <button
-                                 ng-if="globals.currentUser.roles.indexOf('palga') != -1 && req.reviewStatus == 'SUSPENDED'"
-                                 ng-disabled="req.assignee != globals.currentUser.userid"
+                                 ng-if="isPalga() && req.reviewStatus == 'SUSPENDED'"
+                                 ng-disabled="!isCurrentUser(req.assignee)"
                                  class="btn btn-default" type="button" title="{{'Resume'|translate}}" ng-click="resume(req)">
                                 <span><i class="glyphicon glyphicon-play"></i></span>
                             </button>

@@ -100,13 +100,12 @@ Stichting PALGA%0A
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose notification mail' | translate}}
                 </a>
-                <button ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
-                (isPalga())" ng-show="request.assignee != globals.currentUser.userid"
+                <button ng-if="isPalga() && isClaimable(request.status)" ng-show="request.assignee != globals.currentUser.userid"
                 class="btn btn-default" type="button"  ng-click="claim(request);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
                     {{'Claim' | translate}}
                 </button>
-                <button ng-if="isPalga()" ng-show="request.assignee == globals.currentUser.userid" class="btn btn-default" type="button"  ng-click="unclaim(request);" title="Claim">
+                <button ng-if="isPalga() && isClaimable(request.status)" ng-show="request.assignee == globals.currentUser.userid" class="btn btn-default" type="button"  ng-click="unclaim(request);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>

@@ -3,16 +3,25 @@
 angular.module('ProcessApp.directives', [])
     .directive('dntpSidebar', function() {
 
+        var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
+        var _isNotSuspended = _.negate(_isSuspended);
+
         var _getUnclaimed = function (requests) {
-            return _.where( requests, {assignee:null});
+            return _.chain(requests)
+                .filter(_.matches({assignee: null}))
+                .filter(_isNotSuspended)
+                .value();
         };
 
         var _getClaimed = function (requests, userId) {
-            return _.where( requests, {assignee:userId});
+            return _.chain(requests)
+                .filter(_.matches({assignee: userId}))
+                .filter(_isNotSuspended)
+                .value();
         };
 
         var _getSuspended = function (requests) {
-            return _.where( requests, {reviewStatus:'SUSPENDED'});
+            return _.filter(requests, _isSuspended);
         };
 
         return {

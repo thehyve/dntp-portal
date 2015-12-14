@@ -17,6 +17,23 @@ angular.module('ProcessApp.controllers')
                   $alert,
                   AgreementFormTemplate) {
 
+            $scope.statuses = [
+                'Open',
+                'Review',
+                'Approval',
+                'DataDelivery',
+                'SelectionReview',
+                'LabRequest',
+                'Rejected',
+                'Closed'
+            ];
+
+            $scope.claimableStates = _.difference($scope.statuses, [
+                'LabRequest',
+                'Rejected',
+                'Closed'
+            ]);
+
             $rootScope.redirectUrl = $location.path();
         
             $scope.login = function() {
@@ -97,20 +114,30 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
+            var _isNotSuspended = _.negate(_isSuspended);
+
             var selectAll = function (requests) {
                 return requests;
             };
 
             var selectSuspended = function (requests) {
-                return _.where(requests,  {reviewStatus:'SUSPENDED'});
+                return _.filter(requests, _isSuspended);
             };
 
             var selectClaimed = function (requests) {
-                return _.where(requests,  {assignee:$rootScope.globals.currentUser.userid});
+                var userId = $rootScope.globals.currentUser.userid;
+                return _.chain(requests)
+                    .filter(_.matches({assignee: userId}))
+                    .filter(_isNotSuspended)
+                    .value();
             };
 
             var selectUnclaimed = function (requests) {
-                return _.where(requests,  {assignee:null});
+                return _.chain(requests)
+                    .filter(_.matches({assignee: null}))
+                    .filter(_isNotSuspended)
+                    .value();
             };
 
             $scope.selections = {
@@ -266,14 +293,12 @@ angular.module('ProcessApp.controllers')
                 $route.reload();
             };
 
-            var _claimableStatuses = ['Review', 'Approval', 'DataDelivery', 'SelectionReview'];
-            
             $scope.loadTestPalga = function() {
                 // claim all
                 for(var i=0; i < $scope.allRequests.length; i++) {
                     var req = $scope.allRequests[i];
                     console.log('considering request ' + req);
-                    if (req.assignee == null && _claimableStatuses.indexOf(req.status) != -1) {
+                    if (req.assignee == null && _.includes($scope.claimableStates, req.status)) {
                         req.$claim(function(res) {
                             console.log('task claimed: ' + res);
                         }, function(err) {
@@ -748,7 +773,15 @@ angular.module('ProcessApp.controllers')
             $scope.isLabuser = function() {
                 return $scope.globals.currentUser.roles.indexOf('lab_user') !== -1;
             };
-            
+
+            $scope.isCurrentUser = function(user) {
+                return ($scope.globals.currentUser.userid === user);
+            }
+
+            $scope.isClaimable = function(status) {
+                return _.includes($scope.claimableStates, status);
+            };
+
             $scope.excerptSelectionStates = [
                 'DataDelivery',
                 'SelectionReview',

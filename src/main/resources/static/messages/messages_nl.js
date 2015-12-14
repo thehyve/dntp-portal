@@ -332,7 +332,7 @@ var messagesNL =
 	/* scientific council   */
 	/* ===================== */
 	'Accepted' : 'Instemmen',
-	'Rejected' : 'Afwijzen', 
+	'Rejected' : 'Afgewezen', 
 	'ACCEPTED' : 'Akkoord', 
 	'REJECTED' : 'Afgewezen', 
 
@@ -345,11 +345,14 @@ var messagesNL =
 	'DataDelivery' : 'Output geleverd', 
 	'SelectionReview' : 'Excerptselectie door aanvrager',
 	'LabRequest' : 'Verzoek aan labs',
-	'Waiting for lab approval' : 'In afwachting beoordeling lab', //werkt niet, in laboverview en lab request details, en in samples overzicht
-	'Approved' : 'Goedgekeurd', //werkt niet in overzichten en details
-	'Sending' : 'Materiaal verstuurd', //werkt niet in overzichten en details ( lab verzoeken en samples )
-	'Received':'Ontvangen', //werkt niet 
-	'Returning' : 'Retour verzonden', //werkt ook niet :P
+	'Waiting for lab approval' : 'In afwachting beoordeling lab',
+	'Approved' : 'Goedgekeurd',
+	'Sending' : 'Materiaal verstuurd',
+	'Received': 'Ontvangen', 
+	'Returning' : 'Retour verzonden', 
+    'Returned': 'Retour ontvangen',
+    'Completed': 'Afgerond',
+	'Closed': 'Afgesloten',
 	
 	'Download ...' : '{{filename}} downloaden',
 

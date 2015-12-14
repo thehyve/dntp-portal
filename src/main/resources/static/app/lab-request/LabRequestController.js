@@ -330,16 +330,25 @@ angular.module('ProcessApp.controllers')
                     });
             };
 
-            $scope.lab_user_statuses = [
+            $scope.statuses = [
                 'Waiting for lab approval',
                 'Approved',
                 'Sending',
                 'Received',
-                'Returning'
+                'Returning',
+                'Returned',
+                'Rejected',
+                'Completed'
             ];
 
+            $scope.lab_user_statuses = _.difference($scope.statuses, [
+                'Returned',
+                'Rejected',
+                'Completed'
+            ]);
+
             $scope.isLabUserStatus = function (status) {
-                return $scope.lab_user_statuses.indexOf(status) !== -1;
+                return _includes($scope.lab_user_statuses, status);
             };
 
             $scope.requester_statuses = [
@@ -348,7 +357,7 @@ angular.module('ProcessApp.controllers')
             ];
 
             $scope.isRequesterStatus = function (status) {
-                return $scope.requester_statuses.indexOf(status) !== -1;
+                return _includes($scope.requester_statuses, status);
             };
 
             $scope.isLabUser = function () {

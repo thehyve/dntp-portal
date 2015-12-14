@@ -50,12 +50,11 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findByDeletedFalse();
     }
-    
+
     public List<User> findScientificCouncilMembers() {
         Role role = roleRepository.findByName("scientific_council");
-        List<User> members = new ArrayList<User>(role.getUsers());
+        List<User> members = userRepository.findAllByDeletedFalseAndActiveTrueAndHasRole(role.getId());
         return members;
     }
 
-    
 }

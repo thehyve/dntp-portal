@@ -160,7 +160,10 @@ public class LabRequestService {
         list.setEntries(representations);
     }
 
-    
+    public void transferPathologyCount(@NotNull LabRequestRepresentation labRequestRepresentation) {
+        labRequestRepresentation.setPathologyCount(pathologyItemRepository.countByLabRequestId(labRequestRepresentation.getId()));
+    }
+
     @Transactional
     public void transferExcerptListData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         // set excerpt list data
@@ -189,6 +192,8 @@ public class LabRequestService {
         setRequestListData(labRequestRepresentation, instance);
 
         labRequestRepresentation.setLabRequestCode();
+
+        transferPathologyCount(labRequestRepresentation);
 
         Date end = new Date();
         if ((end.getTime() - start.getTime()) > 10) {
@@ -353,6 +358,7 @@ public class LabRequestService {
             }
             pathologyList.add(pathology);
         }
+        representation.setPathologyCount((long) pathologyList.size());
         representation.setPathologyList(pathologyList);
         List<CommentRepresentation> commentList = new ArrayList<CommentRepresentation>();
         for (Comment comment : labRequest.getComments()) {

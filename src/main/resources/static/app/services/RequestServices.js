@@ -193,6 +193,24 @@
             return -1;
         }
 
+        _requestFactory.statuses = [ 
+            'Open',
+            'Review',
+            'Approval',
+            'DataDelivery',
+            'SelectionReview',
+            'LabRequest',
+            'Rejected',
+            'Closed'
+        ];
+
+        _requestFactory.claimableStates = _.difference(_requestFactory.statuses, 
+                [
+                    'LabRequest',
+                    'Rejected',
+                    'Closed'
+                ]);
+
         return _requestFactory;
     };
     RequestFactory.$inject = [ '$resource' ];

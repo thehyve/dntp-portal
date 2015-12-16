@@ -98,6 +98,7 @@ public class LargerExcerptListTests extends SelectionControllerTests {
     @Test(groups="request", dependsOnMethods="selectExcerpts")
     public void approveSelection() {
         UserAuthenticationToken requester = getRequester();
+        UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
      
@@ -108,8 +109,10 @@ public class LargerExcerptListTests extends SelectionControllerTests {
         
         log.info("Status: " + representation.getStatus());
 
+        securityContext.setAuthentication(palga);
+
         representation.setSelectionApproved(true);
-        representation = selectionController.setExcerptSelectionApproval(requester, processInstanceId, representation);
+        representation = selectionController.setExcerptSelectionApproval(palga, processInstanceId, representation);
         
         assertEquals("LabRequest", representation.getStatus());
         

@@ -94,7 +94,6 @@ public class SelectionController {
         return excerptListService.findRepresentationByProcessInstanceId(id);
     }
 
-    // not tested yet
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('requester') and "
             + "hasPermission(#id, 'isRequester')")
@@ -105,21 +104,7 @@ public class SelectionController {
             @RequestBody ExcerptListRepresentation body) {
         log.info("PUT /requests/" + id + "/selection");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
-        if (excerptList == null) {
-            throw new RequestNotFound();
-        }
-        //list.getEntries().get(body.get)
-        for (ExcerptEntryRepresentation entry: body.getEntries()) {
-            ExcerptEntry excerptEntry = excerptList.getEntries().get(entry.getSequenceNumber()-1);
-            if (entry.getId().equals(excerptEntry.getId())) {
-                // indeed the same entry
-                excerptEntry.setSelected(entry.isSelected());
-            }
-        }
-        excerptList = excerptListService.save(excerptList);
-
-        return excerptListService.findRepresentationByProcessInstanceId(id);
+        return excerptListService.updateExcerptListSelection(id, body);
     }
 
     @PreAuthorize("isAuthenticated() and "
@@ -291,32 +276,7 @@ public class SelectionController {
             @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/excerptSelectionApproval");
         
-        // Set approval
-        runtimeService.setVariable(id, "selection_approved", body.isSelectionApproved());
-
-        if (body.isSelectionApproved()) {
-            // set lab numbers for creating lab requests.
-            ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
-            if (excerptList == null) {
-                throw new RequestNotFound();
-            }
-            Set<Integer> selectedLabNumbers = new TreeSet<Integer>();
-            for(ExcerptEntry entry: excerptList.getEntries()) {
-                selectedLabNumbers.add(entry.getLabNumber());
-            }
-            runtimeService.setVariable(id, "lab_request_labs", selectedLabNumbers);
-        }
-        
-        Task task = requestService.getTaskByRequestId(id, "selection_review");
-        if (task.getDelegationState()==DelegationState.PENDING) {
-            taskService.resolveTask(task.getId());
-        }
-        taskService.complete(task.getId());
-        
-        // generate lab requests
-        if (body.isSelectionApproved()) {
-            labRequestService.generateLabRequests(id);
-        }
+        excerptListService.setExcerptSelectionApproval(id, body);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();

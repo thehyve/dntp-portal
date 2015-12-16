@@ -31,15 +31,17 @@
                     {{'Create new request'|translate}}
                 </button>
             </li>
-            <li ng-if="loadTestEnabled()">
-                <span class="btn btn-warning" ng-click="loadTest()">Load test</span>
-            </li>
             </ul>
-            <ul class="nav nav-pills" ng-if="isPalga() && loadTestEnabled()">
-                <li>
+            <div ng-controller="LoadTestController">
+            <ul class="nav nav-pills" ng-if="loadTestEnabled()">
+                <li ng-if="!isPalga()">
+                    <span class="btn btn-warning" ng-click="createTestRequests()">Load test</span>
+                </li>
+                <li ng-if="isPalga()">
                     <span class="btn btn-warning" ng-click="loadTestPalga()">Load test Palga</span>
                 </li>
             </ul>
+            </div>
 
             <!--List of request-->
             <div class="table-responsive" ng-if="authenticated">

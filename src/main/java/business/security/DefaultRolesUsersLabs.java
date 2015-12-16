@@ -80,7 +80,7 @@ public class DefaultRolesUsersLabs {
             if (labRepository.findByName(r) == null) {
                 Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
                 ContactData cd = new ContactData();
-                cd.setEmail(l.getName() + "@labs.dntp.thehyve.nl");
+                cd.setEmail("lab_" + l.getNumber() + "@labs.dntp.thehyve.nl");
                 l.setContactData(cd);
                 labRepository.save(l);
             }

@@ -35,7 +35,7 @@ public class LabRequest {
     private Boolean isPaReportsSent;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @BatchSize(size = 100)
+    @BatchSize(size = 1000)
     List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
 
     private String rejectReason;
@@ -47,7 +47,7 @@ public class LabRequest {
     @OrderBy("timeCreated DESC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)
-    @BatchSize(size = 100)
+    @BatchSize(size = 1000)
     private List<Comment> comments = new ArrayList<Comment>();
 
     public LabRequest() {

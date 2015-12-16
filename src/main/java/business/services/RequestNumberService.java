@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -21,6 +24,11 @@ import business.models.RequestPropertiesRepository;
 public class RequestNumberService {
 
     Log log = LogFactory.getLog(getClass());
+
+    private Object lock = new Object();
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     RequestNumberRepository requestNumberRepository;
@@ -63,15 +71,21 @@ public class RequestNumberService {
      * @return the new request number.
      */
     @Transactional
-    String getNewRequestNumber() {
+    public String getNewRequestNumber() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
-        RequestNumber number = requestNumberRepository.findByYear(year);
-        if (number == null) {
-            number = new RequestNumber(year);
-            number = requestNumberRepository.save(number);
+        RequestNumber number;
+        synchronized (lock) {
+            number = requestNumberRepository.findByYear(year);
+            if (number == null) {
+                number = new RequestNumber(year);
+                number = requestNumberRepository.save(number);
+            }
         }
+        em.refresh(number, LockModeType.PESSIMISTIC_WRITE);
         number.setSerialNumber(number.getSerialNumber() + 1);
-        number = requestNumberRepository.save(number);
+        em.persist(number);
+        em.flush();
+        log.info("Handing out new request number: " + number.toString());
         return number.toString();
     }
 

@@ -14,6 +14,10 @@ import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.DelegationState;
+import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +34,15 @@ import business.exceptions.ExcerptListNotFound;
 import business.exceptions.ExcerptListUploadError;
 import business.exceptions.ExcerptSelectionUploadError;
 import business.exceptions.FileUploadError;
+import business.exceptions.RequestNotFound;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
 import business.models.Lab;
 import business.models.LabRepository;
+import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
+import business.representation.RequestRepresentation;
 
 @Service
 public class ExcerptListService {
@@ -45,7 +52,16 @@ public class ExcerptListService {
     @Autowired LabRepository labRepository;
     
     @Autowired ExcerptListRepository excerptListRepository;
-    
+
+    @Autowired RuntimeService runtimeService;
+
+    @Autowired RequestService requestService;
+
+    @Autowired TaskService taskService;
+
+    @Autowired LabRequestService labRequestService;
+
+
     @Transactional
     public ExcerptList findByProcessInstanceId(String processInstanceId) {
         ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
@@ -70,7 +86,27 @@ public class ExcerptListService {
     public ExcerptList save(ExcerptList list) {
         return excerptListRepository.save(list);
     }
-    
+
+    @Transactional
+    public ExcerptListRepresentation updateExcerptListSelection(String processInstanceId, ExcerptListRepresentation body) {
+        ExcerptList excerptList = findByProcessInstanceId(processInstanceId);
+        if (excerptList == null) {
+            throw new RequestNotFound();
+        }
+        for (ExcerptEntryRepresentation entry: body.getEntries()) {
+            ExcerptEntry excerptEntry = excerptList.getEntries().get(entry.getSequenceNumber()-1);
+            if (entry.getId().equals(excerptEntry.getId())) {
+                // indeed the same entry
+                excerptEntry.setSelected(entry.isSelected());
+            }
+        }
+        excerptList = save(excerptList);
+        ExcerptListRepresentation result = new ExcerptListRepresentation(excerptList);
+        List<ExcerptEntry> list = excerptList.getEntries();
+        result.setEntryList(list);
+        return result;
+    }
+
     public ExcerptList processExcerptList(ExcerptList list, InputStream input) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
         log.info("Processing excerpt list");
@@ -205,6 +241,37 @@ public class ExcerptListService {
             throw new ExcerptListNotFound();
         }
         return writeExcerptList(excerptList, selectedOnly);
+    }
+
+    @Transactional
+    public void setExcerptSelectionApproval(String id,
+            RequestRepresentation body) {
+        // Set approval
+        runtimeService.setVariable(id, "selection_approved", body.isSelectionApproved());
+
+        if (body.isSelectionApproved()) {
+            // set lab numbers for creating lab requests.
+            ExcerptList excerptList = findByProcessInstanceId(id);
+            if (excerptList == null) {
+                throw new RequestNotFound();
+            }
+            Set<Integer> selectedLabNumbers = new TreeSet<Integer>();
+            for(ExcerptEntry entry: excerptList.getEntries()) {
+                selectedLabNumbers.add(entry.getLabNumber());
+            }
+            runtimeService.setVariable(id, "lab_request_labs", selectedLabNumbers);
+        }
+
+        Task task = requestService.getTaskByRequestId(id, "selection_review");
+        if (task.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+
+        // generate lab requests
+        if (body.isSelectionApproved()) {
+            labRequestService.generateLabRequests(id);
+        }
     }
 
 }

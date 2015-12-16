@@ -98,6 +98,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
     @Test(groups="request", dependsOnMethods="selectExcerpts")
     public void approveSelection() {
         UserAuthenticationToken requester = getRequester();
+        UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
      
@@ -108,12 +109,13 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         
         log.info("Status: " + representation.getStatus());
 
+        securityContext.setAuthentication(palga);
+
         representation.setSelectionApproved(true);
-        representation = selectionController.setExcerptSelectionApproval(requester, processInstanceId, representation);
+        representation = selectionController.setExcerptSelectionApproval(palga, processInstanceId, representation);
 
         assertEquals("LabRequest", representation.getStatus());
         
-        assertEquals(2, labRequestRepository.count());
         List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(processInstanceId);
         assertEquals(2, labRequests.size());
         
@@ -126,12 +128,9 @@ public class SmallExcerptListTests extends SelectionControllerTests {
             labRequestService.transferLabRequestDetails(labRequestRepresentation, false);
             pathologyCount += labRequestRepresentation.getPathologyCount();
         }
-        long pathologyCount2 = pathologyItemRepository.count();
         assertEquals(3, pathologyCount);
-        assertEquals(3, pathologyCount2);
         
-        // fails because contact data for labs is not set
-        //assertEquals(2, ((MockMailSender)mailSender).getMessages().size());
+        assertEquals(2, ((MockMailSender)mailSender).getMessages().size());
 
         SecurityContextHolder.clearContext();
     }    

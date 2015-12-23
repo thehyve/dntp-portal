@@ -310,8 +310,9 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
-    @RequestMapping(value = "/requests/fixRequestNumbers", method = RequestMethod.PUT)
+    @RequestMapping(value = "/requestsNumbers/fix", method = RequestMethod.PUT)
     public void fixRequestNumbers() {
+        log.info("PUT /requestsNumbers/fix");
         requestNumberService.fixRequestNumbers();
     }
 

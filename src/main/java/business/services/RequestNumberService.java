@@ -40,16 +40,11 @@ public class RequestNumberService {
     @Autowired
     RequestService requestService;
 
-    @PostConstruct
-    public void init() {
-        fixRequestNumbers();
-    }
-
     /**
      * Fix existing requests that should have a request number, but do not have
      * one yet, by assigning a new request number.
      */
-    void fixRequestNumbers() {
+    public void fixRequestNumbers() {
         log.info("Checking if there are requests without a request number that should have one...");
         List<RequestProperties> requests = requestPropertiesRepository.findByRequestNumberNull();
         for(RequestProperties request: requests) {

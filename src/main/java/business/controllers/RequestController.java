@@ -63,6 +63,7 @@ import business.services.ExcerptListService;
 import business.services.FileService;
 import business.services.MailService;
 import business.services.RequestFormService;
+import business.services.RequestNumberService;
 import business.services.RequestPropertiesService;
 import business.services.RequestService;
 
@@ -109,6 +110,9 @@ public class RequestController {
 
     @Autowired
     private RequestPropertiesService requestPropertiesService;
+
+    @Autowired
+    private RequestNumberService requestNumberService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -303,6 +307,12 @@ public class RequestController {
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
+    @RequestMapping(value = "/requests/fixRequestNumbers", method = RequestMethod.PUT)
+    public void fixRequestNumbers() {
+        requestNumberService.fixRequestNumbers();
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")

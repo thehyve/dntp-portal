@@ -21,6 +21,7 @@ import business.models.RequestProperties;
 import business.models.RequestPropertiesRepository;
 
 @Service
+@Transactional
 public class RequestNumberService {
 
     Log log = LogFactory.getLog(getClass());
@@ -48,7 +49,6 @@ public class RequestNumberService {
      * Fix existing requests that should have a request number, but do not have
      * one yet, by assigning a new request number.
      */
-    @Transactional
     void fixRequestNumbers() {
         log.info("Checking if there are requests without a request number that should have one...");
         List<RequestProperties> requests = requestPropertiesRepository.findByRequestNumberNull();
@@ -70,7 +70,6 @@ public class RequestNumberService {
      * year and <var>N</var> is a sequence number, starting at 1 for every year.
      * @return the new request number.
      */
-    @Transactional
     public String getNewRequestNumber() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         RequestNumber number;

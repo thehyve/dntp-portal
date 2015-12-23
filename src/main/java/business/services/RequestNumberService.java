@@ -71,8 +71,10 @@ public class RequestNumberService {
         synchronized (lock) {
             number = requestNumberRepository.findByYear(year);
             if (number == null) {
+                log.info("Create new request number counter for the year " + year + ".");
                 number = new RequestNumber(year);
-                number = requestNumberRepository.save(number);
+                em.persist(number);
+                em.flush();
             }
         }
         em.refresh(number, LockModeType.PESSIMISTIC_WRITE);

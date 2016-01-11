@@ -22,7 +22,7 @@ angular.module('ProcessApp.controllers')
                 $http.get('user').success(function(data) {
                     // console.log('Login succes: ' + JSON.stringify(data));
                     if (data.username) {
-                        $rootScope.userid = data.id;
+                        $rootScope.userid = ''+data.id;
                         $rootScope.username = data.username;
                         $rootScope.authenticated = true;
                         $rootScope.roles = [];

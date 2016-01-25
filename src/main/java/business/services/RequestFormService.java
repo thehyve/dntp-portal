@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import business.exceptions.UpdateNotAllowed;
 import business.models.ApprovalVote;
 import business.models.ApprovalVoteRepository;
 import business.models.Comment;
@@ -188,6 +189,15 @@ public class RequestFormService {
         excerptListStatuses.add("LabRequest");
     }
 
+    /**
+     * Populate the RequestRepresentation object with data from the Activiti process
+     * instance and the RequestProperties entity.
+     * Nothing is returned; instead the representation object is updated.
+     *  
+     * @param instance the Activiti process instance for the request.
+     * @param request the representation object to be populated.
+     * @param currentUser the current user.
+     */
     @Transactional
     public void transferData(HistoricProcessInstance instance, RequestRepresentation request, User currentUser) {
         boolean is_palga = currentUser == null ? false : currentUser.isPalga();
@@ -373,80 +383,105 @@ public class RequestFormService {
         }
     }
 
+    /**
+     * Copy form data from the RequestRepresentation object to the Activiti process
+     * instance and the RequestProperties entity associated with the request.
+     * Updates the Activiti process variables and the RequestProperties entity
+     * and returns the updated variables.
+     * 
+     * @param request the form data.
+     * @param instance the Activiti process instance.
+     * @param user the current user.
+     * @return the updated variable map of the Activiti process instance.
+     */
     public Map<String, Object> transferFormData(RequestRepresentation request, HistoricProcessInstance instance, User user) {
-        boolean is_palga = user.isPalga();
         request.setProcessInstanceId(instance.getId());
         Map<String, Object> variables = instance.getProcessVariables();
-        if (variables != null) {
-            variables.put("title", request.getTitle());
-            variables.put("background", request.getBackground());
-            variables.put("research_question", request.getResearchQuestion());
-            variables.put("hypothesis", request.getHypothesis());
-            variables.put("methods", request.getMethods());
-
-            variables.put("is_statistics_request", (Boolean)request.isStatisticsRequest());
-            variables.put("is_excerpts_request", (Boolean)request.isExcerptsRequest());
-            variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
-            variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
-
-            variables.put("pathologist_name", request.getPathologistName());
-            variables.put("pathologist_email", request.getPathologistEmail());
-            variables.put("previous_contact",(Boolean) request.isPreviousContact());
-            variables.put("previous_contact_description", request.getPreviousContactDescription());
-            
-            variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
-            variables.put("linkage_with_personal_data_notes", request.getLinkageWithPersonalDataNotes());
-            variables.put("is_informed_consent", (Boolean)request.isInformedConsent());
-            variables.put("reason_using_personal_data", request.getReasonUsingPersonalData());
-
-            variables.put("return_date", request.getReturnDate());
-            variables.put("contact_person_name", request.getContactPersonName());
-
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
-            properties.setChargeNumber(request.getChargeNumber());
-            properties.setReseachNumber(request.getResearchNumber());
-            ContactData billingAddress;
-            if (request.getBillingAddress() != null) {
-                billingAddress = request.getBillingAddress();
-            } else {
-                billingAddress = new ContactData();
-                // FIXME: should throw exception
-            }
-            billingAddress = contactDataRepository.save(billingAddress);
-            properties.setBillingAddress(billingAddress);
-            if (is_palga) {
-                variables.put("requester_is_valid", (Boolean)request.isRequesterValid());
-                variables.put("requester_is_allowed", (Boolean)request.isRequesterAllowed());
-                variables.put("contact_person_is_allowed", (Boolean)request.isContactPersonAllowed());
-                variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
-                variables.put("agreement_reached", (Boolean)request.isAgreementReached());
-                
-                variables.put("request_is_admissible", (Boolean)request.isRequestAdmissible());
-                
-                variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
-                variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
-                
-                variables.put("request_approved", (Boolean)request.isRequestApproved());
-                variables.put("reject_reason", request.getRejectReason());
-                variables.put("reject_date", request.getRejectDate());
-                
-                if (!(request.isRequesterValid()
-                        && request.isRequesterAllowed()
-                        && request.isContactPersonAllowed()
-                        && request.isRequesterLabValid()
-                        && request.isAgreementReached())) {
-                    log.info("Request not admissible");
-                    variables.put("request_is_admissible", Boolean.FALSE);
-                }
-                properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
-                properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
-                properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
-                properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
-            }
-            requestPropertiesService.save(properties);
+        if (variables == null) {
+            return variables;
         }
+
+        if (user.isRequester()) {
+            // for requesters, editing fields is only allowed in status 'Open',
+            // which corresponds to the 'request_form' task.
+            Task task = requestService.findTaskByRequestId(instance.getId(), "request_form");
+            if (task == null) {
+                throw new UpdateNotAllowed();
+            }
+        } else if (!user.isPalga()) {
+            // other users than the requester and Palga users are not allowed to
+            // edit request data.
+            throw new UpdateNotAllowed();
+        }
+
+        variables.put("title", request.getTitle());
+        variables.put("background", request.getBackground());
+        variables.put("research_question", request.getResearchQuestion());
+        variables.put("hypothesis", request.getHypothesis());
+        variables.put("methods", request.getMethods());
+
+        variables.put("is_statistics_request", (Boolean)request.isStatisticsRequest());
+        variables.put("is_excerpts_request", (Boolean)request.isExcerptsRequest());
+        variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
+        variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
+
+        variables.put("pathologist_name", request.getPathologistName());
+        variables.put("pathologist_email", request.getPathologistEmail());
+        variables.put("previous_contact",(Boolean) request.isPreviousContact());
+        variables.put("previous_contact_description", request.getPreviousContactDescription());
+
+        variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
+        variables.put("linkage_with_personal_data_notes", request.getLinkageWithPersonalDataNotes());
+        variables.put("is_informed_consent", (Boolean)request.isInformedConsent());
+        variables.put("reason_using_personal_data", request.getReasonUsingPersonalData());
+
+        variables.put("return_date", request.getReturnDate());
+        variables.put("contact_person_name", request.getContactPersonName());
+
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
+        properties.setChargeNumber(request.getChargeNumber());
+        properties.setReseachNumber(request.getResearchNumber());
+        ContactData billingAddress;
+        if (request.getBillingAddress() != null) {
+            billingAddress = request.getBillingAddress();
+        } else {
+            billingAddress = new ContactData();
+            // FIXME: should throw exception
+        }
+        billingAddress = contactDataRepository.save(billingAddress);
+        properties.setBillingAddress(billingAddress);
+
+        if (user.isPalga()) {
+            variables.put("requester_is_valid", (Boolean)request.isRequesterValid());
+            variables.put("requester_is_allowed", (Boolean)request.isRequesterAllowed());
+            variables.put("contact_person_is_allowed", (Boolean)request.isContactPersonAllowed());
+            variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
+            variables.put("agreement_reached", (Boolean)request.isAgreementReached());
+
+            variables.put("request_is_admissible", (Boolean)request.isRequestAdmissible());
+
+            variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
+            variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
+
+            variables.put("request_approved", (Boolean)request.isRequestApproved());
+            variables.put("reject_reason", request.getRejectReason());
+            variables.put("reject_date", request.getRejectDate());
+
+            if (!(request.isRequesterValid()
+                    && request.isRequesterAllowed()
+                    && request.isContactPersonAllowed()
+                    && request.isRequesterLabValid()
+                    && request.isAgreementReached())) {
+                log.info("Request not admissible");
+                variables.put("request_is_admissible", Boolean.FALSE);
+            }
+            properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
+            properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
+            properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
+            properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());
+        }
+        requestPropertiesService.save(properties);
         return variables;
     }
-    
 
 }

@@ -211,6 +211,12 @@
                     'Closed'
                 ]);
 
+        _requestFactory.editStates = [
+            'Open',
+            'Review',
+            'Approval'
+        ];
+
         return _requestFactory;
     };
     RequestFactory.$inject = [ '$resource' ];

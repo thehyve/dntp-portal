@@ -131,6 +131,10 @@ public class CustomPermissionService {
      * @param requestId
      */
     public boolean checkIsRequester(User user, String requestId) {
+        if (!user.isRequester()) {
+            logDecision("isRequester", user, requestId, "DENIED (not a requester).");
+            return false;
+        }
         if (requestId == null) {
             logDecision("isRequester", user, requestId, "DENIED (empty request id).");
             return false;
@@ -141,6 +145,8 @@ public class CustomPermissionService {
             return false;
         }
         RequestRepresentation request = new RequestRepresentation();
+        // FIXME: use more direct way to check if the requesterId of the request
+        // matches the userId.
         requestFormService.transferData(instance, request, user);
         if (request.getRequesterId().equals(user.getId().toString())) {
             logDecision("isRequester", user, requestId, "OK.");
@@ -261,6 +267,8 @@ public class CustomPermissionService {
             return false;
         }
         RequestRepresentation request = new RequestRepresentation();
+        // FIXME: use more direct way to check if the requesterId of the request
+        // matches the userId.
         requestFormService.transferData(instance, request, user);
         if (request.getRequesterId().equals(user.getId().toString())) {
             logDecision("isLabRequestRequester", user, labRequestId.toString(), "OK.");

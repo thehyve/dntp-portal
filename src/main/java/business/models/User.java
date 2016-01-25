@@ -201,8 +201,7 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username = username;
-        
+        this.username = username.toLowerCase();
     }
 
     public Date getCreated() {
@@ -250,5 +249,5 @@ public class User implements Serializable {
     public void setAccountTemporarilyBlocked(boolean accountTemporarilyBlocked) {
         this.accountTemporarilyBlocked = accountTemporarilyBlocked;
     }
-    
+
 }

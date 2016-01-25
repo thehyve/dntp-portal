@@ -6,7 +6,7 @@ public class EmailRepresentation {
     public EmailRepresentation() {}
 
     public EmailRepresentation(String email) {
-        this.email = email;
+        this.email = email.toLowerCase();
     }
 
     public String getEmail() {

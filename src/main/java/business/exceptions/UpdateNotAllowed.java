@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UpdateNotAllowed extends RuntimeException {
     private static final long serialVersionUID = 4000154580392628894L;
     public UpdateNotAllowed() {
-        super("Update not allowed. Not the owner.");
+        super("Update not allowed in this status.");
     }
 }

@@ -47,6 +47,7 @@ import business.exceptions.InvalidActionInStatus;
 import business.exceptions.NotLoggedInException;
 import business.exceptions.RequestNotAdmissible;
 import business.exceptions.RequestNotFound;
+import business.exceptions.UpdateNotAllowed;
 import business.models.CommentRepository;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
@@ -243,7 +244,7 @@ public class RequestController {
 
         runtimeService.setVariables(instance.getId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
-            log.info("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
+            log.debug("PUT /processes/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
         instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
@@ -297,7 +298,7 @@ public class RequestController {
         //FIXME: validation of the data
         runtimeService.setVariables(instance.getId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
-            log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
+            log.debug("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
 
         RequestProperties properties = requestService.submitRequest(user.getUser(), id);
@@ -316,7 +317,7 @@ public class RequestController {
         requestNumberService.fixRequestNumbers();
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/submitForApproval", method = RequestMethod.PUT)
     public RequestRepresentation submitForApproval(
             UserAuthenticationToken user,
@@ -331,7 +332,7 @@ public class RequestController {
         instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
-        
+
         if (updatedRequest.isRequestAdmissible()) {
             Task task = requestService.getTaskByRequestId(id, "palga_request_review");
             if (task.getDelegationState()==DelegationState.PENDING) {
@@ -353,7 +354,7 @@ public class RequestController {
         return updatedRequest;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/finalise", method = RequestMethod.PUT)
     public RequestRepresentation finalise(
             UserAuthenticationToken user,
@@ -403,7 +404,7 @@ public class RequestController {
         return updatedRequest;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/reject", method = RequestMethod.PUT)
     public RequestRepresentation reject(
             UserAuthenticationToken user,
@@ -458,8 +459,8 @@ public class RequestController {
 
         return updatedRequest;
     }
-    
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
+
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/close", method = RequestMethod.PUT)
     public RequestRepresentation close(
             UserAuthenticationToken user,
@@ -481,8 +482,8 @@ public class RequestController {
 
         return updatedRequest;
     }
-    
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
+
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
     @RequestMapping(value = "/requests/{id}/claim", method = RequestMethod.PUT)
     public RequestRepresentation claim(
             UserAuthenticationToken user,
@@ -504,7 +505,7 @@ public class RequestController {
         return updatedRequest;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
     @RequestMapping(value = "/requests/{id}/unclaim", method = RequestMethod.PUT)
     public RequestRepresentation unclaim(
             UserAuthenticationToken user,
@@ -555,12 +556,15 @@ public class RequestController {
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
         log.info("POST /requests/" + id + "/files: chunk " + chunk + " / " + chunks);
-            
-        Task task;
+
+        // check if there is an active task where modifying attachments is allowed. 
         if (user.getUser().isRequester()) {
-            task = requestService.getTaskByRequestId(id, "request_form");
+            requestService.getTaskByRequestId(id, "request_form");
         } else if (user.getUser().isPalga()) {
-            task = requestService.getTaskByRequestId(id, "palga_request_review");
+            Task task = requestService.findTaskByRequestId(id, "palga_request_review");
+            if (task == null) {
+                task = requestService.getTaskByRequestId(id, "request_approval");
+            }
         }
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.REQUEST, file, chunk, chunks, flowIdentifier);
@@ -569,7 +573,7 @@ public class RequestController {
             properties.getRequestAttachments().add(attachment);
             properties = requestPropertiesService.save(properties);
         }
-            
+
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -586,13 +590,16 @@ public class RequestController {
             @PathVariable Long attachmentId) {
         log.info("DELETE /requests/" + id + "/files/" + attachmentId);
 
-        Task task;
+        // check if there is an active task where modifying attachments is allowed. 
         if (user.getUser().isRequester()) {
-            task = requestService.getTaskByRequestId(id, "request_form");
+            requestService.getTaskByRequestId(id, "request_form");
         } else if (user.getUser().isPalga()) {
-            task = requestService.getTaskByRequestId(id, "palga_request_review");
+            Task task = requestService.findTaskByRequestId(id, "palga_request_review");
+            if (task == null) {
+                task = requestService.getTaskByRequestId(id, "request_approval");
+            }
         }
-        
+
         // remove existing request attachment.
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         File toBeRemoved = null;
@@ -673,7 +680,11 @@ public class RequestController {
         return request;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
+    @PreAuthorize("isAuthenticated() "
+            + " and ("
+            + "     hasPermission(#id, 'isRequester') "
+            + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
+            + ")")
     @RequestMapping(value = "/requests/{id}/mecFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadMECAttachment(
             UserAuthenticationToken user, 
@@ -684,6 +695,13 @@ public class RequestController {
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
         log.info("POST /requests/" + id + "/mecFiles: chunk " + chunk + " / " + chunks);
+
+        if (user.getUser().isRequester()) {
+            Task task = requestService.getTaskByRequestId(id, "request_form");
+            if (task == null) {
+                throw new UpdateNotAllowed();
+            }
+        }
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.MEDICAL_ETHICAL_COMMITEE_APPROVAL, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
@@ -698,12 +716,23 @@ public class RequestController {
         requestFormService.transferData(instance, request, user.getUser());
         return request;
     }
-    
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
+
+    @PreAuthorize("isAuthenticated() "
+            + " and ("
+            + "     hasPermission(#id, 'isRequester') "
+            + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
+            + ")")
     @RequestMapping(value = "/requests/{id}/mecFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeMECAttachment(UserAuthenticationToken user, @PathVariable String id,
             @PathVariable Long attachmentId) {
         log.info("DELETE /requests/" + id + "/mecFiles/" + attachmentId);
+
+        if (user.getUser().isRequester()) {
+            Task task = requestService.getTaskByRequestId(id, "request_form");
+            if (task == null) {
+                throw new UpdateNotAllowed();
+            }
+        }
 
         // remove existing agreement attachment.
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
@@ -725,8 +754,7 @@ public class RequestController {
         requestFormService.transferData(instance, request, user.getUser());
         return request;
     }
-    
-    
+
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadDataAttachment(
@@ -755,7 +783,7 @@ public class RequestController {
         requestFormService.transferData(instance, request, user.getUser());
         return request;
     }
-    
+
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeDataAttachment(UserAuthenticationToken user, @PathVariable String id,
@@ -816,7 +844,7 @@ public class RequestController {
             throw new FileUploadError(e.getMessage());
         }
     }
-    
+
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.POST)
     public RequestRepresentation uploadExcerptList(
@@ -868,7 +896,7 @@ public class RequestController {
                 throw e;
             }
         }
-            
+
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -899,9 +927,9 @@ public class RequestController {
         excerptListStatuses.add("LabRequest");
         excerptListStatuses.add("Closed");
     }
-    
+
     @PreAuthorize("isAuthenticated() and "
-            + "(hasPermission(#id, 'isPalgaUser') "
+            + "(hasRole('palga') "
             + " or hasPermission(#id, 'isRequester') "
             + ")")
     @RequestMapping(value = "/requests/{id}/excerptList/csv", method = RequestMethod.GET)
@@ -915,7 +943,7 @@ public class RequestController {
         }
         return excerptListService.writeExcerptList(id, /* selectedOnly = */ false );
     }
-    
+
     @PreAuthorize("isAuthenticated() and "
             + "(hasRole('palga') "
             + " or hasPermission(#id, 'isRequester') "

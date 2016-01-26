@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +34,8 @@ import business.models.UserRepository;
 @SpringApplicationConfiguration(classes = {Application.class})
 @WebIntegrationTest("server.port = 8093")
 public class ProcessControllerTests {
+
+    Log log = LogFactory.getLog(this.getClass());
 
     @Autowired UserRepository userRepository;
 
@@ -71,7 +74,7 @@ public class ProcessControllerTests {
                 .andDo(new ResultHandler(){
             @Override
             public void handle(MvcResult result) throws Exception {
-                LogFactory.getLog(getClass()).info("TEST: getUser()\n" +
+                log.debug("TEST: getUser()\n" +
                         result.getResponse().getStatus() +
                         "\n" +
                         result.getResponse().getContentAsString());
@@ -108,7 +111,7 @@ public class ProcessControllerTests {
             public void handle(MvcResult result) throws Exception {
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(result.getRequest().getInputStream()));
-                LogFactory.getLog(getClass()).info("TEST: serialiseUser()\n" +
+                log.debug("TEST: serialiseUser()\n" +
                         result.getResponse().getStatus() +
                         "\n" +
                         (result.getResolvedException()==null ? "" : result.getResolvedException().getMessage()+"\n") +
@@ -143,7 +146,7 @@ public class ProcessControllerTests {
             public void handle(MvcResult result) throws Exception {
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(result.getRequest().getInputStream()));
-                LogFactory.getLog(getClass()).info("TEST: putLab()\n" +
+                log.debug("TEST: putLab()\n" +
                         result.getResponse().getStatus() +
                         "\n" +
                         (result.getResolvedException()==null ? "" : result.getResolvedException().getMessage()+"\n") +

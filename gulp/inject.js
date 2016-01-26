@@ -9,11 +9,12 @@ var wiredep = require('wiredep').stream;
 module.exports = function(options) {
   gulp.task('inject', ['scripts'], function () {
     var injectStyles = gulp.src([
-      options.src + '/app/**/*.css'
-    ], { read: false });
+      options.src + '/css/**/*.css'
+    ], {read: false});
 
     var injectScripts = gulp.src([
       options.src + '/app/**/*.js',
+      options.src + '/messages/**/*.js',
       '!' + options.src + '/app/**/*.spec.js',
       '!' + options.src + '/app/**/*.mock.js'
     ])

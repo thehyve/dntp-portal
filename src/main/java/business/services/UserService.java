@@ -1,10 +1,11 @@
 package business.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import business.models.UserRepository;
 @Service
 @Transactional
 public class UserService {
+
+    Log log = LogFactory.getLog(getClass());
 
     @Autowired
     UserRepository userRepository;
@@ -55,6 +58,20 @@ public class UserService {
         Role role = roleRepository.findByName("scientific_council");
         List<User> members = userRepository.findAllByDeletedFalseAndActiveTrueAndHasRole(role.getId());
         return members;
+    }
+
+    /**
+     * Convert all usernames to lowercase.
+     */
+    public void lowerCaseUsernames() {
+        List<User> users = userRepository.findByDeletedFalse();
+        for(User user: users) {
+            if (!user.getUsername().equals(user.getUsername().toLowerCase())) {
+                log.info("Changing username " + user.getUsername() + " to lowercase: " + user.getUsername().toLowerCase());
+                user.setUsername(user.getUsername().toLowerCase());
+                save(user);
+            }
+        }
     }
 
 }

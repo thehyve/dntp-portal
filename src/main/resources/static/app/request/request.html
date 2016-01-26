@@ -32,11 +32,7 @@
 
             <div style="padding-bottom: 25px;">
                 <button class="btn btn-default" type="button"  ng-click="edit(request);" title="Edit"
-                        ng-if="(request.status != 'Closed') && (request.status != 'Rejected') &&
-                        (
-                        (request.status == 'Open' && isRequester())
-                        || (request.status != 'DataDelivery' && request.status != 'SelectionReview' && isPalga())
-                        )"
+                        ng-if="isEditStatus(request.status)"
                         ng-disabled="globals.currentUser.roles.indexOf('palga') != -1 && request.assignee != globals.currentUser.userid">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Edit' | translate}}

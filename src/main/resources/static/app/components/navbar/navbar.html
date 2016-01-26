@@ -63,9 +63,9 @@
                         </a></li>
                     </ul>
                 </li>
-                <li ng-show="authenticated" class="dropdown">
+                <li ng-if="authenticated" class="dropdown">
                     <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="profile_menu"><span
-                            class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}}</a>
+                            class="glyphicon glyphicon-user"></span> {{globals.currentUser.username}} <small>({{rolesText()}})</small></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
                         <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>

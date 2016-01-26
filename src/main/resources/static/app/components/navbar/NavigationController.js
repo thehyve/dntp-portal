@@ -18,6 +18,10 @@ angular.module('ProcessApp.controllers')
                 return false;
             };
 
+            $scope.rolesText = function() {
+                return _.get($rootScope.globals, 'currentUser.roles', []).join(', ');
+            };
+
             $scope.isViewLabsAllowed = function() {
                 return checkRoles(['HAS_MANAGE_LAB_PAGE_AUTH']);
             };

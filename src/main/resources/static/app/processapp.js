@@ -92,7 +92,7 @@
                 controller : 'PasswordController'
             }).when('/profile/', {
                 templateUrl : 'app/profile/profile.html',
-                controller : 'ProfileController'
+                controller : ''
             }).otherwise('/');
 
             // Try to fetch the preferred language from the browser.

@@ -21,8 +21,10 @@ angular.module('ProcessApp.controllers')
 
             $scope.claimableStates = Request.claimableStates;
 
+            $scope.editStates = Request.editStates;
+
             $rootScope.redirectUrl = $location.path();
-        
+
             $scope.login = function() {
                 $location.path('/login');
             };
@@ -661,7 +663,17 @@ angular.module('ProcessApp.controllers')
             $scope.isExcerptSelectionState = function(state) {
                 return $scope.excerptSelectionStates.indexOf(state) !== -1;
             };
-            
+
+            /**
+             * Return true iff the curent user is a requester and the status is 'Open'
+             * of the current user is a Palga user and the status is one of the
+             * statuses where editing is allowed ('Open', 'Review', 'Approval').
+             */
+            $scope.isEditStatus = function(status) {
+                return ($scope.isRequester() && status === 'Open')
+                    || ($scope.isPalga() && _.includes($scope.editStates, status));
+            }
+
             $scope.popover = {
                 previousContact: false,
                 requestType: false,

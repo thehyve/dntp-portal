@@ -54,14 +54,14 @@ public class UserController {
 
     @Value("${dntp.server-port}")
     String serverPort;
-    
+
     @Value("${dntp.activation-link.expiry-hours}")
     @NotNull
     Integer activationLinkExpiryHours;
-    
+
     @Autowired
     UserService userService;
-    
+
     @Autowired
     RoleRepository roleRepository;
 
@@ -70,10 +70,10 @@ public class UserController {
 
     @Autowired
     ActivationLinkRepository activationLinkRepository;
-    
+
     @Autowired
     MailService mailService;
-    
+
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -238,7 +238,7 @@ public class UserController {
     @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ProfileRepresentation update(Principal principal, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
-        LogFactory.getLog(getClass()).info("PUT /admin/users/" + id);
+        log.info("PUT /admin/users/" + id);
         User user = userService.findOne(id);
         if (user != null) {
             transferUserData(body, user);
@@ -251,10 +251,10 @@ public class UserController {
         }
         throw new UserNotFound();
     }    
-    
+
     @RequestMapping(value = "/admin/users/{id}/activate", method = RequestMethod.PUT)
     public ProfileRepresentation activate(Principal principal, @PathVariable String id) {
-        LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/activate");
+        log.info("PUT /admin/users/" + id + "/activate");
         Long userId = Long.valueOf(id);
         User user = userService.getOne(userId);
         user.activate();
@@ -263,16 +263,16 @@ public class UserController {
 
     @RequestMapping(value = "/admin/users/{id}/deactivate", method = RequestMethod.PUT)
     public ProfileRepresentation deactivate(Principal principal, @PathVariable String id) {
-        LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/deactivate");
+        log.info("PUT /admin/users/" + id + "/deactivate");
         Long userId = Long.valueOf(id);
         User user = userService.getOne(userId);
         user.deactivate();
         return new ProfileRepresentation(userService.save(user));
     }
-    
+
     @RequestMapping(value = "/admin/users/{id}/delete", method = RequestMethod.PUT)
     public void delete(Principal principal, @PathVariable String id) {
-        LogFactory.getLog(getClass()).info("PUT /admin/users/" + id + "/delete");
+        log.info("PUT /admin/users/" + id + "/delete");
         Long userId = Long.valueOf(id);
         User user = userService.getOne(userId);
         user.markDeleted();
@@ -281,8 +281,17 @@ public class UserController {
 
     @RequestMapping(value = "/register/users", method = RequestMethod.POST)
     public ProfileRepresentation register(@RequestBody ProfileRepresentation body) {
-        LogFactory.getLog(getClass()).info("POST /register new user");
+        log.info("POST /register new user");
         return createNewUser(body);
+    }
+
+    /**
+     * Convert all usernames to lowercase.
+     */
+    @RequestMapping(value = "/admin/userNames/fix", method = RequestMethod.PUT)
+    public void fixUserNames() {
+        log.info("PUT /admin/userNames/fix");
+        userService.lowerCaseUsernames();
     }
 
 }

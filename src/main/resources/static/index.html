@@ -5,19 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <!-- bower:css -->
-      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-      <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css"/>
-      <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.bootstrap.min.css" />
-      <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
-      <link rel="stylesheet" href="bower_components/github-markdown-css/github-markdown.css">
-      <link rel="stylesheet" href="bower_components/textAngular/dist/textAngular.css">
-      <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
-      <!-- endbower -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- build:css css/libraries.css -->
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css"/>
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.bootstrap.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="bower_components/github-markdown-css/github-markdown.css">
+    <link rel="stylesheet" href="bower_components/textAngular/dist/textAngular.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- endbuild -->
+    <!-- endbower -->
 
+    <!-- build:css css/app.css -->
     <link rel="stylesheet" href="./css/index.css" />
     <link rel="stylesheet" href="./css/index.css" media="print" />
     <link rel="stylesheet" href="./css/progressBar.css" />
+    <!-- endbuild -->
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -43,9 +47,10 @@
   <div ng-include="'app/components/footer/footer.html'"></div>
 
   <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- build:js js/libraries.js -->
   <script src="bower_components/lodash/lodash.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="bower_components/angular-resource/angular-resource.js"></script>
@@ -66,8 +71,10 @@
   <script src="bower_components/textAngular/dist/textAngular-rangy.min.js"></script>
   <script src="bower_components/textAngular/dist/textAngular-sanitize.min.js"></script>
   <script src="bower_components/textAngular/dist/textAngular.min.js"></script>
+  <!-- endbuild -->
   <!-- endbower -->
 
+  <!-- build:js js/app.js -->
   <script type="text/javascript" src="app/processapp.js"></script>
   <script type="text/javascript" src="messages/messages_en.js"></script>
   <script type="text/javascript" src="messages/messages_nl.js"></script>
@@ -98,6 +105,7 @@
   <script type="text/javascript" src="app/lab-request/LabRequestServices.js"></script>
   <script type="text/javascript" src="app/lab-request/LabRequestController.js"></script>
   <script type="text/javascript" src="app/lab-request/LabRequestCommentController.js"></script>
+  <!-- endbuild -->
 
   </body>
 </html>

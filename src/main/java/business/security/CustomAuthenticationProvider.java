@@ -48,7 +48,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public static List<GrantedAuthority> getAuthorityList(User user) {
         List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
         for (Role r : user.getRoles()) {
-            authorityList.add(AuthorityUtils.createAuthorityList(r.getName()).get(0));
+            authorityList.add(AuthorityUtils.createAuthorityList("ROLE_" + r.getName()).get(0));
         }
         return authorityList;
     }
@@ -80,7 +80,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     user.resetFailedLoginAttempts();
                     user = userRepository.save(user);
                 }
-                return new UserAuthenticationToken(user, getAuthorityList(user));
+                UserAuthenticationToken token = new UserAuthenticationToken(user, getAuthorityList(user));
+                log.info("Token: " + token);
+                return token;
             }
             // failed login attempt
             user.incrementFailedLoginAttempts();

@@ -6,7 +6,6 @@ import business.models.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user != null) {
         List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
         for (Role r : user.getRoles()) {
-            authorityList.add(AuthorityUtils.createAuthorityList(r.getName()).get(0));
+            authorityList.add(AuthorityUtils.createAuthorityList("ROLE_"+r.getName()).get(0));
         }
         return new org.springframework.security.core.userdetails.User(
         user.getUsername(), user.getPassword(), true, true,

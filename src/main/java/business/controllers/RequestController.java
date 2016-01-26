@@ -298,7 +298,7 @@ public class RequestController {
         //FIXME: validation of the data
         runtimeService.setVariables(instance.getId(), variables);
         for (Entry<String, Object> entry: variables.entrySet()) {
-            log.info("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
+            log.debug("PUT /requests/" + id + " set " + entry.getKey() + " = " + entry.getValue());
         }
 
         RequestProperties properties = requestService.submitRequest(user.getUser(), id);

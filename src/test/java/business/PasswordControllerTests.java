@@ -107,10 +107,10 @@ public class PasswordControllerTests {
         Matcher m = r.matcher(emailBody);
         m.find();
 
-        log.info("Email body: `" + emailBody + "`");
+        log.debug("Email body: `" + emailBody + "`");
 
         String link = m.group(1);
-        log.info("link: " + link);
+        log.debug("link: " + link);
         NewPasswordRequest passwordRequest = passwordRequestRepository.findByToken(link);
         Assert.assertNotNull(passwordRequest);
         Assert.assertEquals(passwordRequest.getUser().getUsername(), emailForm.getEmail());

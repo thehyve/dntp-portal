@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var htmlmin = require('gulp-htmlmin');
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
@@ -12,11 +13,7 @@ module.exports = function(options) {
       options.src + '/app/**/*.html',
       options.tmp + '/serve/app/**/*.html'
     ])
-      .pipe($.minifyHtml({
-        empty: true,
-        spare: true,
-        quotes: true
-      }))
+      .pipe(htmlmin({collapseWhitespace: true}))
       .pipe($.angularTemplatecache('templateCacheHtml.js', {
         module: 'dntpPortal',
         root: 'app'
@@ -32,35 +29,28 @@ module.exports = function(options) {
       addRootSlash: false
     };
 
-    var htmlFilter = $.filter('*.html');
-    var jsFilter = $.filter('**/*.js');
-    var cssFilter = $.filter('**/*.css');
-    var assets;
+    var htmlFilter = $.filter('*.html', {restore: true});
+    var jsFilter = $.filter('**/*.js', {restore: true});
+    var cssFilter = $.filter('**/*.css', {restore: true});
 
-    return gulp.src(options.tmp + '/serve/*.html')
+    return gulp.src(options.src + '/serve/*.html')
       .pipe($.inject(partialsInjectFile, partialsInjectOptions))
-      .pipe(assets = $.useref.assets())
-      .pipe($.rev())
+      .pipe($.useref())
       .pipe(jsFilter)
       .pipe($.ngAnnotate())
       .pipe($.uglify({ preserveComments: $.uglifySaveLicense })).on('error', options.errorHandler('Uglify'))
-      .pipe(jsFilter.restore())
+      .pipe($.rev())
+      .pipe(jsFilter.restore)
       .pipe(cssFilter)
       .pipe($.csso())
-      .pipe(cssFilter.restore())
-      .pipe(assets.restore())
-      .pipe($.useref())
+      .pipe($.rev())
+      .pipe(cssFilter.restore)
       .pipe($.revReplace())
       .pipe(htmlFilter)
-      .pipe($.minifyHtml({
-        empty: true,
-        spare: true,
-        quotes: true,
-        conditionals: true
-      }))
-      .pipe(htmlFilter.restore())
+      .pipe(htmlmin({collapseWhitespace: true}))
+      .pipe(htmlFilter.restore)
       .pipe(gulp.dest(options.dist + '/'))
-      .pipe($.size({ title: options.dist + '/', showFiles: true }));
+//      .pipe($.size({ title: options.dist + '/', showFiles: true }));
   });
 
   // Only applies for fonts from bower dependencies

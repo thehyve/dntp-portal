@@ -69,6 +69,7 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/index.html",
                         "/bower_components/**",
                         "/app/**",
+                        "/js/**",
                         "/messages/**",
                         "/css/**",
                         "/*.ico",

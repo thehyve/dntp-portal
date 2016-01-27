@@ -1,12 +1,8 @@
 <div ng-controller="RegistrationController">
-    <div class="container-fluid ">
+    <div class="container">
 
         <h2>{{ 'Registration' | translate }}</h2>
         <hr>
-
-        <div class="alert alert-danger" ng-show="validationError">
-            {{ validationError | translate }}
-        </div>
 
         <form class="form-horizontal" role="form" name="registrationForm" ng-submit="submit(user)" novalidate>
 

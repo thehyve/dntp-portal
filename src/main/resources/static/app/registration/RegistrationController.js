@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('RegistrationController',['$scope', 'User', 'Restangular', '$rootScope', '$location',
-        function ($scope, User, Restangular, $rootScope, $location) {
+    .controller('RegistrationController',['$scope', '$rootScope',
+                                          'Restangular',
+                                          '$location', '$alert', '$timeout',
+        function ($scope, $rootScope,
+                Restangular,
+                $location, $alert, $timeout) {
 
         $scope.labs = []; // init labs
 
@@ -13,14 +17,10 @@ angular.module('ProcessApp.controllers')
             });
 
         $scope.submit = function (user) {
-
             if ($scope.registrationForm.$valid) {
-
                 user.currentRole = 'requester';
                 user.username = user.contactData.email;
-
                 $rootScope.registrant = user;
-
                 Restangular.all('register/users').post(user)
                     .then(function (data) {
                         $location.path('/register/success');
@@ -30,16 +30,19 @@ angular.module('ProcessApp.controllers')
                         } else {
                             _error('Error');
                         }
-
                     });
             }
         };
 
         var _error = function (msg) {
-            $scope.validationError = msg;
-            $timeout(function () {
-                $scope.validationError = undefined;
-            }, 3000);
+            $alert({
+                title : 'Error',
+                content : msg,
+                placement : 'top-right',
+                type : 'danger',
+                show : true,
+                duration : 5
+            });
         };
 
 }]);

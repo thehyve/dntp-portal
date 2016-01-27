@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('AdminUserController',['$rootScope', '$scope', '$modal', '$location', 
+    .controller('AdminUserController',['$rootScope', '$scope', '$alert', '$modal', '$location', 
                                        'User', 'Role', 'UserRole', 'Lab',
-        function ($rootScope, $scope, $modal, $location, 
+        function ($rootScope, $scope, $alert, $modal, $location, 
                 User, Role, UserRole, Lab) {
 
             $rootScope.redirectUrl = $location.path();
@@ -11,7 +11,7 @@ angular.module('ProcessApp.controllers')
             $scope.login = function () {
                 $location.path('/login');
             };
-    
+
             if (!$rootScope.globals.currentUser) {
                 $scope.login();
             }
@@ -44,18 +44,31 @@ angular.module('ProcessApp.controllers')
                 }
             });
 
+            var _error = function (msg) {
+                console.log('error: ' + msg);
+                $alert({
+                    title : 'Error',
+                    content : msg,
+                    placement : 'top',
+                    type : 'danger',
+                    show : true,
+                    duration : 5
+                });
+            };
+
             $scope.update = function(userdata) {
                 $scope.dataLoading = true;
-                if (userdata.id > 0) {
+                if (!isNaN(parseInt(userdata.id, 10))) {
                     userdata.$update(function(result) {
                         $scope.dataLoading = false;
                         $scope.editerror = '';
                         $scope.editUserModal.hide();
                     }, function(response) {
                         $scope.dataLoading = false;
-                        if (response.status === 304) { // not modified
-                            //console.log(JSON.stringify(response));
-                            $scope.editerror = 'Email address not available.';
+                        if (response.data) {
+                            _error(response.data.message);
+                        } else {
+                            _error('Error');
                         }
                     });
                 } else {
@@ -67,9 +80,10 @@ angular.module('ProcessApp.controllers')
                         $scope.users.unshift(result);
                     }, function(response) {
                         $scope.dataLoading = false;
-                        if (response.status === 304) { // not modified
-                            //console.log(JSON.stringify(response));
-                            $scope.editerror = 'Email address not available.';
+                        if (response.data) {
+                            _error(response.data.message);
+                        } else {
+                            _error('Error');
                         }
                     });
                 }
@@ -128,8 +142,7 @@ angular.module('ProcessApp.controllers')
                 $scope.edituser = usr;
                 $scope.editerror = '';
                 $scope.editUserModal = $modal({scope: $scope, template: '/app/admin/user/edituser.html'});
-            }
-
+            };
 
         }
     ]

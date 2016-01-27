@@ -1,3 +1,4 @@
+(function (window, console, angular, $, _, bootbox) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -40,8 +41,8 @@ angular.module('ProcessApp.controllers')
                 return $translate.instant(key, params);
             };
 
-            $scope.serverurl = $location.protocol()+'://'+$location.host()
-                +(($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
+            $scope.serverurl = $location.protocol()+'://'+$location.host() +
+                (($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
 
             $scope.error = '';
             $rootScope.tempRequest = null;
@@ -134,7 +135,7 @@ angular.module('ProcessApp.controllers')
                 suspended: selectSuspended,
                 claimed: selectClaimed,
                 unclaimed: selectUnclaimed
-            }
+            };
 
             $scope.showSelection = function(requests) {
                 var selection = $scope.activeSidebar;
@@ -144,7 +145,7 @@ angular.module('ProcessApp.controllers')
                     $scope.requests = [];
                 }
                 $scope.displayedCollection = [].concat($scope.requests);
-            }
+            };
 
             $scope.$watch('allRequests', function(newValue) {
                 if (newValue) {
@@ -206,14 +207,14 @@ angular.module('ProcessApp.controllers')
                     'data': ''
             };
 
-            $scope.upload_error = {}
+            $scope.upload_error = {};
 
             $scope.fileuploadsubmitted = function(type) {
                 $scope.upload_result[type] = '';
                 if (type in $scope.upload_error) {
                     delete $scope.upload_error[type];
                 } 
-            }
+            };
 
             $scope.fileuploadsuccess = function(request, data, type, flow) {
                 $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
@@ -626,7 +627,7 @@ angular.module('ProcessApp.controllers')
             $scope.size = function(obj) {
                 var size = 0, key;
                 for (key in obj) {
-                    if (obj.hasOwnProperty(key)) {size++};
+                    if (obj.hasOwnProperty(key)) { size++; }
                 }
                 return size;
             };
@@ -670,9 +671,9 @@ angular.module('ProcessApp.controllers')
              * statuses where editing is allowed ('Open', 'Review', 'Approval').
              */
             $scope.isEditStatus = function(status) {
-                return ($scope.isRequester() && status === 'Open')
-                    || ($scope.isPalga() && _.includes($scope.editStates, status));
-            }
+                return ($scope.isRequester() && status === 'Open') ||
+                    ($scope.isPalga() && _.includes($scope.editStates, status));
+            };
 
             $scope.popover = {
                 previousContact: false,
@@ -690,3 +691,4 @@ angular.module('ProcessApp.controllers')
             };
 
         }]);
+})(window, console, angular, $, _, bootbox);

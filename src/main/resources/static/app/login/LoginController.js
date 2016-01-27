@@ -1,8 +1,7 @@
-'use strict';
-
 angular.module('ProcessApp.controllers')
     .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookies',
         function ($scope, $http, $rootScope, $location, $cookies) {
+            'use strict';
 
             var _serialiseRoles = function(roles) {
                 if (!$.isArray(roles)) { 
@@ -10,14 +9,14 @@ angular.module('ProcessApp.controllers')
                 } else {
                     return roles.join(',');
                 }
-            }
+            };
 
             var _storeUserdata = function(userdata) {
                 $cookies.put('userid', userdata.userid);
                 $cookies.put('username', userdata.username);
                 $cookies.put('roles', _serialiseRoles(userdata.roles));
-            }
-            
+            };
+
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
                     // console.log('Login succes: ' + JSON.stringify(data));

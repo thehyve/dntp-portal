@@ -1,3 +1,4 @@
+(function(angular) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -48,23 +49,23 @@ angular.module('ProcessApp.controllers')
 
             $scope.isViewAccessLogsAllowed = function() {
                 return checkRoles(['HAS_MANAGE_ACCESS_LOG_AUTH']);
-            }
+            };
 
             $scope.isEditAgreementFormTemplateAllowed = function() {
                 return checkRoles(['HAS_MANAGE_AGREEMENT_FORM_TEMPLATE_AUTH']);
-            }
+            };
 
             $scope.isRequestsPage = function() {
-                return $route.current.templateUrl=='app/request/edit-request.html'
-                    || $route.current.templateUrl=='app/request/requests.html'
-                    || $route.current.templateUrl=='app/request/request.html';
-            }
+                return $route.current.templateUrl=='app/request/edit-request.html' ||
+                    $route.current.templateUrl=='app/request/requests.html' ||
+                    $route.current.templateUrl=='app/request/request.html';
+            };
             
             $scope.isLabRequestsPage = function() {
-                return $route.current.templateUrl=='app/lab-request/edit-lab-request.html'
-                    || $route.current.templateUrl=='app/lab-request/lab-requests.html'
-                    || $route.current.templateUrl=='app/lab-request/lab-request.html';
-            }
+                return $route.current.templateUrl=='app/lab-request/edit-lab-request.html' ||
+                    $route.current.templateUrl=='app/lab-request/lab-requests.html' ||
+                    $route.current.templateUrl=='app/lab-request/lab-request.html';
+            };
             
             $scope.login = function() {
                 $location.path('/login');
@@ -106,3 +107,4 @@ angular.module('ProcessApp.controllers')
             }
 
         }]);
+})(angular);

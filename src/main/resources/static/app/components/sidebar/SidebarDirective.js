@@ -1,3 +1,4 @@
+(function (angular, _) {
 'use strict';
 
 angular.module('ProcessApp.directives', [])
@@ -49,3 +50,4 @@ angular.module('ProcessApp.directives', [])
             }
         };
     });
+})(angular, _);

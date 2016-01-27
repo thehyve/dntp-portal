@@ -1,4 +1,5 @@
-'use strict';
+(function(angular){
+    'use strict';
 
 angular.module('ProcessApp.controllers')
     .controller('LabRequestController', [
@@ -42,7 +43,7 @@ angular.module('ProcessApp.controllers')
                 $scope.samples = [];
                 for (var i = 0; i < labRequests.length; i++) {
                     var pathologyList = labRequests[i].pathologyList;
-                    if (pathologyList != null) {
+                    if (pathologyList !== null) {
                         for (var j in pathologyList) {
                             var item = pathologyList[j];
                             item.labRequestId = labRequests[i].id;
@@ -50,9 +51,9 @@ angular.module('ProcessApp.controllers')
                             item.processInstanceId = labRequests[i].processInstanceId;
                             item.status = labRequests[i].status;
                             item.assignee = labRequests[i].assignee;
-                            item.email = labRequests[i].requesterLab.contactData.email
-                                ? labRequests[i].requesterLab.contactData.email
-                                : labRequests[i].requesterEmail;
+                            item.email = labRequests[i].requesterLab.contactData.email ?
+                                labRequests[i].requesterLab.contactData.email :
+                                labRequests[i].requesterEmail;
                             $scope.samples.push(item);
                         }
                     }
@@ -95,8 +96,8 @@ angular.module('ProcessApp.controllers')
             var getHTMLRequesterAddress = function (contactData) {
 
                 var _createEmailTmp = function (email) {
-                    return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' + email
-                        + '">' + email + '</a>';
+                    return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' + 
+                        email + '">' + email + '</a>';
                 };
 
                 var _createPhoneTmp = function (phone) {
@@ -183,7 +184,7 @@ angular.module('ProcessApp.controllers')
                 } else {
                     return err;
                 }
-            }
+            };
             
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
@@ -205,8 +206,7 @@ angular.module('ProcessApp.controllers')
                                     $scope.labReqModal.hide();
                                 }
                                 _loadData();
-                            }
-                            , function (err) {
+                            }, function (err) {
                                 $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                             });
                         }
@@ -459,6 +459,7 @@ angular.module('ProcessApp.controllers')
                 var _printWindow = window.open('', '_blank');
                 _printWindow.document.write(_contents);
                 _printWindow.document.close();
-            }
+            };
 
         }]);
+})(angular);

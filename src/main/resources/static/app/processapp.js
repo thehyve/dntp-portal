@@ -1,6 +1,5 @@
-'use strict';
-
-(function(angular) {
+(function(window, angular, messages) {
+    'use strict';
 
     angular.module('ProcessApp.services', ['restangular'])
       .config(function(RestangularProvider) {
@@ -98,7 +97,7 @@
             // Try to fetch the preferred language from the browser.
             var language = window.navigator.userLanguage || window.navigator.language;
             var preferredLanguage = 'nl';
-            if (language != null && language.length >= 2) {
+            if (language !== null && language.length >= 2) {
                 language = language.substring(0, 2);
                 var supported_languages = ['nl', 'en'];
                 if (supported_languages.indexOf(language) != -1)
@@ -108,8 +107,8 @@
             }
 
             // default lang settings for the localization
-            $translateProvider.translations('en', messagesEN)
-                              .translations('nl', messagesNL);
+            $translateProvider.translations('en', messages.en)
+                              .translations('nl', messages.nl);
             $translateProvider.preferredLanguage(preferredLanguage);
             $translateProvider.useSanitizeValueStrategy('escaped');
             cfpLoadingBarProvider.includeSpinner = false;
@@ -227,4 +226,4 @@
         }
         return true;
     }
-}(angular));
+})(window, angular, messages);

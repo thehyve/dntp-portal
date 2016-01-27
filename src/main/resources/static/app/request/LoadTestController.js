@@ -1,3 +1,4 @@
+(function (console, angular, _) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -44,7 +45,7 @@ angular.module('ProcessApp.controllers')
                         req.background = 'Load testing';
                         req.researchQuestion = 'How does the system perform under heavy load?';
                         req.hypothesis = 'Overall okay, but slow in dealing with lab requests.';
-                        req.methods = 'Javascript test script emulating many requests.'
+                        req.methods = 'Javascript test script emulating many requests.';
                         req.type = '4';
 
                         req.billingAddress = {};
@@ -131,7 +132,7 @@ angular.module('ProcessApp.controllers')
                             });
                         } else if (req.status == 'DataDelivery') {
                             req.$get(function(res) {
-                                if (res.excerptList == null) {
+                                if (res.excerptList === null) {
                                     res.$useExampleExcerptList(function(result) {
                                         console.log('Using example excerpt list for:' + result.requestNumber);
                                         resolve();
@@ -195,7 +196,7 @@ angular.module('ProcessApp.controllers')
                     // claim all
                     var claimPromises = [];
                     $scope.$parent.allRequests.forEach(function (req) {
-                        if (req.assignee == null && _.includes($scope.claimableStates, req.status)) {
+                        if (req.assignee === null && _.includes($scope.claimableStates, req.status)) {
                             claimPromises.push(claimRequest(req));
                         }
                     });
@@ -243,3 +244,4 @@ angular.module('ProcessApp.controllers')
 
         }
     ]);
+})(console, angular, _);

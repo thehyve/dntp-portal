@@ -181,7 +181,7 @@
                         <goals>
                             <goal>gulp</goal>
                         </goals>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                         <configuration>
                             <arguments>package</arguments>
                         </configuration>

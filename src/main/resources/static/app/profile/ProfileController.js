@@ -1,3 +1,4 @@
+(function(console, angular) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -6,7 +7,7 @@ angular.module('ProcessApp.controllers')
         $scope.submitted = false;
 
         var restError = function () {
-          console.log('Server error!');
+            console.log('Server error!');
         };
 
         Restangular.one('profile').get().then(function (profile) {
@@ -31,9 +32,10 @@ angular.module('ProcessApp.controllers')
                     $scope.success = false;
                 }, 3000);
             }, function () {
-              restError;
+              restError();
             });
         };
 
 
 }]);
+})(console, angular);

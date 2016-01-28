@@ -1,3 +1,4 @@
+(function(console, angular, jQuery, _) {
 'use strict';
 
 angular.module('ProcessApp.services')
@@ -61,10 +62,10 @@ angular.module('ProcessApp.services')
             };
 
             agreementFormService.getVariableNames = function(obj) {
-                var names = $.map(obj, function(value, key) {
+                var names = jQuery.map(obj, function(value, key) {
                     if (value instanceof Object) {
                         var subnames = agreementFormService.getVariableNames(value);
-                        return $.map(subnames, function(v, k) {
+                        return jQuery.map(subnames, function(v, k) {
                             return key + '.' + v;
                         });
                     } else {
@@ -72,7 +73,7 @@ angular.module('ProcessApp.services')
                     }
                 });
                 return names;
-            }
+            };
 
             var varsPattern = /{{[\w.]+}}/g;
             var varNamePattern = /{{([\w.]+)}}/;
@@ -128,3 +129,4 @@ angular.module('ProcessApp.services')
 
             return agreementFormService;
     }]);
+})(console, angular, jQuery, _);

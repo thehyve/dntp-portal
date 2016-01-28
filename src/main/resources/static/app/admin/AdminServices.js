@@ -1,6 +1,5 @@
-'use strict';
-
 (function(angular) {
+    'use strict';
 
     var UserFactory = function($resource) {
         return $resource('/admin/users/:id', {

@@ -1,11 +1,9 @@
-(function(angular){
-    'use strict';
-
 angular.module('ProcessApp.controllers')
     .controller('LabRequestController', [
         '$q', '$rootScope', '$scope', '$modal', '$location', '$route', '$routeParams', '$window', 'Request',
         'Restangular', function ($q, $rootScope, $scope, $modal, $location, $route, $routeParams, $window, Request,
                                  Restangular) {
+            'use strict';
 
             $rootScope.redirectUrl = $location.path();
 
@@ -462,4 +460,3 @@ angular.module('ProcessApp.controllers')
             };
 
         }]);
-})(angular);

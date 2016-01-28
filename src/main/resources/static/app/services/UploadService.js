@@ -1,3 +1,4 @@
+(function(console, angular) {
 'use strict';
 
 angular.module('ProcessApp.services')
@@ -21,7 +22,7 @@ angular.module('ProcessApp.services')
             uploadService.uploadFile = function(e) {
                 //console.log('Uploading file.');
                 e.upload();
-            }
+            };
 
             uploadService.fileUploadSuccess = function(type, data, file) {
                 //console.log('Upload success: ', file);
@@ -46,8 +47,8 @@ angular.module('ProcessApp.services')
                     // console.log('warning: ' + e);
                 }
                 console.log('Error uploading \'' + file.name + '\': ' + message);
-                var content = 'Failed to upload ' + file.name
-                    + (message ? '<br>' + message : '');
+                var content = 'Failed to upload ' + file.name +
+                    (message ? '<br>' + message : '');
                 $alert({
                     title : 'Upload failed',
                     content : content,
@@ -63,3 +64,4 @@ angular.module('ProcessApp.services')
 
             return uploadService;
     }]);
+})(console, angular);

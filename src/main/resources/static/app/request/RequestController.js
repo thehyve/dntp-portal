@@ -1,4 +1,4 @@
-(function (window, console, angular, $, _, bootbox) {
+(function (window, console, angular, jQuery, _, bootbox) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -60,7 +60,7 @@ angular.module('ProcessApp.controllers')
                     var now = new Date();
                     req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
                     $scope.request = req;
-                    $rootScope.tempRequest = $.extend( true, {}, req ); // deep copy
+                    $rootScope.tempRequest = jQuery.extend( true, {}, req ); // deep copy
                 }, function(response) {
                     if (response.data) {
                         $scope.error = response.data.message + '\n';
@@ -530,7 +530,7 @@ angular.module('ProcessApp.controllers')
                     });
                 } else {
                     // return request to the original
-                    $scope.request = $.extend( true, {},  $rootScope.tempRequest ); // deep copy
+                    $scope.request = jQuery.extend( true, {},  $rootScope.tempRequest ); // deep copy
                 }
                 $scope.editRequestModal.hide();
             };
@@ -540,7 +540,7 @@ angular.module('ProcessApp.controllers')
                     Request.get({id:request.processInstanceId}, function (data) {
                         data.type = Request.convertRequestOptsToType(data);
                         $scope.request = data;
-                        $rootScope.tempRequest = $.extend( true, {}, data ); // deep copy
+                        $rootScope.tempRequest = jQuery.extend( true, {}, data ); // deep copy
 
                         if ($rootScope.tempRequest.title === null) {
                             $scope.request.type = '1';
@@ -650,7 +650,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.isCurrentUser = function(user) {
                 return ($scope.globals.currentUser.userid === user);
-            }
+            };
 
             $scope.isClaimable = function(status) {
                 return _.includes($scope.claimableStates, status);
@@ -691,4 +691,4 @@ angular.module('ProcessApp.controllers')
             };
 
         }]);
-})(window, console, angular, $, _, bootbox);
+})(window, console, angular, jQuery, _, bootbox);

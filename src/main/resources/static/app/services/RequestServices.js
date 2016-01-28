@@ -1,6 +1,5 @@
-'use strict';
-
-(function(angular) {
+(function(console, angular, _) {
+    'use strict';
 
     var RequestFactory = function($resource) {
 
@@ -191,7 +190,7 @@
                 return value;
             }
             return -1;
-        }
+        };
 
         _requestFactory.statuses = [ 
             'Open',
@@ -341,4 +340,4 @@
     FlowOptionService.$inject = [ '$cookies' ];
     angular.module('ProcessApp.services').factory('FlowOptionService', FlowOptionService);
 
-}(angular));
+}(console, angular, _));

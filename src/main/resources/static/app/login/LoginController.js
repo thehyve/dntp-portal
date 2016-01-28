@@ -4,7 +4,7 @@ angular.module('ProcessApp.controllers')
             'use strict';
 
             var _serialiseRoles = function(roles) {
-                if (!$.isArray(roles)) { 
+                if (!jQuery.isArray(roles)) { 
                     return ''; 
                 } else {
                     return roles.join(',');
@@ -54,10 +54,10 @@ angular.module('ProcessApp.controllers')
                     } else {
                         $rootScope.authenticated = false;
                     }
-                    callback && callback();
+                    if (callback) { callback(); }
                 }).error(function() {
                     $rootScope.authenticated = false;
-                    callback && callback();
+                    if (callback) { callback(); }
                 });
             };
 
@@ -105,7 +105,7 @@ angular.module('ProcessApp.controllers')
             };
             
             angular.element(document).ready(function() {
-                $('#username').focus();
+                jQuery('#username').focus();
               });
 
         }]);

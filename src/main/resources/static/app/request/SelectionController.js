@@ -1,3 +1,4 @@
+(function(document, console, angular, jQuery, _, bootbox) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -21,7 +22,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.currentIndex = 0;
-            
+
             $scope.relevantFields = [
                                      'PALGApatiëntnr', 
                                      'PALGAexcerptnr',
@@ -36,15 +37,15 @@ angular.module('ProcessApp.controllers')
                     $scope.relevantIndexes.push(index);
                 }
             }
-            
+
             $scope.xls2html = function(text) {
                 if (text) {
                     return text.replace(/_x000D_/g, '<br />\n');
                 } else {
                     return "";
                 }
-            }
-            
+            };
+
             $scope.toggleExcerpt = function(request, excerpt) {
                 //console.log('Toggle excerpt: ' + excerpt.id + ' for request ' + request.processInstanceId);
                 $scope.updateSelection(request, excerpt, !excerpt.selected);
@@ -66,7 +67,7 @@ angular.module('ProcessApp.controllers')
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';
                 });
-            }
+            };
 
             $scope.submitExcerptSelection = function(request) {
                 $scope.disableSpaceSelects();
@@ -143,9 +144,10 @@ angular.module('ProcessApp.controllers')
                 });
             };
             $scope.enableSpaceSelects();
-            
+
             $scope.disableSpaceSelects = function() {
-                $(document).off('keydown.selection');
+                jQuery(document).off('keydown.selection');
             };
 
 }]);
+})(document, console, angular, jQuery, _, bootbox);

@@ -1,8 +1,6 @@
-(function (angular, _) {
-'use strict';
-
 angular.module('ProcessApp.directives', [])
     .directive('dntpSidebar', function() {
+        'use strict';
 
         var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
         var _isNotSuspended = _.negate(_isSuspended);
@@ -50,4 +48,3 @@ angular.module('ProcessApp.directives', [])
             }
         };
     });
-})(angular, _);

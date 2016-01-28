@@ -1,8 +1,7 @@
-'use strict';
-
 angular.module('ProcessApp.controllers')
     .controller('MyLabController', ['$scope', 'Restangular',
         function ($scope, Restangular) {
+            'use strict';
 
             $scope.alerts = [];
 

@@ -1,3 +1,4 @@
+(function(console, jQuery, angular) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -17,12 +18,10 @@ angular.module('ProcessApp.controllers')
                             if ($scope.scientificCouncilEmail.length > 0) {
                                 $scope.scientificCouncilEmail += ', ';
                             }
-                            var name = $.trim($rootScope.getName(response[i]));
+                            var name = jQuery.trim($rootScope.getName(response[i]));
                             if (name.length > 0) {
-                                $scope.scientificCouncilEmail += name 
-                                + ' <'
-                                + response[i].contactData.email
-                                + '>';
+                                $scope.scientificCouncilEmail += name +
+                                    ' <' + response[i].contactData.email + '>';
                             } else {
                                 $scope.scientificCouncilEmail += response[i].contactData.email;
                             }
@@ -93,3 +92,4 @@ angular.module('ProcessApp.controllers')
                 });
             };
 }]);
+})(console, jQuery, angular);

@@ -1,3 +1,4 @@
+(function(angular) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -57,3 +58,4 @@ angular.module('ProcessApp.controllers')
         _loadData();
     }
 ]);
+})(angular);

@@ -1,26 +1,27 @@
-'use strict';
+describe('LoginController', function() {
+    'use strict';
 
-describe('LoginController', function () {
+    beforeEach(module('ProcessApp.controllers', 'ngCookies'));
 
-  beforeEach(module('ProcessApp.controllers', 'ngCookies'));
+    var $controller;
 
-  var $controller;
+    beforeEach(inject(function(_$controller_) {
+        // The injector unwraps the underscores (_) from around the parameter
+        // names when matching
+        $controller = _$controller_;
+    }));
 
-  beforeEach(inject(function (_$controller_) {
-    // The injector unwraps the underscores (_) from around the parameter names when matching
-    $controller = _$controller_;
-  }));
+    describe('Login Page', function() {
+        var $scope, controller;
 
-  describe('Login Page', function () {
-    var $scope, controller;
+        beforeEach(function() {
+            controller = $controller('LoginController', {
+                $scope : $scope
+            });
+        });
 
-    beforeEach(function () {
-      controller = $controller('LoginController', {$scope: $scope});
+        // TODO
+
     });
-
-    // TODO
-
-  });
-
 
 });

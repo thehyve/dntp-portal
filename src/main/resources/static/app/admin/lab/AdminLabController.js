@@ -1,3 +1,4 @@
+(function(angular) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -92,3 +93,4 @@ angular.module('ProcessApp.controllers')
                 $scope.editLabModal = $modal({scope: $scope, template: '/app/admin/lab/editlab.html'});
             };
         }]);
+})(angular);

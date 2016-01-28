@@ -1,6 +1,3 @@
-(function (console, angular, _) {
-'use strict';
-
 angular.module('ProcessApp.controllers')
     .controller('LoadTestController',['$rootScope', '$scope',
                                       '$route', '$routeParams',
@@ -12,6 +9,7 @@ angular.module('ProcessApp.controllers')
                   Request,
                   $alert,
                   $q) {
+            'use strict';
 
             var patt = /gijs(\+)?[a-zA-Z0-9]*@thehyve.nl/g;
             var result = patt.test($rootScope.globals.currentUser.username);
@@ -244,4 +242,3 @@ angular.module('ProcessApp.controllers')
 
         }
     ]);
-})(console, angular, _);

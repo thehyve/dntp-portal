@@ -1,11 +1,10 @@
-'use strict';
-
 angular.module('ProcessApp.controllers')
     .controller('LabRequestCommentController',['$rootScope', '$scope', '$modal', '$location', '$route',
         'LabRequest', 'LabRequestComment',
 
     function ($rootScope, $scope, $modal, $location, $route,
               LabRequest, LabRequestComment) {
+        'use strict';
 
         $scope.commentEditVisibility = {};
         //$scope.editComment = {};
@@ -45,4 +44,4 @@ angular.module('ProcessApp.controllers')
             });
         };
 
-}]);
+    }]);

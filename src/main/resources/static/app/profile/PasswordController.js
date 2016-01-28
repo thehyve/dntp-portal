@@ -1,3 +1,4 @@
+(function(console, angular) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -33,3 +34,4 @@ angular.module('ProcessApp.controllers')
             }, 3000);
         }
 }]);
+})(console, angular);

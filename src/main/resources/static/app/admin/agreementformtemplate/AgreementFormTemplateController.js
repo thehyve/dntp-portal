@@ -1,3 +1,4 @@
+(function(window, angular, jQuery) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -113,3 +114,4 @@ angular.module('ProcessApp.controllers')
 
     }
 ]);
+})(window, angular, jQuery);

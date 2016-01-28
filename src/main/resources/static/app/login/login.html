@@ -14,7 +14,10 @@
     <form role="form" ng-submit="login()">
         <div class="form-group">
             <label for="username">{{'Username' | translate}}:</label>
-            <input type="text" class="form-control" id="username" name="username" ng-model="credentials.username" autofocus="autofocus"/>
+            <input type="text" lowercase-only="lowercase-only" class="form-control"
+                id="username" name="username" ng-model="credentials.username"
+                placeholder="{{ 'Email address (lower case)' | translate }}"
+                autofocus="autofocus" />
         </div>
         <div class="form-group">
             <label for="password">{{'Password' | translate}}:</label>
@@ -26,6 +29,6 @@
         <a href="#/login/forgot-password" class="btn btn-success" id="forgot-password">
             <span class="glyphicon glyphicon-envelope"></span> {{'Forgot Password' | translate}}
         </a>
-        &nbsp;<a href="#/register">{{'Create an account' | translate}}.</a>
+        &nbsp;<a href="#/register">{{'Create an account' | translate}}</a>.
     </form>
 </div>

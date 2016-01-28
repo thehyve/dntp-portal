@@ -52,12 +52,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
         return authorityList;
     }
-    
+
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        log.info("username: " + authentication.getName());
-        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse(authentication.getName());
+        if (authentication == null || authentication.getName() == null) {
+            log.error("Empty authentication.");
+            return null;
+        }
+        String username = authentication.getName().toLowerCase();
+        log.info("username: " + username);
+        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse(username);
         if (user != null) {
             if (user.isAccountTemporarilyBlocked()) {
                 Date now = new Date();

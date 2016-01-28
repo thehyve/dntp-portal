@@ -58,10 +58,10 @@ There should now be an application running at [http://localhost:8092/](http://lo
 # create a war package
 mvn package
 ```
-There should now be a `.war`-file in `target/dntp-portal-0.0.29-SNAPSHOT.war`.
+There should now be a `.war`-file in `target/dntp-portal-0.0.30-SNAPSHOT.war`.
 ```
 # run the packaged application
-java -jar target/dntp-portal-0.0.29-SNAPSHOT.war
+java -jar target/dntp-portal-0.0.30-SNAPSHOT.war
 ```
 
 

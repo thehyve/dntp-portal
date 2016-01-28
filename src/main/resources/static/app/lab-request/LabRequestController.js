@@ -346,7 +346,7 @@ angular.module('ProcessApp.controllers')
             ]);
 
             $scope.isLabUserStatus = function (status) {
-                return _includes($scope.lab_user_statuses, status);
+                return _.includes($scope.lab_user_statuses, status);
             };
 
             $scope.requester_statuses = [
@@ -355,7 +355,7 @@ angular.module('ProcessApp.controllers')
             ];
 
             $scope.isRequesterStatus = function (status) {
-                return _includes($scope.requester_statuses, status);
+                return _.includes($scope.requester_statuses, status);
             };
 
             $scope.isLabUser = function () {

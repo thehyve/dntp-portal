@@ -161,7 +161,8 @@
         'Create an account': 'Een account maken',
         'Bad credentials': 'Ongeldige logingegevens.',
         'User account blocked. Please retry in 15 minutes.': 'Account geblokkeerd. Probeert u het opnieuw over 15 minuten.',
-    
+        'Email address (lower case)': 'E-mailadres (kleine letters)',
+
         /* ========= */
         /* Main page */
         /* ========= */

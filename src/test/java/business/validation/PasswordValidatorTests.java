@@ -1,10 +1,18 @@
 package business.validation;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+
 import static  org.junit.Assert.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
+import business.security.SecureTokenGenerator;
+
 public class PasswordValidatorTests {
+
+    Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
     PasswordValidator passwordValidator;
@@ -88,4 +96,11 @@ public class PasswordValidatorTests {
         assertTrue(PasswordValidator.validate("?=!*'();:@&=+$,/?#a0"));
     }
 
+    @Test
+    public void testPasswordGenerator() {
+        for(int i = 0; i < 20; i++) {
+            String password = SecureTokenGenerator.generatePassword();
+            assertTrue(PasswordValidator.validate(password));
+        }
+    }
 }

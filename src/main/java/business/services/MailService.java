@@ -266,14 +266,16 @@ public class MailService {
         // Send email to user
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-            message.setTo(link.getUser().getUsername());
+            String recipient = link.getUser().getUsername();
+            message.setTo(recipient);
             message.setFrom(replyAddress, replyName);
             message.setReplyTo(replyAddress);
             message.setSubject("PALGA-account activeren / Activate PALGA account");
             String activationLink = getLink("/#/activate/" + link.getToken());
             message.setText(String.format(activationEmailTemplate, activationLink));
             mailSender.send(message.getMimeMessage());
-            LogFactory.getLog(this.getClass()).info("Recovery password token generated: " + link.getToken());
+            log.info("Activation link token generated for " + recipient +
+                    ": " + link.getToken());
         } catch(MessagingException e) {
             log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
@@ -314,12 +316,13 @@ public class MailService {
     public void sendPasswordRecoveryToken(NewPasswordRequest npr) {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-            message.setTo(npr.getUser().getContactData().getEmail());
+            String recipient = npr.getUser().getContactData().getEmail();
+            message.setTo(recipient);
             message.setFrom(replyAddress, replyName);
             message.setSubject(passwordRecoverySubject);
             String passwordRecoveryLink = getLink("/#/login/reset-password/" + npr.getToken());
             message.setText(String.format(passwordRecoveryTemplate, passwordRecoveryLink));
-            log.info("Sending password recovery token. mailSender: " + mailSender.getClass());
+            log.info("Sending password recovery token to " + recipient + ".");
             mailSender.send(message.getMimeMessage());
         } catch(MessagingException e) {
             log.error(e.getMessage());

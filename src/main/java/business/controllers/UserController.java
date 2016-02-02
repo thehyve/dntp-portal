@@ -39,6 +39,7 @@ import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
 import business.representation.ProfileRepresentation;
+import business.security.SecureTokenGenerator;
 import business.security.UserAuthenticationToken;
 import business.services.MailService;
 import business.services.UserService;
@@ -230,8 +231,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
-    public ProfileRepresentation create(Principal principal, @RequestBody ProfileRepresentation body) {
-        LogFactory.getLog(getClass()).info("POST /admin/users (for user: " + principal.getName() + ")");
+    public ProfileRepresentation create(UserAuthenticationToken user, @RequestBody ProfileRepresentation body) {
+        log.info("POST /admin/users (for user: " + user.getName() + ")");
+        /*
+         * Set strong random password when a user is created by an administrator.
+         * The user can set a password using the 'Forgot password' button on the
+         * login page. 
+         */
+        String password = SecureTokenGenerator.generatePassword();
+        body.setPassword1(password);
+        body.setPassword2(password);
         return createNewUser(body);
     }
 

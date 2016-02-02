@@ -24,6 +24,7 @@ public class ProfileRepresentation {
     private String password2;
     private String firstName;
     private String lastName;
+    private boolean emailValidated;
 
     private ContactData contactData;
     
@@ -39,7 +40,7 @@ public class ProfileRepresentation {
 
     public ProfileRepresentation() {
     }
-    
+
     public ProfileRepresentation(@NotNull User user) {
         this.active = user.isActive();
         this.id = user.getId();
@@ -52,6 +53,7 @@ public class ProfileRepresentation {
         for (Role role: user.getRoles()) {
             this.roles.add(new RoleRepresentation(role));
         }
+        this.emailValidated = user.isEmailValidated();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.setPathologist(user.isPathologist());
@@ -101,6 +103,14 @@ public class ProfileRepresentation {
 
     public void setPassword2(String password2) {
         this.password2 = password2;
+    }
+
+    public boolean isEmailValidated() {
+        return emailValidated;
+    }
+
+    public void setEmailValidated(boolean emailValidated) {
+        this.emailValidated = emailValidated;
     }
 
     public String getFirstName() {

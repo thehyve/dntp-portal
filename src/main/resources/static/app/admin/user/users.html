@@ -44,13 +44,15 @@
                         <tr>
                             <th st-sort="getters.lastName">{{'Name'|translate}}</th>
                             <th st-sort="username">{{'Email'|translate}}</th>
+                            <th st-sort="emailValidated">{{'Validation'|translate}}</th>
                             <th st-sort="currentRole">{{'Role'|translate}}</th>
                             <th st-sort="institute">{{'Institute'|translate}}</th>
                             <th st-sort="labId">{{'Lab'|translate}}</th>
                             <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
+                            <th></th>
                         </tr>
                         <tr>
-                            <th colspan="7"><input st-search="" class="form-control"
+                            <th colspan="8"><input st-search="" class="form-control"
                                                    placeholder="{{'Search' | translate}} ..." type="text"/></th>
                         </tr>
                         </thead>
@@ -58,9 +60,12 @@
                         <tr ng-repeat="user in displayedCollection">
                             <td>{{user.firstName}} {{user.lastName}}</td>
                             <td>{{user.username}}</td>
+                            <td><span ng-if="user.emailValidated">{{'Validated'|translate}}</span>
+                                <span class="text-danger" ng-if="!user.emailValidated">{{'Not validated'|translate}}</span>
+                            </td>
                             <td>{{user.currentRole}}</td>
                             <td>{{user.institute}}</td>
-                            <td>{{labmap[user.labId].name}}</td>
+                            <td>{{labmap[user.labId].number}}. {{labmap[user.labId].name}}</td>
                             <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
                                 &nbsp;&nbsp;
                                 {{user.created | date: 'HH:mm'}}
@@ -71,13 +76,17 @@
                                     <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(user)">
                                         <span><i class="glyphicon glyphicon-pencil"></i></span>
                                     </button>
-                                    <button class="btn btn-default {{user.active ? 'disabled' : ''}}" type="button" title="Activate"
+                                    <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
+                                            ng-if="!user.active"
+                                            type="button" title="Activate"
                                             ng-click="activate(user)" ng-disabled="dataLoading">
-                                        {{'Activate' | translate}}
+                                        <span class="glyphicon glyphicon-repeat"></span>
                                     </button>
-                                    <button class="btn btn-default {{user.active ? '' : 'disabled'}}" type="button" title="Dectivate"
+                                    <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
+                                            ng-if="user.active"
+                                            type="button" title="Dectivate"
                                             ng-click="deactivate(user)" ng-disabled="dataLoading">
-                                        {{'Deactivate' | translate}}
+                                        <span class="glyphicon glyphicon-ban-circle"></span>
                                     </button>
                                     <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
                                             ng-click="remove(user)">

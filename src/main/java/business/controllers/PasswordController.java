@@ -51,8 +51,6 @@ public class PasswordController {
             this.nprRepo.save(npr);
 
             mailService.sendPasswordRecoveryToken(npr);
-            
-            log.info("Recovery password token generated: " + npr.getToken());
         }
 
         // If the user doesn't exist we still return OK, since we don't want to let an attacker know if an email

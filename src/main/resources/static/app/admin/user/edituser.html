@@ -19,7 +19,7 @@
         <div class="form-group">
             <label class="control-label col-sm-4" for="currentRole">{{ 'Role' | translate }}</label>
             <div class="col-sm-6">
-                <select ng-model="edituser.currentRole">
+                <select class="form-control" ng-model="edituser.currentRole">
                     <option ng-repeat="role in roles" value="{{role.name}}" ng-selected="role.name == edituser.currentRole">{{role.name}}</option>
                 </select>
             </div>
@@ -79,46 +79,6 @@
             </div>
         </div>
 
-        <!-- Password -->
-        <div ng-if="edituser.id == null" class="form-group"
-             ng-class="{ 'has-error' : (registrationForm.password.$invalid ||
-             registrationForm.password.$error.required) && registrationForm.password.$dirty }">
-            <label class="control-label col-sm-4" for="password">{{ 'Password' | translate }}</label>
-
-            <div class="col-sm-6">
-                <input type="password" class="form-control" id="password" name="password"
-                       placeholder="{{ 'Password' | translate }}" ng-model="edituser.password1"
-                       validate-password required >
-                <!-- errors -->
-                <span ng-show="registrationForm.password.$error.required"
-                      class="help-block">
-                    {{ 'Required field' | translate }}
-                </span>
-                <span ng-show="registrationForm.password.$error.validatePassword && registrationForm.password.$dirty"
-                      class="help-block">
-                    {{ 'Password must be 8 or more characters long,
-                        contain numbers, letters, and a special character.' | translate }}
-                </span>
-            </div>
-        </div>
-        <!-- Repeat Password -->
-        <div ng-if="edituser.id == null" class="form-group"
-             ng-class="{ 'has-error' : registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty }">
-            <label class="control-label col-sm-4" for="repeatPassword">{{ 'Repeat password' | translate }}</label>
-
-            <div class="col-sm-6">
-                <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
-                       ng-model="edituser.password2" placeholder="{{ 'Repeat Password' | translate }}"
-                       compare-to="edituser.password1" required>
-                 <!-- errors -->
-                <span class="help-block" ng-show="registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty">
-                    {{ 'Passwords do not match! ' | translate }}
-                </span>
-            </div>
-        </div>
-        <br>
-
-
         <!-- Telephone -->
         <div class="form-group" ng-class="{ 'has-error' : registrationForm.telephone.$invalid && registrationForm.telephone.$dirty }">
             <label class="control-label col-sm-4" for="telephone">{{ 'Telephone' | translate }}</label>
@@ -154,9 +114,10 @@
         <div class="form-group" ng-if="edituser.currentRole == 'lab_user' || edituser.currentRole == 'requester'">
             <label class="control-label col-sm-4" for="lab">{{ 'Lab' | translate }}</label>
             <div class="col-sm-6">
-                <select class="form-control"  id="lab" name="lab" ng-model="edituser.labId" ng-required="true">
-                    <option value="" ng-selected="edituser.labId==''">None</option>
-                    <option ng-disabled="!lab.active" ng-repeat="lab in labs" value="{{lab.id}}"  ng-selected="edituser.labId==lab.id">{{lab.name}}</option>
+                <select class="form-control" id="lab" name="lab"
+                        ng-model="edituser.labId" ng-required="true"
+                        ng-options="lab.id as lab.number + '. ' + lab.name disable when !lab.active for lab in labs">
+                    <option value="" disabled>None</option>
                 </select>
                 <!-- errors -->
                 <span ng-show="registrationForm.lab.$error.required"

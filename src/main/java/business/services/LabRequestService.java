@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import business.exceptions.EmailError;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.models.Comment;
@@ -268,7 +269,22 @@ public class LabRequestService {
             for (LabRequest labRequest: labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);
-                mailService.notifyLab(representation);
+                if (representation.getLab() == null) {
+                    log.warn("No lab for lab request " + representation.getLabRequestCode() +
+                            " while gerating lab requests.");
+                } else {
+                    try {
+                        mailService.notifyLab(representation);
+                    } catch (EmailError e) {
+                        log.warn("No mail sent to lab " + representation.getLab().getNumber() +
+                                " for lab request " + representation.getLabRequestCode() +
+                                ". Email address: '" +
+                                representation.getLab().getContactData() == null ?
+                                        "" : representation.getLab().getContactData().getEmail() +
+                                "'.");
+                        // FIXME: return error messages.
+                    }
+                }
             }
         }
     }

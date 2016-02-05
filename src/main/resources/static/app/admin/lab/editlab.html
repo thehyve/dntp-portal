@@ -15,7 +15,8 @@
             <label class="control-label col-sm-4" for="labNumber">{{ 'Number' | translate }}</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="labNumber" placeholder="{{ 'Number' | translate }}"
-                    ng-model="editlab.number" ng-disabled="editlab.id">
+                    ng-model="editlab.number" ng-disabled="editlab.id"
+                    required>
             </div>
         </div>
 
@@ -63,11 +64,15 @@
         </div>
 
         <!-- E-mail -->
-        <div class="form-group">
+        <div class="form-group"
+             ng-class="{ 'has-error' : labEditForm.email.$invalid && labEditForm.email.$dirty}">
             <label class="control-label col-sm-4" for="email">{{ 'E-mail' | translate }}</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="email" placeholder="{{ 'E-mail' | translate }}"
+                <input type="email" class="form-control" id="email" placeholder="{{ 'E-mail' | translate }}"
                 ng-model="editlab.contactData.email" >
+                <span class="help-block" ng-show="labEditForm.email.$invalid && labEditForm.email.$dirty">
+                    {{ 'Email format is invalid' | translate }}
+                </span>
             </div>
         </div>
 
@@ -82,8 +87,8 @@
 
 </div>
 <div class="modal-footer">
-    <button class="btn btn-info" type="submit" ng-disabled="dataLoading">{{'Save'|translate}}</button>
-    <button class="btn btn-default" ng-click="$hide()">{{'Cancel'|translate}}</button>
+    <a class="btn btn-default pull-left" ng-click="$hide()">{{'Cancel'|translate}}</a>
+    <button class="btn btn-info" type="submit" ng-disabled="labEditForm.$invalid || dataLoading">{{'Save'|translate}}</button>
 </div>
 </form>
 </div>

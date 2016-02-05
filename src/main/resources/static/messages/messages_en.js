@@ -11,7 +11,9 @@
         /* Global */
         /* ========= */
         'DNTP': 'PALGA',
-    
+        'An email has been sent to ? with instructions on how to reset your password.': 'An email has been sent to {{email}} with instructions on how to reset your password.',
+        'Registration has been completed. An email with an activation link should have been sent to ?.': 'Registration has been completed. An email with an activation link should have been sent to {{email}}.',
+
         /* ========= */
         /* Request */
         /* ========= */

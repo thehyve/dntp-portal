@@ -79,6 +79,7 @@ angular.module('ProcessApp.controllers')
                         $scope.editerror = '';
                         $scope.editUserModal.hide();
                         $scope.users.unshift(result);
+                        bootbox.alert('User has been added. A password reset mail has been sent to ' + result.username + '.');
                     }, function(response) {
                         $scope.dataLoading = false;
                         if (response.data) {

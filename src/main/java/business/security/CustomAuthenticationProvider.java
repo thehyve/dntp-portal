@@ -15,13 +15,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import business.models.Role;
 import business.models.User;
 import business.models.UserRepository;
+import business.services.PasswordService;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -35,7 +35,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordService passwordService;
 
     @Override
     public boolean supports(Class<?> authentication) {
@@ -79,7 +79,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     throw new UserAccountBlocked();
                 }
             }
-            if (passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
+            if (passwordService.getEncoder().matches(authentication.getCredentials().toString(), user.getPassword())) {
                 log.info("AuthenticationProvider: OK");
                 if (user.getFailedLoginAttempts() > 0) {
                     user.resetFailedLoginAttempts();

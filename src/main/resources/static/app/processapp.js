@@ -37,19 +37,19 @@
                 controller : 'LoginController'
             }).when('/login/forgot-password', {
                 templateUrl : 'app/forgot-password/forgot-password.html',
-                controller : 'ForgotPasswordController'
+                controller : ''
             }).when('/login/reset-password/:token', {
                 templateUrl : 'app/forgot-password/reset-password.html',
-                controller : 'ResetPasswordController'
+                controller : ''
             }).when('/register', {
                 templateUrl : 'app/registration/registration.html',
-                controller : 'RegistrationController'
+                controller : ''
             }).when('/register/success', {
                 templateUrl : 'app/registration/thank-you.html',
-                controller : 'RegistrationController'
+                controller : ''
             }).when('/activate/:token', {
                 templateUrl : 'app/activation/activate.html',
-                controller : 'ActivationController'
+                controller : ''
             }).when('/users', {
                 templateUrl : 'app/admin/user/users.html'
             }).when('/labs', {

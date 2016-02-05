@@ -24,8 +24,8 @@
         'Labs': 'Laboratoriumbeheer',
         'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
         'Thank you': 'Bedankt',
-        'Registration is successful and confirmation email should be sent to': 'Registratie succesvol afgerond, activatie link gestuurd naar',
-    
+        'Registration has been completed. An email with an activation link should have been sent to ?.': 'Registratie is afgerond. Een e-mail met de activatielink is gestuurd naar {{email}}.',
+
         /* ========= */
         /* Request */
         /* ========= */
@@ -196,7 +196,7 @@
         'Department': 'Afdeling',
         'I am member of a pathology department': 'Ik ben lid van een pathologieafdeling',
         'Password': 'Wachtwoord',
-        'Repeat Password': 'Herhaal wachtwoord',
+        'Repeat password': 'Herhaal wachtwoord',
         'Request Account': 'Account aanvragen',
         'Required field': 'Veld is verplicht',
         'Input value is too long': 'Invoerwaarde is te lang',
@@ -207,8 +207,8 @@
         /* ================= */
     
         'Account activation': 'Account activeren',
-        'Your account has been successfully activated': 'Uw account is succesvol geactiveerd',
-        'This link is not valid': 'Deze link is niet geldig',
+        'Your account has been successfully activated.': 'Uw account is succesvol geactiveerd.',
+        'This link is not valid.': 'Deze link is niet geldig.',
     
         /* ================= */
         /* Profile */
@@ -230,16 +230,15 @@
         'New password (again)': 'Nieuw wachtwoord (herhaling)',
         'The old password is incorrect': 'Het oude wachtwoord is niet correct',
         'Change': 'Wijzigen',
-        'Passwords cannot be empty': 'Wachtwoorden mogen niet leeg zijn',
         'Reset': 'Resetten',
         'Reset password': 'Wachtwoord resetten',
-        'The password reset link is invalid': 'De link om het wachtwoord te resetten is niet geldig',
-        'Click here to get a new one': 'Klik hier om een nieuwe te krijgen',
-        'Your password has been successfully reset': 'U wachtwoord is successvol gereset',
-        'Click here to log in': 'Klik hier om in te loggen',
+        'The password reset link is invalid.': 'De link om het wachtwoord te resetten is niet geldig.',
+        'Receive a new link.': 'Ontvang een nieuwe link.',
+        'Your password has been successfully reset.': 'Uw wachtwoord is successvol gereset.',
         'Send email': 'Stuur email',
-        'An email has been sent to': 'We hebben een email gestuurd naar',
-        'with instructions on how to reset your password': 'met instructies om uw wachtwoord te resetten',
+        'An email has been sent to ? with instructions on how to reset your password.': 'We hebben een email gestuurd naar {{email}} met instructies om uw wachtwoord te resetten.',
+        'Do not forget to store the password in a secure location. It is advised to use the password manager of your browser.': 'Vergeet niet het wachtwoord op een veilige locatie te bewaren. Het wordt aangeraden om de password manager van uw browser te gebruiken.',
+        'Generate password': 'Genereer een wachtwoord',
     
         /* ===================== */
         /* Request Overview */
@@ -304,7 +303,6 @@
         'Edit user': 'Bewerk gebruiker',
         'Edit user ...': 'Bewerk gebruiker {{username}}',
         'Please complete all required fields.': 'Alle velden invullen a.u.b.',
-        'Repeat password': 'Herhaal wachtwoord',
         'Lab': 'Laboratorium',
         'None': 'Geen',
     

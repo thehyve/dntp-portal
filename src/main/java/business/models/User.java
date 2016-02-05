@@ -201,7 +201,7 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username = username.toLowerCase();
+        this.username = username.trim().toLowerCase();
     }
 
     public Date getCreated() {

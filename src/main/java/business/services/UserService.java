@@ -1,6 +1,8 @@
 package business.services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -11,14 +13,29 @@ import org.springframework.stereotype.Service;
 
 import business.exceptions.EmailAddressNotAvailable;
 import business.exceptions.EmailAddressNotUnique;
+import business.exceptions.InvalidPassword;
+import business.exceptions.InvalidUserData;
+import business.models.ActivationLink;
+import business.models.ActivationLinkRepository;
+import business.models.ContactData;
+import business.models.Lab;
+import business.models.LabRepository;
 import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
+import business.representation.ProfileRepresentation;
+import business.validation.PasswordValidator;
 
 @Service
 @Transactional
 public class UserService {
+
+    public enum NewUserLinkType {
+        ACTIVATION_LINK,
+        PASSWORD_RESET_LINK,
+        NONE
+    }
 
     Log log = LogFactory.getLog(getClass());
 
@@ -27,7 +44,19 @@ public class UserService {
     
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    LabRepository labRepository;
+
+    @Autowired
+    MailService mailService;
+
+    @Autowired
+    PasswordService passwordService;
     
+    @Autowired
+    ActivationLinkRepository activationLinkRepository;
+
     public User save(User user) throws EmailAddressNotAvailable {
         assert(user.getRoles().size() == 1);
         User result = userRepository.save(user);
@@ -37,11 +66,11 @@ public class UserService {
         }
         throw new EmailAddressNotUnique();
     }
-    
+
     public User findByUsername(String username) {
         return userRepository.findByUsernameAndDeletedFalse(username);
     }
-    
+
     public User getOne(Long id) {
         return userRepository.getByIdAndDeletedFalse(id);
     }
@@ -49,7 +78,7 @@ public class UserService {
     public User findOne(Long id) {
         return userRepository.findByIdAndDeletedFalse(id);
     }
-    
+
     public List<User> findAll() {
         return userRepository.findByDeletedFalse();
     }
@@ -58,6 +87,106 @@ public class UserService {
         Role role = roleRepository.findByName("scientific_council");
         List<User> members = userRepository.findAllByDeletedFalseAndActiveTrueAndHasRole(role.getId());
         return members;
+    }
+
+    public void transferUserData(ProfileRepresentation body, User user) {
+        user.setFirstName(body.getFirstName());
+        user.setLastName(body.getLastName());
+        user.setPathologist(body.isPathologist());
+        user.setInstitute(body.getInstitute());
+        user.setSpecialism(body.getSpecialism());
+
+        // copy email address
+        String email = body.getContactData().getEmail();
+        if (email == null) {
+            throw new InvalidUserData("No email address entered.");
+        }
+        email = email.trim().toLowerCase();
+        if (user.getUsername() == null || !user.getUsername().equals(email)) {
+            // check for uniqueness (also enforced by user service):
+            User u = findByUsername(email);
+            if (u == null) {
+                user.setUsername(email);
+            } else {
+                throw new EmailAddressNotAvailable();
+            }
+        }
+
+        // change role
+        ProfileRepresentation representation = new ProfileRepresentation(user);
+        if (!representation.getCurrentRole().equals(body.getCurrentRole())) {
+            Role role = roleRepository.findByName(body.getCurrentRole());
+            if (role == null) {
+                throw new InvalidUserData("Unknown role selected.");
+            }
+            Set<Role> roles = new HashSet<Role>();
+            roles.add(role);
+            user.setRoles(roles);
+        }
+        
+        if (user.isRequester() || user.isLabUser()) {
+            if (body.getLabId() == null) {
+                throw new InvalidUserData("No lab selected.");
+            }
+            Lab lab = labRepository.findOne(body.getLabId());
+            if (lab == null) {
+                throw new InvalidUserData("No lab selected.");
+            }
+            user.setLab(lab);
+        }
+        
+        if (body.getContactData() == null) {
+            throw new InvalidUserData("No contact data entered.");
+        }
+        if (user.getContactData() == null) {
+            user.setContactData(new ContactData());
+        }
+        user.getContactData().copy(body.getContactData());
+
+    }
+
+    public ProfileRepresentation createNewUser(ProfileRepresentation body, NewUserLinkType linkType) {
+        if (body == null || body.getContactData() == null || body.getContactData().getEmail() == null) {
+            throw new InvalidUserData("Invalid user data.");
+        }
+        if (body.getPassword1() == null || !body.getPassword1().equals(body.getPassword2())) {
+            throw new InvalidUserData("Passwords do not match.");
+        }
+        String email = body.getContactData().getEmail().trim().toLowerCase();
+        if (findByUsername(email) != null ) {
+            throw new EmailAddressNotAvailable();
+        }
+        Role role = roleRepository.findByName(body.getCurrentRole());
+        Set<Role> roles = new HashSet<Role>();
+        if (role == null) {
+            throw new InvalidUserData("No role selected.");
+        } else {
+            roles.add(role);
+        }
+
+        if (!PasswordValidator.validate(body.getPassword1())) {
+            throw new InvalidPassword();
+        }
+        
+        User user = new User(email, passwordService.getEncoder().encode(body.getPassword1()), true, roles);
+
+        transferUserData(body, user);
+        try {
+            User result = save(user);
+
+            if (linkType == NewUserLinkType.ACTIVATION_LINK) {
+                // Generate and save activation link
+                ActivationLink link = new ActivationLink(user);
+                activationLinkRepository.save(link);
+                // The user has been successfully saved. Send activation email
+                mailService.sendActivationEmail(link);
+            } else if (linkType == NewUserLinkType.PASSWORD_RESET_LINK) {
+                passwordService.requestNewPassword(email);
+            }
+            return new ProfileRepresentation(result);
+        } catch (EmailAddressNotUnique e) {
+            throw new EmailAddressNotAvailable();
+        }
     }
 
     /**

@@ -46,6 +46,12 @@ public class MailService {
 
     static final String replyName = "Stichting PALGA";
 
+    static final String fromName = "Stichting PALGA";
+
+    private String getFrom() {
+        return "no-reply@" + serverName;
+    }
+
     private String getLink(String relativeURI) {
         String protocol = "http";
         boolean writePort = true;
@@ -98,8 +104,8 @@ public class MailService {
             MimeMessageHelper message = new MimeMessageHelper(
                     mailSender.createMimeMessage());
             message.setTo(requester.getContactData().getEmail());
-            message.setFrom(replyAddress, replyName);
-            message.setReplyTo(replyAddress);
+            message.setFrom(getFrom(), fromName);
+            message.setReplyTo(replyAddress, replyName);
             message.setSubject(String.format("Nieuwe PALGA-aanvraag ontvangen, aanvraagnummer: %s", request.getRequestNumber()));
             String agreementFormLink = getLink(
                     "/#/request/"
@@ -141,8 +147,8 @@ public class MailService {
             try {
                 MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
                 message.setTo(member.getContactData().getEmail());
-                message.setFrom(replyAddress, replyName);
-                message.setReplyTo(replyAddress);
+                message.setFrom(getFrom(), fromName);
+                message.setReplyTo(replyAddress, replyName);
                 message.setSubject(String.format("Nieuwe PALGA-aanvraag aan u voorgelegd, aanvraagnummer: %s", request.getRequestNumber()));
                 String requestLink = getLink("/#/request/view/" + request.getProcessInstanceId());
                 message.setText(String.format(scientificCouncilNotificationTemplate, requestLink));
@@ -210,7 +216,8 @@ public class MailService {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             message.setTo(lab.getContactData().getEmail());
-            message.setFrom(replyAddress, replyName);
+            message.setFrom(getFrom(), fromName);
+            message.setReplyTo(replyAddress, replyName);
             message.setSubject(String.format("PALGA-verzoek aan laboratorium, aanvraagnummer: %s", labRequest.getLabRequestCode()));
             String labRequestLink = getLink("/#/lab-request/view/" + labRequest.getId());
             String body = String.format(labNotificationTemplate,
@@ -268,8 +275,8 @@ public class MailService {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             String recipient = link.getUser().getUsername();
             message.setTo(recipient);
-            message.setFrom(replyAddress, replyName);
-            message.setReplyTo(replyAddress);
+            message.setFrom(getFrom(), fromName);
+            message.setReplyTo(replyAddress, replyName);
             message.setSubject("PALGA-account activeren / Activate PALGA account");
             String activationLink = getLink("/#/activate/" + link.getToken());
             message.setText(String.format(activationEmailTemplate, activationLink));
@@ -318,7 +325,8 @@ public class MailService {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
             String recipient = npr.getUser().getContactData().getEmail();
             message.setTo(recipient);
-            message.setFrom(replyAddress, replyName);
+            message.setFrom(getFrom(), fromName);
+            message.setReplyTo(replyAddress, replyName);
             message.setSubject(passwordRecoverySubject);
             String passwordRecoveryLink = getLink("/#/login/reset-password/" + npr.getToken());
             message.setText(String.format(passwordRecoveryTemplate, passwordRecoveryLink));

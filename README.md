@@ -27,8 +27,9 @@ cd dntp-portal
 
 ### Configure PostgreSQL database
 ```
-sudo su - postgres
-psql 
+sudo -u postgres psql
+```
+```sql
 create user thehyve with password 'thehyve';
 create database dntp_portal;
 grant all privileges on database dntp_portal to thehyve;
@@ -37,7 +38,7 @@ Alternatively, edit `src/main/resources/application.properties` to change
 the database settings.
 
 Important for performance: setting the indexes appropriately, e.g.:
-```
+```sql
 create index var_procinst_name_index on act_hi_varinst (proc_inst_id_, name_ );
 create index var_task_name_index on act_hi_varinst (task_id_, name_ );
 ```
@@ -46,7 +47,7 @@ create index var_task_name_index on act_hi_varinst (task_id_, name_ );
 
 Make sure you have [npm](https://docs.npmjs.com/getting-started/installing-node) and Maven installed.
 
-```
+```bash
 # run the application
 mvn spring-boot:run
 ```
@@ -54,12 +55,12 @@ There should now be an application running at [http://localhost:8092/](http://lo
 
 
 ### Package
-```
+```bash
 # create a war package
 mvn package
 ```
-There should now be a `.war`-file in `target/dntp-portal-0.0.31-SNAPSHOT.war`.
-```
+There should now be a `.war`-file in `target/dntp-portal-&lt;version&gt;.war`.
+```bash
 # run the packaged application
 java -jar target/dntp-portal-0.0.31-SNAPSHOT.war
 ```
@@ -67,7 +68,7 @@ java -jar target/dntp-portal-0.0.31-SNAPSHOT.war
 
 ### Tests
 
-```
+```bash
 # run the testNG test suite
 mvn -Dspring.profiles.active=dev test
 ```
@@ -100,6 +101,6 @@ mvn -Dspring.profiles.active=dev deploy
 
 ## Release notes
 When updating from 0.0.4 to 0.0.5, an existing database can be updated with:
-```
+```sql
 alter table excerpt_entry add selected boolean;
 ```

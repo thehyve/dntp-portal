@@ -67,9 +67,9 @@ public class PasswordService {
             throw new PasswordChangeFailed();
         }
         // Check if the link is not older than <var>passwordLinkExpiryHours</var> hours.
-        log.info("password link: expiry hours = " + passwordLinkExpiryHours);
+        log.info("Password link: expiry hours = " + passwordLinkExpiryHours);
         long linkAge = TimeUnit.MILLISECONDS.toHours(new Date().getTime() - npr.getCreationDate().getTime()); // hours
-        log.info("password link age in hours: " + linkAge);
+        log.info("Password link age in hours: " + linkAge);
 
         if (linkAge > passwordLinkExpiryHours) {
             // The token is expired.

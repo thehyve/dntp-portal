@@ -63,23 +63,26 @@ public class UserController {
 
     @RequestMapping(value = "/register/users/activate/{token}", method = RequestMethod.GET)
     public ResponseEntity<Object> activateUser(@PathVariable String token) {
-        log.info("activation link: expiry hours = " + activationLinkExpiryHours);
         ActivationLink link = activationLinkRepository.findByToken(token);
 
         if (link == null) {
+            log.warn("Activation link not found.");
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         // Check that the link has been issued in the previous week
+        log.info("Activation link: expiry hours = " + activationLinkExpiryHours);
         long linkAge = TimeUnit.MILLISECONDS.toHours(new Date().getTime() - link.getCreationDate().getTime()); // hours
-        log.info("activation link age in hours: " + linkAge);
+        log.info("Activation link age in hours: " + linkAge);
         if (linkAge <= activationLinkExpiryHours) {
             User user = link.getUser();
             user.setEmailValidated(true);
             userService.save(user);
             activationLinkRepository.delete(link);
+            log.info("User validated.");
             return new ResponseEntity<Object>(HttpStatus.OK);
         } else {
             // The activation link doesn't exist or is outdated!
+            log.warn("Activation link expired.");
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }

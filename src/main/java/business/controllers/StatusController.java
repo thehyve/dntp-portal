@@ -39,6 +39,11 @@ public class StatusController {
     
     @Autowired MailService mailService;
 
+    @RequestMapping(value = "/ping", method = RequestMethod.GET)
+    public void getPing() {
+
+    }
+
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getStatus() {
         log.info("GET /status");

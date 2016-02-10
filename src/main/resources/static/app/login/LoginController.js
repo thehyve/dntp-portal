@@ -66,44 +66,59 @@ angular.module('ProcessApp.controllers')
                 //password: 'palga'
             };
 
+            var _refreshCookie = function() {
+                return $http.get('/ping');
+            };
+
             $scope.login = function() {
                 $scope.dataLoading = true;
-                $http.post('login', jQuery.param($scope.credentials), {
-                    headers : {
-                        'content-type' : 'application/x-www-form-urlencoded'
-                    }
-                }).success(function(data) {
-                    authenticate(function() {
-                        $scope.dataLoading = false;
-                        if ($rootScope.authenticated) {
-                            $scope.error = false;
-                            var redirectUrl = $rootScope.redirectUrl;
-                            if (!redirectUrl) {
-                                if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
-                                    redirectUrl = '/';
-                                } else {
-                                    redirectUrl = '/lab-requests';
-                                }
-                            }
-                            $location.path(redirectUrl);
-                        } else {
-                            $location.path('/login');
-                            $scope.error = true;
-                            $scope.errormessage = '';
-                            $scope.dataLoading = false;
+                _refreshCookie()
+                .then(function(result) {
+                    $http.post('login', jQuery.param($scope.credentials), {
+                        headers : {
+                            'content-type' : 'application/x-www-form-urlencoded'
                         }
+                    }).success(function(data) {
+                        authenticate(function() {
+                            $scope.dataLoading = false;
+                            if ($rootScope.authenticated) {
+                                $rootScope.error = false;
+                                var redirectUrl = $rootScope.redirectUrl;
+                                if (!redirectUrl) {
+                                    if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
+                                        redirectUrl = '/';
+                                    } else {
+                                        redirectUrl = '/lab-requests';
+                                    }
+                                }
+                                $location.path(redirectUrl);
+                            } else {
+                                $location.path('/login');
+                                $rootScope.error = true;
+                                $rootScope.errormessage = '';
+                                $scope.dataLoading = false;
+                            }
+                        });
+                    }).error(function(data) {
+                        $location.path('/login');
+                        $rootScope.error = true;
+                        if (data.message) {
+                            $rootScope.errormessage = data.message;
+                        }
+                        $rootScope.authenticated = false;
+                        $scope.dataLoading = false;
                     });
-                }).error(function(data) {
-                    $location.path('/login');
-                    $scope.error = true;
+                }, function(data) {
+                    $rootScope.error = true;
                     if (data.message) {
-                        $scope.errormessage = data.message;
+                        console.log("Error: " + data.message);
+                        $rootScope.errormessage = data.message;
+                    } else {
+                        console.log("Error: " + data);
                     }
-                    $rootScope.authenticated = false;
-                    $scope.dataLoading = false;
                 });
             };
-            
+
             angular.element(document).ready(function() {
                 jQuery('#username').focus();
               });

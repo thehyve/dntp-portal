@@ -73,15 +73,24 @@ angular.module('ProcessApp.controllers')
 
             $scope.logout = function() {
                 $http.post('logout', {}).success(function() {
-                    $location.path('/login');
+                    console.log('Logout succes.');
                     $rootScope.authenticated = false;
                     $rootScope.globals = {};
                     $cookies.remove('userid');
                     $cookies.remove('username');
                     $cookies.remove('roles');
+                    $rootScope.error = false;
+                    $rootScope.errormessage = '';
+                    $location.path('/login');
                 }).error(function(data) {
+                    console.log('Logout error.');
+                    $rootScope.error = true;
+                    $rootScope.errormessage = '';
+                    if (data.message) {
+                        $rootScope.errormessage = data.message;
+                    }
                     $rootScope.authenticated = false;
-                    console.log('logout error', data);
+                    $location.path('/login');
                 });
             };
 

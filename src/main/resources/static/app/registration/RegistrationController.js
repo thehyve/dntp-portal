@@ -1,4 +1,4 @@
-(function(console, angular) {
+(function(console, angular, jQuery) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -46,5 +46,9 @@ angular.module('ProcessApp.controllers')
             });
         };
 
+        angular.element(document).ready(function() {
+            jQuery('#firstName').focus();
+        });
+
 }]);
-})(console, angular);
+})(console, angular, jQuery);

@@ -62,7 +62,8 @@
 
                 <div class="col-sm-10">
                     <input type="email" class="form-control" id="email" name="email"
-                           placeholder="{{ 'E-mail' | translate }}"
+                           lowercase-only="lowercase-only"
+                           placeholder="{{ 'Email address (lower case)' | translate }}"
                            ng-maxlength="255"
                            ng-model="user.contactData.email" required>
                     <!-- errors -->
@@ -164,7 +165,8 @@
 
                 <div class="col-sm-10">
                     <input type="password" class="form-control" id="password" name="password"
-                           placeholder="{{ 'Enter 8 characters long password' | translate }}" ng-model="user.password1"
+                           ng-model="user.password1"
+                           placeholder="{{ 'Password must be 8 or more characters long, contain numbers, letters, and a special character.' | translate }}"
                            ng-minlength="8" validate-password required >
                     <!-- errors -->
                     <span ng-show="registrationForm.password.$error.required && registrationForm.password.$dirty"
@@ -173,8 +175,7 @@
                     </span>
                     <span ng-show="registrationForm.password.$error.validatePassword && registrationForm.password.$dirty"
                           class="help-block">
-                        {{ 'Password must be 8 or more characters long,
-                            contain numbers, letters, and a special character.' | translate }}
+                        {{ 'Password must be 8 or more characters long, contain numbers, letters, and a special character.' | translate }}
                     </span>
                 </div>
             </div>
@@ -200,7 +201,7 @@
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" class="btn btn-primary" ng-disabled="registrationForm.$invalid">
-                        {{ 'Request Account' | translate }}
+                        {{ 'Request account' | translate }}
                     </button>
                 </div>
             </div>

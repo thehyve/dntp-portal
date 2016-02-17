@@ -62,9 +62,11 @@
         <div class="form-group" ng-class="{ 'has-error' : (registrationForm.email.$invalid || registrationForm.email.$error.required) && registrationForm.email.$dirty }">
             <label class="control-label col-sm-4" for="email">{{ 'E-mail' | translate }}</label>
             <div class="col-sm-6">
-                <input type="email" class="form-control" id="email" name="email" placeholder="{{ 'E-mail' | translate }}"
-                ng-maxlength="255"
-                ng-model="edituser.contactData.email" required>
+                <input type="email" class="form-control" id="email" name="email"
+                    placeholder="{{ 'Email address (lower case)' | translate }}"
+                    lowercase-only="lowercase-only"
+                    ng-maxlength="255"
+                    ng-model="edituser.contactData.email" required>
                 <!-- errors -->
                 <span class="help-block"
                       ng-show="registrationForm.email.$error.required">

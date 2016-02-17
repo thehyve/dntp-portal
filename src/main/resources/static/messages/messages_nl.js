@@ -25,6 +25,7 @@
         'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
         'Thank you': 'Bedankt',
         'Registration has been completed. An email with an activation link should have been sent to ?.': 'Registratie is afgerond. Een e-mail met de activatielink is gestuurd naar {{email}}.',
+        'Password must be 8 or more characters long, contain numbers, letters, and a special character.': 'Wachtwoord moet ten minste 8 tekens lang zijn en cijfers, letters en een speciaal teken bevatten.',
 
         /* ========= */
         /* Request */
@@ -157,7 +158,7 @@
         Login: 'Aanmelden',
         login: 'aanmelden',
         Logout: 'Afmelden',
-        'Forgot Password': 'Wachwoord vergeten',
+        'Forgot password': 'Wachwoord vergeten',
         'Create an account': 'Een account maken',
         'Bad credentials': 'Ongeldige logingegevens.',
         'User account blocked. Please retry in 15 minutes.': 'Account geblokkeerd. Probeert u het opnieuw over 15 minuten.',
@@ -189,7 +190,6 @@
     
         'First name': 'Voornaam',
         'Last name': 'Achternaam',
-        'E-mail': 'E-mail',
         'Telephone': 'Telefoonnummer',
         'Institute': 'Instelling',
         'Specialism': 'Specialisme',
@@ -197,7 +197,7 @@
         'I am member of a pathology department': 'Ik ben lid van een pathologieafdeling',
         'Password': 'Wachtwoord',
         'Repeat password': 'Herhaal wachtwoord',
-        'Request Account': 'Account aanvragen',
+        'Request account': 'Account aanvragen',
         'Required field': 'Veld is verplicht',
         'Input value is too long': 'Invoerwaarde is te lang',
         'Pathology lab': 'Pathologielaboratorium',
@@ -235,7 +235,7 @@
         'The password reset link is invalid.': 'De link om het wachtwoord te resetten is niet geldig.',
         'Receive a new link.': 'Ontvang een nieuwe link.',
         'Your password has been successfully reset.': 'Uw wachtwoord is successvol gereset.',
-        'Send email': 'Stuur email',
+        'Send email': 'Stuur e-mail',
         'An email has been sent to ? with instructions on how to reset your password.': 'We hebben een email gestuurd naar {{email}} met instructies om uw wachtwoord te resetten.',
         'Do not forget to store the password in a secure location. It is advised to use the password manager of your browser.': 'Vergeet niet het wachtwoord op een veilige locatie te bewaren. Het wordt aangeraden om de password manager van uw browser te gebruiken.',
         'Generate password': 'Genereer een wachtwoord',
@@ -292,6 +292,7 @@
         'Add user': 'Gebruiker toevoegen',
         'Name': 'Naam',
         'Email': 'E-mail',
+        'Email address': 'E-mailadres',
         'Role': 'Rol',
         'Created': 'Aangemaakt op',
         'Activate': 'Activeer',

@@ -97,6 +97,15 @@
                             <small>{{req.dateAssigned | date: 'EEE dd MMMM yyyy  H:mm'}}</small>
                         </td>
                         <td class="no-print">
+                        <span class="pull-left">
+                        <span class="btn-group">
+                            <button
+                                 ng-if="req.status == 'Open'"
+                                 class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
+                                <span><i class="glyphicon glyphicon-trash"></i></span>
+                            </button>
+                        </span>
+                        </span>
                         <span class="pull-right">
                         <span class="btn-group">
                             <button
@@ -116,11 +125,6 @@
                                 ng-disabled="!isCurrentUser(req.assignee) || !isClaimable(req.status)"
                                  class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>
-                            </button>
-                            <button
-                                 ng-if="req.status == 'Open'"
-                                 class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
-                                <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>
                             <button
                                  ng-if="isPalga() && req.reviewStatus != 'SUSPENDED'"

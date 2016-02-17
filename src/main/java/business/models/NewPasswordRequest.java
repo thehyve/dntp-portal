@@ -16,6 +16,8 @@ public class NewPasswordRequest {
     private User user;
 
     private Date creationDate;
+
+    @Column(unique = true)
     private String token;
 
     public NewPasswordRequest() {}

@@ -2,6 +2,7 @@ package business.security;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +44,9 @@ public class SecureTokenGenerator {
      *   this could be not long enough (in number of characters), the
      *   {@link BCryptPasswordEncoder} is applied to that number as well.
      * - All these values are concatenated.
+     *
+     * Note: for the alphanumerical part, probably {@link UUID.randomUUID()}
+     * would suffice as well.
      *
      * @return the password.
      */

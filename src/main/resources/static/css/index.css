@@ -267,3 +267,8 @@ address {margin-bottom: 0px;}
     font-size: .9em;
     color: #777;
 }
+
+.navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+}

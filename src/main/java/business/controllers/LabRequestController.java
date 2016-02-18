@@ -249,7 +249,22 @@ public class LabRequestController {
         labRequestReturnedEnabledStatuses.add("Received");
         labRequestReturnedEnabledStatuses.add("Returning");
     }
-    
+
+    /**
+     * Updates the status to 'Returned' (if the current status is in
+     * {@link #labRequestReturnedEnabledStatuses}) and completes the task associated with
+     * the lab request.
+     *
+     * From the <var>body</var>, only the <var>samplesMissing</var> and <var>missingSamples</var>
+     * are processed. When <var>samplesMissing</var> is true, the contents of <var>missingSamples</var>
+     * is added as a comment to the lab request.
+     *
+     * @param user the currently authenticated user.
+     * @param id the id of the lab request.
+     * @param body the LabRequestRepresentation with <var>samplesMissing</var> and <var>missingSamples</var>
+     *        fields.
+     * @return the updated (completed) lab request.
+     */
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
     @RequestMapping(value = "/labrequests/{id}/returned", method = RequestMethod.PUT)
     public LabRequestRepresentation returned(UserAuthenticationToken user,
@@ -274,11 +289,9 @@ public class LabRequestController {
             labRequest.addComment(comment);
             labRequest = labRequestRepository.save(labRequest);
         }
-        
-        labRequest = transferLabRequestFormData(body, labRequest, user.getUser());
-        
+
         labRequest = labRequestService.updateStatus(labRequest, "Returned");
-        
+
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
         // complete task

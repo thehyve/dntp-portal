@@ -37,7 +37,7 @@
         }
     </style>
   </head>
-  <body ng-app="ProcessApp"> <!-- flow-prevent-drop -->
+  <body ng-app="ProcessApp" ng-csp="no-unsafe-eval"> <!-- flow-prevent-drop -->
 
   <!-- Navigator -->
   <div ng-include="'app/components/navbar/navbar.html'"></div>

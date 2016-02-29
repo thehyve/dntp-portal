@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -85,6 +86,9 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
                 .csrf().csrfTokenRepository(csrfTokenRepository())
+        .and()
+            .headers()
+            .addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only", "default-src 'self' 'unsafe-inline'"))
         ;
     }
 

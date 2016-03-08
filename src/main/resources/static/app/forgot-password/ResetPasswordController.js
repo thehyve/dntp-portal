@@ -26,7 +26,7 @@ angular.module('ProcessApp.controllers')
                 var pw = asmCrypto.SHA256.base64(buffer);
 
                 // To match password constraints, add a letter, a special and a number:
-                var buffer = new Uint8Array(3);
+                buffer = new Uint8Array(3);
                 asmCrypto.getRandomValues(buffer);
                 var letter = letters[buffer[0] % letters.length];
                 var special = specials[buffer[1] % specials.length];

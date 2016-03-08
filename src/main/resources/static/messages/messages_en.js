@@ -65,7 +65,25 @@
         /* ===================== */
         'popover:Markdown Help': 'Markdown Help',
         'Agreement form template': 'Agreement form template',
-    
+
+        /* ===================== */
+        /* Status */
+        /* ===================== */
+        'Open': 'Not submitted',
+        'Review': 'Under review',
+        'Approval': 'Waiting for approval',
+        'DataDelivery': 'Data delivery and selection',
+        'SelectionReview': 'Waiting for excerpt selection approval',
+        'LabRequest': 'Lab request',
+        'Waiting for lab approval': 'Waiting for lab approval',
+        'Approved': 'Approved',
+        'Sending': 'Materials sent',
+        'Received': 'Received',
+        'Returning': 'Sent in return',
+        'Returned': 'Returned',
+        'Completed': 'Completed',
+        'Closed': 'Closed',
+
         null: null
     };
 })(window);

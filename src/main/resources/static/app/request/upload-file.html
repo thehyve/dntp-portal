@@ -147,20 +147,22 @@
   <h3>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h3>
   <hr>
 
-  <ul class="list-group">
-    <li class="list-group-item" ng-repeat="file in request.dataAttachments">
-      <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
+  <div class="list-group">
+    <a ng-repeat="file in request.dataAttachments"
+       ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+       class="list-group-item">
+      <i class="glyphicon glyphicon-file"></i> {{file.name}}
                         <span class="pull-right">
                         <span class="btn-group">
-                            <button class="btn btn-default" type="button" title="{{'Delete'|translate}}"
-                                    ng-click="removeDataFile(file)"
+                            <button class="btn btn-xs btn-default" type="button" title="{{'Delete'|translate}}"
+                                    ng-click="removeDataFile(file); $event.preventDefault();"
                               >
-                              {{'Delete'|translate}}
+                              <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
                             </button>
                         </span>
                         </span>
-    </li>
-  </ul>
+    </a>
+  </div>
   <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">
     <i>{{'No data files.'|translate}}</i>
   </p>

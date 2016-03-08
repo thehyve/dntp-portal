@@ -2,7 +2,7 @@
     <div class="row">
 
         <!--Side Bar-->
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-2 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 <li class="active"><a href="#/">{{'View'|translate}}</a></li>
             </ul>
@@ -127,7 +127,7 @@ Stichting PALGA%0A
 
             <!-- Status -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Status' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.status |translate}}
                     <br>
@@ -136,7 +136,7 @@ Stichting PALGA%0A
 
             <!-- Reject reason  -->
             <div class="row" ng-if="request.status == 'Rejected'">
-                <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Reject reason' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.rejectReason}}
                     <br>
@@ -145,14 +145,14 @@ Stichting PALGA%0A
 
             <!-- Requester -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Requester' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Requester' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.requesterName}}
                     <br>
                 </p>
             </div>
             <div class="row" ng-if="request.requester.contactData">
-                <label class="control-label col-sm-3">{{ 'Contact data' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Contact data' | translate }}</label>
                 <address  class="col-sm-7">
                      {{request.requester.contactData.address1}}
                      <br ng-if="request.requester.contactData.address1">
@@ -175,7 +175,7 @@ Stichting PALGA%0A
 
             <!-- Principal Investigator -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Principal investigator' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Principal investigator' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.contactPersonName}}
                 </p>
@@ -183,7 +183,7 @@ Stichting PALGA%0A
 
             <!-- Pathologist name -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Pathologist' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Pathologist' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.pathologistName}}
                 </p>
@@ -191,7 +191,7 @@ Stichting PALGA%0A
 
             <!-- Pathologist email -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Pathologist email' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Pathologist email' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.pathologistEmail}}
                 </p>
@@ -202,7 +202,7 @@ Stichting PALGA%0A
 
             <!-- Previous contact -->
             <div class="row">
-                <label class="control-label col-sm-3">
+                <label class="control-label col-sm-2">
                     {{'Previous contact'|translate}}
                 </label>
 
@@ -224,7 +224,7 @@ Stichting PALGA%0A
 
             <!-- Title -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Title' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Title' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.title}}
                 </p>
@@ -232,7 +232,7 @@ Stichting PALGA%0A
 
             <!--Background -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Background' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Background' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.background}}
                 </p>
@@ -240,7 +240,7 @@ Stichting PALGA%0A
 
             <!-- Research Question -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ ' Research question' | translate }}</label>
+                <label class="control-label col-sm-2">{{ ' Research question' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.researchQuestion}}
                 </p>
@@ -248,7 +248,7 @@ Stichting PALGA%0A
 
             <!-- Hypothesis -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Hypothesis' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Hypothesis' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.hypothesis}}
                 </p>
@@ -256,7 +256,7 @@ Stichting PALGA%0A
 
             <!-- Methods -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Methods' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Methods' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.methods}}
                 </p>
@@ -264,7 +264,7 @@ Stichting PALGA%0A
 
             <!-- Request Type -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Request type' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Request type' | translate }}</label>
                 <div class="col-sm-7" ng-init="">
                     {{"Request_Type_" + request.type | translate}}
                 </div>
@@ -272,7 +272,7 @@ Stichting PALGA%0A
 
             <!-- Billing address -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Billing address' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Billing address' | translate }}</label>
                 <div class="col-sm-7">
                     <address>
                         {{request.billingAddress.address1}}<br>
@@ -287,7 +287,7 @@ Stichting PALGA%0A
 
             <!-- Charge number -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Charge number' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Charge number' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.chargeNumber}}
                 </p>
@@ -295,7 +295,7 @@ Stichting PALGA%0A
 
             <!-- Research number -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Research number' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Research number' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.researchNumber}}
                 </p>
@@ -304,37 +304,36 @@ Stichting PALGA%0A
 
             <!-- Data Linkage -->
             <div class="row" ng-show="request.type != '1'">
-                <label class="control-label col-sm-3">
-                    &nbsp;
+                <label class="control-label col-sm-2">
+                    {{'Data linkage'|translate}}
                 </label>
-
                 <div class="col-sm-7">
-                    <span><i class="glyphicon {{request.linkageWithPersonalData ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp;{{'Data linkage'|translate}}
-                    <br>
-                    (<em><span ng-if="request.linkageWithPersonalData">{{ 'Linkage with own or external personal data.' |
-                    translate }}</span><span
-                    ng-if="!request.linkageWithPersonalData">{{ 'No data linkage required' |
-                    translate }}</span>.</em>)
+                    {{request.linkageWithPersonalData ? 'Linkage with own or external personal data.' :
+                      'No data linkage required.' | translate }}
+                </div>
+            </div>
+            <div class="row" ng-show="request.type != '1' && request.linkageWithPersonalDataNotes">
+                <label class="control-label col-sm-2">
+                    {{ 'Data linkage notes' | translate }}
+                </label>
+                <div class="col-sm-7">
+                    {{request.linkageWithPersonalDataNotes}}
                 </div>
             </div>
 
             <!-- Informed Consent -->
             <div class="row" ng-show="request.type != '1'">
-                <label class="control-label col-sm-3">
-                    &nbsp;
+                <label class="control-label col-sm-2">
+                    {{ 'Informed consent (IC)' | translate }}
                 </label>
-
                 <div class="col-sm-7">
-                    <span><i class="glyphicon {{request.informedConsent ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                    &nbsp; {{ 'Informed consent' |
-                    translate }}.
+                    {{request.informedConsent ? 'Yes' : 'No' | translate}}
                 </div>
             </div>
 
             <!-- Reason Using Personal Data -->
-            <div class="row" ng-show="request.type != '1'">
-                <label class="control-label col-sm-3">{{ 'Reason using personal data' | translate }}</label>
+            <div class="row" ng-show="request.type != '1' && request.reasonUsingPersonalData">
+                <label class="control-label col-sm-2">{{ 'Reason using personal data' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.reasonUsingPersonalData}}
                 </p>
@@ -347,22 +346,26 @@ Stichting PALGA%0A
 
             <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
 
-            <ul class="list-group" id="attachments">
-                <li class="list-group-item" ng-repeat="file in request.attachments">
-                    <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
-                </li>
-            </ul>
+            <div class="list-group" id="attachments">
+                <a ng-repeat="file in request.attachments"
+                   ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}" 
+                   class="list-group-item">
+                    <i class="glyphicon glyphicon-file"></i> {{file.name}}
+                </a>
+            </div>
 
             <h3>{{ 'Medical ethical committee approval' | translate }}</h3>
             <hr>
 
             <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
 
-            <ul class="list-group" id="medicalEthicalCommitteeApprovalAttachments">
-                <li class="list-group-item" ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments">
-                    <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
-                </li>
-            </ul>
+            <div class="list-group" id="medicalEthicalCommitteeApprovalAttachments">
+                <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
+                   ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}" 
+                   class="list-group-item">
+                    <i class="glyphicon glyphicon-file"></i> {{file.name}}
+                </a>
+            </div>
 
 
             <div ng-if="isPalga()">
@@ -373,7 +376,7 @@ Stichting PALGA%0A
 
                 <!-- Requester valid -->
                 <div class="row">
-                    <label class="control-label col-sm-3">
+                    <label class="control-label col-sm-2">
                         &nbsp;
                     </label>
                     <div class="col-sm-7">
@@ -385,7 +388,7 @@ Stichting PALGA%0A
                 <!-- Lab -->
                 <div class="row">
                     <br>
-                    <label class="control-label col-sm-3">
+                    <label class="control-label col-sm-2">
                        {{'Lab' | translate}}
                     </label>
                     <div class="col-sm-7">
@@ -394,7 +397,7 @@ Stichting PALGA%0A
                     </div>
                 </div>
                 <div class="row">
-                    <label class="control-label col-sm-3">
+                    <label class="control-label col-sm-2">
                         &nbsp;
                     </label>
                     <div class="col-sm-7">
@@ -405,7 +408,7 @@ Stichting PALGA%0A
 
                 <!-- Requester allowed -->
                 <div class="row">
-                    <label class="control-label col-sm-3">
+                    <label class="control-label col-sm-2">
                         &nbsp;
                     </label>
                     <div class="col-sm-7">
@@ -416,7 +419,7 @@ Stichting PALGA%0A
 
                 <!-- Contact person allowed -->
                 <div class="row">
-                    <label class="control-label col-sm-3">
+                    <label class="control-label col-sm-2">
                         &nbsp;
                     </label>
                     <div class="col-sm-7">
@@ -430,7 +433,7 @@ Stichting PALGA%0A
 
                 <!-- Agreement reached -->
                 <div class="row">
-                    <label class="control-label col-sm-3">
+                    <label class="control-label col-sm-2">
                         &nbsp;
                     </label>
                     <div class="col-sm-7">
@@ -439,11 +442,13 @@ Stichting PALGA%0A
                     </div>
                 </div>
 
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="file in request.agreementAttachments">
-                        <label><a ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}">{{file.name}}</a></label>
-                    </li>
-                </ul>
+                <div class="list-group">
+                    <a ng-repeat="file in request.agreementAttachments"
+                       ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+                       class="list-group-item">
+                        <span><i class="glyphicon glyphicon-file"></i></span> {{file.name}}
+                    </a>
+                </div>
 
                 <br>
 
@@ -462,7 +467,7 @@ Stichting PALGA%0A
 
                 <!-- Has this request has been sent to Privacy Committee -->
                 <div class="row">
-                    <label class="control-label col-sm-3">
+                    <label class="control-label col-sm-2">
                         &nbsp;
                     </label>
                     <div class="col-sm-7">
@@ -473,7 +478,7 @@ Stichting PALGA%0A
 
                 <!-- Outcome -->
                 <div class="row">
-                    <label class="control-label col-sm-3">{{ 'Outcome' | translate }}</label>
+                    <label class="control-label col-sm-2">{{ 'Outcome' | translate }}</label>
                     <p class="col-sm-7">
                         {{request.privacyCommitteeOutcome}}
                     </p>
@@ -481,7 +486,7 @@ Stichting PALGA%0A
 
                 <!-- Outcome Reference -->
                 <div class="row">
-                    <label class="control-label col-sm-3">{{ 'Outcome reference' | translate }}</label>
+                    <label class="control-label col-sm-2">{{ 'Outcome reference' | translate }}</label>
                     <p class="col-sm-7">
                         {{request.privacyCommitteeOutcomeRef}}
                     </p>
@@ -489,7 +494,7 @@ Stichting PALGA%0A
 
                 <!-- Outcome Emails -->
                 <div class="row">
-                    <label class="control-label col-sm-3">{{ 'Emailing history' | translate }}</label>
+                    <label class="control-label col-sm-2">{{ 'Emailing history' | translate }}</label>
                     <p class="col-sm-7">
                         {{request.privacyCommitteeEmails}}
                     </p>
@@ -518,7 +523,7 @@ Stichting PALGA%0A
 
             <!-- Excerpt list remark -->
             <div class="row">
-                <label class="control-label col-sm-3">{{ 'Remark' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Remark' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.excerptListRemark}}
                 </p>

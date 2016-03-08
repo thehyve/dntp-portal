@@ -316,7 +316,7 @@ angular.module('ProcessApp.controllers')
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
                         attachment.$removeDataFile(function(result) {
-                            $scope.request.dataAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
+                            $scope.request.dataAttachments.splice($scope.request.dataAttachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
                             $scope.error = response.statusText;

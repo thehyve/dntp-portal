@@ -1,10 +1,13 @@
 # Request portal for Dutch pathology labs
 
-This repository hosts the code of a request portal, built for the [Dutch National Tissuebank Portal](http://www.dntp.nl) project.
-The portal is hosted at [aanvraag.palga.nl](https://aanvraag.palga.nl). Its allows researchers to submit requests to [PALGA](http://www.palga.nl), the Dutch pathology database organisation.
+This repository hosts the code of a request portal, built for the
+[Dutch National Tissuebank Portal](http://www.dntp.nl) project.
+The portal is hosted at [aanvraag.palga.nl](https://aanvraag.palga.nl).
+It allows researchers to submit requests to [PALGA](http://www.palga.nl),
+the Dutch pathology database organisation.
 
-## Project
-Issues are reported to our [JIRA project](https://jira.thehyve.nl/browse/DNTP).
+## Issues
+Project members can report issues in [JIRA](https://jira.thehyve.nl/projects/DNTPSD).
 
 ## Development 
 
@@ -98,9 +101,29 @@ Deploy to the repository:
 ```
 mvn -Dspring.profiles.active=dev deploy
 ```
+### Fetch from repository
+```
+mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepositories=https://repo.thehyve.nl/content/repositories/releases/ -Ddestination=dntpportal.jar
+```
 
 ## Release notes
 When updating from 0.0.4 to 0.0.5, an existing database can be updated with:
 ```sql
 alter table excerpt_entry add selected boolean;
 ```
+
+## License
+Copyright &copy; 2016  Stichting PALGA
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the [GNU Affero General Public License](agpl-3.0.txt)
+along with this program. If not, see https://www.gnu.org/licenses/.

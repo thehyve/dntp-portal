@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2016  Stichting PALGA
+ * This file is distributed under the GNU Affero General Public License
+ * (see accompanying file LICENSE).
+ */
 (function(window) {
     'use strict';
     
@@ -10,7 +15,8 @@
         /* ========= */
         /* Global */
         /* ========= */
-    
+
+        'Source': 'Bron',
         'DNTP': 'PALGA',
         'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
         'There was a problem logging in.': 'Er is een probleem met inloggen.',

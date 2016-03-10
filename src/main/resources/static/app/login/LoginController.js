@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2016  Stichting PALGA
+ * This file is distributed under the GNU Affero General Public License
+ * (see accompanying file LICENSE).
+ */
 angular.module('ProcessApp.controllers')
     .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookies',
         function ($scope, $http, $rootScope, $location, $cookies) {

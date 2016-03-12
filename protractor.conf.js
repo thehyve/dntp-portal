@@ -9,7 +9,11 @@ exports.config = {
     'browserName': 'chrome'
   },
 
-  framework: 'cucumber',
+  // set to "custom" instead of cucumber.
+  framework: 'custom',
+
+  // path relative to the current config file
+  frameworkPath: require.resolve('protractor-cucumber-framework'),
 
   // Spec patterns are relative to the current working directly when
   // protractor is called.

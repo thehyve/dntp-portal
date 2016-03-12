@@ -23,6 +23,15 @@ var mappings = [
     newMapping('requests', 'create new request', function() {
         var pages = require('./pages/pages');
         return pages.requests.createNewRequest.click();
+    }),
+    newMapping('*', 'lab requests', function() {
+        return element(by.id('nav_lab-requests')).click();
+    }),
+    newMapping('*', 'requests', function() {
+        return element(by.id('nav_requests')).click();
+    }),
+    newMapping('*', 'samples', function() {
+        return element(by.id('nav_samples')).click();
     })
 ];
 
@@ -39,7 +48,7 @@ module.exports = {
         'palga': { username: 'palga@dntp.thehyve.nl', password: 'palga' },
         'requester': { username: 'requester@dntp.thehyve.nl', password: 'requester' },
         'scientific council': { username: 'scientific_council@dntp.thehyve.nl', password: 'scientific_council' },
-        'lab': { username: 'lab_user@dntp.thehyve.nl', password: 'lab_user' },
+        'lab': { username: 'lab_user106@dntp.thehyve.nl', password: 'lab_user' },
         'invalid': { username: 'kjaurtyqkuwygf', password: '784yfsda' }
     },
     'mappings': mappings,

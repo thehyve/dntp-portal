@@ -15,7 +15,7 @@ var expect = util.chai.expect;
 
 var RequestPage = function() {
     this.claimButton = element(by.css('[title=Claim]'));
-    this.attachedExcerpt = element(by.id('attached-excerpt-list'));
+    this.attachedExcerpt = element(by.id('attached-excerpt-list-1'));
 };
 
 module.exports = new RequestPage();

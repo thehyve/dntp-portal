@@ -13,6 +13,7 @@ var readline = require('readline');
 module.exports = function() {
     var pages = require('../pages/pages');
     var baseUrl = util.baseUrl;
+    this.setDefaultTimeout(60 * 1000);
 
     this.Given(/^I am on the (.*) page$/, function(pageName, next) {
         util.getPage(pageName).then(function() {
@@ -22,7 +23,7 @@ module.exports = function() {
 
     this.Given(/^I am logged in as the (.*) user$/, function(user, next) {
         util.login(user).then(function() {
-            browser.sleep(500);
+            browser.sleep(2500);
             next();
         });
     });
@@ -50,7 +51,7 @@ module.exports = function() {
         var mapping;
         for (var i in util.mappings) {
             var m = util.mappings[i];
-            if (m.from === from && m.to === to) {
+            if ((m.from === from || m.from ==='*') && m.to === to) {
                 mapping = m;
                 break;
             }
@@ -134,7 +135,7 @@ module.exports = function() {
     });
 
     this.When(/^I click on the lab request with id '(.+)'$/, function(id, next) {
-        element(by.linkText(id)).click().then(function() {
+        element(by.linkText(id.replace('YYYY', new Date().getFullYear()))).click().then(function() {
             next()
         });
     });

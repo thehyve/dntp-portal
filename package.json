@@ -49,13 +49,15 @@
     "main-bower-files": "^2.11.1",
     "merge-stream": "^1.0.0",
     "protractor": "^3.0.0",
-    "protractor-cucumber": "^0.1.4",
+    "protractor-cucumber": "^0.1.8",
+    "protractor-cucumber-framework": "~0.3.4",
+    "request-promise": "~2.0.1",
     "require-dir": "^0.3.0",
     "uglify-save-license": "~0.4.1",
     "wiredep": "^3.0.0",
     "wrench": "~1.5.8"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.4.0"
   }
 }

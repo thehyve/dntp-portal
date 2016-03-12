@@ -10,7 +10,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import business.models.CommentRepository;
 import business.models.ExcerptListRepository;
 import business.models.LabRequestRepository;
 import business.models.PathologyItemRepository;
+import business.models.RequestNumberRepository;
 import business.models.RequestPropertiesRepository;
 
 @Profile("dev")
@@ -31,6 +31,8 @@ import business.models.RequestPropertiesRepository;
 public class TestController {
 
     Log log = LogFactory.getLog(getClass());
+
+    @Autowired RequestNumberRepository requestNumberRepository;
 
     @Autowired ExcerptListRepository excerptListRepository;
 
@@ -53,12 +55,13 @@ public class TestController {
     @RequestMapping(value = "/test/clear", method = RequestMethod.GET)
     public void clearAll() {
         log.warn("GET /test/clear");
-        pathologyItemRepository.deleteAll();
+        //pathologyItemRepository.deleteAll();
         labRequestRepository.deleteAll();
         excerptListRepository.deleteAll();
         requestPropertiesRepository.deleteAll();
         commentRepository.deleteAll();
         approvalVoteRepository.deleteAll();
+        requestNumberRepository.deleteAll();
 
         for (ProcessInstance instance: runtimeService.createProcessInstanceQuery().list()) {
             runtimeService.deleteProcessInstance(instance.getId(), null);

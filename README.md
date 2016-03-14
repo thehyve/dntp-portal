@@ -77,8 +77,13 @@ mvn -Dspring.profiles.active=dev test
 ```
 
 Running front-end unit testing and e2e testing:
-* `sudo npm install -g protractor` to install Protractor.
-* `protractor` to run end to end tests with Protractor.
+[Get `nodejs`](https://nodejs.org/en/download/).
+```bash
+# install dependencies
+sudo npm install -g gulp protractor
+# run tests
+protractor
+```
 
 ### Deployment
 The project is configured to deploy to the [Nexus repository of The Hyve](https://repo.thehyve.nl/).

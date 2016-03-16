@@ -262,7 +262,9 @@ public class ExcerptListService {
             }
             Set<Integer> selectedLabNumbers = new TreeSet<Integer>();
             for(ExcerptEntry entry: excerptList.getEntries()) {
-                selectedLabNumbers.add(entry.getLabNumber());
+                if (entry.isSelected()) {
+                    selectedLabNumbers.add(entry.getLabNumber());
+                }
             }
             runtimeService.setVariable(id, "lab_request_labs", selectedLabNumbers);
         }

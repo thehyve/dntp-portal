@@ -57,9 +57,6 @@ public class LabRequestService {
     private UserRepository userRepository;
 
     @Autowired
-    private RequestPropertiesService requestPropertiesService;
-
-    @Autowired
     private TaskService taskService;
 
     @Autowired

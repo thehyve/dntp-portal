@@ -13,10 +13,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
-import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -27,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import business.controllers.RequestComparator;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
@@ -42,22 +38,10 @@ public class RequestService {
     Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private RuntimeService runtimeService;
-
-    @Autowired
     private TaskService taskService;
 
     @Autowired
-    private IdentityService identityService;
-
-    @Autowired
-    private FormService formService;
-
-    @Autowired
     private HistoryService historyService;
-
-    @Autowired
-    private RequestComparator requestComparator;
 
     @Autowired
     private LabRequestService labRequestService;

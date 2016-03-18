@@ -15,6 +15,7 @@
 /.settings/
 /.classpath
 /.project
+*.DS_Store
 *.iml
 *.ipr
 *.iws

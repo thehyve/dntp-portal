@@ -2,28 +2,28 @@
   "name": "dntpPortal",
   "version": "0.0.39",
   "dependencies": {
-    "jquery": "~2.1",
-    "lodash": "~3.10",
-    "angular": "~1.4",
-    "angular-cookies": "~1.4",
-    "angular-route": "~1.4",
-    "angular-sanitize": "~1.4",
+    "jquery": "~2.2",
+    "lodash": "~4.6",
+    "angular": "1.5.1",
+    "angular-cookies": "~1.5",
+    "angular-route": "~1.5",
+    "angular-sanitize": "~1.5",
     "restangular": "~1.5",
-    "angular-resource": "~1.4",
+    "angular-resource": "~1.5",
     "angular-translate": "",
     "bootstrap": "~3.3.1",
-    "angular-strap": "~2.2.4",
+    "angular-strap": "~2.3.7",
     "ng-flow": "~2",
     "fusty-flow.js": "~1",
     "angular-smart-table": "~2",
     "bootbox": "4.4.0",
-    "ng-tags-input": "2.3.0 ",
-    "angular-loading-bar": "0.8.0",
-    "github-markdown-css": "~2.1.1",
-    "textAngular": "~1.4.6",
+    "ng-tags-input": "3.0.0",
+    "angular-loading-bar": "0.9.0",
+    "github-markdown-css": "~2.2.1",
+    "textAngular": "~1.5.0",
     "asmcrypto": "*"
   },
   "devDependencies": {
-    "angular-mocks": "~1.4"
+    "angular-mocks": "~1.5"
   }
 }

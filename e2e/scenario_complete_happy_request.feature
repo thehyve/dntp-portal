@@ -6,6 +6,12 @@ Feature: scenario request Request for excerpts + PA reports + materials
     # And request with title "Request 1" is deleted
     # And all lab-requests with title "Request 1" are deleted
 
+  Scenario: 0. Select language
+	Given I am on the login page
+	And I click on the object with id 'language_selection'
+	And I click on the object with id 'select_language_en'
+	Then the page should contain the text 'Language: en'
+
   Scenario: 1. Create request
     Given there are no requests
     And I am logged in as the requester user

@@ -56,14 +56,14 @@ This file is distributed under the GNU Affero General Public License
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <label class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
+                    <label id="language_selection" class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
                         {{ 'Language' | translate }}: {{currentLanguage}}
                     </label>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
+                        <li id="select_language_en"><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
                             {{ 'English' | translate }} (en)
                         </a></li>
-                        <li><a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
+                        <li id="select_language_nl"><a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
                             {{ 'Dutch' | translate }} (nl)
                         </a></li>
                     </ul>

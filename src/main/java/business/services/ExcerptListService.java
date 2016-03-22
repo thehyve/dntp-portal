@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +51,8 @@ import business.representation.RequestRepresentation;
 
 @Service
 public class ExcerptListService {
+
+    public static final String EXCERPT_LIST_CHARACTER_ENCODING = "UTF-8";
 
     Log log = LogFactory.getLog(getClass());
     
@@ -116,20 +118,20 @@ public class ExcerptListService {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
         log.info("Processing excerpt list");
         try {
-            CSVReader reader = new CSVReader(new InputStreamReader(input), ';', '"');
+            CSVReader reader = new CSVReader(new InputStreamReader(input, EXCERPT_LIST_CHARACTER_ENCODING), ';', '"');
             String [] nextLine;
-            log.info("Column names.");
+            log.debug("Column names.");
             if ((nextLine = reader.readNext()) != null) {
                 try {
                     list.setColumnNames(nextLine);
                 } catch (RuntimeException e) {
                     reader.close();
                     throw new ExcerptListUploadError(e.getMessage());
-                } 
+                }
             }
             int line = 2;
             while ((nextLine = reader.readNext()) != null) {
-                log.info("Line " + line);
+                log.debug("Line " + line);
                 try {
                     ExcerptEntry entry = list.addEntry(nextLine);
                     // check lab number
@@ -206,22 +208,22 @@ public class ExcerptListService {
      * in CSV format.
      */
     public HttpEntity<InputStreamResource> writeExcerptList(ExcerptList list, boolean selectedOnly) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(); 
-        Writer writer = new PrintWriter(out);
-        CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
-        csvwriter.writeNext(list.getCsvColumnNames());
-        for (ExcerptEntry entry: list.getEntries()) {
-            if (!selectedOnly || entry.isSelected()) {
-                csvwriter.writeNext(entry.getCsvValues());
-            }
-        }
         try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Writer writer = new OutputStreamWriter(out, EXCERPT_LIST_CHARACTER_ENCODING);
+            CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
+            csvwriter.writeNext(list.getCsvColumnNames());
+            for (ExcerptEntry entry: list.getEntries()) {
+                if (!selectedOnly || entry.isSelected()) {
+                    csvwriter.writeNext(entry.getCsvValues());
+                }
+            }
             csvwriter.flush();
-            csvwriter.close();
             writer.flush();
-            writer.close();
             out.flush();
             InputStream in = new ByteArrayInputStream(out.toByteArray());
+            csvwriter.close();
+            writer.close();
             out.close();
             InputStreamResource resource = new InputStreamResource(in);
             HttpHeaders headers = new HttpHeaders();
@@ -234,6 +236,8 @@ public class ExcerptListService {
             log.info("Returning reponse.");
             return response;
         } catch (IOException e) {
+            log.error(e.getStackTrace());
+            log.error(e.getMessage());
             throw new ExcerptListDownloadError();
         }
     }

@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import business.services.ExcerptListService;
+
 @Component
 public class StartupMessage implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -24,5 +26,7 @@ public class StartupMessage implements ApplicationListener<ContextRefreshedEvent
     public void onApplicationEvent(ContextRefreshedEvent arg0) {
         log.info(String.format("Starting %s (%s).", applicationTitle, applicationVersion));
         log.info("Default character set: " + Charset.defaultCharset());
+        log.info("Character set " + ExcerptListService.EXCERPT_LIST_CHARACTER_ENCODING + " supported: " + 
+                Boolean.toString(Charset.isSupported(ExcerptListService.EXCERPT_LIST_CHARACTER_ENCODING)));
     }
 }

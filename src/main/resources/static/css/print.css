@@ -28,14 +28,14 @@ tfoot td {
 }
 
 .no-print,
-.print-pa-id-col,
 .nav,
 input[type='text'] {
     display: none !important;
 }
-
-.print-pa-no-col { width: 15%;}
-.print-pa-samples-col { width: 85%;}
+.table th, td { text-align: left; }
+.print-pa-id-col { width: 10%; }
+.print-pa-no-col { width: 10%; }
+.print-pa-samples-col { width: 70%; }
 
 
 ul li { display: inline; }

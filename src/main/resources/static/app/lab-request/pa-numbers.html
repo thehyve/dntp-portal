@@ -27,7 +27,7 @@ This file is distributed under the GNU Affero General Public License
 <table st-table="paNumbersDisplayedCollection" st-safe-src="labRequest.pathologyList" class="table table-striped">
   <thead>
   <tr>
-    <th class="print-pa-id-col">{{'ID' | translate}}</th>
+    <th class="print-pa-id-col">{{'Sequence number' | translate}} ({{sequenceNumberColumnName}})</th>
     <th class="print-pa-no-col" st-sort="paNumber" width="10%">{{'PA number' | translate}}</th>
     <th class="print-pa-samples-col">{{'Samples' | translate}}</th>
     <th class="" width="10%">{{'Total Samples' | translate}}</th>
@@ -44,7 +44,7 @@ This file is distributed under the GNU Affero General Public License
   <tbody>
   <tr ng-repeat="pathology in paNumbersDisplayedCollection">
     <td class="print-pa-id-col">
-      {{pathology.id}}
+      {{getSequenceNumberForPaNumber(labRequest, pathology.paNumber)}}
     </td>
     <td class="print-pa-no-col">
       {{pathology.paNumber}}

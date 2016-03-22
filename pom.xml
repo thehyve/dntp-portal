@@ -92,7 +92,6 @@
 		<dependency>
 			<groupId>org.skyscreamer</groupId>
 			<artifactId>jsonassert</artifactId>
-			<version>1.2.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -104,7 +103,6 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4-1200-jdbc41</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -171,6 +169,16 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>bower update</id>
+                        <goals>
+                            <goal>bower</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+					    <configuration>
+					        <arguments>update</arguments>
+					    </configuration>
+                    </execution>
+                    <execution>
                         <id>bower install</id>
                         <goals>
                             <goal>bower</goal>
@@ -195,7 +203,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
                 <configuration>
                     <webResources>
                         <resource>

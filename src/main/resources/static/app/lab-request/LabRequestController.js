@@ -65,18 +65,19 @@ angular.module('ProcessApp.controllers')
                 $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
             };
 
-            $scope.sequenceNumberColumnName = 'PALGAexcerptnr';
+            //$scope.sequenceNumberColumnName = 'PALGAexcerptnr';
 
             $scope.getSequenceNumberForPaNumber = function (labRequest, paNumber) {
-                var seqNrColumn = labRequest.excerptList.columnNames.indexOf($scope.sequenceNumberColumnName);
+                /*var seqNrColumn = labRequest.excerptList.columnNames.indexOf($scope.sequenceNumberColumnName);
                 if (seqNrColumn < 0) {
                     console.log('Error: column with name ' + $scope.sequenceNumberColumnName + ' not found in excerpt list.');
                     return '';
-                }
+                }*/
                 for (var i in labRequest.excerptList.entries) {
                     var entry = labRequest.excerptList.entries[i];
                     if (entry.paNumber == paNumber) {
-                        return entry.values[seqNrColumn];
+                        return entry.sequenceNumber;
+                        //return entry.values[seqNrColumn];
                     }
                 }
             };

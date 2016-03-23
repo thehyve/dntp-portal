@@ -65,7 +65,7 @@ angular.module('ProcessApp.controllers')
                 $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
             };
 
-            $scope.sequenceNumberColumnName = 'PALGApatiëntnr';
+            $scope.sequenceNumberColumnName = 'PALGAexcerptnr';
 
             $scope.getSequenceNumberForPaNumber = function (labRequest, paNumber) {
                 var seqNrColumn = labRequest.excerptList.columnNames.indexOf($scope.sequenceNumberColumnName);

@@ -181,15 +181,17 @@ public class CustomPermissionService {
             logDecision("isScientificCouncil", user, requestId, "OK.");
             return true;
         } else {
-            long count = historyService
+            long requestCount = historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .processInstanceId(requestId)
-                    .includeProcessVariables()
-                    .variableValueNotEquals("status", "Approval")
-                    .variableValueNotEquals("scientific_council_approved", null)
                     .count();
-            if (count > 0) {
+            long approvalTaskCount = historyService
+                    .createHistoricTaskInstanceQuery()
+                    .processInstanceId(requestId)
+                    .taskDefinitionKey("scientific_council_approval")
+                    .count();
+            if (requestCount > 0 && approvalTaskCount > 0) {
                 logDecision("isScientificCouncil", user, requestId, "OK.");
                 return true;
             } else {

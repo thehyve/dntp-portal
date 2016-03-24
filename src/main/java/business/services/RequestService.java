@@ -219,27 +219,22 @@ public class RequestService {
                     .list();
         } else if (user.getUser().isScientificCouncilMember()) {
             Date start = new Date();
-            processInstances = new ArrayList<HistoricProcessInstance>();
-            processInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("status", "Approval")
-                    .list());
-            Date endQ1 = new Date();
-            List<HistoricProcessInstance> list = historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueNotEquals("status", "Approval")
-                    .variableValueNotEquals("scientific_council_approved", null)
+            List<HistoricTaskInstance> approvalTasks = historyService
+                    .createHistoricTaskInstanceQuery()
+                    .taskDefinitionKey("scientific_council_approval")
                     .list();
-            Date endQ2 = new Date();
-            log.info("GET: query 1 took " + (endQ1.getTime() - start.getTime()) + " ms.");
-            log.info("GET: query 2 took " + (endQ2.getTime() - endQ1.getTime()) + " ms.");
-            if (list != null) {
-                processInstances.addAll(list);
+            Set<String> processInstanceIds = new HashSet<>();
+            for (HistoricTaskInstance task: approvalTasks) {
+                processInstanceIds.add(task.getProcessInstanceId());
             }
+            processInstances = historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .processInstanceIds(processInstanceIds)
+                    .list();
+            Date end = new Date();
+            log.info("GET: query took " + (end.getTime() - start.getTime()) + " ms.");
         } else if (user.getUser().isLabUser()) {
             List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
             Set<String> processInstanceIds = new HashSet<String>();

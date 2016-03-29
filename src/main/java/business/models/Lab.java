@@ -18,19 +18,21 @@ public class Lab {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     @Column(unique = true)
     private Integer number;
-    
+
     private String name;
-    
+
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     private ContactData contactData;
-    
+
+    private boolean hubAssistanceEnabled = true;
+
     private boolean active = true;
-    
+
     public Lab() {
-        
+
     }
 
     public Lab(Long id, Integer number, String name, ContactData contactData) {
@@ -71,7 +73,20 @@ public class Lab {
     public void setContactData(ContactData contactData) {
         this.contactData = contactData;
     }
-    
+
+    /**
+     * Indicates if for this lab, assistance from a hub user is enabled.
+     *
+     * @return true if hub assistance is enabled; false otherwise (default: true).
+     */
+    public boolean isHubAssistanceEnabled() {
+        return hubAssistanceEnabled;
+    }
+
+    public void setHubAssistanceEnabled(boolean hubAssistanceEnabled) {
+        this.hubAssistanceEnabled = hubAssistanceEnabled;
+    }
+
     public void activate() {
         this.active = true;
     }

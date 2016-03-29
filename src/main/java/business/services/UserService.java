@@ -94,7 +94,7 @@ public class UserService {
         return members;
     }
 
-    public void transferUserData(ProfileRepresentation body, User user) {
+    public void transferUserData(User currentUser, ProfileRepresentation body, User user) {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());
         user.setPathologist(body.isPathologist());
@@ -119,16 +119,19 @@ public class UserService {
 
         // change role
         ProfileRepresentation representation = new ProfileRepresentation(user);
-        if (!representation.getCurrentRole().equals(body.getCurrentRole())) {
-            Role role = roleRepository.findByName(body.getCurrentRole());
-            if (role == null) {
-                throw new InvalidUserData("Unknown role selected.");
+        // Update of user roles can only be done by Palga users.
+        if (currentUser != null && currentUser.isPalga()) {
+            if (!representation.getCurrentRole().equals(body.getCurrentRole())) {
+                Role role = roleRepository.findByName(body.getCurrentRole());
+                if (role == null) {
+                    throw new InvalidUserData("Unknown role selected.");
+                }
+                Set<Role> roles = new HashSet<Role>();
+                roles.add(role);
+                user.setRoles(roles);
             }
-            Set<Role> roles = new HashSet<Role>();
-            roles.add(role);
-            user.setRoles(roles);
         }
-        
+
         if (user.isRequester() || user.isLabUser()) {
             if (body.getLabId() == null) {
                 throw new InvalidUserData("No lab selected.");
@@ -150,7 +153,7 @@ public class UserService {
 
     }
 
-    public ProfileRepresentation createNewUser(ProfileRepresentation body, NewUserLinkType linkType) {
+    public ProfileRepresentation createNewUser(User currentUser, ProfileRepresentation body, NewUserLinkType linkType) {
         if (body == null || body.getContactData() == null || body.getContactData().getEmail() == null) {
             throw new InvalidUserData("Invalid user data.");
         }
@@ -161,7 +164,14 @@ public class UserService {
         if (findByUsername(email) != null ) {
             throw new EmailAddressNotAvailable();
         }
-        Role role = roleRepository.findByName(body.getCurrentRole());
+        Role role = null;
+        if (currentUser != null && currentUser.isPalga()) {
+            role = roleRepository.findByName(body.getCurrentRole());
+        } else {
+            // when a user is registered by anyone else than a Palga user,
+            // then only the requester role can be selected.
+            role = roleRepository.findByName("requester");
+        }
         Set<Role> roles = new HashSet<Role>();
         if (role == null) {
             throw new InvalidUserData("No role selected.");
@@ -172,10 +182,10 @@ public class UserService {
         if (!PasswordValidator.validate(body.getPassword1())) {
             throw new InvalidPassword();
         }
-        
+
         User user = new User(email, passwordService.getEncoder().encode(body.getPassword1()), true, roles);
 
-        transferUserData(body, user);
+        transferUserData(currentUser, body, user);
         try {
             User result = save(user);
 

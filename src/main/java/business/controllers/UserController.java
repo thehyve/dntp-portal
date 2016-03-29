@@ -129,16 +129,16 @@ public class UserController {
         String password = SecureTokenGenerator.generatePassword();
         body.setPassword1(password);
         body.setPassword2(password);
-        return userService.createNewUser(body, NewUserLinkType.PASSWORD_RESET_LINK);
+        return userService.createNewUser(user.getUser(), body, NewUserLinkType.PASSWORD_RESET_LINK);
     }
 
     @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ProfileRepresentation update(Principal principal, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
+    public ProfileRepresentation update(UserAuthenticationToken currentUser, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
         log.info("PUT /admin/users/" + id);
         User user = userService.findOne(id);
         if (user != null) {
-            userService.transferUserData(body, user);
+            userService.transferUserData(currentUser.getUser(), body, user);
             try {
                 User result = userService.save(user);
                 return new ProfileRepresentation(result);
@@ -179,7 +179,7 @@ public class UserController {
     @RequestMapping(value = "/register/users", method = RequestMethod.POST)
     public ProfileRepresentation register(@RequestBody ProfileRepresentation body) {
         log.info("POST /register new user");
-        return userService.createNewUser(body, NewUserLinkType.ACTIVATION_LINK);
+        return userService.createNewUser(null, body, NewUserLinkType.ACTIVATION_LINK);
     }
 
     /**

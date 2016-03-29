@@ -65,6 +65,10 @@ public class Role implements Serializable {
         return name.equals("lab_user");
     }
 
+    public boolean isHubUser() {
+        return name.equals("hub_user");
+    }
+
     public Set<User> getUsers() {
         return users;
     }

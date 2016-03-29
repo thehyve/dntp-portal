@@ -5,7 +5,6 @@
  */
 package business.security;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,9 +50,9 @@ public class DefaultRolesUsersLabs {
     
     @Autowired
     private Environment env;
-    
-    static final String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
-    
+
+    static final String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user", "hub_user"};
+
     /**
      * Generates default users and labs in the 'dev' and 'test' profiles.
      * Always generates default roles (if not already present).

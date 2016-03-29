@@ -20,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 @Table(name = "appUser")
 public class User implements Serializable {
@@ -47,17 +49,24 @@ public class User implements Serializable {
 
     @ManyToOne(optional = true)
     private Lab lab;
-   
+
+    /**
+     * Labs associated with hub users.
+     */
+    @BatchSize(size = 1000)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity=Lab.class)
+    private Set<Lab> hubLabs;
+
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     private ContactData contactData;
-    
+
     @ManyToMany(fetch = FetchType.EAGER, targetEntity=Role.class)
     private Set<Role> roles = new HashSet<Role>();
-    
+
     private Date created = new Date();
-    
+
     public User() {}
-    
+
     public User(String username, String password, boolean active,
             Set<Role> roles) {
         super();
@@ -77,6 +86,13 @@ public class User implements Serializable {
     public boolean isPalga() {
         for (Role role: roles) {
             if (role.isPalga()) return true;
+        }
+        return false;
+    }
+
+    public boolean isHubUser() {
+        for (Role role: roles) {
+            if (role.isHubUser()) return true;
         }
         return false;
     }
@@ -159,6 +175,14 @@ public class User implements Serializable {
 
     public void setLab(Lab lab) {
         this.lab = lab;
+    }
+
+    public Set<Lab> getHubLabs() {
+        return hubLabs;
+    }
+
+    public void setHubLabs(Set<Lab> hubLabs) {
+        this.hubLabs = hubLabs;
     }
 
     public String getInstitute() {

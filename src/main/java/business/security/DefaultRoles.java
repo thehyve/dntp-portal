@@ -24,9 +24,9 @@ public class DefaultRoles {
     
     @Autowired
     RoleRepository roleRepository;
-    
-    static final String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user"};
-    
+
+    static final String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user", "hub_user"};
+
     /**
      * Always generates default roles (if not already present).
      */

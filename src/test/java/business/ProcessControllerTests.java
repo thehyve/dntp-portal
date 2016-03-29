@@ -10,8 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import javax.servlet.Filter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +24,12 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,10 +42,14 @@ import business.models.LabRepository;
 import business.models.Role;
 import business.models.User;
 import business.models.UserRepository;
+import business.security.UserAuthenticationToken;
+import business.services.PasswordService;
+import business.services.UserService;
 
 @Profile("dev")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class})
+@ContextConfiguration
 @WebIntegrationTest("server.port = 8093")
 public class ProcessControllerTests {
 
@@ -44,25 +57,59 @@ public class ProcessControllerTests {
 
     @Autowired UserRepository userRepository;
 
+    @Autowired PasswordService passwordService;
+
+    @Autowired UserService userService;
+
     @Autowired LabRepository labRepository;
 
     @Autowired
     private EmbeddedWebApplicationContext webApplicationContext;
 
+    @Autowired
+    AuthenticationProvider authenticationProvider;
+
+    @Autowired
+    private Filter springSecurityFilterChain;
+
     private MockMvc mockMvc;
+
+    private UserAuthenticationToken palga;
+
+    private SecurityContext securityContext;
+
+    protected UserAuthenticationToken getPalga() {
+        User user = userService.findByUsername("palga@dntp.thehyve.nl");
+        user.setPassword(passwordService.getEncoder().encode("palga")); // because of password tests
+        userService.save(user);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, "palga");
+        return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
+    }
 
     @Before
     public void setUp() throws Exception {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .addFilters(springSecurityFilterChain)
+                .build();
+        palga = getPalga();
+        securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
     }
-    
-    private String users_test_expected_template = 
+
+    @After
+    public void shutDown() {
+        SecurityContextHolder.clearContext();
+    }
+
+    private String users_test_expected_template =
         "{\"id\":%d,\"username\":\"palga@dntp.thehyve.nl\",\"password\":\"palga\",\"active\":true,"
         + "\"deleted\":false,\"lab\":null,\"institute\":null,"
         + "\"contactData\":{\"id\":%d,\"telephone\":null,\"email\":\"palga@dntp.thehyve.nl\","
         + "\"address1\":null,\"address2\":null,\"postalCode\":null,\"city\":null,"
         + "\"stateProvince\":null,\"country\":\"NL\"},\"roles\":[{\"id\":%d,\"name\":\"palga\"}]}";
-    
+
     @Test
     public void getUser() throws Exception {
         User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("palga@dntp.thehyve.nl");
@@ -88,7 +135,7 @@ public class ProcessControllerTests {
             .andExpect(status().isOk());
             //.andExpect(content().json(users_test_expected));
     }
-    
+
     private String json_put_test_template =
             "{\"id\":%d,\"currentRole\":\"scientific_council\",\"username\":\"scientific_council@dntp.thehyve.nl\",\"password\":\"\",\"active\":true,"
             + "\"deleted\":false,\"contactData\":{\"email\":\"scientific_council@dntp.thehyve.nl\"}}";
@@ -99,8 +146,7 @@ public class ProcessControllerTests {
             +"\"contactData\":{\"id\":9,\"telephone\":null,\"email\":\"scientific_council@dntp.thehyve.nl\","
             + "\"address1\":null,\"address2\":null,\"postalCode\":null,\"city\":null,"
             + "\"stateProvince\":null,\"country\":\"NL\"}}";
-    
-    
+
     @Test
     public void serialiseUser() throws Exception {
         User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("scientific_council@dntp.thehyve.nl");
@@ -110,7 +156,7 @@ public class ProcessControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/users/{id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(test_string)
-            .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(new ResultHandler(){
             @Override
             public void handle(MvcResult result) throws Exception {
@@ -126,13 +172,13 @@ public class ProcessControllerTests {
                         );
             }
                 })
-            .andExpect(status().isOk());
-            //.andExpect(content().json(expected));
+                .andExpect(status().isOk());
+                //.andExpect(content().json(expected));
     }
-    
-    private String lab_put_template = 
+
+    private String lab_put_template =
         "{\"id\":%d,\"number\":%d,\"name\":\"Nijmegen\",\"contactData\":{\"address1\":\"Onderzoeksstraat 12\"}}";
-    
+
     @Test
     public void putLab() throws Exception {
 

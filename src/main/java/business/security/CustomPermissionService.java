@@ -8,7 +8,6 @@ package business.security;
 import java.util.Date;
 
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
@@ -30,26 +29,22 @@ import business.services.RequestService;
 public class CustomPermissionService {
 
     @Autowired
-    private RuntimeService runtimeService;
+    private HistoryService historyService;
 
     @Autowired
-    private HistoryService historyService;
-    
-    @Autowired 
     private RequestService requestService;
 
     @Autowired
     private RequestFormService requestFormService;
-    
+
     @Autowired
     private LabRequestRepository labRequestRepository;
-    
-    @Autowired 
+
+    @Autowired
     private TaskService taskService;
 
     Log log = LogFactory.getLog(getClass());
-    
-    
+
     public void logDecision(String permission, User user, String id, String decision) {
         log.trace(String.format("%s\t%s\t%d\t%s\t%s",
                 new Date(),
@@ -58,7 +53,7 @@ public class CustomPermissionService {
                 id,
                 decision));
     }
-    
+
     /**
      * Usage: {@code hasPermission(#taskId, 'isAssignedToTask')}<br>
      * Checks if the user is assigned to the (single) task with the id
@@ -230,9 +225,37 @@ public class CustomPermissionService {
     }
 
     /**
+     * Usage: {@code hasPermission(#id, 'isHubuser')}<br>
+     * Checks if the user is a hub user
+     * and if there is a task that is both associated with
+     * the request with id {@code id}
+     * and with one of the hub labs of the user.
+     * @param user
+     * @param requestId
+     */
+    public boolean checkIsHubuser(User user, String requestId) {
+        if (!user.isHubUser()) {
+            logDecision("isHubuser", user, requestId, "DENIED (not a hub user).");
+            return false;
+        }
+        if (user.getHubLabs() == null || user.getHubLabs().isEmpty()) {
+            logDecision("isHubuser", user, requestId, "DENIED (no hub lab associated with the user).");
+            return false;
+        }
+        long count = labRequestRepository.countByProcessInstanceIdAndLabIn(requestId, user.getHubLabs());
+        if (count > 0) {
+            logDecision("isHubuser", user, requestId, "OK.");
+            return true;
+        } else {
+            logDecision("isHubuser", user, requestId, "DENIED (no task found for user and request).");
+            return false;
+        }
+    }
+
+    /**
      * Usage: {@code hasPermission(#labRequestId, 'isLabRequestLabuser')}<br>
      * Checks if the user is a lab user and if the lab request with id {@code labRequestId}
-     * is associated with the lab of the user. 
+     * is associated with the lab of the user.
      * @param user
      * @param labRequestId
      */
@@ -284,6 +307,35 @@ public class CustomPermissionService {
             logDecision("isLabRequestRequester", user, labRequestId.toString(), "DENIED (user is not the requester of the request).");
             return false;
         }
+    }
+
+    /**
+     * Usage: {@code hasPermission(#labRequestId, 'isLabRequestHubuser')}<br>
+     * Checks if the user is a hub user and if the lab request with id {@code labRequestId}
+     * is associated with one of the hub labs of the user.
+     * @param user
+     * @param labRequestId
+     */
+    public boolean checkIsLabRequestHubuser(User user, Long labRequestId) {
+        if (!user.isHubUser()) {
+            logDecision("isLabRequestHubuser", user, labRequestId.toString(), "DENIED (not a hub user).");
+            return false;
+        }
+        if (user.getHubLabs() == null || user.getHubLabs().isEmpty()) {
+            logDecision("isLabRequestHubuser", user, labRequestId.toString(), "DENIED (no hub lab associated with the user).");
+            return false;
+        }
+        LabRequest labRequest = labRequestRepository.findOne(labRequestId);
+        if (labRequest == null) {
+            logDecision("isLabRequestHubuser", user, labRequestId.toString(), "DENIED (lab request not found).");
+            return false;
+        }
+        if (!user.getHubLabs().contains(labRequest.getLab().getNumber())) {
+            logDecision("isLabRequestHubuser", user, labRequestId.toString(), "DENIED (lab request not associated with user lab).");
+            return false;
+        }
+        logDecision("isLabRequestHubuser", user, labRequestId.toString(), "OK.");
+        return true;
     }
 
 }

@@ -19,10 +19,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -53,15 +50,11 @@ import business.exceptions.NotLoggedInException;
 import business.exceptions.RequestNotAdmissible;
 import business.exceptions.RequestNotFound;
 import business.exceptions.UpdateNotAllowed;
-import business.models.CommentRepository;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
 import business.models.File;
-import business.models.FileRepository;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
-import business.models.RoleRepository;
-import business.models.UserRepository;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
@@ -97,22 +90,7 @@ public class RequestController {
     private TaskService taskService;
 
     @Autowired
-    private IdentityService identityService;
-
-    @Autowired
-    private FormService formService;
-
-    @Autowired
     private HistoryService historyService;
-
-    @Autowired
-    private RepositoryService repositoryService;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private RequestPropertiesService requestPropertiesService;
@@ -121,16 +99,10 @@ public class RequestController {
     private RequestNumberService requestNumberService;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private ExcerptListRepository excerptListRepository;
 
     @Autowired
-    private ExcerptListRepository excerptListRepository;
-    
-    @Autowired
     private FileService fileService;
-    
-    @Autowired
-    private FileRepository fileRepository;
 
     @Autowired
     private RequestListRepresentationComparator requestListRepresentationComparator;
@@ -196,6 +168,7 @@ public class RequestController {
             + "  or hasPermission(#id, 'isRequester') "
             + "  or hasPermission(#id, 'isScientificCouncil')"
             + "  or hasPermission(#id, 'isLabuser')"
+            + "  or hasPermission(#id, 'isHubuser')"
             + ")")
     @RequestMapping(value = "/requests/{id}", method = RequestMethod.GET)
     public RequestRepresentation getRequestById(UserAuthenticationToken user,
@@ -954,6 +927,7 @@ public class RequestController {
             + " or hasPermission(#id, 'isRequester') "
             + " or hasPermission(#id, 'isScientificCouncil') "
             + " or hasPermission(#id, 'isLabuser') "
+            + " or hasPermission(#id, 'isHubuser') "
             + ")")
     @RequestMapping(value = "/requests/{id}/files/{attachmentId}", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> getFile(UserAuthenticationToken user, @PathVariable String id,

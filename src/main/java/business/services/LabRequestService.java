@@ -309,6 +309,17 @@ public class LabRequestService {
                 }
                 representations.add(representation);
             }
+        } else if (user.isHubUser()) {
+            // Hub user
+            List<LabRequest> labRequests = labRequestRepository.findAllByLabIn(user.getHubLabs(), sortByIdDesc());
+            for (LabRequest labRequest : labRequests) {
+                LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+                transferLabRequestData(representation);
+                if (fetchDetails) {
+                    transferLabRequestDetails(representation, labRequest, true);
+                }
+                representations.add(representation);
+            }
         } else if (user.isPalga()) {
             // Palga
             List<LabRequest> labRequests = labRequestRepository.findAll(sortByIdDesc());

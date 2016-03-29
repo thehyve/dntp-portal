@@ -10,9 +10,7 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.DelegationState;
@@ -46,7 +44,6 @@ import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.ExcerptListService;
 import business.services.FileService;
-import business.services.LabRequestService;
 import business.services.RequestFormService;
 import business.services.RequestPropertiesService;
 import business.services.RequestService;
@@ -59,31 +56,25 @@ public class SelectionController {
 
     @Autowired
     private ExcerptListService excerptListService;
-    
-    @Autowired
-    private LabRequestService labRequestService;
-    
+
     @Autowired
     private RequestPropertiesService requestPropertiesService;
-    
+
     @Autowired
     private RequestService requestService;
 
     @Autowired
     private TaskService taskService;
-    
-    @Autowired
-    private RuntimeService runtimeService;
-    
+
     @Autowired
     private RequestFormService requestFormService;
-    
+
     @Autowired
     private FileService fileService;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('requester') and "
             + "hasPermission(#id, 'isRequester')")

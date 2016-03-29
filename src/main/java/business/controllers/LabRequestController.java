@@ -79,8 +79,8 @@ public class LabRequestController {
     @Autowired
     private RequestFormService requestFormService;
 
-    @PreAuthorize("isAuthenticated() and (" + "hasRole('requester')" + " or "
-            + "hasRole('palga')" + " or " + "hasRole('lab_user')" + ")")
+    @PreAuthorize("isAuthenticated() and (hasRole('requester') or hasRole('palga') or "
+            + "hasRole('lab_user') or hasRole('hub_user') )")
     @RequestMapping(value = "/labrequests", method = RequestMethod.GET)
     public List<LabRequestRepresentation> getLabRequests(
             UserAuthenticationToken user) {
@@ -88,8 +88,8 @@ public class LabRequestController {
         return labRequestService.findLabRequestsForUser(user.getUser(), false);
     }
 
-    @PreAuthorize("isAuthenticated() and (" + "hasRole('requester')" + " or "
-            + "hasRole('palga')" + " or " + "hasRole('lab_user')" + ")")
+    @PreAuthorize("isAuthenticated() and (hasRole('requester') or hasRole('palga') or "
+            + "hasRole('lab_user') or hasRole('hub_user') )")
     @RequestMapping(value = "/labrequests/detailed", method = RequestMethod.GET)
     public List<LabRequestRepresentation> getDetailedLabRequests(
             UserAuthenticationToken user) {
@@ -101,6 +101,7 @@ public class LabRequestController {
             + "(hasRole('palga') "
             + " or hasPermission(#id, 'isLabRequestRequester') "
             + " or hasPermission(#id, 'isLabRequestLabuser') "
+            + " or hasPermission(#id, 'isLabRequestHubuser') "
             + ")")
     @RequestMapping(value = "/labrequests/{id}", method = RequestMethod.GET)
     public LabRequestRepresentation getLabRequest(
@@ -115,8 +116,16 @@ public class LabRequestController {
         return representation;
     }
 
-
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    /**
+     * Reject a lab request and complete the associated task.
+     * Action only allowed for lab users.
+     *
+     * @param user the authorised user.
+     * @param id the lab request id.
+     * @return a representation of the rejected lab request.
+     */
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser') and "
+            + "hasPermission(#id, 'isLabRequestLabuser')")
     @RequestMapping(value = "/labrequests/{id}/reject", method = RequestMethod.PUT)
     public LabRequestRepresentation reject(UserAuthenticationToken user,
             @PathVariable Long id, @RequestBody LabRequestRepresentation body) {
@@ -143,7 +152,15 @@ public class LabRequestController {
 
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    /**
+     * Approve a lab request. Action only allowed for lab users.
+     *
+     * @param user the authorised user.
+     * @param id the lab request id.
+     * @return a representation of the approved lab request.
+     */
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser') and "
+            + "hasPermission(#id, 'isLabRequestLabuser')")
     @RequestMapping(value = "/labrequests/{id}/accept", method = RequestMethod.PUT)
     public LabRequestRepresentation accept(UserAuthenticationToken user,
             @PathVariable Long id) {
@@ -270,7 +287,8 @@ public class LabRequestController {
      *        fields.
      * @return the updated (completed) lab request.
      */
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+    @PreAuthorize("isAuthenticated() and ( hasPermission(#id, 'isLabRequestLabuser') or "
+            + "hasPermission(#id, 'isLabRequestHubuser') )")
     @RequestMapping(value = "/labrequests/{id}/returned", method = RequestMethod.PUT)
     public LabRequestRepresentation returned(UserAuthenticationToken user,
             @PathVariable Long id,
@@ -310,7 +328,8 @@ public class LabRequestController {
         return representation;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+    @PreAuthorize("isAuthenticated() and ( hasPermission(#id, 'isLabRequestLabuser') or "
+            + "hasPermission(#id, 'isLabRequestHubuser') )")
     @RequestMapping(value = "/labrequests/{id}/complete", method = RequestMethod.PUT)
     public LabRequestRepresentation complete(UserAuthenticationToken user,
             @PathVariable Long id,
@@ -349,9 +368,9 @@ public class LabRequestController {
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
-    
-    
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+
+    @PreAuthorize("isAuthenticated() and ( hasPermission(#id, 'isLabRequestLabuser') or "
+            + "hasPermission(#id, 'isLabRequestHubuser') )")
     @RequestMapping(value = "/labrequests/{id}/claim", method = RequestMethod.PUT)
     public LabRequestRepresentation claim(UserAuthenticationToken user,
             @PathVariable Long id) {
@@ -373,7 +392,8 @@ public class LabRequestController {
         return representation;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isLabRequestLabuser')")
+    @PreAuthorize("isAuthenticated() and ( hasPermission(#id, 'isLabRequestLabuser') or "
+            + "hasPermission(#id, 'isLabRequestHubuser') )")
     @RequestMapping(value = "/labrequests/{id}/unclaim", method = RequestMethod.PUT)
     public LabRequestRepresentation unclaim(UserAuthenticationToken user,
             @PathVariable Long id) {
@@ -395,6 +415,7 @@ public class LabRequestController {
       + "(hasRole('palga') "
       + " or hasPermission(#id, 'isLabRequestRequester') "
       + " or hasPermission(#id, 'isLabRequestLabuser') "
+      + " or hasPermission(#id, 'isLabRequestHubuser') "
       + ")")
     @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable Long id) {

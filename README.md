@@ -112,6 +112,12 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 ```
 
 ## Release notes
+### 0.0.42
+When updating to versoin 0.0.42, an existing database can be updated with:
+```sql
+alter table lab add hub_assistance_enabled boolean default true;
+```
+### 0.0.5
 When updating from 0.0.4 to 0.0.5, an existing database can be updated with:
 ```sql
 alter table excerpt_entry add selected boolean;

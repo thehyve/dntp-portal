@@ -6,13 +6,7 @@
 package business.security;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +17,7 @@ import org.springframework.stereotype.Component;
 
 import business.exceptions.InvalidPermissionExpression;
 import business.exceptions.NullIdentifier;
-import business.models.LabRequest;
-import business.models.LabRequestRepository;
 import business.models.User;
-import business.representation.RequestRepresentation;
-import business.services.RequestFormService;
-import business.services.RequestService;
 
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
@@ -37,7 +26,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     CustomPermissionService permissionService;
 
     Log log = LogFactory.getLog(getClass());
-    
+
     /**
      * Use the annotation {@link PreAuthorize} with the permission rules below
      * for data access control to secure controller functions.<br>
@@ -49,8 +38,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
      *      Usage: {@code hasPermission(#taskId, 'isAssignedToTask')}<br>
      *      Checks if the user is assigned to the (single) task with the id
      *      {@code taskId}.
-     * </li>     
-     * <li><strong>requestAssignedToUser</strong>: 
+     * </li>
+     * <li><strong>requestAssignedToUser</strong>:
      *      Usage: {@code hasPermission(#id, 'requestAssignedToUser')}<br>
      *      Checks if there exists a running task that is associated with the request
      *      with id {@code id} and is assigned to the user.
@@ -73,20 +62,32 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
      *      Usage: {@code hasPermission(#id, 'isScientificCouncil')}<br>
      *      Checks if the request with id {@code id} is in status 'Approval'
      *      (actually, if an approval task is associated with the request)
-     *      or if the request has already past the approval phase (i.e., 
+     *      or if the request has already past the approval phase (i.e.,
      *      an approval decision is associated with the request).
      * </li>
      * <li><strong>isLabuser</strong>:
      *      Usage: {@code hasPermission(#id, 'isLabuser')}<br>
-     *      Checks if the user is a lab user 
-     *      and if there is a task that is both associated with 
+     *      Checks if the user is a lab user
+     *      and if there is a task that is both associated with
      *          the request with id {@code id}
      *          and with the lab of the user.
+     * </li>
+     * <li><strong>isHubuser</strong>:
+     *      Usage: {@code hasPermission(#id, 'isHubuser')}<br>
+     *      Checks if the user is a hub user
+     *      and if there is a task that is both associated with 
+     *          the request with id {@code id}
+     *          and with one of the hub labs of the user.
      * </li>
      * <li><strong>isLabRequestLabuser</strong>:
      *      Usage: {@code hasPermission(#labRequestId, 'isLabRequestLabuser')}<br>
      *      Checks if the user is a lab user and if the lab request with id {@code labRequestId}
      *      is associated with the lab of the user. 
+     * </li>
+     * <li><strong>isLabRequestHubuser</strong>:
+     *      Usage: {@code hasPermission(#labRequestId, 'isLabRequestHubuser')}<br>
+     *      Checks if the user is a hub user and if the lab request with id {@code labRequestId}
+     *      is associated with one of the hub labs of the user. 
      * </li>
      * <li><strong>isLabRequestRequester</strong>:
      *      Usage: {@code hasPermission(#labRequestId, 'isLabRequestRequester')}<br>
@@ -110,25 +111,25 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
         User user = (User)authentication.getPrincipal();
         permissionService.logDecision(permission.toString(), user, ((targetDomainObject==null) ? "" : targetDomainObject.toString()), "");
-        if ("isAssignedToTask".equals(permission)) 
+        if ("isAssignedToTask".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             String taskId = (String)targetDomainObject;
             return permissionService.checkIsAssignedToTask(user, taskId);
-        } 
-        else if ("requestAssignedToUser".equals(permission)) 
+        }
+        else if ("requestAssignedToUser".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             return permissionService.checkRequestAssignedToUser(user, requestId);
-        } 
-        else if ("labRequestAssignedToUser".equals(permission)) 
+        }
+        else if ("labRequestAssignedToUser".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             Long labRequestId = (Long)targetDomainObject;
             return permissionService.checkLabRequestAssignedToUser(user, labRequestId);
-        } 
-        else if ("isPalgaUser".equals(permission)) 
+        }
+        else if ("isPalgaUser".equals(permission))
         {
             String requestId = (String)targetDomainObject;
             if (user.isPalga()) {
@@ -139,42 +140,54 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 return false;
             }
         }
-        else if ("isRequester".equals(permission)) 
+        else if ("isRequester".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             return permissionService.checkIsRequester(user, requestId);
-        } 
-        else if ("isScientificCouncil".equals(permission)) 
+        }
+        else if ("isScientificCouncil".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             return permissionService.checkIsScientificCouncil(user, requestId);
-        } 
+        }
         else if ("isLabuser".equals(permission)) 
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             return permissionService.checkIsLabuser(user, requestId);
-        } 
-        else if ("isLabRequestLabuser".equals(permission)) 
+        }
+        else if ("isHubuser".equals(permission))
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkIsHubuser(user, requestId);
+        }
+        else if ("isLabRequestLabuser".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             Long labRequestId = (Long)targetDomainObject;
             return permissionService.checkIsLabRequestLabuser(user, labRequestId);
-        } 
-        else if ("isLabRequestRequester".equals(permission)) 
+        }
+        else if ("isLabRequestHubuser".equals(permission))
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            return permissionService.checkIsLabRequestHubuser(user, labRequestId);
+        }
+        else if ("isLabRequestRequester".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
             Long labRequestId = (Long)targetDomainObject;
             return permissionService.checkIsLabRequestRequester(user, labRequestId);
-        } 
-        else 
+        }
+        else
         {
             throw new InvalidPermissionExpression();
         }
     }
-    
+
     private void checkTargetDomainObjectNotNull(Object targetDomainObject) {
         if (targetDomainObject == null) {
             throw new NullIdentifier();

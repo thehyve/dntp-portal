@@ -135,6 +135,8 @@ public class LabController {
         }
         // Copy values. The lab number cannot be changed.
         transferLabData(body, lab);
+        // Set hub assistance property (only when edited by a lab user).
+        lab.setHubAssistanceEnabled(body.isHubAssistanceEnabled());
         return labRepository.save(lab);
     }
     

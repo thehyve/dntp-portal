@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import business.models.ContactData;
+import business.models.Lab;
 import business.models.Role;
 import business.models.User;
 
@@ -32,14 +33,16 @@ public class ProfileRepresentation {
     private boolean emailValidated;
 
     private ContactData contactData;
-    
+
     private Long labId;
-    
+
+    private Set<Long> hubLabIds;
+
     private boolean isPathologist;
     private String institute;
 
     private String specialism;
-    
+
     private Date created;
     private Long createdTime;
 
@@ -51,6 +54,7 @@ public class ProfileRepresentation {
         this.id = user.getId();
         this.username = user.getUsername();
         this.currentRole =  user.isPalga() ? "palga" :
+                            user.isHubUser() ? "hub_user" :
                             user.isLabUser() ? "lab_user" :
                             user.isScientificCouncilMember() ? "scientific_council" :
                             user.isRequester() ? "requester" :
@@ -64,6 +68,12 @@ public class ProfileRepresentation {
         this.setPathologist(user.isPathologist());
         this.contactData = user.getContactData() == null ? new ContactData() : user.getContactData();
         this.labId = user.getLab() == null ? null : user.getLab().getId();
+        this.hubLabIds = new HashSet<Long>();
+        if (this.currentRole == "hub_user" && user.getHubLabs() != null) {
+            for (Lab l: user.getHubLabs()) {
+                this.hubLabIds.add(l.getId());
+            }
+        }
         this.institute = user.getInstitute();
         this.specialism = user.getSpecialism();
         this.created = user.getCreated();
@@ -148,6 +158,14 @@ public class ProfileRepresentation {
 
     public void setLabId(Long labId) {
         this.labId = labId;
+    }
+
+    public Set<Long> getHubLabIds() {
+        return hubLabIds;
+    }
+
+    public void setHubLabIds(Set<Long> hubLabIds) {
+        this.hubLabIds = hubLabIds;
     }
 
     public String getInstitute() {

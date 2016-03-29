@@ -235,7 +235,7 @@ public class RequestService {
                     .list();
             Date end = new Date();
             log.info("GET: query took " + (end.getTime() - start.getTime()) + " ms.");
-        } else if (user.getUser().isLabUser()) {
+        } else if (user.getUser().isLabUser() || user.getUser().isHubUser()) {
             List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
             Set<String> processInstanceIds = new HashSet<String>();
             for (LabRequestRepresentation labRequest: labRequests) {

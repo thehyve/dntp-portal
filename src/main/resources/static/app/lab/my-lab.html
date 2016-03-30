@@ -85,6 +85,7 @@ This file is distributed under the GNU Affero General Public License
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="stateProvince">{{ 'Province' | translate }}</label>
                     <div class="col-sm-6">
+
                         <input type="text" class="form-control" id="stateProvince"
                                placeholder="{{ 'Province' | translate }}"
                                ng-model="editlab.contactData.stateProvince" >
@@ -111,6 +112,17 @@ This file is distributed under the GNU Affero General Public License
                         <input type="text" class="form-control" id="telephone"
                                placeholder="{{ 'Telephone' | translate }}"
                                ng-model="editlab.contactData.telephone" >
+                    </div>
+                </div>
+
+                <!-- Enable Hub Assistance -->
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="needHubAssistance">&nbsp;</label>
+                    <div class="col-sm-6">
+                        <input type="checkbox" id="needHubAssistance" name="needHubAssistance"
+                               ng-model="editlab.hubAssistanceEnabled">
+                        <label class="normal" for="needHubAssistance">{{ 'Need Hub Assistance' | translate
+                            }}</label><br>
                     </div>
                 </div>
 

@@ -365,6 +365,12 @@
         /* ===================== */
         'popover:Markdown Help': 'Markdown Hulp',
         'Agreement form template': 'Agreement form template',
+
+        /* ===================== */
+        /* My Lab */
+        /* ===================== */
+        'Edit my lab': 'Bewerk My Lab',
+        'Need Hub Assistance': 'Hubmedewerker bijstand nodig',
     
         null: null
     };

@@ -147,8 +147,10 @@ angular.module('ProcessApp.controllers')
 
             $scope.edit = function(usr) {
                 $scope.edituser = usr;
+                $scope.hubLabs = _.map($scope.labs, function (lab) {lab.disabled = !lab.active; return lab});
+                $scope.edituser.hubLabs = [];
                 $scope.editerror = '';
-                $scope.editUserModal = $modal({scope: $scope, template: '/app/admin/user/edituser.html'});
+                $scope.editUserModal = $modal({scope: $scope, templateUrl: '/app/admin/user/edituser.html', animation:false});
             };
 
         }

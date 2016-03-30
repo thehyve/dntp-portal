@@ -63,6 +63,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.update = function(userdata) {
+                userdata.hubLabIds = _.map(userdata.hubLabs, function(lab) { return lab.id; });
                 $scope.dataLoading = true;
                 if (!isNaN(parseInt(userdata.id, 10))) {
                     userdata.$update(function(result) {
@@ -148,7 +149,10 @@ angular.module('ProcessApp.controllers')
             $scope.edit = function(usr) {
                 $scope.edituser = usr;
                 $scope.hubLabs = _.map($scope.labs, function (lab) {lab.disabled = !lab.active; return lab});
-                $scope.edituser.hubLabs = [];
+                $scope.edituser.hubLabs = _.map($scope.labs, function(lab) {
+                    lab.ticked = _.includes($scope.edituser.hubLabIds, lab.id);
+                    return lab;
+                });
                 $scope.editerror = '';
                 $scope.editUserModal = $modal({scope: $scope, templateUrl: '/app/admin/user/edituser.html', animation:false});
             };

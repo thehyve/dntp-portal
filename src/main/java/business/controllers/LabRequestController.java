@@ -163,10 +163,12 @@ public class LabRequestController {
             + "hasPermission(#id, 'isLabRequestLabuser')")
     @RequestMapping(value = "/labrequests/{id}/accept", method = RequestMethod.PUT)
     public LabRequestRepresentation accept(UserAuthenticationToken user,
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            @RequestBody LabRequestRepresentation body) {
         log.info("PUT /labrequests/" + id + "/accept");
 
         LabRequest labRequest = labRequestRepository.findOne(id);
+        labRequest.setHubAssistanceRequested(body.isHubAssistanceRequested());
         labRequest = labRequestService.updateStatus(labRequest, "Approved");
 
         LabRequestRepresentation representation = new LabRequestRepresentation(

@@ -46,7 +46,7 @@ This file is distributed under the GNU Affero General Public License
             <div>
                 <input type="file" flow-btn id="test-upload-excerpt-list" style="display:none" />
                           <span class="btn btn-primary" flow-btn
-                                ng-disabled="request.assignee != globals.currentUser.userid"
+                                ng-disabled="!isCurrentUser(request.assignee)"
                                   >{{'Upload excerpt list'|translate}}</span>
             </div>
             <br>
@@ -54,7 +54,7 @@ This file is distributed under the GNU Affero General Public License
                  flow-drag-enter="style={border:'4px dashed lightgreen'}"
                  flow-drag-leave="style={border: '2px dashed gray'}"
                  ng-style="style"
-                 ng-hide="request.assignee != globals.currentUser.userid">
+                 ng-hide="!isCurrentUser(request.assignee)">
                 ({{'drag and drop your file here'|translate}})
             </div>
         </div>
@@ -66,7 +66,7 @@ This file is distributed under the GNU Affero General Public License
         ng-controller="SelectionController">
         <a class="btn btn-primary" title="Select all"
             ng-click="selectAllExcerpts(request)"
-            ng-disabled="request.assignee != globals.currentUser.userid">
+            ng-disabled="!isCurrentUser(request.assignee)">
         <i class="glyphicon glyphicon-check"></i>
         {{'Select all excerpts and continue'|translate}}
         </a>
@@ -134,13 +134,13 @@ This file is distributed under the GNU Affero General Public License
 
     <div ng-if="request.status == 'SelectionReview' && isPalga()">
         <button type="button" class="btn btn-primary"
-                ng-disabled="request.assignee != globals.currentUser.userid"
+                ng-disabled="!isCurrentUser(request.assignee)"
                 ng-click="approveSelection(request)"
           >
           {{'Approve selection'|translate}}
         </button>
         <button type="button" class="btn btn-danger"
-                ng-disabled="request.assignee != globals.currentUser.userid"
+                ng-disabled="!isCurrentUser(request.assignee)"
                 ng-click="rejectSelection(request)"
           >
           {{'Reject selection'|translate}}
@@ -188,7 +188,7 @@ This file is distributed under the GNU Affero General Public License
     </p>
     <div>
                         <span class="btn btn-default" flow-btn
-                              ng-disabled="request.assignee != globals.currentUser.userid"
+                              ng-disabled="!isCurrentUser(request.assignee)"
                           >{{'Upload data files'|translate}}</span>
     </div>
     <br>
@@ -196,7 +196,7 @@ This file is distributed under the GNU Affero General Public License
          flow-drag-enter="style={border:'4px dashed lightgreen'}"
          flow-drag-leave="style={border: '2px dashed gray'}"
          ng-style="style"
-         ng-hide="request.assignee != globals.currentUser.userid">
+         ng-hide="!isCurrentUser(request.assignee)">
       ({{'drag and drop your file here'|translate}})
     </div>
   </div>
@@ -205,7 +205,7 @@ This file is distributed under the GNU Affero General Public License
                 && (!request.paReportRequest && !request.materialsRequest)
                 && isPalga()">
     <button type="button" class="btn btn-warning"
-            ng-disabled="request.assignee != globals.currentUser.userid || dataLoading"
+            ng-disabled="!isCurrentUser(request.assignee) || dataLoading"
             ng-click="closeRequest(request)"
       >
       {{'Close request'|translate}}

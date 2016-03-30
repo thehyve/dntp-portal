@@ -252,7 +252,7 @@ public class LabRequestService {
                 labRequest = labRequestRepository.save(labRequest);
                 // set initial status
                 labRequest = updateStatus(labRequest, "Waiting for lab approval");
-
+                labRequest.setHubAssistanceRequested(lab.isHubAssistanceEnabled());
 
                 ExcerptList excerptList = excerptListService.findByProcessInstanceId(processInstanceId);
                 ExcerptListRepresentation list = new ExcerptListRepresentation();

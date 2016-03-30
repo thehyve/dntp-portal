@@ -42,6 +42,8 @@ public class LabRequestRepresentation {
     
     private Lab lab;
 
+    private Boolean hubAssistanceRequested;
+
     private ExcerptListRepresentation excerptList;
 
     private List<PathologyRepresentation> pathologyList;
@@ -77,6 +79,7 @@ public class LabRequestRepresentation {
         this.setRejectDate(labRequest.getRejectDate());
         this.setSendDate(labRequest.getSendDate());
         this.setRejectReason(labRequest.getRejectReason());
+        this.setHubAssistanceRequested(labRequest.isHubAssistanceRequested());
         this.setPaReportsSent(labRequest.isPaReportsSent());
     }
 
@@ -178,6 +181,14 @@ public class LabRequestRepresentation {
 
     public void setLab(Lab lab) {
         this.lab = lab;
+    }
+
+    public Boolean isHubAssistanceRequested() {
+        return hubAssistanceRequested;
+    }
+
+    public void setHubAssistanceRequested(Boolean hubAssistanceRequested) {
+        this.hubAssistanceRequested = hubAssistanceRequested;
     }
 
     public ExcerptListRepresentation getExcerptList() {

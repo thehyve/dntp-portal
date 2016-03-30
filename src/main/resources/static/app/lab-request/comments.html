@@ -31,7 +31,7 @@ This file is distributed under the GNU Affero General Public License
                                   <span><i class="glyphicon glyphicon-pencil"></i></span>
                               </button>
                               <button class="btn btn-danger" type="button" title="Delete"
-                                      ng-if="comment.creator.id == globals.currentUser.userid"
+                                      ng-if="isCurrentUser(comment.creator.id)"
                                       ng-click="removeComment(labRequest, comment)">
                                   <span><i class="glyphicon glyphicon-remove-circle"></i></span>
                               </button>

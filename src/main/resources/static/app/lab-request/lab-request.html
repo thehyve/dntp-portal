@@ -36,9 +36,9 @@ This file is distributed under the GNU Affero General Public License
 
             <div style="padding-bottom: 25px;">
                 <button class="btn btn-default" type="button"  ng-click="edit(labRequest);" title="Actions"
-                        ng-if="(isLabUser() && isLabUserStatus(labRequest.status))
+                        ng-if="isLabOrHubUserStatus(labRequest.status)
                             || (isRequester() && isRequesterStatus(labRequest.status))"
-                        ng-disabled="isLabUser() && (labRequest.assignee != globals.currentUser.userid)">
+                        ng-disabled="(isLabUser() || isHubUser())) && isCurrentUser(labRequest.assignee)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Actions' | translate}}
                 </button>
@@ -46,7 +46,7 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}
                 </button>
-                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && (isRequester() || isLabUser())">
+                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && (isRequester() || isLabUser() || isHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                    <span><i class="glyphicon glyphicon-download-alt"></i></span>
                    {{'Download ...' |translate: {filename: 'panumbers_' + labRequest.id + '.csv'} }}
@@ -60,15 +60,15 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose rejection mail' | translate}}
                 </button></a>
-                <button ng-if="isLabUser() && lab_user_statuses.indexOf(labRequest.status) != -1" 
-                    ng-show="labRequest.assignee != globals.currentUser.userid"
+                <button ng-if="isLabOrHubUserStatus(labRequest.status)" 
+                    ng-show="!isCurrentUser(labRequest.assignee)"
                     class="btn btn-default" type="button"  
                     ng-click="claim(labRequest);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
                     {{'Claim' | translate}}
                 </button>
-                <button ng-if="isLabUser() && lab_user_statuses.indexOf(labRequest.status) != -1"
-                    ng-show="labRequest.assignee == globals.currentUser.userid" 
+                <button ng-if="isLabOrHubUserStatus(labRequest.status)"
+                    ng-show="isCurrentUser(labRequest.assignee)" 
                     class="btn btn-default" type="button"  
                     ng-click="unclaim(labRequest);" title="Unclaim">
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
@@ -79,7 +79,7 @@ This file is distributed under the GNU Affero General Public License
                     class="btn btn-default" type="button"
                     ng-click="printPreview();"
                     title="printView"
-                    ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
+                    ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
                     <span><i class="glyphicon glyphicon-print"></i></span>
                     {{'Print preview' | translate}}
                 </button>
@@ -232,7 +232,7 @@ This file is distributed under the GNU Affero General Public License
                 </div>
             </div>
 
-                <div ng-if="globals.currentUser.roles.indexOf('requester') == -1" >
+                <div ng-if="isRequester()" >
                   <!--Requester info-->
                   <!--Displayed only to users with non requester role-->
                   <!-- Requester -->
@@ -250,8 +250,8 @@ This file is distributed under the GNU Affero General Public License
                 <!--Requester lab Info-->
                 <div class="form-group">
                   <label class="control-label col-md-2 no-print">{{ 'Requester lab' | translate }}</label>
-                  <label class="control-label col-md-2 print-only" ng-if="isLabUser()">{{ 'Delivery Address' | translate }}</label>
-                  <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Sender Address' | translate }}</label>
+                  <label class="control-label col-md-2 print-only" ng-if="isLabUser() || isHubUser()">{{ 'Delivery address' | translate }}</label>
+                  <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Sender address' | translate }}</label>
                   <div class="col-md-10">
                     <p class="form-control-static">
                       {{'Lab' | translate}} {{labRequest.requesterLab.number}} - {{labRequest.requesterLab.name}}
@@ -266,7 +266,7 @@ This file is distributed under the GNU Affero General Public License
                   <div class="form-group">
                         <label class="control-label col-md-2 no-print">{{ 'Sender lab' | translate }}</label>
                         <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Delivery address' | translate }}</label>
-                        <label class="control-label col-md-2 print-only" ng-if="isLabUser()">{{ 'Sender' | translate }}</label>
+                        <label class="control-label col-md-2 print-only" ng-if="isLabUser() || isHubUser()">{{ 'Sender' | translate }}</label>
                         <div class="col-md-10">
                           <p class="form-control-static">
                             {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
@@ -279,7 +279,7 @@ This file is distributed under the GNU Affero General Public License
               </div>
 
               <div title="{{'Samples' | translate}}" name="PA Numbers" bs-pane id="pa-numbers"
-                ng-if="isLabUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
+                ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
                 <div ng-include="'app/lab-request/pa-numbers.html'"></div>
               </div>
 

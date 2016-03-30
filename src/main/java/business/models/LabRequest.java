@@ -31,9 +31,11 @@ public class LabRequest {
     private String taskId;
 
     private String status;
-    
+
     private Date timeCreated;
-    
+
+    private Boolean hubAssistanceRequested;
+
     @Column
     private Boolean isPaReportsSent;
 
@@ -79,6 +81,14 @@ public class LabRequest {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public Boolean isHubAssistanceRequested() {
+        return hubAssistanceRequested;
+    }
+
+    public void setHubAssistanceRequested(Boolean hubAssistanceRequested) {
+        this.hubAssistanceRequested = hubAssistanceRequested;
     }
 
     public Boolean isPaReportsSent() {

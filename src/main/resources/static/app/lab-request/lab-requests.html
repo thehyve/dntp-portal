@@ -4,11 +4,11 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" ng-controller="LabRequestController">
 
         <!--Side Bar-->
         <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
+            <ul class="nav nav-sidebar" ng-if="authenticated && labRequests">
                 <li class="active"><a ng-href="/#/lab-requests">{{'Overview'|translate}} <span class="badge pull-right">{{labRequests.length}}</span></a></li>
             </ul>
         </div>
@@ -20,10 +20,9 @@ This file is distributed under the GNU Affero General Public License
         </div>
 
         <!--Main Content-->
-        <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"
-             ng-controller="LabRequestController">
+        <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-            <div ng-show="error" class="alert alert-danger" role="alert">
+            <div ng-if="error" class="alert alert-danger" role="alert">
                 {{ error | translate }}
             </div>
 
@@ -37,7 +36,7 @@ This file is distributed under the GNU Affero General Public License
                 </button>
                 {{alert.msg | translate}}
             </div>
-                <table st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
+                <table ng-if="labRequests" st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
                     <thead>
                         <tr>
                             <th st-sort="labRequestCode">{{'Lab request ID' | translate}}</th>
@@ -74,7 +73,7 @@ This file is distributed under the GNU Affero General Public License
                     </thead>
                     <tbody>
                     <tr ng-repeat="labRequest in displayedLabRequests track by $index"
-                        ng-class="{'smart-table-selected': labRequest.assignee == globals.currentUser.userid}">
+                        ng-class="{'smart-table-selected': isCurrentUser(labRequest.assignee)}">
                         <td>
                             <!--{{labRequest.id}}-->
                             <!--{{labRequest.request.processInstanceId}} - {{labRequest.lab.number}}-->
@@ -104,17 +103,17 @@ This file is distributed under the GNU Affero General Public License
                         <td class="no-print">
                             <span class="pull-right">
                                 <span class="btn-group">
-                                <button ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid"
+                                <button ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)"
                                     class="btn btn-default" type="button" title="{{'Actions'|translate}}"
                                     ng-click="edit(labRequest)">
                                 <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
                                 </button>
-                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee != globals.currentUser.userid"
+                                <button ng-if="(isLabUser() || isHubUser()) && !isCurrentUser(labRequest.assignee)"
                                     class="btn btn-default" type="button" title="{{'Claim'|translate}}"
                                     ng-click="claim(labRequest)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
                                 </button>
-                                <button ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && labRequest.assignee == globals.currentUser.userid"
+                                <button ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)"
                                     class="btn btn-default" type="button" title="{{'Unclaim'|translate}}"
                                     ng-click="unclaim(labRequest)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>

@@ -142,7 +142,21 @@ public class UserService {
             }
             user.setLab(lab);
         }
-        
+        if (user.isHubUser()) {
+            if (body.getHubLabIds() == null || body.getHubLabIds().isEmpty()) {
+                throw new InvalidUserData("No hub labs selected.");
+            }
+            Set<Lab> labs = new HashSet<>();
+            for (Long labId: body.getHubLabIds()) {
+                Lab lab = labRepository.findOne(labId);
+                if (lab == null) {
+                    throw new InvalidUserData("Selected hub lab not found.");
+                }
+                labs.add(lab);
+            }
+            user.setHubLabs(labs);
+        }
+
         if (body.getContactData() == null) {
             throw new InvalidUserData("No contact data entered.");
         }

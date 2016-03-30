@@ -24,7 +24,7 @@
         'ProcessApp.services',
         'ProcessApp.controllers',
         'ProcessApp.directives',
-        'textAngular'])
+        'textAngular','isteven-multi-select'])
         .config(function(
                 $routeProvider, 
                 $translateProvider, 

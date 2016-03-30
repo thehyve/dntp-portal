@@ -4,41 +4,45 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
-<div class="modal-dialog">
-<div class="modal-content">
-<form class="form-horizontal" role="form" name="registrationForm" ng-submit="update(edituser)" novalidate>
-<div class="modal-header">
-    <h3 class="modal-title">{{'Edit user ...'|translate: {username: edituser.username} }}</h3>
-</div>
-<div class="modal-body">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" role="form" name="registrationForm" ng-submit="update(edituser)" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{'Edit user ...'|translate: {username: edituser.username} }}</h3>
+                </div>
+                <div class="modal-body">
 
-        <p><em>{{'Please complete all required fields.'|translate}}</em></p>
+                    <p><em>{{'Please complete all required fields.'|translate}}</em></p>
 
-        <div ng-show="editerror" class="alert alert-danger" role="alert">
-            {{ editerror | translate }}
-        </div>
+                    <div ng-show="editerror" class="alert alert-danger" role="alert">
+                        {{ editerror | translate }}
+                    </div>
 
-        <input type="hidden" ng-model="edituser.contactData.id"/>
+                    <input type="hidden" ng-model="edituser.contactData.id"/>
 
-        <!-- Role -->
-        <div class="form-group">
-            <label class="control-label col-sm-4" for="currentRole">{{ 'Role' | translate }}</label>
-            <div class="col-sm-6">
-                <select class="form-control" ng-model="edituser.currentRole">
-                    <option ng-repeat="role in roles" value="{{role.name}}" ng-selected="role.name == edituser.currentRole">{{role.name}}</option>
-                </select>
-            </div>
-        </div>
+                    <!-- Role -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="currentRole">{{ 'Role' | translate }}</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" ng-model="edituser.currentRole">
+                                <option ng-repeat="role in roles" value="{{role.name}}"
+                                        ng-selected="role.name == edituser.currentRole">{{role.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
 
 
-        <!-- First Name -->
-        <div class="form-group" ng-class="{ 'has-error' : (registrationForm.firstName.$invalid || registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
-            <label class="control-label col-sm-4" for="firstName">{{ 'First name' | translate }}</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="{{ 'First name' | translate }}"
-                       ng-model="edituser.firstName" ng-maxlength="50" required>
-                <!-- errors -->
-                <!-- errors -->
+                    <!-- First Name -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : (registrationForm.firstName.$invalid || registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
+                        <label class="control-label col-sm-4" for="firstName">{{ 'First name' | translate }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="firstName" name="firstName"
+                                   placeholder="{{ 'First name' | translate }}"
+                                   ng-model="edituser.firstName" ng-maxlength="50" required>
+                            <!-- errors -->
+                            <!-- errors -->
                 <span ng-show="registrationForm.firstName.$error.required"
                       class="help-block">
                     {{ 'Required field' | translate }}
@@ -46,33 +50,36 @@ This file is distributed under the GNU Affero General Public License
                 <span class="help-block" ng-show="registrationForm.firstName.$error.maxlength">
                     {{ 'Input value is too long' | translate }}
                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <!-- Last Name -->
-        <div class="form-group" ng-class="{ 'has-error' : registrationForm.lastName.$invalid && registrationForm.lastName.$dirty }">
-            <label class="control-label col-sm-4" for="lastName">{{ 'Last name' | translate }}</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" name="lastName" id="lastName" placeholder="{{ 'Last name' | translate }}"
-                ng-maxlength="50"
-                ng-model="edituser.lastName" >
-                 <!-- errors -->
+                    <!-- Last Name -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : registrationForm.lastName.$invalid && registrationForm.lastName.$dirty }">
+                        <label class="control-label col-sm-4" for="lastName">{{ 'Last name' | translate }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="lastName" id="lastName"
+                                   placeholder="{{ 'Last name' | translate }}"
+                                   ng-maxlength="50"
+                                   ng-model="edituser.lastName">
+                            <!-- errors -->
                  <span class="help-block" ng-show="registrationForm.lastName.$error.maxlength">
                     {{ 'Input value is too long' | translate }}
                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <!-- E-mail -->
-        <div class="form-group" ng-class="{ 'has-error' : (registrationForm.email.$invalid || registrationForm.email.$error.required) && registrationForm.email.$dirty }">
-            <label class="control-label col-sm-4" for="email">{{ 'E-mail' | translate }}</label>
-            <div class="col-sm-6">
-                <input type="email" class="form-control" id="email" name="email"
-                    placeholder="{{ 'Email address (lower case)' | translate }}"
-                    lowercase-only="lowercase-only"
-                    ng-maxlength="255"
-                    ng-model="edituser.contactData.email" required>
-                <!-- errors -->
+                    <!-- E-mail -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : (registrationForm.email.$invalid || registrationForm.email.$error.required) && registrationForm.email.$dirty }">
+                        <label class="control-label col-sm-4" for="email">{{ 'E-mail' | translate }}</label>
+                        <div class="col-sm-6">
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="{{ 'Email address (lower case)' | translate }}"
+                                   lowercase-only="lowercase-only"
+                                   ng-maxlength="255"
+                                   ng-model="edituser.contactData.email" required>
+                            <!-- errors -->
                 <span class="help-block"
                       ng-show="registrationForm.email.$error.required">
                     {{ 'Required field' | translate }}
@@ -83,30 +90,34 @@ This file is distributed under the GNU Affero General Public License
                 <span class="help-block" ng-show="registrationForm.email.$invalid && registrationForm.email.$dirty">
                     {{ 'Email format is invalid' | translate }}
                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <!-- Telephone -->
-        <div class="form-group" ng-class="{ 'has-error' : registrationForm.telephone.$invalid && registrationForm.telephone.$dirty }">
-            <label class="control-label col-sm-4" for="telephone">{{ 'Telephone' | translate }}</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" name="telephone" id="telephone" placeholder="{{ 'Telephone' | translate }}"
-                ng-maxlength="50"
-                ng-model="edituser.contactData.telephone" >
+                    <!-- Telephone -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : registrationForm.telephone.$invalid && registrationForm.telephone.$dirty }">
+                        <label class="control-label col-sm-4" for="telephone">{{ 'Telephone' | translate }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="telephone" id="telephone"
+                                   placeholder="{{ 'Telephone' | translate }}"
+                                   ng-maxlength="50"
+                                   ng-model="edituser.contactData.telephone">
                 <span class="help-block" ng-show="registrationForm.telephone.$error.maxlength">
                     {{ 'Input value is too long' | translate }}
                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <!-- Institute -->
-        <div class="form-group" ng-if="edituser.currentRole == 'requester'" ng-class="{ 'has-error' : (registrationForm.institute.$invalid || registrationForm.institute.$error.required) && registrationForm.institute.$dirty }">
-            <label class="control-label col-sm-4" for="institute">{{ 'Institute' | translate }}</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="institute" name="institute" placeholder="{{ 'Institute' | translate }}"
-                ng-maxlength="50"
-                ng-model="edituser.institute" required>
-                <!-- errors -->
+                    <!-- Institute -->
+                    <div class="form-group" ng-if="edituser.currentRole == 'requester'"
+                         ng-class="{ 'has-error' : (registrationForm.institute.$invalid || registrationForm.institute.$error.required) && registrationForm.institute.$dirty }">
+                        <label class="control-label col-sm-4" for="institute">{{ 'Institute' | translate }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="institute" name="institute"
+                                   placeholder="{{ 'Institute' | translate }}"
+                                   ng-maxlength="50"
+                                   ng-model="edituser.institute" required>
+                            <!-- errors -->
                 <span ng-show="registrationForm.institute.$error.required"
                       class="help-block">
                     {{ 'Required field' | translate }}
@@ -114,47 +125,63 @@ This file is distributed under the GNU Affero General Public License
                 <span class="help-block" ng-show="registrationForm.institute.$error.maxlength">
                     {{ 'Input value is too long' | translate }}
                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <!-- Lab -->
-        <div class="form-group" ng-if="edituser.currentRole == 'lab_user' || edituser.currentRole == 'requester'">
-            <label class="control-label col-sm-4" for="lab">{{ 'Lab' | translate }}</label>
-            <div class="col-sm-6">
-                <select class="form-control" id="lab" name="lab"
-                        ng-model="edituser.labId" ng-required="true"
-                        ng-options="lab.id as lab.number + '. ' + lab.name disable when !lab.active for lab in labs">
-                    <option value="" disabled>None</option>
-                </select>
-                <!-- errors -->
+                    <!-- Lab -->
+                    <div class="form-group"
+                         ng-if="edituser.currentRole == 'lab_user' || edituser.currentRole == 'requester' || edituser.currentRole == 'hub_user'">
+                        <label class="control-label col-sm-4" for="lab">{{ 'Lab' | translate }}</label>
+                        <div class="col-sm-6">
+                            <div ng-switch on="edituser.currentRole">
+                                <select class="form-control" id="lab" name="lab" ng-switch-default
+                                        ng-model="edituser.labId" ng-required="true"
+                                        ng-options="lab.id as lab.number + '. ' + lab.name disable when !lab.active for lab in labs">
+                                    <option value="" disabled>None</option>
+                                </select>
+                                <div
+                                        ng-switch-when="hub_user"
+                                        isteven-multi-select
+                                        input-model="hubLabs"
+                                        output-model="edituser.hubLabs"
+                                        button-label="number name"
+                                        item-label="number name"
+                                        tick-property="ticked"
+                                        disable-property="disabled">
+                                </div>
+                            </div>
+                            <!-- errors -->
                 <span ng-show="registrationForm.lab.$error.required"
                       class="help-block">
                     {{ 'Required field' | translate }}
                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-
-        <!-- Specialism -->
-        <div class="form-group" ng-class="{ 'has-error' : registrationForm.specialism.$invalid && registrationForm.specialism.$dirty }">
-            <label class="control-label col-sm-4" for="specialism">{{ 'Specialism' | translate }}</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" name="specialism" id="specialism" placeholder="{{ 'Specialism' | translate }}"
-                ng-maxlength="100"
-                ng-model="edituser.specialism">
+                    <!-- Specialism -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : registrationForm.specialism.$invalid && registrationForm.specialism.$dirty }">
+                        <label class="control-label col-sm-4" for="specialism">{{ 'Specialism' | translate }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="specialism" id="specialism"
+                                   placeholder="{{ 'Specialism' | translate }}"
+                                   ng-maxlength="100"
+                                   ng-model="edituser.specialism">
                 <span class="help-block" ng-show="registrationForm.specialism.$error.maxlength">
                     {{ 'Input value is too long' | translate }}
                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <br>
-</div>
-<div class="modal-footer">
-    <a class="btn btn-default pull-left" ng-click="$hide()">{{'Cancel'|translate}}</a>
-    <button class="btn btn-primary" type="submit"  ng-disabled="registrationForm.$invalid || dataLoading">{{'Save'|translate}}</button>
-</div>
-</form>
-</div>
-</div>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default pull-left" ng-click="$hide()">{{'Cancel'|translate}}</a>
+                    <button class="btn btn-primary" type="submit"
+                            ng-disabled="registrationForm.$invalid || dataLoading">{{'Save'|translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

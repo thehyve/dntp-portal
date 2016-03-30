@@ -8,7 +8,9 @@ package business.services;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
@@ -311,7 +313,13 @@ public class LabRequestService {
             }
         } else if (user.isHubUser()) {
             // Hub user
-            List<LabRequest> labRequests = labRequestRepository.findAllByLabIn(user.getHubLabs(), sortByIdDesc());
+            Set<Lab> hubLabs = new HashSet<>();
+            for (Lab lab: user.getHubLabs()) {
+                if (lab.isHubAssistanceEnabled()) {
+                    hubLabs.add(lab);
+                }
+            }
+            List<LabRequest> labRequests = labRequestRepository.findAllByLabIn(hubLabs, sortByIdDesc());
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
                 transferLabRequestData(representation);

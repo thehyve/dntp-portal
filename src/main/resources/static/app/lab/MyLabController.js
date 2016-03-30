@@ -22,6 +22,13 @@ angular.module('ProcessApp.controllers')
                     $scope.alerts.push({type: 'danger', msg: err.data.message});
                 });
 
+            Restangular.one('lab', 'hubusers').get()
+            .then(function (hubUsers) {
+                $scope.hubUsers = hubUsers;
+            }, function (err) {
+                $scope.alerts.push({type: 'danger', msg: err.data.message});
+            });
+
             $scope.update = function () {
                 Restangular.one('lab').customPUT($scope.editlab, '')
                     .then(function (){

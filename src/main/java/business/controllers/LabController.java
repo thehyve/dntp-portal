@@ -6,7 +6,9 @@
 package business.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,16 +30,21 @@ import business.models.ContactData;
 import business.models.Lab;
 import business.models.LabRepository;
 import business.models.User;
+import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.UserService;
 
 @RestController
 public class LabController {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Autowired
     LabRepository labRepository;
-    
+
+    @Autowired
+    UserService userService;
+
     @RequestMapping(value = "/admin/labs/{id}", method = RequestMethod.GET)
     public Lab get(@PathVariable Long id) {
         return labRepository.findOne(id);
@@ -48,7 +55,7 @@ public class LabController {
         log.info("GET /admin/labs (for user: " + principal.getName() + ")");
         return labRepository.findAll();
     }
-    
+
     public void transferLabData(Lab body, Lab lab) {
         lab.setName(body.getName());
         if (lab.getContactData() == null) {
@@ -56,7 +63,7 @@ public class LabController {
         }
         lab.getContactData().copy(body.getContactData());
     }
-   
+
     @RequestMapping(value = "/admin/labs", method = RequestMethod.POST)
     public Lab create(Principal principal, @RequestBody Lab body) {
         log.info("POST /admin/labs (for user: " + principal.getName() + ")");
@@ -68,7 +75,7 @@ public class LabController {
         transferLabData(body, lab);
         return labRepository.save(lab);
     }
-    
+
     @RequestMapping(value = "/admin/labs/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab update(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
@@ -93,7 +100,7 @@ public class LabController {
         lab.activate();
         return  labRepository.save(lab);
     }
-    
+
     @RequestMapping(value = "/admin/labs/{id}/deactivate", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab deactivate(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
@@ -105,20 +112,38 @@ public class LabController {
         lab.deactivate();
         return  labRepository.save(lab);
     }
-    
+
     @RequestMapping(value = "/lab", method = RequestMethod.GET)
     public Lab getLab(UserAuthenticationToken token) {
         log.info("GET /lab");
         User user = token.getUser();
-        if (user != null && user.isLabUser()) {
-            if (user.getLab() == null) {
-                throw new LabuserWithoutLab("No lab associated with lab user.");
-            }
-            return labRepository.findOne(user.getLab().getId());
+        if (user == null || !user.isLabUser()) {
+            throw new UserUnauthorised("User not authorised to fetch lab information.");
         }
-        throw new UserUnauthorised("User not authorised to fetch lab information.");
+        if (user.getLab() == null) {
+            throw new LabuserWithoutLab("No lab associated with lab user.");
+        }
+        return labRepository.findOne(user.getLab().getId());
     }
-    
+
+    @RequestMapping(value = "/lab/hubusers", method = RequestMethod.GET)
+    public List<ProfileRepresentation> getLabHubUsers(UserAuthenticationToken token) {
+        log.info("GET /lab/hubusers");
+        User user = token.getUser();
+        if (user == null || !user.isLabUser()) {
+            throw new UserUnauthorised("User not authorised to fetch lab information.");
+        }
+        if (user.getLab() == null) {
+            throw new LabuserWithoutLab("No lab associated with lab user.");
+        }
+        Lab lab = labRepository.findOne(user.getLab().getId());
+        List<ProfileRepresentation> hubUsers = new ArrayList<>();
+        for(User u: userService.findHubUsersForLab(lab)) {
+            hubUsers.add(new ProfileRepresentation(u));
+        }
+        return hubUsers;
+    }
+
     @PreAuthorize("isAuthenticated() and hasRole('lab_user')")
     @RequestMapping(value = "/lab", method = RequestMethod.PUT)
     public Lab updateLab(UserAuthenticationToken token, @RequestBody Lab body) {

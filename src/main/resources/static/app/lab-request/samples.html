@@ -8,7 +8,7 @@ This file is distributed under the GNU Affero General Public License
 
         <!--Side Bar-->
         <div class="col-sm-2 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
+            <ul class="nav nav-sidebar" ng-if="authenticated && samples">
                 <li class="active"><a href="/#/samples">{{'Overview'|translate}} <span class="badge pull-right">{{samples.length}}</span></a></li>
             </ul>
         </div>
@@ -19,14 +19,14 @@ This file is distributed under the GNU Affero General Public License
             </div>
         </div>
 
-        <div ng-if="!samples" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <div ng-show="error" class="alert alert-danger" role="alert">
+        <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div ng-if="error" class="alert alert-danger" role="alert">
                 {{ error | translate }}
             </div>
         </div>
 
         <!--Main-->
-        <div ng-if="samples" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div ng-if="authenticated && samples" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
         <h3>{{ 'PA numbers' | translate}}</h3>
         <hr>
@@ -39,7 +39,7 @@ This file is distributed under the GNU Affero General Public License
                     <th st-sort="paNumber">{{'PA number' | translate}}</th>
                     <th>{{'Samples' | translate}}</th>
                     <th st-sort="status">{{'Status' | translate}}</th>
-                    <th class="no-print" ng-if="isLabUser()">
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">
                         {{'Actions' | translate}}
                     </th>
                 </tr>
@@ -48,7 +48,7 @@ This file is distributed under the GNU Affero General Public License
                     <th><input st-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th class="no-print" ng-if="isLabUser()">&nbsp;</th>
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
                 </tr>
                 <tr class="no-print">
                     <th colspan="4"><input id="request-search"
@@ -63,18 +63,18 @@ This file is distributed under the GNU Affero General Public License
                     </td>
                     <td>{{pathology.paNumber}}</td>
                     <td><span
-                        ng-if="labRequest.assignee != globals.currentUser.userid">
+                        ng-if="!isCurrentUser(labRequest.assignee)">
                             <span
                             ng-repeat="sample in pathology.samples">
                                 <label class="label label-primary">{{sample}}</label>
                         </span>
                     </span></td>
                     <td>{{pathology.status}}</td>
-                    <td class="no-print" ng-if="isLabUser()">
+                    <td class="no-print" ng-if="isLabUser() || isHubUser()">
                         <span class="pull-right">
                         <span class="btn-group">
                             <a href="mailto:{{pathology.email}}?subject=Regarding request {{pathology.labRequestCode}}, recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
-                                ng-if="pathology.assignee == globals.currentUser.userid && (pathology.status=='Received' || pathology.status=='Sending')"
+                                ng-if="!isCurrentUser(pathology.assignee) && (pathology.status=='Received' || pathology.status=='Sending')"
                                 class="btn btn-default btn-sm" role="button" title="{{'Recall sample' | translate}}">
                                 <span><i class="glyphicon glyphicon-envelope"></i></span>
                                 {{'Compose recall mail' | translate}}

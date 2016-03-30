@@ -6,6 +6,8 @@
 package business.security;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.TaskService;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import business.models.Lab;
 import business.models.LabRequest;
 import business.models.LabRequestRepository;
 import business.models.User;
@@ -330,7 +333,11 @@ public class CustomPermissionService {
             logDecision("isLabRequestHubuser", user, labRequestId.toString(), "DENIED (lab request not found).");
             return false;
         }
-        if (!user.getHubLabs().contains(labRequest.getLab().getNumber())) {
+        Set<Integer> hubLabNumbers = new HashSet<>();
+        for(Lab lab: user.getHubLabs()) {
+            hubLabNumbers.add(lab.getNumber());
+        }
+        if (!hubLabNumbers.contains(labRequest.getLab().getNumber())) {
             logDecision("isLabRequestHubuser", user, labRequestId.toString(), "DENIED (lab request not associated with user lab).");
             return false;
         }

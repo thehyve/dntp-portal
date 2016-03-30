@@ -23,7 +23,7 @@ angular.module('ProcessApp.controllers')
             $scope.labReqModal = $modal({
                 id: 'labRequestWindow',
                 scope: $scope,
-                template: '/app/lab-request/edit-lab-request.html',
+                templateUrl: '/app/lab-request/edit-lab-request.html',
                 backdrop: 'static',
                 show: false
             });
@@ -367,8 +367,24 @@ angular.module('ProcessApp.controllers')
                 'Completed'
             ]);
 
+            $scope.hub_user_statuses = _.difference($scope.statuses, [
+                'Waiting for lab approval',
+                'Returned',
+                'Rejected',
+                'Completed'
+            ]);
+
             $scope.isLabUserStatus = function (status) {
                 return _.includes($scope.lab_user_statuses, status);
+            };
+
+            $scope.isHubUserStatus = function (status) {
+                return _.includes($scope.hub_user_statuses, status);
+            };
+
+            $scope.isLabOrHubUserStatus = function (status) {
+                return  ($scope.isLabUser() && $scope.isLabUserStatus(status)) ||
+                        ($scope.isHubUser() && $scope.isHubUserStatus(status));
             };
 
             $scope.requester_statuses = [
@@ -388,6 +404,14 @@ angular.module('ProcessApp.controllers')
                 return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
             };
 
+            $scope.isHubUser = function () {
+                if (!$rootScope.globals.currentUser) {
+                    $scope.login();
+                    return;
+                }
+                return $rootScope.globals.currentUser.roles.indexOf('hub_user') !== -1;
+            };
+
             $scope.isRequester = function () {
                 if (!$rootScope.globals.currentUser) {
                     $scope.login();
@@ -403,7 +427,11 @@ angular.module('ProcessApp.controllers')
                 }
                 return $rootScope.globals.currentUser.roles.indexOf('palga') !== -1;
             };
-            
+
+            $scope.isCurrentUser = function(user) {
+                return ($scope.globals.currentUser.userid === user);
+            };
+
             $scope.update = function (labRequest) {
                 var obj = {'paReportsSent': labRequest.paReportsSent};
                 Restangular.one('labrequests', labRequest.id)

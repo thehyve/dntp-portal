@@ -7,9 +7,9 @@ This file is distributed under the GNU Affero General Public License
 <hr>
 
 <form class="form-horizontal no-print" role="form" name="pathologyForm" novalidate
-    ng-if="isLabUser()">
+    ng-if="isLabUser() || isHubUser()">
     <!-- PA number -->
-    <div class="form-group" ng-if="isLabUser() && labRequest.status == 'Approved'">
+    <div class="form-group" ng-if="(isLabUser() || isHubUser()) && labRequest.status == 'Approved'">
         <div class="col-sm-8">
             <input type="text" class="form-control" id="paNumber" name="paNumber" placeholder="{{ 'PA number' | translate }}"
                    ng-model="editPathology.paNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" required
@@ -17,7 +17,7 @@ This file is distributed under the GNU Affero General Public License
         </div>
         <button class="btn btn-primary" title="{{'Add'|translate}}"
             ng-click="addPathology(labRequest, editPathology)"
-            ng-disabled="pathologyForm.paNumber.$invalid || (labRequest.assignee != globals.currentUser.userid)">
+            ng-disabled="pathologyForm.paNumber.$invalid || isCurrentUser(labRequest.assignee)">
             {{'Add PA number'|translate}}
         </button>
     </div>
@@ -32,7 +32,7 @@ This file is distributed under the GNU Affero General Public License
     <th class="print-pa-samples-col">{{'Samples' | translate}}</th>
     <th class="" width="10%">{{'Total Samples' | translate}}</th>
     <th class="no-print" class="" 
-        ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid
+        ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)
             && (labRequest.status == 'Approved' || labRequest.status=='Received' || labRequest.status=='Sending')">
         {{'Actions' | translate}}
     </th>
@@ -60,15 +60,15 @@ This file is distributed under the GNU Affero General Public License
         add-on-blur="true"
         add-on-paste="true"
         min-length="1"
-        ng-if="(labRequest.assignee == globals.currentUser.userid) && labRequest.request.materialsRequest"></tags-input>
-        <span ng-if="labRequest.assignee != globals.currentUser.userid">
+        ng-if="isCurrentUser(labRequest.assignee) && labRequest.request.materialsRequest"></tags-input>
+        <span ng-if="!isCurrentUser(labRequest.assignee)">
             <span ng-repeat="sample in pathology.samples">
                 <label class="label label-primary">{{sample}}</label>
             </span>
         </span>
     </td>
     <td>{{pathology.samples.length}}</td>
-    <td class="no-print" ng-if="isLabUser() && labRequest.assignee == globals.currentUser.userid 
+    <td class="no-print" ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee) 
         && (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending')">
     <span class="pull-right">
         <span class="btn-group">

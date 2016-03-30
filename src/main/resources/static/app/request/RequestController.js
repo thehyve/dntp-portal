@@ -653,6 +653,10 @@ angular.module('ProcessApp.controllers')
                 return $scope.globals.currentUser.roles.indexOf('lab_user') !== -1;
             };
 
+            $scope.isHubuser = function() {
+                return $scope.globals.currentUser.roles.indexOf('hub_user') !== -1;
+            };
+
             $scope.isCurrentUser = function(user) {
                 return ($scope.globals.currentUser.userid === user);
             };

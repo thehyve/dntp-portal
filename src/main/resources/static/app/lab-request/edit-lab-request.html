@@ -76,7 +76,7 @@ This file is distributed under the GNU Affero General Public License
           </p>
         </div>
 
-        <div ng-if="globals.currentUser.roles.indexOf('requester') == -1" >
+        <div ng-if="isRequester()" >
           <!--Requester info-->
           <!--Displayed only to users with non requester role-->
           <div class="form-group">
@@ -117,7 +117,7 @@ This file is distributed under the GNU Affero General Public License
         </div>
 
         <div class="panel panel-default" 
-            ng-if="isLabUser() && isLabUserStatus(labRequest.status) && labRequest.status != 'Waiting for lab approval' && labRequest.request.paReportRequest">
+            ng-if="isLabOrHubUserStatus(labRequest.status) && labRequest.status != 'Waiting for lab approval' && labRequest.request.paReportRequest">
           <div class="panel-heading">
             <h4>{{'PA reports'|translate}}</h4>
           </div>
@@ -163,7 +163,7 @@ This file is distributed under the GNU Affero General Public License
         </div>
 
         <div class="panel panel-default" 
-            ng-if="isLabUser() && labRequest.status == 'Approved'">
+            ng-if="(isLabUser() || isHubUser()) && labRequest.status == 'Approved'">
           <div class="panel-heading">
             <h4>{{'Approved'|translate}}</h4>
           </div>
@@ -208,7 +208,7 @@ This file is distributed under the GNU Affero General Public License
 
         <div class="panel panel-default" 
             ng-if=" isRequester() && labRequest.status == 'Sending' || 
-                    isLabUser() && (
+                    (isLabUser() || isHubUser()) && (
                             labRequest.status == 'Returning'
                             || labRequest.status == 'Sending'
                             || labRequest.status == 'Received'
@@ -237,7 +237,7 @@ This file is distributed under the GNU Affero General Public License
                     ng-disabled="labRequestEditForm.$invalid"
                     ng-click="received(labRequest);">{{'Materials received'|translate}}</button>
             </span>
-            <span ng-if="isLabUser()">
+            <span ng-if="isLabUser() || isHubUser()">
                 <button class="btn btn-default btn-primary"
                         ng-click="returned(labRequest);">{{'Materials returned'|translate}}</button>
             </span>

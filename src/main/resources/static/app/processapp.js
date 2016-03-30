@@ -163,6 +163,10 @@
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
+                    } else if (currentUser.roles[0] === 'hub_user') {
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
                     } else if (currentUser.roles[0] === 'requester') {
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);

@@ -89,6 +89,12 @@
         'Completed': 'Completed',
         'Closed': 'Closed',
 
+        /* ===================== */
+        /* My Lab */
+        /* ===================== */
+        'Edit my lab': 'Edit my lab',
+        'Need Hub Assistance': 'Need Hub Assistance',
+
         null: null
     };
 })(window);

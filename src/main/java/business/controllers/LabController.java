@@ -137,7 +137,9 @@ public class LabController {
         transferLabData(body, lab);
         // Set hub assistance property (only when edited by a lab user).
         lab.setHubAssistanceEnabled(body.isHubAssistanceEnabled());
+        // TODO: if !isHubAssistanceEnabled(), perhaps set 'hubAssistanceRequested' to false
+        // for all associated lab requests.
         return labRepository.save(lab);
     }
-    
+
 }

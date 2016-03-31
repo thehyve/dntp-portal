@@ -40,6 +40,10 @@ This file is distributed under the GNU Affero General Public License
                     class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">
                     <a href="#/my-lab">{{'My lab'|translate}}</a>
                 </li>
+                <li id="nav_hub-labs"
+                    class="{{$route.current.templateUrl=='app/lab/hub-labs.html' ? 'active': ''}}">
+                    <a href="#/hub-labs">{{'Hub labs'|translate}}</a>
+                </li>
                 <li id="nav_agreementformtemplate" ng-show="isEditAgreementFormTemplateAllowed();" class="{{$route.current.templateUrl=='app/admin/agreementformtemplate/edit.html' ? 'active': ''}}">
                     <a href="#/agreementformtemplate">{{'Agreement form template'|translate}}</a>
                 </li>

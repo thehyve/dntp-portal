@@ -371,7 +371,10 @@
         /* ===================== */
         'Edit my lab': 'Bewerk My Lab',
         'Need Hub Assistance': 'Hubmedewerker bijstand nodig',
-    
+        'active': 'actief',
+        'inactive': 'inactief',
+        'Lab Id' :'Lab Id',
+        'Request Assistance' :'Assistance Nodig',
         null: null
     };
 })(window);

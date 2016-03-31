@@ -5,6 +5,8 @@
  */
 package business.controllers;
 
+import business.models.Lab;
+import business.models.LabRepository;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,10 +21,16 @@ import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.UserService;
 
+import java.util.List;
+
 @RestController
 public class ProfileController {
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    LabRepository labRepository;
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,6 +40,18 @@ public class ProfileController {
 
         // Return the representation
         return new ProfileRepresentation(userService.findOne(user.getId()));
+    }
+
+    @RequestMapping(value = "/hublabs", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Lab> getProfileHubLabs(UserAuthenticationToken user) {
+        // Query user's profile
+        LogFactory.getLog(this.getClass()).info("GET labs profile for user with id " + user.getId());
+
+        ProfileRepresentation profileRepresentation = new ProfileRepresentation(userService.findOne(user.getId()));
+
+        // Return the representation
+        return labRepository.findAll(profileRepresentation.getHubLabIds());
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)

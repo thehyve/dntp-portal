@@ -90,7 +90,9 @@
                 templateUrl : 'app/request/agreementform.html'
             }).when('/my-lab', {
                 templateUrl : 'app/lab/my-lab.html',
-                controller : ''
+            }).when('/hub-labs', {
+                templateUrl : 'app/lab/hub-labs.html',
+                controller : 'HubLabsController'
             }).when('/profile/password', {
                 templateUrl : 'app/profile/password.html',
                 controller : 'PasswordController'

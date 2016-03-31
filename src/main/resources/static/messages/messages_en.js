@@ -92,8 +92,13 @@
         /* ===================== */
         /* My Lab */
         /* ===================== */
-        'Edit my lab': 'Edit my lab',
-        'Need Hub Assistance': 'Need Hub Assistance',
+        'Edit my lab': 'Bewerk My Lab',
+        'Need Hub Assistance': 'Hubmedewerker bijstand nodig',
+        'active': 'actieve',
+        'inactive': 'inactive',
+        'Lab Id' :'Lab Id',
+        'Request Assistance' :'Bijstand Nodig',
+
 
         null: null
     };

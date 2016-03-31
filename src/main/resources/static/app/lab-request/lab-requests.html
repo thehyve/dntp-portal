@@ -43,11 +43,12 @@ This file is distributed under the GNU Affero General Public License
                             <th st-sort="request.title">{{'Request title' | translate}}</th>
                             <th st-sort="requesterName">{{'Requester' | translate}}</th>
                             <th st-sort="lab.name">{{'Lab' | translate}}</th>
+                            <th st-sort="hubAssistanceRequested">{{'Hub assistance'|translate}}</th>
                             <th st-sort="dateCreated">{{'Creation date' | translate}}</th>
                             <th st-sort="endDate">{{'End date' | translate}}</th>
                             <th st-sort="pathologyCount">{{'# PA numbers' | translate}}</th>
                             <th st-sort="status">{{'Status' | translate}}</th>
-                            <th class="no-print">&nbsp;</th>
+                            <th class="no-print" style="width: 8em"><span class="pull-right">{{'Actions'|translate}}</span></th>
                         </tr>
                         <tr class="no-print">
                             <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
@@ -55,6 +56,11 @@ This file is distributed under the GNU Affero General Public License
                             <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <td><select st-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                                    <option value="">{{'Filter by hub assistance'|translate}}</option>
+                                    <option value="true">{{ 'Yes' | translate}}</option>
+                                    <option value="false">{{ 'No' | translate}}</option>
+                                </select></td>
                             <!--<th><input st-search="dateCreated" placeholder="Filter by date" class="input-sm form-control" type="search"/></th>-->
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
@@ -67,7 +73,7 @@ This file is distributed under the GNU Affero General Public License
                             <th class="no-print">&nbsp;</th>
                         </tr>
                         <tr class="no-print">
-                            <th colspan="8"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                            <th colspan="9"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -88,11 +94,16 @@ This file is distributed under the GNU Affero General Public License
                         <td>
                             {{labRequest.lab.name}}
                         </td>
-                        <td>
-                            {{labRequest.dateCreated | date: 'EEE, dd MMMM yyyy H:mm'}}
+                        <td class="centertext">
+                            {{labRequest.hubAssistanceRequested ? 'Yes' :
+                              labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
+                              | translate }}
                         </td>
                         <td>
-                            {{labRequest.endDate | date: 'EEE, dd MMMM yyyy H:mm'}}
+                            <small>{{labRequest.dateCreated | date: 'EEE, dd MMMM yyyy H:mm'}}</small>
+                        </td>
+                        <td>
+                            <small>{{labRequest.endDate | date: 'EEE, dd MMMM yyyy H:mm'}}</small>
                         </td>
                         <td>
                             {{labRequest.pathologyCount}}

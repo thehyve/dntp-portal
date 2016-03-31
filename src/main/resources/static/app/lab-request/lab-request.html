@@ -38,7 +38,7 @@ This file is distributed under the GNU Affero General Public License
                 <button class="btn btn-default" type="button"  ng-click="edit(labRequest);" title="Actions"
                         ng-if="isLabOrHubUserStatus(labRequest.status)
                             || (isRequester() && isRequesterStatus(labRequest.status))"
-                        ng-disabled="(isLabUser() || isHubUser())) && isCurrentUser(labRequest.assignee)">
+                        ng-disabled="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Actions' | translate}}
                 </button>

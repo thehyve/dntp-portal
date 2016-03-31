@@ -245,7 +245,13 @@ public class CustomPermissionService {
             logDecision("isHubuser", user, requestId, "DENIED (no hub lab associated with the user).");
             return false;
         }
-        long count = labRequestRepository.countByProcessInstanceIdAndLabIn(requestId, user.getHubLabs());
+        Set<Lab> hubLabs = new HashSet<>();
+        for(Lab lab: user.getHubLabs()) {
+            if (lab.isHubAssistanceEnabled()) {
+                hubLabs.add(lab);
+            }
+        }
+        long count = labRequestRepository.countByProcessInstanceIdAndLabIn(requestId, hubLabs);
         if (count > 0) {
             logDecision("isHubuser", user, requestId, "OK.");
             return true;
@@ -335,7 +341,9 @@ public class CustomPermissionService {
         }
         Set<Integer> hubLabNumbers = new HashSet<>();
         for(Lab lab: user.getHubLabs()) {
-            hubLabNumbers.add(lab.getNumber());
+            if (lab.isHubAssistanceEnabled()) {
+                hubLabNumbers.add(lab.getNumber());
+            }
         }
         if (!hubLabNumbers.contains(labRequest.getLab().getNumber())) {
             logDecision("isLabRequestHubuser", user, labRequestId.toString(), "DENIED (lab request not associated with user lab).");

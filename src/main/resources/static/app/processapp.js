@@ -90,7 +90,6 @@
                 templateUrl : 'app/request/agreementform.html'
             }).when('/my-lab', {
                 templateUrl : 'app/lab/my-lab.html',
-                controller : 'MyLabController'
             }).when('/hub-labs', {
                 templateUrl : 'app/lab/hub-labs.html',
                 controller : 'HubLabsController'
@@ -205,7 +204,17 @@
                     $rootScope.setCurrentUserAuthorizations($rootScope.globals.currentUser);
                     //$http.defaults.headers.common.Authorization = 'Basic ' + $rootScope.globals.currentUser.credentials;
                 }
-                
+
+                var _getName = function(user) {
+                    if (user === null) {
+                        return '';
+                    }
+                    return user.firstName +
+                        ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
+                        (user.lastName === null ? '' : user.lastName);
+                };
+                $rootScope.getName = _getName;
+
                 $rootScope.$on('$locationChangeStart', function () {
                     // redirect to login page if not logged in
                   if (($location.path() !== '/login' &&

@@ -115,14 +115,36 @@ This file is distributed under the GNU Affero General Public License
                     </div>
                 </div>
 
-                <!-- Enable Hub Assistance -->
+                <!-- Hub assistance -->
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="needHubAssistance">&nbsp;</label>
+                    <label class="control-label col-sm-2" for="needHubAssistance">{{ 'Hub assistance' | translate
+                            }}</label>
                     <div class="col-sm-6">
                         <input type="checkbox" id="needHubAssistance" name="needHubAssistance"
                                ng-model="editlab.hubAssistanceEnabled">
-                        <label class="normal" for="needHubAssistance">{{ 'Need Hub Assistance' | translate
-                            }}</label><br>
+                        <label class="normal" for="needHubAssistance">{{ 'Need hub assistance' | translate
+                            }}</label>
+                        <br>
+                        <br>
+                        <h4>{{'Hub users' | translate}} <span class="badge">{{hubUsers.length}}</span></h4>
+                        <div ng-repeat="hubUser in hubUsers">
+                            <address>
+                                <strong>{{getName(hubUser)}}</strong><br>
+                                {{hubUser.contactData.address1}}
+                                <br ng-if="hubUser.contactData.address1">
+                                {{hubUser.contactData.address2}}
+                                <br ng-if="hubUser.contactData.address2">
+                                {{hubUser.contactData.postalCode}} {{hubUser.contactData.city}}
+                               <span ng-if="hubUser.contactData.telephone">
+                                   <span><i class="glyphicon glyphicon-earphone"></i></span>
+                                   {{hubUser.contactData.telephone}}
+                               </span>
+                               <br ng-if="hubUser.contactData.telephone">
+                               <span><i class="glyphicon glyphicon-envelope"></i></span>
+                               <a href="mailto:{{hubUser.contactData.email}}">{{hubUser.contactData.email}}</a>
+                           </address>
+                           <br>
+                       </div>
                     </div>
                 </div>
 

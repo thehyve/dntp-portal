@@ -141,6 +141,7 @@
                     // TODO This might something that're organized in the backend in the future
                     // ========================================================================
                     var globalFeatures = {
+                        HAS_MANAGE_HUB_LABS_PAGE_AUTH : 'HAS_MANAGE_HUB_LABS_PAGE_AUTH',
                         HAS_MANAGE_OWN_LAB_PAGE_AUTH : 'HAS_MANAGE_OWN_LAB_PAGE_AUTH',
                         HAS_MANAGE_LAB_PAGE_AUTH : 'HAS_MANAGE_LAB_PAGE_AUTH',
                         HAS_MANAGE_USER_PAGE_AUTH : 'HAS_MANAGE_USER_PAGE_AUTH',
@@ -169,6 +170,7 @@
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_SAMPLES_PAGE_AUTH);
+                        currentUser.features.push(globalFeatures.HAS_MANAGE_HUB_LABS_PAGE_AUTH);
                     } else if (currentUser.roles[0] === 'requester') {
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                         currentUser.features.push(globalFeatures.HAS_MANAGE_LAB_REQUEST_PAGE_AUTH);

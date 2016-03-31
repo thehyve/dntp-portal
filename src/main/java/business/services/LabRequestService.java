@@ -10,7 +10,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
@@ -41,7 +45,6 @@ import business.models.LabRequestRepository;
 import business.models.PathologyItem;
 import business.models.PathologyItemRepository;
 import business.models.User;
-import business.models.UserRepository;
 import business.representation.CommentRepresentation;
 import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
@@ -56,7 +59,7 @@ public class LabRequestService {
     Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private TaskService taskService;
@@ -127,7 +130,7 @@ public class LabRequestService {
         if (request.getRequesterId() != null) {
             labRequestRepresentation.setRequesterId(request.getRequesterId());
             labRequestRepresentation.setRequesterName(request.getRequesterName());
-            User user = userRepository.findOne(request.getRequesterId());
+            User user = userService.findOne(request.getRequesterId());
             labRequestRepresentation.setRequesterEmail(user.getContactData().getEmail());
             labRequestRepresentation.setRequester(new ProfileRepresentation(user));
             labRequestRepresentation.setRequesterLab(user.getLab());
@@ -240,7 +243,8 @@ public class LabRequestService {
         log.info("instance: " + instance.getId());
         if (var != null && var instanceof Collection<?>) {
             List<LabRequest> labRequests = new ArrayList<LabRequest>();
-            Collection<Integer> labNumbers = (Collection<Integer>) var;
+            SortedSet<Integer> labNumbers = new TreeSet<>((Collection<Integer>) var);
+            Set<User> hubUsers = new HashSet<>();
             for (Integer labNumber : labNumbers) {
                 Lab lab = labRepository.findByNumber(labNumber);
                 HistoricTaskInstance task = findLabRequestTaskForLab(labNumber, instance.getId());
@@ -255,6 +259,9 @@ public class LabRequestService {
                 // set initial status
                 labRequest = updateStatus(labRequest, "Waiting for lab approval");
                 labRequest.setHubAssistanceRequested(lab.isHubAssistanceEnabled());
+                if (lab.isHubAssistanceEnabled()) {
+                    hubUsers.addAll(userService.findHubUsersForLab(lab));
+                }
 
                 ExcerptList excerptList = excerptListService.findByProcessInstanceId(processInstanceId);
                 ExcerptListRepresentation list = new ExcerptListRepresentation();
@@ -269,6 +276,7 @@ public class LabRequestService {
                         " with " + pathologyList.size() + " pathology items.");
                 labRequests.add(labRequest);
             }
+            Map<Integer, LabRequestRepresentation> representationMap = new TreeMap<>();
             // notify labs by mail
             for (LabRequest labRequest: labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
@@ -277,6 +285,7 @@ public class LabRequestService {
                     log.warn("No lab for lab request " + representation.getLabRequestCode() +
                             " while gerating lab requests.");
                 } else {
+                    representationMap.put(representation.getLab().getNumber(), representation);
                     try {
                         mailService.notifyLab(representation);
                     } catch (EmailError e) {
@@ -288,6 +297,35 @@ public class LabRequestService {
                                 "'.");
                         // FIXME: return error messages.
                     }
+                }
+            }
+            // notify hub users by mail
+            for (User u: hubUsers) {
+                // build list of lab request representations for the lab requests for labs
+                // associated with the hub user.
+                List<LabRequestRepresentation> representations = new ArrayList<>();
+                List<String> labRequestCodes = new ArrayList<>();
+                for (Lab l: u.getHubLabs()) {
+                    if (l.isHubAssistanceEnabled()) {
+                        LabRequestRepresentation representation = representationMap.get(l.getNumber());
+                        if (representation != null) {
+                            representations.add(representation);
+                            labRequestCodes.add(representation.getLabRequestCode());
+                        }
+                    }
+                }
+                String labRequestCodesString = String.join(", ", labRequestCodes);
+                // send mail to hub user
+                try {
+                    mailService.notifyHubuser(u, representations);
+                } catch (EmailError e) {
+                    log.warn("No mail sent to hub user " + u.getUsername() +
+                            " for lab requests " + labRequestCodesString +
+                            ". Email address: '" +
+                            u.getContactData() == null ?
+                                    "" : u.getContactData().getEmail() +
+                            "'.");
+                    // FIXME: return error messages.
                 }
             }
         }

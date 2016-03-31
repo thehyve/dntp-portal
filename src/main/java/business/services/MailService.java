@@ -6,6 +6,7 @@
 package business.services;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -171,7 +172,7 @@ public class MailService {
         }
     }
 
-    static final String labNotificationTemplate = 
+    static final String labNotificationTemplate =
             "Geachte heer/mevrouw,\n"
           + "\n"
           + "PALGA heeft een aanvraag ontvangen bestemd voor uw laboratorium.\n"
@@ -218,7 +219,8 @@ public class MailService {
         log.info("Notify lab for lab request " + labRequest.getId() + ".");
 
         Lab lab = labRequest.getLab();
-        if (lab.getContactData() == null || lab.getContactData().getEmail() == null) {
+        if (lab.getContactData() == null || lab.getContactData().getEmail() == null ||
+                lab.getContactData().getEmail().trim().isEmpty()) {
             log.warn("No email address set for lab " + lab.getNumber());
             return;
         }
@@ -249,7 +251,87 @@ public class MailService {
         }
     }
 
-    static final String activationEmailTemplate = 
+    static final String hubUserNotificationTemplate =
+            "Geachte heer/mevrouw,\n"
+          + "\n"
+          + "PALGA heeft aanvragen ontvangen bestemd voor laboratoria waaraan "
+          + "u gekoppeld bent als hubmedewerker.\n"
+          + "Het gaat om de volgende verzoeken:\n"
+          + "\n"
+          + "%1$s\n"
+          + "\n"
+          + "Met vriendelijke groet,\n"
+          + "Stichting PALGA\n"
+          + "088-0402700 / aanvraag@palga.nl\n"
+          + "\n"
+          + "--\n"
+          + "Dit is een automatisch gegenereerd bericht. "
+          + "Heeft u vragen, stuur dan een mail naar: aanvraag@palga.nl.\n"
+          ;
+
+    static final String hubUserNotificationLabSnippet =
+            "Link:\t%1$s\n"
+          + "Aanvraagnummer:\t%2$s\n"
+          + "Titel project:\t%3$s\n"
+          + "Lab:\t%4$d %5$s\n"
+          + "Onderzoeker:\t%6$s\n"
+          + "Patholoog:\t%7$s\n"
+          + "Instituut:\t%8$d %9$s\n"
+          ;
+
+    public void notifyHubuser(User hubUser, List<LabRequestRepresentation> labRequests) {
+        if (!hubUser.isHubUser()) {
+            log.warn("The user is no hub user: " + hubUser.getUsername());
+            return;
+        }
+        List<String> codes = new ArrayList<>();
+        List<String> snippets = new ArrayList<>();
+        for(LabRequestRepresentation labRequest: labRequests) {
+            codes.add(labRequest.getLabRequestCode());
+            String link = getLink("/#/lab-request/view/" + labRequest.getId());
+            String snippet = String.format(hubUserNotificationLabSnippet,
+                    link, // %1
+                    labRequest.getLabRequestCode(), // %2
+                    labRequest.getRequest().getTitle(), // %3
+                    labRequest.getLab().getNumber(), // %4
+                    labRequest.getLab().getName(), // %5
+                    labRequest.getRequesterName(), // %6
+                    labRequest.getRequest().getPathologistName() == null ? "" : labRequest.getRequest().getPathologistName(), // %7
+                    labRequest.getRequesterLab().getNumber(), // %8
+                    labRequest.getRequesterLab().getName() // %9
+                    );
+            snippets.add(snippet);
+        }
+        String labRequestCodes = String.join(", ", codes);
+        String labRequestSnippets = String.join("\n", snippets);
+
+        log.info("Notify hub user " + hubUser.getUsername() + " for lab requests " + labRequestCodes + ".");
+
+        if (hubUser.getContactData() == null || hubUser.getContactData().getEmail() == null ||
+                hubUser.getContactData().getEmail().trim().isEmpty()) {
+            log.warn("No email address set for hub user " + hubUser.getUsername());
+            return;
+        }
+        log.info("Sending notification to " + hubUser.getContactData().getEmail());
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
+            message.setTo(hubUser.getContactData().getEmail());
+            message.setFrom(getFrom(), fromName);
+            message.setReplyTo(replyAddress, replyName);
+            message.setSubject(String.format("PALGA-verzoek aan laboratoria, aanvraagnummers: %s", labRequestCodes));
+            String body = String.format(hubUserNotificationTemplate, labRequestSnippets /* %1 */);
+            message.setText(body);
+            mailSender.send(message.getMimeMessage());
+        } catch(MessagingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
+        } catch(UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+            throw new EmailError("Email error: " + e.getMessage());
+        }
+    }
+
+    static final String activationEmailTemplate =
               "Geachte heer/mevrouw,\n"
             + "\n"
             + "U heeft een account aangemaakt bij Stichting PALGA. "

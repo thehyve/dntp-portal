@@ -148,7 +148,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.edit = function(usr) {
                 $scope.edituser = usr;
-                $scope.hubLabs = _.map($scope.labs, function (lab) {lab.disabled = !lab.active; return lab});
+                $scope.hubLabs = _.map($scope.labs, function (lab) { lab.disabled = !lab.active; return lab; });
                 $scope.edituser.hubLabs = _.map($scope.labs, function(lab) {
                     lab.ticked = _.includes($scope.edituser.hubLabIds, lab.id);
                     return lab;

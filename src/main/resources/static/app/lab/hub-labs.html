@@ -39,10 +39,10 @@ This file is distributed under the GNU Affero General Public License
                     <table st-table="displayedCollection" st-safe-src="labs" class="table table-striped">
                         <thead>
                         <tr>
-                            <th st-sort="number">{{'Lab Id'|translate}}</th>
+                            <th st-sort="number">{{'Number'|translate}}</th>
                             <th st-sort="name">{{'Name'|translate}}</th>
                             <th st-sort="active">{{'Status'|translate}}</th>
-                            <th st-sort="hubAssistanceEnabled">{{'Request Assistance'|translate}}</th>
+                            <th st-sort="hubAssistanceEnabled">{{'Hub assistance'|translate}}</th>
                             <th st-sort="contactData.email">{{'Email'|translate}}</th>
                         </tr>
                         <tr>
@@ -56,10 +56,10 @@ This file is distributed under the GNU Affero General Public License
                             <td>{{lab.name}}</td>
                             <td>
                                 <span style="color: green;" class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                      ng-show="{{lab.active}}" title="{{'active' | translate}}">
+                                      ng-show="{{lab.active}}" title="{{'Active' | translate}}">
                                 </span>
                                 <span style="color: grey;" class="glyphicon glyphicon-ban-circle" aria-hidden="true"
-                                      ng-show="{{!lab.active}}" title="{{'inactive' | translate}}">
+                                      ng-show="{{!lab.active}}" title="{{'Inactive' | translate}}">
                                 </span>
                             </td>
                             <td>

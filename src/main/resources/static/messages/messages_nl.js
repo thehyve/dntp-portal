@@ -369,12 +369,15 @@
         /* ===================== */
         /* My Lab */
         /* ===================== */
-        'Edit my lab': 'Bewerk My Lab',
-        'Need Hub Assistance': 'Hubmedewerker bijstand nodig',
-        'active': 'actief',
-        'inactive': 'inactief',
+        'Edit my lab': 'Bewerk mijn lab',
+        'Enable hub assistance.': 'Inzet hubmedewerker toestaan.',
+        'Request hub assistance.': 'Hubmedewerker inschakelen.',
+        'Option not available because hub assistance is not enabled by your lab.': 'De optie is niet beschikbaar omdat uw lab de inzet van de hubmedewerker niet toestaat.',
+        'Active': 'Actief',
+        'Inactive': 'Niet actief',
         'Lab Id' :'Lab Id',
-        'Request Assistance' :'Assistance Nodig',
+        'Hub assistance' :'Inzet hubmedewerker',
+        'Hub users': 'Hubmedewerkers',
         null: null
     };
 })(window);

@@ -154,6 +154,9 @@ This file is distributed under the GNU Affero General Public License
                    ng-disabled="!labRequest.lab.hubAssistanceEnabled"
                    ng-model="labRequest.hubAssistanceRequested"> &nbsp;
              <label class="normal" for="hubAssistanceRequested">{{ 'Request hub assistance.' | translate }}</label>
+             <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
+                  {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
+             </span>
           </div>
 
           <div class="panel-footer clearfix">

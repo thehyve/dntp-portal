@@ -77,27 +77,27 @@ This file is distributed under the GNU Affero General Public License
                             </td>
                             <td>
                                 <span class="pull-right">
-                                <span class="btn-group">
-                                    <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(user)">
-                                        <span><i class="glyphicon glyphicon-pencil"></i></span>
-                                    </button>
-                                    <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
-                                            ng-if="!user.active"
-                                            type="button" title="Activate"
-                                            ng-click="activate(user)" ng-disabled="dataLoading">
-                                        <span class="glyphicon glyphicon-repeat"></span>
-                                    </button>
-                                    <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
-                                            ng-if="user.active"
-                                            type="button" title="Dectivate"
-                                            ng-click="deactivate(user)" ng-disabled="dataLoading">
-                                        <span class="glyphicon glyphicon-ban-circle"></span>
-                                    </button>
-                                    <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
-                                            ng-click="remove(user)">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                </span>
+                                    <span class="btn-group">
+                                        <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(user)">
+                                            <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                        </button>
+                                        <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
+                                                ng-if="!user.active"
+                                                type="button" title="Activate"
+                                                ng-click="activate(user)" ng-disabled="dataLoading">
+                                            <span class="glyphicon glyphicon-repeat"></span>
+                                        </button>
+                                        <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
+                                                ng-if="user.active"
+                                                type="button" title="Dectivate"
+                                                ng-click="deactivate(user)" ng-disabled="dataLoading">
+                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                        </button>
+                                        <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
+                                                ng-click="remove(user)">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
                                 </span>
                             </td>
                         </tr>
@@ -128,3 +128,4 @@ This file is distributed under the GNU Affero General Public License
 
 
     </div>
+</div>

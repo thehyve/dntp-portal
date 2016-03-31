@@ -1,0 +1,96 @@
+<!--
+Copyright (C) 2016  Stichting PALGA
+This file is distributed under the GNU Affero General Public License
+(see accompanying file LICENSE).
+-->
+<div class="container-fluid">
+    <div class="row">
+
+        <!--Side Bar-->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#/">{{'Overview'|translate}} <span class="sr-only">(current)</span></a></li>
+            </ul>
+        </div>
+
+        <div ng-if="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{'Not logged in'|translate}}.
+            </div>
+        </div>
+
+        <div ng-if="authenticated">
+
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+                <div class="alert alert-danger" role="alert" ng-if="error.length" id="error">
+                    {{error|translate}}.
+                </div>
+
+                <h1>{{ 'Labs' | translate }}</h1>
+                <hr>
+
+                <div ng-hide="accessDenied">
+
+                    <div class="alert alert-info" role="alert" ng-hide="labs.length">
+                        {{'There are no labs yet.' | translate}}
+                    </div>
+
+                    <table st-table="displayedCollection" st-safe-src="labs" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th st-sort="number">{{'Lab Id'|translate}}</th>
+                            <th st-sort="name">{{'Name'|translate}}</th>
+                            <th st-sort="active">{{'Status'|translate}}</th>
+                            <th st-sort="hubAssistanceEnabled">{{'Request Assistance'|translate}}</th>
+                            <th st-sort="contactData.email">{{'Email'|translate}}</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th colspan="8"><input st-search="" class="form-control"
+                                                   placeholder="{{'Search' | translate}} ..." type="text"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="lab in displayedCollection">
+                            <td>{{lab.number}}</td>
+                            <td>{{lab.name}}</td>
+                            <td>
+                                <span style="color: green;" class="glyphicon glyphicon-ok-circle" aria-hidden="true"
+                                      ng-show="{{lab.active}}" title="{{'active' | translate}}">
+                                </span>
+                                <span style="color: grey;" class="glyphicon glyphicon-ban-circle" aria-hidden="true"
+                                      ng-show="{{!lab.active}}" title="{{'inactive' | translate}}">
+                                </span>
+                            </td>
+                            <td>
+                                <span style="color: green;" class="glyphicon glyphicon-bell" aria-hidden="true"
+                                      ng-show="{{lab.hubAssistanceEnabled}}" title="{{'Yes' | translate}}">
+                                </span>
+                                <span style="color: grey;" class="glyphicon glyphicon-ban-circle" aria-hidden="true"
+                                      ng-show="{{!lab.hubAssistanceEnabled}}" title="{{'No' | translate}}">
+                                </span>
+                            </td>
+                            <td>{{lab.contactData.email}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="page-header">
+    <h2>{{'Labs'|translate}}</h2>
+</div>
+<div ng-if="!authenticated">
+    <div class="alert alert-danger" role="alert">
+        {{'Not logged in'|translate}}.
+    </div>
+</div>

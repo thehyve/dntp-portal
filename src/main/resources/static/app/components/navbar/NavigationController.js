@@ -52,6 +52,10 @@ angular.module('ProcessApp.controllers')
                 return checkRoles(['HAS_MANAGE_OWN_LAB_PAGE_AUTH']);
             };
 
+            $scope.isViewHubLabsAllowed = function() {
+                return checkRoles(['HAS_MANAGE_HUB_LABS_PAGE_AUTH']);
+            };
+
             $scope.isViewAccessLogsAllowed = function() {
                 return checkRoles(['HAS_MANAGE_ACCESS_LOG_AUTH']);
             };

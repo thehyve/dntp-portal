@@ -40,7 +40,7 @@ This file is distributed under the GNU Affero General Public License
                     class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">
                     <a href="#/my-lab">{{'My lab'|translate}}</a>
                 </li>
-                <li id="nav_hub-labs"
+                <li id="nav_hub-labs" ng-show="isViewHubLabsAllowed();"
                     class="{{$route.current.templateUrl=='app/lab/hub-labs.html' ? 'active': ''}}">
                     <a href="#/hub-labs">{{'Hub labs'|translate}}</a>
                 </li>

@@ -39,4 +39,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
             + "and ur.id = :roleId")
     List<User> findAllByDeletedFalseAndActiveTrueAndHasRole(@Param("roleId") Long roleId);
 
+    @Query("select u "
+            + "from User u "
+            + "inner join u.roles ur "
+            + "inner join u.hubLabs ul "
+            + "where u.deleted = false "
+            + "and u.active = true "
+            + "and ur.id = :roleId "
+            + "and ul.id = :labId")
+    List<User> findAllByDeletedFalseAndActiveTrueAndHasRoleAndHubLab(
+            @Param("roleId") Long roleId,
+            @Param("labId") Long labId);
+
 }

@@ -619,16 +619,6 @@ angular.module('ProcessApp.controllers')
                 $(el).focus();
             };
 
-            $scope.getName = function(user) {
-                if (user === null) {
-                    return '';
-                }
-                return user.firstName +
-                    ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
-                    (user.lastName === null ? '' : user.lastName);
-            };
-            $rootScope.getName = $scope.getName;
-
             $scope.size = function(obj) {
                 var size = 0, key;
                 for (key in obj) {
@@ -636,29 +626,35 @@ angular.module('ProcessApp.controllers')
                 }
                 return size;
             };
-            
+
+            var _checkCurrentUserRole = function(role) {
+                return ($scope.globals && $scope.globals.currentUser && $scope.globals.currentUser.roles) &&
+                        $scope.globals.currentUser.roles.indexOf(role) !== -1;
+            };
+
             $scope.isPalga = function() {
-                return $scope.globals.currentUser.roles.indexOf('palga') !== -1;
+                return _checkCurrentUserRole('palga');
             };
 
             $scope.isRequester = function() {
-                return $scope.globals.currentUser.roles.indexOf('requester') !== -1;
+                return _checkCurrentUserRole('requester');
             };
-            
+
             $scope.isScientificCouncil = function() {
-                return $scope.globals.currentUser.roles.indexOf('scientific_council') !== -1;
+                return _checkCurrentUserRole('scientific_council');
             };
 
             $scope.isLabuser = function() {
-                return $scope.globals.currentUser.roles.indexOf('lab_user') !== -1;
+                return _checkCurrentUserRole('lab_user');
             };
 
             $scope.isHubuser = function() {
-                return $scope.globals.currentUser.roles.indexOf('hub_user') !== -1;
+                return _checkCurrentUserRole('hub_user');
             };
 
             $scope.isCurrentUser = function(user) {
-                return ($scope.globals.currentUser.userid === user);
+                return ($scope.globals && $scope.globals.currentUser) &&
+                        ($scope.globals.currentUser.userid === user);
             };
 
             $scope.isClaimable = function(status) {

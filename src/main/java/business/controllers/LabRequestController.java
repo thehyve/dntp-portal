@@ -168,7 +168,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/accept");
 
         LabRequest labRequest = labRequestRepository.findOne(id);
-        labRequest.setHubAssistanceRequested(body.isHubAssistanceRequested());
+        labRequest.setHubAssistanceRequested(Boolean.TRUE.equals(body.isHubAssistanceRequested()));
         labRequest = labRequestService.updateStatus(labRequest, "Approved");
 
         LabRequestRepresentation representation = new LabRequestRepresentation(

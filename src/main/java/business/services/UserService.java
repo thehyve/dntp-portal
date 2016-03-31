@@ -94,6 +94,11 @@ public class UserService {
         return members;
     }
 
+    public List<User> findHubUsersForLab(Lab lab) {
+        Role role = roleRepository.findByName("hub_user");
+        return userRepository.findAllByDeletedFalseAndActiveTrueAndHasRoleAndHubLab(role.getId(), lab.getId());
+    }
+
     public void transferUserData(User currentUser, ProfileRepresentation body, User user) {
         user.setFirstName(body.getFirstName());
         user.setLastName(body.getLastName());

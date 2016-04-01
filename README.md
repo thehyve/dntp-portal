@@ -1,5 +1,7 @@
 # Request portal for Dutch pathology labs
 
+[![Build Status](https://travis-ci.org/thehyve/dntp-portal.svg?branch=dev)](https://travis-ci.org/thehyve/dntp-portal/branches)
+
 This repository hosts the code of a request portal, built for the
 [Dutch National Tissuebank Portal](http://www.dntp.nl) project.
 The portal is hosted at [aanvraag.palga.nl](https://aanvraag.palga.nl).

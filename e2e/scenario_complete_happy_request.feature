@@ -115,6 +115,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
    # And I am on the requests page
    When I click on the request with title 'Request 1'
    And I scroll to the bottom of the page
+   And testing is paused to wait a bit
    And I click on the object with id 'select-pa-numbers'
    # We should be able to do it automatically... But it doesn't work, so we do it manually
    And testing is paused to select all PA numbers of the current request
@@ -131,8 +132,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
    And I click on the 'Approve selection' button
    And I click on the 'OK' button
    And I go to the 'lab requests' page
-   Then I should see 2 lab requests in the list
-   
+   Then I should see 4 lab requests in the list
+
    Scenario: 7 accept request as lab user
     Given I am logged in as the lab 106 user
     # And I am on the lab requests page
@@ -172,7 +173,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     """
     And I click on the 'Add note' button
     And I go to the 'lab requests' page
-    Then I should see 2 lab requests in the list
+    Then I should see 4 lab requests in the list
     And the page should contain the text 'Approved'
     And the page should contain the text 'Rejected'
 

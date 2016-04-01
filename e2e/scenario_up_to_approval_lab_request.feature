@@ -20,7 +20,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     contactPersonName: Nobody
     pathologistName: Nobody
     pathologistEmail: nobody@nowhere.org
-    requestTitle: Request 1
+    requestTitle: Request 2
     background: None
     researchQuestion: test
     hypothesis: theory
@@ -52,14 +52,14 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the object with id 'submit-new-request'
     And I click on the 'OK' button
     Then I should be on the requests page
-    And request 'Request 1' should be in the list of requests
-    And request 'Request 1' should have status 'Under review'
+    And request 'Request 2' should be in the list of requests
+    And request 'Request 2' should have status 'Under review'
 
   Scenario: 2. Claim and send requests to Scientific council
     Given I am logged in as the palga user
     # And I am on the requests page
-    When I claim the request with title 'Request 1'
-    And I click on the request with title 'Request 1'
+    When I claim the request with title 'Request 2'
+    And I click on the request with title 'Request 2'
     And I click on the 'Edit' button
     And I click on the following objects
       """
@@ -72,12 +72,12 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'Submit for approval' button
     And I click on the 'OK' button
     And I go to the 'requests' page
-    Then request 'Request 1' should have status 'Waiting for approval'
+    Then request 'Request 2' should have status 'Waiting for approval'
     # And email is send to scientific council, check manually!
 
   Scenario: 4a attach excerpt list
     Given I am logged in as the palga user
-    When I click on the request with title 'Request 1'
+    When I click on the request with title 'Request 2'
     And I click on the 'Edit' button
     And I click on the following objects
       """
@@ -88,19 +88,20 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And I go to the 'requests' page
-    Then request 'Request 1' should have status 'Data delivery and selection'
+    Then request 'Request 2' should have status 'Data delivery and selection'
 
   Scenario: 5a check receipt of excerpt lists
     Given I am on the requests page
     And I am logged in as the requester user
-    When I click on the request with title 'Request 1'
+    When I click on the request with title 'Request 2'
     Then an excerpt should be attached to the request
 
   Scenario: 6 select PA numbers
    Given I am logged in as the requester user
    # And I am on the requests page
-   When I click on the request with title 'Request 1'
+   When I click on the request with title 'Request 2'
    And I scroll to the bottom of the page
+   And testing is paused to wait a bit
    And I click on the object with id 'select-pa-numbers'
    # We should be able to do it automatically... But it doesn't work, so we do it manually
    And testing is paused to select all PA numbers of the current request
@@ -112,13 +113,10 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 6a Palga approves selection
    Given I am logged in as the palga user
    # And I am on the requests page
-   When I click on the request with title 'Request 1'
+   When I click on the request with title 'Request 2'
    And I scroll to the bottom of the page
+   And testing is paused to wait a bit
    And I click on the 'Approve selection' button
    And I click on the 'OK' button
    And I go to the 'lab requests' page
-   Then I should see 2 lab requests in the list
-   
- 
-
-  
+   Then I should see 4 lab requests in the list

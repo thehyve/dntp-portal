@@ -134,10 +134,10 @@ public class SmallExcerptListTests extends SelectionControllerTests {
             pathologyCount += labRequestRepresentation.getPathologyCount();
         }
         assertEquals(3, pathologyCount);
-        
-        assertEquals(2, ((MockMailSender)mailSender).getMessages().size());
+
+        assertEquals(3, ((MockMailSender)mailSender).getMessages().size());
 
         SecurityContextHolder.clearContext();
-    }    
-    
+    }
+
 }

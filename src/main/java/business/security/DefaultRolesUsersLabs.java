@@ -70,8 +70,8 @@ public class DefaultRolesUsersLabs {
         if (env.acceptsProfiles("prod")) {
             return;
         }
-        
-        log.warn("Creating default labs...");
+
+        log.info("Creating default labs...");
         String[] defaultLabs = new String[] {
                 "AMC, afd. Pathologie",
                 "Meander Medisch Centrum, afd. Klinische Pathologie",
@@ -90,7 +90,7 @@ public class DefaultRolesUsersLabs {
             }
         }
 
-        log.warn("Creating default users...");
+        log.info("Creating default users...");
         Lab defaultLab = labRepository.findByName(defaultLabs[0]);
         // Create default roles and users for each role
         for (String r: defaultRoles) {
@@ -102,7 +102,14 @@ public class DefaultRolesUsersLabs {
             User user = userService.findByUsername(username);
             if (user == null) {
                 user = createUser(r, role);
-                user.setLab(defaultLab);
+                if (role.isHubUser()) {
+                    Set<Lab> hubLabs = new HashSet<>();
+                    hubLabs.add(defaultLab);
+                    hubLabs.add(labRepository.findByName(defaultLabs[2]));
+                    user.setHubLabs(hubLabs);
+                } else {
+                    user.setLab(defaultLab);
+                }
                 userService.save(user);
                 userService.save(user);
             }
@@ -120,7 +127,7 @@ public class DefaultRolesUsersLabs {
             }
         }
 
-        LogFactory.getLog(getClass()).info("Created default users and roles");
+        log.info("Created default users and roles.");
     }
 
     private User createUser(String username, Role role) {

@@ -1,0 +1,22 @@
+language: java
+jdk:
+ - openjdk7
+sudo: false
+install: true
+
+script:
+- mvn -Dspring.profiles.active=dev test
+- mvn -Dspring.profiles.active=dev package
+
+notifications:
+  email:
+    recipients:
+    - gijs@thehyve.nl
+    on_success: change
+    on_failure: always
+  hipchat:
+    rooms:
+      secure: SI0Jjvc42mhgjRT9IdRtBUsam0FrHrXjNTr56jD8ZJi/DQN6kxj+lgmXgcRvF6Tsx96vYYIQRHwZjhAET9MeFOPbIbF5PgT5/3V3CrirKcN1vfkUpOnQ20QPnXDYy6b6X2h8kECPyPhMVicUePmQLFqVgF+ycHETGD05Xy7QCgE=
+    on_success: change
+    on_failure: always
+

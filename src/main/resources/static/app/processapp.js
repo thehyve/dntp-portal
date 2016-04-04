@@ -3,13 +3,14 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(window, angular, messages) {
+(function(window, _, angular, messages) {
     'use strict';
 
     angular.module('ProcessApp.services', ['restangular'])
       .config(function(RestangularProvider) {
         RestangularProvider.setBaseUrl('/');
       });
+    angular.module('ProcessApp.interceptors', []);
     angular.module('ProcessApp.directives', []);
     angular.module('ProcessApp.controllers', ['restangular'])
       .config(function(RestangularProvider) {
@@ -22,11 +23,13 @@
         'smart-table', 'ngSanitize',
         'angular-loading-bar',
         'ProcessApp.services',
-        'ProcessApp.controllers',
+        'ProcessApp.interceptors',
         'ProcessApp.directives',
+        'ProcessApp.controllers',
         'textAngular','isteven-multi-select'])
         .config(function(
-                $routeProvider, 
+                $routeProvider,
+                $httpProvider,
                 $translateProvider, 
                 $popoverProvider,
                 cfpLoadingBarProvider) {
@@ -66,6 +69,9 @@
             }).when('/agreementformtemplate', {
                 templateUrl : 'app/admin/agreementformtemplate/edit.html'
             }).when('/lab-requests', {
+                templateUrl : 'app/lab-request/lab-requests.html',
+                controller : ''
+            }).when('/lab-requests/:selection', {
                 templateUrl : 'app/lab-request/lab-requests.html',
                 controller : ''
             }).when('/lab-request/view/:labRequestId', {
@@ -120,6 +126,9 @@
             $translateProvider.useSanitizeValueStrategy('escaped');
             cfpLoadingBarProvider.includeSpinner = false;
 
+            // Inject response interceptor for error handling
+            $httpProvider.interceptors.push('responseObserver');
+
             // default popover setting to have html friendly content
             angular.extend($popoverProvider.defaults, {
                 html: true,
@@ -128,8 +137,8 @@
 
         })
 
-        .run(['$rootScope', '$location', '$cookies', '$http',
-            function ($rootScope, $location, $cookies, $http) {
+        .run(['$rootScope', '$location', '$cookies', '$http', '$alert',
+            function ($rootScope, $location, $cookies, $http, $alert) {
 
                 /**
                  * To authorize feature based on role
@@ -178,12 +187,12 @@
                         currentUser.features.push(globalFeatures.HAS_MANAGE_REQUEST_PAGE_AUTH);
                     }
                 };
-            
+
                 var _deserialiseRoles = function(text) {
                     var result = text.split(',');
                     return result;
                 };
-                
+
                 var _fetchUserdata = function() {
                     var userid = $cookies.get('userid');
                     if (!userid) { return null; }
@@ -196,16 +205,24 @@
                     };
                     return userdata;
                 };
-            
+
+                $rootScope.updateUserData = function(userdata) {
+                    $rootScope.globals = userdata ? { currentUser: userdata } : {};
+
+                    if ($rootScope.globals.currentUser) {
+                        $rootScope.authenticated = true;
+                        $rootScope.setCurrentUserAuthorizations($rootScope.globals.currentUser);
+                        //$http.defaults.headers.common.Authorization = 'Basic ' + $rootScope.globals.currentUser.credentials;
+                    }
+
+                    $rootScope.currentUserId = _.get($rootScope, 'globals.currentUser.userid');
+                    $rootScope.currentUsername = _.get($rootScope, 'globals.currentUser.username', '');
+                    $rootScope.currentRole = _.find(_.get($rootScope, 'globals.currentUser.roles', []));
+                };
+
                 // keep user logged in after page refresh
                 var userdata = _fetchUserdata();
-                $rootScope.globals = userdata ? { currentUser: userdata } : {};
-
-                if ($rootScope.globals.currentUser) {
-                    $rootScope.authenticated = true;
-                    $rootScope.setCurrentUserAuthorizations($rootScope.globals.currentUser);
-                    //$http.defaults.headers.common.Authorization = 'Basic ' + $rootScope.globals.currentUser.credentials;
-                }
+                $rootScope.updateUserData(userdata);
 
                 var _getName = function(user) {
                     if (user === null) {
@@ -216,6 +233,47 @@
                         (user.lastName === null ? '' : user.lastName);
                 };
                 $rootScope.getName = _getName;
+
+                $rootScope.heartbeat = function() {
+                    return $http.get('user');
+                };
+
+                $rootScope.isCurrentUser = function(userid) {
+                    return ($rootScope.currentUserId === userid);
+                };
+
+                $rootScope.hasRole = function(role) {
+                    return _.includes(_.get($rootScope, 'globals.currentUser.roles', []), role);
+                };
+
+                $rootScope.isPalga = function() {
+                    return $rootScope.hasRole('palga');
+                };
+
+                $rootScope.isRequester = function() {
+                    return $rootScope.hasRole('requester');
+                };
+
+                $rootScope.isLabUser = function() {
+                    return $rootScope.hasRole('lab_user');
+                };
+
+                $rootScope.isHubUser = function() {
+                    return $rootScope.hasRole('hub_user');
+                };
+
+                $rootScope.isScientificCouncil = function() {
+                    return $rootScope.hasRole('scientific_council');
+                };
+
+                $rootScope.logErrorResponse = function(response) {
+                    var message = _.get(response, 'data.message', '<empty>');
+                    console.log('Status ' + response.status + ': ' + _.get(response, 'data.error', 'Error') + '\n' + message);
+                };
+
+                $rootScope.alert = function(options) {
+                    return $alert(options);
+                };
 
                 $rootScope.$on('$locationChangeStart', function () {
                     // redirect to login page if not logged in
@@ -249,4 +307,4 @@
         }
         return true;
     }
-})(window, angular, messages);
+})(window, _, angular, messages);

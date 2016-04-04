@@ -186,7 +186,13 @@ address {margin-bottom: 0px;}
 /*
 * Alert box from angular-strap
 */
-.top-right { position: fixed; right: 5px; margin-right: 10px; top: 55px; }
+.top-right {
+    position: fixed;
+    right: 5px;
+    margin-right: 10px;
+    top: 55px;
+    min-width: 20em;
+}
 .alert.top {
     position: fixed;
     right: 5px;

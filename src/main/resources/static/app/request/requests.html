@@ -22,7 +22,7 @@ This file is distributed under the GNU Affero General Public License
         <!--Main Content-->
         <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-            <div ng-show="error" class="alert alert-danger" role="alert">
+            <div ng-if="error" class="alert alert-danger" role="alert">
                 {{ error | translate }}
             </div>
 
@@ -69,7 +69,9 @@ This file is distributed under the GNU Affero General Public License
                         <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><select st-search="status" class="input-sm form-control" type="search" st-input-event="change">
                                 <option value="">{{'Filter by status' | translate}}</option>
-                                <option ng-repeat="status in statuses" value="{{status}}">{{ status | translate}}</option>
+                                <option ng-repeat="status in statuses"
+                                    ng-selected="status === activeSidebar"
+                                    value="{{status}}">{{ status | translate}}</option>
                             </select>
                         </th>
                         <th>&nbsp;</th>

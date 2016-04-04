@@ -4,36 +4,26 @@
  * (see accompanying file LICENSE).
  */
 angular.module('ProcessApp.directives')
-    .directive('dntpSidebar', ['Request', function(Request) {
+    .directive('labRequestsSidebar', ['LabRequest', function(LabRequest) {
         'use strict';
 
-        var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
-        var _isNotSuspended = _.negate(_isSuspended);
-
-        var _getUnclaimed = function (requests) {
-            return _.chain(requests)
+        var _getUnclaimed = function (labrequests) {
+            return _.chain(labrequests)
                 .filter(_.matches({assignee: null}))
-                .filter(_isNotSuspended)
                 .value();
         };
 
-        var _getClaimed = function (requests, userId) {
-            return _.chain(requests)
+        var _getClaimed = function (labrequests, userId) {
+            return _.chain(labrequests)
                 .filter(_.matches({assignee: userId}))
-                .filter(_isNotSuspended)
                 .value();
         };
 
-        var _getSuspended = function (requests) {
-            return _.filter(requests, _isSuspended);
-        };
-
-        var _getRequestsByStatus = function (requests, statuses) {
+        var _getRequestsByStatus = function (labrequests, statuses) {
             var result = {};
             _(statuses).forEach(function(status) {
-                result[status] = _.chain(requests)
+                result[status] = _.chain(labrequests)
                     .filter(_.matches({status: status}))
-                    .filter(_isNotSuspended)
                     .value();
             });
             return result;
@@ -42,21 +32,21 @@ angular.module('ProcessApp.directives')
         return {
             restrict: 'E',
             scope: {
-                allRequests: '=',
+                allLabRequests: '=',
                 activeSidebar: '='
             },
-            templateUrl: 'app/components/sidebar/sidebar-template.html',
+            templateUrl: 'app/components/sidebar/lab-requests-sidebar-template.html',
             link : function ($scope) {
                 var userId = $scope.$root.currentUserId;
-                $scope.statusesForRole = Request.getStatusesForRole($scope.$root.currentRole);
+                $scope.statusesForRole = LabRequest.statuses;
 
-                $scope.isPalga = $scope.$root.isPalga;
+                $scope.isLabUser = $scope.$root.isLabUser;
+                $scope.isHubUser = $scope.$root.isHubUser;
 
-                $scope.$watch('allRequests', function(newValue, oldValue) {
+                $scope.$watch('allLabRequests', function(newValue, oldValue) {
                     if (newValue) {
                         $scope.unclaimedReqs = _getUnclaimed(newValue);
                         $scope.claimedReqs = _getClaimed(newValue, userId);
-                        $scope.suspendedReqs = _getSuspended(newValue);
                         $scope.requestsByStatus = _getRequestsByStatus(newValue, $scope.statusesForRole);
                     }
                 });

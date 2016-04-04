@@ -696,4 +696,4 @@ angular.module('ProcessApp.controllers')
             };
 
         }]);
-})(window, console, angular, jQuery, _, bootbox);
+})(window, console, angular, jQuery, _, window.bootbox);

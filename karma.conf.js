@@ -23,7 +23,7 @@ function listFiles() {
       path.join(conf.paths.src, '/app/**/*.module.js'),
       path.join(conf.paths.src, '/app/**/*.js'),
       path.join(conf.paths.src, '/**/*.spec.js'),
-      path.join(conf.paths.src, '/**/*.mock.js'),
+      path.join(conf.paths.src, '/**/*.mock.js')
     ])
     .concat(pathSrcHtml);
 
@@ -38,7 +38,6 @@ function listFiles() {
     served: true,
     watched: false
   });
-    console.log(files);
   return files;
 }
 

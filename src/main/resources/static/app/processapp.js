@@ -6,10 +6,14 @@
 (function(window, angular, messages) {
     'use strict';
 
-    angular.module('ProcessApp.services', ['restangular'])
-      .config(function(RestangularProvider) {
-        RestangularProvider.setBaseUrl('/');
-      });
+    angular.module('ProcessApp.services', ['mgcrea.ngStrap.alert','ngCookies', 'restangular'])
+        .config(function ( $alertProvider, $cookieeProvider, RestangularProvider ) {
+            angular.extend($alertProvider.defaults, {
+                animation: 'am-fade-and-slide-top',
+                placement: 'top'
+            });
+            RestangularProvider.setBaseUrl('/');
+        });
     angular.module('ProcessApp.directives', []);
     angular.module('ProcessApp.controllers', ['restangular'])
       .config(function(RestangularProvider) {

@@ -249,4 +249,4 @@
         }
         return true;
     }
-})(window, angular, messages);
+})(window, angular, window.messages);

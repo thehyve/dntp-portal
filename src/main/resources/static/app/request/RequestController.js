@@ -11,16 +11,16 @@ angular.module('ProcessApp.controllers')
         'Request', 'RequestAttachment', 'RequestComment',
         'ApprovalComment', 'ApprovalVote',
         '$translate',
-        '$alert',
         'Upload', '$routeParams', 'RequestFilter',
+        '$alert', '$timeout',
         'AgreementFormTemplate',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
                   $translate,
-                  $alert,
                   Upload, $routeParams, RequestFilter,
+                  $alert, $timeout,
                   AgreementFormTemplate) {
 
             $scope.statuses = Request.statuses;
@@ -570,7 +570,7 @@ angular.module('ProcessApp.controllers')
                 'LabRequest'
             ];
             $scope.isExcerptSelectionState = function(state) {
-                return $scope.excerptSelectionStates.indexOf(state) !== -1;
+                return _.includes($scope.excerptSelectionStates, state);
             };
 
             /**
@@ -583,19 +583,50 @@ angular.module('ProcessApp.controllers')
                     ($scope.isPalga() && _.includes($scope.editStates, status));
             };
 
-            $scope.popover = {
-                previousContact: false,
-                requestType: false,
-                dataLinkage: false,
-                informedConsent: false
-            };
-            
-            $scope.showPopover = function(name) {
-                $scope.popover[name] = true;
+            $scope.autofocus = function() {
+                $timeout(function() {
+                    $('#contactPersonName').focus();
+                });
             };
 
-            $scope.hidePopover = function(name) {
-                $scope.popover[name] = false;
+            $scope.popoverEnablers = {
+                previousContactPopover: ['previousContactYes', 'previousContactNo'],
+                requestTypePopover: ['radio-numbers', 'radio-excerpts', 'radio-excerpts-PA', 'radio-excerpts-materials',
+                                     'radio-excerpts-PA-materials', 'radio-PA', 'radio-materials'],
+                dataLinkagePopover: ['linkageWithPersonalDataYes', 'linkageWithPersonalDataNo'],
+                informedConsentPopover: ['informedConsentYes', 'informedConsentNo']
+            };
+
+            $scope.showPopover = function(id) {
+                $('#'+id).popover('show');
+            };
+
+            $scope.hidePopover = function(id) {
+                $timeout(function() {
+                    var enablersHaveFocus = false;
+                    _($scope.popoverEnablers[id]).forEach(function(enabler) {
+                        if ($('#'+enabler).is(':focus')) {
+                            enablersHaveFocus = true;
+                        }
+                    });
+                    if (!enablersHaveFocus) { $('#'+id).popover('hide'); }
+                });
+            };
+
+            $scope.enablePopovers = function() {
+                $timeout(function() {
+                _($scope.popoverEnablers).forIn(function(enablers, id) {
+                    _(enablers).forEach(function(enabler) {
+                        var el = $('#'+enabler);
+                        el.focus(function(event) {
+                            $scope.showPopover(id);
+                        });
+                        el.blur(function(event) {
+                            $scope.hidePopover(id);
+                        });
+                    });
+                });
+                });
             };
 
         }]);

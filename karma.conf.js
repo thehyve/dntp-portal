@@ -18,7 +18,7 @@ function listFiles() {
 
   var patterns = wiredep(wiredepOptions).js
     .concat([
-        path.join(conf.paths.src, '/messages/*.js'),
+      path.join(conf.paths.src, '/messages/*.js'),
       path.join(conf.paths.src, '/app/*.js'),
       path.join(conf.paths.src, '/app/**/*.module.js'),
       path.join(conf.paths.src, '/app/**/*.js'),
@@ -33,7 +33,7 @@ function listFiles() {
     };
   });
   files.push({
-    pattern: path.join(conf.paths.src, '/assets/**/*'),
+    pattern: path.join(conf.paths.src, '/images/**/*'),
     included: false,
     served: true,
     watched: false
@@ -57,7 +57,7 @@ module.exports = function(config) {
 
     logLevel: 'WARN',
 
-    frameworks: ['jasmine', 'angular-filesort'],
+    frameworks: ['phantomjs-shim', 'jasmine', 'angular-filesort'],
 
     angularFilesort: {
       whitelist: [path.join(conf.paths.src, '/**/!(*.html|*.spec|*.mock).js')]
@@ -68,6 +68,7 @@ module.exports = function(config) {
     plugins : [
       'karma-phantomjs-launcher',
       'karma-angular-filesort',
+      'karma-phantomjs-shim',
       'karma-coverage',
       'karma-jasmine',
       'karma-ng-html2js-preprocessor'

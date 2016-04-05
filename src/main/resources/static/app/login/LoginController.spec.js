@@ -16,17 +16,8 @@ describe('LoginController', function() {
         $controller = _$controller_;
     }));
 
-    describe('Login Page', function() {
-        var $scope, controller;
-
-        beforeEach(function() {
-            controller = $controller('LoginController', {
-                $scope : $scope
-            });
-        });
-
-        // TODO
-
+    it('should have been defined', function() {
+        expect($controller).toBeDefined();
     });
 
 });

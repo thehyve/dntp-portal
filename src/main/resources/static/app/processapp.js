@@ -7,7 +7,7 @@
     'use strict';
 
     angular.module('ProcessApp.services', ['mgcrea.ngStrap.alert','ngCookies', 'restangular'])
-        .config(function ( $alertProvider, $cookieeProvider, RestangularProvider ) {
+        .config(function ( $alertProvider, $cookiesProvider, RestangularProvider ) {
             angular.extend($alertProvider.defaults, {
                 animation: 'am-fade-and-slide-top',
                 placement: 'top'

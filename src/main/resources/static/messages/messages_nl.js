@@ -3,15 +3,13 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(window) {
+(function(hasModuleExports, hasWindow) {
     'use strict';
     
     /* global messages: true,
      */
 
-    var messages = window.messages || (window.messages = {});
-    
-    messages.nl = {
+    var _messages_nl = {
         /* ========= */
         /* Global */
         /* ========= */
@@ -380,4 +378,14 @@
         'Hub users': 'Hubmedewerkers',
         null: null
     };
-})(window);
+
+    if (hasWindow) {
+        var messages = window.messages || (window.messages = {});
+        messages.nl = _messages_nl;
+    }
+
+    if (hasModuleExports) {
+        module.exports = _messages_nl;
+    }
+
+})(typeof module !== 'undefined' && module.exports, typeof window !== 'undefined');

@@ -7,11 +7,11 @@ angular.module('ProcessApp.controllers')
     .controller('LabRequestController', [
         '$q', '$rootScope', '$scope', '$modal',
         '$location', '$route', '$routeParams', '$window',
-        'Request', 'LabRequest', 'Restangular',
+        'Request', 'LabRequest', 'Restangular', 'LabRequestFilter',
         function (
                 $q, $rootScope, $scope, $modal,
                 $location, $route, $routeParams, $window,
-                Request, LabRequest, Restangular) {
+                Request, LabRequest, Restangular, LabRequestFilter) {
             'use strict';
 
             $scope.labReqModal = $modal({
@@ -153,38 +153,13 @@ angular.module('ProcessApp.controllers')
                 return deferred.promise;
             };
 
-            var selectAll = function (requests) {
-                return requests;
-            };
-
-            var selectClaimed = function (requests) {
-                var userId = $rootScope.globals.currentUser.userid;
-                return _.chain(requests)
-                    .filter(_.matches({assignee: userId}))
-                    .value();
-            };
-
-            var selectUnclaimed = function (requests) {
-                return _.chain(requests)
-                    .filter(_.matches({assignee: null}))
-                    .value();
-            };
-
-            var selectStatus = function (status) {
-                return function (requests) {
-                    return _.chain(requests)
-                        .filter(_.matches({status: status}))
-                        .value();
-                };
-            };
-
             $scope.selections = {
-                overview: selectAll,
-                claimed: selectClaimed,
-                unclaimed: selectUnclaimed
+                overview: LabRequestFilter.selectAll,
+                claimed: LabRequestFilter.selectClaimed($rootScope.currentUserId),
+                unclaimed: LabRequestFilter.selectUnclaimed
             };
             _(LabRequest.statuses).forEach(function(status) {
-                $scope.selections[status] = selectStatus(status);
+                $scope.selections[status] = LabRequestFilter.selectByStatus(status);
             });
 
             $scope.showSelection = function(labRequests) {

@@ -11,16 +11,16 @@ angular.module('ProcessApp.controllers')
         'Request', 'RequestAttachment', 'RequestComment',
         'ApprovalComment', 'ApprovalVote',
         '$translate',
-        'Upload', '$routeParams',
         '$alert',
+        'Upload', '$routeParams', 'RequestFilter',
         'AgreementFormTemplate',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
                   $translate,
-                  Upload, $routeParams,
                   $alert,
+                  Upload, $routeParams, RequestFilter,
                   AgreementFormTemplate) {
 
             $scope.statuses = Request.statuses;
@@ -70,49 +70,16 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
-            var _isNotSuspended = _.negate(_isSuspended);
-
-            var selectAll = function (requests) {
-                return requests;
-            };
-
-            var selectSuspended = function (requests) {
-                return _.filter(requests, _isSuspended);
-            };
-
-            var selectClaimed = function (requests) {
-                var userId = $rootScope.globals.currentUser.userid;
-                return _.chain(requests)
-                    .filter(_.matches({assignee: userId}))
-                    .filter(_isNotSuspended)
-                    .value();
-            };
-
-            var selectUnclaimed = function (requests) {
-                return _.chain(requests)
-                    .filter(_.matches({assignee: null}))
-                    .filter(_isNotSuspended)
-                    .value();
-            };
-
-            var selectStatus = function (status) {
-                return function (requests) {
-                    return _.chain(requests)
-                        .filter(_.matches({status: status}))
-                        .filter(_isNotSuspended)
-                        .value();
-                };
-            };
-
             $scope.selections = {
-                overview: selectAll,
-                suspended: selectSuspended,
-                claimed: selectClaimed,
-                unclaimed: selectUnclaimed
+                overview: RequestFilter.selectAll,
+                suspended: RequestFilter.selectSuspended,
+                claimed: RequestFilter.selectClaimed($rootScope.currentUserId),
+                unclaimed: RequestFilter.selectUnclaimed,
+                voted: RequestFilter.selectVoted,
+                notvoted: RequestFilter.selectNotVoted
             };
             _(Request.getStatusesForRole($scope.currentRole)).forEach(function(status) {
-                $scope.selections[status] = selectStatus(status);
+                $scope.selections[status] = RequestFilter.selectByStatus(status);
             });
 
             $scope.showSelection = function(requests) {

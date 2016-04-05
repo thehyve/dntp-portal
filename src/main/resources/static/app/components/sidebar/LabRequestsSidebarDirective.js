@@ -4,30 +4,9 @@
  * (see accompanying file LICENSE).
  */
 angular.module('ProcessApp.directives')
-    .directive('labRequestsSidebar', ['LabRequest', function(LabRequest) {
+    .directive('labRequestsSidebar', ['LabRequest', 'LabRequestFilter',
+            function(LabRequest, LabRequestFilter) {
         'use strict';
-
-        var _getUnclaimed = function (labrequests) {
-            return _.chain(labrequests)
-                .filter(_.matches({assignee: null}))
-                .value();
-        };
-
-        var _getClaimed = function (labrequests, userId) {
-            return _.chain(labrequests)
-                .filter(_.matches({assignee: userId}))
-                .value();
-        };
-
-        var _getRequestsByStatus = function (labrequests, statuses) {
-            var result = {};
-            _(statuses).forEach(function(status) {
-                result[status] = _.chain(labrequests)
-                    .filter(_.matches({status: status}))
-                    .value();
-            });
-            return result;
-        };
 
         return {
             restrict: 'E',
@@ -45,9 +24,12 @@ angular.module('ProcessApp.directives')
 
                 $scope.$watch('allLabRequests', function(newValue, oldValue) {
                     if (newValue) {
-                        $scope.unclaimedReqs = _getUnclaimed(newValue);
-                        $scope.claimedReqs = _getClaimed(newValue, userId);
-                        $scope.requestsByStatus = _getRequestsByStatus(newValue, $scope.statusesForRole);
+                        $scope.unclaimedReqs = LabRequestFilter.selectUnclaimed(newValue);
+                        $scope.claimedReqs = LabRequestFilter.selectClaimed(userId)(newValue);
+                        $scope.requestsByStatus = {};
+                        _($scope.statusesForRole).forEach(function(status) {
+                            $scope.requestsByStatus[status] = LabRequestFilter.selectByStatus(status)(newValue);
+                        });
                     }
                 });
             }

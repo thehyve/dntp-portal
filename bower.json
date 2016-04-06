@@ -3,7 +3,7 @@
   "version": "0.0.43",
   "dependencies": {
     "jquery": "~2.1.4",
-    "lodash": "~3.10.1",
+    "lodash": "~4.6.1",
     "angular-cookies": "~1.5.3",
     "angular-route": "~1.5.3",
     "angular-touch": "~1.5.3",    
@@ -25,6 +25,7 @@
     "angular-loading-bar": "0.9.0",
     "github-markdown-css": "~2.2.1",
     "textAngular": "~1.5.0",
+    "asmcrypto": "*",
     "moment": "~2.10.6",
     "animate.css": "~3.4.0",    
     "isteven-angular-multiselect" : "~4",

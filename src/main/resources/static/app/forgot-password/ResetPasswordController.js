@@ -27,13 +27,12 @@ angular.module('ProcessApp.controllers')
 
             $scope.generateRandomPassword = function() {
                 var buffer = new Uint8Array(32);
-                //asmCrypto.getRandomValues(buffer);
-                //var pw = asmCrypto.SHA256.base64(buffer);
-                var pw = buffer;
+                asmCrypto.getRandomValues(buffer);
+                var pw = asmCrypto.SHA256.base64(buffer);
 
                 // To match password constraints, add a letter, a special and a number:
                 buffer = new Uint8Array(3);
-                //asmCrypto.getRandomValues(buffer);
+                asmCrypto.getRandomValues(buffer);
                 var letter = letters[buffer[0] % letters.length];
                 var special = specials[buffer[1] % specials.length];
                 var number = buffer[2];

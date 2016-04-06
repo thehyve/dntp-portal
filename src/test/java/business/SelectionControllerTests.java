@@ -33,9 +33,6 @@ import org.testng.annotations.Test;
 
 import business.controllers.RequestController;
 import business.controllers.SelectionController;
-import business.controllers.TestController;
-import business.models.LabRepository;
-import business.models.LabRequestRepository;
 import business.models.PathologyItemRepository;
 import business.models.User;
 import business.representation.RequestRepresentation;
@@ -55,30 +52,24 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     
     @Autowired UserService userService;
 
-    @Autowired LabRepository labRepository;
-
     @Autowired SelectionController selectionController;
-    
+
     @Autowired RequestController requestController;
-    
-    @Autowired TestController testController;
-    
+
     @Autowired TaskService taskService;
 
-    @Autowired LabRequestRepository labRequestRepository;
-    
     @Autowired LabRequestService labRequestService;
-    
+
     @Autowired PathologyItemRepository pathologyItemRepository;
-    
+
     @Autowired
     JavaMailSender mailSender;
-    
+
     @Autowired
     AuthenticationProvider authenticationProvider;
-    
+
     protected String processInstanceId;
-    
+
     protected UserAuthenticationToken getRequester() {
         User user = userService.findByUsername("requester@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");

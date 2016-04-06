@@ -24,7 +24,6 @@ import business.models.ActivationLink;
 import business.models.ActivationLinkRepository;
 import business.models.ContactData;
 import business.models.Lab;
-import business.models.LabRepository;
 import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
@@ -51,7 +50,7 @@ public class UserService {
     RoleRepository roleRepository;
 
     @Autowired
-    LabRepository labRepository;
+    LabService labService;
 
     @Autowired
     MailService mailService;
@@ -141,7 +140,7 @@ public class UserService {
             if (body.getLabId() == null) {
                 throw new InvalidUserData("No lab selected.");
             }
-            Lab lab = labRepository.findOne(body.getLabId());
+            Lab lab = labService.findOne(body.getLabId());
             if (lab == null) {
                 throw new InvalidUserData("No lab selected.");
             }
@@ -153,7 +152,7 @@ public class UserService {
             }
             Set<Lab> labs = new HashSet<>();
             for (Long labId: body.getHubLabIds()) {
-                Lab lab = labRepository.findOne(labId);
+                Lab lab = labService.findOne(labId);
                 if (lab == null) {
                     throw new InvalidUserData("Selected hub lab not found.");
                 }

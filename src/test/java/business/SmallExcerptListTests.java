@@ -121,7 +121,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
 
         assertEquals("LabRequest", representation.getStatus());
         
-        List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(processInstanceId);
+        List<LabRequest> labRequests = labRequestService.findAllByProcessInstanceId(processInstanceId);
         assertEquals(2, labRequests.size());
         
         int pathologyCount = 0;

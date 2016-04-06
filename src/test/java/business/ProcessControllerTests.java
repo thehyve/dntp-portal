@@ -38,11 +38,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import business.models.Lab;
-import business.models.LabRepository;
 import business.models.Role;
 import business.models.User;
 import business.models.UserRepository;
 import business.security.UserAuthenticationToken;
+import business.services.LabService;
 import business.services.PasswordService;
 import business.services.UserService;
 
@@ -61,7 +61,7 @@ public class ProcessControllerTests {
 
     @Autowired UserService userService;
 
-    @Autowired LabRepository labRepository;
+    @Autowired LabService labService;
 
     @Autowired
     private EmbeddedWebApplicationContext webApplicationContext;
@@ -185,8 +185,8 @@ public class ProcessControllerTests {
         Lab lab = new Lab();
         lab.setNumber(3);
         lab.setName("Nijmegen");
-        lab = labRepository.save(lab);
-                
+        lab = labService.save(lab);
+
         String test_string = String.format(lab_put_template, lab.getId(), lab.getNumber());
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/labs/{id}", lab.getId())
                 .contentType(MediaType.APPLICATION_JSON)

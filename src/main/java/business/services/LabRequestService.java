@@ -39,7 +39,6 @@ import business.models.Comment;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.Lab;
-import business.models.LabRepository;
 import business.models.LabRequest;
 import business.models.LabRequestRepository;
 import business.models.PathologyItem;
@@ -80,7 +79,7 @@ public class LabRequestService {
     private HistoryService historyService;
 
     @Autowired
-    private LabRepository labRepository;
+    private LabService labService;
 
     @Autowired
     private LabRequestRepository labRequestRepository;
@@ -100,8 +99,19 @@ public class LabRequestService {
     public LabRequest findOne(Long id) {
         return this.labRequestRepository.findOne(id);
     }
-    
-    
+
+    /**
+     * Counts the number of lab requests.
+     * @return the number of lab requests.
+     */
+    public long count() {
+        return labRequestRepository.count();
+    }
+
+    public List<LabRequest> findAllByProcessInstanceId(String processInstanceId) {
+        return labRequestRepository.findAllByProcessInstanceId(processInstanceId);
+    }
+
     /**
      * Finds task.
      * @param taskId
@@ -246,7 +256,7 @@ public class LabRequestService {
             SortedSet<Integer> labNumbers = new TreeSet<>((Collection<Integer>) var);
             Set<User> hubUsers = new HashSet<>();
             for (Integer labNumber : labNumbers) {
-                Lab lab = labRepository.findByNumber(labNumber);
+                Lab lab = labService.findByNumber(labNumber);
                 HistoricTaskInstance task = findLabRequestTaskForLab(labNumber, instance.getId());
 
                 // create lab requests

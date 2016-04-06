@@ -5,20 +5,14 @@
  */
 angular.module('ProcessApp.controllers')
     .controller('LabRequestController', [
-        '$q', '$rootScope', '$scope', '$modal', '$location', '$route', '$routeParams', '$window', 'Request',
-        'Restangular', function ($q, $rootScope, $scope, $modal, $location, $route, $routeParams, $window, Request,
-                                 Restangular) {
+        '$q', '$rootScope', '$scope', '$modal',
+        '$location', '$route', '$routeParams', '$window',
+        'Request', 'LabRequest', 'Restangular', 'LabRequestFilter',
+        function (
+                $q, $rootScope, $scope, $modal,
+                $location, $route, $routeParams, $window,
+                Request, LabRequest, Restangular, LabRequestFilter) {
             'use strict';
-
-            $rootScope.redirectUrl = $location.path();
-
-            $scope.login = function () {
-                $location.path('/login');
-            };
-
-            if (!$rootScope.globals.currentUser) {
-                $scope.login();
-            }
 
             $scope.labReqModal = $modal({
                 id: 'labRequestWindow',
@@ -91,18 +85,12 @@ angular.module('ProcessApp.controllers')
                 var fetchSampleList = ($route.current.templateUrl === 'app/lab-request/samples.html');
                 Restangular.all(fetchSampleList ? 'labrequests/detailed' : 'labrequests')
                 .getList().then(function (labRequests) {
-                    $rootScope.labRequests = labRequests;
-                    $scope.displayedLabRequests = [].concat($rootScope.labRequests);
+                    $scope.allLabRequests = labRequests;
                     if (fetchSampleList) {
                         _createSampleList(labRequests);
                     }
-                    deferred.resolve($scope.labRequests);
+                    deferred.resolve($scope.allLabRequests);
                 }, function (err) {
-                    if (err.status === 403) {
-                        $rootScope.errormessage = err.data.message;
-                        $scope.login();
-                        return;
-                    }
                     deferred.reject('Cannot load lab requests. ' + _flattenError(err));
                 });
                 return deferred.promise;
@@ -158,11 +146,6 @@ angular.module('ProcessApp.controllers')
                     $scope.labRequest.htmlLabAddress = getHTMLRequesterAddress($scope.labRequest.lab.contactData);
                     deferred.resolve($scope.labRequest);
                 }, function (err) {
-                    if (err.status === 403) {
-                        $rootScope.errormessage = err.data.message;
-                        $scope.login();
-                        return;
-                    }
                     var errMsg = 'Error : ' + err.data.status + ' - ' + err.data.error;
                     $scope.alerts.push({type: 'danger', msg: errMsg});
                     deferred.reject(errMsg);
@@ -170,10 +153,40 @@ angular.module('ProcessApp.controllers')
                 return deferred.promise;
             };
 
+            $scope.selections = {
+                overview: LabRequestFilter.selectAll,
+                claimed: LabRequestFilter.selectClaimed($rootScope.currentUserId),
+                unclaimed: LabRequestFilter.selectUnclaimed
+            };
+            _(LabRequest.statuses).forEach(function(status) {
+                $scope.selections[status] = LabRequestFilter.selectByStatus(status);
+            });
+
+            $scope.showSelection = function(labRequests) {
+                var selection = $scope.activeSidebar;
+                if (labRequests && selection in $scope.selections) {
+                    $scope.labRequests = $scope.selections[selection](labRequests);
+                } else {
+                    $scope.labRequests = [];
+                }
+                $scope.displayedLabRequests = [].concat($scope.labRequests);
+            };
+
+            $scope.$watch('allLabRequests', function(newValue) {
+                if (newValue) {
+                    $scope.showSelection(newValue);
+                }
+            });
+
             var _loadData = function () {
                 if ($routeParams.labRequestId) {
                     _loadRequest({id: $routeParams.labRequestId});
                 } else {
+                    if ($routeParams.selection && $routeParams.selection in $scope.selections) {
+                        $scope.activeSidebar = $routeParams.selection;
+                    } else {
+                        $scope.activeSidebar = 'overview';
+                    }
                     _loadRequests();
                 }
             };
@@ -350,16 +363,7 @@ angular.module('ProcessApp.controllers')
                     });
             };
 
-            $scope.statuses = [
-                'Waiting for lab approval',
-                'Approved',
-                'Sending',
-                'Received',
-                'Returning',
-                'Returned',
-                'Rejected',
-                'Completed'
-            ];
+            $scope.statuses = LabRequest.statuses;
 
             $scope.lab_user_statuses = _.difference($scope.statuses, [
                 'Returned',
@@ -383,8 +387,8 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.isLabOrHubUserStatus = function (status) {
-                return  ($scope.isLabUser() && $scope.isLabUserStatus(status)) ||
-                        ($scope.isHubUser() && $scope.isHubUserStatus(status));
+                return  ($rootScope.isLabUser() && $scope.isLabUserStatus(status)) ||
+                        ($rootScope.isHubUser() && $scope.isHubUserStatus(status));
             };
 
             $scope.requester_statuses = [
@@ -394,42 +398,6 @@ angular.module('ProcessApp.controllers')
 
             $scope.isRequesterStatus = function (status) {
                 return _.includes($scope.requester_statuses, status);
-            };
-
-            $scope.isLabUser = function () {
-                if (!$rootScope.globals.currentUser) {
-                    $scope.login();
-                    return;
-                }
-                return $rootScope.globals.currentUser.roles.indexOf('lab_user') !== -1;
-            };
-
-            $scope.isHubUser = function () {
-                if (!$rootScope.globals.currentUser) {
-                    $scope.login();
-                    return;
-                }
-                return $rootScope.globals.currentUser.roles.indexOf('hub_user') !== -1;
-            };
-
-            $scope.isRequester = function () {
-                if (!$rootScope.globals.currentUser) {
-                    $scope.login();
-                    return;
-                }
-                return $rootScope.globals.currentUser.roles.indexOf('requester') !== -1;
-            };
-
-            $scope.isPalga = function () {
-                if (!$rootScope.globals.currentUser) {
-                    $scope.login();
-                    return;
-                }
-                return $rootScope.globals.currentUser.roles.indexOf('palga') !== -1;
-            };
-
-            $scope.isCurrentUser = function(user) {
-                return ($scope.globals.currentUser.userid === user);
             };
 
             $scope.update = function (labRequest) {
@@ -491,10 +459,6 @@ angular.module('ProcessApp.controllers')
                         }
                     }
                 );
-            };
-            
-            $scope.focus = function (el) {
-                $(el).focus();
             };
 
             $scope.printPreview = function () {

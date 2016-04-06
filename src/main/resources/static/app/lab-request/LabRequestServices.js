@@ -6,8 +6,8 @@
 (function(angular) {
     'use strict';
 
-      var LabRequestFactory = function($resource) {
-        return $resource('/labrequests/:id', {
+    var LabRequestFactory = function($resource) {
+        var _labRequestFactory = $resource('/labrequests/:id', {
             id : '@id'
         }, {
             getDetailed : {
@@ -52,6 +52,19 @@
                 method : 'PUT'
             }
         });
+
+        _labRequestFactory.statuses = [
+            'Waiting for lab approval',
+            'Approved',
+            'Sending',
+            'Received',
+            'Returning',
+            'Returned',
+            'Rejected',
+            'Completed'
+        ];
+
+        return _labRequestFactory;
     };
 
     LabRequestFactory.$inject = [ '$resource' ];

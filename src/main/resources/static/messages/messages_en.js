@@ -3,15 +3,13 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function (window) {
+(function(hasModuleExports, hasWindow) {
     'use strict';
 
     /* global messages: true,
      */
 
-    var messages = window.messages || (window.messages = {});
-    
-    messages.en = {
+    var _messages_en = {
         /* ========= */
         /* Global */
         /* ========= */
@@ -94,4 +92,15 @@
         /* ===================== */
         null: null
     };
-})(window);
+
+    if (hasWindow) {
+        var messages = window.messages || (window.messages = {});
+        messages.en = _messages_en;
+    }
+
+    if (hasModuleExports) {
+        module.exports = _messages_en;
+    }
+
+})(typeof module !== 'undefined' && module.exports, typeof window !== 'undefined');
+

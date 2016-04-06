@@ -27,36 +27,20 @@ angular.module('ProcessApp.controllers')
                 $http.get('user').success(function(data) {
                     // console.log('Login succes: ' + JSON.stringify(data));
                     if (data.username) {
-                        $rootScope.userid = ''+data.id;
-                        $rootScope.username = data.username;
-                        $rootScope.authenticated = true;
-                        $rootScope.roles = [];
+                        var userdata = {
+                            userid: ''+data.id,
+                            username: data.username,
+                            roles: [],
+                            features: [],
+                            lab: null
+                        };
                         if (data.roles) {
                             for(var i in data.roles) {
-                                $rootScope.roles.push(data.roles[i].name);
+                                userdata.roles.push(data.roles[i].name);
                             }
                         }
-
-                        $rootScope.globals = {
-                            currentUser: {
-                                userid: $rootScope.userid,
-                                username: $rootScope.username,
-                                //credentials: $scope.credentials,
-                                roles: $rootScope.roles,
-                                features : [],
-                                lab : null
-                            }
-                        };
-
-                        $rootScope.setCurrentUserAuthorizations($rootScope.globals.currentUser);
-
-                        _storeUserdata($rootScope.globals.currentUser);
-
-                        if (data.authorities) {
-                            for(var j in data.authorities) {
-                                $rootScope.roles.push(data.authorities[j].authority);
-                            }
-                        }
+                        _storeUserdata(userdata);
+                        $rootScope.updateUserData(userdata);
                     } else {
                         $rootScope.authenticated = false;
                     }
@@ -68,8 +52,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.credentials = {
-                //username: 'palga@dntp.thehyve.nl',
-                //password: 'palga'
+                username: $cookies.get('username')
             };
 
             var _refreshCookie = function() {
@@ -91,12 +74,13 @@ angular.module('ProcessApp.controllers')
                                 $rootScope.error = false;
                                 var redirectUrl = $rootScope.redirectUrl;
                                 if (!redirectUrl) {
-                                    if ($rootScope.globals.currentUser.roles.indexOf('lab_user') === -1) {
-                                        redirectUrl = '/';
-                                    } else {
+                                    if ($rootScope.isLabUser() || $rootScope.isHubUser()) {
                                         redirectUrl = '/lab-requests';
+                                    } else {
+                                        redirectUrl = '/';
                                     }
                                 }
+                                //console.log('Redirect to: ' + redirectUrl);
                                 $location.path(redirectUrl);
                             } else {
                                 $location.path('/login');

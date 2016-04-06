@@ -11,16 +11,16 @@ angular.module('ProcessApp.controllers')
         'Request', 'RequestAttachment', 'RequestComment',
         'ApprovalComment', 'ApprovalVote',
         '$translate',
-        'Upload', '$routeParams',
-        '$alert',
+        'Upload', '$routeParams', 'RequestFilter',
+        '$alert', '$timeout',
         'AgreementFormTemplate',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
                   $translate,
-                  Upload, $routeParams,
-                  $alert,
+                  Upload, $routeParams, RequestFilter,
+                  $alert, $timeout,
                   AgreementFormTemplate) {
 
             $scope.statuses = Request.statuses;
@@ -28,17 +28,6 @@ angular.module('ProcessApp.controllers')
             $scope.claimableStates = Request.claimableStates;
 
             $scope.editStates = Request.editStates;
-
-            $rootScope.redirectUrl = $location.path();
-
-            $scope.login = function() {
-                $location.path('/login');
-            };
-
-            if (!$rootScope.globals.currentUser) {
-                $scope.login();
-                return;
-            }
 
             $scope.Upload = Upload;
 
@@ -49,7 +38,6 @@ angular.module('ProcessApp.controllers')
             $scope.serverurl = $location.protocol()+'://'+$location.host() +
                 (($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
 
-            $scope.error = '';
             $rootScope.tempRequest = null;
 
             $scope.getRequest = function() {
@@ -67,20 +55,7 @@ angular.module('ProcessApp.controllers')
                     $scope.request = req;
                     $rootScope.tempRequest = jQuery.extend( true, {}, req ); // deep copy
                 }, function(response) {
-                    if (response.data) {
-                        $scope.error = response.data.message + '\n';
-                        if (response.data.error === 302) {
-                            $scope.accessDenied = true;
-                        }
-                        else if (response.status === 403) {
-                            $rootScope.errormessage = response.data.message;
-                            $scope.login();
-                            return;
-                        }
-                    } else {
-                        $scope.login();
-                        return;
-                    }
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
@@ -91,56 +66,21 @@ angular.module('ProcessApp.controllers')
                         req.number = Request.convertRequestNumber(req);
                     });
                 }, function(response) {
-                    if (response.data) {
-                        $scope.error = response.data.message + '\n';
-                        if (response.data.error === 302) {
-                            $scope.accessDenied = true;
-                            console.log("Access denied.");
-                        }
-                        else if (response.status === 403) {
-                            //$rootScope.errormessage = response.data.message;
-                            $scope.login();
-                            return;
-                        }
-                    } else {
-                        $scope.login();
-                        return;
-                    }
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
-            var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
-            var _isNotSuspended = _.negate(_isSuspended);
-
-            var selectAll = function (requests) {
-                return requests;
-            };
-
-            var selectSuspended = function (requests) {
-                return _.filter(requests, _isSuspended);
-            };
-
-            var selectClaimed = function (requests) {
-                var userId = $rootScope.globals.currentUser.userid;
-                return _.chain(requests)
-                    .filter(_.matches({assignee: userId}))
-                    .filter(_isNotSuspended)
-                    .value();
-            };
-
-            var selectUnclaimed = function (requests) {
-                return _.chain(requests)
-                    .filter(_.matches({assignee: null}))
-                    .filter(_isNotSuspended)
-                    .value();
-            };
-
             $scope.selections = {
-                overview: selectAll,
-                suspended: selectSuspended,
-                claimed: selectClaimed,
-                unclaimed: selectUnclaimed
+                overview: RequestFilter.selectAll,
+                suspended: RequestFilter.selectSuspended,
+                claimed: RequestFilter.selectClaimed($rootScope.currentUserId),
+                unclaimed: RequestFilter.selectUnclaimed,
+                voted: RequestFilter.selectVoted,
+                notvoted: RequestFilter.selectNotVoted
             };
+            _(Request.getStatusesForRole($scope.currentRole)).forEach(function(status) {
+                $scope.selections[status] = RequestFilter.selectByStatus(status);
+            });
 
             $scope.showSelection = function(requests) {
                 var selection = $scope.activeSidebar;
@@ -173,12 +113,8 @@ angular.module('ProcessApp.controllers')
                 AgreementFormTemplate.get()
                 .then(function (template) {
                     $scope.agreementFormTemplate = template;
-                }, function (err) {
-                    if (err.status === 403) {
-                        $rootScope.errormessage = err.response;
-                        $scope.login();
-                        return;
-                    }
+                }, function (response) {
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
@@ -246,7 +182,7 @@ angular.module('ProcessApp.controllers')
                 new Request().$save(function(request) {
                     $scope.edit(request);
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + '\n';
+                    $rootScope.logErrorResponse(response);
                     $scope.dataLoading = false;
                 });
             };
@@ -277,7 +213,7 @@ angular.module('ProcessApp.controllers')
                     $scope.editRequestModal.hide();
                     $scope.dataLoading = false;
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + '\n';
+                    $rootScope.logErrorResponse(response);
                     $scope.dataLoading = false;
                 });
             };
@@ -292,7 +228,7 @@ angular.module('ProcessApp.controllers')
                             $scope.request.agreementAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
-                            $scope.error = response.statusText;
+                            $rootScope.logErrorResponse(response);
                         });
                     }
                 });
@@ -308,7 +244,7 @@ angular.module('ProcessApp.controllers')
                             $scope.request.medicalEthicalCommitteeApprovalAttachments.splice($scope.request.medicalEthicalCommitteeApprovalAttachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
-                            $scope.error = response.statusText;
+                            $rootScope.logErrorResponse(response);
                         });
                     }
                 });
@@ -324,7 +260,7 @@ angular.module('ProcessApp.controllers')
                             $scope.request.dataAttachments.splice($scope.request.dataAttachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
-                            $scope.error = response.statusText;
+                            $rootScope.logErrorResponse(response);
                         });
                     }
                 });
@@ -340,7 +276,7 @@ angular.module('ProcessApp.controllers')
                             $scope.request.attachments.splice($scope.request.attachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
-                            $scope.error = response.statusText;
+                            $rootScope.logErrorResponse(response);
                         });
                     }
                 });
@@ -353,7 +289,7 @@ angular.module('ProcessApp.controllers')
                             $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
                             bootbox.alert('Request ' + request.processInstanceId + ' deleted.');
                         }, function(response) {
-                            $scope.error = response.statusText;
+                            $rootScope.logErrorResponse(response);
                         });
                     }
                 });
@@ -371,7 +307,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                             });
                         } else {
                             $scope.dataLoading = false;
@@ -390,7 +326,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                             });
                         } else {
                             $scope.dataLoading = false;
@@ -410,7 +346,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.editRequestModal.hide();
                                 $scope.dataLoading = false;
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                             });
                         } else {
                             $scope.dataLoading = false;
@@ -430,7 +366,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.refresh(request, result);
                                 //$scope.editRequestModal.hide();
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                             });
                         } else {
                             $scope.dataLoading = false;
@@ -455,7 +391,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.editRequestModal.hide();
                                 $scope.dataLoading = false;
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                                 $scope.dataLoading = false;
                             });
                         } else {
@@ -477,7 +413,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.refresh(request, result);
                                 $scope.dataLoading = false;
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                                 $scope.dataLoading = false;
                             });
                         }
@@ -495,7 +431,7 @@ angular.module('ProcessApp.controllers')
                                 $scope.refresh(request, result);
                                 $scope.dataLoading = false;
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                                 $scope.dataLoading = false;
                             });
                         }
@@ -531,7 +467,8 @@ angular.module('ProcessApp.controllers')
                         $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
                         $scope.refresh(request, result);
                     }, function (response) {
-                        $scope.error = response.statusText;
+                        $rootScope.logErrorResponse(response);
+                        return;
                     });
                 } else {
                     // return request to the original
@@ -587,7 +524,7 @@ angular.module('ProcessApp.controllers')
                 request.$claim(function(result) {
                     $scope.refresh(request, result);
                 }, function(response) {
-                    $scope.error = response.statusText;
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
@@ -595,7 +532,7 @@ angular.module('ProcessApp.controllers')
                 request.$unclaim(function(result) {
                     $scope.refresh(request, result);
                 }, function(response) {
-                    $scope.error = response.statusText;
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
@@ -603,7 +540,7 @@ angular.module('ProcessApp.controllers')
                 request.$suspend(function(result) {
                     $scope.refresh(request, result);
                 }, function(response) {
-                    $scope.error = response.statusText;
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
@@ -611,12 +548,8 @@ angular.module('ProcessApp.controllers')
                 request.$resume(function(result) {
                     $scope.refresh(request, result);
                 }, function(response) {
-                    $scope.error = response.statusText;
+                    $rootScope.logErrorResponse(response);
                 });
-            };
-
-            $scope.focus = function (el) {
-                $(el).focus();
             };
 
             $scope.size = function(obj) {
@@ -625,36 +558,6 @@ angular.module('ProcessApp.controllers')
                     if (obj.hasOwnProperty(key)) { size++; }
                 }
                 return size;
-            };
-
-            var _checkCurrentUserRole = function(role) {
-                return ($scope.globals && $scope.globals.currentUser && $scope.globals.currentUser.roles) &&
-                        $scope.globals.currentUser.roles.indexOf(role) !== -1;
-            };
-
-            $scope.isPalga = function() {
-                return _checkCurrentUserRole('palga');
-            };
-
-            $scope.isRequester = function() {
-                return _checkCurrentUserRole('requester');
-            };
-
-            $scope.isScientificCouncil = function() {
-                return _checkCurrentUserRole('scientific_council');
-            };
-
-            $scope.isLabuser = function() {
-                return _checkCurrentUserRole('lab_user');
-            };
-
-            $scope.isHubuser = function() {
-                return _checkCurrentUserRole('hub_user');
-            };
-
-            $scope.isCurrentUser = function(user) {
-                return ($scope.globals && $scope.globals.currentUser) &&
-                        ($scope.globals.currentUser.userid === user);
             };
 
             $scope.isClaimable = function(status) {
@@ -667,7 +570,7 @@ angular.module('ProcessApp.controllers')
                 'LabRequest'
             ];
             $scope.isExcerptSelectionState = function(state) {
-                return $scope.excerptSelectionStates.indexOf(state) !== -1;
+                return _.includes($scope.excerptSelectionStates, state);
             };
 
             /**
@@ -680,19 +583,50 @@ angular.module('ProcessApp.controllers')
                     ($scope.isPalga() && _.includes($scope.editStates, status));
             };
 
-            $scope.popover = {
-                previousContact: false,
-                requestType: false,
-                dataLinkage: false,
-                informedConsent: false
-            };
-            
-            $scope.showPopover = function(name) {
-                $scope.popover[name] = true;
+            $scope.autofocus = function() {
+                $timeout(function() {
+                    $('#contactPersonName').focus();
+                });
             };
 
-            $scope.hidePopover = function(name) {
-                $scope.popover[name] = false;
+            $scope.popoverEnablers = {
+                previousContactPopover: ['previousContactYes', 'previousContactNo'],
+                requestTypePopover: ['radio-numbers', 'radio-excerpts', 'radio-excerpts-PA', 'radio-excerpts-materials',
+                                     'radio-excerpts-PA-materials', 'radio-PA', 'radio-materials'],
+                dataLinkagePopover: ['linkageWithPersonalDataYes', 'linkageWithPersonalDataNo'],
+                informedConsentPopover: ['informedConsentYes', 'informedConsentNo']
+            };
+
+            $scope.showPopover = function(id) {
+                $('#'+id).popover('show');
+            };
+
+            $scope.hidePopover = function(id) {
+                $timeout(function() {
+                    var enablersHaveFocus = false;
+                    _($scope.popoverEnablers[id]).forEach(function(enabler) {
+                        if ($('#'+enabler).is(':focus')) {
+                            enablersHaveFocus = true;
+                        }
+                    });
+                    if (!enablersHaveFocus) { $('#'+id).popover('hide'); }
+                });
+            };
+
+            $scope.enablePopovers = function() {
+                $timeout(function() {
+                _($scope.popoverEnablers).forIn(function(enablers, id) {
+                    _(enablers).forEach(function(enabler) {
+                        var el = $('#'+enabler);
+                        el.focus(function(event) {
+                            $scope.showPopover(id);
+                        });
+                        el.blur(function(event) {
+                            $scope.hidePopover(id);
+                        });
+                    });
+                });
+                });
             };
 
         }]);

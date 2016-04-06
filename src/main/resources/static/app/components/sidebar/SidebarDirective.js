@@ -3,30 +3,10 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-angular.module('ProcessApp.directives', [])
-    .directive('dntpSidebar', function() {
+angular.module('ProcessApp.directives')
+    .directive('dntpSidebar', ['Request', 'RequestFilter',
+            function(Request, RequestFilter) {
         'use strict';
-
-        var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
-        var _isNotSuspended = _.negate(_isSuspended);
-
-        var _getUnclaimed = function (requests) {
-            return _.chain(requests)
-                .filter(_.matches({assignee: null}))
-                .filter(_isNotSuspended)
-                .value();
-        };
-
-        var _getClaimed = function (requests, userId) {
-            return _.chain(requests)
-                .filter(_.matches({assignee: userId}))
-                .filter(_isNotSuspended)
-                .value();
-        };
-
-        var _getSuspended = function (requests) {
-            return _.filter(requests, _isSuspended);
-        };
 
         return {
             restrict: 'E',
@@ -36,20 +16,25 @@ angular.module('ProcessApp.directives', [])
             },
             templateUrl: 'app/components/sidebar/sidebar-template.html',
             link : function ($scope) {
-                var userId = $scope.$root.globals.currentUser.userid;
-                $scope.userRoles = $scope.$root.globals.currentUser.roles;
+                var userId = $scope.$root.currentUserId;
+                $scope.statusesForRole = Request.getStatusesForRole($scope.$root.currentRole);
 
-                $scope.isPalga = function() {
-                    return $scope.userRoles.indexOf('palga') !== -1;
-                };
+                $scope.isPalga = $scope.$root.isPalga;
+                $scope.isScientificCouncil = $scope.$root.isScientificCouncil;
 
                 $scope.$watch('allRequests', function(newValue, oldValue) {
                     if (newValue) {
-                        $scope.unclaimedReqs = _getUnclaimed(newValue);
-                        $scope.claimedReqs = _getClaimed(newValue, userId);
-                        $scope.suspendedReqs = _getSuspended(newValue);
+                        $scope.unclaimedReqs = RequestFilter.selectUnclaimed(newValue);
+                        $scope.claimedReqs = RequestFilter.selectClaimed(userId)(newValue);
+                        $scope.suspendedReqs = RequestFilter.selectSuspended(newValue);
+                        $scope.requestsByStatus = {};
+                        _($scope.statusesForRole).forEach(function(status) {
+                            $scope.requestsByStatus[status] = RequestFilter.selectByStatus(status)(newValue);
+                        });
+                        $scope.reqsVoted = RequestFilter.selectVoted(newValue);
+                        $scope.reqsNotVoted = RequestFilter.selectNotVoted(newValue);
                     }
                 });
             }
         };
-    });
+    }]);

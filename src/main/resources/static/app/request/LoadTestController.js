@@ -17,7 +17,7 @@ angular.module('ProcessApp.controllers')
             'use strict';
 
             var patt = /gijs(\+)?[a-zA-Z0-9]*@thehyve.nl/g;
-            var result = patt.test($rootScope.globals.currentUser.username);
+            var result = patt.test($rootScope.currentUsername);
             //console.log('pattern: ' + patt.source + ', username: ' + $rootScope.globals.currentUser.username + ', match: ' + result);
             $scope.loadTestCounter = 1;
 
@@ -25,8 +25,8 @@ angular.module('ProcessApp.controllers')
                 return result;
             };
 
-            if (!result) {
-                console.log('LoadTestController not loaded.');
+            if (result) {
+                console.log('LoadTestController loaded.');
                 return;
             }
 
@@ -94,10 +94,6 @@ angular.module('ProcessApp.controllers')
                     console.log('Error: ' + err);
                     $route.reload();
                 });
-            };
-
-            var isCurrentUser = function(user) {
-                return ($scope.globals.currentUser.userid === user);
             };
 
             /**

@@ -3,7 +3,9 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto" ng-keypress="cancelByEscKey($event, request);">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto"
+    ng-init="enablePopovers(); autofocus();"
+    ng-keypress="cancelByEscKey($event, request);">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form class="form-horizontal" role="form" name="requestEditForm" novalidate>
@@ -28,7 +30,7 @@ This file is distributed under the GNU Affero General Public License
                             <input type="text" class="form-control" id="contactPersonName" name="contactPersonName" 
                                 placeholder="{{ 'Principal investigator' | translate }}" title="{{ 'Principal investigator' | translate }}"
                                 ng-model="request.contactPersonName" ng-maxlength="100" 
-                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Principal investigator'|translate}}" data-trigger="focus" bs-popover 
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Principal investigator'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
@@ -77,11 +79,12 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!-- Previous contact -->
-                    <div class="form-group" ng-mouseover="showPopover('previousContact')" ng-mouseleave="hidePopover('previousContact')">
+                    <div class="form-group" ng-mouseover="showPopover('previousContactPopover')" ng-mouseleave="hidePopover('previousContactPopover')">
                         <label class="control-label col-sm-3">
                             {{'Previous contact' | translate}}
                         </label>
                         <div class="col-sm-6 form-control-static"
+                            id="previousContactPopover"
                             data-placement="top-right" data-animation="am-flip-x" 
                             data-content="{{'popover: Previous contact'|translate}}" 
                             data-trigger="manual" bs-show="popover.previousContact" bs-popover
@@ -89,12 +92,10 @@ This file is distributed under the GNU Affero General Public License
                             >
                             {{'Did you contact Palga previously?' | translate}}
                             <br/>
-                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact" 
-                            ng-focus="showPopover('previousContact')" ng-blur="hidePopover('previousContact')">
+                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact">
                             <label class="normal" for="previousContactYes">{{'Yes' | translate}}</label>
                             &nbsp;
-                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);"
-                             ng-focus="showPopover('previousContact')" ng-blur="hidePopover('previousContact')">
+                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);">
                             <label class="normal" for="previousContactNo">{{'No' | translate}}</label>
                             <br>
                         </div>
@@ -197,32 +198,26 @@ This file is distributed under the GNU Affero General Public License
                             {{'Request type' | translate}}
                         </label>
                         <div class="col-sm-6"
-                            ng-mouseover="showPopover('requestType')" ng-mouseleave="hidePopover('requestType')"
-                            data-placement="top-right" data-animation="am-flip-x" 
-                            data-content="{{'popover: Request type'|translate}}" 
+                            id="requestTypePopover"
+                            ng-mouseover="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')"
+                            data-placement="top-right" data-animation="am-flip-x"
+                            data-content="{{'popover: Request type'|translate}}"
                             data-trigger="manual" bs-show="popover.requestType" bs-popover
                             title="{{'Request type' | translate}}"
                             >
-                            <input name="requestType" type="radio" ng-model="request.type" value="1" id="radio-numbers" 
-                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
+                            <input name="requestType" type="radio" ng-model="request.type" value="1" id="radio-numbers">
                             <label class="normal" for="radio-numbers">{{'Request for numbers only' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="2" id="radio-excerpts"
-                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
+                            <input name="requestType" type="radio" ng-model="request.type" value="2" id="radio-excerpts">
                             <label class="normal" for="radio-excerpts">{{'Request for excerpts' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA"
-                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
+                            <input name="requestType" type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA">
                             <label class="normal" for="radio-excerpts-PA">{{'Request for excerpts + PA reports' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials"
-                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
+                            <input name="requestType" type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials">
                             <label class="normal" for="radio-excerpts-materials">{{'Request for excerpts + materials' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials"
-                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
+                            <input name="requestType" type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials">
                             <label class="normal" for="radio-excerpts-PA-materials">{{'Request for excerpts + PA reports + materials' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="6" id="radio-PA"
-                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
+                            <input name="requestType" type="radio" ng-model="request.type" value="6" id="radio-PA">
                             <label class="normal" for="radio-PA">{{'Request for PA-reports only' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="7" id="radio-materials"
-                                ng-focus="showPopover('requestType')" ng-blur="hidePopover('requestType')">
+                            <input name="requestType" type="radio" ng-model="request.type" value="7" id="radio-materials">
                             <label class="normal" for="radio-materials">{{'Request for materials only' | translate}}</label>
                         </div>
                     </div>
@@ -356,17 +351,18 @@ This file is distributed under the GNU Affero General Public License
                     <hr>
 
                     <!-- Data Linkage -->
-                    <div class="form-group" ng-mouseover="showPopover('dataLinkage')" ng-mouseleave="hidePopover('dataLinkage')">
+                    <div class="form-group" ng-mouseover="showPopover('dataLinkagePopover')" ng-mouseleave="hidePopover('dataLinkagePopover')">
                         <label class="control-label col-sm-3">
                             {{'Data linkage' | translate}}
                         </label>
                         <div class="col-sm-8"
+                            id="dataLinkagePopover"
                             data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Data linkage'|translate}}" data-trigger="manual" bs-show="popover.dataLinkage" bs-popover>
-                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData" 
-                                ng-focus="showPopover('dataLinkage')" ng-blur="hidePopover('dataLinkage')">
+                            <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData"
+                                    ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData">
                             <label class="normal" for="linkageWithPersonalDataYes">{{'Linkage with own or external personal data.' | translate}}</label><br>
-                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData" ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);"
-                                ng-focus="showPopover('dataLinkage')" ng-blur="hidePopover('dataLinkage')">
+                            <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData"
+                                    ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);">
                             <label class="normal" for="linkageWithPersonalDataNo">{{'No data linkage required.' | translate}}</label><br>
                         </div>
                     </div>
@@ -391,17 +387,18 @@ This file is distributed under the GNU Affero General Public License
 
                     <!-- Informed Consent  -->
                     <div class="form-group" ng-class="" ng-show="request.type != 1 && request.linkageWithPersonalData"
-                        ng-mouseover="showPopover('informedConsent')" ng-mouseleave="hidePopover('informedConsent')">
+                            ng-mouseover="showPopover('informedConsentPopover')" ng-mouseleave="hidePopover('informedConsentPopover')">
                         <label class="control-label col-sm-3" for="informedConsentYes">
                             {{'Informed consent (IC)' | translate}}
                         </label>
                         <div class="col-sm-8"
+                            id="informedConsentPopover"
                             data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Informed consent'|translate}}" data-trigger="manual" bs-show="popover.informedConsent" bs-popover>
-                            <input type="radio" id="informedConsentYes" name="informedConsent" ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);"
-                                ng-focus="showPopover('informedConsent')" ng-blur="hidePopover('informedConsent')">
+                            <input type="radio" id="informedConsentYes" name="informedConsent"
+                                    ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);">
                             <label class="normal" for="informedConsentYes">{{'Yes' | translate}}</label><br>
-                            <input type="radio" id="informedConsentNo" name="informedConsent" ng-model="request.informedConsent" ng-value="false" ng-checked="!request.informedConsent"
-                                ng-focus="showPopover('informedConsent')" ng-blur="hidePopover('informedConsent')">
+                            <input type="radio" id="informedConsentNo" name="informedConsent"
+                                    ng-model="request.informedConsent" ng-value="false" ng-checked="!request.informedConsent">
                             <label class="normal" for="informedConsentNo">{{'No' | translate}}</label>
                         </div>
                     </div>
@@ -647,7 +644,7 @@ This file is distributed under the GNU Affero General Public License
                             {{'Reject'|translate}}
                     </button>
                     <button class="btn btn-info" type="submit" ng-click="update(request);"
-                            ng-disabled="requestEditForm.$invalid || dataLoading">{{'Save'|translate}}
+                            ng-disabled="dataLoading">{{'Save'|translate}}
                     </button>
                 </div>
             </form>

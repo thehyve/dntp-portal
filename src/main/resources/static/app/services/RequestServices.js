@@ -221,6 +221,19 @@
             'Approval'
         ];
 
+        _requestFactory.statusesForRole = {
+            'palga': _requestFactory.statuses,
+            'requester': _requestFactory.statuses,
+            'scientific_council': _.difference(_requestFactory.statuses,
+                    ['Open', 'Review']),
+            'lab_user': ['LabRequest', 'Rejected', 'Closed'],
+            'hub_user': ['LabRequest', 'Rejected', 'Closed']
+        };
+
+        _requestFactory.getStatusesForRole = function (role) {
+            return _.get(_requestFactory.statusesForRole, role, []);
+        };
+
         return _requestFactory;
     };
     RequestFactory.$inject = [ '$resource' ];

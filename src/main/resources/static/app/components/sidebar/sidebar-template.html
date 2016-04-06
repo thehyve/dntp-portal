@@ -4,23 +4,30 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div class="col-sm-3 col-md-2 sidebar">
-    <ul class="nav nav-sidebar" ng-if="isPalga()">
+    <ul class="nav nav-sidebar">
         <li ng-class="{active: activeSidebar === 'overview'}">
             <a ng-href="/#/">{{'All'|translate}}  <span class="badge pull-right">{{allRequests.length}}</span></a>
         </li>
-        <li  ng-class="{active: activeSidebar === 'claimed'}">
-            <a ng-href="/#/requests/claimed">{{'Claimed'|translate}} <span class="badge pull-right">{{claimedReqs.length}}</span></a>
+        <li ng-if="isPalga()" ng-class="{active: activeSidebar === 'claimed'}">
+            <a ng-href="/#/requests/claimed">{{'Claimed by me'|translate}} <span class="badge pull-right">{{claimedReqs.length}}</span></a>
         </li>
-        <li  ng-class="{active: activeSidebar === 'unclaimed'}">
+        <li ng-if="isPalga()" ng-class="{active: activeSidebar === 'unclaimed'}">
             <a ng-href="/#/requests/unclaimed">{{'Unclaimed'|translate}} <span class="badge pull-right">{{unclaimedReqs.length}}</span></a>
         </li>
-        <li  ng-class="{active: activeSidebar === 'suspended'}">
-            <a ng-href="/#/requests/suspended">{{'On hold'|translate}} <span class="badge pull-right">{{suspendedReqs.length}}</span></a>
+        <li ng-if="isScientificCouncil()" ng-class="{active: activeSidebar === 'voted'}">
+            <a ng-href="/#/requests/voted">{{'Voted'|translate}} <span class="badge pull-right">{{reqsVoted.length}}</span></a>
         </li>
-    </ul>
-    <ul class="nav nav-sidebar" ng-if="!isPalga()">
-        <li class="active">
-            <a ng-href="/#/">{{'Overview'|translate}}  <span class="badge pull-right">{{allRequests.length}}</span></a>
+        <li ng-if="isScientificCouncil()" ng-class="{active: activeSidebar === 'notvoted'}">
+            <a ng-href="/#/requests/notvoted">{{'Not voted'|translate}} <span class="badge pull-right">{{reqsNotVoted.length}}</span></a>
+        </li>
+        <hr />
+        <li ng-repeat="status in statusesForRole"
+            ng-class="{active: activeSidebar === status}">
+            <a ng-href="/#/requests/{{status}}">{{status|translate}} <span class="badge pull-right">{{requestsByStatus[status].length}}</span></a>
+        </li>
+        <hr />
+        <li ng-if="isPalga()" ng-class="{active: activeSidebar === 'suspended'}">
+            <a ng-href="/#/requests/suspended">{{'On hold'|translate}} <span class="badge pull-right">{{suspendedReqs.length}}</span></a>
         </li>
     </ul>
 </div>

@@ -8,9 +8,9 @@ This file is distributed under the GNU Affero General Public License
 
         <!--Side Bar-->
         <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar" ng-if="authenticated && labRequests">
-                <li class="active"><a ng-href="/#/lab-requests">{{'Overview'|translate}} <span class="badge pull-right">{{labRequests.length}}</span></a></li>
-            </ul>
+            <div>
+                <lab-requests-sidebar all-lab-requests="allLabRequests" active-sidebar="activeSidebar"/>
+            </div>
         </div>
 
         <div ng-if="!authenticated">
@@ -67,7 +67,9 @@ This file is distributed under the GNU Affero General Public License
                             <th>&nbsp;</th>
                             <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by status' | translate}}</option>
-                                    <option ng-repeat="status in statuses" value="{{status}}">{{ status | translate}}</option>
+                                    <option ng-repeat="status in statuses"
+                                        ng-selected="activeSidebar === status"
+                                        value="{{status}}">{{ status | translate}}</option>
                                 </select>
                             </th>
                             <th class="no-print">&nbsp;</th>
@@ -136,7 +138,7 @@ This file is distributed under the GNU Affero General Public License
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="8" class="text-center">
+                            <td colspan="10" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                             </td>
                         </tr>

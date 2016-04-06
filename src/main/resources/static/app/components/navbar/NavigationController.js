@@ -81,6 +81,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.logout = function() {
+                $rootScope.redirectUrl = undefined;
                 $http.post('logout', {}).success(function() {
                     console.log('Logout succes.');
                     $rootScope.authenticated = false;

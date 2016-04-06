@@ -46,6 +46,8 @@ module.exports = function(config) {
   var configuration = {
     files: listFiles(),
 
+    exclude: [path.join(conf.paths.src, '/messages/msg2tsv.js')],
+
     singleRun: true,
 
     autoWatch: false,

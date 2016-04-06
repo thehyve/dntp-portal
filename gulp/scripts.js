@@ -24,8 +24,10 @@ gulp.task('scripts', function() {
 });
 
 function buildScripts() {
-  return gulp.src(path.join(conf.paths.src, '/app/**/*.js'))
+  return gulp.src([
+      path.join(conf.paths.src, '/app/**/*.js'),
+      path.join(conf.paths.src, '/messages/**/*.js')])
     //.pipe($.eslint())
     //.pipe($.eslint.format())
     .pipe($.size())
-};
+}

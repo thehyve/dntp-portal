@@ -1,6 +1,6 @@
 {
   "extends": "eslint:recommended",
-  "plugins": ["angular"],
+  "plugins": [],
   "env": {
     "browser": true,
     "jasmine": true
@@ -8,6 +8,10 @@
   "globals": {
     "angular": true,
     "module": true,
-    "inject": true
+    "inject": true,
+    "jQuery":true,
+    "_":true,
+    "asmCrypto":true,
+    "bootbox":true
   }
 }

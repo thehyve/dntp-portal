@@ -1,7 +1,8 @@
 {
   "name": "dntpPortal",
   "version": "0.0.43",
-  "dependencies": {    
+  "dependencies": {
+    "jquery": "~2.1.4",
     "lodash": "~3.10.1",
     "angular-cookies": "~1.5.3",
     "angular-route": "~1.5.3",
@@ -9,7 +10,6 @@
     "angular-sanitize": "~1.5.3",
     "angular-messages": "~1.5.3",
     "angular-aria": "~1.5.3",
-    "jquery": "~2.1.4",
     "restangular": "~1.5.1",
     "bootstrap": "~3.3.5",
     "angular-strap": "~2.3.1",

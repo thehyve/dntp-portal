@@ -5,7 +5,11 @@
  */
 package business.security;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -78,14 +82,23 @@ public class DefaultRolesUsersLabs {
                 "Canisius-Wilhelmina Ziekenhuis, afd. Pathologie",
                 "Laboratorium voor Pathologie (PAL), Dordrecht"
         };
+        Map<Integer, String> cities = new HashMap<>();
+        cities.put(100, "Amsterdam");
+        cities.put(102, "Amersfoort");
+        cities.put(104, "Nijmegen");
+        cities.put(106, "Dordrecht");
         int labIdx = 99;
         // Create default labs
         for (String r: defaultLabs) {
             if (labRepository.findByName(r) == null) {
                 Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
                 ContactData cd = new ContactData();
-                cd.setEmail("lab_" + l.getNumber() + "@labs.dntp.thehyve.nl");
+                cd.setCity(cities.get(l.getNumber()));
                 l.setContactData(cd);
+                l.setEmailAddresses(new ArrayList<>(Arrays.asList(new String[]
+                        {"lab_" + l.getNumber() + "@labs.dntp.thehyve.nl",
+                         "lab_" + l.getNumber() + "_test@labs.dntp.thehyve.nl"
+                        })));
                 labRepository.save(l);
             }
         }

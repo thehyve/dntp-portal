@@ -70,7 +70,7 @@ This file is distributed under the GNU Affero General Public License
                                 <label class="label label-primary">{{sample}}</label>
                         </span>
                     </span></td>
-                    <td>{{pathology.status}}</td>
+                    <td>{{pathology.status | translate}}</td>
                     <td class="no-print" ng-if="isLabUser() || isHubUser()">
                         <span class="pull-right">
                         <span class="btn-group">

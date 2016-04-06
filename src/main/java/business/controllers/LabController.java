@@ -7,8 +7,11 @@ package business.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.mail.internet.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import business.exceptions.EmailAddressInvalid;
 import business.exceptions.InvalidLabNumber;
 import business.exceptions.LabNotFound;
 import business.exceptions.LabuserWithoutLab;
@@ -62,6 +66,17 @@ public class LabController {
             lab.setContactData(new ContactData());
         }
         lab.getContactData().copy(body.getContactData());
+        Set<String> emailAddresses = new LinkedHashSet<>();
+        for (String email: body.getEmailAddresses()) {
+            try {
+                InternetAddress address = new InternetAddress(email);
+                address.validate();
+                emailAddresses.add(email.trim().toLowerCase());
+            } catch (AddressException e) {
+                throw new EmailAddressInvalid(email);
+            }
+        }
+        lab.setEmailAddresses(new ArrayList<>(emailAddresses));
     }
 
     @RequestMapping(value = "/admin/labs", method = RequestMethod.POST)

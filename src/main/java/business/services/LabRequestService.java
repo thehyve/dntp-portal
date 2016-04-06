@@ -291,9 +291,9 @@ public class LabRequestService {
                     } catch (EmailError e) {
                         log.warn("No mail sent to lab " + representation.getLab().getNumber() +
                                 " for lab request " + representation.getLabRequestCode() +
-                                ". Email address: '" +
-                                representation.getLab().getContactData() == null ?
-                                        "" : representation.getLab().getContactData().getEmail() +
+                                ". Email addresses: '" +
+                                        representation.getLab().getEmailAddresses() == null ?
+                                        "" : String.join(", ", representation.getLab().getEmailAddresses()) +
                                 "'.");
                         // FIXME: return error messages.
                     }

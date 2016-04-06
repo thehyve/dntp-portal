@@ -219,15 +219,17 @@ public class MailService {
         log.info("Notify lab for lab request " + labRequest.getId() + ".");
 
         Lab lab = labRequest.getLab();
-        if (lab.getContactData() == null || lab.getContactData().getEmail() == null ||
-                lab.getContactData().getEmail().trim().isEmpty()) {
+        if (lab.getEmailAddresses() == null || lab.getEmailAddresses().isEmpty()) {
             log.warn("No email address set for lab " + lab.getNumber());
             return;
         }
-        log.info("Sending notification to " + lab.getContactData().getEmail());
+        String recipients = String.join(", ", lab.getEmailAddresses());
+        log.info("Sending notification to " + recipients);
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-            message.setTo(lab.getContactData().getEmail());
+            for (String email: lab.getEmailAddresses()) {
+                message.addTo(email);
+            }
             message.setFrom(getFrom(), fromName);
             message.setReplyTo(replyAddress, replyName);
             message.setSubject(String.format("PALGA-verzoek aan laboratorium, aanvraagnummer: %s", labRequest.getLabRequestCode()));

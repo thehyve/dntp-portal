@@ -20,52 +20,48 @@ var csso = require('gulp-csso');
 var gzip = require('gulp-gzip');
 var del = require('del');
 
-//module.exports = function(options) {
+gulp.task('copy-static', ['clean-dist'], function() {
+    return gulp.src([conf.paths.src+'/**/*', '!'+conf.paths.src+'/index.html'])
+        .pipe(gulp.dest(conf.paths.dist))
+        ;
+});
 
-    gulp.task('copy-static', ['clean-dist'], function() {
-        return gulp.src([conf.paths.src+'/**/*', '!'+conf.paths.src+'/index.html'])
-            .pipe(gulp.dest(conf.paths.dist))
-            ;
-    });
+gulp.task('js-css-combine-revision', ['copy-static'], function() {
+    var jsFilter = filter('**/*.js', {restore: true});
+    var cssFilter = filter('**/*.css', {restore: true});
 
-    gulp.task('js-css-combine-revision', ['copy-static'], function() {
-        var jsFilter = filter('**/*.js', {restore: true});
-        var cssFilter = filter('**/*.css', {restore: true});
+    return gulp.src(conf.paths.src+'/index.html')
+        .pipe(sourcemaps.init())
+        .pipe(useref())             // Concatenate with gulp-useref
+        .pipe(jsFilter)
+        .pipe(ngAnnotate())
+        .pipe(uglify())             // Minify any javascript sources
+        //.pipe(gzip())
+        .pipe(rev())                // Rename the concatenated files
+        .pipe(jsFilter.restore)
+        .pipe(cssFilter)
+        .pipe(csso())               // Minify any CSS sources
+        //.pipe(gzip())
+        .pipe(rev())                // Rename the concatenated files
+        .pipe(cssFilter.restore)
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(conf.paths.dist))
+        .pipe(rev.manifest())       // Write substitutions to manifest file
+        .pipe(gulp.dest(conf.paths.dist))
+        ;
+});
 
-        return gulp.src(conf.paths.src+'/index.html')
-            .pipe(sourcemaps.init())
-            .pipe(useref())             // Concatenate with gulp-useref
-            .pipe(jsFilter)
-            .pipe(ngAnnotate())
-            .pipe(uglify())             // Minify any javascript sources
-            //.pipe(gzip())
-            .pipe(rev())                // Rename the concatenated files
-            .pipe(jsFilter.restore)
-            .pipe(cssFilter)
-            .pipe(csso())               // Minify any CSS sources
-            //.pipe(gzip())
-            .pipe(rev())                // Rename the concatenated files
-            .pipe(cssFilter.restore)
-            .pipe(sourcemaps.write())
-            .pipe(gulp.dest(conf.paths.dist))
-            .pipe(rev.manifest())       // Write substitutions to manifest file
-            .pipe(gulp.dest(conf.paths.dist))
-            ;
-    });
+gulp.task('index', ['js-css-combine-revision'], function() {
+    var manifest = gulp.src(conf.paths.dist+'/rev-manifest.json');
 
-    gulp.task('index', ['js-css-combine-revision'], function() {
-        var manifest = gulp.src(conf.paths.dist+'/rev-manifest.json');
+    return gulp.src(conf.paths.dist+'/index.html')
+        .pipe(revReplace({manifest: manifest}))
+        .pipe(gulp.dest(conf.paths.dist))
+        ;
+});
 
-        return gulp.src(conf.paths.dist+'/index.html')
-            .pipe(revReplace({manifest: manifest}))
-            .pipe(gulp.dest(conf.paths.dist))
-            ;
-    });
+gulp.task('clean-dist', function (done) {
+    return del([conf.paths.dist + '/'], done);
+});
 
-    gulp.task('clean-dist', function (done) {
-        return del([conf.paths.dist + '/'], done);
-    });
-
-    gulp.task('package', ['index']);
-
-//};
+gulp.task('package', ['index']);

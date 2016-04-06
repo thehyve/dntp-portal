@@ -1,36 +1,49 @@
-<!doctype html>
 <!--
 Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
+<!DOCTYPE html>
 <html lang="en">
   <head>
-      <meta charset="utf-8">
-      <title>PALGA | Aanvraagsysteem</title>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <title>PALGA | Aanvraagsysteem</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <!-- build:css({.tmp/serve,src}) styles/vendor.css -->
-      <!-- bower:css -->
-      <!-- run `gulp inject` to automatically populate bower styles dependencies -->
-      <!-- endbower -->
-      <!-- endbuild -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- build:css css/libraries.css -->
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css"/>
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.bootstrap.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="bower_components/github-markdown-css/github-markdown.css">
+    <link rel="stylesheet" href="bower_components/textAngular/dist/textAngular.css">
+    <link rel="stylesheet" href="bower_components/isteven-angular-multiselect/isteven-multi-select.css">
+    <!-- endbuild -->
+    <!-- endbower -->
 
-      <!-- build:css({.tmp/serve,src}) styles/app.css -->
-      <!-- inject:css -->
-      <!-- css files will be automatically insert here -->
-      <!-- endinject -->
-      <!-- endbuild -->
+    <!-- build:css css/app.css -->
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/index.css" media="print" />
+    <link rel="stylesheet" href="./css/progressBar.css" />
+    <!-- endbuild -->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+          display: none !important;
+        }
+    </style>
   </head>
-
-
   <body ng-app="ProcessApp" ng-csp="no-unsafe-eval"> <!-- flow-prevent-drop -->
-  <!--[if lt IE 10]>
-  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
 
   <!-- Navigator -->
   <div ng-include="'app/components/navbar/navbar.html'"></div>
@@ -40,21 +53,70 @@ This file is distributed under the GNU Affero General Public License
   <!-- Footer -->
   <div ng-include="'app/components/footer/footer.html'"></div>
 
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- build:js js/libraries.js -->
+  <script src="bower_components/lodash/lodash.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-translate/angular-translate.js"></script>
+  <script src="bower_components/restangular/dist/restangular.js"></script>
+  <script src="bower_components/flow.js/dist/flow.js"></script>
+  <script src="bower_components/ng-flow/dist/ng-flow.js"></script>
+  <script src="bower_components/fusty-flow.js/src/fusty-flow.js"></script>
+  <script src="bower_components/fusty-flow.js/src/fusty-flow-factory.js"></script>
+  <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
+  <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+  <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+  <script src="bower_components/bootbox/bootbox.js"></script>
+  <script src="bower_components/ng-tags-input/ng-tags-input.js"></script>
+  <script src="bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
+  <script src="bower_components/textAngular/dist/textAngular-rangy.min.js"></script>
+  <script src="bower_components/textAngular/dist/textAngular-sanitize.min.js"></script>
+  <script src="bower_components/textAngular/dist/textAngular.min.js"></script>
+  <script src="bower_components/asmcrypto/asmcrypto.js"></script>
+  <script src="bower_components/isteven-angular-multiselect/isteven-multi-select.js"></script>
+  <!-- endbuild -->
+  <!-- endbower -->
 
-<!-- build:js(src) scripts/vendor.js -->
-<!-- bower:js -->
-<!-- run `gulp inject` to automatically populate bower script dependencies -->
-<!-- endbower -->
-<!-- endbuild -->
+  <!-- build:js js/app.js -->
+  <script type="text/javascript" src="messages/messages_en.js"></script>
+  <script type="text/javascript" src="messages/messages_nl.js"></script>
+  <script type="text/javascript" src="app/processapp.js"></script>
+  <script type="text/javascript" src="app/components/navbar/NavigationController.js"></script>
+  <script type="text/javascript" src="app/components/sidebar/SidebarDirective.js"></script>
+  <script type="text/javascript" src="app/login/LoginDirectives.js"></script>
+  <script type="text/javascript" src="app/login/LoginController.js"></script>
+  <script type="text/javascript" src="app/services/RequestServices.js"></script>
+  <script type="text/javascript" src="app/services/UploadService.js"></script>
+  <script type="text/javascript" src="app/request/RequestController.js"></script>
+  <script type="text/javascript" src="app/request/LoadTestController.js"></script>
+  <script type="text/javascript" src="app/request/RequestCommentController.js"></script>
+  <script type="text/javascript" src="app/request/ApprovalController.js"></script>
+  <script type="text/javascript" src="app/request/SelectionController.js"></script>
+  <script type="text/javascript" src="app/admin/AdminServices.js"></script>
+  <script type="text/javascript" src="app/admin/user/AdminUserController.js"></script>
+  <script type="text/javascript" src="app/admin/lab/AdminLabController.js"></script>
+  <script type="text/javascript" src="app/admin/accesslogs/AdminAccessLogsController.js"></script>
+  <script type="text/javascript" src="app/services/AgreementFormService.js"></script>
+  <script type="text/javascript" src="app/admin/agreementformtemplate/AgreementFormTemplateController.js"></script>
+  <script type="text/javascript" src="app/registration/RegistrationController.js"></script>
+  <script type="text/javascript" src="app/registration/RegistrationDirectives.js"></script>
+  <script type="text/javascript" src="app/activation/ActivationController.js"></script>
+  <script type="text/javascript" src="app/profile/ProfileController.js"></script>
+  <script type="text/javascript" src="app/profile/PasswordController.js"></script>
+  <script type="text/javascript" src="app/forgot-password/ForgotPasswordController.js"></script>
+  <script type="text/javascript" src="app/forgot-password/ResetPasswordController.js"></script>
+  <script type="text/javascript" src="app/lab/MyLabController.js"></script>
+  <script type="text/javascript" src="app/lab/HubLabsController.js"></script>
+  <script type="text/javascript" src="app/lab-request/LabRequestServices.js"></script>
+  <script type="text/javascript" src="app/lab-request/LabRequestController.js"></script>
+  <script type="text/javascript" src="app/lab-request/LabRequestCommentController.js"></script>
+  <!-- endbuild -->
 
-<!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
-<!-- inject:js -->
-<!-- js files will be automatically insert here -->
-<!-- endinject -->
-
-<!-- inject:partials -->
-<!-- angular templates will be automatically converted in js and inserted here -->
-<!-- endinject -->
-<!-- endbuild -->
   </body>
 </html>

@@ -185,6 +185,16 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>gulp test</id>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <arguments>test</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>gulp build</id>
                         <goals>
                             <goal>gulp</goal>

@@ -100,10 +100,26 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.cancelByEscKey = function (key) {
+                if (key.keyCode === 27) {
+                    $scope.cancel();
+                }
+            };
+
+            $scope.cancel = function() {
+                $scope.editLabModal.hide();
+                $scope.editLabModal.destroy();
+            };
+
             $scope.edit = function(lb) {
                 $scope.editlab = lb;
                 $scope.editlab.emailAddressData = [].concat($scope.editlab.emailAddresses);
-                $scope.editLabModal = $modal({scope: $scope, templateUrl: '/app/admin/lab/editlab.html'});
+                $scope.editLabModal = $modal({
+                    id: 'editLabWindow',
+                    scope: $scope,
+                    templateUrl: '/app/admin/lab/editlab.html',
+                    backdrop: 'static'
+                });
             };
         }]);
 })(angular);

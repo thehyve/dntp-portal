@@ -117,6 +117,17 @@ angular.module('ProcessApp.controllers')
                 $scope.edit(new User({'currentRole': 'requester'}));
             };
 
+            $scope.cancelByEscKey = function (key) {
+                if (key.keyCode === 27) {
+                    $scope.cancel();
+                }
+            };
+
+            $scope.cancel = function() {
+                $scope.editUserModal.hide();
+                $scope.editUserModal.destroy();
+            };
+
             $scope.edit = function(usr) {
                 $scope.edituser = usr;
                 $scope.hubLabs = _.map($scope.labs, function (lab) { lab.disabled = !lab.active; return lab; });
@@ -124,7 +135,12 @@ angular.module('ProcessApp.controllers')
                     lab.ticked = _.includes($scope.edituser.hubLabIds, lab.id);
                     return lab;
                 });
-                $scope.editUserModal = $modal({scope: $scope, templateUrl: '/app/admin/user/edituser.html', animation:false});
+                $scope.editUserModal = $modal({
+                    id: 'editUserWindow',
+                    scope: $scope,
+                    templateUrl: '/app/admin/user/edituser.html',
+                    backdrop: 'static'
+                });
             };
 
         }

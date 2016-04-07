@@ -21,9 +21,7 @@ angular.module('ProcessApp.interceptors')
 
         return {
             'responseError': function(response) {
-                console.log('Location: ' + $location.path());
                 var url = _.get(response, 'config.url', '').trim();
-                console.log('url: ' + url);
 
                 switch(response.status) {
                 case 302:

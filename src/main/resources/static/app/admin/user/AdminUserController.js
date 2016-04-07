@@ -45,7 +45,7 @@ angular.module('ProcessApp.controllers')
                 userdata.hubLabIds = _.map(userdata.hubLabs, function(lab) { return lab.id; });
                 $scope.dataLoading = true;
                 if (!isNaN(parseInt(userdata.id, 10))) {
-                    userdata.$update(function(result) {
+                    userdata.$update(function() {
                         $scope.dataLoading = false;
                         $scope.editUserModal.destroy();
                     }, function(response) {

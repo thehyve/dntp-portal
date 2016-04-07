@@ -70,9 +70,11 @@ angular.module('ProcessApp.services')
                 var names = jQuery.map(obj, function(value, key) {
                     if (value instanceof Object) {
                         var subnames = agreementFormService.getVariableNames(value);
+                        /*eslint-disable no-unused-vars*/
                         return jQuery.map(subnames, function(v, k) {
                             return key + '.' + v;
                         });
+                        /*eslint-enable no-unused-vars*/
                     } else {
                         return key;
                     }
@@ -89,7 +91,7 @@ angular.module('ProcessApp.services')
                 }
                 var contents = template;
                 var names = _.uniq(template.match(varsPattern));
-                $(names).each(function(i, name) {
+                jQuery(names).each(function(i, name) {
                     var varname = name.match(varNamePattern)[1];
                     var varnameRegExp = new RegExp('{{'+varname+'}}', 'g');
                     var value = _.get(obj, varname);

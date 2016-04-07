@@ -22,6 +22,7 @@ angular.module('ProcessApp.directives')
                 $scope.isLabUser = $scope.$root.isLabUser;
                 $scope.isHubUser = $scope.$root.isHubUser;
 
+                /*eslint-disable no-unused-vars*/
                 $scope.$watch('allLabRequests', function(newValue, oldValue) {
                     if (newValue) {
                         $scope.unclaimedReqs = LabRequestFilter.selectUnclaimed(newValue);
@@ -32,6 +33,7 @@ angular.module('ProcessApp.directives')
                         });
                     }
                 });
+                /*eslint-enable no-unused-vars*/
             }
         };
     }]);

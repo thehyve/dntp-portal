@@ -5,9 +5,6 @@
  */
 (function(hasModuleExports, hasWindow) {
     'use strict';
-    
-    /* global messages: true,
-     */
 
     var _messages_nl = {
         /* ========= */

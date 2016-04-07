@@ -48,11 +48,11 @@ angular.module('ProcessApp.controllers')
                     Restangular.one('password').post('reset', { 
                         token: $routeParams.token, 
                         password: $scope.password 
-                    }).then(function (result) {
+                    }).then(function () {
                         // Notify user
                         $scope.submitted = false;
                         $scope.done = true;
-                    }, function restError(response) {
+                    }, function restError() {
                         // Error, the token isn't valid!
                         $scope.error = true;
                     });

@@ -341,6 +341,7 @@
     var FlowOptionService = function($cookies) {
         return {
             get_default: function(options) {
+                /*eslint-disable no-unused-vars*/
                 options.headers = function (file, chunk, isTest) {
                     var csrftoken = $cookies.get('XSRF-TOKEN');
                     console.log('csrftoken: ' + csrftoken);
@@ -349,6 +350,7 @@
                         'X-XSRF-TOKEN': csrftoken
                     };
                 };
+                /*eslint-enable no-unused-vars*/
                 options.testChunks = false;
                 options.forceChunkSize = true;
                 return options;

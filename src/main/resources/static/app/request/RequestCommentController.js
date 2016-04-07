@@ -44,7 +44,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.removeComment = function(comment) {
                 $scope.dataLoading = true;
-                new RequestComment(comment).$remove(function(result) {
+                new RequestComment(comment).$remove(function() {
                     $scope.dataLoading = false;
                     $scope.request.comments.splice(
                         $scope.request.comments.indexOf(comment), 1);

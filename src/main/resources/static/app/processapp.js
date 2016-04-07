@@ -3,7 +3,7 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(window, _, angular, messages) {
+(function(console, window, _, angular, messages) {
     'use strict';
 
     angular.module('ProcessApp.services', ['mgcrea.ngStrap.alert','ngCookies', 'restangular'])
@@ -95,7 +95,7 @@
             }).when('/request/:requestId/agreementform', {
                 templateUrl : 'app/request/agreementform.html'
             }).when('/my-lab', {
-                templateUrl : 'app/lab/my-lab.html',
+                templateUrl : 'app/lab/my-lab.html'
             }).when('/hub-labs', {
                 templateUrl : 'app/lab/hub-labs.html',
                 controller : 'HubLabsController'
@@ -307,4 +307,4 @@
         }
         return true;
     }
-})(window, _, angular, window.messages);
+})(console, window, _, angular, window.messages);

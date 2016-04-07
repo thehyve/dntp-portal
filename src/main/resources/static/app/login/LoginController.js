@@ -62,12 +62,12 @@ angular.module('ProcessApp.controllers')
             $scope.login = function() {
                 $scope.dataLoading = true;
                 _refreshCookie()
-                .then(function(result) {
+                .then(function() {
                     $http.post('login', jQuery.param($scope.credentials), {
                         headers : {
                             'content-type' : 'application/x-www-form-urlencoded'
                         }
-                    }).success(function(data) {
+                    }).success(function() {
                         authenticate(function() {
                             $scope.dataLoading = false;
                             if ($rootScope.authenticated) {

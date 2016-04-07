@@ -8,7 +8,7 @@
 
     var numericalRegex = /(?=.*[0-9])/, // at least one numerical
         alphabeticalRegex = /(?=.*[a-zA-Z])/, // at least one alphabet
-        specialCharsRegex = /(?=.*[?=!*'();:@&=+$,/?#])/, // at least one special chars
+        //specialCharsRegex = /(?=.*[?=!*'();:@&=+$,/?#])/, // at least one special chars
         verySpecialCharsRegex = /(?=.*[^a-zA-Z0-9 ])/; // at least one special chars
 
     // Validate

@@ -262,7 +262,7 @@ angular.module('ProcessApp.controllers')
             $scope.accept = function (labRequest) {
                 bootbox.confirm('Accept this lab request?' , function (result) {
                     if (result) {
-                        labRequest.customPUT({}, 'accept').then(function () {
+                        labRequest.customPUT(labRequest, 'accept').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }

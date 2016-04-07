@@ -13,107 +13,88 @@ This file is distributed under the GNU Affero General Public License
             </ul>
         </div>
 
-        <div ng-if="!authenticated">
-            <div class="alert alert-danger" role="alert">
-                {{'Not logged in'|translate}}.
-            </div>
-        </div>
-
         <div ng-if="authenticated">
 
             <div ng-controller="AdminUserController" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-                <div class="alert alert-danger" role="alert" ng-if="error.length" id="error">
-                    {{error|translate}}.
-                </div>
-
                 <h1>{{ 'Users' | translate }}</h1>
                 <hr>
 
-                <div ng-hide="error">
-
-                    <div class="input-group">
-                        <button class="btn btn-default" ng-click="add()" title="{{'Add user' | translate}}">
-                            <span class="glyphicon glyphicon-plus-sign"></span> {{'Add user' | translate}}
-                        </button>
-                    </div>
-
-                    <p></p>
-
-                    <div class="alert alert-info" role="alert" ng-hide="users.length">
-                        {{'There are no users yet.' | translate}}
-                    </div>
-
-                    <table st-table="displayedCollection" st-safe-src="users" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th st-sort="getters.lastName">{{'Name'|translate}}</th>
-                            <th st-sort="username">{{'Email'|translate}}</th>
-                            <th st-sort="emailValidated">{{'Validation'|translate}}</th>
-                            <th st-sort="currentRole">{{'Role'|translate}}</th>
-                            <th st-sort="institute">{{'Institute'|translate}}</th>
-                            <th st-sort="labId">{{'Lab'|translate}}</th>
-                            <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <th colspan="8"><input st-search="" class="form-control"
-                                                   placeholder="{{'Search' | translate}} ..." type="text"/></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="user in displayedCollection">
-                            <td>{{user.firstName}} {{user.lastName}}</td>
-                            <td>{{user.username}}</td>
-                            <td><span ng-if="user.emailValidated">{{'Validated'|translate}}</span>
-                                <span class="text-danger" ng-if="!user.emailValidated">{{'Not validated'|translate}}</span>
-                            </td>
-                            <td>{{user.currentRole}}</td>
-                            <td>{{user.institute}}</td>
-                            <td>{{labmap[user.labId].number}}. {{labmap[user.labId].name}}</td>
-                            <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
-                                &nbsp;&nbsp;
-                                {{user.created | date: 'HH:mm'}}
-                            </td>
-                            <td>
-                                <span class="pull-right">
-                                    <span class="btn-group">
-                                        <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(user)">
-                                            <span><i class="glyphicon glyphicon-pencil"></i></span>
-                                        </button>
-                                        <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
-                                                ng-if="!user.active"
-                                                type="button" title="Activate"
-                                                ng-click="activate(user)" ng-disabled="dataLoading">
-                                            <span class="glyphicon glyphicon-repeat"></span>
-                                        </button>
-                                        <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
-                                                ng-if="user.active"
-                                                type="button" title="Dectivate"
-                                                ng-click="deactivate(user)" ng-disabled="dataLoading">
-                                            <span class="glyphicon glyphicon-ban-circle"></span>
-                                        </button>
-                                        <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
-                                                ng-click="remove(user)">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </span>
-                                </span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                <div class="input-group">
+                    <button class="btn btn-default" ng-click="add()" title="{{'Add user' | translate}}">
+                        <span class="glyphicon glyphicon-plus-sign"></span> {{'Add user' | translate}}
+                    </button>
                 </div>
 
+                <p></p>
+
+                <div class="alert alert-info" role="alert" ng-hide="users.length">
+                    {{'There are no users yet.' | translate}}
+                </div>
+
+                <table st-table="displayedCollection" st-safe-src="users" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th st-sort="getters.lastName">{{'Name'|translate}}</th>
+                        <th st-sort="username">{{'Email'|translate}}</th>
+                        <th st-sort="emailValidated">{{'Validation'|translate}}</th>
+                        <th st-sort="currentRole">{{'Role'|translate}}</th>
+                        <th st-sort="institute">{{'Institute'|translate}}</th>
+                        <th st-sort="labId">{{'Lab'|translate}}</th>
+                        <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th colspan="8"><input st-search="" class="form-control"
+                                               placeholder="{{'Search' | translate}} ..." type="text"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="user in displayedCollection">
+                        <td>{{user.firstName}} {{user.lastName}}</td>
+                        <td>{{user.username}}</td>
+                        <td><span ng-if="user.emailValidated">{{'Validated'|translate}}</span>
+                            <span class="text-danger" ng-if="!user.emailValidated">{{'Not validated'|translate}}</span>
+                        </td>
+                        <td>{{user.currentRole}}</td>
+                        <td>{{user.institute}}</td>
+                        <td>{{labmap[user.labId].number}}. {{labmap[user.labId].name}}</td>
+                        <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
+                            &nbsp;&nbsp;
+                            {{user.created | date: 'HH:mm'}}
+                        </td>
+                        <td>
+                            <span class="pull-right">
+                                <span class="btn-group">
+                                    <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(user)">
+                                        <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                    </button>
+                                    <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
+                                            ng-if="!user.active"
+                                            type="button" title="Activate"
+                                            ng-click="activate(user)" ng-disabled="dataLoading">
+                                        <span class="glyphicon glyphicon-repeat"></span>
+                                    </button>
+                                    <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
+                                            ng-if="user.active"
+                                            type="button" title="Dectivate"
+                                            ng-click="deactivate(user)" ng-disabled="dataLoading">
+                                        <span class="glyphicon glyphicon-ban-circle"></span>
+                                    </button>
+                                    <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
+                                            ng-click="remove(user)">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
             </div>
-
         </div>
-        <!-- end row-->
-    </div>
-    <!-- end container-->
-
+    </div> <!-- end row-->
 
     <div class="page-header">
         <h2>{{'Users'|translate}}</h2>
@@ -128,4 +109,4 @@ This file is distributed under the GNU Affero General Public License
 
 
     </div>
-</div>
+</div> <!-- end container-->

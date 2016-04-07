@@ -7,14 +7,16 @@ package business.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.mail.internet.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,16 +24,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import business.exceptions.EmailAddressInvalid;
 import business.exceptions.InvalidLabNumber;
 import business.exceptions.LabNotFound;
 import business.exceptions.LabuserWithoutLab;
 import business.exceptions.UserUnauthorised;
 import business.models.ContactData;
 import business.models.Lab;
-import business.models.LabRepository;
 import business.models.User;
 import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.LabService;
 import business.services.UserService;
 
 @RestController
@@ -40,20 +43,20 @@ public class LabController {
     Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    LabRepository labRepository;
+    LabService labService;
 
     @Autowired
     UserService userService;
 
     @RequestMapping(value = "/admin/labs/{id}", method = RequestMethod.GET)
     public Lab get(@PathVariable Long id) {
-        return labRepository.findOne(id);
+        return labService.findOne(id);
     }
 
     @RequestMapping(value = "/admin/labs", method = RequestMethod.GET)
     public List<Lab> getAll(Principal principal) {
         log.info("GET /admin/labs (for user: " + principal.getName() + ")");
-        return labRepository.findAll();
+        return labService.findAll();
     }
 
     public void transferLabData(Lab body, Lab lab) {
@@ -62,6 +65,17 @@ public class LabController {
             lab.setContactData(new ContactData());
         }
         lab.getContactData().copy(body.getContactData());
+        Set<String> emailAddresses = new LinkedHashSet<>();
+        for (String email: body.getEmailAddresses()) {
+            try {
+                InternetAddress address = new InternetAddress(email);
+                address.validate();
+                emailAddresses.add(email.trim().toLowerCase());
+            } catch (AddressException e) {
+                throw new EmailAddressInvalid(email);
+            }
+        }
+        lab.setEmailAddresses(new ArrayList<>(emailAddresses));
     }
 
     @RequestMapping(value = "/admin/labs", method = RequestMethod.POST)
@@ -73,44 +87,44 @@ public class LabController {
         }
         lab.setNumber(body.getNumber());
         transferLabData(body, lab);
-        return labRepository.save(lab);
+        return labService.save(lab);
     }
 
     @RequestMapping(value = "/admin/labs/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab update(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
         log.info("PUT /admin/labs/" + body.getNumber());
-        Lab lab = labRepository.getOne(id);
+        Lab lab = labService.findOne(id);
         if (lab == null) {
             throw new LabNotFound();
         }
         // Copy values. The lab number cannot be changed.
         transferLabData(body, lab);
-        return  labRepository.save(lab);
+        return  labService.save(lab);
     }
 
     @RequestMapping(value = "/admin/labs/{id}/activate", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab activate(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
         log.info("PUT /admin/labs/" + body.getNumber());
-        Lab lab = labRepository.getOne(id);
+        Lab lab = labService.findOne(id);
         if (lab == null) {
             throw new LabNotFound();
         }
         lab.activate();
-        return  labRepository.save(lab);
+        return  labService.save(lab);
     }
 
     @RequestMapping(value = "/admin/labs/{id}/deactivate", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab deactivate(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
         log.info("PUT /admin/labs/" + body.getNumber());
-        Lab lab = labRepository.getOne(id);
+        Lab lab = labService.findOne(id);
         if (lab == null) {
             throw new LabNotFound();
         }
         lab.deactivate();
-        return  labRepository.save(lab);
+        return  labService.save(lab);
     }
 
     @RequestMapping(value = "/lab", method = RequestMethod.GET)
@@ -123,7 +137,7 @@ public class LabController {
         if (user.getLab() == null) {
             throw new LabuserWithoutLab("No lab associated with lab user.");
         }
-        return labRepository.findOne(user.getLab().getId());
+        return labService.findOne(user.getLab().getId());
     }
 
     @RequestMapping(value = "/lab/hubusers", method = RequestMethod.GET)
@@ -136,7 +150,7 @@ public class LabController {
         if (user.getLab() == null) {
             throw new LabuserWithoutLab("No lab associated with lab user.");
         }
-        Lab lab = labRepository.findOne(user.getLab().getId());
+        Lab lab = labService.findOne(user.getLab().getId());
         List<ProfileRepresentation> hubUsers = new ArrayList<>();
         for(User u: userService.findHubUsersForLab(lab)) {
             hubUsers.add(new ProfileRepresentation(u));
@@ -154,7 +168,7 @@ public class LabController {
                 throw new LabuserWithoutLab("No lab associated with lab user.");
             }
         }
-        Lab lab = labRepository.findOne(user.getLab().getId());
+        Lab lab = labService.findOne(user.getLab().getId());
         if (lab == null) {
             throw new LabNotFound();
         }
@@ -164,7 +178,14 @@ public class LabController {
         lab.setHubAssistanceEnabled(body.isHubAssistanceEnabled());
         // TODO: if !isHubAssistanceEnabled(), perhaps set 'hubAssistanceRequested' to false
         // for all associated lab requests.
-        return labRepository.save(lab);
+        return labService.save(lab);
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
+    @RequestMapping(value = "/lab/fixLabEmailAddresses", method = RequestMethod.PUT)
+    public void fixLabEmailAddresses() {
+        log.info("PUT /lab/fixLabEmailAddresses");
+        labService.fixLabEmailAddresses();
     }
 
 }

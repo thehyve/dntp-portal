@@ -3,7 +3,7 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(console, angular, bootbox) {
+(function(console, _, angular, bootbox) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -12,30 +12,9 @@ angular.module('ProcessApp.controllers')
         function ($rootScope, $scope, $alert, $modal, $location, 
                 User, Role, UserRole, Lab) {
 
-            $rootScope.redirectUrl = $location.path();
-            
-            $scope.login = function () {
-                $location.path('/login');
-            };
-
-            if (!$rootScope.globals.currentUser) {
-                $scope.login();
-            }
-
-            $scope.error = '';
-            $scope.accessDenied = false;
-            $scope.visibility = {};
-
             User.query().$promise.then(function(response) {
                 $scope.users = response ? response : [];
                 $scope.displayedCollection = [].concat($scope.users);
-            }, function(err) {
-                if (err.status === 403) {
-                    $rootScope.errormessage = err.data.message;
-                    $scope.login();
-                    return;
-                }
-                $scope.error = err.data.message;
             });
 
             Role.query(function(response) {
@@ -68,8 +47,7 @@ angular.module('ProcessApp.controllers')
                 if (!isNaN(parseInt(userdata.id, 10))) {
                     userdata.$update(function(result) {
                         $scope.dataLoading = false;
-                        $scope.editerror = '';
-                        $scope.editUserModal.hide();
+                        $scope.editUserModal.destroy();
                     }, function(response) {
                         $scope.dataLoading = false;
                         if (response.data) {
@@ -83,7 +61,7 @@ angular.module('ProcessApp.controllers')
                     user.$save(function(result) {
                         $scope.dataLoading = false;
                         $scope.editerror = '';
-                        $scope.editUserModal.hide();
+                        $scope.editUserModal.destroy();
                         $scope.users.unshift(result);
                         bootbox.alert('User has been added. A password reset mail has been sent to ' + result.username + '.');
                     }, function(response) {
@@ -95,13 +73,6 @@ angular.module('ProcessApp.controllers')
                         }
                     });
                 }
-            };
-
-            $scope.toggleVisibility = function(user) {
-                if (!(user.userId in $scope.visibility)) {
-                    $scope.visibility[user.userId] = false;
-                }
-                $scope.visibility[user.userId] = !$scope.visibility[user.userId];
             };
 
             $scope.activate = function(user) {
@@ -153,11 +124,11 @@ angular.module('ProcessApp.controllers')
                     lab.ticked = _.includes($scope.edituser.hubLabIds, lab.id);
                     return lab;
                 });
-                $scope.editerror = '';
                 $scope.editUserModal = $modal({scope: $scope, templateUrl: '/app/admin/user/edituser.html', animation:false});
             };
 
         }
     ]
 );
-})(console, angular, window.bootbox);
+})(console, _, angular, window.bootbox);
+

@@ -33,7 +33,7 @@ angular.module('ProcessApp.interceptors')
                         $rootScope.logErrorResponse(response);
                         return $q.reject(response);
                     }
-                    $rootScope.heartbeat().then(function(data) {
+                    return $rootScope.heartbeat().then(function(data) {
                         // User is logged in, but denied access; redirect to start page.
                         //console.log('User is logged in, but denied access; redirect to start page.');
                         $rootScope.alert({

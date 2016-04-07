@@ -5,12 +5,25 @@
  */
 package business.models;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
+
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import business.services.LabRequestService;
 
 @Entity
 public class Lab {
@@ -26,6 +39,13 @@ public class Lab {
 
     @OneToOne(optional = true, cascade = CascadeType.ALL)
     private ContactData contactData;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(indexes = @Index(columnList="lab_id"))
+    @Fetch(FetchMode.JOIN)
+    @BatchSize(size = 100)
+    @OrderColumn
+    private List<String> emailAddresses;
 
     private boolean hubAssistanceEnabled = true;
 
@@ -72,6 +92,20 @@ public class Lab {
 
     public void setContactData(ContactData contactData) {
         this.contactData = contactData;
+    }
+
+    /**
+     * Email addresses used to notify the lab that lab requests have been
+     * created.
+     * See {@link LabRequestService#generateLabRequests(String)}.
+     * @return The list of email addresses.
+     */
+    public List<String> getEmailAddresses() {
+        return emailAddresses;
+    }
+
+    public void setEmailAddresses(List<String> emailAddresses) {
+        this.emailAddresses = emailAddresses;
     }
 
     /**

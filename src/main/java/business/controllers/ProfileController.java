@@ -6,7 +6,8 @@
 package business.controllers;
 
 import business.models.Lab;
-import business.models.LabRepository;
+
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import business.models.ContactData;
 import business.models.User;
 import business.representation.ProfileRepresentation;
 import business.security.UserAuthenticationToken;
+import business.services.LabService;
 import business.services.UserService;
 
 import java.util.List;
@@ -26,17 +28,19 @@ import java.util.List;
 @RestController
 public class ProfileController {
 
-    @Autowired
-    private UserService userService;
+    Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    LabRepository labRepository;
+    UserService userService;
+
+    @Autowired
+    LabService labService;
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ProfileRepresentation getOwnProfile(UserAuthenticationToken user) {
         // Query user's profile
-        LogFactory.getLog(this.getClass()).info("GET profile for user with id " + user.getId());
+        log.info("GET profile for user with id " + user.getId());
 
         // Return the representation
         return new ProfileRepresentation(userService.findOne(user.getId()));
@@ -46,20 +50,20 @@ public class ProfileController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Lab> getProfileHubLabs(UserAuthenticationToken user) {
         // Query user's profile
-        LogFactory.getLog(this.getClass()).info("GET labs profile for user with id " + user.getId());
+        log.info("GET labs profile for user with id " + user.getId());
 
         ProfileRepresentation profileRepresentation = new ProfileRepresentation(userService.findOne(user.getId()));
 
         // Return the representation
-        return labRepository.findAll(profileRepresentation.getHubLabIds());
+        return labService.findAll(profileRepresentation.getHubLabIds());
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.PUT)
     public void putOwnProfile(UserAuthenticationToken user, @RequestBody ProfileRepresentation form) {
-        LogFactory.getLog(this.getClass()).info("PUT profile for user with id " + user.getId());
+        log.info("PUT profile for user with id " + user.getId());
 
         if (form == null) {
-            LogFactory.getLog(this.getClass()).info("form is null!");
+            log.info("form is null!");
             return;
         }
 
@@ -79,7 +83,7 @@ public class ProfileController {
         // Only update the telephone number
         ContactData modifiedData = form.getContactData();
         if (modifiedData == null) {
-            LogFactory.getLog(this.getClass()).info("new contact data is null!");
+            log.info("new contact data is null!");
         } else {
             cData.setTelephone(modifiedData.getTelephone());
         }

@@ -44,7 +44,6 @@ import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
 import business.models.Lab;
-import business.models.LabRepository;
 import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.RequestRepresentation;
@@ -56,7 +55,7 @@ public class ExcerptListService {
 
     Log log = LogFactory.getLog(getClass());
     
-    @Autowired LabRepository labRepository;
+    @Autowired LabService labService;
     
     @Autowired ExcerptListRepository excerptListRepository;
 
@@ -136,7 +135,7 @@ public class ExcerptListService {
                     ExcerptEntry entry = list.addEntry(nextLine);
                     // check lab number
                     if (!validLabNumbers.contains(entry.getLabNumber())) {
-                        Lab lab = labRepository.findByNumber(entry.getLabNumber());
+                        Lab lab = labService.findByNumber(entry.getLabNumber());
                         if (lab == null) {
                             throw new ExcerptListUploadError(
                                     "Lab not found: " + entry.getLabNumber());

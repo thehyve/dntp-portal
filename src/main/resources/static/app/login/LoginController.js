@@ -6,8 +6,8 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookies',
-        function ($scope, $http, $rootScope, $location, $cookies) {
+    .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookies', '$log',
+        function ($scope, $http, $rootScope, $location, $cookies, $log) {
 
             var _serialiseRoles = function(roles) {
                 if (!jQuery.isArray(roles)) { 
@@ -25,7 +25,6 @@ angular.module('ProcessApp.controllers')
 
             var authenticate = function(callback) {
                 $http.get('user').success(function(data) {
-                    // console.log('Login succes: ' + JSON.stringify(data));
                     if (data.username) {
                         var userdata = {
                             userid: ''+data.id,
@@ -80,7 +79,6 @@ angular.module('ProcessApp.controllers')
                                         redirectUrl = '/';
                                     }
                                 }
-                                //console.log('Redirect to: ' + redirectUrl);
                                 $location.path(redirectUrl);
                             } else {
                                 $location.path('/login');
@@ -101,10 +99,10 @@ angular.module('ProcessApp.controllers')
                 }, function(data) {
                     $rootScope.error = true;
                     if (data.message) {
-                        console.log("Error: " + data.message);
+                        $log.error("Error: " + data.message);
                         $rootScope.errormessage = data.message;
                     } else {
-                        console.log("Error: " + data);
+                        $log.error("Error: " + data);
                     }
                 });
             };

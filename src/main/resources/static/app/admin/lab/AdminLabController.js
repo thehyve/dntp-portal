@@ -10,29 +10,36 @@ angular.module('ProcessApp.controllers')
     .controller('AdminLabController',['$rootScope', '$scope', '$location', '$modal', 'Lab',
         function ($rootScope, $scope, $location, $modal, Lab) {
 
-            $rootScope.redirectUrl = $location.path();
-    
-            $scope.login = function () {
-                $location.path('/login');
+            var _error = function (msg) {
+                console.log('error: ' + msg);
+                $alert({
+                    title : 'Error',
+                    content : msg,
+                    placement : 'top',
+                    type : 'danger',
+                    show : true,
+                    duration : 5
+                });
             };
-    
-            if (!$rootScope.globals.currentUser) {
-                $scope.login();
-            }
-        
-            $scope.error = '';
-            $scope.accessDenied = false;
-            $scope.visibility = {};
 
-            Lab.query(function(response) {
-                $scope.labs = response ? response : [];
-            }, function(err) {
-                if (err.status === 403) {
-                    $rootScope.errormessage = err.data.message;
-                    $scope.login();
-                    return;
+            /**
+             * From AngularJS v1.5.3, http://angularjs.org
+             */
+            var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+            $scope.validateEmail = function(obj) {
+                var email = obj.text;
+                if (!email) {
+                    return false;
                 }
-                $scope.error = err.data.message;
+                email = email.trim();
+                return email.length > 1 && email.length <= 255 && EMAIL_REGEXP.test(email);
+            };
+
+            Lab.query().$promise.then(function(response) {
+                $scope.labs = response ? response : [];
+                $scope.displayedCollection = [].concat($scope.labs);
+            }, function(response) {
+                $rootScope.logErrorResponse(response);
             });
 
             $scope.add = function() {
@@ -41,22 +48,25 @@ angular.module('ProcessApp.controllers')
 
             $scope.update = function(labdata) {
                 $scope.dataLoading = true;
+                labdata.emailAddresses = _.map(
+                        labdata.emailAddressData, 
+                        function(obj) { return obj.text; });
                 if (labdata.id > 0) {
                     labdata.$update(function(result) {
-                        $scope.editLabModal.hide();
+                        $scope.editLabModal.destroy();
                         $scope.dataLoading = false;
                     }, function(response) {
-                        $scope.error = $scope.error + response.data.message + '\n';
+                        _error(response.data.message);
                         $scope.dataLoading = false;
                     });
                 } else {
                     var lab = new Lab(labdata);
                     lab.$save(function(result) {
-                        $scope.editLabModal.hide();
+                        $scope.editLabModal.destroy();
                         $scope.labs.unshift(result);
                         $scope.dataLoading = false;
                     }, function(response) {
-                        $scope.error = response.data.message + '\n';
+                        _error(response.data.message);
                         $scope.dataLoading = false;
                     });
                 }
@@ -78,24 +88,18 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            $scope.toggleVisibility = function(lab) {
-                if (!(lab.id in $scope.visibility)) {
-                    $scope.visibility[lab.id] = false;
-                }
-                $scope.visibility[lab.id] = !$scope.visibility[lab.id];
-            };
-
             $scope.remove = function(lab) {
                 lab.$remove(function() {
                     $scope.labs.splice($scope.labs.indexOf(lab), 1);
                 }, function(response) {
-                    $scope.error = response.statusText;
+                    _error(response.statusText);
                 });
             };
 
             $scope.edit = function(lb) {
                 $scope.editlab = lb;
-                $scope.editLabModal = $modal({scope: $scope, template: '/app/admin/lab/editlab.html'});
+                $scope.editlab.emailAddressData = [].concat($scope.editlab.emailAddresses);
+                $scope.editLabModal = $modal({scope: $scope, templateUrl: '/app/admin/lab/editlab.html'});
             };
         }]);
 })(angular);

@@ -5,7 +5,11 @@
  */
 package business.security;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -20,11 +24,11 @@ import org.springframework.stereotype.Service;
 
 import business.models.ContactData;
 import business.models.Lab;
-import business.models.LabRepository;
 import business.models.Role;
 import business.models.RoleRepository;
 import business.models.User;
 import business.models.UserRepository;
+import business.services.LabService;
 import business.services.UserService;
 
 @Profile({"default", "dev", "test"})
@@ -43,7 +47,7 @@ public class DefaultRolesUsersLabs {
     RoleRepository roleRepository;
 
     @Autowired
-    LabRepository labRepository;
+    LabService labService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -78,20 +82,29 @@ public class DefaultRolesUsersLabs {
                 "Canisius-Wilhelmina Ziekenhuis, afd. Pathologie",
                 "Laboratorium voor Pathologie (PAL), Dordrecht"
         };
+        Map<Integer, String> cities = new HashMap<>();
+        cities.put(100, "Amsterdam");
+        cities.put(102, "Amersfoort");
+        cities.put(104, "Nijmegen");
+        cities.put(106, "Dordrecht");
         int labIdx = 99;
         // Create default labs
         for (String r: defaultLabs) {
-            if (labRepository.findByName(r) == null) {
+            if (labService.findByName(r) == null) {
                 Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
                 ContactData cd = new ContactData();
-                cd.setEmail("lab_" + l.getNumber() + "@labs.dntp.thehyve.nl");
+                cd.setCity(cities.get(l.getNumber()));
                 l.setContactData(cd);
-                labRepository.save(l);
+                l.setEmailAddresses(new ArrayList<>(Arrays.asList(new String[]
+                        {"lab_" + l.getNumber() + "@labs.dntp.thehyve.nl",
+                         "lab_" + l.getNumber() + "_test@labs.dntp.thehyve.nl"
+                        })));
+                labService.save(l);
             }
         }
 
         log.info("Creating default users...");
-        Lab defaultLab = labRepository.findByName(defaultLabs[0]);
+        Lab defaultLab = labService.findByName(defaultLabs[0]);
         // Create default roles and users for each role
         for (String r: defaultRoles) {
             // Save the role if it doesn't exist yet
@@ -105,7 +118,7 @@ public class DefaultRolesUsersLabs {
                 if (role.isHubUser()) {
                     Set<Lab> hubLabs = new HashSet<>();
                     hubLabs.add(defaultLab);
-                    hubLabs.add(labRepository.findByName(defaultLabs[2]));
+                    hubLabs.add(labService.findByName(defaultLabs[2]));
                     user.setHubLabs(hubLabs);
                 } else {
                     user.setLab(defaultLab);
@@ -115,7 +128,7 @@ public class DefaultRolesUsersLabs {
             }
         }
         // Create default lab users for each lab (if they don't exist)
-        for (Lab lab: labRepository.findAll()) {
+        for (Lab lab: labService.findAll()) {
             String labNumber = lab.getNumber().toString();
             String username = "lab_user" + labNumber + "@dntp.thehyve.nl";
 

@@ -13,94 +13,89 @@ This file is distributed under the GNU Affero General Public License
             </ul>
         </div>
 
-        <div ng-if="!authenticated">
-            <div class="alert alert-danger" role="alert">
-                {{'Not logged in'|translate}}.
-            </div>
-        </div>
-
         <div ng-if="authenticated">
 
             <div ng-controller="AdminLabController" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-                <div class="alert alert-danger" role="alert" ng-if="error.length" id="error">
-                    {{error|translate}}.
-                </div>
-
                 <h1>{{ 'Labs' | translate }}</h1>
                 <hr>
 
-                <div ng-hide="accessDenied">
-
-                    <ul class="nav nav-pills">
-                        <li>
-                            <button class="btn btn-default" type="button" title= "{{'Add lab'|translate}}" ng-click="add()">
-                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> {{'Add lab'|translate}}
-                            </button>
-                        </li>
-                    </ul>
-
-                    <p></p>
-
-                    <div class="alert alert-info" role="alert" ng-hide="labs.length">
-                        {{'There are no labs yet.' | translate}}
-                    </div>
-
-                    <ul class="list-group">
-                        <li class="list-group-item {{lab.active ? '' : 'disabled' }} {{visibility[lab.id] ? 'list-group-item-info' : ''}}"
-                            ng-repeat="lab in labs" id="lab_{{lab.id}}">
-                            <h4 class="list-group-item-heading" ng-click="toggleVisibility(lab)">
-                                <label>Lab {{lab.number}}: {{lab.name}}</label>
-            <span class="pull-right">
-            <span class="btn-group">
-                <button ng-if="lab.contactData" class="btn btn-default" type="button"
-                        title="{{visibility[lab.id] ? 'Collapse' :'Details'}}">
-                    <span class="glyphicon {{visibility[lab.id] ? 'glyphicon-menu-up' :'glyphicon-menu-down'}}"></span>
-                </button>
-                <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(lab)">
-                    <span><i class="glyphicon glyphicon-pencil"></i></span>
-                </button>
-                <button class="btn btn-default {{lab.active ? 'disabled' : ''}}" type="button" title="{{'Activate' | translate}}"
-                        ng-click="activate(lab)" ng-disabled="dataLoading">
-                    {{'Activate' | translate}}
-                </button>
-                <button class="btn btn-default {{lab.active ? '' : 'disabled'}}" type="button" title="{{'Deactivate' | translate}}"
-                        ng-click="deactivate(lab)" ng-disabled="dataLoading">
-                    {{'Deactivate' | translate}}
-                </button>
-            </span>
-            </span>
-                            </h4>
-                            <div ng-show="visibility[lab.id]" ng-if="lab.contactData">
-                                <em>{{'Contact info'|translate}}</em>:
-                                <address>
-                                    {{lab.contactData.address1}}<br/>
-                                    {{lab.contactData.address2}}<br/>
-                                    {{lab.contactData.postalCode}}
-                                    {{lab.contactData.city}}<br/>
-                                    {{lab.contactData.country}}<br/>
-                                    {{lab.contactData.email}}<br/>
-                                    {{lab.contactData.telephone}}
-                                </address>
-                            </div>
-                        </li>
-                    </ul>
-
+                <div class="input-group">
+                    <button class="btn btn-default" ng-click="add()" title="{{'Add lab' | translate}}">
+                        <span class="glyphicon glyphicon-plus-sign"></span> {{'Add lab' | translate}}
+                    </button>
                 </div>
 
-            </div>
+                <p></p>
+
+                <div class="alert alert-info" role="alert" ng-hide="labs.length">
+                    {{'There are no labs yet.' | translate}}
+                </div>
+
+                <table st-table="displayedCollection" st-safe-src="labs" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th st-sort="number">{{'Number'|translate}}</th>
+                        <th st-sort="name">{{'Name'|translate}}</th>
+                        <th st-sort="name">{{'Address'|translate}}</th>
+                        <th st-sort="emailAddresses">{{'Email addresses'|translate}}</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th colspan="5"><input st-search="" class="form-control"
+                                               placeholder="{{'Search' | translate}} ..." type="text"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="lab in displayedCollection" class="{{lab.active ? '' : 'disabled' }}">
+                        <td>{{lab.number}}</td>
+                        <td>{{lab.name}}</td>
+                        <td>
+                            <address>
+                                {{lab.contactData.address1}}<br ng-if="lab.contactData.address1"/>
+                                {{lab.contactData.address2}}<br ng-if="lab.contactData.address2"/>
+                                {{lab.contactData.postalCode}}
+                                {{lab.contactData.city}}<br ng-if="lab.contactData.postalCode || lab.contactData.city"/>
+                                {{lab.contactData.country}}<br ng-if="lab.contactData.country"/>
+                                {{lab.contactData.telephone}}
+                            </address>
+                        </td>
+                        <td>{{lab.emailAddresses.join(', ')}}</td>
+                        <td>
+                            <span class="pull-right">
+                                <span class="btn-group">
+                                    <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(lab)">
+                                        <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                    </button>
+                                    <button class="btn btn-default {{lab.active ? 'disabled' : ''}}" type="button"
+                                            title="{{'Activate' | translate}}"
+                                            ng-click="activate(lab)" ng-disabled="dataLoading">
+                                        <span><i class="glyphicon glyphicon-repeat"></i></span>
+                                    </button>
+                                    <button class="btn btn-default {{lab.active ? '' : 'disabled'}}" type="button"
+                                            title="{{'Deactivate' | translate}}"
+                                            ng-click="deactivate(lab)" ng-disabled="dataLoading">
+                                        <span><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                    </button>
+                                </span>
+                            </span>
+                        </td>
+                     </tr>
+                 </tbody>
+            </table>
+
         </div>
-
-
     </div>
-</div>
 
 
-<div class="page-header">
-    <h2>{{'Labs'|translate}}</h2>
-</div>
-<div ng-if="!authenticated">
-    <div class="alert alert-danger" role="alert">
-        {{'Not logged in'|translate}}.
+    <div class="page-header">
+        <h2>{{'Labs'|translate}}</h2>
     </div>
+    <div ng-if="!authenticated">
+        <div class="alert alert-danger" role="alert">
+            {{'Not logged in'|translate}}.
+        </div>
+    </div>
+
 </div>
+

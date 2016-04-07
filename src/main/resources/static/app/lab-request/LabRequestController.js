@@ -48,9 +48,10 @@ angular.module('ProcessApp.controllers')
                             item.processInstanceId = labRequests[i].processInstanceId;
                             item.status = labRequests[i].status;
                             item.assignee = labRequests[i].assignee;
-                            item.email = labRequests[i].requesterLab.contactData.email ?
-                                labRequests[i].requesterLab.contactData.email :
+                            item.email = labRequests[i].requesterLab.emailAddresses ?
+                                labRequests[i].requesterLab.emailAddresses.join(',') :
                                 labRequests[i].requesterEmail;
+                            console.log('email for lab ' + labRequests[i].number + ': ' + item.email);
                             $scope.samples.push(item);
                         }
                     }
@@ -101,7 +102,7 @@ angular.module('ProcessApp.controllers')
              * @param contactData
              * @returns {string}
              */
-            var getHTMLRequesterAddress = function (contactData) {
+            var getHTMLAddress = function (contactData) {
 
                 var _createEmailTmp = function (email) {
                     return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' + 
@@ -126,6 +127,17 @@ angular.module('ProcessApp.controllers')
             };
 
             /**
+             * Get address in html format
+             * @param contactData
+             * @returns {string}
+             */
+            var getHTMLAddressForLab = function (lab) {
+                var contactData = lab.contactData;
+                lab.email = lab.emailAddresses.join(',');
+                return getHTMLAddress(contactData);
+            };
+
+            /**
              * To load lab request
              * @private
              */
@@ -141,9 +153,9 @@ angular.module('ProcessApp.controllers')
                 restInstance.get().then(function (result) {
                     result.request.type = Request.convertRequestOptsToType(result.request);
                     $scope.labRequest = result;
-                    $scope.labRequest.htmlRequesterAddress = getHTMLRequesterAddress($scope.labRequest.requester.contactData);
-                    $scope.labRequest.htmlRequesterLabAddress = getHTMLRequesterAddress($scope.labRequest.requesterLab.contactData);
-                    $scope.labRequest.htmlLabAddress = getHTMLRequesterAddress($scope.labRequest.lab.contactData);
+                    $scope.labRequest.htmlRequesterAddress = getHTMLAddress($scope.labRequest.requester.contactData);
+                    $scope.labRequest.htmlRequesterLabAddress = getHTMLAddressForLab($scope.labRequest.requesterLab);
+                    $scope.labRequest.htmlLabAddress = getHTMLAddressForLab($scope.labRequest.lab);
                     deferred.resolve($scope.labRequest);
                 }, function (err) {
                     var errMsg = 'Error : ' + err.data.status + ' - ' + err.data.error;

@@ -30,10 +30,21 @@ angular.module('ProcessApp.controllers')
                 if (user === null) {
                     return '';
                 }
-                return user.firstName +
-                    ((user.firstName === '' || user.lastName === '' || user.lastName === null ) ? '' : ' ') +
-                    (user.lastName === null ? '' : user.lastName);
+                return _.compact([user.firstName, user.lastName]).join(' ');
             };
+
+            var _getRecallMailRecipients = function(labRequest) {
+                var recipients = [];
+                recipients.push(_.get(labRequest, 'requesterEmail'));
+                recipients.push(_.get(labRequest, 'request.pathologistEmail'));
+                recipients = recipients.concat(_.get(labRequest, 'requesterLab.emailAddresses'));
+
+                // remove duplicates and empty values
+                recipients = _.map(_.compact(recipients), function(r) { return r.trim(); });
+                recipients = _.uniq(_.compact(recipients));
+                return recipients.join(', ');
+            }
+            $scope.getRecallMailRecipients = _getRecallMailRecipients;
 
             var _createSampleList = function (labRequests) {
                 //console.log('_createSampleList: ' + labRequests.length + ' lab requests.');
@@ -48,10 +59,7 @@ angular.module('ProcessApp.controllers')
                             item.processInstanceId = labRequests[i].processInstanceId;
                             item.status = labRequests[i].status;
                             item.assignee = labRequests[i].assignee;
-                            item.email = labRequests[i].requesterLab.emailAddresses ?
-                                labRequests[i].requesterLab.emailAddresses.join(',') :
-                                labRequests[i].requesterEmail;
-                            console.log('email for lab ' + labRequests[i].number + ': ' + item.email);
+                            item.email = _getRecallMailRecipients(labRequests[i]);
                             $scope.samples.push(item);
                         }
                     }
@@ -133,7 +141,7 @@ angular.module('ProcessApp.controllers')
              */
             var getHTMLAddressForLab = function (lab) {
                 var contactData = lab.contactData;
-                lab.email = lab.emailAddresses.join(',');
+                contactData.email = lab.emailAddresses.join(', ');
                 return getHTMLAddress(contactData);
             };
 

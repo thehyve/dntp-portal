@@ -244,9 +244,9 @@ angular.module('ProcessApp.controllers')
                     '</form>',
                     function(result) {
                         if (result) {
-                            labRequest.rejectReason = $('#rejectReason').val();
+                            labRequest.rejectReason = jQuery('#rejectReason').val();
                             //console.log('Rejected. Reason: ' + labRequest.rejectReason);
-                            labRequest.customPUT(labRequest, 'reject').then(function (result) {
+                            labRequest.customPUT(labRequest, 'reject').then(function () {
                                 if ($scope.labReqModal) {
                                     $scope.labReqModal.hide();
                                 }
@@ -262,7 +262,7 @@ angular.module('ProcessApp.controllers')
             $scope.accept = function (labRequest) {
                 bootbox.confirm('Accept this lab request?' , function (result) {
                     if (result) {
-                        labRequest.customPUT({}, 'accept').then(function (result) {
+                        labRequest.customPUT({}, 'accept').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -278,7 +278,7 @@ angular.module('ProcessApp.controllers')
             $scope.sending = function (labRequest) {
                 bootbox.confirm('Send this lab request?'  , function (result) {
                     if (result) {
-                        labRequest.customPUT({}, 'sending').then(function (result) {
+                        labRequest.customPUT({}, 'sending').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -297,7 +297,7 @@ angular.module('ProcessApp.controllers')
                             samplesMissing: labRequest.samplesMissing,
                             missingSamples: labRequest.missingSamples};
 
-                        labRequest.customPUT(obj, 'received').then(function (result) {
+                        labRequest.customPUT(obj, 'received').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -312,7 +312,7 @@ angular.module('ProcessApp.controllers')
             $scope.returning = function (labRequest) {
                 bootbox.confirm('Return this lab request?'  , function (result) {
                     if (result) {
-                        labRequest.customPUT({}, 'returning').then(function (result) {
+                        labRequest.customPUT({}, 'returning').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -330,7 +330,7 @@ angular.module('ProcessApp.controllers')
                         var obj = { id: labRequest.id,
                             samplesMissing: labRequest.samplesMissing,
                             missingSamples: labRequest.missingSamples};
-                        labRequest.customPUT(obj, 'returned').then(function (result) {
+                        labRequest.customPUT(obj, 'returned').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -345,7 +345,7 @@ angular.module('ProcessApp.controllers')
             $scope.complete = function (labRequest) {
                 bootbox.confirm('Complete lab request?'  , function (result) {
                     if (result) {
-                        labRequest.customPUT(labRequest, 'complete').then(function (result) {
+                        labRequest.customPUT(labRequest, 'complete').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -359,7 +359,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.claim = function (labRequest) {
                 labRequest.customPUT({}, 'claim')
-                    .then(function (result) {
+                    .then(function () {
                         _loadData();
                     }, function (err) {
                         $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
@@ -368,7 +368,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.unclaim = function (labRequest) {
                 labRequest.customPUT({}, 'unclaim')
-                    .then(function (result) {
+                    .then(function () {
                         _loadData();
                     }, function (err) {
                         $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
@@ -415,7 +415,7 @@ angular.module('ProcessApp.controllers')
             $scope.update = function (labRequest) {
                 var obj = {'paReportsSent': labRequest.paReportsSent};
                 Restangular.one('labrequests', labRequest.id)
-                    .customPUT(obj).then(function (result) {
+                    .customPUT(obj).then(function () {
                     if ($scope.labReqModal) {
                         $scope.labReqModal.hide();
                     }
@@ -433,7 +433,7 @@ angular.module('ProcessApp.controllers')
                     obj.samples.push(pathology.samples[i].text);
                 }
                 Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
-                    .customPUT(obj).then(function (result) {
+                    .customPUT(obj).then(function () {
                         //console.log(result);
                     },
                     function (err) {
@@ -445,7 +445,7 @@ angular.module('ProcessApp.controllers')
             
             $scope.addPathology = function (labRequest, pathology) {
                 Restangular.one('labrequests', labRequest.id).post('pathology', pathology)
-                    .then(function (result) {
+                    .then(function () {
                         //console.log(result);
                         $scope.editPathology = {};
                         _loadData();
@@ -461,7 +461,7 @@ angular.module('ProcessApp.controllers')
                     function(result) {
                         if (result) {
                             Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
-                            .remove().then(function (result) {
+                            .remove().then(function () {
                                 //console.log(result);
                                 _loadData();
                             },

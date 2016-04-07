@@ -7,8 +7,12 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('AdminLabController',['$rootScope', '$scope', '$location', '$modal', 'Lab',
-        function ($rootScope, $scope, $location, $modal, Lab) {
+    .controller('AdminLabController',['$rootScope', '$scope', '$location',
+                                      '$modal', '$alert',
+                                      'Lab',
+        function ($rootScope, $scope, $location,
+                $modal, $alert,
+                Lab) {
 
             var _error = function (msg) {
                 console.log('error: ' + msg);
@@ -52,7 +56,7 @@ angular.module('ProcessApp.controllers')
                         labdata.emailAddressData, 
                         function(obj) { return obj.text; });
                 if (labdata.id > 0) {
-                    labdata.$update(function(result) {
+                    labdata.$update(function() {
                         $scope.editLabModal.destroy();
                         $scope.dataLoading = false;
                     }, function(response) {

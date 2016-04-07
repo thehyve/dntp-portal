@@ -187,10 +187,12 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            /*eslint-disable no-unused-vars*/
             $scope.filterEmptyRequests = function(value, index) {
                 return !value;
             };
-            
+            /*eslint-enable no-unused-vars*/
+
             $scope.refresh = function(request, result) {
                 result.type = Request.convertRequestOptsToType(result);
                 var index = -1;
@@ -224,7 +226,7 @@ angular.module('ProcessApp.controllers')
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
-                        attachment.$removeAgreementFile(function(result) {
+                        attachment.$removeAgreementFile(function() {
                             $scope.request.agreementAttachments.splice($scope.request.agreementAttachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
@@ -240,7 +242,7 @@ angular.module('ProcessApp.controllers')
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
-                        attachment.$removeMECFile(function(result) {
+                        attachment.$removeMECFile(function() {
                             $scope.request.medicalEthicalCommitteeApprovalAttachments.splice($scope.request.medicalEthicalCommitteeApprovalAttachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
@@ -256,7 +258,7 @@ angular.module('ProcessApp.controllers')
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
-                        attachment.$removeDataFile(function(result) {
+                        attachment.$removeDataFile(function() {
                             $scope.request.dataAttachments.splice($scope.request.dataAttachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
@@ -272,7 +274,7 @@ angular.module('ProcessApp.controllers')
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
                         attachment.id = f.id;
-                        attachment.$remove(function(result) {
+                        attachment.$remove(function() {
                             $scope.request.attachments.splice($scope.request.attachments.indexOf(f), 1);
                             bootbox.alert('File ' + f.name + ' deleted.');
                         }, function(response) {
@@ -285,7 +287,7 @@ angular.module('ProcessApp.controllers')
             $scope.remove = function(request) {
                 bootbox.confirm($scope.translate('Are you sure you want to delete request ?', {id: request.processInstanceId}), function(result) {
                     if (result) {
-                        request.$remove(function(result) {
+                        request.$remove(function() {
                             $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
                             bootbox.alert('Request ' + request.processInstanceId + ' deleted.');
                         }, function(response) {
@@ -385,7 +387,7 @@ angular.module('ProcessApp.controllers')
                     '</form>',
                     function(result) {
                         if (result) {
-                            request.rejectReason = $('#rejectReason').val();
+                            request.rejectReason = jQuery('#rejectReason').val();
                             request.$reject(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
@@ -585,7 +587,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.autofocus = function() {
                 $timeout(function() {
-                    $('#contactPersonName').focus();
+                    jQuery('#contactPersonName').focus();
                 });
             };
 
@@ -598,18 +600,18 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.showPopover = function(id) {
-                $('#'+id).popover('show');
+                jQuery('#'+id).popover('show');
             };
 
             $scope.hidePopover = function(id) {
                 $timeout(function() {
                     var enablersHaveFocus = false;
                     _($scope.popoverEnablers[id]).forEach(function(enabler) {
-                        if ($('#'+enabler).is(':focus')) {
+                        if (jQuery('#'+enabler).is(':focus')) {
                             enablersHaveFocus = true;
                         }
                     });
-                    if (!enablersHaveFocus) { $('#'+id).popover('hide'); }
+                    if (!enablersHaveFocus) { jQuery('#'+id).popover('hide'); }
                 });
             };
 
@@ -617,11 +619,11 @@ angular.module('ProcessApp.controllers')
                 $timeout(function() {
                 _($scope.popoverEnablers).forIn(function(enablers, id) {
                     _(enablers).forEach(function(enabler) {
-                        var el = $('#'+enabler);
-                        el.focus(function(event) {
+                        var el = jQuery('#'+enabler);
+                        el.focus(function() {
                             $scope.showPopover(id);
                         });
-                        el.blur(function(event) {
+                        el.blur(function() {
                             $scope.hidePopover(id);
                         });
                     });

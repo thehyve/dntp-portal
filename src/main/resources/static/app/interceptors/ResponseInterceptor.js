@@ -33,7 +33,7 @@ angular.module('ProcessApp.interceptors')
                         $rootScope.logErrorResponse(response);
                         return $q.reject(response);
                     }
-                    return $rootScope.heartbeat().then(function(data) {
+                    return $rootScope.heartbeat().then(function() {
                         // User is logged in, but denied access; redirect to start page.
                         //console.log('User is logged in, but denied access; redirect to start page.');
                         $rootScope.alert({
@@ -42,11 +42,11 @@ angular.module('ProcessApp.interceptors')
                             placement : 'top-right',
                             type : 'warning',
                             show : true,
-                            duration : 15
+                            duration : 10
                         });
                         $location.path('/');
                         return $q.reject(response);
-                    }, function(error) {
+                    }, function() {
                         // User not logged in or session is expired; redirect to login page.
                         //console.log('User not logged in or session is expired; redirect to login page.');
                         $rootScope.alert({
@@ -55,7 +55,7 @@ angular.module('ProcessApp.interceptors')
                             placement : 'top-right',
                             type : 'info',
                             show : true,
-                            duration : 10
+                            duration : 5
                         });
                         _logout();
                         $location.path('/login');

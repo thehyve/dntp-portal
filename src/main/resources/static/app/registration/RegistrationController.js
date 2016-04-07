@@ -9,10 +9,10 @@
 angular.module('ProcessApp.controllers')
     .controller('RegistrationController',['$scope', '$rootScope',
                                           'Restangular',
-                                          '$location', '$alert', '$timeout',
+                                          '$location', '$alert',
         function ($scope, $rootScope,
                 Restangular,
-                $location, $alert, $timeout) {
+                $location, $alert) {
 
         $scope.labs = []; // init labs
 
@@ -28,7 +28,7 @@ angular.module('ProcessApp.controllers')
                 user.username = user.contactData.email;
                 $rootScope.registrant = user;
                 Restangular.all('register/users').post(user)
-                    .then(function (data) {
+                    .then(function () {
                         $location.path('/register/success');
                     }, function (response) {
                         if (response.data) {

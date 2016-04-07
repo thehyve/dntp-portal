@@ -84,7 +84,7 @@ angular.module('ProcessApp.controllers')
                     newRequestPromises.push(createAndSubmitRequest());
                 }
                 console.log('Start load test (creating and submitting ' + newRequestPromises.length + ' requests).');
-                $q.all(newRequestPromises).then(function(result) {
+                $q.all(newRequestPromises).then(function() {
                     var end = new Date().getTime();
                     console.log('Load test took ' + (end - start) + ' ms.');
                     $route.reload();
@@ -105,7 +105,7 @@ angular.module('ProcessApp.controllers')
             var forwardRequest = function(req) {
                 return $q(function(resolve, reject) {
                     //console.log('Considering request ' + req.requestNumber);
-                    if (isCurrentUser(req.assignee)) {
+                    if ($rootScope.isCurrentUser(req.assignee)) {
                         if (req.status == 'Review') {
                             req.requesterLabValid = true;
                             req.requesterValid = true;
@@ -230,7 +230,7 @@ angular.module('ProcessApp.controllers')
                 });
 
                 var promises = [claimAllPromise, forwardAllPromise];
-                $q.all(promises).then(function(result) {
+                $q.all(promises).then(function() {
                     console.log('Load tests completed.');
                     $route.reload();
                 }, function(err) {

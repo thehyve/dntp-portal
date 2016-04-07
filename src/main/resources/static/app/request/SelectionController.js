@@ -100,11 +100,11 @@ angular.module('ProcessApp.controllers')
 
             $scope.scrollToCurrent = function() {
                 var elementId = '#excerpt_'+$scope.request.excerptList.entries[$scope.currentIndex].id;
-                if ($(elementId + ':not(:visible)')) {
+                if (jQuery(elementId + ':not(:visible)')) {
                     //console.log('scroll to: ' + elementId);
-                    var element = $(elementId);
+                    var element = jQuery(elementId);
                     if (element) {
-                        $('html, body').animate({
+                        jQuery('html, body').animate({
                             scrollTop: element.offset().top - 200
                         }, 200);
                     }
@@ -112,15 +112,15 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.enableSpaceSelects = function() {
-                $(document).off('keydown.selection');
-                $(document).on('keydown.selection', function(e){
+                jQuery(document).off('keydown.selection');
+                jQuery(document).on('keydown.selection', function(e){
                     if(e.which === 40) { // down
                         //console.log('down: ' + $scope.request.excerptList.entries.length);
                         if ($scope.currentIndex < $scope.request.excerptList.entries.length - 1) {
                             $scope.$apply(function() {
                                 $scope.currentIndex++;
                             });
-                            $('#excerpt_'+$scope.request.excerptList.entries[$scope.currentIndex].id).focus();
+                            jQuery('#excerpt_'+$scope.request.excerptList.entries[$scope.currentIndex].id).focus();
                         }
                         $scope.scrollToCurrent();
                         return false; // stops the page from scrolling

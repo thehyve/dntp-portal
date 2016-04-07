@@ -106,7 +106,7 @@ angular.module('ProcessApp.controllers')
             AgreementFormTemplate.save(template)
             .then(function (template) {
                 $scope.template = template;
-            }, function (err) {
+            }, function () {
                 //
             });
         };

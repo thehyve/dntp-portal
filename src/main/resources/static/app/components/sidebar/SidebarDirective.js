@@ -22,6 +22,7 @@ angular.module('ProcessApp.directives')
                 $scope.isPalga = $scope.$root.isPalga;
                 $scope.isScientificCouncil = $scope.$root.isScientificCouncil;
 
+                /*eslint-disable no-unused-vars*/
                 $scope.$watch('allRequests', function(newValue, oldValue) {
                     if (newValue) {
                         $scope.unclaimedReqs = RequestFilter.selectUnclaimed(newValue);
@@ -35,6 +36,7 @@ angular.module('ProcessApp.directives')
                         $scope.reqsNotVoted = RequestFilter.selectNotVoted(newValue);
                     }
                 });
+                /*eslint-enable no-unused-vars*/
             }
         };
     }]);

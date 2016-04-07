@@ -41,7 +41,7 @@ angular.module('ProcessApp.controllers')
         $scope.removeComment = function(labRequest, body) {
             var comment = new LabRequestComment(body);
             comment.labRequestId = labRequest.id;
-            comment.$remove(function(result) {
+            comment.$remove(function() {
                 $scope.labRequest.comments.splice(
                     $scope.labRequest.comments.indexOf(body), 1);
             }, function(response) {

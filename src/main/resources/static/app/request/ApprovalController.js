@@ -87,7 +87,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.removeApprovalComment = function(comment) {
                 $scope.dataLoading = true;
-                new ApprovalComment(comment).$remove(function(result) {
+                new ApprovalComment(comment).$remove(function() {
                     $scope.request.approvalComments.splice(
                         $scope.request.approvalComments.indexOf(comment), 1);
                     $scope.dataLoading = false;

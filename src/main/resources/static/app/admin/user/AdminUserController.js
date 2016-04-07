@@ -12,23 +12,6 @@ angular.module('ProcessApp.controllers')
         function ($rootScope, $scope, $alert, $modal, $location, 
                 User, Role, UserRole, Lab) {
 
-            User.query().$promise.then(function(response) {
-                $scope.users = response ? response : [];
-                $scope.displayedCollection = [].concat($scope.users);
-            });
-
-            Role.query(function(response) {
-                $scope.roles = response ? response : [];
-            });
-
-            Lab.query(function(response) {
-                $scope.labs = response ? response : [];
-                $scope.labmap = {};
-                for(var i in $scope.labs) {
-                    $scope.labmap[$scope.labs[i].id] = $scope.labs[i];
-                }
-            });
-
             var _error = function (msg) {
                 console.log('error: ' + msg);
                 $alert({
@@ -41,11 +24,76 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            var _getDisplayLab = function(labId) {
+                if (labId in $scope.labmap) {
+                    return _.get($scope.labmap, [labId, 'number']) + '. ' +
+                        _.get($scope.labmap, [labId, 'name']);
+                } else {
+                    return '';
+                }
+            };
+
+            $scope.getDisplayLabsForUser = function(user) {
+                if (user.currentRole === 'hub_user') {
+                    var labs = _.map(user.hubLabIds, function(labId) {
+                        return _getDisplayLab(labId);
+                    });
+                    return _.compact(labs);
+                } else {
+                    return [_getDisplayLab(user.labId)];
+                }
+            };
+
+            $scope.getDisplayName = function(user) {
+                if (user === null) {
+                    return '';
+                }
+                return _.compact([user.firstName, user.lastName]).join(' ');
+            };
+
+            var _addInfoToUser = function(user) {
+                user.displayLabs = $scope.getDisplayLabsForUser(user);
+                user.displayName = $scope.getDisplayName(user);
+                return user;
+            };
+
+            var _loadUsers = function() {
+                User.query().$promise.then(function(response) {
+                    var users = response ? response : [];
+                    $scope.users = _.map(users, function(user) {
+                        user = _addInfoToUser(user);
+                        return user;
+                    })
+                    $scope.displayedCollection = [].concat($scope.users);
+                });
+            };
+
+            var _loadRoles = function() {
+                return Role.query(function(response) {
+                    $scope.roles = response ? response : [];
+                });
+            };
+
+            var _loadLabsAndUsers = function() {
+                Lab.query(function(response) {
+                    $scope.labs = response ? response : [];
+                    $scope.labmap = {};
+                    for(var i in $scope.labs) {
+                        $scope.labmap[$scope.labs[i].id] = $scope.labs[i];
+                    }
+                    _loadUsers();
+                });
+            };
+
+            _loadRoles();
+            _loadLabsAndUsers();
+
             $scope.update = function(userdata) {
                 userdata.hubLabIds = _.map(userdata.hubLabs, function(lab) { return lab.id; });
                 $scope.dataLoading = true;
                 if (!isNaN(parseInt(userdata.id, 10))) {
                     userdata.$update(function() {
+                        userdata = _addInfoToUser(userdata);
                         $scope.dataLoading = false;
                         $scope.editUserModal.destroy();
                     }, function(response) {
@@ -62,6 +110,7 @@ angular.module('ProcessApp.controllers')
                         $scope.dataLoading = false;
                         $scope.editerror = '';
                         $scope.editUserModal.destroy();
+                        result = _addInfoToUser(result);
                         $scope.users.unshift(result);
                         bootbox.alert('User has been added. A password reset mail has been sent to ' + result.username + '.');
                     }, function(response) {
@@ -89,15 +138,6 @@ angular.module('ProcessApp.controllers')
                     $scope.users[$scope.users.indexOf(user)] = result;
                     $scope.dataLoading = false;
                 });
-            };
-
-            $scope.getName = function(user) {
-                if (user === null) {
-                    return '';
-                }
-                return user.firstName +
-                    ((user.firstName === '' || user.lastName === '' || user.lastName === null ) ? '' : ' ') +
-                    (user.lastName === null ? '' : user.lastName);
             };
 
             $scope.remove = function(user) {

@@ -40,7 +40,7 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="emailValidated">{{'Validation'|translate}}</th>
                         <th st-sort="currentRole">{{'Role'|translate}}</th>
                         <th st-sort="institute">{{'Institute'|translate}}</th>
-                        <th st-sort="labId">{{'Lab'|translate}}</th>
+                        <th st-sort="displayLabs">{{'Lab'|translate}}</th>
                         <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
                         <th></th>
                     </tr>
@@ -51,14 +51,14 @@ This file is distributed under the GNU Affero General Public License
                     </thead>
                     <tbody>
                     <tr ng-repeat="user in displayedCollection">
-                        <td>{{user.firstName}} {{user.lastName}}</td>
+                        <td>{{user.displayName}}</td>
                         <td>{{user.username}}</td>
                         <td><span ng-if="user.emailValidated">{{'Validated'|translate}}</span>
                             <span class="text-danger" ng-if="!user.emailValidated">{{'Not validated'|translate}}</span>
                         </td>
                         <td>{{user.currentRole}}</td>
                         <td>{{user.institute}}</td>
-                        <td>{{labmap[user.labId].number}}. {{labmap[user.labId].name}}</td>
+                        <td><span ng-repeat="lab in user.displayLabs">{{lab}}<br /></span></td>
                         <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
                             &nbsp;&nbsp;
                             {{user.created | date: 'HH:mm'}}

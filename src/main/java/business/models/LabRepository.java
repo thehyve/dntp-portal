@@ -22,5 +22,5 @@ public interface LabRepository extends JpaRepository<Lab, Long> {
 
     Lab findOneByActiveTrue(Long id);
 
-    List<Lab> findAllByOrderByNumberAsc(Set<Long> labIds);
+    List<Lab> findAllByIdInOrderByNumberAsc(Set<Long> labIds);
 }

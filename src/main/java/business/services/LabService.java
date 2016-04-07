@@ -38,7 +38,7 @@ public class LabService {
 
     @Transactional(readOnly = true)
     public List<Lab> findAll(Set<Long> labIds) {
-        return labRepository.findAllByOrderByNumberAsc(labIds);
+        return labRepository.findAllByIdInOrderByNumberAsc(labIds);
     }
 
     public Lab findOne(Long id) {

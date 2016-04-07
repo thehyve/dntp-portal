@@ -73,6 +73,8 @@ java -jar target/dntp-portal-<version>.war
 
 ### Tests
 
+Run all tests
+
 ```bash
 # run the testNG test suite
 mvn -Dspring.profiles.active=dev test
@@ -83,7 +85,9 @@ Running front-end unit testing and e2e testing:
 ```bash
 # install dependencies
 sudo npm install -g gulp protractor
-# run tests
+# run unit testings
+gulp test
+# run e2e tests
 protractor
 ```
 

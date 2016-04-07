@@ -10,6 +10,7 @@
 /classes/
 /out/
 /target/
+/coverage/
 /.idea/
 /.gradle/
 /.settings/

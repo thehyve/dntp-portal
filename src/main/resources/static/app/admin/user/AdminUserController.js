@@ -160,4 +160,4 @@ angular.module('ProcessApp.controllers')
         }
     ]
 );
-})(console, angular, bootbox);
+})(console, angular, window.bootbox);

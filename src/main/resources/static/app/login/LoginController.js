@@ -3,10 +3,11 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
+'use strict';
+
 angular.module('ProcessApp.controllers')
     .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookies',
         function ($scope, $http, $rootScope, $location, $cookies) {
-            'use strict';
 
             var _serialiseRoles = function(roles) {
                 if (!jQuery.isArray(roles)) { 

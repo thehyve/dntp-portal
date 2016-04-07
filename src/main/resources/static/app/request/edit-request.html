@@ -504,7 +504,7 @@ This file is distributed under the GNU Affero General Public License
                             <button class="btn btn-default"
                                     data-placement="top-left" data-animation="am-flip-x"
                                     data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
-                                    ata-trigger="hover focus" bs-popover
+                                    data-trigger="hover focus" bs-popover
                                     flow-btn>{{'Upload medical ethical committee approval'|translate}}
                             </button>
                         </div>
@@ -535,8 +535,8 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-sm-8">
                                 <input type="checkbox" id="sentToPrivacyComm" name="sentToPrivacyComm" value="1"
                                        ng-model="request.sentToPrivacyCommittee"> &nbsp;
-                                <label class="normal" for="sentToPrivacyComm">{{ 'This request has been sent to the
-                                    privacy committee to be checked.' | translate }}</label>
+                                <label class="normal" for="sentToPrivacyComm">{{
+                                'This request has been sent to the privacy committee to be checked.' | translate }}</label>
                             </div>
                         </div>
 
@@ -553,8 +553,8 @@ This file is distributed under the GNU Affero General Public License
 
                         <!-- Outcome Reference -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{ 'Outcome
-                                reference' | translate }}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{
+                            'Outcome reference' | translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
                                       name="privacyCommitteeOutcomeRef"
@@ -595,8 +595,8 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-sm-8">
                                 <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved"
                                        ng-model="request.scientificCouncilApproved"> &nbsp;
-                                <label class="normal" for="scientificCouncilApproved">{{ 'The scientific council has
-                                    approved.' | translate }}</label>
+                                <label class="normal" for="scientificCouncilApproved">{{
+                                'The scientific council has approved.' | translate }}</label>
                             </div>
                         </div>
 
@@ -608,8 +608,8 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-sm-8">
                                 <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved"
                                        ng-model="request.privacyCommitteeApproved"> &nbsp;
-                                <label class="normal" for="privacyCommitteeApproved">{{ 'There are no privacy issues or
-                                    the privacy committee has approved.' | translate }}</label>
+                                <label class="normal" for="privacyCommitteeApproved">{{
+                                'There are no privacy issues or the privacy committee has approved.' | translate }}</label>
                             </div>
                         </div>
                     </div>

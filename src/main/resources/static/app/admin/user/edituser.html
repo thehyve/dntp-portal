@@ -3,7 +3,8 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true"
+    ng-keypress="cancelByEscKey($event);">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-horizontal" role="form" name="registrationForm" ng-submit="update(edituser)" novalidate>
@@ -176,7 +177,7 @@ This file is distributed under the GNU Affero General Public License
                     <br>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-default pull-left" ng-click="$hide()">{{'Cancel'|translate}}</a>
+                    <a class="btn btn-default pull-left" ng-click="cancel()">{{'Cancel'|translate}}</a>
                     <button class="btn btn-primary" type="submit"
                             ng-disabled="registrationForm.$invalid || dataLoading">{{'Save'|translate}}
                     </button>

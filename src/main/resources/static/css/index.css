@@ -278,3 +278,27 @@ address {margin-bottom: 0px;}
     padding-top: 0;
     padding-bottom: 0;
 }
+
+.multiSelect > button {
+    font-size: .9em;
+    text-align: left;
+}
+
+.checkBoxContainer {
+    font-size: .9em;
+}
+
+.help-block, .navbar-fixed-bottom {
+    font-size: .85em;
+    color: indianred;
+}
+
+.h4, h4 {
+    font-size: 18px;
+    font-weight: 200;
+    color: grey;
+    background-color: aliceblue;
+    padding: 7px;
+}
+
+.h4-palga {background-color: #f9ebda}

@@ -9,7 +9,7 @@ This file is distributed under the GNU Affero General Public License
          || isRequester()
         )">
 
-    <h3>{{'Excerpt List'|translate}}</h3>
+    <h4>{{'Excerpt List'|translate}}</h4>
     <hr>
     
     <div ng-if="request.excerptList">
@@ -79,7 +79,7 @@ This file is distributed under the GNU Affero General Public License
         && request.excerptList"
         ng-controller="SelectionController">
 
-        <h3>{{'Excerpt selection'|translate}}</h3>
+        <h4>{{'Excerpt selection'|translate}}</h4>
         <hr>
         <!-- Excerpt selection upload -->
         <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
@@ -149,7 +149,7 @@ This file is distributed under the GNU Affero General Public License
 
   </div>
 
-  <h3>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h3>
+  <h4>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
   <hr>
 
   <div class="list-group">

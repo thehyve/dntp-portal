@@ -20,7 +20,7 @@ This file is distributed under the GNU Affero General Public License
                         {{ error }}
                     </div>
 
-                    <h3>{{'General details' |translate}}</h3>
+                    <h4>{{'General details' |translate}}</h4>
                     <hr>
 
                     <!-- Principal Investigator -->
@@ -222,7 +222,7 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
-                    <h3>{{'Billing address'|translate}}</h3>
+                    <h4>{{'Billing address'|translate}}</h4>
                     <hr>
                     <!-- Address -->
                     <div class="form-group"
@@ -312,7 +312,7 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
                     
-                    <h3>{{'Billing information' | translate}}</h3>
+                    <h4>{{'Billing information' | translate}}</h4>
                     <hr>
                     <!-- Charge number -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.chargeNumber.$invalid && requestEditForm.chargeNumber.$dirty }">
@@ -347,7 +347,7 @@ This file is distributed under the GNU Affero General Public License
 
 
                     <div ng-show="request.type != 1">
-                    <h3>{{ 'Data Linkage' | translate }}</h3>
+                    <h4>{{ 'Data Linkage' | translate }}</h4>
                     <hr>
 
                     <!-- Data Linkage -->
@@ -422,7 +422,7 @@ This file is distributed under the GNU Affero General Public License
 
                     <br>
 
-                    <h3>{{ 'Attachments' | translate }}</h3>
+                    <h4>{{ 'Attachments' | translate }}</h4>
                     <hr>
 
                     <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
@@ -468,7 +468,7 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
-                    <h3>{{ 'Medical ethical committee approval' | translate }}</h3>
+                    <h4>{{ 'Medical ethical committee approval' | translate }}</h4>
                     <hr>
 
                     <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
@@ -500,10 +500,13 @@ This file is distributed under the GNU Affero General Public License
                             <span ng-bind-html="upload_error['mec_approval']"></span>
                         </div>
                         <div>
-                            <input type="file" flow-btn id="test-upload-attachment2" style="display:none" />
-                            <button class="btn btn-default" 
-                                data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Upload medical ethical committee approval'|translate}}" data-trigger="hover focus" bs-popover
-                                flow-btn>{{'Upload medical ethical committee approval'|translate}}</button>
+                            <input type="file" flow-btn id="test-upload-attachment2" style="display:none"/>
+                            <button class="btn btn-default"
+                                    data-placement="top-left" data-animation="am-flip-x"
+                                    data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
+                                    data-trigger="hover focus" bs-popover
+                                    flow-btn>{{'Upload medical ethical committee approval'|translate}}
+                            </button>
                         </div>
                         <br>
                         <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
@@ -521,7 +524,7 @@ This file is distributed under the GNU Affero General Public License
 
                         <br>
 
-                        <h3>{{'Checks by privacy committee'|translate}}</h3>
+                        <h4 class="h4-palga">{{'Checks by privacy committee'|translate}}</h4>
                         <hr>
 
                         <!-- Is sent to privacy commitee -->
@@ -531,75 +534,85 @@ This file is distributed under the GNU Affero General Public License
                             </label>
                             <div class="col-sm-8">
                                 <input type="checkbox" id="sentToPrivacyComm" name="sentToPrivacyComm" value="1"
-                                       ng-model="request.sentToPrivacyCommittee"> &nbsp; 
-                                <label class="normal" for="sentToPrivacyComm">{{ 'This request has been sent to the privacy committee to be checked.' | translate }}</label>
+                                       ng-model="request.sentToPrivacyCommittee"> &nbsp;
+                                <label class="normal" for="sentToPrivacyComm">{{
+                                'This request has been sent to the privacy committee to be checked.' | translate }}</label>
                             </div>
                         </div>
 
                         <!-- Outcome -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Outcome' | translate }}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Outcome' | translate
+                                }}</label>
                             <div class="col-sm-8">
-                            <textarea type="text" class="form-control" id="privacyCommitteeOutcome" name="privacyCommitteeOutcome" placeholder="{{ 'Outcome' | translate }}"
-                                  ng-model="request.privacyCommitteeOutcome"></textarea>
+                            <textarea type="text" class="form-control" id="privacyCommitteeOutcome"
+                                      name="privacyCommitteeOutcome" placeholder="{{ 'Outcome' | translate }}"
+                                      ng-model="request.privacyCommitteeOutcome"></textarea>
                             </div>
                         </div>
 
                         <!-- Outcome Reference -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{ 'Outcome reference' | translate }}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{
+                            'Outcome reference' | translate }}</label>
                             <div class="col-sm-8">
-                            <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef" name="privacyCommitteeOutcomeRef" placeholder="{{ 'Outcome Reference' | translate }}"
-                                  ng-model="request.privacyCommitteeOutcomeRef"></textarea>
+                            <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
+                                      name="privacyCommitteeOutcomeRef"
+                                      placeholder="{{ 'Outcome Reference' | translate }}"
+                                      ng-model="request.privacyCommitteeOutcomeRef"></textarea>
                             </div>
                         </div>
 
                         <!-- Outcome Emails -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeEmails">{{ 'Emailing history' | translate }}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeEmails">{{ 'Emailing history' |
+                                translate }}</label>
                             <div class="col-sm-8">
-                            <textarea type="text" class="form-control" id="privacyCommitteeEmails" name="privacyCommitteeEmails" placeholder="{{ 'Emailing History' | translate }}"
+                            <textarea type="text" class="form-control" id="privacyCommitteeEmails"
+                                      name="privacyCommitteeEmails" placeholder="{{ 'Emailing History' | translate }}"
                                       ng-model="request.privacyCommitteeEmails"></textarea>
                             </div>
                         </div>
 
                     </div> <!-- endif in 'Review' status and user type 'palga' -->
 
-                  <!--Upload Files if in 'DataDelivery' status-->
-                  <div ng-include="'app/request/upload-file.html'" ng-if="request.status=='DataDelivery'"></div>
+                    <!--Upload Files if in 'DataDelivery' status-->
+                    <div ng-include="'app/request/upload-file.html'" ng-if="request.status=='DataDelivery'"></div>
 
                     <!--Approvals-->
                     <div ng-include="'app/request/approvals.html'"
                          ng-if="request.status=='Approval' && (isPalga() || isScientificCouncil())"></div>
 
 
-                <div ng-if="request.status=='Approval' && isPalga()">
-                <h3>{{'Finalisation checks'|translate}}</h3>
-                <hr>
-                <!-- Scientific council has approved -->
-                <div class="form-group" ng-class="">
-                    <label class="control-label col-sm-3">
-                        &nbsp;
-                    </label>
-                    <div class="col-sm-8">
-                        <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved"
-                               ng-model="request.scientificCouncilApproved"> &nbsp;
-                       <label class="normal" for="scientificCouncilApproved">{{ 'The scientific council has approved.' | translate }}</label>
-                    </div>
-                </div>
+                    <div ng-if="request.status=='Approval' && isPalga()">
+                        <h4 class="h4-palga">{{'Finalisation checks'|translate}}</h4>
+                        <hr>
+                        <!-- Scientific council has approved -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved"
+                                       ng-model="request.scientificCouncilApproved"> &nbsp;
+                                <label class="normal" for="scientificCouncilApproved">{{
+                                'The scientific council has approved.' | translate }}</label>
+                            </div>
+                        </div>
 
-                <!-- There are no privacy issues or the privacy committee has approved. -->
-                <div class="form-group" ng-class="">
-                    <label class="control-label col-sm-3">
-                        &nbsp;
-                    </label>
-                    <div class="col-sm-8">
-                        <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved"
-                               ng-model="request.privacyCommitteeApproved"> &nbsp;
-                        <label class="normal" for="privacyCommitteeApproved">{{ 'There are no privacy issues or the privacy committee has approved.' | translate }}</label>
+                        <!-- There are no privacy issues or the privacy committee has approved. -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved"
+                                       ng-model="request.privacyCommitteeApproved"> &nbsp;
+                                <label class="normal" for="privacyCommitteeApproved">{{
+                                'There are no privacy issues or the privacy committee has approved.' | translate }}</label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                </div>
 
 
                 </div> <!--end modal-body-->

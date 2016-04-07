@@ -22,8 +22,8 @@ This file is distributed under the GNU Affero General Public License
 
                     <!-- Role -->
                     <div class="form-group">
-                        <label class="control-label col-sm-4" for="currentRole">{{ 'Role' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="currentRole">{{ 'Role' | translate }}</label>
+                        <div class="col-sm-8">
                             <select class="form-control" ng-model="edituser.currentRole">
                                 <option ng-repeat="role in roles" value="{{role.name}}"
                                         ng-selected="role.name == edituser.currentRole">{{role.name}}
@@ -36,8 +36,8 @@ This file is distributed under the GNU Affero General Public License
                     <!-- First Name -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : (registrationForm.firstName.$invalid || registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
-                        <label class="control-label col-sm-4" for="firstName">{{ 'First name' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="firstName">{{ 'First name' | translate }}</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="firstName" name="firstName"
                                    placeholder="{{ 'First name' | translate }}"
                                    ng-model="edituser.firstName" ng-maxlength="50" required>
@@ -56,8 +56,8 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Last Name -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : registrationForm.lastName.$invalid && registrationForm.lastName.$dirty }">
-                        <label class="control-label col-sm-4" for="lastName">{{ 'Last name' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="lastName">{{ 'Last name' | translate }}</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" name="lastName" id="lastName"
                                    placeholder="{{ 'Last name' | translate }}"
                                    ng-maxlength="50"
@@ -72,8 +72,8 @@ This file is distributed under the GNU Affero General Public License
                     <!-- E-mail -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : (registrationForm.email.$invalid || registrationForm.email.$error.required) && registrationForm.email.$dirty }">
-                        <label class="control-label col-sm-4" for="email">{{ 'E-mail' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="email">{{ 'E-mail' | translate }}</label>
+                        <div class="col-sm-8">
                             <input type="email" class="form-control" id="email" name="email"
                                    placeholder="{{ 'Email address (lower case)' | translate }}"
                                    lowercase-only="lowercase-only"
@@ -96,8 +96,8 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Telephone -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : registrationForm.telephone.$invalid && registrationForm.telephone.$dirty }">
-                        <label class="control-label col-sm-4" for="telephone">{{ 'Telephone' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone' | translate }}</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" name="telephone" id="telephone"
                                    placeholder="{{ 'Telephone' | translate }}"
                                    ng-maxlength="50"
@@ -111,8 +111,8 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Institute -->
                     <div class="form-group" ng-if="edituser.currentRole == 'requester'"
                          ng-class="{ 'has-error' : (registrationForm.institute.$invalid || registrationForm.institute.$error.required) && registrationForm.institute.$dirty }">
-                        <label class="control-label col-sm-4" for="institute">{{ 'Institute' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="institute">{{ 'Institute' | translate }}</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="institute" name="institute"
                                    placeholder="{{ 'Institute' | translate }}"
                                    ng-maxlength="50"
@@ -131,8 +131,8 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Lab -->
                     <div class="form-group"
                          ng-if="edituser.currentRole == 'lab_user' || edituser.currentRole == 'requester' || edituser.currentRole == 'hub_user'">
-                        <label class="control-label col-sm-4" for="lab">{{ 'Lab' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="lab">{{ 'Lab' | translate }}</label>
+                        <div class="col-sm-8">
                             <div ng-switch on="edituser.currentRole">
                                 <select class="form-control" id="lab" name="lab" ng-switch-default
                                         ng-model="edituser.labId" ng-required="true"
@@ -161,8 +161,8 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Specialism -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : registrationForm.specialism.$invalid && registrationForm.specialism.$dirty }">
-                        <label class="control-label col-sm-4" for="specialism">{{ 'Specialism' | translate }}</label>
-                        <div class="col-sm-6">
+                        <label class="control-label col-sm-3" for="specialism">{{ 'Specialism' | translate }}</label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" name="specialism" id="specialism"
                                    placeholder="{{ 'Specialism' | translate }}"
                                    ng-maxlength="100"

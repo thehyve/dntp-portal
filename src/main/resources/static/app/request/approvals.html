@@ -6,7 +6,7 @@ This file is distributed under the GNU Affero General Public License
 <!-- If in 'Approval' status and user type 'palga' or 'scientific_council' -->
 <div ng-controller="ApprovalController">
 
-    <h3>{{'Approval by the scientific council'|translate}}</h3>
+    <h4 class="h4-palga">{{'Approval by the scientific council'|translate}}</h4>
     <hr>
 
     <a href="mailto:{{scientificCouncilEmail}}?subject=Request {{request.requestNumber}}&amp;body=Request {{request.requestNumber}}%0AView: {{serverurl}}/#/request/view/{{request.processInstanceId}}
@@ -18,7 +18,7 @@ This file is distributed under the GNU Affero General Public License
         {{'Compose mail to members' | translate}}
     </button></a>
 
-    <h4>{{'Votes'|translate}}</h4>
+    <h4 class="h4-palga">{{'Votes'|translate}}</h4>
     <hr>
 
     <!-- Status -->
@@ -59,7 +59,7 @@ This file is distributed under the GNU Affero General Public License
     </div>
     <br>
 
-    <h4>{{'Discussion'|translate}}</h4>
+    <h4 class="h4-palga">{{'Discussion'|translate}}</h4>
     <hr>
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="comment in request.approvalComments">

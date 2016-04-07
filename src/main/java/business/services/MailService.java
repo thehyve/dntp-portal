@@ -391,7 +391,7 @@ public class MailService {
     static final String passwordRecoveryTemplate = 
               "Geachte heer/mevrouw,\n"
             + "\n"
-            + "Via deze link kunt u uw PALGA wachtwoord opnieuw instellen: %1$s.\n"
+            + "Via deze link kunt u een nieuw PALGA-wachtwoord instellen: %1$s.\n"
             + "\n"
             + "Met vriendelijke groet,\n"
             + "Stichting PALGA\n"
@@ -405,7 +405,7 @@ public class MailService {
             + "\n"
             + "Dear Sir/Madam,\n"
             + "\n"
-            + "Please follow this link to reset your PALGA password: %1$s.\n"
+            + "Please follow this link to set a new PALGA password: %1$s.\n"
             + "\n"
             + "With kind regards,\n"
             + "Stichting PALGA\n"
@@ -416,7 +416,7 @@ public class MailService {
             + "If you have questions, please send an email to aanvraag@palga.nl.\n"
             ;
 
-    public static final String passwordRecoverySubject = "PALGA-wachtwoord opnieuw instellen / Reset PALGA password";
+    public static final String passwordRecoverySubject = "Nieuw PALGA-wachtwoord instellen / Create new PALGA password";
 
     public void sendPasswordRecoveryToken(NewPasswordRequest npr) {
         try {

@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -95,8 +96,15 @@ public class FileService {
             Integer chunk, Integer chunks, String flowIdentifier) {
         try {
             String identifier = user.getId().toString() + "_" +flowIdentifier;
-            
-            String contentType = file.getContentType();
+            String contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            log.info("File content-type: " + file.getContentType());
+            try {
+                contentType = MediaType.valueOf(file.getContentType()).toString();
+                log.info("Media type: " + contentType);
+            } catch(InvalidMediaTypeException e) {
+                log.warn("Invalid content type: " + e.getMediaType());
+                //throw new FileUploadError("Invalid content type: " + e.getMediaType());
+            }
             InputStream input = file.getInputStream();
 
             // Create temporary file for chunk
@@ -205,7 +213,11 @@ public class FileService {
             InputStream input = new FileInputStream(path.toFile());
             InputStreamResource resource = new InputStreamResource(input);
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.valueOf(attachment.getMimeType()));
+            if (attachment.getMimeType() != null) {
+                headers.setContentType(MediaType.valueOf(attachment.getMimeType()));
+            } else {
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            }
             headers.set("Content-Disposition",
                     "attachment; filename=" + attachment.getName().replace(" ", "_"));
             HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);

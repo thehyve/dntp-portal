@@ -13,11 +13,16 @@ import javax.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
+import business.exceptions.AttachmentNotFound;
+import business.models.File;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
 import business.models.RequestPropertiesRepository;
+import business.models.User;
 
 @Service
 public class RequestPropertiesService {
@@ -26,6 +31,10 @@ public class RequestPropertiesService {
 
     @Autowired
     RequestPropertiesRepository requestPropertiesRepository;
+
+    @Autowired
+    FileService fileService;
+
 
     @Transactional
     public RequestProperties save(RequestProperties properties) {
@@ -56,6 +65,84 @@ public class RequestPropertiesService {
 
     public Set<String> getProcessInstanceIdsByReviewStatus(ReviewStatus reviewStatus) {
         return requestPropertiesRepository.getProcessInstanceIdsByReviewStatus(reviewStatus);
+    }
+
+    @Transactional
+    public void addRequestAttachment(String processInstanceId, File attachment) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        properties.getRequestAttachments().add(attachment);
+        properties = save(properties);
+    }
+
+    @Transactional
+    public void removeRequestAttachment(String processInstanceId, Long attachmentId) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        File toBeRemoved = null;
+        for (File file: properties.getRequestAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                toBeRemoved = file;
+                break;
+            }
+        }
+        if (toBeRemoved == null) {
+            throw new AttachmentNotFound();
+        }
+        properties.getRequestAttachments().remove(toBeRemoved);
+        save(properties);
+        fileService.removeAttachment(toBeRemoved);
+    }
+
+    @Transactional
+    public void addAgreementAttachment(String processInstanceId, File attachment) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        properties.getAgreementAttachments().add(attachment);
+        properties = save(properties);
+    }
+
+    @Transactional
+    public void removeAgreementAttachment(String processInstanceId, Long attachmentId) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        File toBeRemoved = null;
+        for (File file: properties.getAgreementAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                toBeRemoved = file;
+                break;
+            }
+        }
+        if (toBeRemoved == null) {
+            throw new AttachmentNotFound();
+        }
+        properties.getAgreementAttachments().remove(toBeRemoved);
+        save(properties);
+        fileService.removeAttachment(toBeRemoved);
+    }
+
+    @Transactional
+    public HttpEntity<InputStreamResource> getFile(User user, String id, Long attachmentId) {
+        RequestProperties properties = findByProcessInstanceId(id);
+        for (File file: properties.getRequestAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                return fileService.download(file.getId());
+            }
+        }
+        for (File file: properties.getAgreementAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                return fileService.download(file.getId());
+            }
+        }
+        if (!user.isScientificCouncilMember()) {
+            for (File file: properties.getDataAttachments()) {
+                if (file.getId().equals(attachmentId)) {
+                    return fileService.download(file.getId());
+                }
+            }
+        }
+        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                return fileService.download(file.getId());
+            }
+        }
+        throw new AttachmentNotFound();
     }
 
 }

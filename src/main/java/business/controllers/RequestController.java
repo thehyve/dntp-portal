@@ -574,9 +574,7 @@ public class RequestController {
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.REQUEST, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-            properties.getRequestAttachments().add(attachment);
-            properties = requestPropertiesService.save(properties);
+            requestPropertiesService.addRequestAttachment(id, attachment);
         }
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
@@ -606,22 +604,8 @@ public class RequestController {
         }
 
         // remove existing request attachment.
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        File toBeRemoved = null;
-        for (File file: properties.getRequestAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                toBeRemoved = file;
-                break;
-            }
-        }
-        if (toBeRemoved != null) {
-            properties.getRequestAttachments().remove(toBeRemoved);
-            requestPropertiesService.save(properties);
-            fileService.removeAttachment(toBeRemoved);
-        } else {
-            log.warn("No such file found: " + attachmentId);
-        }
-        
+        requestPropertiesService.removeRequestAttachment(id, attachmentId);
+
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -644,17 +628,15 @@ public class RequestController {
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.AGREEMENT, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
             // add attachment id to the set of ids of the agreement attachments.
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-            properties.getAgreementAttachments().add(attachment);
-            requestPropertiesService.save(properties);
+            requestPropertiesService.addAgreementAttachment(id, attachment);
         }
-        
+
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
         return request;
     }
-    
+
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeAgreementAttachment(UserAuthenticationToken user, @PathVariable String id,
@@ -665,19 +647,7 @@ public class RequestController {
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
 
         // remove existing agreement attachment.
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        File toBeRemoved = null;
-        for (File file: properties.getAgreementAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                toBeRemoved = file;
-                break;
-            }
-        }
-        if (toBeRemoved != null) {
-            properties.getAgreementAttachments().remove(toBeRemoved);
-            requestPropertiesService.save(properties);
-            fileService.removeAttachment(toBeRemoved);
-        }
+        requestPropertiesService.removeAgreementAttachment(id, attachmentId);
 
         instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
@@ -685,6 +655,7 @@ public class RequestController {
         return request;
     }
 
+    // FIXME: refactor
     @PreAuthorize("isAuthenticated() "
             + " and ("
             + "     hasPermission(#id, 'isRequester') "
@@ -722,6 +693,7 @@ public class RequestController {
         return request;
     }
 
+    // FIXME: refactor
     @PreAuthorize("isAuthenticated() "
             + " and ("
             + "     hasPermission(#id, 'isRequester') "
@@ -760,6 +732,7 @@ public class RequestController {
         return request;
     }
 
+    // FIXME: refactor
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadDataAttachment(
@@ -773,7 +746,7 @@ public class RequestController {
         log.info("POST /requests/" + id + "/dataFiles: chunk " + chunk + " / " + chunks);
 
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
-        
+
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.DATA, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
             // add attachment id to the set of ids of the agreement attachments.
@@ -785,10 +758,10 @@ public class RequestController {
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
-        requestFormService.transferData(instance, request, user.getUser());
         return request;
     }
 
+    // FIXME: refactor
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeDataAttachment(UserAuthenticationToken user, @PathVariable String id,
@@ -850,6 +823,7 @@ public class RequestController {
         }
     }
 
+    // FIXME: refactor
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.POST)
     public RequestRepresentation uploadExcerptList(
@@ -959,31 +933,7 @@ public class RequestController {
     public HttpEntity<InputStreamResource> getFile(UserAuthenticationToken user, @PathVariable String id,
             @PathVariable Long attachmentId) {
         log.info("GET /requests/" + id + "/files/" + attachmentId);
-        
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        for (File file: properties.getRequestAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
-            }
-        }
-        for (File file: properties.getAgreementAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
-            }
-        }
-        if (!user.getUser().isScientificCouncilMember()) {
-            for (File file: properties.getDataAttachments()) {
-                if (file.getId().equals(attachmentId)) {
-                    return fileService.download(file.getId());
-                }
-            }
-        }
-        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
-            }
-        }
-        throw new AttachmentNotFound();
+        return requestPropertiesService.getFile(user.getUser(), id, attachmentId);
     }
 
 }

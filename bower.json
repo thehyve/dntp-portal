@@ -1,6 +1,6 @@
 {
   "name": "dntpPortal",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "dependencies": {
     "jquery": "~2.2",
     "lodash": "~4.6",

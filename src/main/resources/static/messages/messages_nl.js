@@ -12,144 +12,163 @@
         /* ========= */
 
         'Source': 'Bron',
-        'DNTP': 'PALGA',
-        'The password has been successfully changed': 'Het wachtwoord is succesvol gewijzigd',
-        'There was a problem logging in.': 'Er is een probleem met inloggen.',
-        'Passwords must be at least 8 characters long': 'Wachtwoorden moeten minstens 8 tekens lang zijn',
-        'No lab associated with lab user.': 'Deze gebruiker is niet verbonden aan een lab.',
+        'The password has been successfully changed.': 'Het wachtwoord is succesvol gewijzigd.',
+        'There is a problem logging in.': 'Er is een probleem met inloggen.',
+        'User is not associated with a pathology laboratory.': 'Deze gebruiker is niet verbonden aan een pathologielaboratorium.',
         'Search': 'Zoeken',
         'Lab requests': 'Labverzoeken',
         'About': 'Over',
-        'Username': 'E-mailadres',
-        'Users': 'Gebruikersbeheer',
-        'Labs': 'Laboratoriumbeheer',
-        'Passwords do not match': 'De wachtwoorden zijn niet gelijk',
+        'Username': 'Gebruikersnaam',
+        'Users': 'Gebruikers',
+        'User management': 'Gebruikersbeheer',
+        'Labs': 'Laboratoria',
+        'Laboratory management': 'Laboratoriumbeheer',
+        'Passwords do not match.': 'De wachtwoorden zijn niet gelijk.',
         'Thank you': 'Bedankt',
-        'Registration has been completed. An email with an activation link should have been sent to ?.': 'Registratie is afgerond. Een e-mail met de activatielink is gestuurd naar {{email}}.',
+        'Registration completed. An email with an activation link was sent to ?.': 'Registratie is afgerond. Een e-mail met de activatielink is gestuurd naar {{email}}.',
         'Password must be 8 or more characters long, contain numbers, letters, and a special character.': 'Wachtwoord moet ten minste 8 tekens lang zijn en cijfers, letters en een speciaal teken bevatten.',
 
         /* ========= */
         /* Request */
         /* ========= */
-        'Principal investigator': 'Hoofdaanvrager',
-        'popover: Principal investigator': 'Hoofdaanvrager is de eindverantwoordelijk onderzoeker.',
+        'Principal investigator': 'Projectleider',
+        'popover: Principal investigator': 'Projectleider is de eindverantwoordelijk onderzoeker.',
         'popover: Pathologist': 'De patholoog betrokken bij dit onderzoek. ',
         'Pathologist': 'Patholoog',
-        'popover: Pathologist email': 'Vul het e-mail adres van de betrokken patholoog in.',
+        'popover: Pathologist email': 'E-mailadres patholoog.',
         'Postal code': 'Postcode',
         'popover: Postal code': 'De postcode.',
         'City': 'Plaats',
         'popover: City': 'De plaats.',
         'Address': 'Adres',
         'popover: Address': 'Postadres waar factuur naar verzonden mag worden. ',
-        'Province': 'Provincie',
-        'popover: Province': 'De provincie.',
         'popover: E-mail': 'E-mail crediteurenadministratie.',
         'popover: Telephone': 'Het telefoonnummer.',
         'Billing address': 'Facturatieadres',
-        'Billing information': 'Facturatiedetails',
+        'Billing details': 'Facturatiedetails',
         'Charge number': 'Kostenplaats',
-        'popover: Charge number': 'Rekening waar het project op geboekt mag worden.',
-        'Research number': 'Onderzoeksnummer',
-        'popover: Research number': 'Projectnummer van bijvoorbeeld subsidieverstrekker.',
+        'popover: Charge number': 'Kostenplaats van het project.',
+        'Grant number': 'Subsidienummer',
+        'popover: Research number': 'Projectnummer van subsidieverstrekker.',
         'Previous contact': 'Vorig contact',
         'popover: Previous contact': 'Heeft u contact gehad met PALGA over deze aanvraag?',
         'Did you contact Palga previously?': 'Heeft u contact gehad met PALGA over deze aanvraag?',
         'popover: Description of previous contact': 'Met wie heeft u contact gehad en wat is besproken?',
-        'Description of previous contact': 'Beschrijf het contact.',
+        'Description of previous contact.': 'Beschrijf het contact.',
         'Yes': 'Ja',
         'No': 'Nee',
-        'Running title': 'Onderzoekstitel',
+        'Running title': 'Titel onderzoeksproject',
         'popover: Title': 'De titel van het onderzoek.',
         'Background': 'Achtergrond',
         'popover: Background': 'Achtergrond van het onderzoek.',
         'Research question': 'Onderzoeksvraag',
-        'popover: Research question': 'De onderzoeksvraag.',
+        'popover: Research question': 'De onderzoeksvraag of -vragen.',
         'Hypothesis': 'Hypothese',
         'popover: Hypothesis': 'De hypothese.',
         'Methods': 'Methode',
-        'popover: Methods': 'Welke technieken(bv Kiembaan mutatie analyse /moleculaire technieken,immuunhistochemie, tissue micro array enz.) worden gebruikt om tot beantwoording van de hypothese te komen? wat is het minimaal aantal patienten dat nodig is om deze vraag te kunnen beantwoorden?',
+        'popover: Methods': 'Welke technieken (bijv. kiembaanmutatieanalyse/moleculaire technieken, immuunhistochemie, tissue micro array enz.) worden gebruikt om tot beantwoording van de hypothese te komen? Wat is het minimaal aantal patiënten dat nodig is om deze vraag te kunnen beantwoorden?',
         'Request type': 'Soort aanvraag',
-        'popover: Request type': 'Een excerpt is een samenvatting van het oorspronkelijke pathologie verslag en bevat onder meer de diagnoseregels en de conclusie van de patholoog. Zie voor verdere uitleg palga.nl.',
-    
-    
-    
-        'Request for numbers only': 'Getallen PALGA-database',
-        'Request for excerpts': 'Excerpten',
-        'Request for excerpts + PA reports': 'Excerpten en complete PA-verslagen',
-        'Request for excerpts + materials': 'Excerpten en materiaal',
-        'Request for excerpts + PA reports + materials': 'Excerpten, complete PA-verslagen en materiaal',
-        'Request for PA-reports only': 'Alleen PA-verslagen',
-        'Request for materials only': 'Alleen materiaal',
-    
-        'Request_Type_1': 'Getallen PALGA-database',
-        'Request_Type_2': 'Excerpten',
+        'popover: Request type': 'Benodigde gegevens en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" href="http://www.palga.nl/gegevensaanvragen/excerpten.html">www.palga.nl/gegevensaanvragen/excerpten.html</a>.',
+
+        'Numbers only, exploratory request': 'Alleen aantallen, oriënterende zoekvraag',
+        'Excerpts only': 'Alleen excerpten',
+        'Excerpts and full PA reports': 'Excerpten en complete PA-verslagen',
+        'Excerpts and PA material': 'Excerpten en PA-materiaal',
+        'Excerpts, PA reports and PA material': 'Excerpten, complete PA-verslagen en PA-materiaal',
+        'Full PA reports only (no excerpts)': 'Alleen PA-verslagen',
+        'PA material only': 'Alleen PA-materiaal',
+
+        'Request_Type_1': 'Alleen aantallen, oriënterende zoekvraag',
+        'Request_Type_2': 'Alleen excerpten',
         'Request_Type_3': 'Excerpten en complete PA-verslagen',
-        'Request_Type_4': 'Excerpten en materiaal',
-        'Request_Type_5': 'Excerpten, complete PA-verslagen en materiaal',
+        'Request_Type_4': 'Excerpten en PA-materiaal',
+        'Request_Type_5': 'Excerpten, complete PA-verslagen en PA-materiaal',
         'Request_Type_6': 'Alleen PA-verslagen',
-        'Request_Type_7': 'Alleen materiaal',
-    
+        'Request_Type_7': 'Alleen PA-materiaal',
+
         'Upload file': 'Upload bestand(en)',
         'drag and drop your file here': 'sleep bestanden hierheen',
-        'No attachment found.': 'Nog geen attachments geüpload.',
-        'Medical ethical committee approval': 'METC toetsing',
-        'Upload medical ethical committee approval': 'Upload METC-toetsing',
+        'No attachments uploaded.': 'Nog geen attachments geüpload.',
+        'Letter of medical research ethics committee': 'Brief van medisch-ethische toetsingscommissie',
+        'Upload letter': 'Upload brief',
         'Submit': 'Indienen',
         'Save': 'Opslaan',
         'Cancel': 'Annuleren',
         'Are you sure you want to delete file ?': 'Weet u zeker dat u het bestand {{name}} wilt verwijderen?',
         'File too large': 'Het bestand is te groot ({{mb_size}} MB). Het maximum is 10 MB.',
         'Are you sure you want to approve the selection?<br>After approving, lab requests will be generated.' :
-            'Weet u zeker dat u de selectie wilt goedkeuren?<br>Na goedkeuring worden labverzoeken aangemaakt.',
+            'Weet je zeker dat je de selectie wilt goedkeuren?<br>Na goedkeuring worden de labverzoeken aangemaakt.',
         'Are you sure you want to delete request ?': 'Weet u zeker dat u aanvraag {{id}} wilt verwijderen?',
         'Are you sure you want to submit the request? After submission the request cannot be edited anymore.' :
             'Weet u zeker dat u de aanvraag wilt indienen? Na het indienen kan de aanvraag niet meer bewerkt worden.',
-        'Are you sure you want to submit the request for approval?': 'Weet u zeker dat u de aanvraag voor goedkeuring wilt doorsturen?',
+        'Are you sure you want to submit the request for approval?': 'Weet je zeker dat je de aanvraag naar de wetenschappelijk raad wilt sturen?',
         'Are you sure you want to finalise the request?': 'Weet u zeker dat u de aanvraag wilt afronden?',
-        'Are you sure you want to close the request?<br>After closing, no data files can be added.': 'Weet u zeker dat u de aanvraag wilt sluiten?<br>Na het sluiten kunnen geen bestanden worden toegevoegd.',
-        'Are you sure you want to reject the request?': 'Weet u zeker dat u de aanvraag wilt afwijzen?',
-        'Please enter a reject reason:': 'Reden van afwijzing:',
+        'Are you sure you want to close the request?<br>After closing, no data files can be added.': 'Weet je zeker dat je de aanvraag wilt afsluiten?<br>Na het sluiten kunnen geen bestanden meer worden toegevoegd.',
+        'Are you sure you want to reject the request?': 'Weet je zeker dat je de aanvraag wilt afwijzen?',
+        'Please enter the reason for rejection.': 'Vul de reden van afwijzing in.',
         'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Data delivery.\'' :
             'Weet u zeker dat u de selectie wilt afwijzen?<br>' +
             'Na afwijzing wordt de status veranderd naar \'Datauitgifte.\'',
-    
-        'Checks by Palga': 'Controles door PALGA uitgevoerd',
-        'The requester has been checked and is valid.': 'De identiteit van de aanvrager is vastgesteld/gecontrolleerd.',
-        'The requester has been confirmed to be associated with the lab.': 'De aanvrager is verbonden aan het opgegeven laboratorium.',
-        'The requester is allowed to file the request.': 'De aanvrager is gemachtigd deze aanvraag in te dienen.',
+
+        'Authentification checks by PALGA': 'Authentificatiecontroles door PALGA',
+        'Requester\'s identity was established.': 'De identiteit van de aanvrager is vastgesteld/gecontroleerd.',
+        'Requester indeed works at or collaborates with the pathology laboratory mentioned.': 'De aanvrager is inderdaad verbonden aan of werkt samen met het opgegeven pathologielaboratorium.',
+        'The requester is allowed to submit the request.': 'De aanvrager is bevoegd deze aanvraag in te dienen.',
         'The contact person been checked and is authorised to support the request.': 'De hoofdaanvrager is bekend en ondersteunt deze aanvraag.',
-        'Signed agreement': 'Handtekeningformulier',
+        'Authentification and agreement request': 'Authentificatie en instemming aanvraag',
         'Agreement has been reached.': 'Formulier ontvangen',
-        'Upload agreement files': 'Upload handtekeningenformulier',
+        'Upload form': 'Upload formulier',
         'Reject': 'Afwijzen',
-        'Submit for approval': 'Doorsturen naar wetenschappelijke raad',
-    
+        'Submit to scientific council': 'Doorsturen naar wetenschappelijke raad',
+
         'No previous contact.': 'Aanvrager heeft niet eerder contact gehad met betrekking tot deze aanvraag',
         'Data linkage': 'Koppeling',
-        'Linkage with own or external personal data.': 'Koppeling met eigen of externe data.',
-        'No data linkage required.': 'Geen koppelingen met eigen of externe data.',
+        'Linkage with own patients or cohort or linkage between registries.': 'Koppeling van eigen patiënten of eigen cohort of koppeling tussen registraties.',
+        'No data linkage required.': 'Geen koppeling vereist.',
         'Informed consent (IC)': 'Informed consent (IC)',
-        'Data linkage notes': 'Koppelingsinformatie',
-        'popover: Data linkage': 'Koppelingsinformatie',
-        'Notes for linkage with personal data':  'Geef aan met welk bestand of welke organisatie u wilt koppelen.',
-        'popover: Notes for linkage with personal data':  'Bijvoorbeeld uw eigen cohort, IKNL, DICA etc. ',
-        'Reason using personal data': 'Reden ontbreken IC',
-        'popover: Reason using personal data': 'Geef aan waarom u denk dat informed consent niet nodig is.',
+        'Data linkage information': 'Koppelingsinformatie',
+        'popover: Data linkage': 'Koppelingsinformatie.',
+        'Which cohort or registry do you want to link to PALGA?':  'Geef aan met welke persoonsgegevens of welke registratie u wilt koppelen.',
+        'popover: Notes for linkage with personal data':  'Bijvoorbeeld naam en website van uw eigen cohort of naam van de registratie (NKR, DICA, PHARMO, etc.).',
+        'Explanation why linkage is allowed without informed consent': 'Toelichting gebruik persoonsgegevens zonder toestemming (informed consent)',
+        'popover: Reason using personal data': 'Geef aan waarom u denkt dat informed consent niet nodig is.',
         'Notes': 'Notities',
         'Add note': 'Notitie toevoegen',
         'Edit request': 'Aanvraag bewerken',
         'Pathologist email': 'E-mail patholoog',
         'General details': 'Algemene details',
-    
+        'Review by PALGA privacy commitee': 'Toetsing door PALGA privacycommissie (PPC)',
+        'This request was sent by email to the privacy committee.': 'Deze aanvraag is schriftelijk voorgelegd naar de PPC',
+        'Review result': 'Oordeel PPC',
+        'Summary review procces': 'Samenvatting schriftelijke procedure',
+        'Final checks before data delivery': 'Laatste controles voor datalevering',
+        'Approved by scientific council.': 'De wetenschappelijke raad heeft toestemming gegeven',
+        'Approved by privacy committee.': 'Afgehandeld conform mandaat PPC',
+        'Finish': 'Afronden',
+        'Evaluate': 'Evaluatie',
+        'Contact information': 'Contactinformatie',
+        'Validation': 'Validatie',
+
+        'All requests': 'Alle aanvragen',
+        'Requests claimed by me': 'Door mij geclaimde aanvragen',
+        'Unclaimed requests': 'Openstaande aanvragen',
+        'Requests on hold': 'Aanvragen in de wacht',
+        'Evaluated': 'Beoordeeld',
+        'Not yet evaluated': 'Nog niet beoordeeld',
+
+        'All lab requests': 'Alle labverzoeken',
+        'Lab requests claimed by me': 'Door mij geclaimde labverzoeken',
+        'Unclaimed lab requests': 'Openstaande labverzoeken',
+
         'Votes': 'Stemmen',
         'Approval by the scientific council': 'Beoordeling door de wetenschappelijke raad',
         'Discussion': 'Discussie',
         'Update comment': 'Opmerking bewerken',
         'Add comment': 'Opmerking plaatsen',
         'popover: Upload file': 'Upload alle relevante bijlagen. ',
-        'popover: Upload medical ethical committee approval': 'Upload verklaring METC indien van toepassing.',
-    
+        'popover: Upload medical ethical committee approval': 'Upload brief van medisch-ethische toetsingscommissie.',
+        'Close request': 'Aanvraag afsluiten',
+        'Compose mail to members': 'Schrijf e-mail aan leden',
     
         /* ========= */
         /* Login */
@@ -191,7 +210,7 @@
     
         'First name': 'Voornaam',
         'Last name': 'Achternaam',
-        'Telephone': 'Telefoonnummer',
+        'Telephone number': 'Telefoonnummer',
         'Institute': 'Instelling',
         'Specialism': 'Specialisme',
         'Department': 'Afdeling',
@@ -199,9 +218,10 @@
         'Password': 'Wachtwoord',
         'Repeat password': 'Herhaal wachtwoord',
         'Request account': 'Account aanvragen',
-        'Required field': 'Veld is verplicht',
+        'Required field': 'Verplicht veld',
         'Input value is too long': 'Invoerwaarde is te lang',
         'Pathology lab': 'Pathologielaboratorium',
+        'Select lab': 'Selecteer laboratorium',
     
         /* ================= */
         /* Email validation */
@@ -219,7 +239,8 @@
         'Update profile': 'Profiel bijwerken',
         'Change password': 'Wachtwoord wijzigen',
         'Update': 'Bijwerken',
-        'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA': 'Het bent alleen toegestaan om uw telefoonnummer aan te passen. Als u ook andere informatie wil bijwerken, neem contact op met PALGA',
+        'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA.': 
+            'U kunt alleen uw telefoonnummer aanpassen. Indien u andere informatie wilt wijzigen, neem dan contact op met PALGA.',
         'Your profile has been updated': 'Uw profiel is bijgewerkt',
     
         /* ===================== */
@@ -228,7 +249,7 @@
     
         'Old password': 'Oud wachtwoord',
         'New password': 'Nieuw wachtwoord',
-        'New password (again)': 'Nieuw wachtwoord (herhaling)',
+        'Repeat new password': 'Herhaal nieuw wachtwoord',
         'The old password is incorrect': 'Het oude wachtwoord is niet correct',
         'Change': 'Wijzigen',
         'Reset': 'Resetten',
@@ -263,7 +284,7 @@
         'Filter by assignee': 'Filteren op gevolmachtigde',
         'Date assigned': 'Toegekend op',
         'Vote': 'Stem(men)',
-    
+
         /* ===================== */
         /* Labrequest overview */
         /* ===================== */
@@ -274,19 +295,16 @@
         'Filter by id': 'Filteren op ID',
         'Filter by request title': 'Filteren op titel',
         'Filter by lab': 'Filteren op lab',
-    
-    
+
         /* ===================== */
         /* Labrequest details */
         /* ===================== */
         'Request details': 'Aanvraagdetails',
         'Request ID': 'Aanvraag ID',
         'Requester lab': 'Lab aanvrager',
-        'Sender lab': 'Versturend lab',
+        'Sending lab': 'Versturend lab',
         'Lab request code': 'Labverzoekcode',
-    
-    
-    
+
         /* ===================== */
         /* User Overview */
         /* ===================== */
@@ -298,7 +316,7 @@
         'Created': 'Aangemaakt op',
         'Activate': 'Activeer',
         'Deactivate': 'Blokkeer',
-    
+
         /* ===================== */
         /* Add user */
         /* ===================== */
@@ -307,25 +325,25 @@
         'Please complete all required fields.': 'Alle velden invullen a.u.b.',
         'Lab': 'Laboratorium',
         'None': 'Geen',
-    
+
         /* ===================== */
         /* Sample overview */
         /* ===================== */
-    
+
         'PA number': 'PA-nummer',
         'PA numbers': 'PA-nummers',
         'Samples': 'Samples',
         'Lab request': 'Labverzoek',
         'Filter by samples': 'Filteren op monsters',
         'Filter by PA number': 'Filteren op PA-nummer',
-    
+
         /* ===================== */
         /* Sample overview */
         /* ===================== */
         'Add lab': 'Lab toevoegen',
         'Edit lab': 'Lab bewerken',
         'Number': 'Labnummer',
-    
+
         /* ===================== */
         /* scientific council */
         /* ===================== */
@@ -333,17 +351,17 @@
         'Rejected': 'Afgewezen',
         'ACCEPTED': 'Akkoord',
         'REJECTED': 'Afgewezen',
-    
+
         /* ===================== */
         /* status */
         /* ===================== */
-        'Open': 'Niet ingestuurd',
-        'Review': 'In behandeling',
+        'Open': 'Open, nog niet ingestuurd',
+        'Review': 'Ontvangen door PALGA-adviseur',
         'Approval': 'Wachten op goedkeuring',
         'DataDelivery': 'Datalevering en -selectie',
-        'SelectionReview': 'Wachten op goedkeuring excerptselectie',
+        'SelectionReview': 'Excerptselectie ingestuurd',
         'LabRequest': 'Verzoek aan labs',
-        'Waiting for lab approval': 'In afwachting beoordeling lab',
+        'Waiting for lab approval': 'Beoordeling door lab',
         'Approved': 'Goedgekeurd',
         'Sending': 'Materiaal verstuurd',
         'Received': 'Ontvangen',
@@ -359,11 +377,13 @@
         /* Agreement overview */
         /* ===================== */
         'popover:Markdown Help': 'Markdown Hulp',
-        'Agreement form template': 'Agreement form template',
+        'Edit form': 'Formulier aanpassen',
+        'Insert variables': 'Variabelen invoegen',
 
         /* ===================== */
         /* My Lab */
         /* ===================== */
+        'My lab': 'Mijn lab',
         'Edit my lab': 'Bewerk mijn lab',
         'Enable hub assistance.': 'Inzet hubmedewerker toestaan.',
         'Request hub assistance.': 'Hubmedewerker inschakelen.',
@@ -373,6 +393,8 @@
         'Lab Id' :'Lab Id',
         'Hub assistance' :'Inzet hubmedewerker',
         'Hub users': 'Hubmedewerkers',
+        'Email addresses': 'Emailadressen',
+
         null: null
     };
 

@@ -10,7 +10,6 @@ angular.module('ProcessApp.controllers')
     .controller('RequestController',['$rootScope', '$scope', '$modal', '$location', '$route',
         'Request', 'RequestAttachment', 'RequestComment',
         'ApprovalComment', 'ApprovalVote',
-        '$translate',
         'Upload', '$routeParams', 'RequestFilter',
         '$alert', '$timeout',
         'AgreementFormTemplate',
@@ -18,7 +17,6 @@ angular.module('ProcessApp.controllers')
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
-                  $translate,
                   Upload, $routeParams, RequestFilter,
                   $alert, $timeout,
                   AgreementFormTemplate) {
@@ -30,10 +28,6 @@ angular.module('ProcessApp.controllers')
             $scope.editStates = Request.editStates;
 
             $scope.Upload = Upload;
-
-            $scope.translate = function(key, params) {
-                return $translate.instant(key, params);
-            };
 
             $scope.serverurl = $location.protocol()+'://'+$location.host() +
                 (($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
@@ -221,7 +215,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.removeAgreementFile = function(f) {
-                bootbox.confirm($scope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
                     if (result) {
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
@@ -237,7 +231,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.removeMECFile = function(f) {
-                bootbox.confirm($scope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
                     if (result) {
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
@@ -253,7 +247,7 @@ angular.module('ProcessApp.controllers')
             };
             
             $scope.removeDataFile = function(f) {
-                bootbox.confirm($scope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
                     if (result) {
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
@@ -269,7 +263,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.removeFile = function(f) {
-                bootbox.confirm($scope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
                     if (result) {
                         var attachment = new RequestAttachment();
                         attachment.requestId = $scope.request.processInstanceId;
@@ -285,7 +279,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.remove = function(request) {
-                bootbox.confirm($scope.translate('Are you sure you want to delete request ?', {id: request.processInstanceId}), function(result) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete request ?', {id: request.processInstanceId}), function(result) {
                     if (result) {
                         request.$remove(function() {
                             $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
@@ -300,7 +294,7 @@ angular.module('ProcessApp.controllers')
             $scope.submitRequest = function(request) {
                 $scope.dataLoading = true;
                 bootbox.confirm(
-                    $scope.translate('Are you sure you want to submit the request? ' +
+                    $rootScope.translate('Are you sure you want to submit the request? ' +
                         'After submission the request cannot be edited anymore.'),
                     function(confirmed) {
                         if (confirmed) {
@@ -321,7 +315,7 @@ angular.module('ProcessApp.controllers')
             $scope.submitForApproval = function(request) {
                 $scope.dataLoading = true;
                 bootbox.confirm(
-                        $scope.translate('Are you sure you want to submit the request for approval?'),
+                        $rootScope.translate('Are you sure you want to send the request to the scientific council?'),
                     function(confirmed) {
                         if (confirmed) {
                             request.$submitForApproval(function(result) {
@@ -340,7 +334,7 @@ angular.module('ProcessApp.controllers')
             $scope.finalise = function(request) {
                 $scope.dataLoading = true;
                 bootbox.confirm(
-                        $scope.translate('Are you sure you want to finalise the request?'),
+                        $rootScope.translate('Are you sure you want to finalise the request?'),
                     function(confirmed) {
                         if (confirmed) {
                             request.$finalise(function(result) {
@@ -360,7 +354,7 @@ angular.module('ProcessApp.controllers')
             $scope.closeRequest = function(request) {
                 $scope.dataLoading = true;
                 bootbox.confirm(
-                    $scope.translate('Are you sure you want to close the request?<br>' +
+                    $rootScope.translate('Are you sure you want to close the request?<br>' +
                             'After closing, no data files can be added.'),
                     function(confirmed) {
                         if (confirmed) {
@@ -380,9 +374,10 @@ angular.module('ProcessApp.controllers')
             $scope.reject = function(request) {
                 $scope.dataLoading = true;
                 bootbox.confirm(
-                    '<h4>' + $scope.translate('Are you sure you want to reject the request?') + '</h4>\n' +
+                    '<h4>' + $rootScope.translate('Are you sure you want to reject the request?') + '</h4>\n' +
                     '<form id="reject" action="">' +
-                    $scope.translate('Please enter a reject reason:') + '\n<br><br>\n' +
+                    $rootScope.translate('Please enter the reason for rejection.') +
+                    '\n<br><br>\n' +
                     '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
                     '</form>',
                     function(result) {
@@ -406,7 +401,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.approveSelection = function(request) {
                 bootbox.confirm(
-                    $scope.translate('Are you sure you want to approve the selection?<br>' +
+                    $rootScope.translate('Are you sure you want to approve the selection?<br>' +
                     'After approving, lab requests will be generated.'),
                     function(confirmed) {
                         if (confirmed) {
@@ -424,7 +419,7 @@ angular.module('ProcessApp.controllers')
             
             $scope.rejectSelection = function(request) {
                 bootbox.confirm(
-                    $scope.translate('Are you sure you want to reject the selection?<br>' +
+                    $rootScope.translate('Are you sure you want to reject the selection?<br>' +
                     'After rejecting, the status will return to \'Data delivery.\''),
                     function(confirmed) {
                         if (confirmed) {
@@ -444,7 +439,7 @@ angular.module('ProcessApp.controllers')
                 var max_size = 1024*1024*10;
                 if (flow.getSize() > max_size) {
                     var mb_size = (flow.getSize()/(1024*1024)).toFixed(1);
-                    bootbox.alert($scope.translate('File too large', {'mb_size': mb_size}));
+                    bootbox.alert($rootScope.translate('File too large', {'mb_size': mb_size}));
                     flow.cancel();
                 } else {
                     flow.upload();

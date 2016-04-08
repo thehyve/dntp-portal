@@ -63,7 +63,7 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.email.$invalid ||
                  registrationForm.email.$error.required) && registrationForm.email.$dirty }">
-                <label class="control-label col-sm-2" for="email">{{ 'E-mail' | translate }}</label>
+                <label class="control-label col-sm-2" for="email">{{ 'Email' | translate }}</label>
 
                 <div class="col-sm-10">
                     <input type="email" class="form-control" id="email" name="email"
@@ -89,11 +89,11 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.telephone.$invalid ||
                  registrationForm.telephone.$error.required) && registrationForm.telephone.$dirty }">
-                <label class="control-label col-sm-2" for="telephone">{{ 'Telephone' | translate }}</label>
+                <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
 
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="telephone" name="telephone"
-                           placeholder="{{ 'Telephone' | translate }}"
+                           placeholder="{{ 'Telephone number' | translate }}"
                            ng-model="user.contactData.telephone" ng-maxlength="50" required>
                     <!-- errors -->
                     <span class="help-block"
@@ -152,7 +152,7 @@ This file is distributed under the GNU Affero General Public License
                 <div class="col-sm-10">
                     <select class="form-control" name="lab" ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
                              ng-required="true">
-                        <option value="" ng-selected="selected">-- Select lab --</option>
+                        <option value="" ng-selected="selected">&ndash; {{'Select lab' | translate}} &ndash;</option>
                     </select>
                     <!-- errors -->
                     <span ng-show="registrationForm.lab.$error.required" class="help-block">
@@ -196,7 +196,7 @@ This file is distributed under the GNU Affero General Public License
                            compare-to="user.password1" required>
                      <!-- errors -->
                     <span class="help-block" ng-show="registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty">
-                        {{ 'Passwords do not match! ' | translate }}
+                        {{ 'Passwords do not match.' | translate }}
                     </span>
                 </div>
             </div>

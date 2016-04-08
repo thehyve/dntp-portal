@@ -4,29 +4,19 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div class="col-sm-3 col-md-2 sidebar">
-    <ul class="nav nav-sidebar" ng-if="!(isLabUser() || isHubUser())">
+    <ul class="nav nav-sidebar">
         <li ng-class="{active: activeSidebar === 'overview'}">
-            <a ng-href="/#/lab-requests">{{'All'|translate}}
+            <a ng-href="/#/lab-requests/">{{'All lab requests'|translate}}
             <span class="badge pull-right">{{allLabRequests.length}}</span></a>
         </li>
-        <hr />
-        <li ng-repeat="status in statusesForRole"
-            ng-class="{active: activeSidebar === status}">
-            <a ng-href="/#/lab-requests/{{status}}">{{status|translate}}
-            <span class="badge pull-right">{{requestsByStatus[status].length}}</span></a>
-        </li>
-    </ul>
-    <ul class="nav nav-sidebar" ng-if="isLabUser() || isHubUser()">
-        <li ng-class="{active: activeSidebar === 'overview'}">
-            <a ng-href="/#/lab-requests/">{{'All'|translate}}
-            <span class="badge pull-right">{{allLabRequests.length}}</span></a>
-        </li>
-        <li  ng-class="{active: activeSidebar === 'claimed'}">
-            <a ng-href="/#/lab-requests/claimed">{{'Claimed by me'|translate}}
+        <li ng-if="isLabUser() || isHubUser()"
+            ng-class="{active: activeSidebar === 'claimed'}">
+            <a ng-href="/#/lab-requests/claimed">{{'Lab requests claimed by me'|translate}}
             <span class="badge pull-right">{{claimedReqs.length}}</span></a>
         </li>
-        <li  ng-class="{active: activeSidebar === 'unclaimed'}">
-            <a ng-href="/#/lab-requests/unclaimed">{{'Unclaimed'|translate}}
+        <li ng-if="isLabUser() || isHubUser()"
+            ng-class="{active: activeSidebar === 'unclaimed'}">
+            <a ng-href="/#/lab-requests/unclaimed">{{'Unclaimed lab requests'|translate}}
             <span class="badge pull-right">{{unclaimedReqs.length}}</span></a>
         </li>
         <hr />

@@ -73,7 +73,7 @@ This file is distributed under the GNU Affero General Public License
                     <!-- E-mail -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : (registrationForm.email.$invalid || registrationForm.email.$error.required) && registrationForm.email.$dirty }">
-                        <label class="control-label col-sm-3" for="email">{{ 'E-mail' | translate }}</label>
+                        <label class="control-label col-sm-3" for="email">{{ 'Email' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="email" class="form-control" id="email" name="email"
                                    placeholder="{{ 'Email address (lower case)' | translate }}"
@@ -97,10 +97,10 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Telephone -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : registrationForm.telephone.$invalid && registrationForm.telephone.$dirty }">
-                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone' | translate }}</label>
+                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="telephone" id="telephone"
-                                   placeholder="{{ 'Telephone' | translate }}"
+                                   placeholder="{{ 'Telephone number' | translate }}"
                                    ng-maxlength="50"
                                    ng-model="edituser.contactData.telephone">
                 <span class="help-block" ng-show="registrationForm.telephone.$error.maxlength">

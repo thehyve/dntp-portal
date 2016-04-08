@@ -30,11 +30,11 @@ This file is distributed under the GNU Affero General Public License
                 </li>
                 <li id="nav_users" ng-show="isViewUsersAllowed();"
                     class="{{$route.current.templateUrl=='app/admin/user/users.html' ? 'active': ''}}">
-                    <a href="#/users">{{'Users'|translate}}</a>
+                    <a href="#/users">{{'User management'|translate}}</a>
                 </li>
                 <li id="nav_labs" ng-show="isViewLabsAllowed();"
                     class="{{$route.current.templateUrl=='app/admin/lab/labs.html' ? 'active': ''}}">
-                    <a href="#/labs">{{'Labs'|translate}}</a>
+                    <a href="#/labs">{{'Laboratory management'|translate}}</a>
                 </li>
                 <li id="nav_my-lab" ng-show="isViewOwnLabAllowed();"
                     class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">
@@ -45,7 +45,7 @@ This file is distributed under the GNU Affero General Public License
                     <a href="#/hub-labs">{{'Hub labs'|translate}}</a>
                 </li>
                 <li id="nav_agreementformtemplate" ng-show="isEditAgreementFormTemplateAllowed();" class="{{$route.current.templateUrl=='app/admin/agreementformtemplate/edit.html' ? 'active': ''}}">
-                    <a href="#/agreementformtemplate">{{'Agreement form template'|translate}}</a>
+                    <a href="#/agreementformtemplate">{{'Edit form'|translate}}</a>
                 </li>
                 <li id="nav_accesslogs" ng-show="isViewAccessLogsAllowed();" class="{{$route.current.templateUrl=='app/admin/accesslogs/accesslogs.html' ? 'active': ''}}">
                     <a href="#/accesslogs">{{'Access logs'|translate}}</a>

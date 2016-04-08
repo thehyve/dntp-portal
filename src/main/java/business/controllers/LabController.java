@@ -135,7 +135,7 @@ public class LabController {
             throw new UserUnauthorised("User not authorised to fetch lab information.");
         }
         if (user.getLab() == null) {
-            throw new LabuserWithoutLab("No lab associated with lab user.");
+            throw new LabuserWithoutLab("User is not associated with a pathology laboratory.");
         }
         return labService.findOne(user.getLab().getId());
     }
@@ -148,7 +148,7 @@ public class LabController {
             throw new UserUnauthorised("User not authorised to fetch lab information.");
         }
         if (user.getLab() == null) {
-            throw new LabuserWithoutLab("No lab associated with lab user.");
+            throw new LabuserWithoutLab("User is not associated with a pathology laboratory.");
         }
         Lab lab = labService.findOne(user.getLab().getId());
         List<ProfileRepresentation> hubUsers = new ArrayList<>();
@@ -165,7 +165,7 @@ public class LabController {
         User user = token.getUser();
         if (user != null && user.isLabUser()) {
             if (user.getLab() == null) {
-                throw new LabuserWithoutLab("No lab associated with lab user.");
+                throw new LabuserWithoutLab("User is not associated with a pathology laboratory.");
             }
         }
         Lab lab = labService.findOne(user.getLab().getId());

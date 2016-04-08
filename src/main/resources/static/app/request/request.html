@@ -157,7 +157,7 @@ Stichting PALGA%0A
                 </p>
             </div>
             <div class="row" ng-if="request.requester.contactData">
-                <label class="control-label col-sm-2">{{ 'Contact data' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Contact information' | translate }}</label>
                 <address  class="col-sm-7">
                      {{request.requester.contactData.address1}}
                      <br ng-if="request.requester.contactData.address1">
@@ -229,7 +229,7 @@ Stichting PALGA%0A
 
             <!-- Title -->
             <div class="row">
-                <label class="control-label col-sm-2">{{ 'Title' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Running title' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.title}}
                 </p>
@@ -300,7 +300,7 @@ Stichting PALGA%0A
 
             <!-- Research number -->
             <div class="row">
-                <label class="control-label col-sm-2">{{ 'Research number' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Grant number' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.researchNumber}}
                 </p>
@@ -313,13 +313,13 @@ Stichting PALGA%0A
                     {{'Data linkage'|translate}}
                 </label>
                 <div class="col-sm-7">
-                    {{request.linkageWithPersonalData ? 'Linkage with own or external personal data.' :
+                    {{request.linkageWithPersonalData ? 'Linkage with own patients or cohort or linkage between registries.' :
                       'No data linkage required.' | translate }}
                 </div>
             </div>
             <div class="row" ng-show="request.type != '1' && request.linkageWithPersonalDataNotes">
                 <label class="control-label col-sm-2">
-                    {{ 'Data linkage notes' | translate }}
+                    {{ 'Data linkage information' | translate }}
                 </label>
                 <div class="col-sm-7">
                     {{request.linkageWithPersonalDataNotes}}
@@ -338,7 +338,7 @@ Stichting PALGA%0A
 
             <!-- Reason Using Personal Data -->
             <div class="row" ng-show="request.type != '1' && request.reasonUsingPersonalData">
-                <label class="control-label col-sm-2">{{ 'Reason using personal data' | translate }}</label>
+                <label class="control-label col-sm-2">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
                 <p class="col-sm-7">
                     {{request.reasonUsingPersonalData}}
                 </p>
@@ -349,7 +349,7 @@ Stichting PALGA%0A
             <h3>{{ 'Attachments' | translate }}</h3>
             <hr>
 
-            <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+            <div ng-show="request.attachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
 
             <div class="list-group" id="attachments">
                 <a ng-repeat="file in request.attachments"
@@ -359,10 +359,10 @@ Stichting PALGA%0A
                 </a>
             </div>
 
-            <h3>{{ 'Medical ethical committee approval' | translate }}</h3>
+            <h3>{{ 'Letter of medical research ethics committee' | translate }}</h3>
             <hr>
 
-            <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+            <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
 
             <div class="list-group" id="medicalEthicalCommitteeApprovalAttachments">
                 <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
@@ -376,7 +376,7 @@ Stichting PALGA%0A
             <div ng-if="isPalga()">
                 <br>
 
-                <h3>{{'Checks by Palga'|translate}}</h3>
+                <h3>{{'Authentification checks by PALGA'|translate}}</h3>
                 <hr>
 
                 <!-- Requester valid -->
@@ -386,7 +386,7 @@ Stichting PALGA%0A
                     </label>
                     <div class="col-sm-7">
                         <span><i class="glyphicon {{request.requesterValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'The requester has been checked and is valid.' | translate }}
+                        &nbsp; {{ 'Requester\'s identity was established.' | translate }}
                     </div>
                 </div>
 
@@ -407,7 +407,7 @@ Stichting PALGA%0A
                     </label>
                     <div class="col-sm-7">
                         <span><i class="glyphicon {{request.requesterLabValid ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'The requester has been confirmed to be associated with the lab.' | translate }}
+                        &nbsp; {{ 'Requester indeed works at or collaborates with the pathology laboratory mentioned.' | translate }}
                     </div>
                 </div>
 
@@ -418,7 +418,7 @@ Stichting PALGA%0A
                     </label>
                     <div class="col-sm-7">
                         <span><i class="glyphicon {{request.requesterAllowed ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'The requester is allowed to file the request.' | translate }}
+                        &nbsp; {{ 'The requester is allowed to submit the request.' | translate }}
                     </div>
                 </div>
 
@@ -433,7 +433,7 @@ Stichting PALGA%0A
                     </div>
                 </div>
 
-                <h3>{{'Signed agreement'|translate}}</h3>
+                <h3>{{'Authentification and agreement request'|translate}}</h3>
                 <hr>
 
                 <!-- Agreement reached -->
@@ -467,7 +467,7 @@ Stichting PALGA%0A
                 <!--*****************-->
                 <br>
 
-                <h3>{{'Privacy committee checks'|translate}}</h3>
+                <h3>{{'Review by PALGA privacy commitee'|translate}}</h3>
                 <hr>
 
                 <!-- Has this request has been sent to Privacy Committee -->
@@ -477,13 +477,13 @@ Stichting PALGA%0A
                     </label>
                     <div class="col-sm-7">
                         <span><i class="glyphicon {{request.sentToPrivacyCommittee ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                        &nbsp; {{ 'This request has been sent to privacy committee to be checked.' | translate }}
+                        &nbsp; {{ 'This request was sent by email to the privacy committee.' | translate }}
                     </div>
                 </div>
 
-                <!-- Outcome -->
+                <!-- Review result -->
                 <div class="row">
-                    <label class="control-label col-sm-2">{{ 'Outcome' | translate }}</label>
+                    <label class="control-label col-sm-2">{{ 'Review result' | translate }}</label>
                     <p class="col-sm-7">
                         {{request.privacyCommitteeOutcome}}
                     </p>
@@ -491,7 +491,7 @@ Stichting PALGA%0A
 
                 <!-- Outcome Reference -->
                 <div class="row">
-                    <label class="control-label col-sm-2">{{ 'Outcome reference' | translate }}</label>
+                    <label class="control-label col-sm-2">{{ 'Review result' | translate }}</label>
                     <p class="col-sm-7">
                         {{request.privacyCommitteeOutcomeRef}}
                     </p>
@@ -499,7 +499,7 @@ Stichting PALGA%0A
 
                 <!-- Outcome Emails -->
                 <div class="row">
-                    <label class="control-label col-sm-2">{{ 'Emailing history' | translate }}</label>
+                    <label class="control-label col-sm-2">{{ 'Summary review procces' | translate }}</label>
                     <p class="col-sm-7">
                         {{request.privacyCommitteeEmails}}
                     </p>

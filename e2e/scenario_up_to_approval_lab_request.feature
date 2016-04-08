@@ -28,7 +28,6 @@ Feature: scenario request Request for excerpts + PA reports + materials
     address1: dreef
     postalcode: 1234
     city: Amsterdam
-    stateProvince: NH
     billingEmail: fin@f.f
     telephone: 1234567890
     chargeNumber: 1234
@@ -53,7 +52,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'OK' button
     Then I should be on the requests page
     And request 'Request 2' should be in the list of requests
-    And request 'Request 2' should have status 'Under review'
+    And request 'Request 2' should have status 'Received by PALGA advisor'
 
   Scenario: 2. Claim and send requests to Scientific council
     Given I am logged in as the palga user
@@ -69,7 +68,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
       contactPersonAllowed
       agreementReached
       """
-    And I click on the 'Submit for approval' button
+    And I click on the 'Submit to scientific council' button
     And I click on the 'OK' button
     And I go to the 'requests' page
     Then request 'Request 2' should have status 'Waiting for approval'
@@ -84,7 +83,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
       scientificCouncilApproved
       privacyCommitteeApproved
       """
-    And I click on the 'Finalise' button
+    And I click on the 'Finish' button
     And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And I go to the 'requests' page

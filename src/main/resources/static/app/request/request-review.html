@@ -5,7 +5,7 @@ This file is distributed under the GNU Affero General Public License
 -->
   <br>
 
-  <h4 class="h4-palga">{{'Checks by Palga'|translate}}</h4>
+  <h4 class="h4-palga">{{'Authentification checks by PALGA'|translate}}</h4>
   <hr>
 
   <!-- Requester valid -->
@@ -16,7 +16,7 @@ This file is distributed under the GNU Affero General Public License
     <div class="col-sm-8">
       <input type="checkbox" id="requesterValid" name="requesterValid" value="1"
              ng-model="request.requesterValid"> &nbsp;
-      <label class="normal" for="requesterValid">{{ 'The requester has been checked and is valid.' | translate }}</label>
+      <label class="normal" for="requesterValid">{{ 'Requester\'s identity was established.' | translate }}</label>
     </div>
   </div>
 
@@ -38,7 +38,7 @@ This file is distributed under the GNU Affero General Public License
     <div class="col-sm-8">
       <input type="checkbox" id="requesterLabValid" name="requesterLabValid" value="1"
              ng-model="request.requesterLabValid"> &nbsp;
-      <label class="normal" for="requesterLabValid">{{ 'The requester has been confirmed to be associated with the lab.' | translate }}</label>
+      <label class="normal" for="requesterLabValid">{{ 'Requester indeed works at or collaborates with the pathology laboratory mentioned.' | translate }}</label>
     </div>
   </div>
 
@@ -50,7 +50,7 @@ This file is distributed under the GNU Affero General Public License
     <div class="col-sm-8">
       <input type="checkbox" id="requesterAllowed" name="requesterAllowed" value="1"
              ng-model="request.requesterAllowed"> &nbsp;
-      <label class="normal" for="requesterAllowed">{{ 'The requester is allowed to file the request.' | translate }}</label>
+      <label class="normal" for="requesterAllowed">{{ 'The requester is allowed to submit the request.' | translate }}</label>
     </div>
   </div>
 
@@ -68,7 +68,7 @@ This file is distributed under the GNU Affero General Public License
 
   <br>
 
-  <h4 class="h4-palga">{{'Signed agreement'|translate}}</h4>
+  <h4 class="h4-palga">{{'Authentification and agreement request'|translate}}</h4>
   <hr>
 
   <!-- Agreement reached -->
@@ -111,7 +111,7 @@ This file is distributed under the GNU Affero General Public License
         <span ng-bind-html="upload_error['agreement']"></span>
     </div>
     <div>
-      <span class="btn btn-default" flow-btn>{{'Upload agreement files'|translate}}</span>
+      <span class="btn btn-default" flow-btn>{{'Upload form'|translate}}</span>
     </div>
     <br>
     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"

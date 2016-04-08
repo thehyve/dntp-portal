@@ -84,13 +84,13 @@ This file is distributed under the GNU Affero General Public License
                 <!-- E-mail -->
                 <div class="form-group"
                      ng-class="{ 'has-error' : myLabEditForm.email.$invalid && myLabEditForm.email.$dirty}">
-                    <label class="control-label col-sm-2" for="email">{{ 'E-mail' | translate }}</label>
+                    <label class="control-label col-sm-2" for="email">{{ 'Email' | translate }}</label>
                     <div class="col-sm-6">
                         <tags-input
                             on-tag-adding="validateEmail($tag)"
                             replace-spaces-with-dashes="false"
                             ng-model="editlab.emailAddressData"
-                            placeholder="{{'E-mail addresses' | translate }}"
+                            placeholder="{{'Email addresses' | translate }}"
                             add-on-enter="true"
                             add-on-space="true"
                             add-on-blur="true"
@@ -106,10 +106,10 @@ This file is distributed under the GNU Affero General Public License
 
                 <!-- Telephone -->
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="telephone">{{ 'Telephone' | translate }}</label>
+                    <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="telephone"
-                               placeholder="{{ 'Telephone' | translate }}"
+                               placeholder="{{ 'Telephone number' | translate }}"
                                ng-model="editlab.contactData.telephone" >
                     </div>
                 </div>

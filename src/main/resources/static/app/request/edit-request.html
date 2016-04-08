@@ -107,7 +107,7 @@ This file is distributed under the GNU Affero General Public License
                         <label class="control-label col-sm-3" for="previousContactDescription"></label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" 
-                            placeholder="{{ 'Description of previous contact' | translate }}" title="{{ 'Description of previous contact' | translate }}"
+                            placeholder="{{ 'Description of previous contact.' | translate }}" title="{{ 'Description of previous contact.' | translate }}"
                             ng-model="request.previousContactDescription" 
                             ng-required="request.previousContact"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Description of previous contact'|translate}}" data-trigger="focus" bs-popover
@@ -201,24 +201,24 @@ This file is distributed under the GNU Affero General Public License
                             id="requestTypePopover"
                             ng-mouseover="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')"
                             data-placement="top-right" data-animation="am-flip-x"
-                            data-content="{{'popover: Request type'|translate}}"
+                            data-content="{{'popover: Request type'|translate}}" data-html="true"
                             data-trigger="manual" bs-show="popover.requestType" bs-popover
                             title="{{'Request type' | translate}}"
                             >
                             <input name="requestType" type="radio" ng-model="request.type" value="1" id="radio-numbers">
-                            <label class="normal" for="radio-numbers">{{'Request for numbers only' | translate}}</label><br>
+                            <label class="normal" for="radio-numbers">{{'Request_Type_1' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="2" id="radio-excerpts">
-                            <label class="normal" for="radio-excerpts">{{'Request for excerpts' | translate}}</label><br>
+                            <label class="normal" for="radio-excerpts">{{'Request_Type_2' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA">
-                            <label class="normal" for="radio-excerpts-PA">{{'Request for excerpts + PA reports' | translate}}</label><br>
+                            <label class="normal" for="radio-excerpts-PA">{{'Request_Type_3' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials">
-                            <label class="normal" for="radio-excerpts-materials">{{'Request for excerpts + materials' | translate}}</label><br>
+                            <label class="normal" for="radio-excerpts-materials">{{'Request_Type_4' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials">
-                            <label class="normal" for="radio-excerpts-PA-materials">{{'Request for excerpts + PA reports + materials' | translate}}</label><br>
+                            <label class="normal" for="radio-excerpts-PA-materials">{{'Request_Type_5' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="6" id="radio-PA">
-                            <label class="normal" for="radio-PA">{{'Request for PA-reports only' | translate}}</label><br>
+                            <label class="normal" for="radio-PA">{{'Request_Type_6' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="7" id="radio-materials">
-                            <label class="normal" for="radio-materials">{{'Request for materials only' | translate}}</label>
+                            <label class="normal" for="radio-materials">{{'Request_Type_7' | translate}}</label>
                         </div>
                     </div>
 
@@ -242,7 +242,7 @@ This file is distributed under the GNU Affero General Public License
                             ng-model="request.billingAddress.address2" >
                         </div>
                     </div>
-            
+
                     <!-- Postal code -->
                     <div class="form-group" 
                         ng-class="{ 'has-error' : (requestEditForm.postalcode.$invalid && requestEditForm.postalcode.$dirty)
@@ -270,24 +270,12 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
             
-                    <!-- State / Province -->
-                    <div class="form-group">
-                        <label class="control-label col-sm-3" for="stateProvince">{{ 'Province' | translate }}</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="stateProvince" 
-                            placeholder="{{ 'Province' | translate }}" title="{{ 'Province' | translate }}"
-                            ng-model="request.billingAddress.stateProvince" 
-                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Province'|translate}}" data-trigger="focus" bs-popover
-                            >
-                        </div>
-                    </div>
-            
                     <!-- Billing E-mail -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.billingEmail.$invalid && requestEditForm.billingEmail.$dirty }">
-                        <label class="control-label col-sm-3" for="billingEmail">{{ 'E-mail' | translate }}</label>
+                        <label class="control-label col-sm-3" for="billingEmail">{{ 'Email' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="email" class="form-control" name="billingEmail" id="billingEmail" 
-                            placeholder="{{ 'E-mail' | translate }}" title="{{ 'E-mail' | translate }}"
+                            placeholder="{{ 'Email' | translate }}" title="{{ 'Email' | translate }}"
                             ng-model="request.billingAddress.email" ng-maxlength="255"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: E-mail'|translate}}" data-trigger="focus" bs-popover
                             >
@@ -302,17 +290,17 @@ This file is distributed under the GNU Affero General Public License
             
                     <!-- Telephone -->
                     <div class="form-group">
-                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone' | translate }}</label>
+                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="telephone" 
-                            placeholder="{{ 'Telephone' | translate }}" title="{{ 'Telephone' | translate }}"
+                            placeholder="{{ 'Telephone number' | translate }}" title="{{ 'Telephone number' | translate }}"
                             ng-model="request.billingAddress.telephone" 
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Telephone'|translate}}" data-trigger="focus" bs-popover
                             >
                         </div>
                     </div>
                     
-                    <h4>{{'Billing information' | translate}}</h4>
+                    <h4>{{'Billing details' | translate}}</h4>
                     <hr>
                     <!-- Charge number -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.chargeNumber.$invalid && requestEditForm.chargeNumber.$dirty }">
@@ -331,12 +319,12 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
-                    <!-- Research number -->
+                    <!-- Grant number -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.researchNumber.$invalid && requestEditForm.researchNumber.$dirty }">
-                        <label class="control-label col-sm-3" for="researchNumber">{{ 'Research number' | translate }}</label>
+                        <label class="control-label col-sm-3" for="researchNumber">{{ 'Grant number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="researchNumber" name="researchNumber" 
-                                placeholder="{{ 'Research number' | translate }}" title="{{ 'Research number' | translate }}"
+                                placeholder="{{ 'Grant number' | translate }}" title="{{ 'Grant number' | translate }}"
                                 ng-model="request.researchNumber" ng-maxlength="100"
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Research number'|translate}}" data-trigger="focus" bs-popover
                                 >
@@ -347,7 +335,7 @@ This file is distributed under the GNU Affero General Public License
 
 
                     <div ng-show="request.type != 1">
-                    <h4>{{ 'Data Linkage' | translate }}</h4>
+                    <h4>{{ 'Data linkage' | translate }}</h4>
                     <hr>
 
                     <!-- Data Linkage -->
@@ -360,7 +348,7 @@ This file is distributed under the GNU Affero General Public License
                             data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Data linkage'|translate}}" data-trigger="manual" bs-show="popover.dataLinkage" bs-popover>
                             <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData"
                                     ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData">
-                            <label class="normal" for="linkageWithPersonalDataYes">{{'Linkage with own or external personal data.' | translate}}</label><br>
+                            <label class="normal" for="linkageWithPersonalDataYes">{{'Linkage with own patients or cohort or linkage between registries.' | translate}}</label><br>
                             <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData"
                                     ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);">
                             <label class="normal" for="linkageWithPersonalDataNo">{{'No data linkage required.' | translate}}</label><br>
@@ -371,10 +359,10 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Data Linkage Notes  -->
                     <div class="form-group" ng-show="request.type != 1 && request.linkageWithPersonalData"
                          ng-class="{ 'has-error' : requestEditForm.linkageWithPersonalDataNotes.$invalid  && requestEditForm.linkageWithPersonalDataNotes.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Data linkage notes' | translate }}</label>
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Data linkage information' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes" 
-                            placeholder="{{ 'Notes for linkage with personal data' | translate }}" title="{{ 'Notes for linkage with personal data' | translate }}"
+                            placeholder="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}" title="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}"
                             ng-model="request.linkageWithPersonalDataNotes" 
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Notes for linkage with personal data'|translate}}" data-trigger="focus" bs-popover
                             ng-required="request.linkageWithPersonalData"></textarea>
@@ -406,10 +394,10 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Reason Using Personal Data  -->
                     <div class="form-group" ng-show="(request.type != 1 && request.linkageWithPersonalData)"
                          ng-class="{ 'has-error' : requestEditForm.reasonUsingPersonalData.$invalid && requestEditForm.reasonUsingPersonalData.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Reason using personal data' | translate }}</label>
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" 
-                            placeholder="{{ 'Reason using personal data' | translate }}" title="{{ 'Reason using personal data' | translate }}"
+                            placeholder="{{ 'Explanation why linkage is allowed without informed consent' | translate }}" title="{{ 'Explanation why linkage is allowed without informed consent' | translate }}"
                             ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent" 
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Reason using personal data'|translate}}" data-trigger="focus" bs-popover
                             ng-required="(request.type != 1 && request.linkageWithPersonalData && !request.informedConsent)"></textarea>
@@ -425,7 +413,7 @@ This file is distributed under the GNU Affero General Public License
                     <h4>{{ 'Attachments' | translate }}</h4>
                     <hr>
 
-                    <div ng-show="request.attachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+                    <div ng-show="request.attachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
 
                     <div class="list-group">
                         <a ng-repeat="file in request.attachments"
@@ -456,7 +444,7 @@ This file is distributed under the GNU Affero General Public License
                         <div>
                             <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
                             <button class="btn btn-default" 
-                                data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Upload file'|translate}}" data-trigger="hover focus" bs-popover
+                                data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Upload file'|translate}}" data-trigger="hover" bs-popover
                                 flow-btn>{{'Upload file'|translate}}</button>
                         </div>
                         <br>
@@ -468,10 +456,10 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
-                    <h4>{{ 'Medical ethical committee approval' | translate }}</h4>
+                    <h4>{{ 'Letter of medical research ethics committee' | translate }}</h4>
                     <hr>
 
-                    <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachment found.' | translate}}</i></p></div>
+                    <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
 
                     <div class="list-group">
                         <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
@@ -504,8 +492,8 @@ This file is distributed under the GNU Affero General Public License
                             <button class="btn btn-default"
                                     data-placement="top-left" data-animation="am-flip-x"
                                     data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
-                                    data-trigger="hover focus" bs-popover
-                                    flow-btn>{{'Upload medical ethical committee approval'|translate}}
+                                    data-trigger="hover" bs-popover
+                                    flow-btn>{{'Upload letter'|translate}}
                             </button>
                         </div>
                         <br>
@@ -540,13 +528,13 @@ This file is distributed under the GNU Affero General Public License
                             </div>
                         </div>
 
-                        <!-- Outcome -->
+                        <!-- Review result -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Outcome' | translate
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Review result' | translate
                                 }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeOutcome"
-                                      name="privacyCommitteeOutcome" placeholder="{{ 'Outcome' | translate }}"
+                                      name="privacyCommitteeOutcome" placeholder="{{ 'Review result' | translate }}"
                                       ng-model="request.privacyCommitteeOutcome"></textarea>
                             </div>
                         </div>
@@ -554,22 +542,22 @@ This file is distributed under the GNU Affero General Public License
                         <!-- Outcome Reference -->
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{
-                            'Outcome reference' | translate }}</label>
+                            'Review result' | translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
                                       name="privacyCommitteeOutcomeRef"
-                                      placeholder="{{ 'Outcome Reference' | translate }}"
+                                      placeholder="{{ 'Review result' | translate }}"
                                       ng-model="request.privacyCommitteeOutcomeRef"></textarea>
                             </div>
                         </div>
 
                         <!-- Outcome Emails -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeEmails">{{ 'Emailing history' |
+                            <label class="control-label col-sm-3" for="privacyCommitteeEmails">{{ 'Summary review procces' |
                                 translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeEmails"
-                                      name="privacyCommitteeEmails" placeholder="{{ 'Emailing History' | translate }}"
+                                      name="privacyCommitteeEmails" placeholder="{{ 'Summary review procces' | translate }}"
                                       ng-model="request.privacyCommitteeEmails"></textarea>
                             </div>
                         </div>
@@ -585,7 +573,7 @@ This file is distributed under the GNU Affero General Public License
 
 
                     <div ng-if="request.status=='Approval' && isPalga()">
-                        <h4 class="h4-palga">{{'Finalisation checks'|translate}}</h4>
+                        <h4 class="h4-palga">{{'Final checks before data delivery'|translate}}</h4>
                         <hr>
                         <!-- Scientific council has approved -->
                         <div class="form-group" ng-class="">
@@ -596,7 +584,7 @@ This file is distributed under the GNU Affero General Public License
                                 <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved"
                                        ng-model="request.scientificCouncilApproved"> &nbsp;
                                 <label class="normal" for="scientificCouncilApproved">{{
-                                'The scientific council has approved.' | translate }}</label>
+                                'Approved by scientific council.' | translate }}</label>
                             </div>
                         </div>
 
@@ -609,7 +597,7 @@ This file is distributed under the GNU Affero General Public License
                                 <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved"
                                        ng-model="request.privacyCommitteeApproved"> &nbsp;
                                 <label class="normal" for="privacyCommitteeApproved">{{
-                                'There are no privacy issues or the privacy committee has approved.' | translate }}</label>
+                                'Approved by privacy committee.' | translate }}</label>
                             </div>
                         </div>
                     </div>
@@ -638,7 +626,7 @@ This file is distributed under the GNU Affero General Public License
                             || !request.requesterLabValid
                             || dataLoading
                         ">
-                            {{'Submit for approval'|translate}}
+                            {{'Submit to scientific council'|translate}}
                     </button>
                     <button class="btn btn-warning" type="button"
                         ng-if="request.status=='Approval' && isPalga()"
@@ -648,7 +636,7 @@ This file is distributed under the GNU Affero General Public License
                             || !request.privacyCommitteeApproved
                             || dataLoading
                         ">
-                            {{'Finalise'|translate}}
+                            {{'Finish'|translate}}
                     </button>
                     <button class="btn btn-danger" type="button"
                         ng-if="(request.status=='Review' || request.status=='Approval') && isPalga()"

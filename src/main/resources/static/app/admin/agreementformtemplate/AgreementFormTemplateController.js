@@ -64,7 +64,6 @@ angular.module('ProcessApp.controllers')
                 address2: null,
                 postalCode: null,
                 city: null,
-                stateProvince: null,
                 country: 'NL'
             },
             chargeNumber: '12345678',

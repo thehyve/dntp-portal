@@ -127,8 +127,7 @@ angular.module('ProcessApp.controllers')
                     .concat(contactData.postalCode !== null ? contactData.postalCode + '  ' : '')
                     .concat(contactData.city !== null ? contactData.city : '')
                     .concat(contactData.city !== null || contactData.postalCode !== null ? '<br>' : '')
-                    .concat(contactData.stateProvince !== null ? contactData.stateProvince + ', ' : '')
-                    .concat(contactData.stateProvince !== null ? contactData.country + '<br>' : '')
+                    .concat(contactData.country !== null ? contactData.country + '<br>' : '')
                     .concat(contactData.telephone !== null ? _createPhoneTmp(contactData.telephone) + '<br>' : '')
                     .concat(contactData.email !== null ? _createEmailTmp(contactData.email) + '<br>' : '')
                     : '';
@@ -247,7 +246,8 @@ angular.module('ProcessApp.controllers')
                 bootbox.confirm(
                     '<h4>Are you sure you want to reject the lab request?</h4>\n' +
                     '<form id="reject" action="">' +
-                    'Please enter a reject reason:\n<br><br>\n' +
+                    $rootScope.translate('Please enter the reason for rejection.') +
+                    '\n<br><br>\n' +
                     '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
                     '</form>',
                     function(result) {

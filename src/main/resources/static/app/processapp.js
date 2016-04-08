@@ -137,8 +137,8 @@
 
         })
 
-        .run(['$rootScope', '$location', '$cookies', '$http', '$alert',
-            function ($rootScope, $location, $cookies, $http, $alert) {
+        .run(['$rootScope', '$location', '$cookies', '$http', '$alert', '$translate',
+            function ($rootScope, $location, $cookies, $http, $alert, $translate) {
 
                 /**
                  * To authorize feature based on role
@@ -228,11 +228,13 @@
                     if (user === null) {
                         return '';
                     }
-                    return user.firstName +
-                        ((user.firstName ==='' || user.lastName ==='' || user.lastName === null ) ? '' : ' ') +
-                        (user.lastName === null ? '' : user.lastName);
+                    return _.compact(user.firstName, user.lastName).join(' ');
                 };
                 $rootScope.getName = _getName;
+
+                $rootScope.translate = function(key, params) {
+                    return $translate.instant(key, params);
+                };
 
                 $rootScope.heartbeat = function() {
                     return $http.get('user');

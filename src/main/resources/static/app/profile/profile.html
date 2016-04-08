@@ -11,7 +11,7 @@ This file is distributed under the GNU Affero General Public License
     <h2 ng-show="!loaded">Loading</h2>
     <form class="form-horizontal" role="form" name="profileForm" ng-show="loaded" novalidate>
         <div class="alert alert-success" role="alert">
-            {{ 'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA' | translate }}
+            {{ 'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA.' | translate }}
         </div>
     
     
@@ -33,7 +33,7 @@ This file is distributed under the GNU Affero General Public License
 
         <!-- E-mail -->
         <div class="form-group">
-            <label class="control-label col-sm-2" for="email">{{ 'E-mail' | translate }}</label>
+            <label class="control-label col-sm-2" for="email">{{ 'Email' | translate }}</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="email" ng-model="user.contactData.email" disabled>
             </div>
@@ -41,7 +41,7 @@ This file is distributed under the GNU Affero General Public License
 
         <!-- Telephone -->
         <div class="form-group">
-            <label class="control-label col-sm-2" for="telephone">{{ 'Telephone' | translate }}</label>
+            <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="telephone" ng-model="user.contactData.telephone">
             </div>

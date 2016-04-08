@@ -4,7 +4,9 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <!-- If in 'DataDelivery' status -->
-<div class="container-fluid" ng-if="request.status=='DataDelivery'" ng-controller="SelectionController">
+<div class="container-fluid" ng-if="request.status=='DataDelivery'"
+    ng-controller="SelectionController"
+    ng-init="enableSpaceSelects()">
 
     <div class="page-header">
     <h4>{{'Selection'|translate}}</h4>
@@ -23,7 +25,7 @@ This file is distributed under the GNU Affero General Public License
         <li class="list-group-item {{excerpt.selected ? 'list-group-item-info' : ''}} {{$index == currentIndex ? 'active':''}}"
             ng-repeat="excerpt in request.excerptList.entries track by excerpt.id"
             id="excerpt_{{excerpt.id}}">
-            <h4 class="list-group-item-heading">
+            <h3 class="list-group-item-heading">
                 {{'Excerpt'|translate}} {{excerpt.values[0]}}
                 &nbsp;
                 <i ng-if="excerpt.selected" class="glyphicon glyphicon-check"></i>
@@ -41,7 +43,7 @@ This file is distributed under the GNU Affero General Public License
                     </button>
                 </span>
                 </span>
-            </h4>
+            </h3>
             <div ng-show="$index == currentIndex">
             <div class="row" ng-repeat="fieldName in relevantFields">
                 <div class="col-xs-2 col-md-1">

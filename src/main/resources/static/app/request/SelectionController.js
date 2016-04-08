@@ -114,6 +114,10 @@ angular.module('ProcessApp.controllers')
             $scope.enableSpaceSelects = function() {
                 jQuery(document).off('keydown.selection');
                 jQuery(document).on('keydown.selection', function(e){
+                    if ($route.current.templateUrl !== 'app/request/selection.html') {
+                        $scope.disableSpaceSelects();
+                        return;
+                    }
                     if(e.which === 40) { // down
                         //console.log('down: ' + $scope.request.excerptList.entries.length);
                         if ($scope.currentIndex < $scope.request.excerptList.entries.length - 1) {
@@ -148,11 +152,14 @@ angular.module('ProcessApp.controllers')
                     }
                 });
             };
-            $scope.enableSpaceSelects();
 
             $scope.disableSpaceSelects = function() {
                 jQuery(document).off('keydown.selection');
             };
+
+            $scope.$on("$destroy", function(){
+                $scope.disableSpaceSelects();
+            });
 
 }]);
 })(document, console, angular, jQuery, _, window.bootbox);

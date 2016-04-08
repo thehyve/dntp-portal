@@ -1,0 +1,16 @@
+{
+  "name": "msg2tsv",
+  "description": "Writes language definitions to stdout in tab delimited format.",
+  "version": "0.0.1",
+  "license": "AGPL-3.0",
+  "dependencies": {},
+  "scripts": {
+  },
+  "devDependencies": {
+    "lodash": "~4.6.1"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
+

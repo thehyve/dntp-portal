@@ -61,6 +61,7 @@ public class LabController {
 
     public void transferLabData(Lab body, Lab lab) {
         lab.setName(body.getName());
+        lab.setHubAssistanceEnabled(body.isHubAssistanceEnabled());
         if (lab.getContactData() == null) {
             lab.setContactData(new ContactData());
         }

@@ -6,8 +6,14 @@ This file is distributed under the GNU Affero General Public License
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         <li ng-class="{active: activeSidebar === 'overview'}">
-            <a ng-href="/#/lab-requests/">{{'All lab requests'|translate}}
+            <a ng-href="/#/lab-requests/overview">{{'All lab requests'|translate}}
             <span class="badge pull-right">{{allLabRequests.length}}</span></a>
+        </li>
+        <hr />
+        <li ng-if="isHubUser()"
+            ng-class="{active: activeSidebar === 'hub_assistance_requested'}">
+            <a ng-href="/#/lab-requests/hub_assistance_requested">{{'Hub assistance requested'|translate}}
+            <span class="badge pull-right">{{requestsHubAssistanceRequested.length}}</span></a>
         </li>
         <li ng-if="isLabUser() || isHubUser()"
             ng-class="{active: activeSidebar === 'claimed'}">

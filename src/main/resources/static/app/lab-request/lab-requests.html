@@ -59,7 +59,7 @@ This file is distributed under the GNU Affero General Public License
                             <th><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
                             <td><select st-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by hub assistance'|translate}}</option>
-                                    <option value="true">{{ 'Yes' | translate}}</option>
+                                    <option value="true" ng-selected="activeSidebar === 'hub_assistance_requested'">{{ 'Yes' | translate}}</option>
                                     <option value="false">{{ 'No' | translate}}</option>
                                 </select></td>
                             <!--<th><input st-search="dateCreated" placeholder="Filter by date" class="input-sm form-control" type="search"/></th>-->
@@ -77,7 +77,7 @@ This file is distributed under the GNU Affero General Public License
                             <th class="no-print">&nbsp;</th>
                         </tr>
                         <tr class="no-print">
-                            <th colspan="9"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                            <th colspan="11"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>

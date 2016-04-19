@@ -90,6 +90,12 @@ angular.module('ProcessApp.services')
                     .value();
             };
 
+            filterService.selectHubAssistanceRequested = function (requests) {
+                return _.chain(requests)
+                    .filter(_.matches({hubAssistanceRequested: true}))
+                    .value();
+            }
+
             filterService.selectByStatus = function (status) {
                 return function (requests) {
                     return _.chain(requests)

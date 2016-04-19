@@ -20,7 +20,7 @@ This file is distributed under the GNU Affero General Public License
                         {{ error }}
                     </div>
 
-                    <h4>{{'General details' |translate}}</h4>
+                    <h4 class="h4">{{'General details' |translate}}</h4>
                     <hr>
 
                     <!-- Principal Investigator -->
@@ -222,7 +222,7 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
-                    <h4>{{'Billing address'|translate}}</h4>
+                    <h4 class="h4">{{'Billing address'|translate}}</h4>
                     <hr>
                     <!-- Address -->
                     <div class="form-group"
@@ -299,8 +299,8 @@ This file is distributed under the GNU Affero General Public License
                             >
                         </div>
                     </div>
-                    
-                    <h4>{{'Billing details' | translate}}</h4>
+
+                    <h4 class="h4">{{'Billing details' | translate}}</h4>
                     <hr>
                     <!-- Charge number -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.chargeNumber.$invalid && requestEditForm.chargeNumber.$dirty }">
@@ -335,7 +335,7 @@ This file is distributed under the GNU Affero General Public License
 
 
                     <div ng-show="request.type != 1">
-                    <h4>{{ 'Data linkage' | translate }}</h4>
+                    <h4 class="h4">{{ 'Data linkage' | translate }}</h4>
                     <hr>
 
                     <!-- Data Linkage -->
@@ -410,7 +410,7 @@ This file is distributed under the GNU Affero General Public License
 
                     <br>
 
-                    <h4>{{ 'Attachments' | translate }}</h4>
+                    <h4 class="h4">{{ 'Attachments' | translate }}</h4>
                     <hr>
 
                     <div ng-show="request.attachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
@@ -456,7 +456,7 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
-                    <h4>{{ 'Letter of medical research ethics committee' | translate }}</h4>
+                    <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
                     <hr>
 
                     <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
@@ -512,7 +512,7 @@ This file is distributed under the GNU Affero General Public License
 
                         <br>
 
-                        <h4 class="h4-palga">{{'Checks by privacy committee'|translate}}</h4>
+                        <h4 class="h4 h4-palga">{{'Checks by privacy committee'|translate}}</h4>
                         <hr>
 
                         <!-- Is sent to privacy commitee -->
@@ -573,7 +573,7 @@ This file is distributed under the GNU Affero General Public License
 
 
                     <div ng-if="request.status=='Approval' && isPalga()">
-                        <h4 class="h4-palga">{{'Final checks before data delivery'|translate}}</h4>
+                        <h4 class="h4 h4-palga">{{'Final checks before data delivery'|translate}}</h4>
                         <hr>
                         <!-- Scientific council has approved -->
                         <div class="form-group" ng-class="">

@@ -201,7 +201,7 @@
             return -1;
         };
 
-        _requestFactory.statuses = [ 
+        _requestFactory.statuses = [
             'Open',
             'Review',
             'Approval',
@@ -212,11 +212,12 @@
             'Closed'
         ];
 
-        _requestFactory.claimableStates = _.difference(_requestFactory.statuses, 
+        _requestFactory.claimableStates = _.difference(_requestFactory.statuses,
                 [
-                    'LabRequest',
-                    'Rejected',
-                    'Closed'
+                     'Open',
+                     'LabRequest',
+                     'Rejected',
+                     'Closed'
                 ]);
 
         _requestFactory.editStates = [

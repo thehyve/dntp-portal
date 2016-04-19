@@ -83,6 +83,7 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     <tr class="no-print">
                         <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -107,7 +108,7 @@ This file is distributed under the GNU Affero General Public License
                         <span class="pull-left">
                         <span class="btn-group">
                             <button
-                                 ng-if="req.status == 'Open'"
+                                 ng-if="isRequester() && req.status == 'Open'"
                                  class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>
@@ -116,31 +117,31 @@ This file is distributed under the GNU Affero General Public License
                         <span class="pull-right">
                         <span class="btn-group">
                             <button
-                                ng-if="isRequester() || isPalga()"
+                                ng-if="isRequester() || (isPalga() && req.status != 'Open')"
                                  ng-disabled="(isRequester() && req.status != 'Open')
                                     || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval')
                                     || (isPalga() && !isCurrentUser(req.assignee))"
                                  class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(req)">
                                 <span><i class="glyphicon glyphicon-pencil"></i></span>
                             </button>
-                            <button ng-if="isPalga()" 
+                            <button ng-if="isPalga() && req.status != 'Open'"
                                 ng-disabled="isCurrentUser(req.assignee) || !isClaimable(req.status)"
                                  class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
                             </button>
-                            <button ng-if="isPalga()" 
+                            <button ng-if="isPalga() && req.status != 'Open'"
                                 ng-disabled="!isCurrentUser(req.assignee) || !isClaimable(req.status)"
                                  class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>
                             </button>
                             <button
-                                 ng-if="isPalga() && req.reviewStatus != 'SUSPENDED'"
+                                 ng-if="isPalga() && req.status != 'Open' && req.reviewStatus != 'SUSPENDED'"
                                  ng-disabled="!isCurrentUser(req.assignee)"
                                  class="btn btn-default" type="button" title="{{'Suspend'|translate}}" ng-click="suspend(req)">
                                 <span><i class="glyphicon glyphicon-pause"></i></span>
                             </button>
                             <button
-                                 ng-if="isPalga() && req.reviewStatus == 'SUSPENDED'"
+                                 ng-if="isPalga() && req.status != 'Open' && req.reviewStatus == 'SUSPENDED'"
                                  ng-disabled="!isCurrentUser(req.assignee)"
                                  class="btn btn-default" type="button" title="{{'Resume'|translate}}" ng-click="resume(req)">
                                 <span><i class="glyphicon glyphicon-play"></i></span>

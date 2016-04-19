@@ -4,16 +4,17 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div ng-controller="RequestCommentController">
-    <h3>
+    <h3 class="h3 h3-palga">
         {{'Notes'|translate}}
-        <span class="badge">{{request.comments.length}}</span>
+        <span class="badge">{{request.comments.length}}</span><br>
+        <small>({{'only visible for Palga'|translate}})</small>
     </h3>
     <hr>
 
     <div>
         <ul class="list-group">
             <li class="list-group-item" ng-repeat="comment in request.comments">
-                <p><div ng-show="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
+                <div ng-show="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
                 <div ng-show="commentEditVisibility[comment.id]">
                    <textarea id="editCommentText" class="form-control" name="editCommentText" placeholder="{{'Add note'|translate}}"
                              ng-model="comment.contents">
@@ -23,19 +24,18 @@ This file is distributed under the GNU Affero General Public License
                         <span><i class="glyphicon glyphicon-pencil"></i></span> {{'Update'|translate}}
                     </button>
                 </div>
-                      <span class="pull-right">
-                          <span class="btn-group btn-group-xs">
-                              <button class="btn btn-info" type="button" title="Edit"
-                                      ng-click="commentEditVisibility[comment.id] = 1">
-                                  <span><i class="glyphicon glyphicon-pencil"></i></span>
-                              </button>
-                              <button class="btn btn-danger" type="button" title="{{'Delete'|translate}}"
-                                      ng-click="removeComment(comment)" ng-disabled="dataLoading">
-                                  <span><i class="glyphicon glyphicon-remove-circle"></i></span>
-                              </button>
-                          </span>
-                      </span>
-                </p>
+                <span class="pull-right">
+                    <span class="btn-group btn-group-xs">
+                        <button class="btn btn-info" type="button" title="Edit"
+                                ng-click="commentEditVisibility[comment.id] = 1">
+                            <span><i class="glyphicon glyphicon-pencil"></i></span>
+                        </button>
+                        <button class="btn btn-danger" type="button" title="{{'Delete'|translate}}"
+                                ng-click="removeComment(comment)" ng-disabled="dataLoading">
+                            <span><i class="glyphicon glyphicon-remove-circle"></i></span>
+                        </button>
+                    </span>
+                </span>
                 <p>
                     <small>
                         <span><i class="glyphicon glyphicon-user"></i></span>
@@ -57,6 +57,7 @@ This file is distributed under the GNU Affero General Public License
                     </textarea>
     <br>
     <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
+            id="add-comment-button"
             ng-click="addComment(request, editComment)"
             ng-if="!editComment.id" ng-disabled="dataLoading">
         {{'Add note'|translate}}
@@ -66,5 +67,6 @@ This file is distributed under the GNU Affero General Public License
             ng-if="editComment.id" ng-disabled="dataLoading">
         {{'Update note'|translate}}
     </button>
+    <br>
+    <br>
 </div>
-

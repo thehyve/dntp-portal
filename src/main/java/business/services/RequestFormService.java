@@ -67,9 +67,6 @@ public class RequestFormService {
     private RequestService requestService;
 
     @Autowired
-    private TaskService taskService;
-    
-    @Autowired
     private ContactDataRepository contactDataRepository;
 
     /**
@@ -99,6 +96,7 @@ public class RequestFormService {
     
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
+        request.setProcessId(instance.getProcessDefinitionId());
         request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
 
         Map<String, Object> variables = instance.getProcessVariables();
@@ -128,6 +126,7 @@ public class RequestFormService {
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
+            request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
 
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }
@@ -172,8 +171,7 @@ public class RequestFormService {
                 }
             }
         }
-        
-        
+
         if (currentUser.isPalga()) {
             request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(instance.getId()));
         } else if (currentUser.isScientificCouncilMember()) {
@@ -209,7 +207,7 @@ public class RequestFormService {
         boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();
 
         request.setProcessInstanceId(instance.getId());
-        
+        request.setProcessId(instance.getProcessDefinitionId());
         //request.setActivityId(instance.getActivityId()); // fetch from runtimeService?
 
         Map<String, Object> variables = instance.getProcessVariables();
@@ -234,6 +232,8 @@ public class RequestFormService {
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
+
+            request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
 
             request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
             request.setLinkageWithPersonalDataNotes((String) variables.get("linkage_with_personal_data_notes"));
@@ -338,12 +338,12 @@ public class RequestFormService {
                 request.setContactPersonAllowed(fetchBooleanVariable("contact_person_is_allowed", variables));
                 request.setRequesterLabValid(fetchBooleanVariable("requester_lab_is_valid", variables));
                 request.setAgreementReached(fetchBooleanVariable("agreement_reached", variables));
-                
+
                 request.setRequestAdmissible(fetchBooleanVariable("request_is_admissible", variables));
-                
+
                 request.setScientificCouncilApproved(fetchBooleanVariable("scientific_council_approved", variables));
                 request.setPrivacyCommitteeApproved(fetchBooleanVariable("privacy_committee_approved", variables));
-                
+
                 request.setRequestApproved(fetchBooleanVariable("request_approved", variables));
                 request.setRejectReason((String)variables.get("reject_reason"));
                 request.setRejectDate((Date)variables.get("reject_date"));
@@ -464,6 +464,8 @@ public class RequestFormService {
             variables.put("agreement_reached", (Boolean)request.isAgreementReached());
 
             variables.put("request_is_admissible", (Boolean)request.isRequestAdmissible());
+
+            variables.put("reopen_request", (Boolean)request.isReopenRequest());
 
             variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
             variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());

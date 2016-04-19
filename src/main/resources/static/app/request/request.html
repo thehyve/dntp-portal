@@ -111,7 +111,7 @@ Stichting PALGA%0A
                     {{'Unclaim' | translate}}
                 </button>
                 <button class="btn btn-default" type="button"  ng-click="remove(request)" title="{{'Delete' | translate}}"
-                        ng-if="request.status == 'Open'">
+                        ng-if="isRequester() && request.status == 'Open'">
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                     {{'Delete' | translate}}
                 </button>
@@ -174,7 +174,7 @@ Stichting PALGA%0A
                 </address>
             </div>
 
-            <h3>{{ 'Details' | translate }}</h3>
+            <h4 class="h4">{{ 'Details' | translate }}</h4>
             <hr>
 
 
@@ -201,8 +201,6 @@ Stichting PALGA%0A
                     {{request.pathologistEmail}}
                 </p>
             </div>
-
-
 
 
             <!-- Previous contact -->
@@ -346,7 +344,7 @@ Stichting PALGA%0A
 
             <br>
 
-            <h3>{{ 'Attachments' | translate }}</h3>
+            <h4 class="h4">{{ 'Attachments' | translate }}</h4>
             <hr>
 
             <div ng-show="request.attachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
@@ -359,7 +357,7 @@ Stichting PALGA%0A
                 </a>
             </div>
 
-            <h3>{{ 'Letter of medical research ethics committee' | translate }}</h3>
+            <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
             <hr>
 
             <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
@@ -376,7 +374,7 @@ Stichting PALGA%0A
             <div ng-if="isPalga()">
                 <br>
 
-                <h3>{{'Authentification checks by PALGA'|translate}}</h3>
+                <h4 class="h4 h4-palga">{{'Authentification checks by PALGA'|translate}}</h4>
                 <hr>
 
                 <!-- Requester valid -->
@@ -433,7 +431,7 @@ Stichting PALGA%0A
                     </div>
                 </div>
 
-                <h3>{{'Authentification and agreement request'|translate}}</h3>
+                <h4 class="h4 h4-palga">{{'Authentification and agreement request'|translate}}</h4>
                 <hr>
 
                 <!-- Agreement reached -->
@@ -467,7 +465,7 @@ Stichting PALGA%0A
                 <!--*****************-->
                 <br>
 
-                <h3>{{'Review by PALGA privacy commitee'|translate}}</h3>
+                <h4 class="h4 h4-palga">{{'Review by PALGA privacy commitee'|translate}}</h4>
                 <hr>
 
                 <!-- Has this request has been sent to Privacy Committee -->

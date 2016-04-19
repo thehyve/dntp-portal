@@ -9,7 +9,7 @@ This file is distributed under the GNU Affero General Public License
          || isRequester()
         )">
 
-    <h4>{{'Excerpt List'|translate}}</h4>
+    <h4 class="h4 h4-palga">{{'Excerpt list'|translate}}</h4>
     <hr>
     
     <div ng-if="request.excerptList">
@@ -19,8 +19,6 @@ This file is distributed under the GNU Affero General Public License
         {{'Download'|translate}} excerpts_{{request.processInstanceId}}.csv
         <span class="badge">{{request.excerptList.entries.length}}</span>
         </a>
-    
-    
         <br>
         <br>
     </div>
@@ -58,6 +56,8 @@ This file is distributed under the GNU Affero General Public License
                 ({{'drag and drop your file here'|translate}})
             </div>
         </div>
+        <br>
+        <br>
     </div>
 
     <div ng-if="request.excerptList && request.status == 'DataDelivery'
@@ -79,7 +79,7 @@ This file is distributed under the GNU Affero General Public License
         && request.excerptList"
         ng-controller="SelectionController">
 
-        <h4>{{'Excerpt selection'|translate}}</h4>
+        <h4 class="h4 h4-palga">{{'Excerpt selection'|translate}}</h4>
         <hr>
         <!-- Excerpt selection upload -->
         <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
@@ -98,10 +98,10 @@ This file is distributed under the GNU Affero General Public License
                 {{'Select PA numbers'|translate}}
             </a>
             <input type="file" flow-btn id="test-upload-excerpt-selection" style="display:none" />
-            <span class="btn btn-default" flow-btn>
+            <a class="btn btn-default" flow-btn>
                 <i class="glyphicon glyphicon-import"></i>
                 {{'Upload excerpt selection'|translate}}
-            </span>
+            </a>
     
             <br>
             <br>
@@ -122,11 +122,11 @@ This file is distributed under the GNU Affero General Public License
                 {{'Download selection' |translate }}
                 <span class="badge">{{(request.excerptList.entries | filter: {selected: true}).length}}</span>
             </a>
-            <span type="button" class="btn btn-primary" title="Submit"
+            <a type="button" class="btn btn-primary" title="Submit"
                 ng-if="isRequester() && request.status=='DataDelivery'"
                 ng-click="submitExcerptSelection(request)">
                 {{'Submit selection'|translate}}
-            </span>
+            </a>
         </div>
         <div class="clearfix"/>
         <p style="clear: both;"></p>
@@ -145,11 +145,13 @@ This file is distributed under the GNU Affero General Public License
           >
           {{'Reject selection'|translate}}
         </button>
+        <br>
+        <br>
     </div>
 
   </div>
 
-  <h4>{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
+  <h4 class="h4 h4-palga">{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
   <hr>
 
   <div class="list-group">
@@ -187,9 +189,9 @@ This file is distributed under the GNU Affero General Public License
       (<em>{{'Maximum file size 10 MB.'|translate}}</em>)
     </p>
     <div>
-                        <span class="btn btn-default" flow-btn
+                        <a class="btn btn-default" flow-btn
                               ng-disabled="!isCurrentUser(request.assignee)"
-                          >{{'Upload data files'|translate}}</span>
+                          >{{'Upload data files'|translate}}</a>
     </div>
     <br>
     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"

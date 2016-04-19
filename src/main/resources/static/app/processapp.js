@@ -228,7 +228,7 @@
                     if (user === null) {
                         return '';
                     }
-                    return _.compact(user.firstName, user.lastName).join(' ');
+                    return _.compact([user.firstName, user.lastName]).join(' ');
                 };
                 $rootScope.getName = _getName;
 

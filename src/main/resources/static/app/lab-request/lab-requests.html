@@ -48,6 +48,7 @@ This file is distributed under the GNU Affero General Public License
                             <th st-sort="endDate">{{'End date' | translate}}</th>
                             <th st-sort="pathologyCount">{{'# PA numbers' | translate}}</th>
                             <th st-sort="status">{{'Status' | translate}}</th>
+                            <th st-sort="assigneeName">{{'Assignee'|translate}}</th>
                             <th class="no-print" style="width: 8em"><span class="pull-right">{{'Actions'|translate}}</span></th>
                         </tr>
                         <tr class="no-print">
@@ -72,6 +73,7 @@ This file is distributed under the GNU Affero General Public License
                                         value="{{status}}">{{ status | translate}}</option>
                                 </select>
                             </th>
+                            <th><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th class="no-print">&nbsp;</th>
                         </tr>
                         <tr class="no-print">
@@ -113,6 +115,7 @@ This file is distributed under the GNU Affero General Public License
                         <td>
                             {{labRequest.status | translate}}
                         </td>
+                        <td>{{labRequest.assigneeName == '' ? labRequest.assignee : labRequest.assigneeName}}</td>
                         <td class="no-print">
                             <span class="pull-right">
                                 <span class="btn-group">

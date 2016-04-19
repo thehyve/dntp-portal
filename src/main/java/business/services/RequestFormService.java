@@ -18,7 +18,6 @@ import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
-import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -37,7 +36,6 @@ import business.models.ExcerptList;
 import business.models.File;
 import business.models.RequestProperties;
 import business.models.User;
-import business.models.UserRepository;
 import business.representation.ApprovalVoteRepresentation;
 import business.representation.CommentRepresentation;
 import business.representation.ExcerptListRepresentation;
@@ -52,7 +50,7 @@ public class RequestFormService {
     Log log = LogFactory.getLog(getClass());
     
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private RequestPropertiesService requestPropertiesService;
@@ -88,10 +86,14 @@ public class RequestFormService {
         if (user == null) {
             return "";
         }
-        return (user.getFirstName() == null ? "" : user.getFirstName())
-                + (user.getFirstName() == null || user.getFirstName().isEmpty() || user.getLastName() == null
-                || user.getLastName().isEmpty() ? "" :" ")
-                + (user.getLastName() == null ? "" : user.getLastName());
+        List<String> parts = new ArrayList<>(2);
+        if (user.getFirstName() != null && !user.getFirstName().trim().isEmpty()) {
+            parts.add(user.getFirstName().trim());
+        }
+        if (user.getLastName() != null && !user.getLastName().trim().isEmpty()) {
+            parts.add(user.getLastName().trim());
+        }
+        return String.join(" ", parts);
     }
     
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
@@ -116,7 +118,7 @@ public class RequestFormService {
             try { userId = Long.valueOf(requesterId); }
             catch(NumberFormatException e) {}
             if (userId != null) {
-                User user = userRepository.findOne(userId);
+                User user = userService.findOne(userId);
                 if (user != null) {
                     request.setRequesterId(userId);
                     request.setRequesterName(getName(user));
@@ -164,7 +166,7 @@ public class RequestFormService {
                 } catch (NumberFormatException e) {
                 }
                 if (assigneeId != null) {
-                    User assignee = userRepository.findOne(assigneeId);
+                    User assignee = userService.findOne(assigneeId);
                     if (assignee != null) {
                         request.setAssigneeName(getName(assignee));
                     }
@@ -246,7 +248,7 @@ public class RequestFormService {
             try { userId = Long.valueOf(request.getRequesterId()); }
             catch(NumberFormatException e) {}
             if (userId != null) {
-                User user = userRepository.findOne(userId);
+                User user = userService.findOne(userId);
                 if (user != null) {
                     request.setRequesterName(getName(user));
                     if (user.getContactData() != null) {
@@ -278,7 +280,7 @@ public class RequestFormService {
                     try { assigneeId = Long.valueOf(task.getAssignee()); }
                     catch(NumberFormatException e) {}
                     if (assigneeId != null) {
-                        User assignee = userRepository.findOne(assigneeId);
+                        User assignee = userService.findOne(assigneeId);
                         if (assignee != null) {
                             request.setAssigneeName(getName(assignee));
                         }

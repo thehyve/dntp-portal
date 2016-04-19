@@ -201,7 +201,7 @@ public class RequestController {
             values.put("initiator", userId);
 
             ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                    "dntp_request_001", values);
+                    "dntp_request_002", values);
 
             HistoricProcessInstance instance = requestService.getProcessInstance(newInstance.getId());
             RequestRepresentation request = new RequestRepresentation();
@@ -303,6 +303,7 @@ public class RequestController {
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/submitForApproval");
         request.setRequestAdmissible(true);
+        request.setReopenRequest(false);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getId(), variables);
@@ -320,9 +321,9 @@ public class RequestController {
         } else {
             throw new RequestNotAdmissible();
         }
-        
+
         requestService.claimCurrentPalgaTask(id, user.getUser());
-        
+
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
@@ -350,19 +351,20 @@ public class RequestController {
                 updatedRequest.isScientificCouncilApproved()) {
             // marking request as approved
             updatedRequest.setRequestApproved(true);
+            updatedRequest.setReopenRequest(false);
             variables = requestFormService.transferFormData(updatedRequest, instance, user.getUser());
             runtimeService.setVariables(instance.getId(), variables);
-            
+
             Boolean requestApproved = runtimeService.getVariable(id, "request_approved", Boolean.class);
             log.info("Request approved: " + requestApproved);
-        
+
             log.info("Fetching scientific_council_approval task");
             Task councilTask = requestService.getTaskByRequestId(id, "scientific_council_approval");
             if (councilTask.getDelegationState()==DelegationState.PENDING) {
                 taskService.resolveTask(councilTask.getId());
             }
             taskService.complete(councilTask.getId());
-    
+
             log.info("Fetching request_approval task");
             Task palgaTask = requestService.getTaskByRequestId(id, "request_approval");
             if (palgaTask.getDelegationState()==DelegationState.PENDING) {
@@ -383,6 +385,59 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
+    @RequestMapping(value = "/requests/{id}/reopen", method = RequestMethod.PUT)
+    public RequestRepresentation reopen(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestBody RequestRepresentation request) {
+        log.info("PUT /requests/" + id + "/reopen");
+        request.setReopenRequest(true);
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
+        Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
+        runtimeService.setVariables(instance.getId(), variables);
+
+        instance = requestService.getProcessInstance(id);
+        RequestRepresentation updatedRequest = new RequestRepresentation();
+        requestFormService.transferData(instance, updatedRequest, user.getUser());
+
+        if (updatedRequest.isReopenRequest()) {
+            switch (updatedRequest.getStatus()) {
+            case "Review":
+                log.info("Completing review task...");
+                Task task = requestService.getTaskByRequestId(id, "palga_request_review");
+                if (task.getDelegationState()==DelegationState.PENDING) {
+                    taskService.resolveTask(task.getId());
+                }
+                taskService.complete(task.getId());
+                break;
+            case "Approval":
+                log.info("Completing scientific_council_approval task...");
+                Task councilTask = requestService.getTaskByRequestId(id, "scientific_council_approval");
+                if (councilTask.getDelegationState()==DelegationState.PENDING) {
+                    taskService.resolveTask(councilTask.getId());
+                }
+                taskService.complete(councilTask.getId());
+
+                log.info("Completing request_approval task...");
+                Task palgaTask = requestService.getTaskByRequestId(id, "request_approval");
+                if (palgaTask.getDelegationState()==DelegationState.PENDING) {
+                    taskService.resolveTask(palgaTask.getId());
+                }
+                taskService.complete(palgaTask.getId());
+                break;
+            }
+        } else {
+            log.warn("'reopen_request' variable not saved correctly.");
+        }
+
+        instance = requestService.getProcessInstance(id);
+        updatedRequest = new RequestRepresentation();
+        requestFormService.transferData(instance, updatedRequest, user.getUser());
+
+        return updatedRequest;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/reject", method = RequestMethod.PUT)
     public RequestRepresentation reject(
             UserAuthenticationToken user,
@@ -391,6 +446,7 @@ public class RequestController {
         log.info("PUT /requests/" + id + "/reject");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
 
+        request.setReopenRequest(false);
         if (request.getStatus().equals("Review")) {
             request.setRequestAdmissible(false);
         } else if (request.getStatus().equals("Approval")) {
@@ -406,7 +462,7 @@ public class RequestController {
 
         log.info("Reject request.");
         log.info("Reject reason: " + updatedRequest.getRejectReason());
-    
+
         if (updatedRequest.getStatus().equals("Review")) {
             log.info("Fetching palga_request_review task");
             Task palgaTask = requestService.getTaskByRequestId(id, "palga_request_review");
@@ -422,7 +478,7 @@ public class RequestController {
                 taskService.resolveTask(councilTask.getId());
             }
             taskService.complete(councilTask.getId());
-    
+
             log.info("Fetching request_approval task");
             Task palgaTask = requestService.getTaskByRequestId(id, "request_approval");
             if (palgaTask.getDelegationState()==DelegationState.PENDING) {

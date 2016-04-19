@@ -110,6 +110,18 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
+                    <!--Hub Assistance-->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{'Hub assistance'|translate}}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{labRequest.hubAssistanceRequested ? 'Yes' :
+                                labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
+                                | translate }}
+                            </p>
+                        </div>
+                    </div>
+
                     <!--Rejected details-->
                     <div ng-if="labRequest.status == 'Rejected'" class="no-print">
                         <div class="form-group">

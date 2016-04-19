@@ -3,7 +3,7 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(console, window, _, angular, messages) {
+(function(console, window, jQuery, _, angular, messages) {
     'use strict';
 
     angular.module('ProcessApp.services', ['mgcrea.ngStrap.alert','ngCookies', 'restangular'])
@@ -228,9 +228,13 @@
                     if (user === null) {
                         return '';
                     }
-                    return _.compact(user.firstName, user.lastName).join(' ');
+                    return _.compact([user.firstName, user.lastName]).join(' ');
                 };
                 $rootScope.getName = _getName;
+
+                $rootScope.focus = function(el) {
+                    jQuery(el).focus();
+                };
 
                 $rootScope.translate = function(key, params) {
                     return $translate.instant(key, params);
@@ -309,4 +313,4 @@
         }
         return true;
     }
-})(console, window, _, angular, window.messages);
+})(console, window, jQuery, _, angular, window.messages);

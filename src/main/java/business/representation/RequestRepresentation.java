@@ -17,6 +17,7 @@ import business.models.RequestProperties.ReviewStatus;
 public class RequestRepresentation {
 
     private String processInstanceId;
+    private String processId;
     private String requestNumber;
     private String activityId;
     private String requesterId;
@@ -80,16 +81,18 @@ public class RequestRepresentation {
     private boolean requesterLabValid;
     private boolean agreementReached;
     private boolean requestAdmissible;
-    
+
+    private boolean reopenRequest;
+
     private boolean scientificCouncilApproved;
     private boolean privacyCommitteeApproved;
-    
+
     private boolean requestApproved;
     private String rejectReason;
     private Date rejectDate;
 
     private boolean selectionApproved;
-    
+
     // Privacy Committee
     private boolean sentToPrivacyCommittee;
     private String privacyCommitteeOutcome;
@@ -108,6 +111,18 @@ public class RequestRepresentation {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    /**
+     * The version of the process.
+     * @return the process id.
+     */
+    public String getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(String processId) {
+        this.processId = processId;
     }
 
     public String getRequestNumber() {
@@ -389,6 +404,14 @@ public class RequestRepresentation {
 
     public void setRequestAdmissible(boolean requestAdmissible) {
         this.requestAdmissible = requestAdmissible;
+    }
+
+    public boolean isReopenRequest() {
+        return reopenRequest;
+    }
+
+    public void setReopenRequest(boolean reopenRequest) {
+        this.reopenRequest = reopenRequest;
     }
 
     public List<CommentRepresentation> getComments() {

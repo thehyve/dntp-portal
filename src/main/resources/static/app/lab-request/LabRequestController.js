@@ -26,13 +26,6 @@ angular.module('ProcessApp.controllers')
             $scope.labRequest = {};
             $scope.itemsPerPage = 20;
 
-            $scope.getName = function (user) {
-                if (user === null) {
-                    return '';
-                }
-                return _.compact([user.firstName, user.lastName]).join(' ');
-            };
-
             var _getRecallMailRecipients = function(labRequest) {
                 var recipients = [];
                 recipients.push(_.get(labRequest, 'requesterEmail'));

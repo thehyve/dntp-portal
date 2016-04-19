@@ -293,15 +293,15 @@ address {margin-bottom: 0px;}
     color: indianred;
 }
 
-.h4, h4 {
-    font-size: 18px;
+.h4, .h3 {
+    /*font-size: 18px;*/
     font-weight: 200;
-    color: grey;
+    color: #555753;
     background-color: aliceblue;
     padding: 7px;
 }
 
-.h4-palga {background-color: #f9ebda}
+.h4-palga, .h3-palga {background-color: #f9ebda}
 
 .second-input-text {
     margin-top: .2em;

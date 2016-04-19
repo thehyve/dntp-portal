@@ -291,6 +291,31 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.isReopenEnabled = function(request) {
+                return request.processId.startsWith('dntp_request_002');
+            };
+
+            $scope.reopen = function(request) {
+                $scope.dataLoading = true;
+                bootbox.confirm(
+                    $rootScope.translate('Are you sure you want to reopen the request? ' +
+                        'After reopening the request will be editable by the requester.'),
+                    function(confirmed) {
+                        if (confirmed) {
+                            Request.convertRequestTypeToOpts(request); // convert request type
+                            request.$reopen(function(result) {
+                                $scope.refresh(request, result);
+                                $scope.editRequestModal.hide();
+                            }, function(response) {
+                                $rootScope.logErrorResponse(response);
+                            });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
+                        }
+                    });
+            };
+
             $scope.submitRequest = function(request) {
                 $scope.dataLoading = true;
                 bootbox.confirm(

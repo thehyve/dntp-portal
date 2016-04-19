@@ -12,6 +12,7 @@ import business.models.RequestProperties.ReviewStatus;
 public class RequestListRepresentation {
 
     private String processInstanceId;
+    private String processId;
     private String requestNumber;
     private Long requesterId;
     private String requesterName;
@@ -36,10 +37,12 @@ public class RequestListRepresentation {
     private boolean excerptsRequest;
     private boolean paReportRequest;
     private boolean materialsRequest;
-    
+
+    private boolean reopenRequest;
+
     private String approvalVote;
     private Long numberOfApprovalVotes;
-    
+
     public RequestListRepresentation() {
 
     }
@@ -50,6 +53,18 @@ public class RequestListRepresentation {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    /**
+     * The version of the process.
+     * @return the process id.
+     */
+    public String getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(String processId) {
+        this.processId = processId;
     }
 
     public String getRequestNumber() {
@@ -227,5 +242,13 @@ public class RequestListRepresentation {
     public void setMaterialsRequest(boolean materialsRequest) {
         this.materialsRequest = materialsRequest;
     }
-    
+
+    public boolean isReopenRequest() {
+        return reopenRequest;
+    }
+
+    public void setReopenRequest(boolean reopenRequest) {
+        this.reopenRequest = reopenRequest;
+    }
+
 }

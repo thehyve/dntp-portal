@@ -7,15 +7,11 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('AdminLabController',['$rootScope', '$scope', '$location',
-                                      '$modal', '$alert',
-                                      'Lab',
-        function ($rootScope, $scope, $location,
-                $modal, $alert,
-                Lab) {
+    .controller('AdminLabController',['$rootScope', '$scope', '$location', '$modal', '$alert', 'Lab', '$log',
+        function ($rootScope, $scope, $location, $modal, $alert, Lab, $log) {
 
             var _error = function (msg) {
-                console.log('error: ' + msg);
+               $log.error('error: ' + msg);
                 $alert({
                     title : 'Error',
                     content : msg,
@@ -29,7 +25,9 @@ angular.module('ProcessApp.controllers')
             /**
              * From AngularJS v1.5.3, http://angularjs.org
              */
-            var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+            var EMAIL_REGEXP
+                = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
             $scope.validateEmail = function(obj) {
                 var email = obj.text;
                 if (!email) {
@@ -53,7 +51,7 @@ angular.module('ProcessApp.controllers')
             $scope.update = function(labdata) {
                 $scope.dataLoading = true;
                 labdata.emailAddresses = _.map(
-                        labdata.emailAddressData, 
+                        labdata.emailAddressData,
                         function(obj) { return obj.text; });
                 if (labdata.id > 0) {
                     labdata.$update(function() {

@@ -35,51 +35,55 @@ This file is distributed under the GNU Affero General Public License
             <hr>
 
             <div style="padding-bottom: 25px;">
-                <button class="btn btn-default" type="button"  ng-click="edit(labRequest);" title="Actions"
+                <button class="btn btn-default" type="button" ng-click="edit(labRequest);" title="Actions"
                         ng-if="isLabOrHubUserStatus(labRequest.status)
                             || (isRequester() && isRequesterStatus(labRequest.status))"
                         ng-disabled="(isLabUser() || isHubUser()) && !isCurrentUser(labRequest.assignee)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Actions' | translate}}
                 </button>
-                <button class="btn btn-default" type="button"  ng-click="focus('#noteText');" title="{{'Notes' | translate}}">
+                <button class="btn btn-default" type="button" ng-click="focus('#noteText');"
+                        title="{{'Notes' | translate}}">
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}
                 </button>
-                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' && (isRequester() || isLabUser() || isHubUser())">
+                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' &&
+                 (isRequester() || isLabUser() || isHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
-                   <span><i class="glyphicon glyphicon-download-alt"></i></span>
-                   {{'Download ...' |translate: {filename: 'panumbers_' + labRequest.id + '.csv'} }}
+                       <span><i class="glyphicon glyphicon-download-alt"></i></span>
+                       {{'Download ...' |translate: {filename: 'panumbers_' + labRequest.id + '.csv'} }}
                    </a>
                  </span>
-                <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected, request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}
-                    "
-                    ng-if="labRequest.status=='Rejected' && isLabUser()">
-                <button
-                class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
-                    <span><i class="glyphicon glyphicon-envelope"></i></span>
-                    {{'Compose rejection mail' | translate}}
-                </button></a>
-                <button ng-if="isLabOrHubUserStatus(labRequest.status)" 
-                    ng-show="!isCurrentUser(labRequest.assignee)"
-                    class="btn btn-default" type="button"  
-                    ng-click="claim(labRequest);" title="Claim">
+                <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected,
+                request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject
+                reason: {{labRequest.rejectReason}}" ng-if="labRequest.status=='Rejected' && isLabUser()">
+                    <button
+                            class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
+                        <span><i class="glyphicon glyphicon-envelope"></i></span>
+                        {{'Compose rejection mail' | translate}}
+                    </button>
+                </a>
+                <button ng-if="isLabOrHubUserStatus(labRequest.status)"
+                        ng-show="!isCurrentUser(labRequest.assignee)"
+                        class="btn btn-default" type="button"
+                        ng-click="claim(labRequest);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
                     {{'Claim' | translate}}
                 </button>
                 <button ng-if="isLabOrHubUserStatus(labRequest.status)"
-                    ng-show="isCurrentUser(labRequest.assignee)" 
-                    class="btn btn-default" type="button"  
-                    ng-click="unclaim(labRequest);" title="Unclaim">
+                        ng-show="isCurrentUser(labRequest.assignee)"
+                        class="btn btn-default" type="button"
+                        ng-click="unclaim(labRequest);" title="Unclaim">
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
                 <!--<button ng-if="isLabUser()"-->
                 <button
-                    class="btn btn-default" type="button"
-                    ng-click="printPreview();"
-                    title="printView"
-                    ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
+                        class="btn btn-default" type="button"
+                        ng-click="printPreview();"
+                        title="printView"
+                        ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' &&
+                        labRequest.status != 'Waiting for lab approval')">
                     <span><i class="glyphicon glyphicon-print"></i></span>
                     {{'Print preview' | translate}}
                 </button>
@@ -87,207 +91,228 @@ This file is distributed under the GNU Affero General Public License
 
             <div bs-tabs id="lab-request-details">
 
-              <div title="Details" name="Details" bs-pane>
-                <h3 >{{ 'Details' | translate}}</h3>
-                <hr>
-                <!--Lab Request Id-->
-                <div class="form-group">
-                  <label class="control-label col-md-2">{{ 'Lab request code' | translate }}</label>
-                  <div class="col-md-10">
-                    <p class="form-control-static">{{labRequest.labRequestCode}}</p>
-                  </div>
-                </div>
-
-                <!--Status-->
-                <div class="form-group no-print">
-                  <label class="control-label col-md-2">{{ 'Status' | translate }}</label>
-                  <div class="col-md-10">
-                    <p class="form-control-static" id="requestStatus"> {{labRequest.status | translate}} </p>
-                  </div>
-                </div>
-
-                <!--Rejected details-->
-                <div ng-if="labRequest.status == 'Rejected'" class="no-print">
-                  <div class="form-group">
-                    <label class="control-label col-md-2">{{ 'Reject date' | translate }}</label>
-                    <div class="col-md-10">
-                      <p class="form-control-static"> {{labRequest.rejectDate | date}}</p>
-                      <br>
+                <div title="Details" name="Details" bs-pane>
+                    <h3>{{ 'Details' | translate}}</h3>
+                    <hr>
+                    <!--Lab Request Id-->
+                    <div class="form-group">
+                        <label class="control-label col-md-2">{{ 'Lab request code' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">{{labRequest.labRequestCode}}</p>
+                        </div>
                     </div>
-                  </div>
 
-                  <div class="form-group" ng-if="isLabUser()">
-                    <label class="control-label col-md-2">{{ 'Reject reason' | translate }}</label>
-                    <div class="col-md-10">
-                      <p class="form-control-static">
-                        {{labRequest.rejectReason}}
-                        <br><br>
-                        <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected, request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}">
-                          <button
-                            class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
-                            <span><i class="glyphicon glyphicon-envelope"></i></span>
-                            {{'Compose rejection mail' | translate}}
-                          </button>
-                        </a>
-                      </p>
+                    <!--Status-->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Status' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static" id="requestStatus"> {{labRequest.status | translate}} </p>
+                        </div>
                     </div>
-                  </div>
-                </div>
 
-                <!-- PA Reports Status -->
-                <div class="form-group no-print">
-                  <label class="control-label col-md-2">{{ 'PA reports' | translate }}</label>
-                  <div class="col-md-10">
-                    <p class="form-control-static">
+                    <!--Hub Assistance-->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{'Hub assistance'|translate}}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{labRequest.hubAssistanceRequested ? 'Yes' :
+                                labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
+                                | translate }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!--Rejected details-->
+                    <div ng-if="labRequest.status == 'Rejected'" class="no-print">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">{{ 'Reject date' | translate }}</label>
+                            <div class="col-md-10">
+                                <p class="form-control-static"> {{labRequest.rejectDate | date}}</p>
+                                <br>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="isLabUser()">
+                            <label class="control-label col-md-2">{{ 'Reject reason' | translate }}</label>
+                            <div class="col-md-10">
+                                <p class="form-control-static">
+                                    {{labRequest.rejectReason}}
+                                    <br><br>
+                                    <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected,
+                                    request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject
+                                    reason: {{labRequest.rejectReason}}">
+                                        <button
+                                                class="btn btn-default" type="button"
+                                                title="{{'Compose rejection mail' | translate}}">
+                                            <span><i class="glyphicon glyphicon-envelope"></i></span>
+                                            {{'Compose rejection mail' | translate}}
+                                        </button>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PA Reports Status -->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'PA reports' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
                         <span ng-if="labRequest.paReportsSent">
                             {{ 'PA reports have been sent to the requester.' | translate }}
                         </span>
                         <span ng-if="!labRequest.paReportsSent">
                             {{ 'PA reports have NOT been sent to the requester.' | translate }}
                         </span>
-                    </p>
-                  </div>
-                </div>
-
-
-                <h3 class="no-print"> {{'Request details' | translate}} </h3>
-                <hr class="no-print">
-
-                <!--Parent request details-->
-                <div class="form-group no-print">
-                    <label class="control-label col-md-2">{{ 'Request ID' | translate }}</label>
-                    <div class="col-md-10">
-                        <p class="form-control-static">
-                            {{labRequest.request.requestNumber}}
-                        </p>
-                    </div>
-                </div>
-
-                <div class="form-group no-print">
-                    <label class="control-label col-md-2">{{ 'Request title' | translate }}</label>
-                    <div class="col-md-10">
-                        <p class="form-control-static">
-                            <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
-                            {{labRequest.request.title}}
-                            </a>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="form-group no-print">
-                    <label class="control-label col-md-2">{{ 'Creation date' | translate }}</label>
-                    <div class="col-md-10">
-                        <p class="form-control-static">
-                            {{labRequest.request.dateCreated | date }}
-                        </p>
-                    </div>
-                </div>
-
-
-            <!--Background -->
-            <div class="form-group no-print">
-                <label class="control-label col-md-2">{{ 'Background' | translate }}</label>
-                <div class="col-md-10">
-                <p class="form-control-static">
-                    {{labRequest.request.background}}
-                </p>
-                </div>
-            </div>
-
-            <!-- Research Question -->
-            <div class="form-group no-print">
-                <label class="control-label col-md-2">{{ 'Research question' | translate }}</label>
-                <div class="col-md-10">
-                <p class="form-control-static">
-                    {{labRequest.request.researchQuestion}}
-                </p>
-                </div>
-            </div>
-
-            <!-- Hypothesis -->
-            <div class="form-group no-print">
-                <label class="control-label col-md-2">{{ 'Hypothesis' | translate }}</label>
-                <div class="col-md-10">
-                <p class="form-control-static">
-                    {{labRequest.request.hypothesis}}
-                </p>
-                </div>
-            </div>
-
-            <!-- Methods -->
-            <div class="form-group no-print">
-                <label class="control-label col-md-2">{{ 'Methods' | translate }}</label>
-                <p class="col-md-10">
-                    {{labRequest.request.methods}}
-                </p>
-            </div>
-
-            <!-- Request Type -->
-            <div class="form-group no-print">
-                <label class="control-label col-md-2">{{ 'Request type' | translate }}</label>
-                <div class="col-md-10" ng-init="">
-                <p class="form-control-static">
-                    {{"Request_Type_" + labRequest.request.type | translate}}
-                </p>
-                </div>
-            </div>
-
-                <div ng-if="isRequester()" >
-                  <!--Requester info-->
-                  <!--Displayed only to users with non requester role-->
-                  <!-- Requester -->
-                  <div class="form-group">
-                    <label class="control-label col-md-2">{{ 'Requester' | translate }}</label>
-                    <div class="col-md-10">
-                        <p class="form-control-static">
-                            {{labRequest.requesterName}}
-                            <address ng-bind-html="labRequest.htmlRequesterAddress"></address>
-                        </p>
-                    </div>
-                  </div>
-                </div> <!-- end if -->
-
-                <!--Requester lab Info-->
-                <div class="form-group">
-                  <label class="control-label col-md-2 no-print">{{ 'Requester lab' | translate }}</label>
-                  <label class="control-label col-md-2 print-only" ng-if="isLabUser() || isHubUser()">{{ 'Delivery address' | translate }}</label>
-                  <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Sender address' | translate }}</label>
-                  <div class="col-md-10">
-                    <p class="form-control-static">
-                      {{'Lab' | translate}} {{labRequest.requesterLab.number}} - {{labRequest.requesterLab.name}}
-                      <address ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
-                    </p>
-                  </div>
-                </div>
-
-                <div ng-show="!isLabUser()">
-                  <!--Lab Info-->
-                  <!--Displayed only to users with non lab user role-->
-                  <div class="form-group">
-                        <label class="control-label col-md-2 no-print">{{ 'Sending lab' | translate }}</label>
-                        <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Delivery address' | translate }}</label>
-                        <label class="control-label col-md-2 print-only" ng-if="isLabUser() || isHubUser()">{{ 'Sender' | translate }}</label>
-                        <div class="col-md-10">
-                          <p class="form-control-static">
-                            {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
-                            <address ng-bind-html="labRequest.htmlLabAddress"></address>
-                          </p>
+                            </p>
                         </div>
-                  </div>
+                    </div>
+
+
+                    <h3 class="no-print"> {{'Request details' | translate}} </h3>
+                    <hr class="no-print">
+
+                    <!--Parent request details-->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Request ID' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{labRequest.request.requestNumber}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Request title' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
+                                    {{labRequest.request.title}}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Creation date' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{labRequest.request.dateCreated | date }}
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <!--Background -->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Background' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{labRequest.request.background}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Research Question -->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Research question' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{labRequest.request.researchQuestion}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Hypothesis -->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Hypothesis' | translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{labRequest.request.hypothesis}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Methods -->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Methods' | translate }}</label>
+                        <p class="col-md-10">
+                            {{labRequest.request.methods}}
+                        </p>
+                    </div>
+
+                    <!-- Request Type -->
+                    <div class="form-group no-print">
+                        <label class="control-label col-md-2">{{ 'Request type' | translate }}</label>
+                        <div class="col-md-10" ng-init="">
+                            <p class="form-control-static">
+                                {{"Request_Type_" + labRequest.request.type | translate}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div ng-if="isRequester()">
+                        <!--Requester info-->
+                        <!--Displayed only to users with non requester role-->
+                        <!-- Requester -->
+                        <div class="form-group">
+                            <label class="control-label col-md-2">{{ 'Requester' | translate }}</label>
+                            <div class="col-md-10">
+                                <p class="form-control-static">
+                                    {{labRequest.requesterName}}
+                                <address ng-bind-html="labRequest.htmlRequesterAddress"></address>
+                                </p>
+                            </div>
+                        </div>
+                    </div> <!-- end if -->
+
+                    <!--Requester lab Info-->
+                    <div class="form-group">
+                        <label class="control-label col-md-2 no-print">{{ 'Requester lab' | translate }}</label>
+                        <label class="control-label col-md-2 print-only" ng-if="isLabUser() || isHubUser()">{{ 'Delivery
+                            address' | translate }}</label>
+                        <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Sender address' |
+                            translate }}</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
+                                {{labRequest.requesterLab.name}}
+                            <address ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div ng-show="!isLabUser()">
+                        <!--Lab Info-->
+                        <!--Displayed only to users with non lab user role-->
+                        <div class="form-group">
+                            <label class="control-label col-md-2 no-print">{{ 'Sending lab' | translate }}</label>
+                            <label class="control-label col-md-2 print-only" ng-if="isRequester()">{{ 'Delivery address'
+                                | translate }}</label>
+                            <label class="control-label col-md-2 print-only" ng-if="isLabUser() || isHubUser()">{{
+                                'Sender' | translate }}</label>
+                            <div class="col-md-10">
+                                <p class="form-control-static">
+                                    {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
+                                <address ng-bind-html="labRequest.htmlLabAddress"></address>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-              </div>
-
-              <div title="{{'Samples' | translate}}" name="PA Numbers" bs-pane id="pa-numbers"
-                ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' && labRequest.status != 'Waiting for lab approval')">
-                <div ng-include="'app/lab-request/pa-numbers.html'"></div>
-              </div>
+                <div title="{{'Samples' | translate}}" name="PA Numbers" bs-pane id="pa-numbers"
+                     ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' &&
+                     labRequest.status != 'Waiting for lab approval')">
+                    <div ng-include="'app/lab-request/pa-numbers.html'"></div>
+                </div>
 
             </div>
 
             <!--Comments-->
             <div ng-include="'app/lab-request/comments.html'"></div>
-      </div> <!-- end of main -->
+        </div> <!-- end of main -->
     </div> <!--end row-->
 </div> <!--end container-->
 <br>

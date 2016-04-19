@@ -3,7 +3,7 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(angular) {
+(function(angular, _) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
@@ -113,7 +113,8 @@ angular.module('ProcessApp.controllers')
 
             $scope.edit = function(lb) {
                 $scope.editlab = lb;
-                $scope.editlab.emailAddressData = [].concat($scope.editlab.emailAddresses);
+                var emailAddresses = _.get(lb, 'emailAddresses', []);
+                $scope.editlab.emailAddressData = [].concat(emailAddresses);
                 $scope.editLabModal = $modal({
                     id: 'editLabWindow',
                     scope: $scope,
@@ -122,4 +123,4 @@ angular.module('ProcessApp.controllers')
                 });
             };
         }]);
-})(angular);
+})(angular, _);

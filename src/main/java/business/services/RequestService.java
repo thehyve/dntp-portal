@@ -215,7 +215,10 @@ public class RequestService {
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
-                    .variableValueNotEquals("status", "Open")
+                    .or()
+                        .variableValueNotEquals("status", "Open")
+                        .variableValueEquals("reopen_request", Boolean.TRUE)
+                    .endOr()
                     .list();
         } else if (user.getUser().isScientificCouncilMember()) {
             Date start = new Date();

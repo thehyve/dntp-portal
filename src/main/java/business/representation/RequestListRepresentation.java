@@ -37,10 +37,12 @@ public class RequestListRepresentation {
     private boolean excerptsRequest;
     private boolean paReportRequest;
     private boolean materialsRequest;
-    
+
+    private boolean reopenRequest;
+
     private String approvalVote;
     private Long numberOfApprovalVotes;
-    
+
     public RequestListRepresentation() {
 
     }
@@ -240,5 +242,13 @@ public class RequestListRepresentation {
     public void setMaterialsRequest(boolean materialsRequest) {
         this.materialsRequest = materialsRequest;
     }
-    
+
+    public boolean isReopenRequest() {
+        return reopenRequest;
+    }
+
+    public void setReopenRequest(boolean reopenRequest) {
+        this.reopenRequest = reopenRequest;
+    }
+
 }

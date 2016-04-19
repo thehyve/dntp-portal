@@ -644,6 +644,12 @@ This file is distributed under the GNU Affero General Public License
                         ng-disabled="requestEditForm.$invalid || dataLoading">
                             {{'Reject'|translate}}
                     </button>
+                    <button class="btn btn-warning" type="button"
+                        ng-if="(request.status=='Review' || request.status=='Approval') && isPalga() && isReopenEnabled(request)"
+                        ng-click="reopen(request)"
+                        ng-disabled="dataLoading">
+                            {{'Reopen'|translate}}
+                    </button>
                     <button class="btn btn-info" type="submit" ng-click="update(request);"
                             ng-disabled="dataLoading">{{'Save'|translate}}
                     </button>

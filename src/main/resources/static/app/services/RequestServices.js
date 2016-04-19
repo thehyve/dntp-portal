@@ -14,6 +14,10 @@
             update : {
                 method : 'PUT'
             },
+            reopen : {
+                url : '/requests/:id/reopen',
+                method : 'PUT'
+            },
             submit : {
                 url : '/requests/:id/submit',
                 method : 'PUT'

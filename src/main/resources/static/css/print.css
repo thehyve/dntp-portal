@@ -33,10 +33,11 @@ input[type='text'] {
     display: none !important;
 }
 .table th, td { text-align: left; }
-.print-pa-id-col { width: 10%; }
-.print-pa-no-col { width: 10%; }
-.print-pa-samples-col { width: 70%; }
-
+.table { width: 100% }
+.print-pa-id-col { min-width: 5em; }
+.print-pa-no-col { min-width: 10em; }
+.print-pa-samples-col { /* min-width: 65%; */ }
+.print-pa-total-col { min-width: 5em; }
 
 ul li { display: inline; }
 .remove-button {display: none; }

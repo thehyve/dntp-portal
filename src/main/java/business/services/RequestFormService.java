@@ -99,6 +99,7 @@ public class RequestFormService {
     
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
+        request.setProcessId(instance.getProcessDefinitionId());
         request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
 
         Map<String, Object> variables = instance.getProcessVariables();
@@ -209,7 +210,7 @@ public class RequestFormService {
         boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();
 
         request.setProcessInstanceId(instance.getId());
-        
+        request.setProcessId(instance.getProcessDefinitionId());
         //request.setActivityId(instance.getActivityId()); // fetch from runtimeService?
 
         Map<String, Object> variables = instance.getProcessVariables();

@@ -141,15 +141,12 @@ This file is distributed under the GNU Affero General Public License
         </div>
 
         <div class="panel panel-default" 
-            ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
+            ng-if="isLabUser() && isCurrentUser(labRequest.assignee)">
           <div class="panel-heading">
-            <h4>{{'Approval'|translate}}</h4>
+            <h4>{{'Hub assistance'|translate}}</h4>
           </div>
           <div class="panel-body">
-             {{'Waiting for lab approval.'|translate}}
-          </div>
-          
-          <div class="panel-body">
+          <div class="col-sm-8">
              <input type="checkbox" id="hubAssistanceRequested" name="hubAssistanceRequested"
                    ng-disabled="!labRequest.lab.hubAssistanceEnabled"
                    ng-model="labRequest.hubAssistanceRequested"> &nbsp;
@@ -157,6 +154,23 @@ This file is distributed under the GNU Affero General Public License
              <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
                   {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
              </span>
+          </div>
+          </div>
+          <div class="panel-footer clearfix">
+              <span class="pull-right">
+                <button class="btn btn-default btn-primary"
+                    ng-click="update(labRequest);">{{'Update hub assistance'|translate}}</button>
+                </span>
+          </div>
+        </div>
+
+        <div class="panel panel-default" 
+            ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
+          <div class="panel-heading">
+            <h4>{{'Approval'|translate}}</h4>
+          </div>
+          <div class="panel-body">
+             {{'Waiting for lab approval.'|translate}}
           </div>
 
           <div class="panel-footer clearfix">

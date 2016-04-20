@@ -12,6 +12,7 @@ angular.module('ProcessApp.controllers')
                 $q, $rootScope, $scope, $modal,
                 $location, $route, $routeParams, $window,
                 Request, LabRequest, Restangular, LabRequestFilter) {
+
             'use strict';
 
             $scope.labReqModal = $modal({
@@ -36,11 +37,11 @@ angular.module('ProcessApp.controllers')
                 recipients = _.map(_.compact(recipients), function(r) { return r.trim(); });
                 recipients = _.uniq(_.compact(recipients));
                 return recipients.join(', ');
-            }
+            };
+
             $scope.getRecallMailRecipients = _getRecallMailRecipients;
 
             var _createSampleList = function (labRequests) {
-                //console.log('_createSampleList: ' + labRequests.length + ' lab requests.');
                 $scope.samples = [];
                 for (var i = 0; i < labRequests.length; i++) {
                     var pathologyList = labRequests[i].pathologyList;
@@ -57,18 +58,12 @@ angular.module('ProcessApp.controllers')
                         }
                     }
                 }
-                //console.log('_createSampleList: ' + $scope.samples.length + ' samples.');
                 $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
             };
 
             //$scope.sequenceNumberColumnName = 'PALGAexcerptnr';
 
             $scope.getSequenceNumberForPaNumber = function (labRequest, paNumber) {
-                /*var seqNrColumn = labRequest.excerptList.columnNames.indexOf($scope.sequenceNumberColumnName);
-                if (seqNrColumn < 0) {
-                    console.log('Error: column with name ' + $scope.sequenceNumberColumnName + ' not found in excerpt list.');
-                    return '';
-                }*/
                 for (var i in labRequest.excerptList.entries) {
                     var entry = labRequest.excerptList.entries[i];
                     if (entry.paNumber == paNumber) {
@@ -241,12 +236,12 @@ angular.module('ProcessApp.controllers')
                     '<form id="reject" action="">' +
                     $rootScope.translate('Please enter the reason for rejection.') +
                     '\n<br><br>\n' +
-                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" required autofocus ng-model="rejectReason"></textarea>' +
+                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" ' +
+                    'required autofocus ng-model="rejectReason"></textarea>' +
                     '</form>',
                     function(result) {
                         if (result) {
                             labRequest.rejectReason = jQuery('#rejectReason').val();
-                            //console.log('Rejected. Reason: ' + labRequest.rejectReason);
                             labRequest.customPUT(labRequest, 'reject').then(function () {
                                 if ($scope.labReqModal) {
                                     $scope.labReqModal.hide();
@@ -430,15 +425,15 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.updatePathology = function (labRequest, pathology) {
-                //labrequests/{id}/pathology/{pathologyId}
                 var obj = {};
                 obj.samples = [];
                 for (var i in pathology.samples) {
                     obj.samples.push(pathology.samples[i].text);
                 }
+                obj.samplesAvailable = pathology.samplesAvailable;
                 Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
                     .customPUT(obj).then(function () {
-                        //console.log(result);
+
                     },
                     function (err) {
                         $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
@@ -450,7 +445,6 @@ angular.module('ProcessApp.controllers')
             $scope.addPathology = function (labRequest, pathology) {
                 Restangular.one('labrequests', labRequest.id).post('pathology', pathology)
                     .then(function () {
-                        //console.log(result);
                         $scope.editPathology = {};
                         _loadData();
                     },
@@ -466,7 +460,6 @@ angular.module('ProcessApp.controllers')
                         if (result) {
                             Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
                             .remove().then(function () {
-                                //console.log(result);
                                 _loadData();
                             },
                             function (err) {
@@ -487,6 +480,11 @@ angular.module('ProcessApp.controllers')
                 var _printWindow = window.open('', '_blank');
                 _printWindow.document.write(_contents);
                 _printWindow.document.close();
+            };
+
+            $scope.toggleAvailability = function (labRequest, pathology) {
+                pathology.samplesAvailable = !pathology.samplesAvailable;
+                $scope.updatePathology(labRequest,  pathology)
             };
 
         }]);

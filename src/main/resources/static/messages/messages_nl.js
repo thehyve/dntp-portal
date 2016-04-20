@@ -27,6 +27,8 @@
         'Thank you': 'Bedankt',
         'Registration completed. An email with an activation link was sent to ?.': 'Registratie is afgerond. Een e-mail met de activatielink is gestuurd naar {{email}}.',
         'Password must be 8 or more characters long, contain numbers, letters, and a special character.': 'Wachtwoord moet ten minste 8 tekens lang zijn en cijfers, letters en een speciaal teken bevatten.',
+        'Available' : 'Op Voorraad',
+        'Not Available' : 'Niet op Voorraad',
 
         /* ========= */
         /* Request */

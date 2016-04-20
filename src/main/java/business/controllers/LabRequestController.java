@@ -489,6 +489,7 @@ public class LabRequestController {
         pathology.setLabRequestId(id);
         pathology.setPaNumber(body.getPaNumber());
         pathology.setSamples(body.getSamples());
+        pathology.setSamplesAvailable(body.isSamplesAvailable());
         pathology = pathologyItemRepository.save(pathology);
         
         labRequest.getPathologyList().add(pathology);
@@ -535,7 +536,7 @@ public class LabRequestController {
         if (!labRequest.getPathologyList().contains(pathology)) {
             throw new PathologyNotFound();
         }
-        
+        pathology.setSamplesAvailable(Boolean.TRUE.equals(body.isSamplesAvailable()));
         pathology.setSamples(body.getSamples());
         pathology = pathologyItemRepository.save(pathology);
         

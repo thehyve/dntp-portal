@@ -41,6 +41,8 @@ public class PathologyItem {
     @BatchSize(size = 100)
     @OrderColumn
     List<String> samples = new ArrayList<String>();
+
+    private Boolean samplesAvailable;
     
     public PathologyItem() {
         
@@ -82,5 +84,12 @@ public class PathologyItem {
     public void setSamples(List<String> samples) {
         this.samples = samples;
     }
-    
+
+    public Boolean isSamplesAvailable() {
+        return samplesAvailable;
+    }
+
+    public void setSamplesAvailable(Boolean samplesAvailable) {
+        this.samplesAvailable = samplesAvailable;
+    }
 }

@@ -18,6 +18,8 @@ public class PathologyRepresentation {
     
     List<String> samples = new ArrayList<String>();
 
+    Boolean samplesAvailable;
+
     public PathologyRepresentation() {
         
     }
@@ -25,6 +27,7 @@ public class PathologyRepresentation {
     public PathologyRepresentation(PathologyItem item) {
         this.id = item.getId();
         this.paNumber = item.getPaNumber();
+        this.samplesAvailable = item.isSamplesAvailable();
     }
     
     public Long getId() {
@@ -55,4 +58,11 @@ public class PathologyRepresentation {
         this.samples = item.getSamples();
     }
     
+    public Boolean isSamplesAvailable() {
+        return this.samplesAvailable;
+    }
+
+    public void setSamplesAvailable(Boolean samplesAvailable) {
+        this.samplesAvailable = samplesAvailable;
+    }
 }

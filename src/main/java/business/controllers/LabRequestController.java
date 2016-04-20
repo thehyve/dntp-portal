@@ -34,6 +34,8 @@ import business.exceptions.PathologyNotFound;
 import business.models.Comment;
 import business.models.CommentRepository;
 import business.models.LabRequest;
+import business.models.LabRequest.Result;
+import business.models.LabRequest.Status;
 import business.models.PathologyItem;
 import business.models.PathologyItemRepository;
 import business.models.User;
@@ -111,7 +113,7 @@ public class LabRequestController {
     }
 
     /**
-     * Reject a lab request and complete the associated task.
+     * Reject a lab request.
      * Action only allowed for lab users.
      *
      * @param user the authorised user.
@@ -126,24 +128,49 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/reject");
 
         LabRequest labRequest = labRequestService.findOne(id);
+
+        if (!labRequest.getStatus().equals(Status.WAITING_FOR_LAB_APPROVAL)) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
+        }
+
         labRequest.setRejectReason(body.getRejectReason());
         labRequest.setRejectDate(new Date());
 
-        labRequest = labRequestService.updateStatus(labRequest, "Rejected");
-
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
-        // complete task
-        if (task.getDelegationState() == DelegationState.PENDING) {
-            taskService.resolveTask(task.getId());
-        }
-        taskService.complete(task.getId());
+        labRequest = labRequestService.updateStatus(labRequest, Status.REJECTED);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
+    }
 
+    /**
+     * Return a lab request to status 'Waiting for lab approval'.
+     *
+     * @param user the authorised user.
+     * @param id the lab request id.
+     * @return a representation of the rejected lab request.
+     */
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
+    @RequestMapping(value = "/labrequests/{id}/undoreject", method = RequestMethod.PUT)
+    public LabRequestRepresentation undoReject(UserAuthenticationToken user,
+            @PathVariable Long id, @RequestBody LabRequestRepresentation body) {
+        log.info("PUT /labrequests/" + id + "/undoreject");
+
+        LabRequest labRequest = labRequestService.findOne(id);
+
+        if (!labRequest.getStatus().equals(Status.REJECTED)) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
+        }
+
+        labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(
+                labRequest);
+        labRequestService.transferLabRequestData(representation);
+        return representation;
     }
 
     /**
@@ -155,14 +182,18 @@ public class LabRequestController {
      */
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser') and "
             + "hasPermission(#id, 'isLabRequestLabuser')")
-    @RequestMapping(value = "/labrequests/{id}/accept", method = RequestMethod.PUT)
-    public LabRequestRepresentation accept(UserAuthenticationToken user,
+    @RequestMapping(value = "/labrequests/{id}/approve", method = RequestMethod.PUT)
+    public LabRequestRepresentation approve(UserAuthenticationToken user,
             @PathVariable Long id,
             @RequestBody LabRequestRepresentation body) {
-        log.info("PUT /labrequests/" + id + "/accept");
+        log.info("PUT /labrequests/" + id + "/approve");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        labRequest = labRequestService.updateStatus(labRequest, "Approved");
+        if (!labRequest.getStatus().equals(Status.WAITING_FOR_LAB_APPROVAL)) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
+        }
+        labRequest = labRequestService.updateStatus(labRequest, Status.APPROVED);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
@@ -179,7 +210,7 @@ public class LabRequestController {
 
         LabRequest labRequest = labRequestService.findOne(id);
 
-        if (!labRequest.getStatus().equals("Approved")) {
+        if (!labRequest.getStatus().equals(Status.APPROVED)) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -191,8 +222,8 @@ public class LabRequestController {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'. Not a materials request.");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
-        
-        labRequestService.updateStatus(labRequest, "Sending");
+
+        labRequestService.updateStatus(labRequest, Status.SENDING);
 
         labRequest.setSendDate(new Date());
         labRequest = labRequestService.save(labRequest);
@@ -211,7 +242,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/received");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals("Sending")) {
+        if (!labRequest.getStatus().equals(Status.SENDING)) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -234,7 +265,7 @@ public class LabRequestController {
             labRequest = labRequestService.save(labRequest);
         }
 
-        labRequest = labRequestService.updateStatus(labRequest, "Received");
+        labRequest = labRequestService.updateStatus(labRequest, Status.RECEIVED);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
@@ -248,23 +279,24 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/returning");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals("Received")) {
+        if (!labRequest.getStatus().equals(Status.RECEIVED)) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
 
-        labRequest = labRequestService.updateStatus(labRequest, "Returning");
+        labRequest = labRequestService.updateStatus(labRequest, Status.RETURNING);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
     }
 
-    private static final Set<String> labRequestReturnedEnabledStatuses = new HashSet<String>();
+    private static Set<Status> labRequestReturnedEnabledStatuses;
     {
-        labRequestReturnedEnabledStatuses.add("Sending");
-        labRequestReturnedEnabledStatuses.add("Received");
-        labRequestReturnedEnabledStatuses.add("Returning");
+        labRequestReturnedEnabledStatuses = new HashSet<Status>(Arrays.asList(
+                Status.SENDING,
+                Status.RECEIVED,
+                Status.RETURNING));
     }
 
     /**
@@ -284,12 +316,12 @@ public class LabRequestController {
      */
     @PreAuthorize("isAuthenticated() and ( hasPermission(#id, 'isLabRequestLabuser') or "
             + "hasPermission(#id, 'isLabRequestHubuser') )")
-    @RequestMapping(value = "/labrequests/{id}/returned", method = RequestMethod.PUT)
-    public LabRequestRepresentation returned(UserAuthenticationToken user,
+    @RequestMapping(value = "/labrequests/{id}/completereturned", method = RequestMethod.PUT)
+    public LabRequestRepresentation completeReturned(UserAuthenticationToken user,
             @PathVariable Long id,
             @RequestBody LabRequestRepresentation body
             ) {
-        log.info("PUT /labrequests/" + id + "/returned");
+        log.info("PUT /labrequests/" + id + "/completereturned");
 
         LabRequest labRequest = labRequestService.findOne(id);
         if (!labRequestReturnedEnabledStatuses.contains(labRequest.getStatus())) {
@@ -308,7 +340,7 @@ public class LabRequestController {
             labRequest = labRequestService.save(labRequest);
         }
 
-        labRequest = labRequestService.updateStatus(labRequest, "Returned");
+        labRequest = labRequestService.updateStatus(labRequest, Status.COMPLETED, Result.RETURNED);
 
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
@@ -317,7 +349,36 @@ public class LabRequestController {
             taskService.resolveTask(task.getId());
         }
         taskService.complete(task.getId());
-        
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestData(representation);
+        return representation;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
+    @RequestMapping(value = "/labrequests/{id}/completerejected", method = RequestMethod.PUT)
+    public LabRequestRepresentation completeRejected(UserAuthenticationToken user,
+            @PathVariable Long id,
+            @RequestBody LabRequestRepresentation body
+            ) {
+        log.info("PUT /labrequests/" + id + "/completerejected");
+
+        LabRequest labRequest = labRequestService.findOne(id);
+        if (!labRequest.getStatus().equals(Status.REJECTED)) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
+        }
+
+        labRequest = labRequestService.updateStatus(labRequest, Status.COMPLETED, Result.REJECTED);
+
+        Task task = labRequestService.getTask(labRequest.getTaskId(),
+                "lab_request");
+        // complete task
+        if (task.getDelegationState() == DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
@@ -325,15 +386,15 @@ public class LabRequestController {
 
     @PreAuthorize("isAuthenticated() and ( hasPermission(#id, 'isLabRequestLabuser') or "
             + "hasPermission(#id, 'isLabRequestHubuser') )")
-    @RequestMapping(value = "/labrequests/{id}/complete", method = RequestMethod.PUT)
-    public LabRequestRepresentation complete(UserAuthenticationToken user,
+    @RequestMapping(value = "/labrequests/{id}/completereportsonly", method = RequestMethod.PUT)
+    public LabRequestRepresentation completeReportsOnly(UserAuthenticationToken user,
             @PathVariable Long id,
             @RequestBody LabRequestRepresentation body
             ) {
-        log.info("PUT /labrequests/" + id + "/complete");
+        log.info("PUT /labrequests/" + id + "/completereportsonly");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals("Approved")) {
+        if (!labRequest.getStatus().equals(Status.APPROVED)) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -347,9 +408,9 @@ public class LabRequestController {
         }
 
         labRequest = transferLabRequestFormData(body, labRequest, user.getUser());
-        
-        labRequest = labRequestService.updateStatus(labRequest, "Completed");
-        
+
+        labRequest = labRequestService.updateStatus(labRequest, Status.COMPLETED, Result.REPORTS_ONLY);
+
         Task task = labRequestService.getTask(labRequest.getTaskId(),
                 "lab_request");
 
@@ -358,7 +419,7 @@ public class LabRequestController {
             taskService.resolveTask(task.getId());
         }
         taskService.complete(task.getId());
-        
+
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation);
         return representation;
@@ -417,8 +478,8 @@ public class LabRequestController {
         log.info("GET /labrequests/" + id + "/panumbers/csv for userId " + user.getId());
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (labRequest.getStatus().equals("Waiting for lab approval")
-            || labRequest.getStatus().equals("Rejected")) {
+        if (labRequest.getStatus().equals(Status.WAITING_FOR_LAB_APPROVAL)
+            || labRequest.getStatus().equals(Status.REJECTED)) {
             log.error("Download not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Download not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -433,14 +494,23 @@ public class LabRequestController {
         return file;
     }
 
-    static Set<String> paReportSendingStatuses;
+    static Set<Status> paReportSendingStatuses;
     {
-        paReportSendingStatuses = new HashSet<String>(Arrays.asList("Approved", "Sending", "Received", "Returning"));
+        paReportSendingStatuses = new HashSet<Status>(Arrays.asList(
+                Status.APPROVED,
+                Status.SENDING,
+                Status.RECEIVED,
+                Status.RETURNING));
     }
 
-    static Set<String> setHubAssistanceStatuses;
+    static Set<Status> setHubAssistanceStatuses;
     {
-        setHubAssistanceStatuses = new HashSet<String>(Arrays.asList("Waiting for lab approval", "Approved", "Sending", "Received", "Returning"));
+        setHubAssistanceStatuses = new HashSet<Status>(Arrays.asList(
+                Status.WAITING_FOR_LAB_APPROVAL,
+                Status.APPROVED,
+                Status.SENDING,
+                Status.RECEIVED,
+                Status.RETURNING));
     }
 
     private LabRequest transferLabRequestFormData(LabRequestRepresentation body, LabRequest labRequest, User user) {

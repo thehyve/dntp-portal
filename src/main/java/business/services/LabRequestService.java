@@ -40,6 +40,8 @@ import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.Lab;
 import business.models.LabRequest;
+import business.models.LabRequest.Result;
+import business.models.LabRequest.Status;
 import business.models.LabRequestRepository;
 import business.models.PathologyItem;
 import business.models.PathologyItemRepository;
@@ -252,12 +254,20 @@ public class LabRequestService {
     }
 
     @Transactional
-    public LabRequest updateStatus(LabRequest labRequest, String status) {
+    public LabRequest updateStatus(LabRequest labRequest, Status status) {
         taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", status);
         labRequest.setStatus(status);
         return labRequestRepository.save(labRequest);
     }
-    
+
+    @Transactional
+    public LabRequest updateStatus(LabRequest labRequest, Status status, Result result) {
+        taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", status);
+        labRequest.setStatus(status);
+        labRequest.setResult(result);
+        return labRequestRepository.save(labRequest);
+    }
+
     @SuppressWarnings("unchecked")
     @Transactional
     public void generateLabRequests(String processInstanceId) {
@@ -281,7 +291,7 @@ public class LabRequestService {
                 labRequest.setTaskId(task.getId());
                 labRequest = labRequestRepository.save(labRequest);
                 // set initial status
-                labRequest = updateStatus(labRequest, "Waiting for lab approval");
+                labRequest = updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
                 labRequest.setHubAssistanceRequested(lab.isHubAssistanceEnabled());
                 if (lab.isHubAssistanceEnabled()) {
                     hubUsers.addAll(userService.findHubUsersForLab(lab));

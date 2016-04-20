@@ -119,17 +119,18 @@ This file is distributed under the GNU Affero General Public License
                         <td class="no-print">
                             <span class="pull-right">
                                 <span class="btn-group">
-                                <button ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)"
+                                <button ng-if="isPalgaStatus(labRequest.status) || isRequesterStatus(labRequest.status) ||
+                                 (isLabOrHubUserStatus(labRequest.status) && isCurrentUser(labRequest.assignee))"
                                     class="btn btn-default" type="button" title="{{'Actions'|translate}}"
                                     ng-click="edit(labRequest)">
                                 <span><i class="glyphicon" ng-class="'glyphicon-pencil'"></i></span>
                                 </button>
-                                <button ng-if="(isLabUser() || isHubUser()) && !isCurrentUser(labRequest.assignee)"
+                                <button ng-if="isLabOrHubUserStatus(labRequest.status) && !isCurrentUser(labRequest.assignee)"
                                     class="btn btn-default" type="button" title="{{'Claim'|translate}}"
                                     ng-click="claim(labRequest)">
                                 <span><i class="glyphicon glyphicon-eye-open"></i></span>
                                 </button>
-                                <button ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)"
+                                <button ng-if="isLabOrHubUserStatus(labRequest.status) && isCurrentUser(labRequest.assignee)"
                                     class="btn btn-default" type="button" title="{{'Unclaim'|translate}}"
                                     ng-click="unclaim(labRequest)">
                                 <span><i class="glyphicon glyphicon-eye-close"></i></span>

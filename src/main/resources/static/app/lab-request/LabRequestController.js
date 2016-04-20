@@ -235,7 +235,9 @@ angular.module('ProcessApp.controllers')
 
             $scope.reject = function (labRequest) {
                 bootbox.confirm(
-                    '<h4>Are you sure you want to reject the lab request?</h4>\n' +
+                    '<h4>' +
+                    $rootScope.translate('Are you sure you want to reject the lab request?') +
+                    '</h4>\n' +
                     '<form id="reject" action="">' +
                     $rootScope.translate('Please enter the reason for rejection.') +
                     '\n<br><br>\n' +
@@ -258,10 +260,11 @@ angular.module('ProcessApp.controllers')
                 );
             };
 
-            $scope.accept = function (labRequest) {
-                bootbox.confirm('Accept this lab request?' , function (result) {
+            $scope.undoReject = function (labRequest) {
+                bootbox.confirm($rootScope.translate('Return this lab request to status \'Under review by lab\'?'),
+                        function (result) {
                     if (result) {
-                        labRequest.customPUT(labRequest, 'accept').then(function () {
+                        labRequest.customPUT(labRequest, 'undoreject').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -273,9 +276,25 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.approve = function (labRequest) {
+                bootbox.confirm($rootScope.translate('Approve this lab request?'),
+                        function (result) {
+                    if (result) {
+                        labRequest.customPUT(labRequest, 'approve').then(function () {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
+                    }
+                });
+            };
 
             $scope.sending = function (labRequest) {
-                bootbox.confirm('Send this lab request?'  , function (result) {
+                bootbox.confirm($rootScope.translate('Are the materials being sent?'),
+                        function (result) {
                     if (result) {
                         labRequest.customPUT({}, 'sending').then(function () {
                             if ($scope.labReqModal) {
@@ -290,7 +309,8 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.received = function (labRequest) {
-                bootbox.confirm('Is the lab request received?'  , function (result) {
+                bootbox.confirm($rootScope.translate('Have the materials been received?'),
+                        function (result) {
                     if (result) {
                         var obj = { id: labRequest.id,
                             samplesMissing: labRequest.samplesMissing,
@@ -309,7 +329,8 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.returning = function (labRequest) {
-                bootbox.confirm('Return this lab request?'  , function (result) {
+                bootbox.confirm($rootScope.translate('Return the materials to the sending lab?'),
+                        function (result) {
                     if (result) {
                         labRequest.customPUT({}, 'returning').then(function () {
                             if ($scope.labReqModal) {
@@ -323,13 +344,14 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            $scope.returned = function (labRequest) {
-                bootbox.confirm('Is the lab request returned?'  , function (result) {
+            $scope.completeReturned = function (labRequest) {
+                bootbox.confirm($rootScope.translate('Have the materials been received in return?'),
+                        function (result) {
                     if (result) {
                         var obj = { id: labRequest.id,
                             samplesMissing: labRequest.samplesMissing,
                             missingSamples: labRequest.missingSamples};
-                        labRequest.customPUT(obj, 'returned').then(function () {
+                        labRequest.customPUT(obj, 'completereturned').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -341,10 +363,27 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            $scope.complete = function (labRequest) {
-                bootbox.confirm('Complete lab request?'  , function (result) {
+            $scope.completeReportsOnly = function (labRequest) {
+                bootbox.confirm($rootScope.translate('Complete PA reports request?'),
+                        function (result) {
                     if (result) {
-                        labRequest.customPUT(labRequest, 'complete').then(function () {
+                        labRequest.customPUT(labRequest, 'completereportsonly').then(function () {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
+                            _loadData();
+                        }, function (err) {
+                            $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                        });
+                    }
+                });
+            };
+
+            $scope.completeRejected = function (labRequest) {
+                bootbox.confirm($rootScope.translate('Complete rejected request?'),
+                        function (result) {
+                    if (result) {
+                        labRequest.customPUT(labRequest, 'completerejected').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
@@ -378,14 +417,12 @@ angular.module('ProcessApp.controllers')
 
             $scope.lab_user_statuses = _.difference($scope.statuses, [
                 'Returned',
-                'Rejected',
                 'Completed'
             ]);
 
             $scope.hub_user_statuses = _.difference($scope.statuses, [
                 'Waiting for lab approval',
                 'Returned',
-                'Rejected',
                 'Completed'
             ]);
 
@@ -402,13 +439,17 @@ angular.module('ProcessApp.controllers')
                         ($rootScope.isHubUser() && $scope.isHubUserStatus(status));
             };
 
+            $scope.isPalgaStatus = function (status) {
+                return $rootScope.isPalga() && status == 'Rejected';
+            }
+
             $scope.requester_statuses = [
                 'Sending',
                 'Received'
             ];
 
             $scope.isRequesterStatus = function (status) {
-                return _.includes($scope.requester_statuses, status);
+                return $rootScope.isRequester() && _.includes($scope.requester_statuses, status);
             };
 
             $scope.update = function (labRequest) {
@@ -458,7 +499,9 @@ angular.module('ProcessApp.controllers')
             
             $scope.deletePathology = function (labRequest, pathology) {
                 bootbox.confirm(
-                    '<h4>Are you sure you want to delete the PA number?</h4>',
+                    '<h4>' +
+                    $rootScope.translate('Are you sure you want to delete the PA number?') +
+                    '</h4>',
                     function(result) {
                         if (result) {
                             Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)

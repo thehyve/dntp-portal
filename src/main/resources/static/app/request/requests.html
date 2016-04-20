@@ -97,7 +97,7 @@ This file is distributed under the GNU Affero General Public License
                         </td>
                         <td><small>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</small></td>
                         <td ng-if="isScientificCouncil()" class="request-vote">
-                            {{req.approvalVote}}
+                            {{req.approvalVote | translate}}
                         </td>
                         <td ng-if="isPalga()" >{{req.requesterName}}</td>
                         <td ng-if="isPalga()" >{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>

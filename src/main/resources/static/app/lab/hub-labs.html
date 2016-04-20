@@ -43,7 +43,7 @@ This file is distributed under the GNU Affero General Public License
                             <th st-sort="name">{{'Name'|translate}}</th>
                             <th st-sort="active">{{'Status'|translate}}</th>
                             <th st-sort="hubAssistanceEnabled">{{'Hub assistance'|translate}}</th>
-                            <th st-sort="contactData.email">{{'Email'|translate}}</th>
+                            <th st-sort="emailAddresses">{{'Email'|translate}}</th>
                         </tr>
                         <tr>
                             <th colspan="5"><input st-search="" class="form-control"
@@ -70,7 +70,7 @@ This file is distributed under the GNU Affero General Public License
                                       ng-show="{{!lab.hubAssistanceEnabled}}" title="{{'No' | translate}}">
                                 </span>
                             </td>
-                            <td>{{lab.contactData.email}}</td>
+                            <td>{{lab.emailAddresses.join(', ')}}</td>
                         </tr>
                         </tbody>
                     </table>

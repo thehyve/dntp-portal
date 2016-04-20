@@ -27,6 +27,7 @@ angular.module('ProcessApp.directives')
                     if (newValue) {
                         $scope.unclaimedReqs = LabRequestFilter.selectUnclaimed(newValue);
                         $scope.claimedReqs = LabRequestFilter.selectClaimed(userId)(newValue);
+                        $scope.requestsHubAssistanceRequested = LabRequestFilter.selectHubAssistanceRequested(newValue);
                         $scope.requestsByStatus = {};
                         _($scope.statusesForRole).forEach(function(status) {
                             $scope.requestsByStatus[status] = LabRequestFilter.selectByStatus(status)(newValue);

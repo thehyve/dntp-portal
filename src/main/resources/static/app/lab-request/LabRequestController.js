@@ -167,6 +167,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.selections = {
                 overview: LabRequestFilter.selectAll,
+                hub_assistance_requested: LabRequestFilter.selectHubAssistanceRequested,
                 claimed: LabRequestFilter.selectClaimed($rootScope.currentUserId),
                 unclaimed: LabRequestFilter.selectUnclaimed
             };
@@ -196,6 +197,8 @@ angular.module('ProcessApp.controllers')
                 } else {
                     if ($routeParams.selection && $routeParams.selection in $scope.selections) {
                         $scope.activeSidebar = $routeParams.selection;
+                    } else if ($rootScope.isHubUser()){
+                        $scope.activeSidebar = 'hub_assistance_requested';
                     } else {
                         $scope.activeSidebar = 'overview';
                     }

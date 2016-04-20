@@ -38,11 +38,12 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="number">{{'Number'|translate}}</th>
                         <th st-sort="name">{{'Name'|translate}}</th>
                         <th st-sort="name">{{'Address'|translate}}</th>
+                        <th st-sort="hubAssistanceEnabled">{{'Hub assistance'|translate}}</th>
                         <th st-sort="emailAddresses">{{'Email addresses'|translate}}</th>
                         <th></th>
                     </tr>
                     <tr>
-                        <th colspan="5"><input st-search="" class="form-control"
+                        <th colspan="6"><input st-search="" class="form-control"
                                                placeholder="{{'Search' | translate}} ..." type="text"/></th>
                     </tr>
                     </thead>
@@ -59,6 +60,14 @@ This file is distributed under the GNU Affero General Public License
                                 {{lab.contactData.country}}<br ng-if="lab.contactData.country"/>
                                 {{lab.contactData.telephone}}
                             </address>
+                        </td>
+                        <td>
+                            <span style="color: green;" class="glyphicon glyphicon-bell" aria-hidden="true"
+                                  ng-show="{{lab.hubAssistanceEnabled}}" title="{{'Yes' | translate}}">
+                            </span>
+                            <span style="color: grey;" class="glyphicon glyphicon-ban-circle" aria-hidden="true"
+                                  ng-show="{{!lab.hubAssistanceEnabled}}" title="{{'No' | translate}}">
+                            </span>
                         </td>
                         <td>{{lab.emailAddresses.join(', ')}}</td>
                         <td>

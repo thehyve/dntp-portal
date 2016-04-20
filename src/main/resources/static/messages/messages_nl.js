@@ -347,7 +347,7 @@
         /* ===================== */
         /* scientific council */
         /* ===================== */
-        'Accepted': 'Instemmen',
+        'Accepted': 'Akkoord',
         'Rejected': 'Afgewezen',
         'ACCEPTED': 'Akkoord',
         'REJECTED': 'Afgewezen',

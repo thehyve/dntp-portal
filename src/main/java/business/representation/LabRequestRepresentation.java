@@ -22,6 +22,8 @@ public class LabRequestRepresentation {
 
     private String assignee;
 
+    private String assigneeName;
+
     private String processInstanceId;
 
     private String labRequestCode;
@@ -109,6 +111,14 @@ public class LabRequestRepresentation {
 
     public void setAssignee(String assignee) {
         this.assignee = assignee;
+    }
+
+    public String getAssigneeName() {
+        return assigneeName;
+    }
+
+    public void setAssigneeName(String assigneeName) {
+        this.assigneeName = assigneeName;
     }
 
     public String getProcessInstanceId() {

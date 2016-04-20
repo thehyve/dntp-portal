@@ -195,7 +195,7 @@ public class LabRequestService {
 
         labRequestRepresentation.setExcerptList(list);
     }
-    
+
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         Date start = new Date();
 
@@ -204,6 +204,20 @@ public class LabRequestService {
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setEndDate(task.getEndTime());
         labRequestRepresentation.setAssignee(task.getAssignee());
+
+        if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
+            Long assigneeId = null;
+            try {
+                assigneeId = Long.valueOf(task.getAssignee());
+            } catch (NumberFormatException e) {
+            }
+            if (assigneeId != null) {
+                User assignee = userService.findOne(assigneeId);
+                if (assignee != null) {
+                    labRequestRepresentation.setAssigneeName(RequestFormService.getName(assignee));
+                }
+            }
+        }
 
         // set request data
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());

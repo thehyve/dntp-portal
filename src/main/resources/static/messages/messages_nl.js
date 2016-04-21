@@ -11,6 +11,7 @@
         /* Global */
         /* ========= */
 
+        'Management': 'Beheer',
         'Source': 'Bron',
         'The password has been successfully changed.': 'Het wachtwoord is succesvol gewijzigd.',
         'There is a problem logging in.': 'Er is een probleem met inloggen.',

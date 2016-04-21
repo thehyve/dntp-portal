@@ -29,6 +29,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -87,7 +88,7 @@ public class LabRequestService {
     private LabRequestRepository labRequestRepository;
 
     @Autowired
-    private PathologyItemRepository pathologyItemRepository;
+    private PathologyItemService pathologyItemService;
 
     @Autowired
     private ExcerptListService excerptListService;
@@ -131,24 +132,19 @@ public class LabRequestService {
         return task;
     }
 
-    private void setRequestListData(
-            LabRequestRepresentation labRequestRepresentation,
-            HistoricProcessInstance instance
-            ) {
-        // copy request list representation data
-        RequestListRepresentation request = new RequestListRepresentation();
-        requestFormService.transferBasicData(instance, request);
+    private void setRequestListData(LabRequestRepresentation labRequestRepresentation) {
+        RequestListRepresentation request = requestFormService.getRequestListDataCached(
+                labRequestRepresentation.getProcessInstanceId());
         labRequestRepresentation.setRequest(request);
         if (request.getRequesterId() != null) {
             labRequestRepresentation.setRequesterId(request.getRequesterId());
             labRequestRepresentation.setRequesterName(request.getRequesterName());
-            User user = userService.findOne(request.getRequesterId());
+            User user = userService.findOneCached(request.getRequesterId());
             labRequestRepresentation.setRequesterEmail(user.getContactData().getEmail());
             labRequestRepresentation.setRequester(new ProfileRepresentation(user));
             labRequestRepresentation.setRequesterLab(user.getLab());
         }
     }
-
 
     @Transactional
     public void transferExcerptListData(
@@ -181,7 +177,8 @@ public class LabRequestService {
     }
 
     public void transferPathologyCount(@NotNull LabRequestRepresentation labRequestRepresentation) {
-        labRequestRepresentation.setPathologyCount(pathologyItemRepository.countByLabRequestId(labRequestRepresentation.getId()));
+        labRequestRepresentation.setPathologyCount(
+                pathologyItemService.getPathologyCountCached(labRequestRepresentation.getId()));
     }
 
     @Transactional
@@ -214,7 +211,7 @@ public class LabRequestService {
             } catch (NumberFormatException e) {
             }
             if (assigneeId != null) {
-                User assignee = userService.findOne(assigneeId);
+                User assignee = userService.findOneCached(assigneeId);
                 if (assignee != null) {
                     labRequestRepresentation.setAssigneeName(RequestFormService.getName(assignee));
                 }
@@ -222,8 +219,7 @@ public class LabRequestService {
         }
 
         // set request data
-        HistoricProcessInstance instance = requestService.getProcessInstance(labRequestRepresentation.getProcessInstanceId());
-        setRequestListData(labRequestRepresentation, instance);
+        setRequestListData(labRequestRepresentation);
 
         labRequestRepresentation.setLabRequestCode();
 
@@ -231,8 +227,10 @@ public class LabRequestService {
 
         Date end = new Date();
         if ((end.getTime() - start.getTime()) > 10) {
-            log.warn("transferLabRequestData took " + (end.getTime() - start.getTime()) + " ms "
-                    +" (task id: " + task.getId() + ").");
+            log.warn(String.format("transfer lab request data took: %6d ms (task id: %s).",
+                    end.getTime() - start.getTime(),
+                    task.getId()
+                    ));
         }
     }
 

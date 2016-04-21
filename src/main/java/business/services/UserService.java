@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.EmailAddressNotAvailable;
@@ -234,6 +235,11 @@ public class UserService {
                 save(user);
             }
         }
+    }
+
+    @Cacheable("users")
+    public User findOneCached(Long userId) {
+        return findOne(userId);
     }
 
 }

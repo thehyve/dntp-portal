@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ public class RequestPropertiesService {
         return properties;
     }
 
+    @Cacheable("requestnumber")
     public String getRequestNumber(String processInstanceId) {
         return requestPropertiesRepository.getRequestNumberByProcessInstanceId(processInstanceId);
     }

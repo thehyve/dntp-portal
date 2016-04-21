@@ -23,6 +23,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.UpdateNotAllowed;
@@ -77,7 +78,7 @@ public class RequestFormService {
         }
         return false;
     }
-    
+
     /**
      * Concatenates first name and last name of the user if user is not null;
      * returns the empty string otherwise.
@@ -95,7 +96,16 @@ public class RequestFormService {
         }
         return String.join(" ", parts);
     }
-    
+
+    @Cacheable("requestlistdata")
+    public RequestListRepresentation getRequestListDataCached(String processInstanceId) {
+        HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
+        // copy request list representation data
+        RequestListRepresentation request = new RequestListRepresentation();
+        transferBasicData(instance, request);
+        return request;
+    }
+
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
         request.setProcessId(instance.getProcessDefinitionId());
@@ -118,7 +128,7 @@ public class RequestFormService {
             try { userId = Long.valueOf(requesterId); }
             catch(NumberFormatException e) {}
             if (userId != null) {
-                User user = userService.findOne(userId);
+                User user = userService.findOneCached(userId);
                 if (user != null) {
                     request.setRequesterId(userId);
                     request.setRequesterName(getName(user));
@@ -135,9 +145,7 @@ public class RequestFormService {
     }
     
     public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
-
         transferBasicData(instance, request);
-            
         Task task = null;
         if (request.getStatus() != null) {
             switch(request.getStatus()) {
@@ -166,7 +174,7 @@ public class RequestFormService {
                 } catch (NumberFormatException e) {
                 }
                 if (assigneeId != null) {
-                    User assignee = userService.findOne(assigneeId);
+                    User assignee = userService.findOneCached(assigneeId);
                     if (assignee != null) {
                         request.setAssigneeName(getName(assignee));
                     }
@@ -248,7 +256,7 @@ public class RequestFormService {
             try { userId = Long.valueOf(request.getRequesterId()); }
             catch(NumberFormatException e) {}
             if (userId != null) {
-                User user = userService.findOne(userId);
+                User user = userService.findOneCached(userId);
                 if (user != null) {
                     request.setRequesterName(getName(user));
                     if (user.getContactData() != null) {

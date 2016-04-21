@@ -28,13 +28,26 @@ This file is distributed under the GNU Affero General Public License
                     class="{{$route.current.templateUrl=='app/lab-request/samples.html' ? 'active': ''}}">
                     <a href="#/samples">{{'Samples'|translate}}</a>
                 </li>
-                <li id="nav_users" ng-show="isViewUsersAllowed();"
-                    class="{{$route.current.templateUrl=='app/admin/user/users.html' ? 'active': ''}}">
-                    <a href="#/users">{{'User management'|translate}}</a>
-                </li>
-                <li id="nav_labs" ng-show="isViewLabsAllowed();"
-                    class="{{$route.current.templateUrl=='app/admin/lab/labs.html' ? 'active': ''}}">
-                    <a href="#/labs">{{'Laboratory management'|translate}}</a>
+                <li class="dropdown {{isManagementPage() ? 'active':''}}">
+                    <a class="dropdown-toggle"
+                        ng-show="isViewManagementAllowed();"
+                        role="button" data-toggle="dropdown" id="management_menu">
+                        {{ 'Management' | translate }} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li id="nav_users" ng-show="isViewUsersAllowed();">
+                            <a href="#/users">{{'User management'|translate}}</a>
+                        </li>
+                        <li id="nav_labs" ng-show="isViewLabsAllowed();">
+                            <a href="#/labs">{{'Laboratory management'|translate}}</a>
+                        </li>
+                        <li id="nav_agreementformtemplate" ng-show="isEditAgreementFormTemplateAllowed();">
+                            <a href="#/agreementformtemplate">{{'Edit form'|translate}}</a>
+                        </li>
+                        <li id="nav_accesslogs" ng-show="isViewAccessLogsAllowed();">
+                            <a href="#/accesslogs">{{'Access logs'|translate}}</a>
+                        </li>
+                    </ul>
                 </li>
                 <li id="nav_my-lab" ng-show="isViewOwnLabAllowed();"
                     class="{{$route.current.templateUrl=='app/lab/my-lab.html' ? 'active': ''}}">
@@ -43,12 +56,6 @@ This file is distributed under the GNU Affero General Public License
                 <li id="nav_hub-labs" ng-show="isViewHubLabsAllowed();"
                     class="{{$route.current.templateUrl=='app/lab/hub-labs.html' ? 'active': ''}}">
                     <a href="#/hub-labs">{{'Hub labs'|translate}}</a>
-                </li>
-                <li id="nav_agreementformtemplate" ng-show="isEditAgreementFormTemplateAllowed();" class="{{$route.current.templateUrl=='app/admin/agreementformtemplate/edit.html' ? 'active': ''}}">
-                    <a href="#/agreementformtemplate">{{'Edit form'|translate}}</a>
-                </li>
-                <li id="nav_accesslogs" ng-show="isViewAccessLogsAllowed();" class="{{$route.current.templateUrl=='app/admin/accesslogs/accesslogs.html' ? 'active': ''}}">
-                    <a href="#/accesslogs">{{'Access logs'|translate}}</a>
                 </li>
             </ul>
 

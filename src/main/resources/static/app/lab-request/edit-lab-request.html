@@ -30,7 +30,7 @@ This file is distributed under the GNU Affero General Public License
         <div class="form-group">
           <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
           <p class="col-sm-7 form-control-static">
-            {{labRequest.status}}
+            {{labRequest.status | translate}}
             <br>
           </p>
         </div>
@@ -102,7 +102,7 @@ This file is distributed under the GNU Affero General Public License
           <div class="form-group">
             <label class="control-label col-sm-3">{{ 'Lab' | translate }}</label>
             <p class="col-sm-7 form-control-static">
-              {{"Lab" | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
+              {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
               <br>
             </p>
           </div>
@@ -167,16 +167,16 @@ This file is distributed under the GNU Affero General Public License
         <div class="panel panel-default" 
             ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
           <div class="panel-heading">
-            <h4>{{'Approval'|translate}}</h4>
+            <h4>{{'Waiting for lab approval'|translate}}</h4>
           </div>
           <div class="panel-body">
-             {{'Waiting for lab approval.'|translate}}
+             {{'Waiting for a decision from the lab.'|translate}}
           </div>
 
           <div class="panel-footer clearfix">
               <span class="pull-right">
                 <button class="btn btn-default btn-primary"
-                    ng-click="accept(labRequest);">{{'Accept'|translate}}</button>
+                    ng-click="approve(labRequest);">{{'Approve'|translate}}</button>
                 <button class="btn btn-default btn-warning"
                     ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
             </span>
@@ -202,7 +202,31 @@ This file is distributed under the GNU Affero General Public License
                     ng-click="sending(labRequest);">{{'Send materials'|translate}}</button>
                 <button class="btn btn-default btn-primary"
                     ng-if="!labRequest.request.materialsRequest"
-                    ng-click="complete(labRequest);">{{'Complete'|translate}}</button>
+                    ng-click="completeReportsOnly(labRequest);">{{'Complete'|translate}}</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="panel panel-default"
+            ng-if="(isPalga() || isLabUser() || isHubUser()) && labRequest.status == 'Rejected'">
+          <div class="panel-heading">
+            <h4>{{'Rejected'|translate}}</h4>
+          </div>
+          <div class="panel-body">
+
+          <div class="col-sm-8">
+          {{'The lab request has been rejected.'|translate}}
+          </div>
+
+          </div>
+          <div class="panel-footer clearfix">
+              <span class="pull-right">
+                <button class="btn btn-default btn-primary"
+                    ng-if="isPalga()"
+                    ng-click="completeRejected(labRequest);">{{'Complete'|translate}}</button>
+                <button class="btn btn-default btn-primary"
+                    ng-if="isLabUser() || isHubUser()"
+                    ng-click="undoReject(labRequest);">{{'Undo rejection'|translate}}</button>
             </span>
           </div>
         </div>
@@ -260,7 +284,7 @@ This file is distributed under the GNU Affero General Public License
             </span>
             <span ng-if="isLabUser() || isHubUser()">
                 <button class="btn btn-default btn-primary"
-                        ng-click="returned(labRequest);">{{'Materials returned'|translate}}</button>
+                        ng-click="completeReturned(labRequest);">{{'Materials returned'|translate}}</button>
             </span>
             </span>
           </div>

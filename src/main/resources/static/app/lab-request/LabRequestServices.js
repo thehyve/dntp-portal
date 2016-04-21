@@ -15,8 +15,8 @@
                 method : 'GET',
                 isArray: true
             },
-            accept : {
-                url : '/labrequests/:id/accept',
+            approve : {
+                url : '/labrequests/:id/approve',
                 method : 'PUT'
             },
             reject : {
@@ -35,12 +35,16 @@
                 url : '/labrequests/:id/returning',
                 method : 'PUT'
             },
-            returned : {
-                url : '/labrequests/:id/returned',
+            completeReturned : {
+                url : '/labrequests/:id/completereturned',
                 method : 'PUT'
             },
-            complete : {
-                url : '/labrequests/:id/complete',
+            completeReportsOnly : {
+                url : '/labrequests/:id/completereportsonly',
+                method : 'PUT'
+            },
+            completeRejected : {
+                url : '/labrequests/:id/completerejected',
                 method : 'PUT'
             },
             claim : {

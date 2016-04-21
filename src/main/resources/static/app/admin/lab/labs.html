@@ -62,11 +62,12 @@ This file is distributed under the GNU Affero General Public License
                             </address>
                         </td>
                         <td>
-                            <span style="color: green;" class="glyphicon glyphicon-bell" aria-hidden="true"
-                                  ng-show="{{lab.hubAssistanceEnabled}}" title="{{'Yes' | translate}}">
-                            </span>
-                            <span style="color: grey;" class="glyphicon glyphicon-ban-circle" aria-hidden="true"
-                                  ng-show="{{!lab.hubAssistanceEnabled}}" title="{{'No' | translate}}">
+                            <span class="glyphicon" aria-hidden="true"
+                                  ng-class="{
+                                  'dntp-success-color glyphicon-bell':lab.hubAssistanceEnabled,
+                                  'dntp-disabled-color glyphicon-ban-circle':!lab.hubAssistanceEnabled
+                                  }"
+                                  title="{{lab.hubAssistanceEnabled ? 'Yes' : 'No' | translate}}">
                             </span>
                         </td>
                         <td>{{lab.emailAddresses.join(', ')}}</td>

@@ -191,6 +191,14 @@
             }
         };
 
+        _requestFactory.privacyCommitteeRationaleOptions = [
+            'ppc_handled_according_mandate',
+            'ppc_handled_according_mandate_explanation',
+            'ppc_approved_written_procedure',
+            'ppc_discuss',
+            'ppc_rationale_exploratory_request'
+        ];
+
         _requestFactory.convertRequestNumber = function (request) {
             var _number = '' + request.requestNumber;
             if (_number.length > 5) {

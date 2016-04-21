@@ -15,7 +15,6 @@ angular.module('ProcessApp.controllers')
 
             if ($rootScope.globals.currentUser.roles.indexOf('palga') !== -1) {
                 User.queryScientificCouncil().$promise.then(function(response) {
-                    console.log(response);
                     $scope.scientificCouncil = response ? response : [];
                     $scope.scientificCouncilEmail = '';
                     for (var i=0; i < response.length; i++) {

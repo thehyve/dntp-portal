@@ -94,6 +94,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'Edit' button
     And I click on the following objects
       """
+      radio-ppc_handled_according_mandate
       scientificCouncilApproved
       privacyCommitteeApproved
       """

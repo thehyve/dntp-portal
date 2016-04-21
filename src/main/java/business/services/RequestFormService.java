@@ -309,6 +309,7 @@ public class RequestFormService {
             }
 
             request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
+            request.setPrivacyCommitteeRationale(properties.getPrivacyCommitteeRationale());
             request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
             request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
             request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
@@ -493,6 +494,7 @@ public class RequestFormService {
                 variables.put("request_is_admissible", Boolean.FALSE);
             }
             properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
+            properties.setPrivacyCommitteeRationale(request.getPrivacyCommitteeRationale());
             properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
             properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());
             properties.setPrivacyCommitteeEmails(request.getPrivacyCommitteeEmails());

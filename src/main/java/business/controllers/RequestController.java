@@ -47,6 +47,7 @@ import business.exceptions.FileUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.NotLoggedInException;
 import business.exceptions.RequestNotAdmissible;
+import business.exceptions.RequestNotApproved;
 import business.exceptions.RequestNotFound;
 import business.exceptions.UpdateNotAllowed;
 import business.models.ExcerptList;
@@ -346,36 +347,38 @@ public class RequestController {
         instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
-        if (updatedRequest.isPrivacyCommitteeApproved() && 
-                updatedRequest.isScientificCouncilApproved()) {
-            // marking request as approved
-            updatedRequest.setRequestApproved(true);
-            updatedRequest.setReopenRequest(false);
-            variables = requestFormService.transferFormData(updatedRequest, instance, user.getUser());
-            runtimeService.setVariables(instance.getId(), variables);
-
-            Boolean requestApproved = runtimeService.getVariable(id, "request_approved", Boolean.class);
-            log.info("Request approved: " + requestApproved);
-
-            log.info("Fetching scientific_council_approval task");
-            Task councilTask = requestService.getTaskByRequestId(id, "scientific_council_approval");
-            if (councilTask.getDelegationState()==DelegationState.PENDING) {
-                taskService.resolveTask(councilTask.getId());
-            }
-            taskService.complete(councilTask.getId());
-
-            log.info("Fetching request_approval task");
-            Task palgaTask = requestService.getTaskByRequestId(id, "request_approval");
-            if (palgaTask.getDelegationState()==DelegationState.PENDING) {
-                taskService.resolveTask(palgaTask.getId());
-            }
-            taskService.complete(palgaTask.getId());
-        } else {
+        if (    updatedRequest.getPrivacyCommitteeRationale() == null ||
+                updatedRequest.getPrivacyCommitteeRationale().isEmpty() ||
+                !updatedRequest.isPrivacyCommitteeApproved() ||
+                !updatedRequest.isScientificCouncilApproved()) {
             log.warn("Finalisation failed because of lacking approval.");
+            throw new RequestNotApproved();
         }
+        // marking request as approved
+        updatedRequest.setRequestApproved(true);
+        updatedRequest.setReopenRequest(false);
+        variables = requestFormService.transferFormData(updatedRequest, instance, user.getUser());
+        runtimeService.setVariables(instance.getId(), variables);
+
+        Boolean requestApproved = runtimeService.getVariable(id, "request_approved", Boolean.class);
+        log.info("Request approved: " + requestApproved);
+
+        log.info("Fetching scientific_council_approval task");
+        Task councilTask = requestService.getTaskByRequestId(id, "scientific_council_approval");
+        if (councilTask.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(councilTask.getId());
+        }
+        taskService.complete(councilTask.getId());
+
+        log.info("Fetching request_approval task");
+        Task palgaTask = requestService.getTaskByRequestId(id, "request_approval");
+        if (palgaTask.getDelegationState()==DelegationState.PENDING) {
+            taskService.resolveTask(palgaTask.getId());
+        }
+        taskService.complete(palgaTask.getId());
 
         requestService.claimCurrentPalgaTask(id, user.getUser());
-        
+
         instance = requestService.getProcessInstance(id);
         updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());

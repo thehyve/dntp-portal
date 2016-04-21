@@ -61,6 +61,12 @@
         'Request_Type_6' : 'Full PA reports only (no excerpts)',
         'Request_Type_7' : 'PA material only',
 
+        'ppc_handled_according_mandate': 'Handled according to mandate PPC',
+        'ppc_handled_according_mandate_explanation': 'Handled according to mandate PPC, see explanation',
+        'ppc_approved_written_procedure': 'Approved after written procedure',
+        'ppc_discuss': 'Discuss in meeting',
+        'ppc_rationale_exploratory_request': 'Exploratory request, no assessment required',
+
         /* ===================== */
         /* Agreement overview    */
         /* ===================== */

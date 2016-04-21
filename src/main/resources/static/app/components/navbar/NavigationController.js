@@ -64,18 +64,34 @@ angular.module('ProcessApp.controllers')
                 return checkRoles(['HAS_MANAGE_AGREEMENT_FORM_TEMPLATE_AUTH']);
             };
 
+            $scope.isViewManagementAllowed = function() {
+                return checkRoles([
+                                   'HAS_MANAGE_USER_PAGE_AUTH',
+                                   'HAS_MANAGE_LAB_PAGE_AUTH',
+                                   'HAS_MANAGE_ACCESS_LOG_AUTH',
+                                   'HAS_MANAGE_AGREEMENT_FORM_TEMPLATE_AUTH'
+                                   ]);
+            };
+
             $scope.isRequestsPage = function() {
                 return $route.current.templateUrl=='app/request/edit-request.html' ||
                     $route.current.templateUrl=='app/request/requests.html' ||
                     $route.current.templateUrl=='app/request/request.html';
             };
-            
+
             $scope.isLabRequestsPage = function() {
                 return $route.current.templateUrl=='app/lab-request/edit-lab-request.html' ||
                     $route.current.templateUrl=='app/lab-request/lab-requests.html' ||
                     $route.current.templateUrl=='app/lab-request/lab-request.html';
             };
-            
+
+            $scope.isManagementPage = function() {
+                return $route.current.templateUrl=='app/admin/user/users.html' ||
+                    $route.current.templateUrl=='app/admin/lab/labs.html' ||
+                    $route.current.templateUrl=='app/admin/agreementformtemplate/edit.html' ||
+                    $route.current.templateUrl=='app/admin/accesslogs/accesslogs.html';
+            };
+
             $scope.login = function() {
                 $location.path('/login');
             };

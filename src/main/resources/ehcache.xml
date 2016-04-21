@@ -1,0 +1,37 @@
+<eh:config
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:eh='http://www.ehcache.org/v3'
+    xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+    xsi:schemaLocation="
+        http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd
+        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
+
+    <eh:cache alias="users">
+        <eh:key-type>java.lang.Long</eh:key-type>
+        <eh:value-type>business.models.User</eh:value-type>
+        <eh:expiry><eh:ttl unit="hours">1</eh:ttl></eh:expiry>
+        <eh:heap unit="entries">1000</eh:heap>
+    </eh:cache>
+
+    <eh:cache alias="requestlistdata">
+        <eh:key-type>java.lang.String</eh:key-type>
+        <eh:value-type>business.representation.RequestListRepresentation</eh:value-type>
+        <eh:expiry><eh:ttl unit="minutes">1</eh:ttl></eh:expiry>
+        <eh:heap unit="entries">1000</eh:heap>
+    </eh:cache>
+
+    <eh:cache alias="requestnumber">
+        <eh:key-type>java.lang.String</eh:key-type>
+        <eh:value-type>java.lang.String</eh:value-type>
+        <eh:expiry><eh:ttl unit="hours">1</eh:ttl></eh:expiry>
+        <eh:heap unit="entries">1000</eh:heap>
+    </eh:cache>
+
+    <eh:cache alias="pathologycount">
+        <eh:key-type>java.lang.Long</eh:key-type>
+        <eh:value-type>java.lang.Long</eh:value-type>
+        <eh:expiry><eh:ttl unit="minutes">5</eh:ttl></eh:expiry>
+        <eh:heap unit="entries">1000</eh:heap>
+    </eh:cache>
+
+</eh:config>

@@ -7,7 +7,9 @@ package business.models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.*;
 
@@ -15,8 +17,63 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 @Entity
 public class LabRequest {
+
+    public enum Status {
+        WAITING_FOR_LAB_APPROVAL ("Waiting for lab approval"),
+        APPROVED ("Approved"),
+        REJECTED ("Rejected"),
+        COMPLETED ("Completed"),
+        SENDING ("Sending"),
+        RECEIVED ("Received"),
+        RETURNING ("Returning"),
+        @Deprecated RETURNED ("Returned");
+
+        private final String description;
+
+        Status(final String description) {
+            this.description = description;
+        }
+
+        @JsonValue
+        public final String toString() {
+            return description;
+        }
+
+        private static final Map<String,Status> mapping = new HashMap<>();
+        static {
+            for (Status status: Status.values()) {
+                mapping.put(status.toString(), status);
+            }
+        }
+
+        @JsonCreator
+        public static Status forDescription(String description) {
+            return mapping.get(description);
+        }
+
+    }
+
+    public enum Result {
+        REJECTED ("Rejected"),
+        REPORTS_ONLY ("PA reports only"),
+        RETURNED ("Materials returned"),
+        NONE ("None");
+
+        private final String description;
+
+        Result(final String description) {
+            this.description = description;
+        }
+
+        public final String toString() {
+            return description;
+        }
+    }
 
     @Id
     @GeneratedValue
@@ -30,7 +87,10 @@ public class LabRequest {
 
     private String taskId;
 
-    private String status;
+    private Status status = Status.WAITING_FOR_LAB_APPROVAL;
+
+    @Enumerated(EnumType.STRING)
+    private Result result = Result.NONE;
 
     private Date timeCreated;
 
@@ -159,12 +219,20 @@ public class LabRequest {
         this.sendDate = sendDate;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
-    
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+
 }

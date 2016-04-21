@@ -11,6 +11,7 @@
         /* Global */
         /* ========= */
 
+        'Management': 'Beheer',
         'Source': 'Bron',
         'The password has been successfully changed.': 'Het wachtwoord is succesvol gewijzigd.',
         'There is a problem logging in.': 'Er is een probleem met inloggen.',
@@ -205,11 +206,11 @@
         'Completed requests': 'Afgeronde aanvragen',
         'New request': 'Nieuwe aanvraag',
         'Access is denied': 'Toegang is geweigerd',
-    
+
         /* ================= */
         /* Registration form */
         /* ================= */
-    
+
         'First name': 'Voornaam',
         'Last name': 'Achternaam',
         'Telephone number': 'Telefoonnummer',
@@ -288,7 +289,7 @@
         'Vote': 'Stem(men)',
 
         /* ===================== */
-        /* Labrequest overview */
+        /* Lab request overview */
         /* ===================== */
         'Request title': 'Titel',
         'Lab request ID': 'Labverzoek ID',
@@ -299,16 +300,31 @@
         'Filter by lab': 'Filteren op lab',
 
         /* ===================== */
-        /* Labrequest details */
+        /* Lab request details */
         /* ===================== */
+        'Approve': 'Goedkeuren',
         'Request details': 'Aanvraagdetails',
         'Request ID': 'Aanvraag ID',
         'Requester lab': 'Lab aanvrager',
         'Sending lab': 'Versturend lab',
         'Lab request code': 'Labverzoekcode',
+        'Are you sure you want to reject the lab request?': 'Weet u zeker dat u het labverzoek wilt afwijzen?',
+        'Approve this lab request?': 'Het labverzoek goedkeuren?',
+        'Is the material being sent?': 'Is het materiaal verstuurd?',
+        'Has the material been received?': 'Is het materiaal ontvangen?',
+        'Return the material to the sending lab?': 'Het materiaal terugsturen naar het versturende lab?',
+        'Has the material been received in return?': 'Is het materiaal terugontvangen?',
+        'Complete PA reports request?': 'Het verzoek op PA-verlagen afronden?',
+        'Complete rejected request?': 'Het afgewezen labverzoek afronden?',
+        'Are you sure you want to delete the PA number?': 'Weet u zeker dat u het PA-nummer wilt verwijderen?',
+        'Return this lab request to status \'Under review by lab\'?':
+            'Het labverzoek terugzetten naar \'Beoordeling door lab\'?',
+        'Undo rejection': 'Afwijzing ongedaan maken',
+        'Waiting for a decision from the lab.': 'Wachten op een oordeel van het lab.',
+        'Complete': 'Afronden',
 
         /* ===================== */
-        /* User Overview */
+        /* User overview */
         /* ===================== */
         'Add user': 'Gebruiker toevoegen',
         'Name': 'Naam',
@@ -340,14 +356,14 @@
         'Filter by PA number': 'Filteren op PA-nummer',
 
         /* ===================== */
-        /* Sample overview */
+        /* Lab overview */
         /* ===================== */
         'Add lab': 'Lab toevoegen',
         'Edit lab': 'Lab bewerken',
         'Number': 'Labnummer',
 
         /* ===================== */
-        /* scientific council */
+        /* Scientific council */
         /* ===================== */
         'Accepted': 'Akkoord',
         'Rejected': 'Afgewezen',
@@ -355,7 +371,7 @@
         'REJECTED': 'Afgewezen',
 
         /* ===================== */
-        /* status */
+        /* Status */
         /* ===================== */
         'Open': 'Open, nog niet ingestuurd',
         'Review': 'Ontvangen door PALGA-adviseur',
@@ -371,10 +387,10 @@
         'Returned': 'Retour ontvangen',
         'Completed': 'Afgerond',
         'Closed': 'Afgesloten',
-    
+
         'Download ...': '{{filename}} downloaden',
-    
-    
+
+
         /* ===================== */
         /* Agreement overview */
         /* ===================== */
@@ -396,6 +412,7 @@
         'Hub assistance' :'Inzet hubmedewerker',
         'Hub users': 'Hubmedewerkers',
         'Email addresses': 'Emailadressen',
+        'Update hub assistance': 'Inzet hubmedewerker aanpassen',
 
         null: null
     };

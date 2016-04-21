@@ -10,6 +10,8 @@ import java.util.List;
 
 import business.models.Lab;
 import business.models.LabRequest;
+import business.models.LabRequest.Result;
+import business.models.LabRequest.Status;
 
 public class LabRequestRepresentation {
 
@@ -36,7 +38,9 @@ public class LabRequestRepresentation {
     private ProfileRepresentation requester;
     private Lab requesterLab;
 
-    private String status;
+    private Status status;
+
+    private Result result;
 
     private Date dateCreated;
     
@@ -76,6 +80,7 @@ public class LabRequestRepresentation {
         this.setProcessInstanceId(labRequest.getProcessInstanceId());
         this.setTaskId(labRequest.getTaskId());
         this.setStatus(labRequest.getStatus());
+        this.setResult(labRequest.getResult());
         this.setLab(labRequest.getLab());
         //this.pathologyCount = (long)labRequest.getPathologyList().size();
         this.setRejectDate(labRequest.getRejectDate());
@@ -169,12 +174,20 @@ public class LabRequestRepresentation {
         this.requesterLab = requesterLab;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
     }
 
     public Date getDateCreated() {

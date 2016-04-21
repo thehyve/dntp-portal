@@ -86,7 +86,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'Add comment' button
     And I click on the object with id 'vote-accepted'
     And I go to the 'requests' page
-    Then request 'Request 1' should have vote 'ACCEPTED'
+    Then request 'Request 1' should have vote 'Accepted'
 
   Scenario: 4a attach excerpt list
     Given I am logged in as the palga user
@@ -139,7 +139,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the lab request with id 'YYYY-1-106'
     And I claim the current request
     And I click on the 'Actions' button
-    And I click on the 'Accept' button
+    And I click on the 'Approve' button
     And I click on the 'OK' button
     Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
@@ -283,7 +283,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
    """
    And I click on the 'Materials returned' button
    And I am on the lab requests page
-   Then the page should contain the text 'Returned'
+   Then the page should contain the text 'Completed'
 
   Scenario: 24 palga is able to see Request 1 as completed
    Given I am logged in as the palga user

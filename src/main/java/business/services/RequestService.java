@@ -211,15 +211,22 @@ public class RequestService {
         if (user == null) {
             processInstances = new ArrayList<HistoricProcessInstance>();
         } else if (user.getUser().isPalga()) {
-            processInstances = historyService
+            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstances.addAll(
+                    historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
-                    .or()
-                        .variableValueNotEquals("status", "Open")
-                        .variableValueEquals("reopen_request", Boolean.TRUE)
-                    .endOr()
-                    .list();
+                    .variableValueEquals("status", "Open")
+                    .variableValueEquals("reopen_request", Boolean.TRUE)
+                    .list());
+            processInstances.addAll(
+                    historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueNotEquals("status", "Open")
+                    .list());
         } else if (user.getUser().isScientificCouncilMember()) {
             Date start = new Date();
             List<HistoricTaskInstance> approvalTasks = historyService

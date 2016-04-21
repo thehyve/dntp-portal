@@ -483,6 +483,9 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.toggleAvailability = function (labRequest, pathology) {
+                if (pathology.samplesAvailable === null) {
+                    pathology.samplesAvailable = true;
+                }
                 pathology.samplesAvailable = !pathology.samplesAvailable;
                 $scope.updatePathology(labRequest,  pathology)
             };

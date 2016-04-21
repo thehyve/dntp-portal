@@ -307,4 +307,6 @@ address {margin-bottom: 0px;}
     margin-top: .2em;
 }
 
-
+.dntp-disabled-color {color: grey;}
+.dntp-success-color {color: green;}
+.dntp-error-color {color: indianred;}

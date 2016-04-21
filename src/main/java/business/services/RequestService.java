@@ -290,9 +290,12 @@ public class RequestService {
         }
         taskService.complete(task.getId());
 
-        String requestNumber = requestNumberService.getNewRequestNumber();
-        properties.setRequestNumber(requestNumber);
-        properties =  requestPropertiesService.save(properties);
+        if (properties.getRequestNumber() == null || properties.getRequestNumber().isEmpty()) {
+            // The request is a new request and needs to have a new number assigned.
+            String requestNumber = requestNumberService.getNewRequestNumber();
+            properties.setRequestNumber(requestNumber);
+            properties =  requestPropertiesService.save(properties);
+        }
 
         mailService.sendAgreementFormLink(requester, properties);
 

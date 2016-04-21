@@ -13,6 +13,8 @@
         'An email has been sent to ? with instructions on how to reset your password.': 'An email has been sent to {{email}} with instructions on how to reset your password.',
         'Registration completed. An email with an activation link was sent to ?.': 'Registration completed. An email with an activation link was sent to {{email}}.',
         'Postal code': 'Zip code',
+        'Available' : 'Available',
+        'Not Available' : 'Not Available',
 
         /* ========= */
         /* Request */

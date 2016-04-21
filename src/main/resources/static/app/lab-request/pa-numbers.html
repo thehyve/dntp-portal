@@ -11,13 +11,15 @@ This file is distributed under the GNU Affero General Public License
     <!-- PA number -->
     <div class="form-group" ng-if="(isLabUser() || isHubUser()) && labRequest.status == 'Approved'">
         <div class="col-sm-8">
-            <input type="text" class="form-control" id="paNumber" name="paNumber" placeholder="{{ 'PA number' | translate }}"
-                   ng-model="editPathology.paNumber" ng-maxlength="100"  data-placement="bottom" data-animation="am-flip-x" required
+            <input type="text" class="form-control" id="paNumber" name="paNumber"
+                   placeholder="{{ 'PA number' | translate }}"
+                   ng-model="editPathology.paNumber" ng-maxlength="100"
+                   data-placement="bottom" data-animation="am-flip-x" required
                    ng-disabled="!isCurrentUser(labRequest.assignee)">
         </div>
         <button class="btn btn-primary" title="{{'Add'|translate}}"
             ng-click="addPathology(labRequest, editPathology)"
-            ng-disabled="pathologyForm.paNumber.$invalid || isCurrentUser(labRequest.assignee)">
+            ng-disabled="pathologyForm.paNumber.$invalid || !isCurrentUser(labRequest.assignee)">
             {{'Add PA number'|translate}}
         </button>
     </div>
@@ -27,18 +29,19 @@ This file is distributed under the GNU Affero General Public License
 <table st-table="paNumbersDisplayedCollection" st-safe-src="labRequest.pathologyList" class="table table-striped">
   <thead>
   <tr>
-    <th class="print-pa-id-col" style="width: 5em;">{{'Sequence number' | translate}}</th>
-    <th class="print-pa-no-col" st-sort="paNumber" style="width: 10em;">{{'PA number' | translate}}</th>
-    <th class="print-pa-samples-col">{{'Samples' | translate}}</th>
-    <th class="print-pa-total-col" style="width: 5em;">{{'Total Samples' | translate}}</th>
-    <th class="no-print" class="" style="width: 10em;"
-        ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)
-            && (labRequest.status == 'Approved' || labRequest.status=='Received' || labRequest.status=='Sending')">
-        {{'Actions' | translate}}
-    </th>
+        <th class="print-pa-id-col" style="width: 5em;">{{'Sequence number' | translate}}</th>
+        <th class="print-pa-no-col" st-sort="paNumber" style="width: 10em;">{{'PA number' | translate}}</th>
+        <th class="print-pa-samples-col" st-sort="samples">{{'Samples' | translate}}</th>
+        <th class="print-pa-total-col" style="width: 5em;">{{'Total Samples' | translate}}</th>
+        <th class="no-print" style="width: 10em;"
+            ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)
+                && (labRequest.status == 'Approved' || labRequest.status=='Received' || labRequest.status=='Sending')">
+            &nbsp;
+        </th>
   </tr>
   <tr class="no-print">
-    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/></th>
+    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/>
+    </th>
   </tr>
   </thead>
   <tbody>
@@ -56,35 +59,56 @@ This file is distributed under the GNU Affero General Public License
         replace-spaces-with-dashes="false"
         ng-model="pathology.samples" 
         placeholder="Enter sample codes"
-        add-on-enter="true"
+        add-on-enter="true"clear
         add-on-blur="true"
         add-on-paste="true"
         min-length="1"
-        ng-if="isCurrentUser(labRequest.assignee) && labRequest.request.materialsRequest"></tags-input>
+        ng-if="(isLabUser() || isHubUser()) &&
+                isCurrentUser(labRequest.assignee) &&
+                labRequest.request.materialsRequest &&
+                (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending') &&
+                pathology.samplesAvailable != false"
+        ng-disabled="pathology.samplesAvailable == false"
+      ></tags-input>
         <span ng-if="!isCurrentUser(labRequest.assignee)">
             <span ng-repeat="sample in pathology.samples">
                 <label class="label label-primary">{{sample}}</label>
             </span>
         </span>
+        <i class="print-pa-availability " ng-if="pathology.samplesAvailable == false">
+            {{'Samples are not available' | translate}}
+        </i>
     </td>
     <td>{{pathology.samples.length}}</td>
-    <td class="no-print" ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee) 
-        && (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending')">
-    <span class="pull-right">
-        <span class="btn-group">
-            <a  ng-if="labRequest.status == 'Approved'"
-                class="btn btn-default" role="button" title="{{'Delete'|translate}}"
-                ng-click="deletePathology(labRequest, pathology)">
-            <span><i class="glyphicon glyphicon-trash"></i></span>
-            </a>
-            <a  ng-if="labRequest.status=='Received' || labRequest.status=='Sending'"
-                href="mailto:{{getRecallMailRecipients(labRequest)
-                }}?subject=Regarding request {{labRequest.labRequestCode}}, recall sample {{pathology.paNumber}}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
-                class="btn btn-default" role="button" title="{{'Recall sample' | translate}}">
-                <span><i class="glyphicon glyphicon-envelope"></i></span>
-                {{'Compose recall mail' | translate}}
-            </a>
-        </span>
+    <td class="no-print" ng-if="(isLabUser() || isHubUser()) &&
+                isCurrentUser(labRequest.assignee) &&
+                (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending')">
+        <span class="pull-right">
+            <span class="btn-group">
+                <a ng-if="labRequest.status == 'Approved'"
+                   class="btn btn-default" role="button" title="{{'Delete'|translate}}"
+                   ng-click="deletePathology(labRequest, pathology)">
+                    <span><i class="glyphicon glyphicon-trash"></i></span>
+                </a>
+                <a ng-if="labRequest.status=='Received' || labRequest.status=='Sending'"
+                   href="mailto:{{getRecallMailRecipients(labRequest)
+                    }}?subject=Regarding request {{labRequest.labRequestCode}}, recall sample {{pathology.paNumber}}
+                    &amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
+                   class="btn btn-default" role="button" title="{{'Recall sample' | translate}}">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    {{'Compose recall mail' | translate}}
+                </a>
+                <a  ng-click="toggleAvailability(labRequest, pathology)"
+                    ng-disabled="pathology.samples.length > 0"
+                    class="btn btn-default no-print"
+                    role="button"
+                    title="{{pathology.samplesAvailable == false ? 'Not Available' : 'Available' | translate}}">
+                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color: green;"
+                          ng-if="pathology.samplesAvailable == true || pathology.samplesAvailable == null"></span>
+                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="color: red;"
+                          ng-if="pathology.samplesAvailable == false"></span>
+                </a>
+            </span>
         </span>
     </td>
   </tr>

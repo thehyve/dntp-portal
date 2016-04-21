@@ -64,6 +64,8 @@ ul li { display: inline; }
     clear: left;
 }
 
+.print-pa-availability {display: block }
+
 address {
     margin-bottom: 20px;
 }

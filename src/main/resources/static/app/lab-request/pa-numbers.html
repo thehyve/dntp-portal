@@ -32,7 +32,7 @@ This file is distributed under the GNU Affero General Public License
         <th class="print-pa-id-col" style="width: 5em;">{{'Sequence number' | translate}}</th>
         <th class="print-pa-no-col" st-sort="paNumber" style="width: 10em;">{{'PA number' | translate}}</th>
         <th class="print-pa-samples-col" st-sort="samples">{{'Samples' | translate}}</th>
-        <th class="print-pa-total-col" style="width: 5em;">{{'Total Samples' | translate}}</th>
+        <th class="print-pa-total-col" style="width: 5em;">{{'Number of samples' | translate}}</th>
         <th class="no-print" style="width: 10em;"
             ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)
                 && (labRequest.status == 'Approved' || labRequest.status=='Received' || labRequest.status=='Sending')">
@@ -40,7 +40,7 @@ This file is distributed under the GNU Affero General Public License
         </th>
   </tr>
   <tr class="no-print">
-    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="Search ..." type="text"/>
+    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
     </th>
   </tr>
   </thead>
@@ -58,7 +58,7 @@ This file is distributed under the GNU Affero General Public License
         on-tag-removed="updatePathology(labRequest, pathology)"
         replace-spaces-with-dashes="false"
         ng-model="pathology.samples" 
-        placeholder="Enter sample codes"
+        placeholder="{{'Enter sample codes'|translate}}"
         add-on-enter="true"clear
         add-on-blur="true"
         add-on-paste="true"
@@ -102,7 +102,7 @@ This file is distributed under the GNU Affero General Public License
                     ng-disabled="pathology.samples.length > 0"
                     class="btn btn-default no-print"
                     role="button"
-                    title="{{pathology.samplesAvailable == false ? 'Not Available' : 'Available' | translate}}">
+                    title="{{pathology.samplesAvailable == false ? 'Not available' : 'Available' | translate}}">
                     <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color: green;"
                           ng-if="pathology.samplesAvailable == true || pathology.samplesAvailable == null"></span>
                     <span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="color: red;"

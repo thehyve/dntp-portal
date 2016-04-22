@@ -171,25 +171,26 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
-        
-        RequestRepresentation representation = 
+
+        RequestRepresentation representation =
                 requestController.getRequestById(palga, processInstanceId);
         log.info("Status: " + representation.getStatus());
-        
+
         representation = requestController.claim(palga, processInstanceId, representation);
-        
+
+        representation.setPrivacyCommitteeRationale("ppc_approved_written_procedure");
         representation.setScientificCouncilApproved(true);
         representation.setPrivacyCommitteeApproved(true);
-        
+
         representation = requestController.finalise(palga, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
         assertEquals("DataDelivery", representation.getStatus());
-        
+
         SecurityContextHolder.clearContext();
     }
-    
+
     public abstract void uploadExcerptList() throws IOException;
-    
+
     public abstract void selectExcerpts();
-    
+
 }

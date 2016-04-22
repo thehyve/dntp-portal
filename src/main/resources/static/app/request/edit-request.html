@@ -528,6 +528,18 @@ This file is distributed under the GNU Affero General Public License
                             </div>
                         </div>
 
+                        <!-- Privacy committee result rationale -->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="privacyCommitteeRationale">{{'Rationale' | translate}}</label>
+                            <div class="col-sm-8">
+                            <div ng-repeat="option in privacyCommitteeRationaleOptions">
+                            <input name="privacyCommitteeRationale" type="radio" id="radio-{{option}}"
+                                ng-model="request.privacyCommitteeRationale" value="{{option}}">
+                            <label class="normal" for="radio-{{option}}">{{option | translate}}</label>
+                            </div>
+                            </div>
+                        </div>
+
                         <!-- Review result -->
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Review result' | translate
@@ -595,6 +607,7 @@ This file is distributed under the GNU Affero General Public License
                             </label>
                             <div class="col-sm-8">
                                 <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved"
+                                       ng-disabled="!request.privacyCommitteeRationale"
                                        ng-model="request.privacyCommitteeApproved"> &nbsp;
                                 <label class="normal" for="privacyCommitteeApproved">{{
                                 'Approved by privacy committee.' | translate }}</label>

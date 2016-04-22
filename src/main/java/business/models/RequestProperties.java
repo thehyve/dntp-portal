@@ -80,6 +80,9 @@ public class RequestProperties {
     @Column
     private boolean sentToPrivacyCommittee;
 
+    @Column
+    private String privacyCommitteeRationale;
+
     @Column(length = 10000)
     private String privacyCommitteeOutcome;
 
@@ -205,6 +208,14 @@ public class RequestProperties {
         this.sentToPrivacyCommittee = sentToPrivacyCommittee;
     }
 
+    public String getPrivacyCommitteeRationale() {
+        return privacyCommitteeRationale;
+    }
+
+    public void setPrivacyCommitteeRationale(String privacyCommitteeRationale) {
+        this.privacyCommitteeRationale = privacyCommitteeRationale;
+    }
+
     public String getPrivacyCommitteeOutcome() {
         return privacyCommitteeOutcome;
     }
@@ -261,5 +272,5 @@ public class RequestProperties {
     public void setReseachNumber(String reseachNumber) {
         this.reseachNumber = reseachNumber;
     }
-    
+
 }

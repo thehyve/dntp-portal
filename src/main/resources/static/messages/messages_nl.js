@@ -170,7 +170,13 @@
         'popover: Upload medical ethical committee approval': 'Upload brief van medisch-ethische toetsingscommissie.',
         'Close request': 'Aanvraag afsluiten',
         'Compose mail to members': 'Schrijf e-mail aan leden',
-    
+
+        'ppc_handled_according_mandate': 'Afgehandeld conform mandaat PPC',
+        'ppc_handled_according_mandate_explanation': 'Afgehandeld conform mandaat PPC, zie toelichting',
+        'ppc_approved_written_procedure': 'Goedgekeurd na schriftelijke procedure',
+        'ppc_discuss': 'Bespreken in vergadering',
+        'ppc_rationale_exploratory_request': 'Oriënterende aanvraag, geen oordeel vereist',
+
         /* ========= */
         /* Login */
         /* ========= */

@@ -95,6 +95,7 @@ public class RequestRepresentation {
 
     // Privacy Committee
     private boolean sentToPrivacyCommittee;
+    private String privacyCommitteeRationale;
     private String privacyCommitteeOutcome;
     private String privacyCommitteeOutcomeRef;
     private String privacyCommitteeEmails;
@@ -436,6 +437,14 @@ public class RequestRepresentation {
 
     public void setApprovalVotes(Map<Long, ApprovalVoteRepresentation> approvalVotes) {
         this.approvalVotes = approvalVotes;
+    }
+
+    public String getPrivacyCommitteeRationale() {
+        return privacyCommitteeRationale;
+    }
+
+    public void setPrivacyCommitteeRationale(String privacyCommitteeRationale) {
+        this.privacyCommitteeRationale = privacyCommitteeRationale;
     }
 
     public String getPrivacyCommitteeOutcomeRef() {

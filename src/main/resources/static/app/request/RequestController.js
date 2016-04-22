@@ -11,14 +11,16 @@ angular.module('ProcessApp.controllers')
         'Request', 'RequestAttachment', 'RequestComment',
         'ApprovalComment', 'ApprovalVote',
         'Upload', '$routeParams', 'RequestFilter',
-        '$alert', '$timeout',
+        '$alert', '$timeout', '$q',
+        '$templateCache', '$http',
         'AgreementFormTemplate',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
                   ApprovalComment, ApprovalVote,
                   Upload, $routeParams, RequestFilter,
-                  $alert, $timeout,
+                  $alert, $timeout, $q,
+                  $templateCache, $http,
                   AgreementFormTemplate) {
 
             $scope.statuses = Request.statuses;
@@ -60,6 +62,7 @@ angular.module('ProcessApp.controllers')
                     $scope.allRequests = response ? response : [];
                     $scope.allRequests.forEach(function(req) {
                         req.number = Request.convertRequestNumber(req);
+                        req.type = Request.convertRequestOptsToType(req);
                     });
                 }, function(response) {
                     $rootScope.logErrorResponse(response);
@@ -652,6 +655,111 @@ angular.module('ProcessApp.controllers')
                         });
                     });
                 });
+                });
+            };
+
+            $scope.selected_requests = {};
+            $scope.filteredCollection = [];
+
+            $scope.toggleSelect = function(filteredCollection) {
+                if (_.includes($scope.selected_requests, true)) {
+                    $scope.selected_requests = {};
+                } else {
+                    $scope.selected_requests = _.fromPairs(
+                            _.map(filteredCollection, function(request) {
+                                return [request.processInstanceId, true];
+                            })
+                    );
+                }
+            };
+
+            $scope.print_selection = [];
+            $scope.renderPrintSelection = false;
+
+            var openPrintWindow = function () {
+                var elementId = 'printcontents';
+                var css_links = _.map([
+                    './bower_components/bootstrap/dist/css/bootstrap.min.css',
+                    './css/print.css'
+                ], function(link) {
+                    return '<link rel="stylesheet" type="text/css" href="' + link + '" />';
+                }).join('');
+                var _contents = '<!DOCTYPE html>\n<html><head>'
+                    .concat(css_links)
+                    .concat('</head><body onload="//window.print()">')
+                    .concat(document.getElementById(elementId).innerHTML)
+                    .concat('</body></html>');
+                var _printWindow = window.open('', '_blank');
+                _printWindow.document.write(_contents);
+                _printWindow.document.close();
+            };
+
+            var _templates = [
+                 'app/components/address/address-template.html',
+                 'app/request/request-contents.html',
+                 'app/request/comments.html',
+                 'app/request/approvals.html',
+                 'app/request/upload-file.html'
+            ];
+
+            /**
+             * Prefetch templates for the print preview. If the templates are
+             * not prefetched, the templates will be fetched asynchonously,
+             * resulting in unrendered parts of the print page.
+             *
+             * @return promise that fetched the templates when executed.
+             */
+            var prefetchTemplates = function() {
+                var promises = _.map(_templates, function(template) {
+                    return $q(function(resolve, reject) {
+                        $http.get(template).then(function(response) {
+                            $templateCache.put(template, response.data);
+                            resolve(response);
+                        }, function(err) {
+                            reject(err);
+                        })
+                    });
+                });
+                return $q.all(promises);
+            };
+
+            /**
+             * Fetch the detailed request objects for the selected requests.
+             * Reads the selection from <code>$scope.selected_requests</code>.
+             * The fetched objects are stored in <code>$scope.print_selection</code>.
+             *
+             * @return promise that fetches the objects when executed.
+             */
+            var fetchSelected = function() {
+                var selected = _.transform($scope.selected_requests, function(result, value, key) {
+                    if (value) { result.push(key); }
+                  }, []);
+                $scope.print_selection = [];
+                var promises = _.map(selected, function(requestId) {
+                    return $q(function(resolve, reject) {
+                        Request.get({id: requestId}, function(req) {
+                            req.type = Request.convertRequestOptsToType(req);
+                            $scope.print_selection.push(req);
+                            resolve(req);
+                        }, function(response) {
+                            reject(response);
+                        });
+                    });
+                });
+                return $q.all(promises);
+            };
+
+            /**
+             * Prefetch templates, fetch detailed request objects and opens a
+             * new window with a printable version of the selected request list.
+             */
+            $scope.printSelected = function() {
+                prefetchTemplates()
+                .then(function() {
+                    return fetchSelected();
+                })
+                .then(function() {
+                    $timeout(openPrintWindow);
                 });
             };
 

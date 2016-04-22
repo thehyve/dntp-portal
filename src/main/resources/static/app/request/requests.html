@@ -29,11 +29,19 @@ This file is distributed under the GNU Affero General Public License
             <h1>{{ 'Requests' | translate }}</h1>
             <hr>
             <!--Tool bar-->
-          <ul class="nav nav-pills" ng-if="isRequester()">
-            <li role="presentation" title="Create a new request">
+            <ul class="nav nav-pills" ng-if="isRequester()">
+            <li role="presentation" title="{{'Create a new request'|translate}}">
                 <button class="btn btn-default"  ng-click="start()" id="new-request">
                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     {{'Create new request'|translate}}
+                </button>
+            </li>
+            </ul>
+            <ul class="nav nav-pills" ng-if="isPalga()">
+            <li role="presentation" title="{{'Print selected'|translate}}">
+                <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
+                    <span><i class="glyphicon glyphicon-print"></i></span>
+                    {{'Print selected'|translate}}
                 </button>
             </li>
             </ul>
@@ -50,10 +58,18 @@ This file is distributed under the GNU Affero General Public License
 
             <!--List of request-->
             <div class="table-responsive" ng-if="authenticated">
-                <table st-table="displayedCollection" st-safe-src="requests" class="table">
+                <table st-table="displayedCollection" st-safe-src="requests" class="table" st-export-filtered="filteredCollection">
                 <!-- <table st-table="displayedCollection | filter:filterEmptyRequests" st-safe-src="requests" class="table"> -->
                     <thead>
                     <tr>
+                        <th class="no-print">
+                            <a role="button"
+                                ng-if="isPalga()"
+                                ng-click="toggleSelect(filteredCollection)"
+                                title="{{'Select all'|translate}}">
+                                <i class="mdi mdi-check-all"></i>
+                            </a>
+                        </th>
                         <th st-sort="number" style="width: 6em">#</th>
                         <th st-sort="title">{{'Title'|translate}}</th>
                         <th st-sort="status">{{'Status'|translate}}</th>
@@ -65,6 +81,7 @@ This file is distributed under the GNU Affero General Public License
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
                     <tr class="no-print">
+                        <th class="no-print">&nbsp;</th>
                         <th><input st-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><select st-search="status" class="input-sm form-control" type="search" st-input-event="change">
@@ -75,19 +92,26 @@ This file is distributed under the GNU Affero General Public License
                             </select>
                         </th>
                         <th>&nbsp;</th>
-                        <th class="request-vote" ng-if="isScientificCouncil()">&nbsp;</th>
+                        <th ng-if="isScientificCouncil()" class="request-vote">&nbsp;</th>
                         <th ng-if="isPalga()"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()">&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
                     </tr>
                     <tr class="no-print">
-                        <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th class="no-print">&nbsp;</th>
+                        <th colspan="{{isPalga() ? 7 : (isScientificCouncil() ? 5 : 4)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': isCurrentUser(req.assignee)}">
+                        <td class="no-print">
+                            <input class="input-sm form-control"
+                                ng-if="isPalga()"
+                                type="checkbox" value="1"
+                                ng-model="selected_requests[req.processInstanceId]" />
+                        </td>
                         <td>{{req.requestNumber}}</td>
                         <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
                         <td class="request-status">{{req.status | translate}}
@@ -166,6 +190,10 @@ This file is distributed under the GNU Affero General Public License
             <!--=====================================================-->
 
         </div> <!--end Main Content-->
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+            <div class="print-only" ng-include="'app/request/printrequests.html'" id="printcontents"></div>
+        </div>
 
     </div>
 </div>

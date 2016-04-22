@@ -1,0 +1,8 @@
+<div ng-repeat="request in print_selection" style="page-break-inside: avoid;">
+
+<h1 class="h1">{{request.requestNumber}}&nbsp;&nbsp;{{request.title}}</h1>
+<hr>
+
+<div ng-include="'app/request/request-contents.html'"></div>
+
+</div>

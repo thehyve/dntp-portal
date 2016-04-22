@@ -10,7 +10,6 @@ This file is distributed under the GNU Affero General Public License
         )">
 
     <h4 class="h4 h4-palga">{{'Excerpt list'|translate}}</h4>
-    <hr>
     
     <div ng-if="request.excerptList">
         <a class="btn btn-default" ng-href="/requests/{{request.processInstanceId}}/excerptList/csv" 
@@ -19,13 +18,9 @@ This file is distributed under the GNU Affero General Public License
         {{'Download'|translate}} excerpts_{{request.processInstanceId}}.csv
         <span class="badge">{{request.excerptList.entries.length}}</span>
         </a>
-        <br>
-        <br>
     </div>
     <div ng-if="!request.excerptList">
         <em>{{'No excerpt list.'|translate}}</em>
-        <br>
-        <br>
     </div>
     
 
@@ -56,8 +51,6 @@ This file is distributed under the GNU Affero General Public License
                 ({{'drag and drop your file here'|translate}})
             </div>
         </div>
-        <br>
-        <br>
     </div>
 
     <div ng-if="request.excerptList && request.status == 'DataDelivery'
@@ -70,8 +63,6 @@ This file is distributed under the GNU Affero General Public License
         <i class="glyphicon glyphicon-check"></i>
         {{'Select all excerpts and continue'|translate}}
         </a>
-        <br>
-        <br>
     </div>
 
     <div ng-if="isExcerptSelectionState(request.status) 
@@ -80,7 +71,6 @@ This file is distributed under the GNU Affero General Public License
         ng-controller="SelectionController">
 
         <h4 class="h4 h4-palga">{{'Excerpt selection'|translate}}</h4>
-        <hr>
         <!-- Excerpt selection upload -->
         <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
              flow-name="excerptSelectionFlow"
@@ -145,14 +135,11 @@ This file is distributed under the GNU Affero General Public License
           >
           {{'Reject selection'|translate}}
         </button>
-        <br>
-        <br>
     </div>
 
   </div>
 
   <h4 class="h4 h4-palga">{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
-  <hr>
 
   <div class="list-group">
     <a ng-repeat="file in request.dataAttachments"

@@ -1,0 +1,17 @@
+<address>
+    {{contactData.address1}}
+    <br ng-if="contactData.address1">
+    {{contactData.address2}}
+    <br ng-if="contactData.address2">
+    {{contactData.postalCode}} {{contactData.city}}
+    <br ng-if="contactData.postalCode || contactData.city">
+    <span ng-if="contactData.telephone">
+        <span><i class="glyphicon glyphicon-earphone"></i></span>
+        {{contactData.telephone}}
+    </span>
+    <br ng-if="contactData.telephone">
+    <span ng-if="contactData.email">
+        <span><i class="glyphicon glyphicon-envelope"></i></span>
+        <a class="no-print-url" href="mailto:{{contactData.email}}">{{contactData.email}}</a>
+    </span>
+</address>

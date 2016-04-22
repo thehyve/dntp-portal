@@ -4,27 +4,26 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div ng-controller="RequestCommentController">
-    <h3 class="h3 h3-palga">
+    <h4 class="h4 h4-palga">
         {{'Notes'|translate}}
-        <span class="badge">{{request.comments.length}}</span><br>
-        <small>({{'only visible for Palga'|translate}})</small>
-    </h3>
-    <hr>
+        <span class="badge no-print">{{request.comments.length}}</span><br class="no-print">
+        <small class="no-print">({{'only visible for Palga'|translate}})</small>
+    </h4>
 
     <div>
-        <ul class="list-group">
+        <ul class="list-group comments">
             <li class="list-group-item" ng-repeat="comment in request.comments">
                 <div ng-show="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
                 <div ng-show="commentEditVisibility[comment.id]">
-                   <textarea id="editCommentText" class="form-control" name="editCommentText" placeholder="{{'Add note'|translate}}"
+                   <textarea id="editCommentText" class="form-control no-print" name="editCommentText" placeholder="{{'Add note'|translate}}"
                              ng-model="comment.contents">
                    </textarea>
-                    <button class="btn btn-primary btn-xs" type="button" title="{{'Update note'|translate}}"
+                    <button class="btn btn-primary btn-xs no-print" type="button" title="{{'Update note'|translate}}"
                             ng-click="updateComment(request, comment)" ng-disabled="dataLoading">
                         <span><i class="glyphicon glyphicon-pencil"></i></span> {{'Update'|translate}}
                     </button>
                 </div>
-                <span class="pull-right">
+                <span class="pull-right no-print">
                     <span class="btn-group btn-group-xs">
                         <button class="btn btn-info" type="button" title="Edit"
                                 ng-click="commentEditVisibility[comment.id] = 1">
@@ -51,6 +50,7 @@ This file is distributed under the GNU Affero General Public License
     </div>
 
     <!-- Add comment -->
+    <div class="no-print">
     <input type="hidden" ng-model="editComment.processInstanceId" value="{{request.processInstanceId}}">
     <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
               ng-model="editComment.contents">
@@ -69,4 +69,6 @@ This file is distributed under the GNU Affero General Public License
     </button>
     <br>
     <br>
+    </div>
+
 </div>

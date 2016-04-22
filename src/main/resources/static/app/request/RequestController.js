@@ -618,7 +618,9 @@ angular.module('ProcessApp.controllers')
                 requestTypePopover: ['radio-numbers', 'radio-excerpts', 'radio-excerpts-PA', 'radio-excerpts-materials',
                                      'radio-excerpts-PA-materials', 'radio-PA', 'radio-materials'],
                 dataLinkagePopover: ['linkageWithPersonalDataYes', 'linkageWithPersonalDataNo'],
-                informedConsentPopover: ['informedConsentYes', 'informedConsentNo']
+                informedConsentPopover: ['informedConsentYes', 'informedConsentNo'],
+                uploadFilePopover: ['button_upload_attachment'],
+                uploadMETCLetterPopover: ['button_upload_metc_letter']
             };
 
             $scope.showPopover = function(id) {

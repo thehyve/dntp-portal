@@ -79,7 +79,7 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!-- Previous contact -->
-                    <div class="form-group" ng-mouseover="showPopover('previousContactPopover')" ng-mouseleave="hidePopover('previousContactPopover')">
+                    <div class="form-group" ng-mouseenter="showPopover('previousContactPopover')" ng-mouseleave="hidePopover('previousContactPopover')">
                         <label class="control-label col-sm-3">
                             {{'Previous contact' | translate}}
                         </label>
@@ -193,13 +193,12 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!--Request Type-->
-                    <div class="form-group">
+                    <div class="form-group" ng-mouseenter="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')">
                         <label class="control-label col-sm-3">
                             {{'Request type' | translate}}
                         </label>
                         <div class="col-sm-6"
                             id="requestTypePopover"
-                            ng-mouseover="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')"
                             data-placement="top-right" data-animation="am-flip-x"
                             data-content="{{'popover: Request type'|translate}}" data-html="true"
                             data-trigger="manual" bs-show="popover.requestType" bs-popover
@@ -339,19 +338,21 @@ This file is distributed under the GNU Affero General Public License
                     <hr>
 
                     <!-- Data Linkage -->
-                    <div class="form-group" ng-mouseover="showPopover('dataLinkagePopover')" ng-mouseleave="hidePopover('dataLinkagePopover')">
+                    <div class="form-group" ng-mouseenter="showPopover('dataLinkagePopover')" ng-mouseleave="hidePopover('dataLinkagePopover')">
                         <label class="control-label col-sm-3">
                             {{'Data linkage' | translate}}
                         </label>
-                        <div class="col-sm-8"
+                        <div class="col-sm-6"
+                            bs-popover
                             id="dataLinkagePopover"
-                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Data linkage'|translate}}" data-trigger="manual" bs-show="popover.dataLinkage" bs-popover>
+                            title="{{'Data linkage' | translate}}"
+                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Data linkage'|translate}}" data-trigger="manual">
                             <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData"
                                     ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData">
-                            <label class="normal" for="linkageWithPersonalDataYes">{{'Linkage with own patients or cohort or linkage between registries.' | translate}}</label><br>
+                            <label class="normal radio-label" for="linkageWithPersonalDataYes">{{'Linkage with own patients or cohort or linkage between registries.' | translate}}</label><br>
                             <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData"
                                     ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);">
-                            <label class="normal" for="linkageWithPersonalDataNo">{{'No data linkage required.' | translate}}</label><br>
+                            <label class="normal radio-label" for="linkageWithPersonalDataNo">{{'No data linkage required.' | translate}}</label><br>
                         </div>
                     </div>
                     </div>
@@ -375,12 +376,13 @@ This file is distributed under the GNU Affero General Public License
 
                     <!-- Informed Consent  -->
                     <div class="form-group" ng-class="" ng-show="request.type != 1 && request.linkageWithPersonalData"
-                            ng-mouseover="showPopover('informedConsentPopover')" ng-mouseleave="hidePopover('informedConsentPopover')">
+                            ng-mouseenter="showPopover('informedConsentPopover')" ng-mouseleave="hidePopover('informedConsentPopover')">
                         <label class="control-label col-sm-3" for="informedConsentYes">
                             {{'Informed consent (IC)' | translate}}
                         </label>
-                        <div class="col-sm-8"
+                        <div class="col-sm-6"
                             id="informedConsentPopover"
+                            title="{{'Informed consent (IC)' | translate}}"
                             data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Informed consent'|translate}}" data-trigger="manual" bs-show="popover.informedConsent" bs-popover>
                             <input type="radio" id="informedConsentYes" name="informedConsent"
                                     ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);">
@@ -413,7 +415,9 @@ This file is distributed under the GNU Affero General Public License
                     <h4 class="h4">{{ 'Attachments' | translate }}</h4>
                     <hr>
 
-                    <div ng-show="request.attachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+                    <div class="row">
+                    <div class="col-sm-8">
+                    <p ng-show="request.attachments.length < 1"><em>{{'No attachments uploaded.' | translate}}</em></p>
 
                     <div class="list-group">
                         <a ng-repeat="file in request.attachments"
@@ -431,20 +435,30 @@ This file is distributed under the GNU Affero General Public License
                             </span>
                         </a>
                     </div>
+                    </div>
+                    </div>
                     <!-- Attachment upload -->
-                    <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/files'})"
+                    <div class="row">
+                    <div class="col-sm-8"
+                         flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/files'})"
                          flow-name="attachmentFlow"
                          flow-files-submitted="fileuploadsubmitted('attachment'); Upload.uploadFile($flow)"
                          flow-file-success="Upload.fileUploadSuccess('attachment', $message, $file); fileuploadsuccess(request, $message, 'attachment', $flow)"
-                         flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'attachment')">
+                         flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'attachment')"
+                         ng-mouseenter="showPopover('uploadFilePopover')" ng-mouseleave="hidePopover('uploadFilePopover')">
                         <div class="alert alert-danger" role="alert" ng-if="upload_result['attachment'] == 'error'">
                             <span ng-bind-html="upload_error['attachment']"></span>
                         </div>
 
-                        <div>
+                        <div id="uploadFilePopover"
+                            bs-popover
+                            title="{{'Upload file'|translate}}"
+                            data-placement="top-right" data-animation="am-flip-x"
+                            data-trigger="manual"
+                            data-content="{{'popover: Upload file'|translate}}">
                             <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
-                            <button class="btn btn-default" 
-                                data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Upload file'|translate}}" data-trigger="hover" bs-popover
+                            <button class="btn btn-default"
+                                id="button_upload_attachment"
                                 flow-btn>{{'Upload file'|translate}}</button>
                         </div>
                         <br>
@@ -455,11 +469,14 @@ This file is distributed under the GNU Affero General Public License
                             ({{'drag and drop your file here'|translate}})
                         </div>
                     </div>
+                    </div>
 
                     <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
                     <hr>
 
-                    <div ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+                    <div class="row">
+                    <div class="col-sm-8">
+                    <p ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><em>{{'No attachments uploaded.' | translate}}</em></p>
 
                     <div class="list-group">
                         <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
@@ -477,22 +494,31 @@ This file is distributed under the GNU Affero General Public License
                             </span>
                         </a>
                     </div>
+                    </div>
+                    </div>
                     <!-- Medical Ethical Committee approval upload -->
-                    <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/mecFiles'})"
+                    <div class="row">
+                    <div class="col-sm-8"
+                         flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/mecFiles'})"
                          flow-name="mecApprovalFlow"
                          flow-files-submitted="fileuploadsubmitted('mec_approval'); Upload.uploadFile($flow)"
                          flow-file-success="Upload.fileUploadSuccess('MEC approval', $message, $file); fileuploadsuccess(request, $message, 'mec_approval', $flow)"
                          flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'mec_approval')"
+                         ng-mouseenter="showPopover('uploadMETCLetterPopover')" ng-mouseleave="hidePopover('uploadMETCLetterPopover')"
                     >
                         <div class="alert alert-danger" role="alert" ng-if="upload_result['mec_approval'] == 'error'">
                             <span ng-bind-html="upload_error['mec_approval']"></span>
                         </div>
-                        <div>
+                        <div id="uploadMETCLetterPopover"
+                            bs-popover
+                            title="{{'Upload letter'|translate}}"
+                            data-placement="top-right" data-animation="am-flip-x"
+                            data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
+                            data-trigger="manual"
+                            >
                             <input type="file" flow-btn id="test-upload-attachment2" style="display:none"/>
                             <button class="btn btn-default"
-                                    data-placement="top-left" data-animation="am-flip-x"
-                                    data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
-                                    data-trigger="hover" bs-popover
+                                    id="button_upload_metc_letter"
                                     flow-btn>{{'Upload letter'|translate}}
                             </button>
                         </div>
@@ -503,6 +529,7 @@ This file is distributed under the GNU Affero General Public License
                              ng-style="style">
                             ({{'drag and drop your file here'|translate}})
                         </div>
+                    </div>
                     </div>
 
 

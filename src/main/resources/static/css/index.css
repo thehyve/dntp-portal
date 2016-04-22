@@ -313,3 +313,8 @@ address {margin-bottom: 0px;}
 .dntp-disabled-color {color: grey;}
 .dntp-success-color {color: green;}
 .dntp-error-color {color: indianred;}
+
+.radio-label {
+    vertical-align: top;
+    width: 90%;
+}

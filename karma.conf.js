@@ -54,7 +54,7 @@ module.exports = function(config) {
 
     ngHtml2JsPreprocessor: {
       stripPrefix: conf.paths.src + '/',
-      moduleName: 'ProcessApp'
+      moduleName: 'dntp-templates'
     },
 
     logLevel: 'WARN',

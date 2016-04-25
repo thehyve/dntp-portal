@@ -1,4 +1,4 @@
-describe('Unit testing great quotes', function() {
+describe('specialismComboBox', function() {
     var $compile,
         $rootScope,
         translate;
@@ -23,6 +23,7 @@ describe('Unit testing great quotes', function() {
         // fire all the watches, so the scope expression {{1 + 1}} will be evaluated
         $rootScope.$digest();
         // Check that the compiled element contains the templated content
-        expect(element.html()).toContain("select");
+        expect(element.html()).toContain("select"); // it should contain 'select' element
+        expect(element.html()).toContain("input"); // it should contain 'input' element
     });
 });

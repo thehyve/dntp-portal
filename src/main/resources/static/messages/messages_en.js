@@ -88,6 +88,30 @@
         /* ===================== */
         /* My Lab */
         /* ===================== */
+
+        /* ===================== */
+        /* Specialism */
+        /* ===================== */
+        'Maag-darm-lever-ziekten':'Gastrointestinal-liver-disease',
+        'Gynaecologie':'Gynecology',
+        'Dermatologie':'Dermatology',
+        'Medische Oncologie':'Medical Oncology',
+        'Interne geneeskunde':'Internal Medicine',
+        'Radiologie':'Radiology',
+        'Radiotherapie':'Radiotherapy',
+        'Chirurgie':'Surgery (Chirurgie)',
+        'Hematologie':'Haematology',
+        'Keel-neus-oor':'Throat-nose-ear',
+        'Heelkunde':'Surgery (Heelkunde)',
+        'Epidemiologie':'Epidemiologie',
+        'Eerstelijnsgeneeskunde':'Primary care',
+        'Cardiologie':'Cardiology',
+        'Longziekten':'Lung Disease',
+        'Urologie':'Urology',
+        'Neurologie':'Neurology',
+        'Endocrinologie':'Endocrinology',
+        '(Other)':'(Other)',
+        '(Please select a specialism)' : '(Please select a specialism)',
         null: null
     };
 

@@ -129,16 +129,18 @@ This file is distributed under the GNU Affero General Public License
 
             <!-- Specialism -->
             <div class="form-group"
-                 ng-class="{ 'has-error' : registrationForm.specialism.$invalid &&
-                 registrationForm.specialism.$dirty }">
-                <label class="control-label col-sm-2" for="specialism">{{ 'Specialism' | translate }}</label>
-
+                 ng-class="{ 'has-error' : registrationForm.specialism.$invalid}">
+                <label class="control-label col-sm-2">{{ 'Specialism' | translate }}</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="specialism" id="specialism" placeholder="{{ 'Specialism' | translate }}"
-                           ng-model="user.specialism" ng-maxlength="100">
+                    <specialism-combo-box
+                            name="specialism"
+                            ng-model="user.specialism"
+                            custom-class="form-control" required>
+                    </specialism-combo-box>
                     <!-- errors -->
-                    <span class="help-block" ng-show="registrationForm.specialism.$error.maxlength">
-                        {{ 'Input value is too long' | translate }}
+                    <span ng-show="registrationForm.specialism.$error.required"
+                          class="help-block">
+                            {{ 'Required field' | translate }}
                     </span>
                 </div>
             </div>
@@ -150,7 +152,7 @@ This file is distributed under the GNU Affero General Public License
                 </label>
 
                 <div class="col-sm-10">
-                    <select class="form-control" name="lab" ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
+                    <select class="form-control" name="lab" id="lab" ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
                              ng-required="true">
                         <option value="" ng-selected="selected">&ndash; {{'Select lab' | translate}} &ndash;</option>
                     </select>

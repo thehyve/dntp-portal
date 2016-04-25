@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="currentRole">{{ 'Role' | translate }}</label>
                         <div class="col-sm-8">
-                            <select class="form-control" ng-model="edituser.currentRole">
+                            <select class="form-control" ng-model="edituser.currentRole" name="currentRole" id="currentRole">
                                 <option ng-repeat="role in roles" value="{{role.name}}"
                                         ng-selected="role.name == edituser.currentRole">{{role.name}}
                                 </option>
@@ -147,36 +147,28 @@
                                 </div>
                             </div>
                             <!-- errors -->
-                <span ng-show="registrationForm.lab.$error.required"
-                      class="help-block">
-                    {{ 'Required field' | translate }}
-                </span>
-                        </div>
-                    </div>
-
-                    <!-- Specialism
-                    <div class="form-group"
-                         ng-class="{ 'has-error' : registrationForm.specialism.$invalid && registrationForm.specialism.$dirty }">
-                        <label class="control-label col-sm-3" for="specialism">{{ 'Specialism' | translate }}</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="specialism" id="specialism"
-                                   placeholder="{{ 'Specialism' | translate }}"
-                                   ng-maxlength="100"
-                                   ng-model="edituser.specialism">
-                            <span class="help-block" ng-show="registrationForm.specialism.$error.maxlength">
-                                {{ 'Input value is too long' | translate }}
+                            <span ng-show="registrationForm.lab.$error.required"
+                                  class="help-block">
+                                {{ 'Required field' | translate }}
                             </span>
-
                         </div>
                     </div>
-                     -->
 
+                    <!-- Specialism -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : registrationForm.specialism.$invalid && registrationForm.specialism.$dirty }">
+                         ng-class="{ 'has-error' : registrationForm.specialism.$invalid}">
                         <label class="control-label col-sm-3">{{ 'Specialism' | translate }}</label>
                         <div class="col-sm-8">
-                            <specialism-combo-box specialism="edituser.specialism" custom-class="form-control">
+                            <specialism-combo-box
+                                    name="specialism"
+                                    ng-model="edituser.specialism"
+                                    custom-class="form-control" required>
                             </specialism-combo-box>
+                            <!-- errors -->
+                            <span ng-show="registrationForm.specialism.$error.required"
+                                  class="help-block">
+                                    {{ 'Required field' | translate }}
+                            </span>
                         </div>
                     </div>
 

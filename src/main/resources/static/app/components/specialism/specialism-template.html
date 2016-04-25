@@ -1,13 +1,15 @@
-<div ng-class="{'has-error': specialismTxt.length > 100 || specialismTxt.length < 1}">
-    <select ng-options="specialism.label for specialism in specialisms"
-            ng-model="selectedSpecialism" ng-change="updateSpecialismText(specialism.value)" ng-class="customClass">
+    <select ng-options="specialism.label | translate for specialism in specialisms"
+            ng-model="selectedSpecialism"
+            ng-change="updateSpecialismText(specialism.value)"
+            ng-class="customClass"
+    >
         <!-- Add your default option here -->
-        <option value="">{{'Please select a specialism' | translate}}</option>
+        <option value="">{{'(Please select a specialism)' | translate}}</option>
     </select>
     <input type="text"
-           ng-model="specialismTxt"
+           ng-model="modelValue"
            ng-class="customClass"
            style="margin-top: .2em"
-           ng-show="selectedSpecialism.value  == ''">
-</div>
+           ng-show="selectedSpecialism.value  == ''"
+    >
 

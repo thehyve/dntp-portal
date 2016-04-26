@@ -31,21 +31,23 @@ This file is distributed under the GNU Affero General Public License
                 <div class="alert alert-info" role="alert" ng-hide="users.length">
                     {{'There are no users yet.' | translate}}
                 </div>
-
-                <table st-table="displayedCollection" st-safe-src="users" class="table table-striped">
+                <div class="table-responsive">
+                    <table st-table="displayedCollection" st-safe-src="users"
+                           class="table table-striped">
                     <thead>
                     <tr>
                         <th st-sort="getters.lastName">{{'Name'|translate}}</th>
                         <th st-sort="username">{{'Email'|translate}}</th>
                         <th st-sort="emailValidated">{{'Validation'|translate}}</th>
                         <th st-sort="currentRole">{{'Role'|translate}}</th>
+                        <th st-sort="specialism">{{'Specialism'|translate}}</th>
                         <th st-sort="institute">{{'Institute'|translate}}</th>
                         <th st-sort="displayLabs">{{'Lab'|translate}}</th>
                         <th st-sort="getters.createdTime">{{'Created'|translate}}</th>
-                        <th></th>
+                        <th class="no-print smart-table-tool-col"></th>
                     </tr>
                     <tr>
-                        <th colspan="8"><input st-search="" class="form-control"
+                        <th colspan="9"><input st-search="" class="form-control"
                                                placeholder="{{'Search' | translate}} ..." type="text"/></th>
                     </tr>
                     </thead>
@@ -57,41 +59,47 @@ This file is distributed under the GNU Affero General Public License
                             <span class="text-danger" ng-if="!user.emailValidated">{{'Not validated'|translate}}</span>
                         </td>
                         <td>{{user.currentRole}}</td>
+                        <td>
+                            <span ng-class="{
+                                  'label label-success':isPredefinedSpecialism(user.specialism),
+                                  'label label-default':!isPredefinedSpecialism(user.specialism)
+                                  }"
+                            >{{user.specialism|translate}}</span>
+                        </td>
                         <td>{{user.institute}}</td>
                         <td><span ng-repeat="lab in user.displayLabs">{{lab}}<br /></span></td>
                         <td>{{user.created | date: 'EEE dd MMMM yyyy'}}
                             &nbsp;&nbsp;
                             {{user.created | date: 'HH:mm'}}
                         </td>
-                        <td>
-                            <span class="pull-right">
-                                <span class="btn-group">
-                                    <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(user)">
-                                        <span><i class="glyphicon glyphicon-pencil"></i></span>
-                                    </button>
-                                    <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
-                                            ng-if="!user.active"
-                                            type="button" title="Activate"
-                                            ng-click="activate(user)" ng-disabled="dataLoading">
-                                        <span class="glyphicon glyphicon-repeat"></span>
-                                    </button>
-                                    <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
-                                            ng-if="user.active"
-                                            type="button" title="Dectivate"
-                                            ng-click="deactivate(user)" ng-disabled="dataLoading">
-                                        <span class="glyphicon glyphicon-ban-circle"></span>
-                                    </button>
-                                    <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
-                                            ng-click="remove(user)">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                </span>
+                        <td class="dntp-tool-column">
+                            <span class="btn-group btn-group-sm">
+                                <button class="btn btn-default" type="button" title="{{'Edit' | translate}}"
+                                        ng-click="edit(user)">
+                                    <span><i class="glyphicon glyphicon-pencil"></i></span>
+                                </button>
+                                <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
+                                        ng-if="!user.active"
+                                        type="button" title="Activate"
+                                        ng-click="activate(user)" ng-disabled="dataLoading">
+                                    <span class="glyphicon glyphicon-repeat"></span>
+                                </button>
+                                <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
+                                        ng-if="user.active"
+                                        type="button" title="Dectivate"
+                                        ng-click="deactivate(user)" ng-disabled="dataLoading">
+                                    <span class="glyphicon glyphicon-ban-circle"></span>
+                                </button>
+                                <button class="btn btn-default" type="button" title="{{'Remove' | translate}}"
+                                        ng-click="remove(user)">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
                             </span>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-
+                </div>
             </div>
         </div>
     </div> <!-- end row-->

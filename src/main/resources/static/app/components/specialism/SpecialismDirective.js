@@ -78,6 +78,8 @@
                         ctrl.$validators.required = function (modelValue) {
                             if (ctrl.$isEmpty(modelValue)) {
                                 return false;
+                            } else {
+                                return true;
                             }
                         };
 

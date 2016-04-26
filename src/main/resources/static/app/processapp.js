@@ -11,7 +11,7 @@
             RestangularProvider.setBaseUrl('/');
         });
     angular.module('ProcessApp.interceptors', []);
-    angular.module('ProcessApp.directives', []);
+    angular.module('ProcessApp.directives', ['pascalprecht.translate']);
     angular.module('ProcessApp.controllers', ['restangular'])
       .config(function(RestangularProvider) {
         RestangularProvider.setBaseUrl('/');

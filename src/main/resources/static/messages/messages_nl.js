@@ -424,6 +424,30 @@
         'Email addresses': 'Emailadressen',
         'Update hub assistance': 'Inzet hubmedewerker aanpassen',
 
+        /* ===================== */
+        /* Specialism */
+        /* ===================== */
+        'Maag-darm-lever-ziekten':'Maag-darm-lever-ziekten',
+        'Gynaecologie':'Gynaecologie',
+        'Dermatologie':'Dermatologie',
+        'Medische Oncologie':'Medische Oncologie',
+        'Interne geneeskunde':'Interne geneeskunde',
+        'Radiologie':'Radiologie',
+        'Radiotherapie':'Radiotherapie',
+        'Chirurgie':'Chirurgie',
+        'Hematologie':'Hematologie',
+        'Keel-neus-oor':'Keel-neus-oor',
+        'Heelkunde':'Heelkunde',
+        'Epidemiologie':'Epidemiologie',
+        'Eerstelijnsgeneeskunde':'Eerstelijnsgeneeskunde',
+        'Cardiologie':'Cardiologie',
+        'Longziekten':'Longziekten',
+        'Urologie':'Urologie',
+        'Neurologie':'Neurologie',
+        'Endocrinologie':'Endocrinologie',
+        '(Other)':'(Overig)',
+        '(Please select a specialism)' : '(Kies een specialisme)',
+
         null: null
     };
 

@@ -13,6 +13,7 @@
 body {
     padding-top: 50px;
     padding-bottom: 40px;
+    font-size: 1.3em;
 }
 @media print {
     html {
@@ -158,6 +159,9 @@ h3 { color: #949494; }
 .smart-table-not-selected {
     background-color: #ffffff;
 }
+.smart-table-tool-col {
+    width: 9em;
+}
 
 label.normal {
     font-weight: normal !important;
@@ -294,7 +298,6 @@ address {margin-bottom: 0px;}
 }
 
 .h4, .h3 {
-    /*font-size: 18px;*/
     font-weight: 200;
     color: #555753;
     background-color: aliceblue;

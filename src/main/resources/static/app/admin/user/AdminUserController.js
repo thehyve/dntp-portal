@@ -8,9 +8,9 @@
 
 angular.module('ProcessApp.controllers')
     .controller('AdminUserController',['$rootScope', '$scope', '$alert', '$modal', '$location', 
-                                       'User', 'Role', 'UserRole', 'Lab',
+                                       'User', 'Role', 'UserRole', 'Lab','SpecialismService',
         function ($rootScope, $scope, $alert, $modal, $location, 
-                User, Role, UserRole, Lab) {
+                User, Role, UserRole, Lab, SpecialismService) {
 
             var _error = function (msg) {
                 console.log('error: ' + msg);
@@ -63,7 +63,7 @@ angular.module('ProcessApp.controllers')
                     $scope.users = _.map(users, function(user) {
                         user = _addInfoToUser(user);
                         return user;
-                    })
+                    });
                     $scope.displayedCollection = [].concat($scope.users);
                 });
             };
@@ -182,6 +182,10 @@ angular.module('ProcessApp.controllers')
                     backdrop: 'static'
                 });
             };
+
+            $scope.isPredefinedSpecialism = function (val) {
+                return SpecialismService.findPredefined(val) ? true : false;
+            }
 
         }
     ]

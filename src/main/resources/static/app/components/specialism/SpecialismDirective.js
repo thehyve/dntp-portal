@@ -8,8 +8,8 @@
     'use strict';
 
     angular.module('ProcessApp.directives')
-        .directive('specialismComboBox', [
-            function () {
+        .directive('specialismComboBox', ['SpecialismService',
+            function (SpecialismService) {
                 return {
                     restrict: 'E',
                     scope: {
@@ -21,27 +21,7 @@
                     templateUrl: 'app/components/specialism/specialism-template.html',
                     link : function (scope, element, attrs, ctrl) {
 
-                        scope.specialisms = [
-                            {label:'Maag-darm-lever-ziekten', value: 'Maag-darm-lever-ziekten'},
-                            {label:'Gynaecologie', value: 'Gynaecologie'},
-                            {label:'Dermatologie', value: 'Dermatologie'},
-                            {label:'Medische Oncologie', value: 'Medische Oncologie'},
-                            {label:'Interne geneeskunde', value: 'Interne geneeskunde'},
-                            {label:'Radiologie', value: 'Radiologie'},
-                            {label:'Radiotherapie', value: 'Radiotherapie'},
-                            {label:'Chirurgie', value: 'Chirurgie'},
-                            {label:'Hematologie', value: 'Hematologie'},
-                            {label:'Keel-neus-oor', value: 'Keel-neus-oor'},
-                            {label:'Heelkunde', value: 'Heelkunde'},
-                            {label:'Epidemiologie', value: 'Epidemiologie'},
-                            {label:'Eerstelijnsgeneeskunde', value: 'Eerstelijnsgeneeskunde'},
-                            {label:'Cardiologie', value: 'Cardiologie'},
-                            {label:'Longziekten', value: 'Longziekten'},
-                            {label:'Urologie', value: 'Urologie'},
-                            {label:'Neurologie', value: 'Neurologie'},
-                            {label:'Endocrinologie', value: 'Endocrinologie'},
-                            {label:'(Other)', value: ''} // other
-                        ];
+                        scope.specialisms = SpecialismService.specialisms;
 
                         /**
                          * Get selected specialism
@@ -50,11 +30,11 @@
                         scope.selectedSpecialism = (function () {
 
                             // find if specialism is predefined
-                            var _existingSpecialism = _.find(scope.specialisms, {value:scope.modelValue});
+                            var _existingSpecialism = SpecialismService.findPredefined(scope.modelValue);
 
                             // if not then it is 'Other'
                             if (!_existingSpecialism)  {
-                                _existingSpecialism = _.last(scope.specialisms);
+                                _existingSpecialism = SpecialismService.getOther();
                             }
 
                             // return found obj, otherwise return whatever in modelValue
@@ -63,7 +43,6 @@
 
                         /**
                          * Update specialism model
-                         * @param newSpecialism
                          */
                         scope.updateSpecialismText = function () {
                             scope.modelValue = _.isEmpty(scope.selectedSpecialism) ?
@@ -76,11 +55,7 @@
                          * @returns {boolean}
                          */
                         ctrl.$validators.required = function (modelValue) {
-                            if (ctrl.$isEmpty(modelValue)) {
-                                return false;
-                            } else {
-                                return true;
-                            }
+                            return !ctrl.$isEmpty(modelValue);
                         };
 
                     }

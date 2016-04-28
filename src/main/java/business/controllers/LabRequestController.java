@@ -508,6 +508,7 @@ public class LabRequestController {
         setHubAssistanceStatuses = new HashSet<Status>(Arrays.asList(
                 Status.WAITING_FOR_LAB_APPROVAL,
                 Status.APPROVED,
+                Status.REJECTED,
                 Status.SENDING,
                 Status.RECEIVED,
                 Status.RETURNING));

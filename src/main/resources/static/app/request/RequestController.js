@@ -674,7 +674,6 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.print_selection = [];
-            $scope.renderPrintSelection = false;
 
             var openPrintWindow = function () {
                 var _printWindow = window.open('', '_blank');

@@ -285,7 +285,7 @@ This file is distributed under the GNU Affero General Public License
                             <p class="form-control-static">
                                 {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
                                 {{labRequest.requesterLab.name}}
-                            <address ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
+                            <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
                             </p>
                         </div>
                     </div>
@@ -302,7 +302,7 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-md-10">
                                 <p class="form-control-static">
                                     {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
-                                <address ng-bind-html="labRequest.htmlLabAddress"></address>
+                                <address class="address" ng-bind-html="labRequest.htmlLabAddress"></address>
                                 </p>
                             </div>
                         </div>

@@ -1,0 +1,362 @@
+<div>
+    <!-- Status -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Status' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.status |translate}}
+            <br>
+        </p>
+    </div>
+
+    <!-- Reject reason  -->
+    <div class="row" ng-if="request.status == 'Rejected'">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Reject reason' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.rejectReason}}
+            <br>
+        </p>
+    </div>
+
+    <!-- Requester -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Requester' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.requesterName}}
+            <br>
+        </p>
+    </div>
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Contact information' | translate }}</label>
+        <contact-data-address contact-data="request.requester.contactData" class="col-xs-6 col-sm-6"></contact-data-address>
+    </div>
+
+    <h4 class="h4">{{ 'Details' | translate }}</h4>
+
+    <!-- Principal Investigator -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Principal investigator' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.contactPersonName}}
+        </p>
+    </div>
+
+    <!-- Pathologist name -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.pathologistName}}
+        </p>
+    </div>
+
+    <!-- Pathologist email -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist email' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.pathologistEmail}}
+        </p>
+    </div>
+
+
+    <!-- Previous contact -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">
+            {{'Previous contact'|translate}}
+        </label>
+
+        <div class="col-xs-6 col-sm-6">
+            <p>
+            {{request.previousContact ? 'Yes' : 'No' | translate}}
+            </p>
+            <br>
+            <p ng-if="request.previousContact">
+            {{request.previousContactDescription}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Title -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Running title' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.title}}
+        </p>
+    </div>
+
+    <!--Background -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Background' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.background}}
+        </p>
+    </div>
+
+    <!-- Research Question -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ ' Research question' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.researchQuestion}}
+        </p>
+    </div>
+
+    <!-- Hypothesis -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Hypothesis' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.hypothesis}}
+        </p>
+    </div>
+
+    <!-- Methods -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Methods' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.methods}}
+        </p>
+    </div>
+
+    <!-- Request Type -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Request type' | translate }}</label>
+        <div class="col-xs-6 col-sm-6" ng-init="">
+            {{'Request_Type_' + request.type | translate}}
+        </div>
+    </div>
+
+    <!-- Billing address -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Billing address' | translate }}</label>
+        <contact-data-address contact-data="request.billingAddress" class="col-xs-6 col-sm-6"></contact-data-address>
+    </div>
+
+    <!-- Charge number -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Charge number' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.chargeNumber}}
+        </p>
+    </div>
+
+    <!-- Research number -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Grant number' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.researchNumber}}
+        </p>
+    </div>
+
+
+    <!-- Data Linkage -->
+    <div class="row" ng-if="request.type != '1'">
+        <label class="control-label col-xs-4 col-sm-4">
+            {{'Data linkage'|translate}}
+        </label>
+        <div class="col-xs-6 col-sm-6">
+            {{request.linkageWithPersonalData ? 'Linkage with own patients or cohort or linkage between registries.' :
+              'No data linkage required.' | translate }}
+        </div>
+    </div>
+    <div class="row" ng-if="request.type != '1' && request.linkageWithPersonalDataNotes">
+        <label class="control-label col-xs-4 col-sm-4">
+            {{ 'Data linkage information' | translate }}
+        </label>
+        <div class="col-xs-6 col-sm-6">
+            {{request.linkageWithPersonalDataNotes}}
+        </div>
+    </div>
+
+    <!-- Informed Consent -->
+    <div class="row" ng-if="request.type != '1'">
+        <label class="control-label col-xs-4 col-sm-4">
+            {{ 'Informed consent (IC)' | translate }}
+        </label>
+        <div class="col-xs-6 col-sm-6">
+            {{request.informedConsent ? 'Yes' : 'No' | translate}}
+        </div>
+    </div>
+
+    <!-- Reason Using Personal Data -->
+    <div class="row" ng-if="request.type != '1' && request.reasonUsingPersonalData">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.reasonUsingPersonalData}}
+        </p>
+    </div>
+
+    <h4 class="h4">{{ 'Attachments' | translate }}</h4>
+
+    <div ng-if="request.attachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+
+    <div class="list-group files" id="attachments">
+        <a ng-repeat="file in request.attachments"
+           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+           class="list-group-item no-print-url">
+            <i class="glyphicon glyphicon-file"></i> {{file.name}}
+        </a>
+    </div>
+
+    <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
+
+    <div ng-if="request.medicalEthicalCommitteeApprovalAttachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+
+    <div class="list-group files" id="medicalEthicalCommitteeApprovalAttachments">
+        <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
+           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+           class="list-group-item no-print-url">
+            <i class="glyphicon glyphicon-file"></i> {{file.name}}
+        </a>
+    </div>
+
+
+    <div ng-if="isPalga()">
+        <h4 class="h4 h4-palga">{{'Authentification checks by PALGA'|translate}}</h4>
+
+        <!-- Requester valid -->
+        <div class="row">
+            <span class="col-xs-8 col-sm-8">
+            {{ 'Requester\'s identity was established.' | translate }}
+            </span>
+            <span class="col-xs-2 col-sm-2">
+            {{request.requesterValid ? 'Yes' : 'No' | translate}}
+            </span>
+        </div>
+
+        <!-- Lab -->
+        <div class="row">
+            <br>
+            <span class="col-sm-10">
+            <label class="control-label">{{'Lab' | translate}}</label>:
+            <span ng-if="request.lab.number">{{request.lab.number}}. {{request.lab.name}}</span>
+            <span ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></span>
+            </span>
+        </div>
+        <div class="row">
+            <span class="col-xs-8 col-sm-8">
+            {{ 'Requester indeed works at or collaborates with the pathology laboratory mentioned.' | translate }}
+            </span>
+            <span class="col-xs-2 col-sm-2">
+            {{request.request.requesterLabValid ? 'Yes' : 'No' | translate}}
+            </span>
+        </div>
+
+        <!-- Requester allowed -->
+        <div class="row">
+            <span class="col-xs-8 col-sm-8">
+            {{ 'The requester is allowed to submit the request.' | translate }}
+            </span>
+            <span class="col-xs-2 col-sm-2">
+            {{request.requesterAllowed ? 'Yes' : 'No' | translate}}
+            </span>
+        </div>
+
+        <!-- Contact person allowed -->
+        <div class="row">
+            <span class="col-xs-8 col-sm-8">
+            {{ 'The contact person been checked and is authorised to support the request.' | translate }}
+            </span>
+            <span class="col-xs-2 col-sm-2">
+            {{request.contactPersonAllowed ? 'Yes' : 'No' | translate}}
+            </span>
+        </div>
+
+        <h4 class="h4 h4-palga">{{'Authentification and agreement request'|translate}}</h4>
+
+        <!-- Agreement reached -->
+        <div class="row">
+            <span class="col-xs-8 col-sm-8">
+            {{ 'Agreement has been reached.' | translate }}
+            </span>
+            <span class="col-xs-2 col-sm-2">
+            {{request.agreementReached ? 'Yes' : 'No' | translate}}
+            </span>
+        </div>
+
+        <div class="list-group files">
+            <a ng-repeat="file in request.agreementAttachments"
+               ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+               class="list-group-item no-print-url">
+                <span><i class="glyphicon glyphicon-file"></i></span> {{file.name}}
+            </a>
+        </div>
+
+    </div>
+
+
+    <div ng-if="request.status=='Approval' && isPalga()">
+
+        <!--*****************-->
+        <!--Privacy Committee-->
+        <!--*****************-->
+        <h4 class="h4 h4-palga">{{'Review by PALGA privacy commitee'|translate}}</h4>
+
+        <!-- Has this request has been sent to Privacy Committee -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">
+                &nbsp;
+            </label>
+            <div class="col-xs-6 col-sm-6">
+                <span><i class="glyphicon {{request.sentToPrivacyCommittee ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
+                &nbsp; {{ 'This request was sent by email to the privacy committee.' | translate }}
+            </div>
+        </div>
+
+        <!-- Review rationale -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Rationale' | translate }}</label>
+            <p class="col-xs-6 col-sm-6">
+                {{request.privacyCommitteeRationale | translate}}
+            </p>
+        </div>
+
+        <!-- Review result -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Review result' | translate }}</label>
+            <p class="col-xs-6 col-sm-6">
+                {{request.privacyCommitteeOutcome}}
+            </p>
+        </div>
+
+        <!-- Outcome Reference -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Review result' | translate }}</label>
+            <p class="col-xs-6 col-sm-6">
+                {{request.privacyCommitteeOutcomeRef}}
+            </p>
+        </div>
+
+        <!-- Outcome Emails -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Summary review procces' | translate }}</label>
+            <p class="col-xs-6 col-sm-6">
+                {{request.privacyCommitteeEmails}}
+            </p>
+        </div>
+
+    </div>
+
+    <!--Approvals-->
+    <div ng-include="'app/request/approvals.html'"
+         ng-if="(request.status=='Approval' && isPalga()) ||
+                ((request.status=='Approval' || request.approvalVotes != null) && isScientificCouncil() )">
+    </div>
+    <!--Comments-->
+    <div ng-include="'app/request/comments.html'" ng-if="isPalga()"></div>
+
+    <!--Upload Files if in 'DataDelivery' status-->
+    <div class="no-print" ng-include="'app/request/upload-file.html'"
+        ng-if="!isScientificCouncil() && (request.status=='DataDelivery' || request.status=='SelectionReview' || request.status=='LabRequest' || request.status=='Closed')"></div>
+
+    <div ng-if="!isScientificCouncil() && request.status == 'LabRequest'">
+
+    <h4 class="h4">{{ 'Lab request details' | translate }}</h4>
+
+    <!-- Excerpt list remark -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Remark' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.excerptListRemark}}
+        </p>
+    </div>
+
+    </div> <!-- endif LabRequest -->
+
+</div>

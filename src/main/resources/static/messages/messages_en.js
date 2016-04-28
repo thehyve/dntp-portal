@@ -43,7 +43,8 @@
         'popover: Reason using personal data': 'Explain why linkage is allowed without informed consent.',
         'popover: Upload file' : 'Upload file.',
         'popover: Upload medical ethical committee approval' : 'Upload letter of medical research ethics committee.',
-    
+        'popover: Informed consent': 'Informed consent (IC).',
+
         'Are you sure you want to delete file ?' : 'Are you sure you want to delete file {{name}}?',
         'File too large': 'File too large ({{mb_size}} MB). Maximum size is 10 MB.',
         'Are you sure you want to delete request ?' : 'Are you sure you want to delete request {{id}}?',

@@ -4,6 +4,16 @@ h3 {
     font-size: 12pt;
     clear: left;
 }
+h1, .h1 {
+    font-size: 16pt;
+    margin: 5px 0px 15px;
+}
+h2, h3, h4, .h4 {
+    margin: 20px 0px 5px;
+}
+hr {
+    margin: 10px 0;
+}
 body, table {
     font-family: arial, sans-serif ;
     font-size: 10pt ;
@@ -66,6 +76,21 @@ ul li { display: inline; }
 
 .print-pa-availability {display: block }
 
-address {
+.address {
     margin-bottom: 20px;
+}
+
+.row {
+    min-height: 1.5em;
+}
+
+.comments .list-group-item, .files .list-group-item {
+    border: 0;
+    padding: 10px 0;
+}
+
+@media print {
+  a.no-print-url[href]:after {
+    content: none !important;
+  }
 }

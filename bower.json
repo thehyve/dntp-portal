@@ -27,7 +27,8 @@
     "textAngular": "~1.5.0",
     "asmcrypto": "*",
     "moment": "~2.10.6",
-    "animate.css": "~3.4.0",    
+    "animate.css": "~3.4.0",
+    "mdi": "~1.5.54",
     "isteven-angular-multiselect" : "~4",
     "angular": "~1.5.3"
   },

@@ -26,6 +26,16 @@ body {
 }
 h1, h2, h3 { color: steelblue; }
 h3 { color: #949494; }
+h1, .h1 {
+    margin: 5px 0px 15px;
+}
+h2, .h2, h3, .h3, h4, .h4 {
+    margin: 20px 0px 5px;
+}
+.row {
+    min-height: 1.5em;
+}
+
 
 /*
  * Global add-ons
@@ -313,3 +323,8 @@ address {margin-bottom: 0px;}
 .dntp-disabled-color {color: grey;}
 .dntp-success-color {color: green;}
 .dntp-error-color {color: indianred;}
+
+.radio-label {
+    vertical-align: top;
+    width: 90%;
+}

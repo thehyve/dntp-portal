@@ -684,7 +684,6 @@ angular.module('ProcessApp.controllers')
             var writeToPrintWindow = function (_printWindow) {
                 var elementId = 'printcontents';
                 var css_links = _.map([
-                    //'./bower_components/bootstrap/dist/css/bootstrap.min.css',
                     './css/print.css'
                 ], function(link) {
                     return '<link rel="stylesheet" type="text/css" href="' + link + '" />';

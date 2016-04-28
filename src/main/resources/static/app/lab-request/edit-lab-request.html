@@ -116,8 +116,12 @@ This file is distributed under the GNU Affero General Public License
           </p>
         </div>
 
-        <div class="panel panel-default" 
-            ng-if="isLabOrHubUserStatus(labRequest.status) && labRequest.status != 'Waiting for lab approval' && labRequest.request.paReportRequest">
+        <div class="panel panel-default"
+            ng-if="
+            isLabOrHubUserStatus(labRequest.status) &&
+            labRequest.status != 'Waiting for lab approval' &&
+            labRequest.status != 'Rejected') &&
+            labRequest.request.paReportRequest">
           <div class="panel-heading">
             <h4>{{'PA reports'|translate}}</h4>
           </div>

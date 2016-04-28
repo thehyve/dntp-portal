@@ -11,6 +11,9 @@ This file is distributed under the GNU Affero General Public License
     </h4>
 
     <div>
+        <span class="print-only" ng-if="!request.comments || request.comments.length == 0">
+            <em>{{'None' | translate}}</em>
+        </span>
         <ul class="list-group comments">
             <li class="list-group-item" ng-repeat="comment in request.comments">
                 <div ng-show="!commentEditVisibility[comment.id]">{{comment.contents}}</div>

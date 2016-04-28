@@ -1,8 +1,14 @@
-<div ng-repeat="request in print_selection" style="page-break-inside: avoid;">
+<div ng-repeat="request in print_selection" class="printpage">
 
 <h1 class="h1">{{request.requestNumber}}&nbsp;&nbsp;{{request.title}}</h1>
 <hr>
 
 <div ng-include="'app/request/request-contents.html'"></div>
 
+<hr class="page-boundary print-preview-only">
+
+</div>
+
+<div id="printheader" class="print-only">
+    <img src="images/palga.png" id="printlogo" />
 </div>

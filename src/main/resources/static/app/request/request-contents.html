@@ -64,9 +64,7 @@
         </label>
 
         <div class="col-xs-6 col-sm-6">
-            <p>
             {{request.previousContact ? 'Yes' : 'No' | translate}}
-            </p>
             <br>
             <p ng-if="request.previousContact">
             {{request.previousContactDescription}}
@@ -352,8 +350,11 @@
     <!-- Excerpt list remark -->
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Remark' | translate }}</label>
-        <p class="col-xs-6 col-sm-6">
+        <p class="col-xs-6 col-sm-6" ng-if="request.excerptListRemark">
             {{request.excerptListRemark}}
+        </p>
+        <p class="col-xs-6 col-sm-6" ng-if="!request.excerptListRemark">
+            <em>{{'None' | translate}}</em>
         </p>
     </div>
 

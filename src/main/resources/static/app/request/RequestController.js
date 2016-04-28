@@ -677,19 +677,24 @@ angular.module('ProcessApp.controllers')
             $scope.renderPrintSelection = false;
 
             var openPrintWindow = function () {
+                var _printWindow = window.open('', '_blank');
+                return _printWindow;
+            };
+
+            var writeToPrintWindow = function (_printWindow) {
                 var elementId = 'printcontents';
                 var css_links = _.map([
-                    './bower_components/bootstrap/dist/css/bootstrap.min.css',
+                    //'./bower_components/bootstrap/dist/css/bootstrap.min.css',
                     './css/print.css'
                 ], function(link) {
                     return '<link rel="stylesheet" type="text/css" href="' + link + '" />';
                 }).join('');
-                var _contents = '<!DOCTYPE html>\n<html><head>'
+                var _contents = '<!DOCTYPE html>' +
+                    '<html class="printhtml"><head>'
                     .concat(css_links)
-                    .concat('</head><body onload="//window.print()">')
+                    .concat('</head><body onload="window.print()">')
                     .concat(document.getElementById(elementId).innerHTML)
                     .concat('</body></html>');
-                var _printWindow = window.open('', '_blank');
                 _printWindow.document.write(_contents);
                 _printWindow.document.close();
             };
@@ -754,12 +759,15 @@ angular.module('ProcessApp.controllers')
              * new window with a printable version of the selected request list.
              */
             $scope.printSelected = function() {
+                var _printWindow = openPrintWindow();
                 prefetchTemplates()
                 .then(function() {
                     return fetchSelected();
                 })
                 .then(function() {
-                    $timeout(openPrintWindow);
+                    $timeout().then(function() {
+                        writeToPrintWindow(_printWindow);
+                    });
                 });
             };
 

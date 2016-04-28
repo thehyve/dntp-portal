@@ -642,6 +642,17 @@ angular.module('ProcessApp.controllers')
                     return fetchSelected();
                 })
                 .then(function() {
+                    $scope.print_selection = _.sortBy($scope.print_selection,
+                            function(r) {
+                                return Number(r.labRequestCode.split('-')[0]);
+                            },
+                            function(r) {
+                                return Number(r.labRequestCode.split('-')[1]);
+                            },
+                            function(r) {
+                                return Number(r.labRequestCode.split('-')[2]);
+                            }
+                    );
                     $timeout().then(function() {
                         writeToPrintWindow(_printWindow);
                     });

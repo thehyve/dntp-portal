@@ -106,6 +106,16 @@ public class RequestFormService {
         return request;
     }
 
+    @Cacheable("requestlistattachmentsdata")
+    public RequestListRepresentation getRequestListDataWithAttachmentsCached(String processInstanceId) {
+        HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
+        // copy request list representation data
+        RequestListRepresentation request = new RequestListRepresentation();
+        transferBasicData(instance, request);
+        transferAttachmentData(instance, request);
+        return request;
+    }
+
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
         request.setProcessId(instance.getProcessDefinitionId());
@@ -143,7 +153,23 @@ public class RequestFormService {
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }
     }
-    
+
+    public void transferAttachmentData(HistoricProcessInstance instance, RequestListRepresentation request) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                instance.getId());
+        List<FileRepresentation> requestAttachments = new ArrayList<FileRepresentation>();
+        for(File file: properties.getRequestAttachments()) {
+            requestAttachments.add(new FileRepresentation(file));
+        }
+        request.setAttachments(requestAttachments);
+
+        List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments = new ArrayList<FileRepresentation>();
+        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
+            medicalEthicalCommitteeApprovalAttachments.add(new FileRepresentation(file));
+        }
+        request.setMedicalEthicalCommitteeApprovalAttachments(medicalEthicalCommitteeApprovalAttachments);
+    }
+
     public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
         transferBasicData(instance, request);
         Task task = null;
@@ -307,14 +333,14 @@ public class RequestFormService {
             for(File file: properties.getRequestAttachments()) {
                 requestAttachments.add(new FileRepresentation(file));
             }
+            request.setAttachments(requestAttachments);
 
             request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
             request.setPrivacyCommitteeRationale(properties.getPrivacyCommitteeRationale());
             request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
             request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
             request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
-            
-            request.setAttachments(requestAttachments);
+
             if (is_palga) {
                 List<FileRepresentation> agreementAttachments = new ArrayList<FileRepresentation>();
                 for(File file: properties.getAgreementAttachments()) {

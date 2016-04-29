@@ -6,6 +6,7 @@
 package business.representation;
 
 import java.util.Date;
+import java.util.List;
 
 import business.models.RequestProperties.ReviewStatus;
 
@@ -42,6 +43,11 @@ public class RequestListRepresentation {
 
     private String approvalVote;
     private Long numberOfApprovalVotes;
+
+    private List<FileRepresentation> attachments;
+    private List<FileRepresentation> agreementAttachments;
+    private List<FileRepresentation> dataAttachments;
+    private List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments;
 
     public RequestListRepresentation() {
 
@@ -249,6 +255,39 @@ public class RequestListRepresentation {
 
     public void setReopenRequest(boolean reopenRequest) {
         this.reopenRequest = reopenRequest;
+    }
+
+    public List<FileRepresentation> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<FileRepresentation> attachments) {
+        this.attachments = attachments;
+    }
+
+    public List<FileRepresentation> getAgreementAttachments() {
+        return agreementAttachments;
+    }
+
+    public void setAgreementAttachments(List<FileRepresentation> agreementAttachments) {
+        this.agreementAttachments = agreementAttachments;
+    }
+
+    public List<FileRepresentation> getDataAttachments() {
+        return dataAttachments;
+    }
+
+    public void setDataAttachments(List<FileRepresentation> dataAttachments) {
+        this.dataAttachments = dataAttachments;
+    }
+
+    public List<FileRepresentation> getMedicalEthicalCommitteeApprovalAttachments() {
+        return medicalEthicalCommitteeApprovalAttachments;
+    }
+
+    public void setMedicalEthicalCommitteeApprovalAttachments(
+            List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments) {
+        this.medicalEthicalCommitteeApprovalAttachments = medicalEthicalCommitteeApprovalAttachments;
     }
 
 }

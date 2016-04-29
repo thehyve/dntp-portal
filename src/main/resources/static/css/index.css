@@ -329,4 +329,8 @@ address {margin-bottom: 0px;}
     width: 90%;
 }
 
-.popover-content {font-size: .8em}
+.popover-content h3, .popover-content {font-size: .9em}
+.tab-list > .nav-tabs > li a {
+    font-size: 120%;
+    font-weight: 500;
+}

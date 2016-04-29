@@ -3,8 +3,8 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-<div class="container-fluid">
-    <div class="row" ng-controller="LabRequestController">
+<div class="container-fluid" ng-controller="LabRequestController">
+    <div class="row">
 
         <!--Side Bar-->
         <div class="col-sm-3 col-md-2 sidebar">
@@ -28,6 +28,14 @@ This file is distributed under the GNU Affero General Public License
 
             <h1>{{ 'Lab requests' | translate }}</h1>
             <hr>
+            <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser()">
+            <li role="presentation" title="{{'Print selected'|translate}}">
+                <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
+                    <span><i class="glyphicon glyphicon-print"></i></span>
+                    {{'Print selected'|translate}}
+                </button>
+            </li>
+            </ul>
 
             <!-- Alert -->
             <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
@@ -36,9 +44,17 @@ This file is distributed under the GNU Affero General Public License
                 </button>
                 {{alert.msg | translate}}
             </div>
-                <table ng-if="labRequests" st-table="displayedLabRequests" st-safe-src="labRequests"  class="table">
+                <table ng-if="labRequests" st-table="displayedLabRequests" st-safe-src="labRequests"  class="table" st-export-filtered="filteredCollection">
                     <thead>
                         <tr>
+                            <th class="no-print">
+                                <a role="button"
+                                    ng-if="isLabUser() || isHubUser()"
+                                    ng-click="toggleSelect(filteredCollection)"
+                                    title="{{'Select all'|translate}}">
+                                    <i class="mdi mdi-check-all"></i>
+                                </a>
+                            </th>
                             <th st-sort="labRequestCode">{{'Lab request ID' | translate}}</th>
                             <th st-sort="request.title">{{'Request title' | translate}}</th>
                             <th st-sort="requesterName">{{'Requester' | translate}}</th>
@@ -52,6 +68,7 @@ This file is distributed under the GNU Affero General Public License
                             <th class="no-print" style="width: 8em"><span class="pull-right">{{'Actions'|translate}}</span></th>
                         </tr>
                         <tr class="no-print">
+                            <th class="no-print">&nbsp;</th>
                             <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
                             <!--<th>&nbsp;</th>-->
                             <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
@@ -77,13 +94,20 @@ This file is distributed under the GNU Affero General Public License
                             <th class="no-print">&nbsp;</th>
                         </tr>
                         <tr class="no-print">
-                            <th colspan="11"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                            <th class="no-print">&nbsp;</th>
+                            <th colspan="10"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="labRequest in displayedLabRequests track by $index"
                         ng-class="{'smart-table-selected': isCurrentUser(labRequest.assignee)}">
+                        <td class="no-print">
+                            <input class="input-sm form-control"
+                                ng-if="isLabUser() || isHubUser()"
+                                type="checkbox" value="1"
+                                ng-model="selected_lab_requests[labRequest.id]" />
+                        </td>
                         <td>
                             <!--{{labRequest.id}}-->
                             <!--{{labRequest.request.processInstanceId}} - {{labRequest.lab.number}}-->
@@ -152,6 +176,10 @@ This file is distributed under the GNU Affero General Public License
 
         </div>
         <!--end Main Content-->
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+            <div class="print-only" ng-include="'app/lab-request/print-lab-requests.html'" id="printcontents"></div>
+        </div>
 
     </div>
 </div>

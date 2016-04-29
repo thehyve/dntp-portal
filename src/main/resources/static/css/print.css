@@ -32,6 +32,10 @@ a {
    color: #000;
 }
 
+p {
+    margin-top: 0;
+}
+
 hr {
     margin: 10px 0;
 }
@@ -60,6 +64,11 @@ tfoot td {
 input[type='text'] {
     display: none !important;
 }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+    display: none !important;
+}
+
 .table th, td { text-align: left; }
 .table { width: 100% }
 .print-pa-id-col { min-width: 5em; }
@@ -103,7 +112,7 @@ address {
 
 .list-group-item {
    display: list-item;
-   margin-left: 1em;
+   margin-left: 1.2em;
 }
 
 .comments .list-group-item, .files .list-group-item {
@@ -112,12 +121,14 @@ address {
 }
 
 hr.page-boundary {
+    clear: left;
     width: 80%;
     margin: 6em auto;
 }
 
 .printpage {
     margin: 0 auto;
+    padding-top: 3mm;
     page-break-after: always;
     max-width: 80em;
 }
@@ -127,14 +138,15 @@ hr.page-boundary {
     }
 }
 
-#printheader {
-    position: fixed;
+.printheader {
+    position: relative;
     display: block;
+    top: -3mm;
+}
+.printlogo {
+    position: absolute;
     top: 0;
     right: 0;
-    max-height: 10mm;
-}
-#printlogo {
     max-height: 10mm;
 }
 
@@ -145,21 +157,27 @@ hr.page-boundary {
     padding: 2pt 0;
 }
 
-.col-xs-2, .col-xs-4, .col-xs-6, .col-xs-8 {
+.col-xs-2, .col-xs-3, .col-xs-4, .col-xs-6, .col-xs-8, .col-xs-10 {
     float: left;
     margin: 0;
 }
 .col-xs-2 {
-    width: 20%;
+    width: 16.6667%;
+}
+.col-xs-3 {
+    width: 25%;
 }
 .col-xs-4 {
-    width: 40%;
+    width: 33.3333%;
 }
 .col-xs-6 {
-    width: 60%;
+    width: 50%;
 }
 .col-xs-8 {
-    width: 80%;
+    width: 66.6667%;
+}
+.col-xs-10: {
+    width: 83.3333%;
 }
 
 .control-label {
@@ -168,9 +186,6 @@ hr.page-boundary {
 
 html {
     margin: 0;
-}
-html.printhtml {
-    margin-top: 10mm;
 }
 body {
     margin: 2em;

@@ -4,17 +4,20 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div ng-controller="LabRequestCommentController">
-    <h3>
+    <h4 class="h4">
         {{'Notes'|translate}}
-        <span class="badge">{{request.comments.length}}</span>
-    </h3>
+        <span class="badge no-print">{{request.comments.length}}</span>
+    </h4>
     <hr>
 
     <div>
+        <span class="print-only" ng-if="!labRequest.comments || labRequest.comments.length == 0">
+            <em>{{'None' | translate}}</em>
+        </span>
         <ul class="list-group">
             <li class="list-group-item" ng-repeat="comment in labRequest.comments">
-                <p><div ng-show="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
-                <div ng-show="commentEditVisibility[comment.id]">
+                <p><div ng-if="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
+                <div ng-if="commentEditVisibility[comment.id]">
                                    <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add note'|translate}}"
                                              ng-model="comment.contents">
                                    </textarea>
@@ -23,7 +26,7 @@ This file is distributed under the GNU Affero General Public License
                         {{'Update note'|translate}}
                     </button>
                 </div>
-                      <span class="pull-right">
+                      <span class="pull-right no-print">
                           <span class="btn-group btn-group-xs">
                               <button class="btn btn-info" type="button" title="Edit"
                                       ng-if="comment.creator.id == globals.currentUser.userid"
@@ -52,6 +55,7 @@ This file is distributed under the GNU Affero General Public License
     </div>
 
     <!-- Add comment -->
+    <div class="no-print">
     <input type="hidden" ng-model="editComment.processInstanceId" value="{{request.processInstanceId}}">
     <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
               ng-model="editComment.contents">
@@ -67,5 +71,6 @@ This file is distributed under the GNU Affero General Public License
             ng-if="editComment.id">
         {{'Update note'|translate}}
     </button>
+    </div>
 </div>
 

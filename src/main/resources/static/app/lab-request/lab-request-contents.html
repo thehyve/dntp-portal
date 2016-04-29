@@ -1,0 +1,247 @@
+<div>
+    <!--Lab Request Id-->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Lab request code' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">{{labRequest.labRequestCode}}</p>
+        </div>
+    </div>
+
+    <!--Status-->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Status' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static" id="requestStatus">{{labRequest.status | translate}}</p>
+        </div>
+    </div>
+
+    <!--Result-->
+    <div class="row" ng-if="labRequest.status == 'Completed'">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Result' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static" id="requestResult">{{labRequest.result | translate}}</p>
+        </div>
+    </div>
+
+    <!--Hub Assistance-->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{'Hub assistance'|translate}}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                {{labRequest.hubAssistanceRequested ? 'Yes' :
+                labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
+                | translate }}
+            </p>
+        </div>
+    </div>
+
+    <!--Rejected details-->
+    <div ng-if="labRequest.status == 'Rejected' || labRequest.result == 'REJECTED'">
+        <div class="row">
+            <label class="control-label col-xs-4 col-md-2">{{ 'Reject date' | translate }}</label>
+            <div class="col-xs-8 col-md-10">
+                <p class="form-control-static"> {{labRequest.rejectDate | date}}</p>
+                <br>
+            </div>
+        </div>
+
+        <div class="row" ng-if="isLabUser()">
+            <label class="control-label col-xs-4 col-md-2">{{ 'Reject reason' | translate }}</label>
+            <div class="col-xs-8 col-md-10">
+                <p class="form-control-static">
+                    {{labRequest.rejectReason}}
+                    <br><br>
+                    <a href="mailto:{{ labRequest.requesterEmail
+                    }}?subject=Lab request rejected, request number {{ labRequest.labRequestCode
+                    }}&amp;body=Lab request rejected.%0AReject reason: {{ labRequest.rejectReason }}"
+                        class="no-print">
+                        <button
+                                class="btn btn-default" type="button"
+                                title="{{'Compose rejection mail' | translate}}">
+                            <span><i class="glyphicon glyphicon-envelope"></i></span>
+                            {{'Compose rejection mail' | translate}}
+                        </button>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PA Reports Status -->
+    <div class="row" ng-if="
+            labRequest.status != 'Waiting for lab approval' &&
+            labRequest.status != 'Rejected' &&
+            labRequest.request.paReportRequest">
+        <label class="control-label col-xs-4 col-md-2">{{ 'PA reports' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+        <span ng-if="labRequest.paReportsSent">
+            {{ 'PA reports have been sent to the requester.' | translate }}
+        </span>
+        <span ng-if="!labRequest.paReportsSent">
+            {{ 'PA reports have NOT been sent to the requester.' | translate }}
+        </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Excerpt list remark -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Remark' | translate }}</label>
+        <p class="col-xs-8 col-md-10" ng-if="labRequest.request.excerptListRemark">
+            {{labRequest.request.excerptListRemark}}
+        </p>
+        <p class="col-xs-8 col-md-10" ng-if="!labRequest.request.excerptListRemark">
+            <em>{{'None' | translate}}</em>
+        </p>
+    </div>
+
+
+    <h4 class="h4">{{'Request details' | translate}}</h4>
+
+    <!--Parent request details-->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Request ID' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                {{labRequest.request.requestNumber}}
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Request title' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
+                    {{labRequest.request.title}}
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Creation date' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                {{labRequest.request.dateCreated | date }}
+            </p>
+        </div>
+    </div>
+
+    <!--Background -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Background' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                {{labRequest.request.background}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Research Question -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Research question' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                {{labRequest.request.researchQuestion}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Hypothesis -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Hypothesis' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                {{labRequest.request.hypothesis}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Methods -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Methods' | translate }}</label>
+        <p class="col-xs-8 col-md-10">
+            {{labRequest.request.methods}}
+        </p>
+    </div>
+
+    <!-- Request Type -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Request type' | translate }}</label>
+        <div class="col-xs-8 col-md-10" ng-init="">
+            <p class="form-control-static">
+                {{"Request_Type_" + labRequest.request.type | translate}}
+            </p>
+        </div>
+    </div>
+
+    <div ng-if="isRequester()">
+        <!--Requester info-->
+    <!--Displayed only to users with non requester role-->
+    <!-- Requester -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-md-2">{{ 'Requester' | translate }}</label>
+            <div class="col-xs-8 col-md-10">
+                <p class="form-control-static">
+                    {{labRequest.requesterName}}
+                <address ng-bind-html="labRequest.htmlRequesterAddress"></address>
+                </p>
+            </div>
+        </div>
+    </div> <!-- end if -->
+
+    <!--Requester lab Info-->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Requester lab' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+            <p class="form-control-static">
+                {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
+                {{labRequest.requesterLab.name}}
+            <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
+            </p>
+        </div>
+    </div>
+
+    <div ng-if="!isLabUser()">
+        <!--Lab Info-->
+    <!--Displayed only to users with non lab user role-->
+        <div class="row">
+            <label class="control-label col-xs-4 col-md-2">{{ 'Sending lab' | translate }}</label>
+            <div class="col-xs-8 col-md-10">
+                <p class="form-control-static">
+                    {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
+                <address class="address" ng-bind-html="labRequest.htmlLabAddress"></address>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="print-only">
+        <h4 class="h4">{{ 'Attachments' | translate }}</h4>
+
+        <div ng-if="labRequest.request.attachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+
+        <div class="list-group files" id="attachments">
+            <a ng-repeat="file in labRequest.request.attachments"
+               ng-href="/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
+               class="list-group-item no-print-url">
+                <i class="glyphicon glyphicon-file"></i> {{file.name}}
+            </a>
+        </div>
+
+        <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
+
+        <div ng-if="labRequest.request.medicalEthicalCommitteeApprovalAttachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+
+        <div class="list-group files" id="medicalEthicalCommitteeApprovalAttachments">
+            <a ng-repeat="file in labRequest.request.medicalEthicalCommitteeApprovalAttachments"
+               ng-href="/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
+               class="list-group-item no-print-url">
+                <i class="glyphicon glyphicon-file"></i> {{file.name}}
+            </a>
+        </div>
+    </div>
+
+</div>

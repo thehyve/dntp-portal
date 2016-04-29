@@ -674,7 +674,6 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.print_selection = [];
-            $scope.renderPrintSelection = false;
 
             var openPrintWindow = function () {
                 var _printWindow = window.open('', '_blank');
@@ -764,6 +763,14 @@ angular.module('ProcessApp.controllers')
                     return fetchSelected();
                 })
                 .then(function() {
+                    $scope.print_selection = _.sortBy($scope.print_selection,
+                            function(r) {
+                                return Number(r.requestNumber.split('-')[0]);
+                            },
+                            function(r) {
+                                return Number(r.requestNumber.split('-')[1]);
+                            }
+                    );
                     $timeout().then(function() {
                         writeToPrintWindow(_printWindow);
                     });

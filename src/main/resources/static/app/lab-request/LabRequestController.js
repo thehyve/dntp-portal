@@ -6,10 +6,14 @@
 angular.module('ProcessApp.controllers')
     .controller('LabRequestController', [
         '$q', '$rootScope', '$scope', '$modal',
+        '$templateCache', '$http',
+        '$timeout',
         '$location', '$route', '$routeParams', '$window',
         'Request', 'LabRequest', 'Restangular', 'LabRequestFilter',
         function (
                 $q, $rootScope, $scope, $modal,
+                $templateCache, $http,
+                $timeout,
                 $location, $route, $routeParams, $window,
                 Request, LabRequest, Restangular, LabRequestFilter) {
 
@@ -521,7 +525,7 @@ angular.module('ProcessApp.controllers')
                 var _contents = '<html><head><link rel="stylesheet" type="text/css" href="./css/print.css" />' +
                     '</head><body onload="window.print()">'
                         .concat('<h1>' + document.getElementById('lab-request-title').innerHTML + '</h1>')
-                        .concat(document.getElementById('lab-request-details').innerHTML)
+                        .concat(document.getElementById('pa-numbers').innerHTML)
                         .concat('</body></html>');
                 var _printWindow = window.open('', '_blank');
                 _printWindow.document.write(_contents);
@@ -534,6 +538,125 @@ angular.module('ProcessApp.controllers')
                 }
                 pathology.samplesAvailable = !pathology.samplesAvailable;
                 $scope.updatePathology(labRequest,  pathology)
+            };
+
+            $scope.selected_lab_requests = {};
+            $scope.filteredCollection = [];
+
+            $scope.toggleSelect = function(filteredCollection) {
+                if (_.includes($scope.selected_lab_requests, true)) {
+                    $scope.selected_lab_requests = {};
+                } else {
+                    $scope.selected_lab_requests = _.fromPairs(
+                            _.map(filteredCollection, function(labRequest) {
+                                return [labRequest.id, true];
+                            })
+                    );
+                }
+            };
+
+            $scope.print_selection = [];
+
+            var openPrintWindow = function () {
+                var _printWindow = window.open('', '_blank');
+                return _printWindow;
+            };
+
+            var writeToPrintWindow = function (_printWindow) {
+                var elementId = 'printcontents';
+                var css_links = _.map([
+                    './css/print.css'
+                ], function(link) {
+                    return '<link rel="stylesheet" type="text/css" href="' + link + '" />';
+                }).join('');
+                var _contents = '<!DOCTYPE html>' +
+                    '<html class="printhtml"><head>'
+                    .concat(css_links)
+                    .concat('</head><body onload="window.print()">')
+                    .concat(document.getElementById(elementId).innerHTML)
+                    .concat('</body></html>');
+                _printWindow.document.write(_contents);
+                _printWindow.document.close();
+            };
+
+            var _templates = [
+                 'app/components/address/address-template.html',
+                 'app/lab-request/lab-request-contents.html',
+                 'app/lab-request/comments.html'
+            ];
+
+            /**
+             * Prefetch templates for the print preview. If the templates are
+             * not prefetched, the templates will be fetched asynchonously,
+             * resulting in unrendered parts of the print page.
+             *
+             * @return promise that fetched the templates when executed.
+             */
+            var prefetchTemplates = function() {
+                var promises = _.map(_templates, function(template) {
+                    return $q(function(resolve, reject) {
+                        $http.get(template).then(function(response) {
+                            $templateCache.put(template, response.data);
+                            resolve(response);
+                        }, function(err) {
+                            reject(err);
+                        })
+                    });
+                });
+                return $q.all(promises);
+            };
+
+            /**
+             * Fetch the detailed request objects for the selected requests.
+             * Reads the selection from <code>$scope.selected_requests</code>.
+             * The fetched objects are stored in <code>$scope.print_selection</code>.
+             *
+             * @return promise that fetches the objects when executed.
+             */
+            var fetchSelected = function() {
+                var selected = _.transform($scope.selected_lab_requests, function(result, value, key) {
+                    if (value) { result.push(key); }
+                  }, []);
+                $scope.print_selection = [];
+                var promises = _.map(selected, function(labRequestId) {
+                    return $q(function(resolve, reject) {
+                        _loadRequest({id: labRequestId}).then(function(req) {
+                            $scope.print_selection.push(req);
+                            resolve(req);
+                        }, function(response) {
+                            reject(response);
+                        });
+                    });
+                });
+                return $q.all(promises);
+            };
+
+            /**
+             * Prefetch templates, fetch detailed request objects and opens a
+             * new window with a printable version of the selected request list.
+             */
+            $scope.printSelected = function() {
+                var _printWindow = openPrintWindow();
+                prefetchTemplates()
+                .then(function() {
+                    return fetchSelected();
+                })
+                .then(function() {
+                    $scope.print_selection = _.sortBy($scope.print_selection,
+                            function(r) {
+                                return Number(r.labRequestCode.split('-')[0]);
+                            },
+                            function(r) {
+                                return Number(r.labRequestCode.split('-')[1]);
+                            },
+                            function(r) {
+                                return Number(r.labRequestCode.split('-')[2]);
+                            }
+                    );
+                    $timeout().then(function() {
+                        writeToPrintWindow(_printWindow);
+                    });
+                });
             };
 
         }]);

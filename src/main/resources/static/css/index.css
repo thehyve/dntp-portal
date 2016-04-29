@@ -328,3 +328,8 @@ address {margin-bottom: 0px;}
     vertical-align: top;
     width: 90%;
 }
+
+.tab-list > .nav-tabs > li a {
+    font-size: 120%;
+    font-weight: 550;
+}

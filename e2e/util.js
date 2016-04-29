@@ -49,6 +49,7 @@ module.exports = {
         'requester': { username: 'requester@dntp.thehyve.nl', password: 'requester' },
         'scientific council': { username: 'scientific_council@dntp.thehyve.nl', password: 'scientific_council' },
         'lab': { username: 'lab_user106@dntp.thehyve.nl', password: 'lab_user' },
+        'hub': { username: 'hub_user@dntp.thehyve.nl', password: 'hub_user' },
         'invalid': { username: 'kjaurtyqkuwygf', password: '784yfsda' }
     },
     'mappings': mappings,

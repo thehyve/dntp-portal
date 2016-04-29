@@ -12,7 +12,7 @@ This file is distributed under the GNU Affero General Public License
                 <div class="modal-header">
                     <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'New request' | translate }}</h3>
                     <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit' | translate }}: {{request.requestNumber}} {{request.title}}</h3>
-                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Evaluate' |translate }}: {{request.requestNumber}} {{request.title}}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Review_short' |translate }}: {{request.requestNumber}} {{request.title}}</h3>
                 </div>
                 <div class="modal-body">
 
@@ -543,13 +543,13 @@ This file is distributed under the GNU Affero General Public License
                                 <input type="checkbox" id="sentToPrivacyComm" name="sentToPrivacyComm" value="1"
                                        ng-model="request.sentToPrivacyCommittee"> &nbsp;
                                 <label class="normal" for="sentToPrivacyComm">{{
-                                'This request has been sent to the privacy committee to be checked.' | translate }}</label>
+                                'This request was sent by email to the privacy committee.' | translate }}</label>
                             </div>
                         </div>
 
                         <!-- Privacy committee result rationale -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeRationale">{{'Rationale' | translate}}</label>
+                            <label class="control-label col-sm-3" for="privacyCommitteeRationale">{{'Review PPC' | translate}}</label>
                             <div class="col-sm-8">
                             <div ng-repeat="option in privacyCommitteeRationaleOptions">
                             <input name="privacyCommitteeRationale" type="radio" id="radio-{{option}}"
@@ -573,11 +573,11 @@ This file is distributed under the GNU Affero General Public License
                         <!-- Outcome Reference -->
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{
-                            'Review result' | translate }}</label>
+                            'Explanation for PPC' | translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
                                       name="privacyCommitteeOutcomeRef"
-                                      placeholder="{{ 'Review result' | translate }}"
+                                      placeholder="{{ 'Explanation for PPC' | translate }}"
                                       ng-model="request.privacyCommitteeOutcomeRef"></textarea>
                             </div>
                         </div>

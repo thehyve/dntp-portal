@@ -6,8 +6,7 @@ This file is distributed under the GNU Affero General Public License
 <!-- If in 'Approval' status and user type 'palga' or 'scientific_council' -->
 <div ng-controller="ApprovalController">
 
-    <h4 class="h4 h4-palga">{{'Approval by the scientific council'|translate}}</h4>
-    <hr>
+    <h4 class="h4 h4-palga">{{'Review by the scientific council'|translate}}</h4>
 
     <a href="mailto:{{scientificCouncilEmail}}?subject=Request {{request.requestNumber}}&amp;body=Request {{request.requestNumber}}%0AView: {{serverurl}}/#/request/view/{{request.processInstanceId}}
     "
@@ -18,10 +17,13 @@ This file is distributed under the GNU Affero General Public License
         {{'Compose mail to members' | translate}}
     </button></a>
     <br>
-    <br>
 
-    <h4>{{'Review'|translate}} <span class="badge">{{size(request.approvalVotes)}}</span></h4>
-    <hr>
+
+    <h4>{{'Review_short'|translate}} <span class="badge">{{size(request.approvalVotes)}}</span></h4>
+
+    <span class="print-only" ng-if="!request.approvalVotes || request.approvalVotes.length == 0">
+        <em>{{'None' | translate}}</em>
+    </span>
 
     <!-- Status -->
     <div class="row">
@@ -39,7 +41,7 @@ This file is distributed under the GNU Affero General Public License
     </div>
 
     <!-- Add vote -->
-    <div ng-if="isScientificCouncil() && request.status == 'Approval'" class="row" ng-class="">
+    <div ng-if="isScientificCouncil() && request.status == 'Approval'" class="row no-print">
         <div class="col-sm-8">
             <!-- {{request.approvalVotes[globals.currentUser.userid].value}} -->
             <button class="btn btn-default {{request.approvalVotes[globals.currentUser.userid].value=='ACCEPTED'?'active':''}}"
@@ -58,15 +60,18 @@ This file is distributed under the GNU Affero General Public License
             </button>
         </div>
     </div>
-    <br>
+
 
     <h4>{{'Discussion'|translate}}</h4>
-    <hr>
+
+    <span class="print-only" ng-if="!request.approvalComments || request.approvalComments.length == 0">
+        <em>{{'None' | translate}}</em>
+    </span>
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="comment in request.approvalComments">
-            <p>
-            <div ng-show="!approval_comment_edit_visibility[comment.id]">{{comment.contents}}</div>
-            <div ng-show="approval_comment_edit_visibility[comment.id]">
+            <div>
+            <div ng-if="!approval_comment_edit_visibility[comment.id]">{{comment.contents}}</div>
+            <div ng-if="approval_comment_edit_visibility[comment.id]">
                    <textarea class="form-control" name="commentText" placeholder="{{'Add comment'|translate}}"
                              ng-model="comment.contents">
                    </textarea>
@@ -75,7 +80,7 @@ This file is distributed under the GNU Affero General Public License
                     {{'Update comment'|translate}}
                 </button>
             </div>
-                <span class="pull-right" ng-if="globals.currentUser.id==comment.creator.id">
+                <span class="pull-right no-print" ng-if="globals.currentUser.id==comment.creator.id">
                 <span class="btn-group btn-group-xs">
                     <button class="btn btn-info {{commentEditVisibility[comment.id] ? 'active' : ''}}" type="button"
                             title="Edit"
@@ -88,7 +93,7 @@ This file is distributed under the GNU Affero General Public License
                     </button>
                 </span>
                 </span>
-            </p>
+            </div>
             <p>
                 <small>
                     <span><i class="glyphicon glyphicon-user"></i></span>
@@ -103,7 +108,7 @@ This file is distributed under the GNU Affero General Public License
     </ul>
 
     <!-- Add approval comment -->
-    <div class="row" ng-class="" ng-if="request.status=='Approval'">
+    <div class="row no-print" ng-class="" ng-if="request.status=='Approval'">
         <div class="col-sm-12">
             <input type="hidden" ng-model="approvalComment.processInstanceId" value="{{request.processInstanceId}}">
                 <textarea class="form-control" id="commentText" name="commentText"
@@ -112,7 +117,7 @@ This file is distributed under the GNU Affero General Public License
                 </textarea>
         </div>
     </div>
-    <div class="row" ng-class="" ng-if="request.status=='Approval'">
+    <div class="row no-print" ng-class="" ng-if="request.status=='Approval'">
         <div class="col-sm-12 text-justify">
             <br>
             <button class="btn btn-default" type="button" title="{{'Add comment'|translate}}"
@@ -127,6 +132,5 @@ This file is distributed under the GNU Affero General Public License
             </button>
         </div>
     </div>
-    <br>
 
 </div> <!-- endif 'Approval' status and user type 'palga' or 'scientific_council' -->

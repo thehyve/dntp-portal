@@ -288,18 +288,17 @@
 
         <!-- Has this request has been sent to Privacy Committee -->
         <div class="row">
-            <label class="control-label col-xs-4 col-sm-4">
-                &nbsp;
-            </label>
-            <div class="col-xs-6 col-sm-6">
-                <span><i class="glyphicon {{request.sentToPrivacyCommittee ? 'glyphicon-check' : 'glyphicon-unchecked'}}"></i></span>
-                &nbsp; {{ 'This request was sent by email to the privacy committee.' | translate }}
-            </div>
+            <span class="col-xs-8 col-sm-8">
+            {{ 'This request was sent by email to the privacy committee.' | translate }}
+            </span>
+            <span class="col-xs-2 col-sm-2">
+            {{request.sentToPrivacyCommittee ? 'Yes' : 'No' | translate}}
+            </span>
         </div>
 
         <!-- Review rationale -->
         <div class="row">
-            <label class="control-label col-xs-4 col-sm-4">{{ 'Rationale' | translate }}</label>
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Review PPC' | translate }}</label>
             <p class="col-xs-6 col-sm-6">
                 {{request.privacyCommitteeRationale | translate}}
             </p>
@@ -315,7 +314,7 @@
 
         <!-- Outcome Reference -->
         <div class="row">
-            <label class="control-label col-xs-4 col-sm-4">{{ 'Review result' | translate }}</label>
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Explanation for PPC' | translate }}</label>
             <p class="col-xs-6 col-sm-6">
                 {{request.privacyCommitteeOutcomeRef}}
             </p>

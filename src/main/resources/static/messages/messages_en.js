@@ -52,6 +52,8 @@
         'Edit user ...' : 'Edit user {{username}}',
         'Download ...' : 'Download {{filename}}',
 
+        'Review_short': 'Review',
+
         'ACCEPTED' : 'Accepted',
         'REJECTED' : 'Rejected',
 

@@ -13,7 +13,7 @@ angular.module('ProcessApp.controllers')
         function ($rootScope, $scope, $modal, $location, $route,
                 User, Request, ApprovalComment, ApprovalVote) {
 
-            if ($rootScope.globals.currentUser.roles.indexOf('palga') !== -1) {
+            if ($rootScope.isPalga()) {
                 User.queryScientificCouncil().$promise.then(function(response) {
                     $scope.scientificCouncil = response ? response : [];
                     $scope.scientificCouncilEmail = '';
@@ -29,13 +29,6 @@ angular.module('ProcessApp.controllers')
                             } else {
                                 $scope.scientificCouncilEmail += response[i].contactData.email;
                             }
-                        }
-                    }
-                }, function(response) {
-                    if (response.data) {
-                        $scope.error = response.data.message + '\n';
-                        if (response.data.error === 302) {
-                            $scope.accessDenied = true;
                         }
                     }
                 });

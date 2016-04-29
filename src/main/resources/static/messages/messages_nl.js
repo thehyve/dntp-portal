@@ -142,13 +142,14 @@
         'General details': 'Algemene details',
         'Review by PALGA privacy commitee': 'Toetsing door PALGA privacycommissie (PPC)',
         'This request was sent by email to the privacy committee.': 'Deze aanvraag is schriftelijk voorgelegd naar de PPC',
+        'Review PPC': 'Beoordeling PPC',
         'Review result': 'Oordeel PPC',
+        'Explanation for PPC': 'Toelichting voor PPC',
         'Summary review procces': 'Samenvatting schriftelijke procedure',
         'Final checks before data delivery': 'Laatste controles voor datalevering',
         'Approved by scientific council.': 'De wetenschappelijke raad heeft toestemming gegeven',
         'Approved by privacy committee.': 'Afgehandeld conform mandaat PPC',
         'Finish': 'Afronden',
-        'Evaluate': 'Evaluatie',
         'Contact information': 'Contactinformatie',
         'Validation': 'Validatie',
 
@@ -156,15 +157,15 @@
         'Requests claimed by me': 'Door mij geclaimde aanvragen',
         'Unclaimed requests': 'Openstaande aanvragen',
         'Requests on hold': 'Aanvragen in de wacht',
-        'Evaluated': 'Beoordeeld',
-        'Not yet evaluated': 'Nog niet beoordeeld',
+        'Reviewed': 'Beoordeeld',
+        'Not yet reviewed': 'Nog niet beoordeeld',
 
         'All lab requests': 'Alle labverzoeken',
         'Lab requests claimed by me': 'Door mij geclaimde labverzoeken',
         'Unclaimed lab requests': 'Openstaande labverzoeken',
 
-        'Votes': 'Stemmen',
-        'Approval by the scientific council': 'Beoordeling door de wetenschappelijke raad',
+        'Review by the scientific council': 'Beoordeling door de wetenschappelijke raad',
+        'Review_short': 'Beoordeling',
         'Discussion': 'Discussie',
         'Update comment': 'Opmerking bewerken',
         'Add comment': 'Opmerking plaatsen',
@@ -294,7 +295,7 @@
         'Filter by assignee': 'Filteren op gevolmachtigde',
         'Filter by PALGA advisor': 'Filteren op PALGA-adviseur',
         'Date assigned': 'Toegekend op',
-        'Vote': 'Stem(men)',
+        'My verdict': 'Mijn oordeel',
 
         /* ===================== */
         /* Lab request overview */

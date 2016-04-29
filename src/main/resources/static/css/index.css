@@ -36,6 +36,7 @@ h2, .h2, h3, .h3, h4, .h4 {
 }
 .row {
     min-height: 1.5em;
+    padding: 2px 0;
 }
 
 
@@ -182,8 +183,10 @@ label.normal {
 
 address {margin-bottom: 0px;}
 
-.print-only {
-    display: none;
+@media screen {
+    .print-only {
+        display: none;
+    }
 }
 
 .st-sort-ascent:before{

@@ -328,7 +328,7 @@
         'Return this lab request to status \'Under review by lab\'?':
             'Het labverzoek terugzetten naar \'Beoordeling door lab\'?',
         'Undo rejection': 'Afwijzing ongedaan maken',
-        'A researcher has requester data and/or materials from your lab. Do you approve this request?': 
+        'A researcher has requested data and/or materials from your lab. Do you approve this request?':
             'Een onderzoeker heeft gegevens en/of materiaal gevraagd aan uw lab. Stemt u in met dit verzoek?',
         'Complete': 'Afronden',
         'Available' : 'Beschikbaar',

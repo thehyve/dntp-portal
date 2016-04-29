@@ -84,7 +84,7 @@ This file is distributed under the GNU Affero General Public License
                 isCurrentUser(labRequest.assignee) &&
                 (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending')">
         <span class="pull-right">
-            <span class="btn-group">
+            <span class="btn-group btn-group-sm">
                 <a ng-if="labRequest.status == 'Approved'"
                    class="btn btn-default" role="button" title="{{'Delete'|translate}}"
                    ng-click="deletePathology(labRequest, pathology)">

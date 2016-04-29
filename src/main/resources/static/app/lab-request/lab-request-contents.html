@@ -31,6 +31,10 @@
                 {{labRequest.hubAssistanceRequested ? 'Yes' :
                 labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
                 | translate }}
+                <span class="no-print btn btn-default btn-xs to-right"
+                    role="button"
+                    ng-if="isLabUser()"
+                    ng-click="editHubAssistance(labRequest);"><i class="glyphicon glyphicon-pencil"></i></span>
             </p>
         </div>
     </div>

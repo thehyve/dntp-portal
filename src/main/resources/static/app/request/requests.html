@@ -76,7 +76,7 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="dateCreated">{{'Creation date'|translate}}</th>
                         <th ng-if="isScientificCouncil()" st-sort="vote">{{'Vote'|translate}}</th>
                         <th ng-if="isPalga()"  st-sort="requesterName">{{'Requester'|translate}}</th>
-                        <th ng-if="isPalga()" st-sort="assigneeName">{{'Assignee'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="assigneeName">{{'PALGA advisor'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
@@ -94,7 +94,7 @@ This file is distributed under the GNU Affero General Public License
                         <th>&nbsp;</th>
                         <th ng-if="isScientificCouncil()" class="request-vote">&nbsp;</th>
                         <th ng-if="isPalga()"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()">&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
                     </tr>

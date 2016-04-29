@@ -15,6 +15,7 @@
         'Postal code': 'Zip code',
         'Available' : 'Available',
         'Not Available' : 'Not Available',
+        'Request type': 'Required data and/or materials',
 
         /* ========= */
         /* Request */
@@ -37,7 +38,7 @@
         'popover: Telephone': 'Telephone number.',
         'popover: Previous contact' : 'Did you contact PALGA previously about the current request?',
         'popover: Description of previous contact': 'With whom did you speak and what did you discuss?',
-        'popover: Request type': 'Request for data and/or materials.',
+        'popover: Request type': 'Required data and/or materials.',
         'popover: Data linkage' : 'Data linkage information.',
         'popover: Notes for linkage with personal data' : 'Mention the name and website of your cohort or the name of the registry you want to link to PALGA.',
         'popover: Reason using personal data': 'Explain why linkage is allowed without informed consent.',

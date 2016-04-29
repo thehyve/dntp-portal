@@ -29,7 +29,6 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +44,6 @@ import business.models.LabRequest.Result;
 import business.models.LabRequest.Status;
 import business.models.LabRequestRepository;
 import business.models.PathologyItem;
-import business.models.PathologyItemRepository;
 import business.models.User;
 import business.representation.CommentRepresentation;
 import business.representation.ExcerptEntryRepresentation;
@@ -133,7 +131,7 @@ public class LabRequestService {
     }
 
     private void setRequestListData(LabRequestRepresentation labRequestRepresentation) {
-        RequestListRepresentation request = requestFormService.getRequestListDataCached(
+        RequestListRepresentation request = requestFormService.getRequestListDataWithAttachmentsCached(
                 labRequestRepresentation.getProcessInstanceId());
         labRequestRepresentation.setRequest(request);
         if (request.getRequesterId() != null) {

@@ -85,6 +85,18 @@
         </div>
     </div>
 
+    <!-- Excerpt list remark -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Remark' | translate }}</label>
+        <p class="col-xs-8 col-md-10" ng-if="labRequest.request.excerptListRemark">
+            {{labRequest.request.excerptListRemark}}
+        </p>
+        <p class="col-xs-8 col-md-10" ng-if="!labRequest.request.excerptListRemark">
+            <em>{{'None' | translate}}</em>
+        </p>
+    </div>
+
+
     <h4 class="h4">{{'Request details' | translate}}</h4>
 
     <!--Parent request details-->
@@ -205,4 +217,31 @@
             </div>
         </div>
     </div>
+
+    <div class="print-only">
+        <h4 class="h4">{{ 'Attachments' | translate }}</h4>
+
+        <div ng-if="labRequest.request.attachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+
+        <div class="list-group files" id="attachments">
+            <a ng-repeat="file in labRequest.request.attachments"
+               ng-href="/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
+               class="list-group-item no-print-url">
+                <i class="glyphicon glyphicon-file"></i> {{file.name}}
+            </a>
+        </div>
+
+        <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
+
+        <div ng-if="labRequest.request.medicalEthicalCommitteeApprovalAttachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+
+        <div class="list-group files" id="medicalEthicalCommitteeApprovalAttachments">
+            <a ng-repeat="file in labRequest.request.medicalEthicalCommitteeApprovalAttachments"
+               ng-href="/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
+               class="list-group-item no-print-url">
+                <i class="glyphicon glyphicon-file"></i> {{file.name}}
+            </a>
+        </div>
+    </div>
+
 </div>

@@ -16,7 +16,7 @@ This file is distributed under the GNU Affero General Public License
     
     
         <!-- First Name -->
-        <div class="form-group" ng-class="{ 'has-error' : (registrationForm.firstName.$invalid || registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
+        <div class="form-group" ng-class="{ 'has-error' : (profileForm.firstName.$invalid || profileForm.firstName.$error.required) && profileForm.firstName.$dirty }">
             <label class="control-label col-sm-2" for="firstName">{{ 'First name' | translate }}</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="firstName" ng-model="user.firstName" disabled>
@@ -55,17 +55,26 @@ This file is distributed under the GNU Affero General Public License
             </div>
         </div>
 
-        <!-- Specialism -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="specialism">{{ 'Specialism' | translate }}</label>
+        <div class="form-group"
+             ng-class="{ 'has-error' : profileForm.specialism.$invalid}">
+            <label class="control-label col-sm-2">{{ 'Specialism' | translate }}</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="specialism" ng-model="user.specialism" disabled>
+                <specialism-combo-box
+                        name="specialism"
+                        ng-model="user.specialism"
+                        custom-class="form-control" required>
+                </specialism-combo-box>
+                <!-- errors -->
+                    <span ng-show="profileForm.specialism.$error.required"
+                          class="help-block">
+                            {{ 'Required field' | translate }}
+                    </span>
             </div>
-        </div>
+        </div>        
 
         <!-- Pathology Dept. Member -->
         <div class="form-group">
-            <label class="control-label col-sm-2" for="isPathologist">
+            <label class="control-label col-sm-2" for="isPathologyLabMember">
                 &nbsp;
             </label>
             <div class="col-sm-10">
@@ -86,7 +95,7 @@ This file is distributed under the GNU Affero General Public License
         <!-- Submit -->
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" ng-disabled="registrationForm.$invalid || submitted" ng-click="submitForm()">{{ 'Update' | translate }}</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="profileForm.$invalid || submitted" ng-click="submitForm()">{{ 'Update' | translate }}</button>
                 <span class="label label-success" ng-show="submitted">{{ 'Loading' | translate }}...</span>
             </div>
         </div>

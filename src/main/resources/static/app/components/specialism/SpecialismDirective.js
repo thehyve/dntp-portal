@@ -41,6 +41,17 @@
                             return !_.isEmpty(scope.modelValue) ? _existingSpecialism :  scope.modelValue;
                         })();
 
+                        // Watch value changes especially to handle asynchronous result
+                        scope.$watch('modelValue', function (newVal) {
+                            // find if specialism is predefined
+                            scope.selectedSpecialism  = SpecialismService.findPredefined(newVal);
+
+                            // if not then it is 'Other'
+                            if (!scope.selectedSpecialism)  {
+                                scope.selectedSpecialism  = SpecialismService.getOther();
+                            }
+                        });
+
                         /**
                          * Update specialism model
                          */

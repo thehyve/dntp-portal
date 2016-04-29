@@ -3,16 +3,16 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(console, angular) {
+(function(angular) {
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('ProfileController', ['$scope', '$timeout', 'Restangular', function ($scope, $timeout, Restangular) {
+    .controller('ProfileController', ['$scope', '$timeout', 'Restangular', function ($scope, $timeout, Restangular, $log) {
         $scope.loaded = false;
         $scope.submitted = false;
 
         var restError = function () {
-            console.log('Server error!');
+            $log.error('Server error!');
         };
 
         Restangular.one('profile').get().then(function (profile) {
@@ -43,4 +43,4 @@ angular.module('ProcessApp.controllers')
 
 
 }]);
-})(console, angular);
+})(angular);

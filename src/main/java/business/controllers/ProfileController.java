@@ -88,6 +88,13 @@ public class ProfileController {
             cData.setTelephone(modifiedData.getTelephone());
         }
 
+        String specialism = currentUser.getSpecialism();
+
+        // update specialism for any changes
+        if (!form.getSpecialism().equals(specialism)) {
+            currentUser.setSpecialism(form.getSpecialism());
+        }
+
         // Save
         userService.save(currentUser);
 

@@ -1,0 +1,64 @@
+<!--
+Copyright (C) 2016  Stichting PALGA
+This file is distributed under the GNU Affero General Public License
+(see accompanying file LICENSE).
+-->
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+    <form class="form-horizontal" role="form" name="hubAssistanceEditForm" novalidate ng-keypress="cancelByEscKey($event, request);">
+
+      <!--HEADER-->
+      <div class="modal-header">
+        <h3 class="modal-title">{{'Hub assistance' | translate}}</h3>
+      </div>
+
+      <!--BODY-->
+      <div class="modal-body form-horizontal">
+
+        <!-- Alert -->
+        <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeAlert();">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{alert.msg | translate}}
+        </div>
+        <div class="row">
+        <div class="col-sm-8">
+           {{'Would you like hub assistance for this lab request?' | translate }}
+           &nbsp;
+           <input type="radio" id="hubAssistanceRequestedYes" name="hubAssistanceRequested"
+               ng-disabled="!hubAssistanceRequest.lab.hubAssistanceEnabled"
+               ng-model="hubAssistanceRequest.hubAssistanceRequested" ng-value="true" ng-checked="hubAssistanceRequest.hubAssistanceRequested">
+           <label class="normal" for="hubAssistanceRequestedYes">{{'Yes' | translate}}</label>
+           &nbsp;
+           <input type="radio" id="hubAssistanceRequestedNo" name="hubAssistanceRequested"
+               ng-disabled="!hubAssistanceRequest.lab.hubAssistanceEnabled"
+               ng-model="hubAssistanceRequest.hubAssistanceRequested" ng-value="false" ng-checked="!hubAssistanceRequest.hubAssistanceRequested">
+           <label class="normal" for="hubAssistanceRequestedNo">{{'No' | translate}}</label>
+
+           <span class="help-block" ng-show="!hubAssistanceRequest.lab.hubAssistanceEnabled">
+                {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
+           </span>
+        </div>
+        </div>
+
+      </div>
+
+      <!--FOOTER-->
+      <div class="modal-footer">
+        <span class="pull-left">
+            <a class="btn btn-default" ng-click="cancelHubAssistance();">{{'Cancel'|translate}}</a>
+        </span>
+        <span class="pull-right">
+            <button class="btn btn-default btn-primary"
+                ng-click="update(hubAssistanceRequest);">{{'Update hub assistance'|translate}}</button>
+        </span>
+      </div>
+
+    </form>
+    </div>
+  </div>
+</div>
+

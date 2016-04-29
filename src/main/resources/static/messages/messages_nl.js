@@ -68,8 +68,8 @@
         'popover: Hypothesis': 'De hypothese.',
         'Methods': 'Methode',
         'popover: Methods': 'Welke technieken (bijv. kiembaanmutatieanalyse/moleculaire technieken, immuunhistochemie, tissue micro array enz.) worden gebruikt om tot beantwoording van de hypothese te komen? Wat is het minimaal aantal patiënten dat nodig is om deze vraag te kunnen beantwoorden?',
-        'Request type': 'Soort aanvraag',
-        'popover: Request type': 'Benodigde gegevens en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" tabindex="-1" href="http://www.palga.nl/gegevensaanvragen/excerpten.html">www.palga.nl/gegevensaanvragen/excerpten.html</a>.',
+        'Request type': 'Benodigde data en/of materialen',
+        'popover: Request type': 'Benodigde data en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" tabindex="-1" href="http://www.palga.nl/gegevensaanvragen/excerpten.html">www.palga.nl/gegevensaanvragen/excerpten.html</a>.',
 
         'Numbers only, exploratory request': 'Alleen aantallen, oriënterende zoekvraag',
         'Excerpts only': 'Alleen excerpten',
@@ -102,7 +102,7 @@
         'Are you sure you want to delete request ?': 'Weet u zeker dat u aanvraag {{id}} wilt verwijderen?',
         'Are you sure you want to submit the request? After submission the request cannot be edited anymore.' :
             'Weet u zeker dat u de aanvraag wilt indienen? Na het indienen kan de aanvraag niet meer bewerkt worden.',
-        'Are you sure you want to submit the request for approval?': 'Weet je zeker dat je de aanvraag naar de wetenschappelijk raad wilt sturen?',
+        'Are you sure you want to send the request to the scientific council?': 'Weet je zeker dat je de aanvraag naar de wetenschappelijk raad wilt sturen?',
         'Are you sure you want to finalise the request?': 'Weet u zeker dat u de aanvraag wilt afronden?',
         'Are you sure you want to close the request?<br>After closing, no data files can be added.': 'Weet je zeker dat je de aanvraag wilt afsluiten?<br>Na het sluiten kunnen geen bestanden meer worden toegevoegd.',
         'Are you sure you want to reject the request?': 'Weet je zeker dat je de aanvraag wilt afwijzen?',
@@ -119,6 +119,7 @@
         'Authentification and agreement request': 'Authentificatie en instemming aanvraag',
         'Agreement has been reached.': 'Formulier ontvangen',
         'Upload form': 'Upload formulier',
+        'Upload signed authentificaton and agreement form': 'Upload ondertekend formulier authentificatie en instemming aanvraag',
         'Reject': 'Afwijzen',
         'Submit to scientific council': 'Doorsturen naar wetenschappelijke raad',
 
@@ -280,6 +281,7 @@
         'Creation date': 'Aangemaakt op',
         'Requester': 'Aanvrager',
         'Assignee': 'Gevolmachtigde',
+        'PALGA advisor': 'PALGA-adviseur',
         'Actions': 'Acties',
         'Details': 'Details',
         'Claim': 'Claim',
@@ -290,6 +292,7 @@
         'Filter by status': 'Filteren op status',
         'Filter by requester': 'Filteren op aanvrager',
         'Filter by assignee': 'Filteren op gevolmachtigde',
+        'Filter by PALGA advisor': 'Filteren op PALGA-adviseur',
         'Date assigned': 'Toegekend op',
         'Vote': 'Stem(men)',
 
@@ -325,7 +328,8 @@
         'Return this lab request to status \'Under review by lab\'?':
             'Het labverzoek terugzetten naar \'Beoordeling door lab\'?',
         'Undo rejection': 'Afwijzing ongedaan maken',
-        'Waiting for a decision from the lab.': 'Wachten op een oordeel van het lab.',
+        'A researcher has requester data and/or materials from your lab. Do you approve this request?': 
+            'Een onderzoeker heeft gegevens en/of materiaal gevraagd aan uw lab. Stemt u in met dit verzoek?',
         'Complete': 'Afronden',
         'Available' : 'Beschikbaar',
         'Not available' : 'Niet beschikbaar',
@@ -415,6 +419,7 @@
         'My lab': 'Mijn lab',
         'Edit my lab': 'Bewerk mijn lab',
         'Enable hub assistance.': 'Inzet hubmedewerker toestaan.',
+        'Would you like hub assistance for this lab request?': 'Wilt u de inzet van de hubmedewerker toestaan voor dit labverzoek?',
         'Request hub assistance.': 'Hubmedewerker inschakelen.',
         'Option not available because hub assistance is not enabled by your lab.': 'De optie is niet beschikbaar omdat uw lab de inzet van de hubmedewerker niet toestaat.',
         'Active': 'Actief',
@@ -424,6 +429,7 @@
         'Hub users': 'Hubmedewerkers',
         'Email addresses': 'Emailadressen',
         'Update hub assistance': 'Inzet hubmedewerker aanpassen',
+        'Actions in status': 'Acties in status',
 
         /* ===================== */
         /* Specialism */

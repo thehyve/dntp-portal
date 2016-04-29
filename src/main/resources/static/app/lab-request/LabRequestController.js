@@ -27,6 +27,14 @@ angular.module('ProcessApp.controllers')
                 show: false
             });
 
+            $scope.hubAssistanceModal = $modal({
+                id: 'hubAssistanceWindow',
+                scope: $scope,
+                templateUrl: '/app/lab-request/edit-hub-assistance.html',
+                backdrop: 'static',
+                show: false
+            });
+
             $scope.alerts = [];
             $scope.labRequest = {};
             $scope.itemsPerPage = 20;
@@ -206,6 +214,17 @@ angular.module('ProcessApp.controllers')
             };
 
             _loadData();
+
+            $scope.editHubAssistance = function (labRequest) {
+                _loadRequest(labRequest).then(function (req) {
+                    $scope.hubAssistanceRequest = _.clone(req);
+                    $scope.hubAssistanceModal.show();
+                });
+            };
+
+            $scope.cancelHubAssistance = function () {
+                $scope.hubAssistanceModal.hide();
+            };
 
             $scope.edit = function (labRequest) {
                 _loadRequest(labRequest).then(function () {
@@ -465,6 +484,9 @@ angular.module('ProcessApp.controllers')
                     .customPUT(obj).then(function () {
                     if ($scope.labReqModal) {
                         $scope.labReqModal.hide();
+                    }
+                    if ($scope.hubAssistanceModal) {
+                        $scope.hubAssistanceModal.hide();
                     }
                     _loadData();
                 }, function (err) {

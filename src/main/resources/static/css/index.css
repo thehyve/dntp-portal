@@ -336,3 +336,7 @@ address {margin-bottom: 0px;}
     font-size: 120%;
     font-weight: 500;
 }
+
+.to-right {
+    margin-left: 2em;
+}

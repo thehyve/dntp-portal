@@ -142,7 +142,7 @@ This file is distributed under the GNU Affero General Public License
                         <td>{{labRequest.assigneeName == '' ? labRequest.assignee : labRequest.assigneeName}}</td>
                         <td class="no-print">
                             <span class="pull-right">
-                                <span class="btn-group">
+                                <span class="btn-group btn-group-sm">
                                 <button ng-if="isPalgaStatus(labRequest.status) || isRequesterStatus(labRequest.status) ||
                                  (isLabOrHubUserStatus(labRequest.status) && isCurrentUser(labRequest.assignee))"
                                     class="btn btn-default" type="button" title="{{'Actions'|translate}}"

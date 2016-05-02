@@ -32,6 +32,7 @@
                 labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
                 | translate }}
                 <span class="no-print btn btn-default btn-xs to-right"
+                    title="{{'Update hub assistance' | translate}}"
                     role="button"
                     ng-if="isLabUser()"
                     ng-click="editHubAssistance(labRequest);"><i class="glyphicon glyphicon-pencil"></i></span>

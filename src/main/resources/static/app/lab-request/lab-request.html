@@ -34,7 +34,8 @@ This file is distributed under the GNU Affero General Public License
             <hr>
 
             <div class="no-print" style="padding-bottom: 25px;">
-                <button class="btn btn-default" type="button" ng-click="edit(labRequest);" title="Actions"
+                <button class="btn btn-default" type="button" ng-click="edit(labRequest);"
+                        title="{{'Actions' | translate}}"
                         ng-if="isLabOrHubUserStatus(labRequest.status)
                             || (isRequester() && isRequesterStatus(labRequest.status))"
                         ng-disabled="(isLabUser() || isHubUser()) && !isCurrentUser(labRequest.assignee)">
@@ -65,14 +66,14 @@ This file is distributed under the GNU Affero General Public License
                 <button ng-if="isLabOrHubUserStatus(labRequest.status)"
                         ng-show="!isCurrentUser(labRequest.assignee)"
                         class="btn btn-default" type="button"
-                        ng-click="claim(labRequest);" title="Claim">
+                        ng-click="claim(labRequest);" title="{{'Claim' |translate}}">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>
                     {{'Claim' | translate}}
                 </button>
                 <button ng-if="isLabOrHubUserStatus(labRequest.status)"
                         ng-show="isCurrentUser(labRequest.assignee)"
                         class="btn btn-default" type="button"
-                        ng-click="unclaim(labRequest);" title="Unclaim">
+                        ng-click="unclaim(labRequest);" title="{{'Unclaim' |translate}}">
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
@@ -80,7 +81,7 @@ This file is distributed under the GNU Affero General Public License
                 <button
                         class="btn btn-default" type="button"
                         ng-click="printPreview();"
-                        title="printView"
+                        title="{{'Print preview' | translate}}"
                         ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' &&
                         labRequest.status != 'Waiting for lab approval')">
                     <span><i class="glyphicon glyphicon-print"></i></span>

@@ -77,8 +77,8 @@ angular.module('ProcessApp.controllers')
             $scope.submitExcerptSelection = function(request) {
                 $scope.disableSpaceSelects();
                 bootbox.prompt({
-                    title: 'Are you sure you want to submit the selection?\n<br>' +
-                    'You may enter a remark:',
+                    title: $rootScope.translate(
+                            'Are you sure you want to submit the selection?<br>You may enter a remark:'),
                     callback: function(result) {
                         if (result) {
                             request.excerptListRemark = result;

@@ -110,6 +110,9 @@
         'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Data delivery.\'' :
             'Weet u zeker dat u de selectie wilt afwijzen?<br>' +
             'Na afwijzing wordt de status veranderd naar \'Datauitgifte.\'',
+        'Are you sure you want to submit the selection?<br>You may enter a remark:':
+            'Weet u zeker dat u de selectie wilt insturen?<br>U kunt hier een opmerking plaatsen:',
+        'Remark': 'Opmerking',
 
         'Authentification checks by PALGA': 'Authentificatiecontroles door PALGA',
         'Requester\'s identity was established.': 'De identiteit van de aanvrager is vastgesteld/gecontroleerd.',
@@ -152,6 +155,8 @@
         'Finish': 'Afronden',
         'Contact information': 'Contactinformatie',
         'Validation': 'Validatie',
+        'Reopen': 'Heropenen',
+        'Print selected': 'Selectie afdrukken',
 
         'All requests': 'Alle aanvragen',
         'Requests claimed by me': 'Door mij geclaimde aanvragen',

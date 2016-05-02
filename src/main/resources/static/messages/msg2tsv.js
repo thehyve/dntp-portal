@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Copyright (C) 2016  Stichting PALGA
  * This file is distributed under the GNU Affero General Public License

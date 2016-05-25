@@ -69,7 +69,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
                 flowIdentifier,
                 file);
         
-        assertEquals(3, representation.getExcerptList().getEntries().size());
+        assertEquals(3, representation.getExcerptList().getEntryCount().intValue());
         
         SecurityContextHolder.clearContext();
     }
@@ -85,7 +85,8 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         
         log.info("Status: " + representation.getStatus());
         
-        ExcerptListRepresentation excerptList = representation.getExcerptList();
+        ExcerptListRepresentation excerptList =
+                requestController.getExcerptList(requester, processInstanceId);
         for(ExcerptEntryRepresentation entry: excerptList.getEntries()) {
             entry.setSelected(true);
         }

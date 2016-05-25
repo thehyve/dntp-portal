@@ -24,6 +24,7 @@ import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.annotations.BatchSize;
 
 import business.exceptions.InvalidRow;
 
@@ -60,6 +61,7 @@ public class ExcerptList {
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="excerptListId")
     @OrderBy("sequenceNumber ASC")
+    @BatchSize(size = 10000)
     private List<ExcerptEntry> entries = new ArrayList<ExcerptEntry>();
 
     public ExcerptList() {

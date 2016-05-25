@@ -476,10 +476,14 @@ angular.module('ProcessApp.controllers')
                 }
             };
 
+            $scope.selectPANumbers = function(request) {
+                $location.path('/request/' + request.processInstanceId + '/selection');
+            };
+
             $scope.view = function(request) {
                 $location.path('/request/view/' + request.processInstanceId);
             };
-            
+
             $scope.cancelByEscKey = function (key, request) {
                 //console.log('In cancelByEscKey');
                 if (key.keyCode === 27) {

@@ -398,16 +398,20 @@ public class RequestFormService {
                     dataAttachments.add(new FileRepresentation(file));
                 }
                 request.setDataAttachments(dataAttachments);
-            
-                Date start = new Date();
+
                 if (excerptListStatuses.contains(request.getStatus())) {
+                    Date start = new Date();
                     ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
                     if (excerptList != null) {
-                        log.info("Set excerpt list.");
+                        log.info("Set excerpt list info.");
                         ExcerptListRepresentation excerptListRepresentation
                             = new ExcerptListRepresentation(excerptList);
-                        List<ExcerptEntry> list = excerptList.getEntries();
-                        excerptListRepresentation.setEntryList(list);
+                        //List<ExcerptEntry> list = excerptList.getEntries();
+                        //excerptListRepresentation.setEntryList(list);
+                        Integer entryCount = excerptListService.countEntriesByExcerptListId(excerptList.getId());
+                        excerptListRepresentation.setEntryCount(entryCount);
+                        Integer selectedCount = excerptListService.countSelectedEntriesByExcerptListId(excerptList.getId());
+                        excerptListRepresentation.setSelectedCount(selectedCount);
                         request.setExcerptList(excerptListRepresentation);
                         @SuppressWarnings("unchecked")
                         Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
@@ -419,7 +423,7 @@ public class RequestFormService {
                         request.setExcerptListRemark(excerptList.getRemark());
                     }
                     Date end = new Date();
-                    log.info("Fetching excerpt list took " + (end.getTime() - start.getTime()) + " ms.");
+                    log.info("Fetching excerpt list info took " + (end.getTime() - start.getTime()) + " ms.");
                 }
             }
         }

@@ -16,17 +16,19 @@ import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 
 public class ExcerptListRepresentation {
-    
+
     Log log = LogFactory.getLog(getClass());
 
     private Long id;
     private List<String> columnNames = new ArrayList<String>();
     private List<ExcerptEntryRepresentation> entries = new ArrayList<ExcerptEntryRepresentation>();
-    
+    private Integer entryCount;
+    private Integer selectedCount;
+
     public ExcerptListRepresentation() {
-        
+
     }
-    
+
     public ExcerptListRepresentation(ExcerptList list) {
         this.id = list.getId();
         for (String name: list.getCsvColumnNames()) {
@@ -56,15 +58,33 @@ public class ExcerptListRepresentation {
 
     public void setEntries(List<ExcerptEntryRepresentation> entries) {
         this.entries = entries;
+        setEntryCount(entries.size());
     }
-    
+
     public void setEntryList(List<ExcerptEntry> list) {
         Date start = new Date();
         for (ExcerptEntry entry: list) {
             entries.add(new ExcerptEntryRepresentation(entry));
         }
+        setEntryCount(entries.size());
         Date end = new Date();
         log.warn("ExcerptListRepresentation: setEntries took " + (end.getTime() - start.getTime()) + " ms.");
+    }
+
+    public Integer getEntryCount() {
+        return entryCount;
+    }
+
+    public void setEntryCount(Integer entryCount) {
+        this.entryCount = entryCount;
+    }
+
+    public Integer getSelectedCount() {
+        return selectedCount;
+    }
+
+    public void setSelectedCount(Integer selectedCount) {
+        this.selectedCount = selectedCount;
     }
 
 }

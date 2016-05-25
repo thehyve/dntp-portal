@@ -55,6 +55,7 @@ import business.models.ExcerptListRepository;
 import business.models.File;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
+import business.representation.ExcerptListRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
@@ -915,18 +916,18 @@ public class RequestController {
 
     @PreAuthorize("isAuthenticated() and (hasRole('palga') or hasPermission(#id, 'isRequester'))")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.GET)
-    public ExcerptList getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
+    public ExcerptListRepresentation getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
         log.info("GET /requests/" + id + "/excerptList");
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
 
-        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        ExcerptListRepresentation excerptList = excerptListService.findRepresentationByProcessInstanceId(id);
         if (excerptList == null) {
             throw new ExcerptListNotFound();
         }
-        log.info("entries: " + excerptList.getEntries().size());
+        log.info("entries: " + excerptList.getEntryCount());
         return excerptList;
     }
 

@@ -7,11 +7,60 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('SelectionController',['$rootScope', '$scope', '$modal', '$location', '$route',
-        'Request', 'ExcerptEntry',
+    .controller('SelectionController',[
+        '$rootScope', '$scope',
+        '$modal',
+        '$location', '$route',
+        '$q',
+        'Request', 'ExcerptList', 'ExcerptEntry',
 
-        function ($rootScope, $scope, $modal, $location, $route,
-                  Request, ExcerptEntry) {
+        function ($rootScope, $scope,
+                  $modal,
+                  $location, $route,
+                  $q,
+                  Request, ExcerptList, ExcerptEntry) {
+
+            $scope.excerptLabel = $rootScope.translate('Excerpt');
+
+            $scope.init = function() {
+                $scope.getExcerptList().then(function() {
+                    console.log('Excerpt list loaded.');
+
+                    $scope.currentIndex = 0;
+
+                    $scope.relevantFields = [
+                                             'PALGApatiëntnr',
+                                             'PALGAexcerptnr',
+                                             'Jaar onderzoek',
+                                             'Conclusie'
+                                             ];
+                    $scope.relevantIndexes = [];
+                    if ($scope.request && $scope.request.excerptList
+                            && $scope.request.excerptList.entries.length < 1000) {
+                        for (var field in $scope.relevantFields) {
+                            var index = $scope.request.excerptList.columnNames
+                                .indexOf($scope.relevantFields[field]);
+                            //console.log('field '+field+': index = '+index);
+                            $scope.relevantIndexes.push(index);
+                        }
+                    }
+
+                    $scope.enableSpaceSelects();
+                });
+            };
+
+            $scope.getExcerptList = function() {
+                return $q(function(resolve, reject) {
+                    ExcerptList.get({
+                        processInstanceId: $scope.request.processInstanceId
+                    }, function(excerptList) {
+                        $scope.request.excerptList = excerptList;
+                        resolve(excerptList);
+                    }, function(err) {
+                        reject(err);
+                    });
+                });
+            };
 
             $scope.updateSelection = function(request, excerpt, selected) {
                 var entry = new ExcerptEntry(excerpt);
@@ -25,23 +74,6 @@ angular.module('ProcessApp.controllers')
                     $scope.error = $scope.error + response.data.message + '\n';
                 });
             };
-
-            $scope.currentIndex = 0;
-
-            $scope.relevantFields = [
-                                     'PALGApatiëntnr', 
-                                     'PALGAexcerptnr',
-                                     'Jaar onderzoek',
-                                     'Conclusie'
-                                     ];
-            $scope.relevantIndexes = [];
-            if ($scope.request && $scope.request.excerptList) {
-                for (var field in $scope.relevantFields) {
-                    var index = $scope.request.excerptList.columnNames.indexOf($scope.relevantFields[field]);
-                    //console.log('field '+field+': index = '+index);
-                    $scope.relevantIndexes.push(index);
-                }
-            }
 
             $scope.xls2html = function(text) {
                 if (text) {

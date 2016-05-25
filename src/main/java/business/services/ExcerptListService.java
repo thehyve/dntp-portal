@@ -41,6 +41,7 @@ import business.exceptions.ExcerptSelectionUploadError;
 import business.exceptions.FileUploadError;
 import business.exceptions.RequestNotFound;
 import business.models.ExcerptEntry;
+import business.models.ExcerptEntryRepository;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
 import business.models.Lab;
@@ -54,10 +55,12 @@ public class ExcerptListService {
     public static final String EXCERPT_LIST_CHARACTER_ENCODING = "UTF-8";
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @Autowired LabService labService;
-    
+
     @Autowired ExcerptListRepository excerptListRepository;
+
+    @Autowired ExcerptEntryRepository excerptEntryRepository;
 
     @Autowired RuntimeService runtimeService;
 
@@ -73,21 +76,32 @@ public class ExcerptListService {
         ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
         return excerptList;
     }
-    
+
     @Transactional
     public ExcerptListRepresentation findRepresentationByProcessInstanceId(String processInstanceId) {
         ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(processInstanceId);
+        if (excerptList == null) {
+            return null;
+        }
         ExcerptListRepresentation result = new ExcerptListRepresentation(excerptList);
         List<ExcerptEntry> list = excerptList.getEntries();
         result.setEntryList(list);
         return result;
     }
-    
+
+    public Integer countEntriesByExcerptListId(Long excerptListId) {
+        return excerptEntryRepository.countByExcerptListId(excerptListId);
+    }
+
+    public Integer countSelectedEntriesByExcerptListId(Long excerptListId) {
+        return excerptEntryRepository.countBySelectedTrueAndExcerptListId(excerptListId);
+    }
+
     @Transactional
     public void deleteByProcessInstanceId(String processInstanceId) {
         excerptListRepository.deleteByProcessInstanceId(processInstanceId);
     }
-    
+
     @Transactional
     public ExcerptList save(ExcerptList list) {
         return excerptListRepository.save(list);

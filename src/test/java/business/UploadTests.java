@@ -38,6 +38,7 @@ import business.models.File;
 import business.models.User;
 import business.representation.FileRepresentation;
 import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.security.UserAuthenticationToken;
 import business.services.UserService;
 
@@ -84,7 +85,7 @@ public class UploadTests extends AbstractTestNGSpringContextTests {
         log.info("Started request " + representation.getProcessInstanceId());
         log.info("Status: " + representation.getStatus());
         log.info("Assignee: " + representation.getAssignee());
-        assertEquals("Open", representation.getStatus());
+        assertEquals(RequestStatus.OPEN, representation.getStatus());
         processInstanceId = representation.getProcessInstanceId();
 
         SecurityContextHolder.clearContext();

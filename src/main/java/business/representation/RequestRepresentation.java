@@ -24,12 +24,15 @@ public class RequestRepresentation {
     private String requesterName;
     private String requesterEmail;
     private ProfileRepresentation requester;
-    private String status;
+    private RequestStatus status = RequestStatus.NONE;
     private Date dateCreated;
     private Lab lab;
     private String assignee;
     private String assigneeName;
     private Date dateAssigned;
+
+    private RequestRepresentation parent;
+    private List<RequestRepresentation> children;
 
     private ReviewStatus reviewStatus;
 
@@ -158,11 +161,11 @@ public class RequestRepresentation {
         this.requesterName = requesterName;
     }
 
-    public String getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(RequestStatus status) {
         this.status = status;
     }
 
@@ -172,6 +175,22 @@ public class RequestRepresentation {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public RequestRepresentation getParent() {
+        return parent;
+    }
+
+    public void setParent(RequestRepresentation parent) {
+        this.parent = parent;
+    }
+
+    public List<RequestRepresentation> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<RequestRepresentation> children) {
+        this.children = children;
     }
 
     public String getTitle() {

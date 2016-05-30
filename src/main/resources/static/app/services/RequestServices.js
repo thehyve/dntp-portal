@@ -18,6 +18,10 @@
                 url : '/requests/:id/reopen',
                 method : 'PUT'
             },
+            fork : {
+                url : '/requests/:id/forks',
+                method : 'POST'
+            },
             submit : {
                 url : '/requests/:id/submit',
                 method : 'PUT'

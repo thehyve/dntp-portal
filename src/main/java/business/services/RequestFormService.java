@@ -18,6 +18,7 @@ import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -32,7 +33,6 @@ import business.models.ApprovalVoteRepository;
 import business.models.Comment;
 import business.models.ContactData;
 import business.models.ContactDataRepository;
-import business.models.ExcerptEntry;
 import business.models.ExcerptList;
 import business.models.File;
 import business.models.RequestProperties;
@@ -44,6 +44,7 @@ import business.representation.FileRepresentation;
 import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 
 @Service
 public class RequestFormService {
@@ -67,6 +68,9 @@ public class RequestFormService {
 
     @Autowired
     private ContactDataRepository contactDataRepository;
+
+    @Autowired
+    private RuntimeService runtimeService;
 
     /**
      * Casts variable 'name' to type Boolean if it exists as key in the variable map;
@@ -97,13 +101,17 @@ public class RequestFormService {
         return String.join(" ", parts);
     }
 
-    @Cacheable("requestlistdata")
-    public RequestListRepresentation getRequestListDataCached(String processInstanceId) {
+    public RequestListRepresentation getRequestListData(String processInstanceId) {
         HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
         // copy request list representation data
         RequestListRepresentation request = new RequestListRepresentation();
         transferBasicData(instance, request);
         return request;
+    }
+
+    @Cacheable("requestlistdata")
+    public RequestListRepresentation getRequestListDataCached(String processInstanceId) {
+        return getRequestListData(processInstanceId);
     }
 
     @Cacheable("requestlistattachmentsdata")
@@ -131,7 +139,7 @@ public class RequestFormService {
             request.setMethods((String) variables.get("methods"));
             request.setPathologistName((String)variables.get("pathologist_name"));
             request.setPathologistEmail((String)variables.get("pathologist_email"));
-            request.setStatus((String)variables.get("status"));
+            request.setStatus(RequestStatus.forDescription((String)variables.get("status")));
             request.setDateCreated((Date)variables.get("date_created"));
             String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();
             Long userId = null;
@@ -173,23 +181,22 @@ public class RequestFormService {
     public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
         transferBasicData(instance, request);
         Task task = null;
-        if (request.getStatus() != null) {
-            switch(request.getStatus()) {
-                case "Review":
-                    task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
-                    break;
-                case "Approval":
-                    task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
-
-                    request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
-                    break;
-                case "DataDelivery":
-                    task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
-                    break;
-                case "SelectionReview":
-                    task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
-                    break;
-            }
+        switch(request.getStatus()) {
+            case REVIEW:
+                task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
+                break;
+            case APPROVAL:
+                task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
+                request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
+                break;
+            case DATA_DELIVERY:
+                task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
+                break;
+            case SELECTION_REVIEW:
+                task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
+                break;
+            default:
+                break;
         }
         if (task != null) {
             request.setAssignee(task.getAssignee());
@@ -221,11 +228,11 @@ public class RequestFormService {
         }
     }
     
-    private static Set<String> excerptListStatuses = new HashSet<String>();
+    private static Set<RequestStatus> excerptListStatuses = new HashSet<>();
     {
-        excerptListStatuses.add("DataDelivery");
-        excerptListStatuses.add("SelectionReview");
-        excerptListStatuses.add("LabRequest");
+        excerptListStatuses.add(RequestStatus.DATA_DELIVERY);
+        excerptListStatuses.add(RequestStatus.SELECTION_REVIEW);
+        excerptListStatuses.add(RequestStatus.LAB_REQUEST);
     }
 
     /**
@@ -248,7 +255,7 @@ public class RequestFormService {
 
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
-            request.setStatus((String)variables.get("status"));
+            request.setStatus(RequestStatus.forDescription((String)variables.get("status")));
             request.setDateCreated((Date)variables.get("date_created"));
             request.setDateAssigned((Date)variables.get("assigned_date"));
 
@@ -294,17 +301,19 @@ public class RequestFormService {
             }
             Task task = null;
             switch(request.getStatus()) {
-                case "Review":
+                case REVIEW:
                     task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
                     break;
-                case "Approval":
+                case APPROVAL:
                     task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
                     break;
-                case "DataDelivery":
+                case DATA_DELIVERY:
                     task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
                     break;
-                case "SelectionReview":
+                case SELECTION_REVIEW:
                     task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
+                    break;
+                default:
                     break;
             }
             if (task != null) {
@@ -328,7 +337,35 @@ public class RequestFormService {
             request.setBillingAddress(properties.getBillingAddress());
             request.setChargeNumber(properties.getChargeNumber());
             request.setResearchNumber(properties.getReseachNumber());
-            
+
+            {
+                RequestProperties parentProperties = properties.getParent();
+                if (parentProperties != null) {
+                    RequestRepresentation parent = new RequestRepresentation();
+                    parent.setRequestNumber(parentProperties.getRequestNumber());
+                    parent.setProcessInstanceId(parentProperties.getProcessInstanceId());
+                    parent.setStatus(RequestStatus.forDescription(
+                            runtimeService.getVariable(
+                                    parentProperties.getProcessInstanceId(),
+                                    "status", String.class)));
+                    request.setParent(parent);
+                }
+            }
+            if (properties.getChildren() != null) {
+                List<RequestRepresentation> children = new ArrayList<>();
+                for (RequestProperties childProperties: properties.getChildren()) {
+                    RequestRepresentation child = new RequestRepresentation();
+                    child.setRequestNumber(childProperties.getRequestNumber());
+                    child.setProcessInstanceId(childProperties.getProcessInstanceId());
+                    child.setStatus(RequestStatus.forDescription(
+                            runtimeService.getVariable(
+                                    childProperties.getProcessInstanceId(),
+                                    "status", String.class)));
+                    children.add(child);
+                }
+                request.setChildren(children);
+            }
+
             List<FileRepresentation> requestAttachments = new ArrayList<FileRepresentation>();
             for(File file: properties.getRequestAttachments()) {
                 requestAttachments.add(new FileRepresentation(file));

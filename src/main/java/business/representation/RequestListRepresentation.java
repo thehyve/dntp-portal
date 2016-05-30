@@ -17,7 +17,7 @@ public class RequestListRepresentation {
     private String requestNumber;
     private Long requesterId;
     private String requesterName;
-    private String status;
+    private RequestStatus status = RequestStatus.NONE;
     private Date dateCreated;
 
     private ReviewStatus reviewStatus;
@@ -97,11 +97,11 @@ public class RequestListRepresentation {
         this.requesterName = requesterName;
     }
 
-    public String getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(RequestStatus status) {
         this.status = status;
     }
 

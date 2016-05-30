@@ -296,8 +296,22 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            /**
+             * @param version_string e.g., 'dntp_request_002:1:4'
+             * @param min_version e.g., dntp_request_002
+             */
+            var _checkVersionHigherThan = function(version_string, min_version) {
+                var parts = version_string.split(':');
+                if (parts.length != 3) {
+                    return false;
+                }
+                var current_version = parts[0];
+                var result = current_version >= min_version;
+                return result;
+            };
+
             $scope.isReopenEnabled = function(request) {
-                return request.processId.startsWith('dntp_request_002');
+                return _checkVersionHigherThan(request.processId, 'dntp_request_002');
             };
 
             $scope.reopen = function(request) {
@@ -311,6 +325,29 @@ angular.module('ProcessApp.controllers')
                             request.$reopen(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
+                            }, function(response) {
+                                $rootScope.logErrorResponse(response);
+                            });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
+                        }
+                    });
+            };
+
+            $scope.isForkEnabled = function(request) {
+                return _checkVersionHigherThan(request.processId, 'dntp_request_003');
+            };
+
+            $scope.fork = function(request) {
+                $scope.dataLoading = true;
+                bootbox.confirm(
+                    $rootScope.translate('Are you sure you want to create an additional request?'),
+                    function(confirmed) {
+                        if (confirmed) {
+                            Request.convertRequestTypeToOpts(request); // convert request type
+                            request.$fork(function(result) {
+                                $scope.view(result);
                             }, function(response) {
                                 $rootScope.logErrorResponse(response);
                             });

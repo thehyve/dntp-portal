@@ -24,6 +24,7 @@ import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.security.MockConfiguration.MockMailSender;
 import business.security.UserAuthenticationToken;
 
@@ -96,7 +97,7 @@ public class LargerExcerptListTests extends SelectionControllerTests {
 
         log.info("Status: " + representation.getStatus());
         
-        assertEquals("SelectionReview", representation.getStatus());
+        assertEquals(RequestStatus.SELECTION_REVIEW, representation.getStatus());
         
         SecurityContextHolder.clearContext();
     }
@@ -120,7 +121,7 @@ public class LargerExcerptListTests extends SelectionControllerTests {
         representation.setSelectionApproved(true);
         representation = selectionController.setExcerptSelectionApproval(palga, processInstanceId, representation);
         
-        assertEquals("LabRequest", representation.getStatus());
+        assertEquals(RequestStatus.LAB_REQUEST, representation.getStatus());
         
         assertEquals(2, labRequestService.count());
         List<LabRequest> labRequests = labRequestService.findAllByProcessInstanceId(processInstanceId);
@@ -130,7 +131,7 @@ public class LargerExcerptListTests extends SelectionControllerTests {
         for (LabRequest labRequest: labRequests) {
             LabRequestRepresentation labRequestRepresentation = 
                     new LabRequestRepresentation(labRequest);
-            labRequestService.transferLabRequestData(labRequestRepresentation);
+            labRequestService.transferLabRequestData(labRequestRepresentation, false);
             labRequestService.transferExcerptListData(labRequestRepresentation);
             labRequestService.transferLabRequestDetails(labRequestRepresentation, false);
             pathologyCount += labRequestRepresentation.getPathologyCount();

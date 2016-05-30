@@ -7,29 +7,37 @@ package business.services;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
+import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
 import business.models.RequestProperties;
 import business.models.User;
 import business.representation.LabRequestRepresentation;
+import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.security.UserAuthenticationToken;
 
 @Service
@@ -44,10 +52,13 @@ public class RequestService {
     private HistoryService historyService;
 
     @Autowired
+    private RuntimeService runtimeService;
+
+    @Autowired
     private LabRequestService labRequestService;
 
     @Autowired
-    private RequestNumberService requestNumberService;
+    private RequestFormService requestFormService;
 
     @Autowired
     private RequestPropertiesService requestPropertiesService;
@@ -290,16 +301,58 @@ public class RequestService {
         }
         taskService.complete(task.getId());
 
-        if (properties.getRequestNumber() == null || properties.getRequestNumber().isEmpty()) {
-            // The request is a new request and needs to have a new number assigned.
-            String requestNumber = requestNumberService.getNewRequestNumber();
-            properties.setRequestNumber(requestNumber);
-            properties =  requestPropertiesService.save(properties);
-        }
+        properties.setRequestNumber(requestPropertiesService.getNewRequestNumber(properties));
 
         mailService.sendAgreementFormLink(requester, properties);
 
         return properties;
+    }
+
+    /**
+     * 
+     */
+    @Transactional
+    public RequestRepresentation forkRequest(User user, String parentId) {
+        HistoricProcessInstance parentInstance = getProcessInstance(parentId);
+        RequestRepresentation parentRequest = new RequestRepresentation();
+        requestFormService.transferData(parentInstance, parentRequest, null);
+        if (parentRequest.getStatus() != RequestStatus.LAB_REQUEST) {
+            throw new InvalidActionInStatus("Forking of requests not allowed in status " +
+                    parentRequest.getStatus() + ".");
+        }
+        log.info("Forking request " + parentRequest.getRequestNumber() +
+                " (requester: " + parentRequest.getRequesterId() + ", " +
+                parentRequest.getRequesterEmail() + ")");
+
+        // start new process instance
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("initiator", parentRequest.getRequesterId());
+        values.put("jump_to_data_delivery", Boolean.TRUE);
+        ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
+                "dntp_request_003", values);
+        String childId = newInstance.getProcessInstanceId();
+        log.info("New forked process instance started: " + childId);
+        runtimeService.addUserIdentityLink(childId, parentRequest.getRequesterId(), IdentityLinkType.STARTER);
+
+        HistoricProcessInstance childInstance = getProcessInstance(childId);
+        // copy all request properties to the new instance.
+        Map<String, Object> variables = requestFormService.transferFormData(
+                parentRequest, childInstance, user);
+        runtimeService.setVariables(childId, variables);
+
+        RequestProperties childProperties = requestPropertiesService.findByProcessInstanceId(childId);
+        // generate new request number
+        childProperties.setRequestNumber(requestPropertiesService.getNewRequestNumber(childProperties));
+        // set link between parent and child request
+        RequestProperties parentProperties = requestPropertiesService.findByProcessInstanceId(parentId);
+        childProperties.setParent(parentProperties);
+        parentProperties.getChildren().add(childProperties);
+        requestPropertiesService.save(parentProperties);
+
+        childInstance = getProcessInstance(childId);
+        RequestRepresentation childRequest = new RequestRepresentation();
+        requestFormService.transferData(childInstance, childRequest, null);
+        return childRequest;
     }
 
 }

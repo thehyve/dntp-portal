@@ -30,6 +30,45 @@
         <contact-data-address contact-data="request.requester.contactData" class="col-xs-6 col-sm-6"></contact-data-address>
     </div>
 
+    <!-- Parent request -->
+    <div class="row" ng-if="request.parent">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Main request' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            <a ng-href="/#/request/view/{{request.parent.processInstanceId}}"
+            >{{request.parent.requestNumber}}</a>
+        </p>
+    </div>
+    <!-- Additional requests -->
+    <div ng-if="!request.parent && (isPalga() || request.children.length > 0 )">
+        <h4 class="h4">{{'Additional requests' | translate}}</h4>
+        <button class="btn btn-default" type="button" ng-click="fork(request)"
+                title="{{'Add additional request' | translate}}"
+                ng-if="!request.parent && isPalga() && request.status == 'LabRequest' && isForkEnabled(request)">
+            <span><i class="glyphicon glyphicon-duplicate"></i></span>
+            {{'Create additional request' | translate}}
+        </button>
+        <table class="table table-striped">
+        <thead>
+        <tr>
+            <th style="width: 33.3%">{{'Request number' | translate}}</th>
+            <th>{{'Status' | translate}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="child in request.children">
+            <td><a ng-href="/#/request/view/{{child.processInstanceId}}"
+            >{{child.requestNumber}}</a></td>
+            <td>{{child.status | translate}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+        </tfoot>
+        </table>
+    </div>
+
     <h4 class="h4">{{ 'Details' | translate }}</h4>
 
     <!-- Principal Investigator -->

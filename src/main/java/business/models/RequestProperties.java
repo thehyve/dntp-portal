@@ -17,10 +17,16 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 
 @Entity
@@ -36,6 +42,15 @@ public class RequestProperties {
     @GeneratedValue
     private Long id;
 
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.EAGER)
+    private RequestProperties parent;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    @BatchSize(size = 1000)
+    @OrderColumn
+    private List<RequestProperties> children = new ArrayList<>();
+
     @Column(unique = true)
     private String processInstanceId;
 
@@ -45,15 +60,15 @@ public class RequestProperties {
     private ReviewStatus reviewStatus;
 
     @OneToOne
-    ContactData billingAddress;
-    
-    String chargeNumber;
-    
-    String reseachNumber;
-    
+    private ContactData billingAddress;
+
+    private String chargeNumber;
+
+    private String reseachNumber;
+
     @OneToMany
     private List<File> requestAttachments = new ArrayList<File>();
-    
+
     @OneToMany
     private List<File> agreementAttachments = new ArrayList<File>();
 
@@ -106,6 +121,22 @@ public class RequestProperties {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public RequestProperties getParent() {
+        return parent;
+    }
+
+    public void setParent(RequestProperties parent) {
+        this.parent = parent;
+    }
+
+    public List<RequestProperties> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<RequestProperties> children) {
+        this.children = children;
     }
 
     public String getProcessInstanceId() {

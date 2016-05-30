@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
@@ -32,6 +33,9 @@ public class RequestPropertiesService {
 
     @Autowired
     RequestPropertiesRepository requestPropertiesRepository;
+
+    @Autowired
+    RequestNumberService requestNumberService;
 
     @Autowired
     FileService fileService;
@@ -59,6 +63,18 @@ public class RequestPropertiesService {
     @Cacheable("requestnumber")
     public String getRequestNumber(String processInstanceId) {
         return requestPropertiesRepository.getRequestNumberByProcessInstanceId(processInstanceId);
+    }
+
+    @CachePut(value = "requestnumber", key = "#properties.processInstanceId")
+    @Transactional
+    public String getNewRequestNumber(RequestProperties properties) {
+        if (properties.getRequestNumber() == null || properties.getRequestNumber().isEmpty()) {
+            // The request is a new request and needs to have a new number assigned.
+            String requestNumber = requestNumberService.getNewRequestNumber();
+            properties.setRequestNumber(requestNumber);
+            properties =  save(properties);
+        }
+        return properties.getRequestNumber();
     }
 
     public ReviewStatus getRequestReviewStatus(String processInstanceId) {

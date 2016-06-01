@@ -10,9 +10,6 @@ This file is distributed under the GNU Affero General Public License
 
   <!-- Requester valid -->
   <div class="form-group" ng-class="">
-    <label class="control-label col-sm-3">
-      &nbsp;
-    </label>
     <div class="col-sm-8">
       <input type="checkbox" id="requesterValid" name="requesterValid" value="1"
              ng-model="request.requesterValid"> &nbsp;
@@ -23,18 +20,15 @@ This file is distributed under the GNU Affero General Public License
   <!-- Requester valid Lab-->
   <div class="form-group" ng-class="">
     <br>
-    <label class="control-label col-sm-3">
-      {{'Lab' | translate}}
-    </label>
     <div class="col-sm-8 form-control-static" >
+      <label class="control-label">
+        {{'Lab' | translate}}
+      </label>
       <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
       <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
     </div>
   </div>
   <div class="form-group" ng-class="">
-    <label class="control-label col-sm-3">
-      &nbsp;
-    </label>
     <div class="col-sm-8">
       <input type="checkbox" id="requesterLabValid" name="requesterLabValid" value="1"
              ng-model="request.requesterLabValid"> &nbsp;
@@ -44,9 +38,6 @@ This file is distributed under the GNU Affero General Public License
 
   <!-- Requester allowed -->
   <div class="form-group" ng-class="">
-    <label class="control-label col-sm-3">
-      &nbsp;
-    </label>
     <div class="col-sm-8">
       <input type="checkbox" id="requesterAllowed" name="requesterAllowed" value="1"
              ng-model="request.requesterAllowed"> &nbsp;
@@ -56,9 +47,6 @@ This file is distributed under the GNU Affero General Public License
 
   <!-- Contact person allowed -->
   <div class="form-group" ng-class="">
-    <label class="control-label col-sm-3">
-      &nbsp;
-    </label>
     <div class="col-sm-8">
       <input type="checkbox" id="contactPersonAllowed" name="contactPersonAllowed" value="1"
              ng-model="request.contactPersonAllowed"> &nbsp;
@@ -73,9 +61,6 @@ This file is distributed under the GNU Affero General Public License
 
   <!-- Agreement reached -->
   <div class="form-group" ng-class="">
-    <label class="control-label col-sm-3">
-      &nbsp;
-    </label>
     <div class="col-sm-8">
       <input type="checkbox" id="agreementReached" name="agreementReached" value="1"
              ng-model="request.agreementReached"> &nbsp;

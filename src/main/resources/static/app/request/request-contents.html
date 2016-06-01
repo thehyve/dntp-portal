@@ -192,31 +192,34 @@
               'No data linkage required.' | translate }}
         </div>
     </div>
-    <div class="row" ng-if="request.type != '1' && request.linkageWithPersonalDataNotes">
-        <label class="control-label col-xs-4 col-sm-4">
-            {{ 'Data linkage information' | translate }}
-        </label>
-        <div class="col-xs-6 col-sm-6">
-            {{request.linkageWithPersonalDataNotes}}
-        </div>
-    </div>
 
-    <!-- Informed Consent -->
-    <div class="row" ng-if="request.type != '1'">
-        <label class="control-label col-xs-4 col-sm-4">
-            {{ 'Informed consent (IC)' | translate }}
-        </label>
-        <div class="col-xs-6 col-sm-6">
-            {{request.informedConsent ? 'Yes' : 'No' | translate}}
+    <div ng-if="request.type != '1' && request.linkageWithPersonalData">
+        <div class="row" ng-if="request.linkageWithPersonalDataNotes">
+            <label class="control-label col-xs-4 col-sm-4">
+                {{ 'Data linkage information' | translate }}
+            </label>
+            <div class="col-xs-6 col-sm-6">
+                {{request.linkageWithPersonalDataNotes}}
+            </div>
         </div>
-    </div>
 
-    <!-- Reason Using Personal Data -->
-    <div class="row" ng-if="request.type != '1' && request.reasonUsingPersonalData">
-        <label class="control-label col-xs-4 col-sm-4">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
-        <p class="col-xs-6 col-sm-6">
-            {{request.reasonUsingPersonalData}}
-        </p>
+        <!-- Informed Consent -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">
+                {{ 'Informed consent (IC)' | translate }}
+            </label>
+            <div class="col-xs-6 col-sm-6">
+                {{request.informedConsent ? 'Yes' : 'No' | translate}}
+            </div>
+        </div>
+
+        <!-- Reason Using Personal Data -->
+        <div class="row" ng-if="request.reasonUsingPersonalData">
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
+            <p class="col-xs-6 col-sm-6">
+                {{request.reasonUsingPersonalData}}
+            </p>
+        </div>
     </div>
 
     <h4 class="h4">{{ 'Attachments' | translate }}</h4>
@@ -249,11 +252,11 @@
 
         <!-- Requester valid -->
         <div class="row">
-            <span class="col-xs-8 col-sm-8">
+            <label class="control-label col-xs-4 col-sm-4">
             {{ 'Requester\'s identity was established.' | translate }}
-            </span>
-            <span class="col-xs-2 col-sm-2">
-            {{request.requesterValid ? 'Yes' : 'No' | translate}}
+            </label>
+            <span class="col-xs-6 col-sm-6">
+            {{request.requesterValid ? 'Yes' : '&ndash;' | translate}}
             </span>
         </div>
 
@@ -267,31 +270,31 @@
             </span>
         </div>
         <div class="row">
-            <span class="col-xs-8 col-sm-8">
+            <label class="control-label col-xs-4 col-sm-4">
             {{ 'Requester indeed works at or collaborates with the pathology laboratory mentioned.' | translate }}
-            </span>
-            <span class="col-xs-2 col-sm-2">
-            {{request.request.requesterLabValid ? 'Yes' : 'No' | translate}}
+            </label>
+            <span class="col-xs-6 col-sm-6">
+            {{request.request.requesterLabValid ? 'Yes' : '&ndash;' | translate}}
             </span>
         </div>
 
         <!-- Requester allowed -->
         <div class="row">
-            <span class="col-xs-8 col-sm-8">
+            <label class="control-label col-xs-4 col-sm-4">
             {{ 'The requester is allowed to submit the request.' | translate }}
-            </span>
-            <span class="col-xs-2 col-sm-2">
-            {{request.requesterAllowed ? 'Yes' : 'No' | translate}}
+            </label>
+            <span class="col-xs-6 col-sm-6">
+            {{request.requesterAllowed ? 'Yes' : '&ndash;' | translate}}
             </span>
         </div>
 
         <!-- Contact person allowed -->
         <div class="row">
-            <span class="col-xs-8 col-sm-8">
+            <label class="control-label col-xs-4 col-sm-4">
             {{ 'The contact person been checked and is authorised to support the request.' | translate }}
-            </span>
-            <span class="col-xs-2 col-sm-2">
-            {{request.contactPersonAllowed ? 'Yes' : 'No' | translate}}
+            </label>
+            <span class="col-xs-6 col-sm-6">
+            {{request.contactPersonAllowed ? 'Yes' : '&ndash;' | translate}}
             </span>
         </div>
 
@@ -299,11 +302,11 @@
 
         <!-- Agreement reached -->
         <div class="row">
-            <span class="col-xs-8 col-sm-8">
+            <label class="control-label col-xs-4 col-sm-4">
             {{ 'Agreement has been reached.' | translate }}
-            </span>
-            <span class="col-xs-2 col-sm-2">
-            {{request.agreementReached ? 'Yes' : 'No' | translate}}
+            </label>
+            <span class="col-xs-6 col-sm-6">
+            {{request.agreementReached ? 'Yes' : '&ndash;' | translate}}
             </span>
         </div>
 
@@ -326,14 +329,16 @@
         <h4 class="h4 h4-palga">{{'Review by PALGA privacy commitee'|translate}}</h4>
 
         <!-- Has this request has been sent to Privacy Committee -->
+        <!--
         <div class="row">
-            <span class="col-xs-8 col-sm-8">
+            <label class="control-label col-xs-4 col-sm-4">
             {{ 'This request was sent by email to the privacy committee.' | translate }}
-            </span>
-            <span class="col-xs-2 col-sm-2">
+            </label>
+            <span class="col-xs-6 col-sm-6">
             {{request.sentToPrivacyCommittee ? 'Yes' : 'No' | translate}}
             </span>
         </div>
+        -->
 
         <!-- Review rationale -->
         <div class="row">

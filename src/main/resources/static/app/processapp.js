@@ -146,8 +146,6 @@
                  */
                 $rootScope.setCurrentUserAuthorizations = function(currentUser) {
 
-                    console.log('currentUser', currentUser);
-
                     // ========================================================================
                     // TODO This might something that're organized in the backend in the future
                     // ========================================================================

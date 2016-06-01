@@ -51,8 +51,6 @@ angular.module('ProcessApp.controllers')
                     var now = new Date();
                     req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
                     $scope.request = req;
-                    console.log(req);
-                    console.log($scope.globals.currentUser);
                     $rootScope.tempRequest = jQuery.extend( true, {}, req ); // deep copy
                 }, function(response) {
                     $rootScope.logErrorResponse(response);

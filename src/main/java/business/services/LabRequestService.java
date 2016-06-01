@@ -153,36 +153,6 @@ public class LabRequestService {
         }
     }
 
-    @Transactional
-    public void transferExcerptListData(
-            ExcerptListRepresentation list,
-            ExcerptList excerptList,
-            Integer labNumber
-            ) {
-
-        List<String> columnNames = new ArrayList<String>();
-        for (String name : excerptList.getLabRequestColumnNames()) {
-            columnNames.add(name);
-        }
-        list.setColumnNames(columnNames);
-        List<ExcerptEntryRepresentation> representations = new ArrayList<ExcerptEntryRepresentation>();
-        List<ExcerptEntry> entries = excerptList.getEntries();
-        for (ExcerptEntry entry : entries) {
-            if (entry.isSelected() && entry.getLabNumber().equals(labNumber)) {
-                ExcerptEntryRepresentation representation = new ExcerptEntryRepresentation(
-                        entry);
-                List<String> values = new ArrayList<String>();
-                for (String value : entry.getLabRequestValues()) {
-                    values.add(value);
-                }
-                representation.setValues(values);
-                assert(representation.getPaNumber().equals(entry.getPaNumber()));
-                representations.add(representation);
-            }
-        }
-        list.setEntries(representations);
-    }
-
     public void transferPathologyCount(@NotNull LabRequestRepresentation labRequestRepresentation) {
         labRequestRepresentation.setPathologyCount(
                 pathologyItemService.getPathologyCountCached(labRequestRepresentation.getId()));
@@ -196,10 +166,6 @@ public class LabRequestService {
             throw new RequestNotFound();
         }
         labRequestRepresentation.setExcerptListRemark(excerptList.getRemark());
-        ExcerptListRepresentation list = new ExcerptListRepresentation();
-        transferExcerptListData(list, excerptList, labRequestRepresentation.getLab().getNumber());
-
-        labRequestRepresentation.setExcerptList(list);
     }
 
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation, boolean cached) {
@@ -308,11 +274,11 @@ public class LabRequestService {
                 }
 
                 ExcerptList excerptList = excerptListService.findByProcessInstanceId(processInstanceId);
-                ExcerptListRepresentation list = new ExcerptListRepresentation();
-                transferExcerptListData(list, excerptList, labNumber);
                 List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
-                for(ExcerptEntryRepresentation entry: list.getEntries()) {
-                    pathologyList.add(new PathologyItem(labRequest.getId(), entry.getPaNumber()));
+                for(ExcerptEntry entry: excerptList.getEntries()) {
+                    if (entry.isSelected() && labNumber.equals(entry.getLabNumber())) {
+                        pathologyList.add(new PathologyItem(labRequest.getId(), entry));
+                    }
                 }
                 labRequest.setPathologyList(pathologyList);
                 labRequest = labRequestRepository.save(labRequest);

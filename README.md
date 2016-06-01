@@ -118,8 +118,16 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 ```
 
 ## Release notes
+
+### 0.0.46
+```sql
+alter table excerpt_list add column palga_patient_nr_column int4 not null default -1;
+alter table excerpt_list add column palga_excerpt_nr_column int4 not null default -1;
+alter table excerpt_list add column palga_excerpt_id_column int4 not null default -1;
+```
+
 ### 0.0.42
-When updating to versoin 0.0.42, an existing database can be updated with:
+When updating to version 0.0.42, an existing database can be updated with:
 ```sql
 alter table lab add hub_assistance_enabled boolean default true;
 ```

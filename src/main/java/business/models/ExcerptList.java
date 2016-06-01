@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -25,6 +26,8 @@ import javax.persistence.Transient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import business.exceptions.InvalidRow;
 
@@ -32,28 +35,36 @@ import business.exceptions.InvalidRow;
 @Table(indexes = @Index(columnList="propertiesId"))
 public class ExcerptList {
 
-    @Transient
-    Log log = LogFactory.getLog(getClass());
-    
+    static final Log log = LogFactory.getLog(ExcerptList.class);
+
     @Id
     @GeneratedValue
     private Long id;
-    
+
     private Long propertiesId;
-    
+
     @Column(unique = true)
     private String processInstanceId;
 
     @Column(columnDefinition="TEXT")
     //@Column(length = 32767)
     private String remark;
-    
-    @ElementCollection
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(indexes = @Index(columnList="excerpt_list_id"))
+    @Fetch(FetchMode.JOIN)
+    @BatchSize(size = 10000)
     @OrderColumn
     private List<String> columnNames = new ArrayList<String>();
-    
+
+    private int palgaPatientNrColumn = -1;
+
+    private int palgaExcerptNrColumn = -1;
+
+    private int palgaExcerptIdColumn = -1;
+
     private int labNumberColumn = -1;
-    
+
     private int paNumberColumn = -1;
 
     /**
@@ -67,7 +78,7 @@ public class ExcerptList {
     public ExcerptList() {
         
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -91,7 +102,7 @@ public class ExcerptList {
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
     }
-    
+
     public String getRemark() {
         return remark;
     }
@@ -101,9 +112,12 @@ public class ExcerptList {
     }
 
     public String[] getCsvColumnNames() {
-        String[] result = new String[columnNames.size() + 1];
+        String[] result = new String[columnNames.size() + 4];
         result[0] = "Sequence number";
-        int i = 1;
+        result[1] = "PALGAPatiëntnr";
+        result[2] = "PALGAExcerptnr";
+        result[3] = "PALGAExcerptid";
+        int i = 4;
         for (String name: columnNames) {
             result[i] = name;
             i++;
@@ -112,18 +126,21 @@ public class ExcerptList {
     }
 
     public String[] getLabRequestColumnNames() {
-        String[] result = new String[columnNames.size() + 3];
+        String[] result = new String[columnNames.size() + 6];
         result[0] = "Sequence number";
-        result[1] = "Lab";
-        result[2] = "PA number";
-        int i = 3;
+        result[1] = "PALGAPatiëntnr";
+        result[2] = "PALGAExcerptnr";
+        result[3] = "PALGAExcerptid";
+        result[4] = "Lab";
+        result[5] = "PA number";
+        int i = 6;
         for (String name: columnNames) {
             result[i] = name;
             i++;
         }
         return result;
     }
-    
+
     public class InvalidHeader extends RuntimeException {
         private static final long serialVersionUID = 4962263427071738791L;
         
@@ -135,15 +152,24 @@ public class ExcerptList {
             super("Invalid header.");
         }
     }   
-    
+
     public void setColumnNames(String[] columnNames) {
         this.columnNames = new ArrayList<String>();
+        this.palgaPatientNrColumn = -1;
+        this.palgaExcerptNrColumn = -1;
+        this.palgaExcerptIdColumn =-1;
         this.labNumberColumn = -1;
         this.paNumberColumn = -1;
         for (int i=0; i < columnNames.length; i++) {
             String name_ = columnNames[i].trim().toLowerCase();
             log.info("column name: " + name_);
-            if (name_.equals("palab_nu")) {
+            if (name_.equals("palgapatiëntnr")) {
+                palgaPatientNrColumn = i;
+            } else if (name_.equals("palgaexcerptnr")) {
+                palgaExcerptNrColumn = i;
+            } else if (name_.equals("palgaexcerptid")) {
+                palgaExcerptIdColumn = i;
+            } else if (name_.equals("palab_nu")) {
                 labNumberColumn = i;
             } else if (name_.equals("pa_nummer_nu")) {
                 paNumberColumn = i;
@@ -151,11 +177,20 @@ public class ExcerptList {
                 this.columnNames .add(columnNames[i]);
             }
         }
+        if (palgaPatientNrColumn == -1) {
+            throw new InvalidHeader("No patient number column (PALGAPatiëntnr).");
+        }
+        if (palgaExcerptNrColumn == -1) {
+            throw new InvalidHeader("No excerpt number column (PALGAexcerptnr).");
+        }
+        if (palgaExcerptIdColumn == -1) {
+            throw new InvalidHeader("No excerpt id column (PALGAexcerptid).");
+        }
         if (labNumberColumn == -1) {
-            throw new InvalidHeader("No lab number column.");
+            throw new InvalidHeader("No lab number column (PAlab_Nu).");
         }
         if (paNumberColumn == -1) {
-            throw new InvalidHeader("No PA number column.");
+            throw new InvalidHeader("No PA number column (PA_Nummer_Nu).");
         }
     }
 
@@ -165,7 +200,7 @@ public class ExcerptList {
     public List<ExcerptEntry> getEntries() {
         return entries;
     }
-    
+
     public void setEntries(List<ExcerptEntry> entries) {
         this.entries = entries;
     }
@@ -177,24 +212,36 @@ public class ExcerptList {
             this.entries.add(entry);
         }
     }
-    
+
+    static final boolean validIndex(int index, String[] data) {
+        return index >= 0 && index < data.length;
+    }
+
     public ExcerptEntry addEntry(String[] data) {
-        if (data.length != columnNames.size() + 2) {
+        if (data.length != columnNames.size() + 5) {
             throw new InvalidRow("Row length does not match header length.");
         }
         ExcerptEntry entry = new ExcerptEntry();
-        if (labNumberColumn == -1) {
-            throw new InvalidRow("No lab number column.");
+        if (validIndex(palgaPatientNrColumn, data)) {
+            entry.setPalgaPatientNr(data[palgaPatientNrColumn]);
         }
-        if (paNumberColumn == -1) {
-            throw new InvalidRow("No PA number column.");
+        if (validIndex(palgaExcerptNrColumn, data)) {
+            entry.setPalgaExcerptNr(data[palgaExcerptNrColumn]);
+        }
+        if (validIndex(palgaExcerptIdColumn, data)) {
+            entry.setPalgaExcerptId(data[palgaExcerptIdColumn]);
         }
         entry.setLabNumber(Integer.valueOf(data[labNumberColumn]));
         entry.setPaNumber(data[paNumberColumn]);
         for (int i=0; i < data.length; i++) {
-            if (i != labNumberColumn && i != paNumberColumn) {
-                entry.addValue(data[i]);
+            if (    i == palgaPatientNrColumn ||
+                    i == palgaExcerptNrColumn ||
+                    i == palgaExcerptIdColumn ||
+                    i == labNumberColumn ||
+                    i == paNumberColumn) {
+                continue;
             }
+            entry.addValue(data[i]);
         }
         addEntry(entry);
         return entry;
@@ -205,7 +252,7 @@ public class ExcerptList {
             entry.setSelected(false);
         }
     }
-    
+
     public void selectAll() {
         for (ExcerptEntry entry: entries) {
             entry.setSelected(true);

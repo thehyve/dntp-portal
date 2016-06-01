@@ -29,8 +29,9 @@ angular.module('ProcessApp.controllers')
                     $scope.currentIndex = 0;
 
                     $scope.relevantFields = [
-                                             'PALGApatiëntnr',
-                                             'PALGAexcerptnr',
+                                             'PALGAPatiëntnr',
+                                             'PALGAExcerptnr',
+                                             'PALGAExcerptid',
                                              'Jaar onderzoek',
                                              'Conclusie'
                                              ];

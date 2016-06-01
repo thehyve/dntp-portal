@@ -36,6 +36,10 @@ This file is distributed under the GNU Affero General Public License
             <thead>
                 <tr>
                     <th st-sort="labRequestCode">{{'Lab request' | translate}}</th>
+                    <th st-sort="sequenceNumber">{{'Sequence number' | translate}}</th>
+                    <th st-sort="palgaPatientNr">{{'PALGA patiëntnr' | translate}}</th>
+                    <th st-sort="palgaExcerptNr">{{'PALGA excerptnr' | translate}}</th>
+                    <th st-sort="palgaExcerptId">{{'PALGA excerptid' | translate}}</th>
                     <th st-sort="paNumber">{{'PA number' | translate}}</th>
                     <th>{{'Samples' | translate}}</th>
                     <th st-sort="status">{{'Status' | translate}}</th>
@@ -45,13 +49,17 @@ This file is distributed under the GNU Affero General Public License
                 </tr>
                 <tr class="no-print">
                     <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="sequenceNumber" placeholder="{{'Filter by sequence number'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="palgaPatientNr" placeholder="{{'Filter by PALGA patiëntnr'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="palgaExcerptNr" placeholder="{{'Filter by PALGA excerptnr'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="palgaExcerptId" placeholder="{{'Filter by PALGA excerptid'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
                 </tr>
                 <tr class="no-print">
-                    <th colspan="4"><input id="request-search"
+                    <th colspan="8"><input id="request-search"
                         st-search="" class="form-control"
                         placeholder="{{'Search'|translate}} ..." type="text" /></th>
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
@@ -62,6 +70,10 @@ This file is distributed under the GNU Affero General Public License
                     <td>
                         <a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestCode}}</a>
                     </td>
+                    <td>{{pathology.sequenceNumber}}</td>
+                    <td>{{pathology.palgaPatientNr}}</td>
+                    <td>{{pathology.palgaExcerptNr}}</td>
+                    <td>{{pathology.palgaExcerptId}}</td>
                     <td>{{pathology.paNumber}}</td>
                     <td><span
                         ng-if="!isCurrentUser(labRequest.assignee)">
@@ -87,7 +99,7 @@ This file is distributed under the GNU Affero General Public License
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="9" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                     </td>
                 </tr>

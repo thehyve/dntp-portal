@@ -13,9 +13,17 @@ import business.models.PathologyItem;
 public class PathologyRepresentation {
 
     private Long id;
-    
-    String paNumber;
-    
+
+    private String paNumber;
+
+    private String palgaPatientNr;
+
+    private String palgaExcerptNr;
+
+    private String palgaExcerptId;
+
+    private Integer sequenceNumber;
+
     List<String> samples = new ArrayList<String>();
 
     Boolean samplesAvailable;
@@ -27,6 +35,10 @@ public class PathologyRepresentation {
     public PathologyRepresentation(PathologyItem item) {
         this.id = item.getId();
         this.paNumber = item.getPaNumber();
+        this.palgaPatientNr = item.getPalgaPatientNr();
+        this.palgaExcerptNr = item.getPalgaExcerptNr();
+        this.palgaExcerptId = item.getPalgaExcerptId();
+        this.sequenceNumber = item.getSequenceNumber();
         this.samplesAvailable = item.isSamplesAvailable();
     }
     
@@ -46,6 +58,38 @@ public class PathologyRepresentation {
         this.paNumber = paNumber;
     }
 
+    public String getPalgaPatientNr() {
+        return palgaPatientNr;
+    }
+
+    public void setPalgaPatientNr(String palgaPatientNr) {
+        this.palgaPatientNr = palgaPatientNr;
+    }
+
+    public String getPalgaExcerptNr() {
+        return palgaExcerptNr;
+    }
+
+    public void setPalgaExcerptNr(String palgaExcerptNr) {
+        this.palgaExcerptNr = palgaExcerptNr;
+    }
+
+    public String getPalgaExcerptId() {
+        return palgaExcerptId;
+    }
+
+    public void setPalgaExcerptId(String palgaExcerptId) {
+        this.palgaExcerptId = palgaExcerptId;
+    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
+    }
+
     public List<String> getSamples() {
         return samples;
     }
@@ -53,11 +97,11 @@ public class PathologyRepresentation {
     public void setSamples(List<String> samples) {
         this.samples = samples;
     }
-    
+
     public void mapSamples(PathologyItem item) {
         this.samples = item.getSamples();
     }
-    
+
     public Boolean isSamplesAvailable() {
         return this.samplesAvailable;
     }
@@ -65,4 +109,5 @@ public class PathologyRepresentation {
     public void setSamplesAvailable(Boolean samplesAvailable) {
         this.samplesAvailable = samplesAvailable;
     }
+
 }

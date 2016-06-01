@@ -147,9 +147,11 @@ angular.module('ProcessApp.controllers')
                     'data': ''
             };
 
+            $scope.uploading = false;
             $scope.upload_error = {};
 
             $scope.fileuploadsubmitted = function(type) {
+                $scope.uploading = true;
                 $scope.upload_result[type] = '';
                 if (type in $scope.upload_error) {
                     delete $scope.upload_error[type];
@@ -157,6 +159,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.fileuploadsuccess = function(request, data, type, flow) {
+                $scope.uploading = false;
                 $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
                 $scope.upload_result[type] = 'success';
                 $scope.upload_error[type] = '';
@@ -171,6 +174,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.fileuploaderror = function(message, type) {
+                $scope.uploading = false;
                 console.log('Upload error: ' + message);
                 $scope.upload_result[type] = 'error';
                 $scope.upload_error[type] = message;
@@ -501,15 +505,17 @@ angular.module('ProcessApp.controllers')
                         }
                     });
             };
-            
+
             $scope.uploadDataFile = function(flow) {
-                var max_size = 1024*1024*10;
+                var mb_max = 10;
+                var max_size = 1024*1024*mb_max;
                 if (flow.getSize() > max_size) {
                     var mb_size = (flow.getSize()/(1024*1024)).toFixed(1);
-                    bootbox.alert($rootScope.translate('File too large', {'mb_size': mb_size}));
+                    bootbox.alert($rootScope.translate('File too large', {'mb_size': mb_size, 'mb_max': mb_max}));
                     flow.cancel();
+                    $scope.uploading = false;
                 } else {
-                    flow.upload();
+                    Upload.uploadFile(flow);
                 }
             };
 

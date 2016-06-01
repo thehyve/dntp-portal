@@ -99,7 +99,15 @@ public class ExcerptListService {
 
     @Transactional
     public void deleteByProcessInstanceId(String processInstanceId) {
-        excerptListRepository.deleteByProcessInstanceId(processInstanceId);
+        ExcerptList excerptList = findByProcessInstanceId(processInstanceId);
+        if (excerptList != null) {
+            Long excerptListId = excerptList.getId();
+            log.info("Deleting excerpt entries...");
+            excerptEntryRepository.deleteAllByExcerptListId(excerptListId);
+            log.info("Deleting excerpt list...");
+            excerptListRepository.delete(excerptListId);
+            log.info("Done deleting.");
+        }
     }
 
     @Transactional
@@ -127,6 +135,7 @@ public class ExcerptListService {
         return result;
     }
 
+    @Transactional
     public ExcerptList processExcerptList(ExcerptList list, InputStream input) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
         log.info("Processing excerpt list");
@@ -138,6 +147,7 @@ public class ExcerptListService {
                 try {
                     list.setColumnNames(nextLine);
                 } catch (RuntimeException e) {
+                    log.error("Error while setting column names: " + e.getMessage());
                     reader.close();
                     throw new ExcerptListUploadError(e.getMessage());
                 }
@@ -159,6 +169,7 @@ public class ExcerptListService {
                     }
                     
                 } catch (RuntimeException e) {
+                    log.error("Error while processing line " + line + ": " + e.getMessage());
                     reader.close();
                     throw new ExcerptListUploadError("Line " + line + ": " + e.getMessage());
                 }
@@ -172,7 +183,8 @@ public class ExcerptListService {
             throw new FileUploadError(e.getMessage());
         }
     }
-    
+
+    @Transactional
     public List<Integer> processExcerptSelection(InputStream input) {
         List<Integer> result = new ArrayList<Integer>();
         log.info("Processing excerpt selection");

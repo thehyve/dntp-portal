@@ -11,21 +11,56 @@ angular.module('ProcessApp.services')
         function($http, $alert, FlowOptionService) {
             var uploadService = {};
 
+            var _units = ['B', 'kB', 'MB', 'GB', 'TB'];
+
+            /**
+             * Returns readable string for a filesize specified in bytes (B).
+             */
+            uploadService.readableFilesize = function(size) {
+                var i = 0;
+                var s = Number(size);
+                while (s >= 1000 && i < _units.length - 1) {
+                    s /= 1000;
+                    i++;
+                }
+                return s.toFixed() + ' ' + _units[i];
+            };
+
+            var generateRandomString = function() {
+                var buffer = new Uint8Array(16);
+                asmCrypto.getRandomValues(buffer);
+                return btoa(String.fromCharCode.apply(null, buffer));
+            };
+
+            /**
+             * Generate unique identifier for a file
+             * @function
+             * @param {FlowFile} file
+             * @returns {string}
+             */
+            var generateUniqueIdentifier = function(file) {
+              var relativePath = file.relativePath || file.webkitRelativePath || file.fileName || file.name;
+              return file.size + '-' +
+                  relativePath.replace(/[^0-9a-zA-Z_-]/img, '') + '-' +
+                  generateRandomString();
+            };
+
             /*
              * File Operations
              */
             uploadService.flow_options = function(options) {
                 //console.log('Init upload service.');
+                options.generateUniqueIdentifier = generateUniqueIdentifier;
                 return FlowOptionService.get_default(options);
             };
 
             uploadService.flow_xml_options = function(options) {
                 //console.log('Init upload service (XML options).');
+                options.generateUniqueIdentifier = generateUniqueIdentifier;
                 return FlowOptionService.get_xml_result_options(options);
             };
 
             uploadService.uploadFile = function(e) {
-                //console.log('Uploading file.');
                 e.upload();
             };
 
@@ -42,7 +77,7 @@ angular.module('ProcessApp.services')
                 });
                 return content;
             };
-            
+
             uploadService.fileUploadError = function(data, file, flow) {
                 var message = data;
                 try {
@@ -65,7 +100,6 @@ angular.module('ProcessApp.services')
                 flow.cancel();
                 return content;
             };
-
 
             return uploadService;
     }]);

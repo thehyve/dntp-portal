@@ -123,6 +123,12 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             String requestId = (String)targetDomainObject;
             return permissionService.checkRequestAssignedToUser(user, requestId);
         }
+        else if ("requestAssignedToUserAsPathologist".equals(permission))
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkRequestAssignedToUserAsPathologist(user, requestId);
+        }
         else if ("labRequestAssignedToUser".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);

@@ -51,6 +51,8 @@ angular.module('ProcessApp.controllers')
                     var now = new Date();
                     req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
                     $scope.request = req;
+                    console.log(req);
+                    console.log($scope.globals.currentUser);
                     $rootScope.tempRequest = jQuery.extend( true, {}, req ); // deep copy
                 }, function(response) {
                     $rootScope.logErrorResponse(response);
@@ -641,13 +643,18 @@ angular.module('ProcessApp.controllers')
                 return _.includes($scope.excerptSelectionStates, state);
             };
 
+            $scope.isAssignedAsPathologist = function (req) {
+                return req? req.pathologistEmail === $scope.globals.currentUser.username : false;
+            };
+
             /**
              * Return true iff the curent user is a requester and the status is 'Open'
              * of the current user is a Palga user and the status is one of the
              * statuses where editing is allowed ('Open', 'Review', 'Approval').
              */
-            $scope.isEditStatus = function(status) {
-                return ($scope.isRequester() && status === 'Open') ||
+            $scope.isEditStatus = function (status) {
+                // check if current user is assigned as pathologist for selected request
+                return ($scope.isRequester() && status === 'Open' && !$scope.isAssignedAsPathologist($scope.request)) ||
                     ($scope.isPalga() && _.includes($scope.editStates, status));
             };
 

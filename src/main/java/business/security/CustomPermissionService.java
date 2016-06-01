@@ -102,6 +102,29 @@ public class CustomPermissionService {
     }
 
     /**
+     * Usage: {@code hasPermission(#id, 'requestAssignedToUserAsPathologist')}<br>
+     * @param user
+     * @param requestId
+     * @return
+     */
+    public boolean checkRequestAssignedToUserAsPathologist(User user, String requestId) {
+        long count = taskService.createTaskQuery()
+                .processInstanceId(requestId)
+                .active()
+                .processVariableValueEquals("pathologist_email", user.getContactData().getEmail())
+                .count();
+        if (count > 0) {
+            logDecision("requestAssignedToUserAsPathologist", user, requestId, "OK.");
+            return true;
+        } else {
+            logDecision("requestAssignedToUserAsPathologist", user, requestId,
+                    "DENIED (no task found for request assigned to user as pathologist).");
+            return false;
+        }
+    }
+
+
+    /**
      * Usage: {@code hasPermission(#labRequestId, 'requestAssignedToUser')}<br>
      * Checks if there exists a running task that is associated with the lab request
      * with id {@code labRequestId} and is assigned to the user.

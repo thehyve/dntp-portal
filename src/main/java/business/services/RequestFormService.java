@@ -372,7 +372,6 @@ public class RequestFormService {
             }
             request.setAttachments(requestAttachments);
 
-            request.setSentToPrivacyCommittee(properties.isSentToPrivacyCommittee());
             request.setPrivacyCommitteeRationale(properties.getPrivacyCommitteeRationale());
             request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
             request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
@@ -560,7 +559,6 @@ public class RequestFormService {
                 log.info("Request not admissible");
                 variables.put("request_is_admissible", Boolean.FALSE);
             }
-            properties.setSentToPrivacyCommittee(request.isSentToPrivacyCommittee());
             properties.setPrivacyCommitteeRationale(request.getPrivacyCommitteeRationale());
             properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
             properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());

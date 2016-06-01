@@ -92,6 +92,7 @@ public class RequestProperties {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Map<Long, ApprovalVote> approvalVotes = new HashMap<Long, ApprovalVote>();
 
+    @Deprecated
     @Column
     private boolean sentToPrivacyCommittee;
 
@@ -231,10 +232,12 @@ public class RequestProperties {
         this.excerptListAttachment = excerptListAttachment;
     }
 
+    @Deprecated
     public boolean isSentToPrivacyCommittee() {
         return sentToPrivacyCommittee;
     }
 
+    @Deprecated
     public void setSentToPrivacyCommittee(boolean sentToPrivacyCommittee) {
         this.sentToPrivacyCommittee = sentToPrivacyCommittee;
     }

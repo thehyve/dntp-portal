@@ -97,7 +97,6 @@ public class RequestRepresentation {
     private boolean selectionApproved;
 
     // Privacy Committee
-    private boolean sentToPrivacyCommittee;
     private String privacyCommitteeRationale;
     private String privacyCommitteeOutcome;
     private String privacyCommitteeOutcomeRef;
@@ -480,14 +479,6 @@ public class RequestRepresentation {
 
     public void setPrivacyCommitteeEmails(String privacyCommitteeEmails) {
         this.privacyCommitteeEmails = privacyCommitteeEmails;
-    }
-
-    public boolean isSentToPrivacyCommittee() {
-        return sentToPrivacyCommittee;
-    }
-
-    public void setSentToPrivacyCommittee(boolean sentToPrivacyCommittee) {
-        this.sentToPrivacyCommittee = sentToPrivacyCommittee;
     }
 
     public String getPrivacyCommitteeOutcome() {

@@ -106,7 +106,7 @@ public class LabRequestController {
         log.info("GET /labrequests/" + id);
         LabRequest labRequest = labRequestService.findOne(id);
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         labRequestService.transferLabRequestDetails(representation, true);
         labRequestService.transferExcerptListData(representation);
         return representation;
@@ -141,7 +141,7 @@ public class LabRequestController {
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -169,7 +169,7 @@ public class LabRequestController {
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -197,7 +197,7 @@ public class LabRequestController {
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -229,7 +229,7 @@ public class LabRequestController {
         labRequest = labRequestService.save(labRequest);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -268,7 +268,7 @@ public class LabRequestController {
         labRequest = labRequestService.updateStatus(labRequest, Status.RECEIVED);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
     
@@ -287,7 +287,7 @@ public class LabRequestController {
         labRequest = labRequestService.updateStatus(labRequest, Status.RETURNING);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -351,7 +351,7 @@ public class LabRequestController {
         taskService.complete(task.getId());
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -380,7 +380,7 @@ public class LabRequestController {
         taskService.complete(task.getId());
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -421,7 +421,7 @@ public class LabRequestController {
         taskService.complete(task.getId());
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -444,7 +444,7 @@ public class LabRequestController {
 
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -463,7 +463,7 @@ public class LabRequestController {
 
       LabRequestRepresentation representation = new LabRequestRepresentation(
         labRequest);
-      labRequestService.transferLabRequestData(representation);
+      labRequestService.transferLabRequestData(representation, false);
       return representation;
     }
 
@@ -544,7 +544,7 @@ public class LabRequestController {
         transferLabRequestFormData(body, labRequest, user.getUser());
         
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 

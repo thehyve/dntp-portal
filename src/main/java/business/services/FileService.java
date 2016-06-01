@@ -145,6 +145,7 @@ public class FileService {
 
             // Assemble complete file if all chunks have been received
             if (chunkMap.size() == chunks.intValue()) {
+                uploadChunks.remove(identifier);
                 Path assembly = Files.createTempFile(path, prefix, suffix).normalize();
                 // filter path names that point to places outside the upload path.
                 // E.g., to prevent that in cases where clients use '../' in the filename

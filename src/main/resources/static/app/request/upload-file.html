@@ -16,7 +16,7 @@ This file is distributed under the GNU Affero General Public License
             id="attached-excerpt-list-1">
         <i class="glyphicon glyphicon-download-alt"></i>
         {{'Download'|translate}} excerpts_{{request.processInstanceId}}.csv
-        <span class="badge">{{request.excerptList.entries.length}}</span>
+        <span class="badge">{{request.excerptList.entryCount}}</span>
         </a>
     </div>
     <div ng-if="!request.excerptList">
@@ -83,19 +83,20 @@ This file is distributed under the GNU Affero General Public License
                 <span ng-bind-html="upload_error['excerpt_selection']"></span>
             </div>
 
-            <a ng-href="/#/request/{{request.processInstanceId}}/selection" id="select-pa-numbers" class="btn btn-primary">
-                <i class="glyphicon glyphicon-edit"></i>
-                {{'Select PA numbers'|translate}}
-            </a>
-            <input type="file" flow-btn id="test-upload-excerpt-selection" style="display:none" />
-            <a class="btn btn-default" flow-btn>
-                <i class="glyphicon glyphicon-import"></i>
-                {{'Upload excerpt selection'|translate}}
-            </a>
-    
+            <div>
+                <span ng-click="request.excerptList.entryCount <= 1000 ? selectPANumbers(request) : false" id="select-pa-numbers" class="btn btn-primary"
+                    ng-disabled="!request.excerptList || request.excerptList.entryCount > 1000"
+                    title="{{ request.excerptList.entryCount > 1000 ? 'Manual selection disabled for large excerpt lists.' : ''}}">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    {{'Select PA numbers'|translate}}
+                </span>
+                <input type="file" flow-btn id="test-upload-excerpt-selection" style="display:none" />
+                <span class="btn btn-default" flow-btn>
+                    <i class="glyphicon glyphicon-import"></i>
+                    {{'Upload excerpt selection'|translate}}
+                </span>
+            </div>
             <br>
-            <br>
-    
             <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
                 flow-drag-enter="style={border:'4px dashed lightgreen'}"
                 flow-drag-leave="style={border: '2px dashed gray'}"
@@ -110,7 +111,7 @@ This file is distributed under the GNU Affero General Public License
                 id="attached-excerpt-list-2">
                 <i class="glyphicon glyphicon-download-alt"></i>
                 {{'Download selection' |translate }}
-                <span class="badge">{{(request.excerptList.entries | filter: {selected: true}).length}}</span>
+                <span class="badge">{{request.excerptList.selectedCount}}</span>
             </a>
             <a type="button" class="btn btn-primary" title="Submit"
                 ng-if="isRequester() && request.status=='DataDelivery'"

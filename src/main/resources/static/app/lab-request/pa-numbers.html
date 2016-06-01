@@ -98,7 +98,7 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose recall mail' | translate}}
                 </a>
-                <a  ng-click="toggleAvailability(labRequest, pathology)"
+                <a  ng-click="pathology.samples.length > 0 ? false : toggleAvailability(labRequest, pathology)"
                     ng-disabled="pathology.samples.length > 0"
                     class="btn btn-default no-print"
                     role="button"

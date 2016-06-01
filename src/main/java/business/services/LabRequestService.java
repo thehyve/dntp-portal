@@ -130,14 +130,23 @@ public class LabRequestService {
         return task;
     }
 
-    private void setRequestListData(LabRequestRepresentation labRequestRepresentation) {
-        RequestListRepresentation request = requestFormService.getRequestListDataWithAttachmentsCached(
-                labRequestRepresentation.getProcessInstanceId());
+    private void setRequestListData(LabRequestRepresentation labRequestRepresentation, boolean cached) {
+        RequestListRepresentation request;
+        if (cached) {
+            request = requestFormService.getRequestListDataCached(labRequestRepresentation.getProcessInstanceId());
+        } else {
+            request = requestFormService.getRequestListData(labRequestRepresentation.getProcessInstanceId());
+        }
         labRequestRepresentation.setRequest(request);
         if (request.getRequesterId() != null) {
             labRequestRepresentation.setRequesterId(request.getRequesterId());
             labRequestRepresentation.setRequesterName(request.getRequesterName());
-            User user = userService.findOneCached(request.getRequesterId());
+            User user;
+            if (cached) {
+                user = userService.findOneCached(request.getRequesterId());
+            } else {
+                user = userService.findOne(request.getRequesterId());
+            }
             labRequestRepresentation.setRequesterEmail(user.getContactData().getEmail());
             labRequestRepresentation.setRequester(new ProfileRepresentation(user));
             labRequestRepresentation.setRequesterLab(user.getLab());
@@ -193,7 +202,7 @@ public class LabRequestService {
         labRequestRepresentation.setExcerptList(list);
     }
 
-    public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation) {
+    public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation, boolean cached) {
         Date start = new Date();
 
         // get task data
@@ -209,7 +218,12 @@ public class LabRequestService {
             } catch (NumberFormatException e) {
             }
             if (assigneeId != null) {
-                User assignee = userService.findOneCached(assigneeId);
+                User assignee;
+                if (cached) {
+                    assignee = userService.findOneCached(assigneeId);
+                } else {
+                    assignee = userService.findOne(assigneeId);
+                }
                 if (assignee != null) {
                     labRequestRepresentation.setAssigneeName(RequestFormService.getName(assignee));
                 }
@@ -217,7 +231,7 @@ public class LabRequestService {
         }
 
         // set request data
-        setRequestListData(labRequestRepresentation);
+        setRequestListData(labRequestRepresentation, cached);
 
         labRequestRepresentation.setLabRequestCode();
 
@@ -310,7 +324,7 @@ public class LabRequestService {
             // notify labs by mail
             for (LabRequest labRequest: labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation);
+                transferLabRequestData(representation, false);
                 if (representation.getLab() == null) {
                     log.warn("No lab for lab request " + representation.getLabRequestCode() +
                             " while gerating lab requests.");
@@ -373,7 +387,7 @@ public class LabRequestService {
             List<LabRequest> labRequests = labRequestRepository.findAllByLab(user.getLab(), sortByIdDesc());
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation);
+                transferLabRequestData(representation, true);
                 if (fetchDetails) {
                     transferLabRequestDetails(representation, labRequest, true);
                 }
@@ -390,7 +404,7 @@ public class LabRequestService {
             List<LabRequest> labRequests = labRequestRepository.findAllByLabIn(hubLabs, sortByIdDesc());
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation);
+                transferLabRequestData(representation, true);
                 if (fetchDetails) {
                     transferLabRequestDetails(representation, labRequest, true);
                 }
@@ -401,7 +415,7 @@ public class LabRequestService {
             List<LabRequest> labRequests = labRequestRepository.findAll(sortByIdDesc());
             for (LabRequest labRequest : labRequests) {
                 LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation);
+                transferLabRequestData(representation, true);
                 if (fetchDetails) {
                     transferLabRequestDetails(representation, labRequest, true);
                 }
@@ -421,7 +435,7 @@ public class LabRequestService {
                 List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
                 for (LabRequest labRequest : labRequests) {
                     LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                    transferLabRequestData(representation);
+                    transferLabRequestData(representation, true);
                     if (fetchDetails) {
                         transferLabRequestDetails(representation, labRequest, true);
                     }

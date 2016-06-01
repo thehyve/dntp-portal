@@ -100,7 +100,7 @@ public class LabRequest {
     private Boolean isPaReportsSent;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @BatchSize(size = 1000)
+    @BatchSize(size = 10000)
     List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
 
     private String rejectReason;

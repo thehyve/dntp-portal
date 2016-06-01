@@ -18,6 +18,10 @@
                 url : '/requests/:id/reopen',
                 method : 'PUT'
             },
+            fork : {
+                url : '/requests/:id/forks',
+                method : 'POST'
+            },
             submit : {
                 url : '/requests/:id/submit',
                 method : 'PUT'
@@ -325,6 +329,15 @@
     };
     ApprovalVoteFactory.$inject = [ '$resource' ];
     angular.module('ProcessApp.services').factory('ApprovalVote', ApprovalVoteFactory);
+
+    var ExcerptListFactory = function($resource) {
+        return $resource('/requests/:processInstanceId/selection', {
+            processInstanceId: '@processInstanceId'
+        }, {
+        });
+    };
+    ExcerptListFactory.$inject = [ '$resource' ];
+    angular.module('ProcessApp.services').factory('ExcerptList', ExcerptListFactory);
 
     var ExcerptEntryFactory = function($resource) {
         return $resource('/requests/:processInstanceId/excerpts/:id/selection', {

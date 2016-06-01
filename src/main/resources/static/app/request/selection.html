@@ -6,7 +6,7 @@ This file is distributed under the GNU Affero General Public License
 <!-- If in 'DataDelivery' status -->
 <div class="container-fluid" ng-if="request.status=='DataDelivery'"
     ng-controller="SelectionController"
-    ng-init="enableSpaceSelects()">
+    ng-init="init()">
 
     <div class="page-header">
     <h4>{{'Selection'|translate}}</h4>
@@ -26,7 +26,7 @@ This file is distributed under the GNU Affero General Public License
             ng-repeat="excerpt in request.excerptList.entries track by excerpt.id"
             id="excerpt_{{excerpt.id}}">
             <h3 class="list-group-item-heading">
-                {{'Excerpt'|translate}} {{excerpt.values[0]}}
+                {{excerptLabel}} {{excerpt.values[0]}}
                 &nbsp;
                 <i ng-if="excerpt.selected" class="glyphicon glyphicon-check"></i>
                 <span class="pull-right">

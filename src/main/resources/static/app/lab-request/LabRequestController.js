@@ -500,7 +500,11 @@ angular.module('ProcessApp.controllers')
                 for (var i in pathology.samples) {
                     obj.samples.push(pathology.samples[i].text);
                 }
-                obj.samplesAvailable = pathology.samplesAvailable;
+                if (obj.samples.length > 0) {
+                    obj.samplesAvailable = true;
+                } else {
+                    obj.samplesAvailable = pathology.samplesAvailable;
+                }
                 Restangular.one('labrequests', labRequest.id).one('pathology', pathology.id)
                     .customPUT(obj).then(function () {
 

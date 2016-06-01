@@ -41,6 +41,7 @@ import business.models.User;
 import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.security.UserAuthenticationToken;
 import business.services.ExcerptListService;
 import business.services.FileService;
@@ -191,11 +192,11 @@ public class SelectionController {
         return request;
     }
     
-    private static final Set<String> excerptSelectionStatuses = new HashSet<String>();
+    private static final Set<RequestStatus> excerptSelectionStatuses = new HashSet<>();
     {
-        excerptSelectionStatuses.add("DataDelivery");
-        excerptSelectionStatuses.add("SelectionReview");
-        excerptSelectionStatuses.add("LabRequest");
+        excerptSelectionStatuses.add(RequestStatus.DATA_DELIVERY);
+        excerptSelectionStatuses.add(RequestStatus.SELECTION_REVIEW);
+        excerptSelectionStatuses.add(RequestStatus.LAB_REQUEST);
     }
 
     @PreAuthorize("isAuthenticated() and "

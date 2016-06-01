@@ -38,7 +38,7 @@ public class PathologyItem {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(indexes = @Index(columnList="pathology_item_id"))
     @Fetch(FetchMode.JOIN)
-    @BatchSize(size = 100)
+    @BatchSize(size = 10000)
     @OrderColumn
     List<String> samples = new ArrayList<String>();
 

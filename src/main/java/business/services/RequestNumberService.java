@@ -8,7 +8,6 @@ package business.services;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;

@@ -36,6 +36,7 @@ import business.controllers.SelectionController;
 import business.models.PathologyItemRepository;
 import business.models.User;
 import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.security.MockConfiguration.MockMailSender;
 import business.security.UserAuthenticationToken;
 import business.services.LabRequestService;
@@ -100,7 +101,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         log.info("Started request " + representation.getProcessInstanceId());
         log.info("Status: " + representation.getStatus());
         log.info("Assignee: " + representation.getAssignee());
-        assertEquals("Open", representation.getStatus());
+        assertEquals(RequestStatus.OPEN, representation.getStatus());
         processInstanceId = representation.getProcessInstanceId();
         
         //testController.clearAll();
@@ -121,7 +122,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         log.info("Status: " + representation.getStatus());
         representation = requestController.submit(requester, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
-        assertEquals("Review", representation.getStatus());
+        assertEquals(RequestStatus.REVIEW, representation.getStatus());
         
         SecurityContextHolder.clearContext();
     }
@@ -157,7 +158,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         
         representation = requestController.submitForApproval(palga, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
-        assertEquals("Approval", representation.getStatus());
+        assertEquals(RequestStatus.APPROVAL, representation.getStatus());
         
         assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
@@ -184,7 +185,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
 
         representation = requestController.finalise(palga, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
-        assertEquals("DataDelivery", representation.getStatus());
+        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
 
         SecurityContextHolder.clearContext();
     }

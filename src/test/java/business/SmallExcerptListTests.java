@@ -24,6 +24,7 @@ import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.security.MockConfiguration.MockMailSender;
 import business.security.UserAuthenticationToken;
 
@@ -69,7 +70,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
                 flowIdentifier,
                 file);
         
-        assertEquals(3, representation.getExcerptList().getEntries().size());
+        assertEquals(3, representation.getExcerptList().getEntryCount().intValue());
         
         SecurityContextHolder.clearContext();
     }
@@ -85,7 +86,8 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         
         log.info("Status: " + representation.getStatus());
         
-        ExcerptListRepresentation excerptList = representation.getExcerptList();
+        ExcerptListRepresentation excerptList =
+                requestController.getExcerptList(requester, processInstanceId);
         for(ExcerptEntryRepresentation entry: excerptList.getEntries()) {
             entry.setSelected(true);
         }
@@ -95,7 +97,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
 
         log.info("Status: " + representation.getStatus());
         
-        assertEquals("SelectionReview", representation.getStatus());
+        assertEquals(RequestStatus.SELECTION_REVIEW, representation.getStatus());
         
         SecurityContextHolder.clearContext();
     }
@@ -119,7 +121,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         representation.setSelectionApproved(true);
         representation = selectionController.setExcerptSelectionApproval(palga, processInstanceId, representation);
 
-        assertEquals("LabRequest", representation.getStatus());
+        assertEquals(RequestStatus.LAB_REQUEST, representation.getStatus());
         
         List<LabRequest> labRequests = labRequestService.findAllByProcessInstanceId(processInstanceId);
         assertEquals(2, labRequests.size());
@@ -128,7 +130,7 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         for (LabRequest labRequest: labRequests) {
             LabRequestRepresentation labRequestRepresentation = 
                     new LabRequestRepresentation(labRequest);
-            labRequestService.transferLabRequestData(labRequestRepresentation);
+            labRequestService.transferLabRequestData(labRequestRepresentation, false);
             labRequestService.transferExcerptListData(labRequestRepresentation);
             labRequestService.transferLabRequestDetails(labRequestRepresentation, false);
             pathologyCount += labRequestRepresentation.getPathologyCount();

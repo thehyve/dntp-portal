@@ -25,6 +25,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
+import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,12 +52,13 @@ import business.exceptions.RequestNotApproved;
 import business.exceptions.RequestNotFound;
 import business.exceptions.UpdateNotAllowed;
 import business.models.ExcerptList;
-import business.models.ExcerptListRepository;
 import business.models.File;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
+import business.representation.ExcerptListRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.security.UserAuthenticationToken;
 import business.services.ExcerptListService;
 import business.services.FileService;
@@ -99,13 +101,13 @@ public class RequestController {
     private RequestNumberService requestNumberService;
 
     @Autowired
-    private ExcerptListRepository excerptListRepository;
-
-    @Autowired
     private FileService fileService;
 
     @Autowired
     private RequestListRepresentationComparator requestListRepresentationComparator;
+
+    @Autowired
+    private RequestListRepresentationStartTimeComparator requestListRepresentationStartTimeComparator;
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/requests", method = RequestMethod.GET)
@@ -124,7 +126,15 @@ public class RequestController {
         }
         Date endQ = new Date();
         log.info("GET: fetching took " + (endQ.getTime() - start.getTime()) + " ms.");
-        if (!user.getUser().isRequester()) {
+        if (user.getUser().isRequester()) {
+            Collections.sort(result, Collections.reverseOrder(requestListRepresentationStartTimeComparator));
+            Date endSort = new Date();
+            log.info("GET: sorting took " + (endSort.getTime() - endQ.getTime()) + " ms.");
+        } else if (user.getUser().isScientificCouncilMember()) {
+            Collections.sort(result, Collections.reverseOrder(requestListRepresentationComparator));
+            Date endSort = new Date();
+            log.info("GET: sorting took " + (endSort.getTime() - endQ.getTime()) + " ms.");
+        } else {
             Collections.sort(result, requestListRepresentationComparator);
             Date endSort = new Date();
             log.info("GET: sorting took " + (endSort.getTime() - endQ.getTime()) + " ms.");
@@ -155,7 +165,7 @@ public class RequestController {
             if (user.getUser().isPalga() && suspendedRequestIds.contains(request.getProcessInstanceId())) {
                 incrementCount(counts, "suspended");
             } else {
-                incrementCount(counts, request.getStatus());
+                incrementCount(counts, request.getStatus().toString());
             }
         }
         Date end = new Date();
@@ -191,23 +201,30 @@ public class RequestController {
     public RequestRepresentation start(
             UserAuthenticationToken user,
             @RequestBody RequestRepresentation req) {
-        if (user == null) {
-            throw new NotLoggedInException();
-        } else {
-            String userId = user.getId().toString();
-            log.info(
-                    "POST /requests (initiator: " + userId + ")");
-            Map<String, Object> values = new HashMap<String, Object>();
-            values.put("initiator", userId);
+        String userId = user.getId().toString();
+        log.info(
+                "POST /requests (initiator: " + userId + ")");
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("initiator", userId);
+        values.put("jump_to_data_delivery", Boolean.FALSE);
 
-            ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                    "dntp_request_002", values);
+        ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
+                "dntp_request_003", values);
+        runtimeService.addUserIdentityLink(newInstance.getId(), userId, IdentityLinkType.STARTER);
 
-            HistoricProcessInstance instance = requestService.getProcessInstance(newInstance.getId());
-            RequestRepresentation request = new RequestRepresentation();
-            requestFormService.transferData(instance, request, null);
-            return request;
-        }
+        HistoricProcessInstance instance = requestService.getProcessInstance(newInstance.getId());
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, null);
+        return request;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
+    @RequestMapping(value = "/requests/{id}/forks", method = RequestMethod.POST)
+    public RequestRepresentation fork(
+            UserAuthenticationToken user,
+            @PathVariable String id) {
+        log.info("POST /requests/" + id + "/forks");
+        return requestService.forkRequest(user.getUser(), id);
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
@@ -404,7 +421,7 @@ public class RequestController {
 
         if (updatedRequest.isReopenRequest()) {
             switch (updatedRequest.getStatus()) {
-            case "Review":
+            case REVIEW:
                 log.info("Completing review task...");
                 Task task = requestService.getTaskByRequestId(id, "palga_request_review");
                 if (task.getDelegationState()==DelegationState.PENDING) {
@@ -412,7 +429,7 @@ public class RequestController {
                 }
                 taskService.complete(task.getId());
                 break;
-            case "Approval":
+            case APPROVAL:
                 log.info("Completing scientific_council_approval task...");
                 Task councilTask = requestService.getTaskByRequestId(id, "scientific_council_approval");
                 if (councilTask.getDelegationState()==DelegationState.PENDING) {
@@ -426,6 +443,8 @@ public class RequestController {
                     taskService.resolveTask(palgaTask.getId());
                 }
                 taskService.complete(palgaTask.getId());
+                break;
+            default:
                 break;
             }
         } else {
@@ -915,27 +934,27 @@ public class RequestController {
 
     @PreAuthorize("isAuthenticated() and (hasRole('palga') or hasPermission(#id, 'isRequester'))")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.GET)
-    public ExcerptList getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
+    public ExcerptListRepresentation getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
         log.info("GET /requests/" + id + "/excerptList");
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
 
-        ExcerptList excerptList = excerptListRepository.findByProcessInstanceId(id);
+        ExcerptListRepresentation excerptList = excerptListService.findRepresentationByProcessInstanceId(id);
         if (excerptList == null) {
             throw new ExcerptListNotFound();
         }
-        log.info("entries: " + excerptList.getEntries().size());
+        log.info("entries: " + excerptList.getEntryCount());
         return excerptList;
     }
 
-    private static final Set<String> excerptListStatuses = new HashSet<String>();
+    private static final Set<RequestStatus> excerptListStatuses = new HashSet<>();
     {
-        excerptListStatuses.add("DataDelivery");
-        excerptListStatuses.add("SelectionReview");
-        excerptListStatuses.add("LabRequest");
-        excerptListStatuses.add("Closed");
+        excerptListStatuses.add(RequestStatus.DATA_DELIVERY);
+        excerptListStatuses.add(RequestStatus.SELECTION_REVIEW);
+        excerptListStatuses.add(RequestStatus.LAB_REQUEST);
+        excerptListStatuses.add(RequestStatus.CLOSED);
     }
 
     @PreAuthorize("isAuthenticated() and "

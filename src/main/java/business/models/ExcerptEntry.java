@@ -19,6 +19,10 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(indexes = @Index(columnList="excerptListId"))
 public class ExcerptEntry {
@@ -38,10 +42,12 @@ public class ExcerptEntry {
     private Boolean selected;
     
     @ElementCollection
+    @Cascade(value={CascadeType.ALL})
     //@Column(length = 32767)
     @Column(columnDefinition="TEXT")
     @CollectionTable(indexes = @Index(columnList="excerpt_entry_id"))
     @OrderColumn
+    @BatchSize(size = 10000)
     private List<String> values = new ArrayList<String>();
 
     public ExcerptEntry() {

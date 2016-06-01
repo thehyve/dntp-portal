@@ -455,6 +455,7 @@
         'Epidemiologie':'Epidemiologie',
         'Eerstelijnsgeneeskunde':'Eerstelijnsgeneeskunde',
         'Cardiologie':'Cardiologie',
+        'Pathologie':'Pathologie',
         'Longziekten':'Longziekten',
         'Urologie':'Urologie',
         'Neurologie':'Neurologie',

@@ -1,4 +1,4 @@
-    <select ng-options="specialism.label | translate for specialism in specialisms"
+    <select ng-options="specialism.label | translate for specialism in specialisms track by specialism.label"
             ng-model="selectedSpecialism"
             ng-change="updateSpecialismText(specialism.value)"
             ng-class="customClass"

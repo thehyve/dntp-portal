@@ -7,8 +7,8 @@
     'use strict';
 
     angular.module('ProcessApp.services')
-        .factory('SpecialismService', [
-            function () {
+        .factory('SpecialismService', [ '$rootScope',
+            function ($rootScope) {
 
                 var service = {
                     specialisms : [
@@ -26,6 +26,7 @@
                         {label:'Epidemiologie', value: 'Epidemiologie'},
                         {label:'Eerstelijnsgeneeskunde', value: 'Eerstelijnsgeneeskunde'},
                         {label:'Cardiologie', value: 'Cardiologie'},
+                        {label:'Pathologie', value: 'Pathologie'},
                         {label:'Longziekten', value: 'Longziekten'},
                         {label:'Urologie', value: 'Urologie'},
                         {label:'Neurologie', value: 'Neurologie'},
@@ -35,7 +36,28 @@
                 };
 
                 /**
-                 * Check if value predefiend specialism
+                 * Return an ordered list of predefined specialisations
+                 * with '(Other)' as the last element
+                 * @returns Array of ordered list
+                 */
+                service.getSpecialisms = function() {
+                    var specs = angular.copy(this.specialisms);
+
+                    _.remove(specs, function(s) {
+                        return s.value == '';
+                    });
+
+                    _.forEach(specs, function(s) {
+                        s.label = $rootScope.translate(s.label);
+                    });
+
+                    var sortedSpecs = _.sortBy(specs, 'label');
+                    sortedSpecs.push(this.getOther());
+                    return sortedSpecs;
+                };
+
+                /**
+                 * Check if value predefined specialism
                  * @param value
                  * @returns {*}
                  */

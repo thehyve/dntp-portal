@@ -24,7 +24,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.init = function() {
                 $scope.getExcerptList().then(function() {
-                    console.log('Excerpt list loaded.');
+                    //console.log('Excerpt list loaded.');
 
                     $scope.currentIndex = 0;
 

@@ -311,7 +311,7 @@ public class CustomPermissionService {
 
     /**
      * Usage: {@code hasPermission(#labRequestId, 'isLabRequestRequester')}<br>
-     * Checks if the user is a requester and if the user is the requester of
+     * Checks if the user is a requester and if the user is the requester or assigned as pathologist of
      * the main request to which the lab request with id {@code labRequestId}
      * belongs.
      * @param user
@@ -332,7 +332,7 @@ public class CustomPermissionService {
         // FIXME: use more direct way to check if the requesterId of the request
         // matches the userId.
         requestFormService.transferData(instance, request, user);
-        if (request.getRequesterId().equals(user.getId().toString())) {
+        if (request.getRequesterId().equals(user.getId().toString()) || request.getPathologistEmail().equals(user.getUsername())) {
             logDecision("isLabRequestRequester", user, labRequestId.toString(), "OK.");
             return true;
         } else {

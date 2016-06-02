@@ -378,21 +378,30 @@ public class LabRequestService {
     private Sort sortByIdDesc() {
         return new Sort(Sort.Direction.DESC, "id");
     }
+
+    private List<LabRequestRepresentation> convertLabRequestsToRepresentations(List<LabRequest> labRequests,
+                                                                               boolean fetchDetails) {
+        List<LabRequestRepresentation> representations = new ArrayList<LabRequestRepresentation>();
+        for (LabRequest labRequest : labRequests) {
+            LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+                transferLabRequestData(representation, true);
+            if (fetchDetails) {
+                transferLabRequestDetails(representation, labRequest, true);
+            }
+            representations.add(representation);
+        }
+        return representations;
+    }
     
     @Transactional
     public List<LabRequestRepresentation> findLabRequestsForUser(User user, boolean fetchDetails) {
-        List<LabRequestRepresentation> representations = new ArrayList<LabRequestRepresentation>();
+        List<LabRequestRepresentation> representations = null;
+        List<LabRequest> labRequests;
+
         if (user.isLabUser()) {
             // Lab user
-            List<LabRequest> labRequests = labRequestRepository.findAllByLab(user.getLab(), sortByIdDesc());
-            for (LabRequest labRequest : labRequests) {
-                LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation, true);
-                if (fetchDetails) {
-                    transferLabRequestDetails(representation, labRequest, true);
-                }
-                representations.add(representation);
-            }
+            labRequests = labRequestRepository.findAllByLab(user.getLab(), sortByIdDesc());
+            representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
         } else if (user.isHubUser()) {
             // Hub user
             Set<Lab> hubLabs = new HashSet<>();
@@ -401,46 +410,33 @@ public class LabRequestService {
                     hubLabs.add(lab);
                 }
             }
-            List<LabRequest> labRequests = labRequestRepository.findAllByLabIn(hubLabs, sortByIdDesc());
-            for (LabRequest labRequest : labRequests) {
-                LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation, true);
-                if (fetchDetails) {
-                    transferLabRequestDetails(representation, labRequest, true);
-                }
-                representations.add(representation);
-            }
+            labRequests = labRequestRepository.findAllByLabIn(hubLabs, sortByIdDesc());
+            representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
         } else if (user.isPalga()) {
             // Palga
-            List<LabRequest> labRequests = labRequestRepository.findAll(sortByIdDesc());
-            for (LabRequest labRequest : labRequests) {
-                LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation, true);
-                if (fetchDetails) {
-                    transferLabRequestDetails(representation, labRequest, true);
-                }
-                representations.add(representation);
-            }
+            labRequests = labRequestRepository.findAll(sortByIdDesc());
+            representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
         } else {
             // fetch requests in status "LabRequest" for requester
-            List<HistoricProcessInstance> historicInstances = historyService
+            List<HistoricProcessInstance> historicInstances = new ArrayList<HistoricProcessInstance>();
+            historicInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .includeProcessVariables()
                     .involvedUser(user.getId().toString())
+                    .variableValueNotEquals("pathologist_email", user.getContactData().getEmail())
                     .variableValueEquals("status", "LabRequest")
-                    .orderByProcessInstanceStartTime().desc().list();
+                    .list());
+            historicInstances.addAll(historyService
+                    .createHistoricProcessInstanceQuery()
+                    .includeProcessVariables()
+                    .variableValueEquals("pathologist_email", user.getContactData().getEmail())
+                    .variableValueEquals("status", "LabRequest")
+                    .list());
             log.info("#instances: " + historicInstances.size());
             // find associated lab requests
             for (HistoricProcessInstance instance : historicInstances) {
-                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
-                for (LabRequest labRequest : labRequests) {
-                    LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                    transferLabRequestData(representation, true);
-                    if (fetchDetails) {
-                        transferLabRequestDetails(representation, labRequest, true);
-                    }
-                    representations.add(representation);
-                }
+                labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
+                representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
             }
         }
         return representations;

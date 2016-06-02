@@ -163,7 +163,7 @@ public class RequestService {
     /**
      * Claims current Palga task.
      * @param requestId
-     * @param the Palga user token.
+     * @param user
      */
     public void claimCurrentPalgaTask(String requestId, User user) {
         if (user.isPalga()) {
@@ -273,14 +273,21 @@ public class RequestService {
                 processInstances = new ArrayList<HistoricProcessInstance>();
             }
         } else {
-            processInstances = historyService
+            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
                     .involvedUser(user.getId().toString())
-                    .orderByProcessInstanceStartTime()
-                    .desc()
-                    .list();
+                    .variableValueNotEquals("pathologist_email", user.getUser().getContactData().getEmail())
+                    .list());
+            processInstances.addAll(historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueEquals("pathologist_email", user.getUser().getContactData().getEmail())
+                    .list());
+
         }
         return processInstances;
     }

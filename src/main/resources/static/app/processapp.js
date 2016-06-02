@@ -145,7 +145,7 @@
                  * @param role
                  */
                 $rootScope.setCurrentUserAuthorizations = function(currentUser) {
-    
+
                     // ========================================================================
                     // TODO This might something that're organized in the backend in the future
                     // ========================================================================

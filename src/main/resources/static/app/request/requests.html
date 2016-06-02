@@ -76,6 +76,7 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="dateCreated">{{'Creation date'|translate}}</th>
                         <th ng-if="isScientificCouncil()" st-sort="vote">{{'My verdict'|translate}}</th>
                         <th ng-if="isPalga()"  st-sort="requesterName">{{'Requester'|translate}}</th>
+                        <th st-sort="pathologistName">{{'Pathologist'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="assigneeName">{{'PALGA advisor'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
@@ -94,6 +95,7 @@ This file is distributed under the GNU Affero General Public License
                         <th>&nbsp;</th>
                         <th ng-if="isScientificCouncil()" class="request-vote">&nbsp;</th>
                         <th ng-if="isPalga()"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()">&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
@@ -123,16 +125,17 @@ This file is distributed under the GNU Affero General Public License
                         <td ng-if="isScientificCouncil()" class="request-vote">
                             {{req.approvalVote | translate}}
                         </td>
-                        <td ng-if="isPalga()" >{{req.requesterName}}</td>
-                        <td ng-if="isPalga()" >{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
-                        <td ng-if="isPalga()" >
+                        <td ng-if="isPalga()">{{req.requesterName}}</td>
+                        <td><a href="mailto:{{req.pathologistEmail}}"> {{req.pathologistName}}</a></td>
+                        <td ng-if="isPalga()">{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
+                        <td ng-if="isPalga()">
                             <small>{{req.dateAssigned | date: 'EEE dd MMMM yyyy  H:mm'}}</small>
                         </td>
                         <td class="no-print">
                         <span class="pull-left">
                         <span class="btn-group btn-group-sm">
                             <button
-                                 ng-if="isRequester() && req.status == 'Open'"
+                                 ng-if="isMyRequest(req) && req.status == 'Open'"
                                  class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>
@@ -141,7 +144,7 @@ This file is distributed under the GNU Affero General Public License
                         <span class="pull-right">
                         <span class="btn-group btn-group-sm">
                             <button
-                                ng-if="isRequester() || (isPalga() && req.status != 'Open')"
+                                ng-if="isMyRequest(req) || (isPalga() && req.status != 'Open')"
                                  ng-disabled="(isRequester() && req.status != 'Open')
                                     || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval')
                                     || (isPalga() && !isCurrentUser(req.assignee))"

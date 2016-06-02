@@ -279,6 +279,7 @@ public class RequestService {
                     .notDeleted()
                     .includeProcessVariables()
                     .involvedUser(user.getId().toString())
+                    .variableValueNotEquals("pathologist_email", user.getUser().getContactData().getEmail())
                     .list());
             processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()

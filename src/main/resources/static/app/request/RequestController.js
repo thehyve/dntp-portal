@@ -645,15 +645,24 @@ angular.module('ProcessApp.controllers')
                 return req? req.pathologistEmail === $scope.globals.currentUser.username : false;
             };
 
+            $scope.isMyRequest = function (req) {
+                var isMyReq = false;
+                if (req.hasOwnProperty('requester')) {
+                    isMyReq = req.requester.username === $scope.globals.currentUser.username;
+                } else if (req.hasOwnProperty('requesterId')) {
+                    isMyReq = req.requesterId.toString() === $scope.globals.currentUser.userid;
+                }
+                return isMyReq;
+            };
+
             /**
              * Return true iff the curent user is a requester and the status is 'Open'
-             * of the current user is a Palga user and the status is one of the
+             * or the current user is a Palga user and the status is one of the
              * statuses where editing is allowed ('Open', 'Review', 'Approval').
              */
             $scope.isEditStatus = function (status) {
-                // check if current user is assigned as pathologist for selected request
-                return ($scope.isRequester() && status === 'Open' && !$scope.isAssignedAsPathologist($scope.request)) ||
-                    ($scope.isPalga() && _.includes($scope.editStates, status));
+                return  ($scope.isMyRequest($scope.request)  && status === 'Open') ||
+                        ($scope.isPalga() && _.includes($scope.editStates, status));
             };
 
             $scope.autofocus = function() {

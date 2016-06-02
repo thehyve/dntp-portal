@@ -132,7 +132,7 @@ This file is distributed under the GNU Affero General Public License
                         <span class="pull-left">
                         <span class="btn-group btn-group-sm">
                             <button
-                                 ng-if="(isRequester() && !isAssignedAsPathologist(req)) && req.status == 'Open'"
+                                 ng-if="isMyRequest(req) && req.status == 'Open'"
                                  class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>
@@ -141,7 +141,7 @@ This file is distributed under the GNU Affero General Public License
                         <span class="pull-right">
                         <span class="btn-group btn-group-sm">
                             <button
-                                ng-if="(isRequester() && !isAssignedAsPathologist(req)) || (isPalga() && req.status != 'Open')"
+                                ng-if="isMyRequest(req) || (isPalga() && req.status != 'Open')"
                                  ng-disabled="(isRequester() && req.status != 'Open')
                                     || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval')
                                     || (isPalga() && !isCurrentUser(req.assignee))"

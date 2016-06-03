@@ -74,18 +74,12 @@ This file is distributed under the GNU Affero General Public License
 
         <!-- Pathology Dept. Member -->
         <div class="form-group">
-            <label class="control-label col-sm-2" for="isPathologyLabMember">
-                &nbsp;
+            <label class="control-label col-sm-2">
+              {{ 'Pathology lab' | translate }}
             </label>
-            <div class="col-sm-10">
-                <input type="checkbox" id="isPathologyLabMember" ng-model="user.pathologist" disabled>
-                &nbsp; {{ 'I am member of a pathology department' | translate }}
-            </div>
-            <div class="col-sm-10">
-                <br>
-                <em>Department</em>:
-                <p ng-repeat="lab in labs" ng-if="user.labId==lab.id">{{lab.name}}</p>
-            </div>
+            <p class="form-control-static col-sm-10">
+                <span ng-repeat="lab in labs" ng-if="user.labId==lab.id">{{lab.name}}</span>
+            </p>
         </div>
         <div class="alert alert-success" ng-show="success">
             {{ 'Your profile has been updated' | translate }}!

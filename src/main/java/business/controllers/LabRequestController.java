@@ -523,7 +523,7 @@ public class LabRequestController {
         if (request.isPaReportRequest()) {
             if (paReportSendingStatuses.contains(labRequest.getStatus())) {
                 labRequest.setPaReportsSent(body.isPaReportsSent());
-                log.debug("Updating PA reports sent: " + Boolean.toString(labRequest.isPaReportsSent()));
+                log.debug("Updating PA reports sent: " + labRequest.isPaReportsSent());
                 labRequest = labRequestService.save(labRequest);
             }
         }

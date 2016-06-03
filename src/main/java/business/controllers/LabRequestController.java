@@ -529,7 +529,7 @@ public class LabRequestController {
         }
         if (setHubAssistanceStatuses.contains(labRequest.getStatus())) {
             labRequest.setHubAssistanceRequested(Boolean.TRUE.equals(body.isHubAssistanceRequested()));
-            log.debug("Updating hub assistance: " + Boolean.toString(labRequest.isHubAssistanceRequested()));
+            log.debug("Updating hub assistance: " + labRequest.isHubAssistanceRequested());
             labRequest = labRequestService.save(labRequest);
         }
         return labRequest;

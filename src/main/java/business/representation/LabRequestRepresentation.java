@@ -50,8 +50,6 @@ public class LabRequestRepresentation {
 
     private Boolean hubAssistanceRequested;
 
-    private ExcerptListRepresentation excerptList;
-
     private List<PathologyRepresentation> pathologyList;
     private Long pathologyCount;
 
@@ -212,14 +210,6 @@ public class LabRequestRepresentation {
 
     public void setHubAssistanceRequested(Boolean hubAssistanceRequested) {
         this.hubAssistanceRequested = hubAssistanceRequested;
-    }
-
-    public ExcerptListRepresentation getExcerptList() {
-        return excerptList;
-    }
-
-    public void setExcerptList(ExcerptListRepresentation excerptList) {
-        this.excerptList = excerptList;
     }
 
     public String getExcerptListRemark() {

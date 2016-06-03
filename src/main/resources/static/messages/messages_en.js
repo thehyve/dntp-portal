@@ -47,10 +47,13 @@
         'popover: Informed consent': 'Informed consent (IC).',
 
         'Are you sure you want to delete file ?' : 'Are you sure you want to delete file {{name}}?',
-        'File too large': 'File too large ({{mb_size}} MB). Maximum size is 10 MB.',
+        'Maximum file size ? MB.': 'Maximum file size {{mb_max}} MB.',
+        'File too large': 'File too large ({{mb_size}} MB). Maximum size is {{mb_max}} MB.',
         'Are you sure you want to delete request ?' : 'Are you sure you want to delete request {{id}}?',
         'Edit user ...' : 'Edit user {{username}}',
         'Download ...' : 'Download {{filename}}',
+        'Uploading ?' : 'Uploading {{filename}}',
+        'Done uploading file ?' : 'Done uploading file {{filename}}',
 
         'Review_short': 'Review',
 
@@ -116,6 +119,7 @@
         'Epidemiologie':'Epidemiologie',
         'Eerstelijnsgeneeskunde':'Primary care',
         'Cardiologie':'Cardiology',
+        'Pathologie':'Pathology',
         'Longziekten':'Lung Disease',
         'Urologie':'Urology',
         'Neurologie':'Neurology',

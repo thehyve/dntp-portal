@@ -96,7 +96,8 @@
         'Save': 'Opslaan',
         'Cancel': 'Annuleren',
         'Are you sure you want to delete file ?': 'Weet u zeker dat u het bestand {{name}} wilt verwijderen?',
-        'File too large': 'Het bestand is te groot ({{mb_size}} MB). Het maximum is 10 MB.',
+        'Maximum file size ? MB.': 'Maximum bestandsgrootte {{mb_max}} MB.',
+        'File too large': 'Het bestand is te groot ({{mb_size}} MB). Het maximum is {{mb_max}} MB.',
         'Are you sure you want to approve the selection?<br>After approving, lab requests will be generated.' :
             'Weet je zeker dat je de selectie wilt goedkeuren?<br>Na goedkeuring worden de labverzoeken aangemaakt.',
         'Are you sure you want to delete request ?': 'Weet u zeker dat u aanvraag {{id}} wilt verwijderen?',
@@ -123,6 +124,7 @@
         'Agreement has been reached.': 'Formulier ontvangen',
         'Upload form': 'Upload formulier',
         'Upload signed authentificaton and agreement form': 'Upload ondertekend formulier authentificatie en instemming aanvraag',
+        'No form uploaded.': 'Nog geen formulier geüpload.',
         'Reject': 'Afwijzen',
         'Submit to scientific council': 'Doorsturen naar wetenschappelijke raad',
 
@@ -178,12 +180,23 @@
         'popover: Upload medical ethical committee approval': 'Upload brief van medisch-ethische toetsingscommissie.',
         'Close request': 'Aanvraag afsluiten',
         'Compose mail to members': 'Schrijf e-mail aan leden',
+        'Compose reopen email': 'Meld heropenen aanvraag',
 
         'ppc_handled_according_mandate': 'Afgehandeld conform mandaat PPC',
         'ppc_handled_according_mandate_explanation': 'Afgehandeld conform mandaat PPC, zie toelichting',
         'ppc_approved_written_procedure': 'Goedgekeurd na schriftelijke procedure',
         'ppc_discuss': 'Bespreken in vergadering',
         'ppc_rationale_exploratory_request': 'Oriënterende aanvraag, geen oordeel vereist',
+
+        'Excerpt list': 'Excerptlijst',
+        'Upload excerpt list': 'Excerptlijst uploaden',
+        'Select all excerpts and continue': 'Alle excerpten selecteren en doorgaan',
+        'Excerpt selection': 'Excerptselectie',
+        'Download selection': 'Selectie downloaden',
+
+        'Other data files': 'Overige databestanden',
+        'No data files.': 'Geen databestanden.',
+        'Upload data files': 'Databestanden uploaden',
 
         /* ========= */
         /* Login */
@@ -410,6 +423,8 @@
         'Closed': 'Afgesloten',
 
         'Download ...': '{{filename}} downloaden',
+        'Uploading ?' : 'Bezig met uploaden van {{filename}}',
+        'Done uploading file ?' : 'Klaar met uploaden van {{filename}}',
 
 
         /* ===================== */
@@ -454,6 +469,7 @@
         'Epidemiologie':'Epidemiologie',
         'Eerstelijnsgeneeskunde':'Eerstelijnsgeneeskunde',
         'Cardiologie':'Cardiologie',
+        'Pathologie':'Pathologie',
         'Longziekten':'Longziekten',
         'Urologie':'Urologie',
         'Neurologie':'Neurologie',

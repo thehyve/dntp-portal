@@ -370,7 +370,6 @@
                 /*eslint-disable no-unused-vars*/
                 options.headers = function (file, chunk, isTest) {
                     var csrftoken = $cookies.get('XSRF-TOKEN');
-                    console.log('csrftoken: ' + csrftoken);
                     return {
                         'X-CSRFToken': csrftoken,
                         'X-XSRF-TOKEN': csrftoken

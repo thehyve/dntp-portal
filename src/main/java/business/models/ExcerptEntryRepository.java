@@ -13,4 +13,6 @@ public interface ExcerptEntryRepository extends JpaRepository<ExcerptEntry, Long
 
     Integer countBySelectedTrueAndExcerptListId(Long excerptListId);
 
+    void deleteAllByExcerptListId(Long excerptListId);
+
 }

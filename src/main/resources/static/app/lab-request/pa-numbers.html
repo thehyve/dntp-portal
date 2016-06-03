@@ -30,6 +30,9 @@ This file is distributed under the GNU Affero General Public License
   <thead>
   <tr>
         <th class="print-pa-id-col" style="width: 5em;">{{'Sequence number' | translate}}</th>
+        <th class="print-pa-no-col" st-sort="palgaPatientNr" style="width: 10em;">{{'PALGA patiëntnr' | translate}}</th>
+        <th class="print-pa-no-col" st-sort="palgaExcerptNr" style="width: 10em;">{{'PALGA excerptnr' | translate}}</th>
+        <th class="print-pa-no-col" st-sort="palgaExcerptId" style="width: 10em;">{{'PALGA excerptid' | translate}}</th>
         <th class="print-pa-no-col" st-sort="paNumber" style="width: 10em;">{{'PA number' | translate}}</th>
         <th class="print-pa-samples-col" st-sort="samples">{{'Samples' | translate}}</th>
         <th class="print-pa-total-col" style="width: 5em;">{{'Number of samples' | translate}}</th>
@@ -40,14 +43,23 @@ This file is distributed under the GNU Affero General Public License
         </th>
   </tr>
   <tr class="no-print">
-    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
+    <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
     </th>
   </tr>
   </thead>
   <tbody>
   <tr ng-repeat="pathology in paNumbersDisplayedCollection">
     <td class="print-pa-id-col">
-      {{getSequenceNumberForPaNumber(labRequest, pathology.paNumber)}}
+      {{pathology.sequenceNumber}}
+    </td>
+    <td class="print-pa-no-col">
+      {{pathology.palgaPatientNr}}
+    </td>
+    <td class="print-pa-no-col">
+      {{pathology.palgaExcerptNr}}
+    </td>
+    <td class="print-pa-no-col">
+      {{pathology.palgaExcerptId}}
     </td>
     <td class="print-pa-no-col">
       {{pathology.paNumber}}
@@ -113,4 +125,11 @@ This file is distributed under the GNU Affero General Public License
     </td>
   </tr>
   </tbody>
+  <tfoot>
+  <tr>
+    <td colspan="7" class="text-center">
+    </td>
+    <td class="no-print"></td>
+  </tr>
+  </tfoot>
 </table>

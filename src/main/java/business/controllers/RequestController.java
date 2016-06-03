@@ -589,7 +589,8 @@ public class RequestController {
         if (!request.getRequesterId().equals(user.getUser().getId().toString())) {
             throw new RequestNotFound();
         }
-        if (!request.getStatus().equals("Open")) {
+
+        if (!request.getStatus().equals(RequestStatus.OPEN)){
             throw new InvalidActionInStatus();
         }
         log.info("deleting process instance " + id);

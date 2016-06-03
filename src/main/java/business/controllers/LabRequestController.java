@@ -195,6 +195,8 @@ public class LabRequestController {
         }
         labRequest = labRequestService.updateStatus(labRequest, Status.APPROVED);
 
+        labRequest = transferLabRequestFormData(body, labRequest, user.getUser());
+
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
         labRequestService.transferLabRequestData(representation, false);
@@ -540,9 +542,9 @@ public class LabRequestController {
             @RequestBody LabRequestRepresentation body) {
         log.info("PUT /labrequests/" + id + " for userId " + user.getId());
         LabRequest labRequest = labRequestService.findOne(id);
-        
-        transferLabRequestFormData(body, labRequest, user.getUser());
-        
+
+        labRequest = transferLabRequestFormData(body, labRequest, user.getUser());
+
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation, false);
         return representation;

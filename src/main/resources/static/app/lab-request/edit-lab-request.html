@@ -147,7 +147,24 @@ This file is distributed under the GNU Affero General Public License
         <div class="panel panel-default" 
             ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
           <div class="panel-heading">
-            <h4>{{'Actions in status' |translate }}: <em>{{'Waiting for lab approval'|translate}}</em></h4>
+            <h4>{{labRequest.status|translate}}</h4>
+          </div>
+          <div class="panel-body">
+              {{'Would you like hub assistance for this lab request?' | translate }}
+              &nbsp;
+              <input type="radio" id="hubAssistanceRequestedYes" name="hubAssistanceRequested"
+                  ng-disabled="!labRequest.lab.hubAssistanceEnabled"
+                  ng-model="labRequest.hubAssistanceRequested" ng-value="true" ng-checked="labRequest.hubAssistanceRequested">
+              <label class="normal" for="hubAssistanceRequestedYes">{{'Yes' | translate}}</label>
+              &nbsp;
+              <input type="radio" id="hubAssistanceRequestedNo" name="hubAssistanceRequested"
+                  ng-disabled="!labRequest.lab.hubAssistanceEnabled"
+                  ng-model="labRequest.hubAssistanceRequested" ng-value="false" ng-checked="!labRequest.hubAssistanceRequested">
+              <label class="normal" for="hubAssistanceRequestedNo">{{'No' | translate}}</label>
+
+              <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
+                   {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
+              </span>
           </div>
           <div class="panel-body">
              {{'A researcher has requested data and/or materials from your lab. Do you approve this request?'|translate}}

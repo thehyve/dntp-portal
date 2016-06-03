@@ -469,9 +469,9 @@ public class RequestController {
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
 
         request.setReopenRequest(false);
-        if (request.getStatus().equals("Review")) {
+        if (request.getStatus().equals(RequestStatus.REVIEW)) {
             request.setRequestAdmissible(false);
-        } else if (request.getStatus().equals("Approval")) {
+        } else if (request.getStatus().equals(RequestStatus.APPROVAL)) {
             request.setRequestApproved(false);
         }
         request.setRejectDate(new Date());
@@ -485,7 +485,7 @@ public class RequestController {
         log.info("Reject request.");
         log.info("Reject reason: " + updatedRequest.getRejectReason());
 
-        if (updatedRequest.getStatus().equals("Review")) {
+        if (updatedRequest.getStatus().equals(RequestStatus.REVIEW)) {
             log.info("Fetching palga_request_review task");
             Task palgaTask = requestService.getTaskByRequestId(id, "palga_request_review");
             if (palgaTask.getDelegationState()==DelegationState.PENDING) {
@@ -493,7 +493,7 @@ public class RequestController {
             }
             taskService.complete(palgaTask.getId());
 
-        } else if (updatedRequest.getStatus().equals("Approval")) {
+        } else if (updatedRequest.getStatus().equals(RequestStatus.APPROVAL)) {
             log.info("Fetching scientific_council_approval task");
             Task councilTask = requestService.getTaskByRequestId(id, "scientific_council_approval");
             if (councilTask.getDelegationState()==DelegationState.PENDING) {

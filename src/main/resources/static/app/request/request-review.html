@@ -3,7 +3,6 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-  <br>
 
   <h4 class="h4 h4-palga">{{'Authentification checks by PALGA'|translate}}</h4>
   <hr>
@@ -13,26 +12,27 @@ This file is distributed under the GNU Affero General Public License
     <div class="col-sm-8">
       <input type="checkbox" id="requesterValid" name="requesterValid" value="1"
              ng-model="request.requesterValid"> &nbsp;
-      <label class="normal" for="requesterValid">{{ 'Requester\'s identity was established.' | translate }}</label>
+      <label class="normal radio-label" for="requesterValid">{{ 'Requester\'s identity was established.' | translate }}</label>
     </div>
   </div>
 
   <!-- Requester valid Lab-->
   <div class="form-group" ng-class="">
-    <br>
-    <div class="col-sm-8 form-control-static" >
-      <label class="control-label">
-        {{'Lab' | translate}}
-      </label>
-      <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
-      <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
+      <div class="col-sm-6 form-control-static" >
+        <label class="control-label">
+          {{'Lab' | translate}}
+        </label>
+        &nbsp;&nbsp;
+        <span ng-if="request.lab.number">{{request.lab.number}} {{request.lab.name}}</span>
+        <div ng-if="!request.lab.number" class="alert alert-warning"><em>{{'No lab selected.'|translate}}</em></div>
+      </div>
     </div>
   </div>
   <div class="form-group" ng-class="">
     <div class="col-sm-8">
       <input type="checkbox" id="requesterLabValid" name="requesterLabValid" value="1"
              ng-model="request.requesterLabValid"> &nbsp;
-      <label class="normal" for="requesterLabValid">{{ 'Requester indeed works at or collaborates with the pathology laboratory mentioned.' | translate }}</label>
+      <label class="normal radio-label" for="requesterLabValid">{{ 'Requester indeed works at or collaborates with the pathology laboratory mentioned.' | translate }}</label>
     </div>
   </div>
 
@@ -41,7 +41,7 @@ This file is distributed under the GNU Affero General Public License
     <div class="col-sm-8">
       <input type="checkbox" id="requesterAllowed" name="requesterAllowed" value="1"
              ng-model="request.requesterAllowed"> &nbsp;
-      <label class="normal" for="requesterAllowed">{{ 'The requester is allowed to submit the request.' | translate }}</label>
+      <label class="normal radio-label" for="requesterAllowed">{{ 'The requester is allowed to submit the request.' | translate }}</label>
     </div>
   </div>
 
@@ -50,24 +50,26 @@ This file is distributed under the GNU Affero General Public License
     <div class="col-sm-8">
       <input type="checkbox" id="contactPersonAllowed" name="contactPersonAllowed" value="1"
              ng-model="request.contactPersonAllowed"> &nbsp;
-      <label class="normal" for="contactPersonAllowed">{{ 'The contact person been checked and is authorised to support the request.' | translate }}</label>
+      <label class="normal radio-label" for="contactPersonAllowed">{{ 'The contact person been checked and is authorised to support the request.' | translate }}</label>
     </div>
   </div>
 
-  <br>
 
   <h4 class="h4 h4-palga">{{'Authentification and agreement request'|translate}}</h4>
   <hr>
 
   <!-- Agreement reached -->
-  <div class="form-group" ng-class="">
+  <div class="row">
     <div class="col-sm-8">
       <input type="checkbox" id="agreementReached" name="agreementReached" value="1"
              ng-model="request.agreementReached"> &nbsp;
-      <label class="normal" for="agreementReached">{{ 'Agreement has been reached.' | translate }}</label>
+      <label class="normal radio-label" for="agreementReached">{{ 'Agreement has been reached.' | translate }}</label>
     </div>
   </div>
 
+  <div class="row">
+  <div class="col-sm-8">
+  <p ng-show="request.agreementAttachments.length < 1"><em>{{'No form uploaded.' | translate}}</em></p>
   <div class="list-group">
     <a ng-repeat="file in request.agreementAttachments"
        ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
@@ -85,8 +87,13 @@ This file is distributed under the GNU Affero General Public License
                                 </span>
     </a>
   </div>
+  </div>
+  </div>
+
   <!-- Agreement file upload -->
-  <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
+  <div class="row">
+  <div class="col-sm-8"
+       flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
        flow-name="agreementFlow"
        flow-files-submitted="fileuploadsubmitted('agreement'); Upload.uploadFile($flow)"
        flow-file-success="Upload.fileUploadSuccess('agreement', $message, $file); fileuploadsuccess(request, $message, 'agreement', $flow)"
@@ -105,5 +112,6 @@ This file is distributed under the GNU Affero General Public License
          ng-style="style">
       ({{'drag and drop your file here'|translate}})
     </div>
+  </div>
   </div>
   <br>

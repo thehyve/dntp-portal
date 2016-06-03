@@ -75,7 +75,7 @@ Stichting PALGA%0A
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose rejection mail' | translate}}
                 </a>
-                <a href="mailto:{{request.requesterName }} &lt;{{request.requesterEmail}}&gt;?subject=PALGA-gegevens staan voor u klaar, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A
+                <a href="mailto:{{request.requesterEmail}}?subject=PALGA-gegevens staan voor u klaar, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A
 %0A
 Het bestand met PALGA-gegevens voor aanvraag {{request.requestNumber}} (&ldquo;{{request.title}}&rdquo;) staat voor u klaar.%0A
 Meer informatie m.b.t. het bestand vindt u in een aparte email van Stichting PALGA.%0A
@@ -101,6 +101,32 @@ Stichting PALGA%0A
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose notification mail' | translate}}
                 </a>
+
+                <a href="mailto:{{request.requesterEmail}}?subject=PALGA-aanvraag is heropend, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A
+%0A
+Uw aanvraag {{ request.requestNumber }} ( {{ request.title}} ) is heropend.%0A
+De locatie van de aanvraag is: {{serverurl}}/#/request/view/{{request.processInstanceId}}%0A
+%0A
+Met vriendelijke groet,%0A
+Stichting PALGA%0A
+088-0402700 / aanvraag@palga.nl%0A
+%0A
+====================%0A
+%0A
+Dear Sir/Madam,%0A
+%0A
+Your request {{ request.requestNumber }} ( {{ request.title }} ) is reopened.%0A
+The location of the request is: {{serverurl}}/#/request/view/{{request.processInstanceId}}%0A
+%0A
+With kind regards,%0A
+Stichting PALGA%0A
+088-0402700 / aanvraag@palga.nl%0A"
+                   ng-if="isPalga() && request.reopenRequest"
+                   class="btn btn-default" role="button" title="{{'Compose reopen mail' | translate}}">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    {{'Compose reopen email' | translate}}
+                </a>
+
                 <button ng-if="isPalga() && isClaimable(request.status)" ng-show="request.assignee != globals.currentUser.userid"
                 class="btn btn-default" type="button"  ng-click="claim(request);" title="Claim">
                     <span><i class="glyphicon glyphicon-eye-open"></i></span>

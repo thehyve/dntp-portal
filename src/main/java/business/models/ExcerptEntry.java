@@ -30,17 +30,23 @@ public class ExcerptEntry {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     private Long excerptListId;
-    
+
     private Integer labNumber;
-    
+
     private String paNumber;
-    
+
+    private String palgaPatientNr;
+
+    private String palgaExcerptNr;
+
+    private String palgaExcerptId;
+
     private Integer sequenceNumber;
-    
+
     private Boolean selected;
-    
+
     @ElementCollection
     @Cascade(value={CascadeType.ALL})
     //@Column(length = 32767)
@@ -51,9 +57,9 @@ public class ExcerptEntry {
     private List<String> values = new ArrayList<String>();
 
     public ExcerptEntry() {
-        
+
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -61,7 +67,7 @@ public class ExcerptEntry {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Long getExcerptListId() {
         return excerptListId;
     }
@@ -85,7 +91,31 @@ public class ExcerptEntry {
     public void setPaNumber(String paNumber) {
         this.paNumber = paNumber;
     }
-    
+
+    public String getPalgaPatientNr() {
+        return palgaPatientNr;
+    }
+
+    public void setPalgaPatientNr(String palgaPatientNr) {
+        this.palgaPatientNr = palgaPatientNr;
+    }
+
+    public String getPalgaExcerptNr() {
+        return palgaExcerptNr;
+    }
+
+    public void setPalgaExcerptNr(String palgaExcerptNr) {
+        this.palgaExcerptNr = palgaExcerptNr;
+    }
+
+    public String getPalgaExcerptId() {
+        return palgaExcerptId;
+    }
+
+    public void setPalgaExcerptId(String palgaExcerptId) {
+        this.palgaExcerptId = palgaExcerptId;
+    }
+
     public Integer getSequenceNumber() {
         return sequenceNumber;
     }
@@ -109,15 +139,18 @@ public class ExcerptEntry {
     public void setValues(List<String> values) {
         this.values = values;
     }
-    
+
     public void addValue(String value) {
         this.values.add(value);
     }
-    
+
     public String[] getCsvValues() {
-        String[] result = new String[this.getValues().size() + 1];
+        String[] result = new String[this.getValues().size() + 4];
         result[0] = this.sequenceNumber.toString();
-        int i = 1;
+        result[1] = this.palgaPatientNr;
+        result[2] = this.palgaExcerptNr;
+        result[3] = this.palgaExcerptId;
+        int i = 4;
         for (String value: this.getValues()) {
             result[i] = value;
             i++;
@@ -126,16 +159,19 @@ public class ExcerptEntry {
     }
 
     public String[] getLabRequestValues() {
-        String[] result = new String[this.getValues().size() + 3];
+        String[] result = new String[this.getValues().size() + 6];
         result[0] = this.sequenceNumber.toString();
-        result[1] = this.labNumber.toString();
-        result[2] = this.paNumber;
-        int i = 3;
+        result[1] = this.palgaPatientNr;
+        result[2] = this.palgaExcerptNr;
+        result[3] = this.palgaExcerptId;
+        result[4] = this.labNumber.toString();
+        result[5] = this.paNumber;
+        int i = 6;
         for (String value: this.getValues()) {
             result[i] = value;
             i++;
         }
         return result;
     }
-    
+
 }

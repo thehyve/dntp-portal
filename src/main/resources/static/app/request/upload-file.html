@@ -22,11 +22,11 @@ This file is distributed under the GNU Affero General Public License
     <div ng-if="!request.excerptList">
         <em>{{'No excerpt list.'|translate}}</em>
     </div>
-    
 
-    <div ng-if="request.status == 'DataDelivery' && isPalga()">
+    <div class="row" ng-if="request.status == 'DataDelivery' && isPalga()">
         <!-- Excerpt list upload -->
-        <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
+        <div class="col-xs-6 col-sm-6"
+             flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
              flow-name="excerptListFlow"
              flow-files-submitted="fileuploadsubmitted('excerpt_list'); Upload.uploadFile($flow)"
              flow-file-success="Upload.fileUploadSuccess('excerpt list', $message, $file); fileuploadsuccess(request, $message, 'excerpt_list', $flow)"
@@ -35,19 +35,36 @@ This file is distributed under the GNU Affero General Public License
             <div class="alert alert-danger" role="alert" ng-if="upload_result['excerpt_list'] == 'error'">
                 <span ng-bind-html="upload_error['excerpt_list']"></span>
             </div>
-
+            <div ng-repeat="file in $flow.files">
+                <span ng-if="file.isUploading()">
+                    {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                </span>
+                <span ng-if="file.isComplete()">
+                    {{'Done uploading file ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}).
+                </span>
+                <div class="alert alert-danger" role="alert" ng-if="file.error">
+                    {{file.error}}
+                </div>
+                <br />
+                <div class="progress">
+                    <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                        style="min-width: 2em;"
+                        ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                        >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                </div>
+            </div>
             <div>
                 <input type="file" flow-btn id="test-upload-excerpt-list" style="display:none" />
-                          <span class="btn btn-primary" flow-btn
-                                ng-disabled="!isCurrentUser(request.assignee)"
-                                  >{{'Upload excerpt list'|translate}}</span>
+                          <button class="btn btn-primary" flow-btn
+                                ng-disabled="!isCurrentUser(request.assignee) || uploading"
+                                  >{{'Upload excerpt list'|translate}}</button>
             </div>
             <br>
             <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
                  flow-drag-enter="style={border:'4px dashed lightgreen'}"
                  flow-drag-leave="style={border: '2px dashed gray'}"
                  ng-style="style"
-                 ng-hide="!isCurrentUser(request.assignee)">
+                 ng-hide="!isCurrentUser(request.assignee) || uploading">
                 ({{'drag and drop your file here'|translate}})
             </div>
         </div>
@@ -71,8 +88,11 @@ This file is distributed under the GNU Affero General Public License
         ng-controller="SelectionController">
 
         <h4 class="h4 h4-palga">{{'Excerpt selection'|translate}}</h4>
+
         <!-- Excerpt selection upload -->
-        <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
+        <div class="row">
+        <div class="col-xs-6 col-sm-6"
+             flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
              flow-name="excerptSelectionFlow"
              flow-files-submitted="fileuploadsubmitted('excerpt_selection'); Upload.uploadFile($flow)"
              flow-file-success="Upload.fileUploadSuccess('excerpt selection', $message, $file); fileuploadsuccess(request, $message, 'excerpt_selection', $flow)"
@@ -82,7 +102,24 @@ This file is distributed under the GNU Affero General Public License
             <div class="alert alert-danger" role="alert" ng-if="upload_result['excerpt_selection'] == 'error'">
                 <span ng-bind-html="upload_error['excerpt_selection']"></span>
             </div>
-
+            <div ng-repeat="file in $flow.files">
+                <span ng-if="file.isUploading()">
+                    {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                </span>
+                <span ng-if="file.isComplete()">
+                    {{'Done uploading file ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}).
+                </span>
+                <div class="alert alert-danger" role="alert" ng-if="file.error">
+                    {{file.error}}
+                </div>
+                <br />
+                <div class="progress">
+                    <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                        style="min-width: 2em;"
+                        ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                        >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                </div>
+            </div>
             <div>
                 <span ng-click="request.excerptList.entryCount <= 1000 ? selectPANumbers(request) : false" id="select-pa-numbers" class="btn btn-primary"
                     ng-disabled="!request.excerptList || request.excerptList.entryCount > 1000"
@@ -91,21 +128,23 @@ This file is distributed under the GNU Affero General Public License
                     {{'Select PA numbers'|translate}}
                 </span>
                 <input type="file" flow-btn id="test-upload-excerpt-selection" style="display:none" />
-                <span class="btn btn-default" flow-btn>
+                <button class="btn btn-default" flow-btn
+                    ng-disabled="uploading">
                     <i class="glyphicon glyphicon-import"></i>
                     {{'Upload excerpt selection'|translate}}
-                </span>
+                </button>
             </div>
             <br>
             <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
                 flow-drag-enter="style={border:'4px dashed lightgreen'}"
                 flow-drag-leave="style={border: '2px dashed gray'}"
-                ng-style="style">
+                ng-style="style"
+                ng-hide="!isCurrentUser(request.assignee) || uploading">
                 ({{'drag and drop your file here'|translate}})
             </div>
-            
         </div>
-    
+        </div>
+
         <div ng-class="{ 'pull-right' : isRequester() && request.status=='DataDelivery' }">
             <a class="btn btn-default" ng-href="/requests/{{request.processInstanceId}}/selection/csv"
                 id="attached-excerpt-list-2">
@@ -142,29 +181,36 @@ This file is distributed under the GNU Affero General Public License
 
   <h4 class="h4 h4-palga">{{request.statisticsRequest?'Data files':'Other data files'|translate}}</h4>
 
+  <div class="row">
+  <div class="col-xs-6 col-sm-6">
   <div class="list-group">
     <a ng-repeat="file in request.dataAttachments"
        ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
        class="list-group-item">
       <i class="glyphicon glyphicon-file"></i> {{file.name}}
-                        <span class="pull-right">
-                        <span class="btn-group btn-group-sm">
-                            <button class="btn btn-xs btn-default" type="button" title="{{'Delete'|translate}}"
-                                    ng-click="removeDataFile(file); $event.preventDefault();"
-                              >
-                              <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
-                            </button>
-                        </span>
-                        </span>
+      <span class="pull-right">
+      <span class="btn-group btn-group-xs">
+          <button class="btn btn-xs btn-default" type="button" title="{{'Delete'|translate}}"
+                  ng-click="removeDataFile(file); $event.preventDefault();"
+            >
+            <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
+          </button>
+      </span>
+      </span>
     </a>
   </div>
   <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">
     <i>{{'No data files.'|translate}}</i>
   </p>
+  </div>
+  </div>
+
   <!-- Data upload -->
-  <div flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
+  <div class="row">
+  <div class="col-xs-6 col-sm-6"
+       flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/dataFiles'})"
        flow-name="dataFlow"
-       flow-files-submitted="fileuploadsubmitted('data'); Upload.uploadFile($flow)"
+       flow-files-submitted="fileuploadsubmitted('data'); uploadDataFile($flow)"
        flow-file-success="Upload.fileUploadSuccess('data', $message, $file); fileuploadsuccess(request, $message, 'data', $flow)"
        flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'data')"
        ng-if="request.status == 'DataDelivery' && isPalga()"
@@ -172,23 +218,42 @@ This file is distributed under the GNU Affero General Public License
     <div class="alert alert-danger" role="alert" ng-if="upload_result['data'] == 'error'">
         <span ng-bind-html="upload_error['data']"></span>
     </div>
+    <div ng-repeat="file in $flow.files">
+        <span ng-if="file.isUploading()">
+            {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+        </span>
+        <span ng-if="file.isComplete()">
+            {{'Done uploading file ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}).
+        </span>
+        <div class="alert alert-danger" role="alert" ng-if="file.error">
+            {{file.error}}
+        </div>
+        <br />
+        <div class="progress">
+            <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                style="min-width: 2em;"
+                ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+        </div>
+    </div>
 
     <p>
-      (<em>{{'Maximum file size 10 MB.'|translate}}</em>)
+      (<em>{{'Maximum file size ? MB.'|translate: {mb_max: 10} }}</em>)
     </p>
     <div>
-                        <a class="btn btn-default" flow-btn
-                              ng-disabled="!isCurrentUser(request.assignee)"
-                          >{{'Upload data files'|translate}}</a>
+        <button class="btn btn-default" flow-btn
+              ng-disabled="!isCurrentUser(request.assignee) || uploading"
+          >{{'Upload data files'|translate}}</button>
     </div>
     <br>
     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
          flow-drag-enter="style={border:'4px dashed lightgreen'}"
          flow-drag-leave="style={border: '2px dashed gray'}"
          ng-style="style"
-         ng-hide="!isCurrentUser(request.assignee)">
+         ng-hide="!isCurrentUser(request.assignee) || uploading">
       ({{'drag and drop your file here'|translate}})
     </div>
+  </div>
   </div>
 
   <div ng-if="request.status != 'Closed'

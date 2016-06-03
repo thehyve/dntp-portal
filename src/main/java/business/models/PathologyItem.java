@@ -30,11 +30,19 @@ public class PathologyItem {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     private Long labRequestId;
-    
-    String paNumber;
-    
+
+    private String paNumber;
+
+    private String palgaPatientNr;
+
+    private String palgaExcerptNr;
+
+    private String palgaExcerptId;
+
+    private Integer sequenceNumber;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(indexes = @Index(columnList="pathology_item_id"))
     @Fetch(FetchMode.JOIN)
@@ -47,12 +55,16 @@ public class PathologyItem {
     public PathologyItem() {
         
     }
-    
-    public PathologyItem(@NotNull Long labRequestId, @NotNull String paNumber) {
+
+    public PathologyItem(@NotNull Long labRequestId, @NotNull ExcerptEntry entry) {
         this.labRequestId = labRequestId;
-        this.paNumber = paNumber;
+        this.paNumber = entry.getPaNumber();
+        this.palgaPatientNr = entry.getPalgaPatientNr();
+        this.palgaExcerptNr = entry.getPalgaExcerptNr();
+        this.palgaExcerptId = entry.getPalgaExcerptId();
+        this.sequenceNumber = entry.getSequenceNumber();
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -60,7 +72,7 @@ public class PathologyItem {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Long getLabRequestId() {
         return labRequestId;
     }
@@ -75,6 +87,38 @@ public class PathologyItem {
 
     public void setPaNumber(String paNumber) {
         this.paNumber = paNumber;
+    }
+
+    public String getPalgaPatientNr() {
+        return palgaPatientNr;
+    }
+
+    public void setPalgaPatientNr(String palgaPatientNr) {
+        this.palgaPatientNr = palgaPatientNr;
+    }
+
+    public String getPalgaExcerptNr() {
+        return palgaExcerptNr;
+    }
+
+    public void setPalgaExcerptNr(String palgaExcerptNr) {
+        this.palgaExcerptNr = palgaExcerptNr;
+    }
+
+    public String getPalgaExcerptId() {
+        return palgaExcerptId;
+    }
+
+    public void setPalgaExcerptId(String palgaExcerptId) {
+        this.palgaExcerptId = palgaExcerptId;
+    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 
     public List<String> getSamples() {
@@ -92,4 +136,5 @@ public class PathologyItem {
     public void setSamplesAvailable(Boolean samplesAvailable) {
         this.samplesAvailable = samplesAvailable;
     }
+
 }

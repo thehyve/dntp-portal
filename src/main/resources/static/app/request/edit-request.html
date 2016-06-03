@@ -402,7 +402,6 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
-                    <br>
 
                     <h4 class="h4">{{ 'Attachments' | translate }}</h4>
                     <hr>
@@ -441,6 +440,24 @@ This file is distributed under the GNU Affero General Public License
                         <div class="alert alert-danger" role="alert" ng-if="upload_result['attachment'] == 'error'">
                             <span ng-bind-html="upload_error['attachment']"></span>
                         </div>
+                        <div ng-repeat="file in $flow.files">
+                            <span ng-if="file.isUploading()">
+                                {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                            </span>
+                            <span ng-if="file.isComplete()">
+                                {{'Done uploading file ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}).
+                            </span>
+                            <div class="alert alert-danger" role="alert" ng-if="file.error">
+                                {{file.error}}
+                            </div>
+                            <br />
+                            <div class="progress">
+                                <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                                    style="min-width: 2em;"
+                                    ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                                    >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                            </div>
+                        </div>
 
                         <div id="uploadFilePopover"
                             bs-popover
@@ -451,12 +468,14 @@ This file is distributed under the GNU Affero General Public License
                             <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
                             <button class="btn btn-default"
                                 id="button_upload_attachment"
+                                ng-disabled="uploading"
                                 flow-btn>{{'Upload file'|translate}}</button>
                         </div>
                         <br>
                         <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
                              flow-drag-enter="style={border:'4px dashed lightgreen'}"
                              flow-drag-leave="style={border: '2px dashed gray'}"
+                             ng-hide="uploading"
                              ng-style="style">
                             ({{'drag and drop your file here'|translate}})
                         </div>
@@ -501,6 +520,24 @@ This file is distributed under the GNU Affero General Public License
                         <div class="alert alert-danger" role="alert" ng-if="upload_result['mec_approval'] == 'error'">
                             <span ng-bind-html="upload_error['mec_approval']"></span>
                         </div>
+                        <div ng-repeat="file in $flow.files">
+                            <span ng-if="file.isUploading()">
+                                {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                            </span>
+                            <span ng-if="file.isComplete()">
+                                {{'Done uploading file ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}).
+                            </span>
+                            <div class="alert alert-danger" role="alert" ng-if="file.error">
+                                {{file.error}}
+                            </div>
+                            <br />
+                            <div class="progress">
+                                <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                                    style="min-width: 2em;"
+                                    ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                                    >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                            </div>
+                        </div>
                         <div id="uploadMETCLetterPopover"
                             bs-popover
                             title="{{'Upload letter'|translate}}"
@@ -511,6 +548,7 @@ This file is distributed under the GNU Affero General Public License
                             <input type="file" flow-btn id="test-upload-attachment2" style="display:none"/>
                             <button class="btn btn-default"
                                     id="button_upload_metc_letter"
+                                    ng-disabled="uploading"
                                     flow-btn>{{'Upload letter'|translate}}
                             </button>
                         </div>
@@ -518,6 +556,7 @@ This file is distributed under the GNU Affero General Public License
                         <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
                              flow-drag-enter="style={border:'4px dashed lightgreen'}"
                              flow-drag-leave="style={border: '2px dashed gray'}"
+                             ng-hide="uploading"
                              ng-style="style">
                             ({{'drag and drop your file here'|translate}})
                         </div>
@@ -528,8 +567,6 @@ This file is distributed under the GNU Affero General Public License
                     <div ng-include="'app/request/request-review.html'" ng-if="request.status=='Review'"></div>
 
                     <div ng-if="request.status=='Approval' && isPalga()">
-
-                        <br>
 
                         <h4 class="h4 h4-palga">{{'Review by PALGA privacy commitee'|translate}}</h4>
                         <hr>

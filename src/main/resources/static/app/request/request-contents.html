@@ -79,6 +79,14 @@
         </p>
     </div>
 
+    <!-- Principal Investigator -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Principal investigator email' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.contactPersonEmail}}
+        </p>
+    </div>
+
     <!-- Pathologist name -->
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist' | translate }}</label>
@@ -274,7 +282,7 @@
             {{ 'Requester indeed works at or collaborates with the pathology laboratory mentioned.' | translate }}
             </label>
             <span class="col-xs-6 col-sm-6">
-            {{request.request.requesterLabValid ? 'Yes' : '&ndash;' | translate}}
+            {{request.requesterLabValid ? 'Yes' : '&ndash;' | translate}}
             </span>
         </div>
 

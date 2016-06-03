@@ -175,7 +175,8 @@ public class RequestController {
 
     @PreAuthorize("isAuthenticated() and ("
             + "     hasRole('palga')"
-            + "  or hasPermission(#id, 'requestAssignedToUserAsPathologist') "
+            + "  or hasPermission(#id, 'isRequestPathologist') "
+            + "  or hasPermission(#id, 'isRequestContactPerson') "
             + "  or hasPermission(#id, 'isRequester') "
             + "  or hasPermission(#id, 'isScientificCouncil')"
             + "  or hasPermission(#id, 'isLabuser')"

@@ -273,21 +273,35 @@ public class RequestService {
                 processInstances = new ArrayList<HistoricProcessInstance>();
             }
         } else {
+            String userEmail = user.getUser().getUsername();
+            log.info("Fetching requester requests for user:" + userEmail);
             processInstances = new ArrayList<HistoricProcessInstance>();
-            processInstances.addAll(historyService
+            for (HistoricProcessInstance instance: historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
                     .involvedUser(user.getId().toString())
-                    .variableValueNotEquals("pathologist_email", user.getUser().getContactData().getEmail())
+                    .list()) {
+                Map<String, Object> variables = instance.getProcessVariables();
+                String pathologistEmail = (String)variables.get("pathologist_email");
+                String contactPersonEmail = (String)variables.get("contact_person_email");
+                if ((pathologistEmail == null || !pathologistEmail.equals(userEmail)) &&
+                        (contactPersonEmail == null || !contactPersonEmail.equals(userEmail))) {
+                    processInstances.add(instance);
+                }
+            }
+            processInstances.addAll(historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueEquals("pathologist_email", user.getUser().getUsername())
                     .list());
             processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
-                    .variableValueEquals("pathologist_email", user.getUser().getContactData().getEmail())
+                    .variableValueEquals("contact_person_email", user.getUser().getUsername())
                     .list());
-
         }
         return processInstances;
     }

@@ -260,6 +260,14 @@
                     return $rootScope.hasRole('requester');
                 };
 
+                $rootScope.isMyRequest = function (req) {
+                    var isMyReq = false;
+                    if (req.hasOwnProperty('requesterId')) {
+                        isMyReq = req.requesterId.toString() === $rootScope.currentUserId;
+                    }
+                    return isMyReq;
+                };
+
                 $rootScope.isLabUser = function() {
                     return $rootScope.hasRole('lab_user');
                 };

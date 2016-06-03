@@ -62,6 +62,8 @@
                                    variable="return date"></activiti:formProperty>
             <activiti:formProperty id="contact_person_name" name="Principal Investigator" type="string"
                                    variable="contact_person_name" required="true"></activiti:formProperty>
+            <activiti:formProperty id="contact_person_email" name="Principal Investigator email" type="string"
+                                   variable="contact_person_email" required="true"></activiti:formProperty>
             <activiti:formProperty id="pathologist_name" name="Pathologist name" type="string"
                                    variable="pathologist_name" required="true"></activiti:formProperty>
             <activiti:formProperty id="pathologist_email" name="Pathologist email" type="string"

@@ -58,6 +58,16 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
      *      Usage: {@code hasPermission(#id, 'isRequester')}<br>
      *      Checks if the user is the requester of the request with id {@code id}.
      * </li>
+     * <li><strong>isRequestPathologist</strong>:
+     *      Usage: {@code hasPermission(#id, 'isRequestPathologist')}<br>
+     *      Checks if the pathologist email address of the request
+     *      with id {@code id} matches the email address of the current user.
+     * </li>
+     * <li><strong>isRequestContactPerson</strong>:
+     *      Usage: {@code hasPermission(#id, 'isRequestContactPerson')}<br>
+     *      Checks if the contact person email address of the request
+     *      with id {@code id} matches the email address of the current user.
+     * </li>
      * <li><strong>isScientificCouncil</strong>:
      *      Usage: {@code hasPermission(#id, 'isScientificCouncil')}<br>
      *      Checks if the request with id {@code id} is in status 'Approval'
@@ -123,12 +133,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             String requestId = (String)targetDomainObject;
             return permissionService.checkRequestAssignedToUser(user, requestId);
         }
-        else if ("requestAssignedToUserAsPathologist".equals(permission))
-        {
-            checkTargetDomainObjectNotNull(targetDomainObject);
-            String requestId = (String)targetDomainObject;
-            return permissionService.checkRequestAssignedToUserAsPathologist(user, requestId);
-        }
         else if ("labRequestAssignedToUser".equals(permission))
         {
             checkTargetDomainObjectNotNull(targetDomainObject);
@@ -151,6 +155,18 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             checkTargetDomainObjectNotNull(targetDomainObject);
             String requestId = (String)targetDomainObject;
             return permissionService.checkIsRequester(user, requestId);
+        }
+        else if ("isRequestPathologist".equals(permission))
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkRequestPathologist(user, requestId);
+        }
+        else if ("isRequestContactPerson".equals(permission))
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            String requestId = (String)targetDomainObject;
+            return permissionService.checkRequestContactPerson(user, requestId);
         }
         else if ("isScientificCouncil".equals(permission))
         {

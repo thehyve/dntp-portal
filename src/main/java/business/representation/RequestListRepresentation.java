@@ -33,6 +33,8 @@ public class RequestListRepresentation {
     private String methods;
     private String pathologistName;
     private String pathologistEmail;
+    private String contactPersonName;
+    private String contactPersonEmail;
 
     private boolean statisticsRequest;
     private boolean excerptsRequest;
@@ -175,6 +177,22 @@ public class RequestListRepresentation {
 
     public void setPathologistEmail(String pathologistEmail) {
         this.pathologistEmail = pathologistEmail;
+    }
+
+    public String getContactPersonName() {
+        return contactPersonName;
+    }
+
+    public void setContactPersonName(String contactPersonName) {
+        this.contactPersonName = contactPersonName;
+    }
+
+    public String getContactPersonEmail() {
+        return contactPersonEmail;
+    }
+
+    public void setContactPersonEmail(String contactPersonEmail) {
+        this.contactPersonEmail = contactPersonEmail;
     }
 
     public String getAssignee() {

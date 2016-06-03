@@ -80,7 +80,7 @@ public class PasswordControllerTests {
 
     @Test
     public void requestNewPasswordSendsCorrectEmail() throws Exception {
-        EmailRepresentation emailForm = new EmailRepresentation("palga@dntp.thehyve.nl");
+        EmailRepresentation emailForm = new EmailRepresentation("test+palga@dntp.thehyve.nl");
         //greenMail.start();
 
         // Perform the request and ensure we get a correct result status
@@ -154,7 +154,7 @@ public class PasswordControllerTests {
     @Test
     public void resetPassword() throws Exception {
         // Insert a password reset request in the database
-        User user = userRepository.findByUsername("palga@dntp.thehyve.nl");
+        User user = userRepository.findByUsername("test+palga@dntp.thehyve.nl");
         NewPasswordRequest npr = new NewPasswordRequest(user);
         passwordRequestRepository.saveAndFlush(npr);
         

@@ -18,9 +18,10 @@ Feature: scenario request Request for excerpts + PA reports + materials
     When I go from the requests page to the create new request page
     And I fill the form with the following data
     """
-    contactPersonName: Nobody
-    pathologistName: Nobody
-    pathologistEmail: nobody@nowhere.org
+    contactPersonName: Dr. P. Investigator
+    contactPersonEmail: test+contactperson@dntp.thehyve.nl
+    pathologistName: Dr. A. Pathologist
+    pathologistEmail: test+pathologist@dntp.thehyve.nl
     requestTitle: Request 1
     background: None
     researchQuestion: test

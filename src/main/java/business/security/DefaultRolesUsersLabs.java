@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,11 +53,23 @@ public class DefaultRolesUsersLabs {
 
     @Autowired
     PasswordEncoder passwordEncoder;
-    
+
+    @Value("${dntp.test-account}")
+    String testAccount;
+
+    @Value("${dntp.test-domain}")
+    String testDomain;
+
     @Autowired
     private Environment env;
 
     static final String[] defaultRoles = new String[]{"requester", "palga", "scientific_council", "lab_user", "hub_user"};
+
+    static final String[] specialRequesters = new String[]{"pathologist", "contactperson"};
+
+    private String getEmailAddress(String accountName) {
+        return testAccount + '+' + accountName + '@' + testDomain;
+    }
 
     /**
      * Generates default users and labs in the 'dev' and 'test' profiles.
@@ -76,6 +90,7 @@ public class DefaultRolesUsersLabs {
         }
 
         log.info("Creating default labs...");
+        // First, generate default testing labs 100, 102, 104 and 106.
         String[] defaultLabs = new String[] {
                 "AMC, afd. Pathologie",
                 "Meander Medisch Centrum, afd. Klinische Pathologie",
@@ -90,16 +105,43 @@ public class DefaultRolesUsersLabs {
         int labIdx = 99;
         // Create default labs
         for (String r: defaultLabs) {
-            if (labService.findByName(r) == null) {
-                Lab l = new Lab(new Long(labIdx++), labIdx++, r, null);
+            Lab l = labService.findByName(r);
+            if (l == null) {
+                l = new Lab(new Long(labIdx++), labIdx++, r, null);
                 ContactData cd = new ContactData();
                 cd.setCity(cities.get(l.getNumber()));
                 l.setContactData(cd);
-                l.setEmailAddresses(new ArrayList<>(Arrays.asList(new String[]
-                        {"lab_" + l.getNumber() + "@labs.dntp.thehyve.nl",
-                         "lab_" + l.getNumber() + "_test@labs.dntp.thehyve.nl"
-                        })));
-                labService.save(l);
+                l = labService.save(l);
+            }
+            List<String> emailAddresses = new ArrayList<>(Arrays.asList(new String[]{
+                getEmailAddress("lab_" + l.getNumber()),
+                getEmailAddress("lab_" + l.getNumber())
+            }));
+            if (!emailAddresses.equals(l.getEmailAddresses())) {
+                log.debug("Updating email addresses for lab " + l.getNumber() + ".");
+                l.setEmailAddresses(emailAddresses);
+                l = labService.save(l);
+            }
+        }
+        // Second, generate labs in the range 1-99 for testing with large excerpt lists.
+        for(int i = 1; i < 100; i++) {
+            Lab l = labService.findByNumber(i);
+            if (l == null) {
+                l = new Lab();
+                l.setName("Lab " + i);
+                l.setNumber(i);
+                ContactData cd = new ContactData();
+                cd.setCity("Utrecht");
+                l.setContactData(cd);
+                l = labService.save(l);
+            }
+            List<String> emailAddresses = new ArrayList<>(Arrays.asList(new String[]{
+                getEmailAddress("lab_" + l.getNumber()),
+            }));
+            if (!emailAddresses.equals(l.getEmailAddresses())) {
+                log.debug("Updating email addresses for lab " + l.getNumber() + ".");
+                l.setEmailAddresses(emailAddresses);
+                l = labService.save(l);
             }
         }
 
@@ -107,11 +149,9 @@ public class DefaultRolesUsersLabs {
         Lab defaultLab = labService.findByName(defaultLabs[0]);
         // Create default roles and users for each role
         for (String r: defaultRoles) {
-            // Save the role if it doesn't exist yet
             Role role = roleRepository.findByName(r);
-
             // Create a user for the role if it doesn't exist yet
-            String username = r + "@dntp.thehyve.nl";
+            String username = getEmailAddress(r);
             User user = userService.findByUsername(username);
             if (user == null) {
                 user = createUser(r, role);
@@ -123,20 +163,32 @@ public class DefaultRolesUsersLabs {
                 } else {
                     user.setLab(defaultLab);
                 }
-                userService.save(user);
-                userService.save(user);
+                user = userService.save(user);
+            }
+        }
+        // Create special requester users
+        for (String name: specialRequesters) {
+            // Save the role if it doesn't exist yet
+            Role role = roleRepository.findByName("requester");
+            // Create a user if it doesn't exist yet
+            String username = getEmailAddress(name);
+            User user = userService.findByUsername(username);
+            if (user == null) {
+                user = createUser(name, role);
+                user.setLab(defaultLab);
+                user = userService.save(user);
             }
         }
         // Create default lab users for each lab (if they don't exist)
         for (Lab lab: labService.findAll()) {
             String labNumber = lab.getNumber().toString();
-            String username = "lab_user" + labNumber + "@dntp.thehyve.nl";
+            String username = getEmailAddress("lab_user" + labNumber);
 
             if (userRepository.findByUsernameAndDeletedFalse(username) == null) {
                 Role role = roleRepository.findByName("lab_user");
                 User user = createUser("lab_user" + labNumber, role);
                 user.setLab(lab);
-                userRepository.save(user);
+                user = userRepository.save(user);
             }
         }
 
@@ -147,7 +199,7 @@ public class DefaultRolesUsersLabs {
         Set<Role> roles = new HashSet<Role>();
         roles.add(role);
         String password = passwordEncoder.encode(role.getName());
-        User user = new User(username + "@dntp.thehyve.nl", password, true, roles);
+        User user = new User(getEmailAddress(username), password, true, roles);
         user.setFirstName(username);
         ContactData contactData = new ContactData();
         contactData.setEmail(user.getUsername());

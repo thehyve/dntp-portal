@@ -1,14 +1,19 @@
 describe('specialismComboBox', function() {
+    /*eslint-disable no-unused-vars*/
     var $compile,
         $rootScope,
         translate,
         specialismService;
+    /*eslint-enable no-unused-vars*/
 
     // Load the myApp module, which contains the directive
     beforeEach(module('ProcessApp.directives', function($provide) {
         $provide.factory('SpecialismService', function () {
             return {
+                getSpecialisms : function() {return []},
+                /*eslint-disable no-unused-vars*/
                 findPredefined : function (v) {return true},
+                /*eslint-enable no-unused-vars*/
                 getOther : function () {return 'something'}
             }
         });

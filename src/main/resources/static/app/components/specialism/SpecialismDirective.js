@@ -21,7 +21,7 @@
                     templateUrl: 'app/components/specialism/specialism-template.html',
                     link : function (scope, element, attrs, ctrl) {
 
-                        scope.specialisms = SpecialismService.specialisms;
+                        scope.specialisms = SpecialismService.getSpecialisms();
 
                         /**
                          * Get selected specialism

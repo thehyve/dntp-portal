@@ -180,6 +180,7 @@
         'popover: Upload medical ethical committee approval': 'Upload brief van medisch-ethische toetsingscommissie.',
         'Close request': 'Aanvraag afsluiten',
         'Compose mail to members': 'Schrijf e-mail aan leden',
+        'Compose reopen email': 'Meld heropenen aanvraag',
 
         'ppc_handled_according_mandate': 'Afgehandeld conform mandaat PPC',
         'ppc_handled_according_mandate_explanation': 'Afgehandeld conform mandaat PPC, zie toelichting',
@@ -468,6 +469,7 @@
         'Epidemiologie':'Epidemiologie',
         'Eerstelijnsgeneeskunde':'Eerstelijnsgeneeskunde',
         'Cardiologie':'Cardiologie',
+        'Pathologie':'Pathologie',
         'Longziekten':'Longziekten',
         'Urologie':'Urologie',
         'Neurologie':'Neurologie',

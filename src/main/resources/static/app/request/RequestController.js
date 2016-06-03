@@ -288,11 +288,12 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.remove = function(request) {
-                bootbox.confirm($rootScope.translate('Are you sure you want to delete request ?', {id: request.processInstanceId}), function(result) {
-                    if (result) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete request ?', {id: request.processInstanceId}), function(choice) {
+                    if (choice) {
                         request.$remove(function() {
                             $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
                             bootbox.alert('Request ' + request.processInstanceId + ' deleted.');
+                            $location.path('/');
                         }, function(response) {
                             $rootScope.logErrorResponse(response);
                         });

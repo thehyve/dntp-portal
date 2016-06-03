@@ -119,6 +119,7 @@
         'Epidemiologie':'Epidemiologie',
         'Eerstelijnsgeneeskunde':'Primary care',
         'Cardiologie':'Cardiology',
+        'Pathologie':'Pathology',
         'Longziekten':'Lung Disease',
         'Urologie':'Urology',
         'Neurologie':'Neurology',

@@ -70,15 +70,15 @@ This file is distributed under the GNU Affero General Public License
                                 <i class="mdi mdi-check-all"></i>
                             </a>
                         </th>
-                        <th st-sort="number" style="width: 6em">#</th>
-                        <th st-sort="title">{{'Title'|translate}}</th>
-                        <th st-sort="status">{{'Status'|translate}}</th>
-                        <th st-sort="dateCreated">{{'Creation date'|translate}}</th>
-                        <th ng-if="isScientificCouncil()" st-sort="vote">{{'My verdict'|translate}}</th>
-                        <th ng-if="isPalga()"  st-sort="requesterName">{{'Requester'|translate}}</th>
-                        <th st-sort="pathologistName">{{'Pathologist'|translate}}</th>
-                        <th ng-if="isPalga()" st-sort="assigneeName">{{'PALGA advisor'|translate}}</th>
-                        <th ng-if="isPalga()" st-sort="dateAssigned">{{'Date assigned'|translate}}</th>
+                        <th st-sort="number" style="width: 6em" class="sortable">#</th>
+                        <th st-sort="title" class="sortable">{{'Title'|translate}}</th>
+                        <th st-sort="status" class="sortable">{{'Status'|translate}}</th>
+                        <th st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
+                        <th ng-if="isScientificCouncil()" st-sort="vote" class="sortable">{{'My verdict'|translate}}</th>
+                        <th ng-if="isPalga()"  st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
+                        <th st-sort="pathologistName" class="sortable">{{'Pathologist'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="assigneeName" class="sortable">{{'PALGA advisor'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="dateAssigned" class="sortable">{{'Date assigned'|translate}}</th>
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
                     <tr class="no-print">
@@ -102,7 +102,7 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th colspan="{{isPalga() ? 7 : (isScientificCouncil() ? 5 : 4)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="{{isPalga() ? 7 : (isScientificCouncil() ? 6 : 5)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>

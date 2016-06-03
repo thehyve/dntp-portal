@@ -35,10 +35,10 @@ This file is distributed under the GNU Affero General Public License
             class="table table-striped">
             <thead>
                 <tr>
-                    <th st-sort="labRequestCode">{{'Lab request' | translate}}</th>
-                    <th st-sort="paNumber">{{'PA number' | translate}}</th>
+                    <th st-sort="labRequestCode" class="sortable">{{'Lab request' | translate}}</th>
+                    <th st-sort="paNumber" class="sortable">{{'PA number' | translate}}</th>
                     <th>{{'Samples' | translate}}</th>
-                    <th st-sort="status">{{'Status' | translate}}</th>
+                    <th st-sort="status" class="sortable">{{'Status' | translate}}</th>
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">
                         {{'Actions' | translate}}
                     </th>

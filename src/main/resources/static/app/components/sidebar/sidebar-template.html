@@ -20,8 +20,9 @@ This file is distributed under the GNU Affero General Public License
         <li ng-if="isScientificCouncil()" ng-class="{active: activeSidebar === 'notvoted'}">
             <a ng-href="/#/requests/notvoted">{{'Not yet reviewed'|translate}} <span class="badge pull-right">{{reqsNotVoted.length}}</span></a>
         </li>
-        <hr />
-        <li ng-repeat="status in statusesForRole"
+        <hr ng-if="!isScientificCouncil()" />
+        <li ng-if="!isScientificCouncil()"
+            ng-repeat="status in statusesForRole"
             ng-class="{active: activeSidebar === status}">
             <a ng-href="/#/requests/{{status}}">{{status|translate}} <span class="badge pull-right">{{requestsByStatus[status].length}}</span></a>
         </li>

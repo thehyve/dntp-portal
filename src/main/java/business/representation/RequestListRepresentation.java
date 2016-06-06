@@ -40,6 +40,7 @@ public class RequestListRepresentation {
     private boolean excerptsRequest;
     private boolean paReportRequest;
     private boolean materialsRequest;
+    private boolean clinicalDataRequest;
 
     private boolean reopenRequest;
 
@@ -265,6 +266,14 @@ public class RequestListRepresentation {
 
     public void setMaterialsRequest(boolean materialsRequest) {
         this.materialsRequest = materialsRequest;
+    }
+
+    public boolean isClinicalDataRequest() {
+        return clinicalDataRequest;
+    }
+
+    public void setClinicalDataRequest(boolean clinicalDataRequest) {
+        this.clinicalDataRequest = clinicalDataRequest;
     }
 
     public boolean isReopenRequest() {

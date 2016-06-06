@@ -46,7 +46,7 @@ angular.module('ProcessApp.controllers')
                 $scope.approvalComment = {};
                 $scope.commentEditVisibility = {};
                 Request.get({id:$routeParams.requestId}, function (req) {
-                    req.type = Request.convertRequestOptsToType(req);
+                    //req.type = Request.convertRequestOptsToType(req);
                     // set date -- to be used in the agreement form
                     var now = new Date();
                     req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
@@ -62,7 +62,7 @@ angular.module('ProcessApp.controllers')
                     $scope.allRequests = response ? response : [];
                     $scope.allRequests.forEach(function(req) {
                         req.number = Request.convertRequestNumber(req);
-                        req.type = Request.convertRequestOptsToType(req);
+                        //req.type = Request.convertRequestOptsToType(req);
                     });
                 }, function(response) {
                     $rootScope.logErrorResponse(response);
@@ -138,6 +138,21 @@ angular.module('ProcessApp.controllers')
                 request.previousContactDescription = '';
             };
 
+            $scope.isValidRequestType = function(request) {
+                return (request.statisticsRequest ||
+                        request.excerptsRequest ||
+                        request.paReportRequest ||
+                        request.materialsRequest ||
+                        request.clinicalDataRequest);
+            };
+
+            $scope.resetNonStatistcsRequestType = function(request) {
+                request.excerptsRequest = false;
+                request.paReportRequest = false;
+                request.materialsRequest = false;
+                request.clinicalDataRequest = false;
+            };
+
             $scope.upload_result = {
                     'attachment': '',
                     'agreement': '',
@@ -197,7 +212,7 @@ angular.module('ProcessApp.controllers')
             /*eslint-enable no-unused-vars*/
 
             $scope.refresh = function(request, result) {
-                result.type = Request.convertRequestOptsToType(result);
+                //result.type = Request.convertRequestOptsToType(result);
                 var index = -1;
                 for (var i in $scope.allRequests) {
                     if ($scope.allRequests[i].processInstanceId === request.processInstanceId) {
@@ -212,7 +227,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.update = function(request) {
                 $scope.dataLoading = true;
-                Request.convertRequestTypeToOpts(request); // convert request type
+                //Request.convertRequestTypeToOpts(request); // convert request type
                 request.$update(function(result) {
                     $scope.refresh(request, result);
                     $scope.editRequestModal.hide();
@@ -326,7 +341,7 @@ angular.module('ProcessApp.controllers')
                         'After reopening the request will be editable by the requester.'),
                     function(confirmed) {
                         if (confirmed) {
-                            Request.convertRequestTypeToOpts(request); // convert request type
+                            //Request.convertRequestTypeToOpts(request); // convert request type
                             request.$reopen(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
@@ -344,13 +359,17 @@ angular.module('ProcessApp.controllers')
                 return _checkVersionHigherThan(request.processId, 'dntp_request_003');
             };
 
+            $scope.isClinicalDataEnabled = function(request) {
+                return _checkVersionHigherThan(request.processId, 'dntp_request_003');
+            };
+
             $scope.fork = function(request) {
                 $scope.dataLoading = true;
                 bootbox.confirm(
                     $rootScope.translate('Are you sure you want to create an additional request?'),
                     function(confirmed) {
                         if (confirmed) {
-                            Request.convertRequestTypeToOpts(request); // convert request type
+                            //Request.convertRequestTypeToOpts(request); // convert request type
                             request.$fork(function(result) {
                                 $scope.view(result);
                             }, function(response) {
@@ -370,7 +389,7 @@ angular.module('ProcessApp.controllers')
                         'After submission the request cannot be edited anymore.'),
                     function(confirmed) {
                         if (confirmed) {
-                            Request.convertRequestTypeToOpts(request); // convert request type
+                            //Request.convertRequestTypeToOpts(request); // convert request type
                             request.$submit(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
@@ -555,7 +574,7 @@ angular.module('ProcessApp.controllers')
             $scope.edit = function(request) {
                 if (request) {
                     Request.get({id:request.processInstanceId}, function (data) {
-                        data.type = Request.convertRequestOptsToType(data);
+                        //data.type = Request.convertRequestOptsToType(data);
                         $scope.request = data;
                         $rootScope.tempRequest = jQuery.extend( true, {}, data ); // deep copy
 
@@ -789,7 +808,7 @@ angular.module('ProcessApp.controllers')
                 var promises = _.map(selected, function(requestId) {
                     return $q(function(resolve, reject) {
                         Request.get({id: requestId}, function(req) {
-                            req.type = Request.convertRequestOptsToType(req);
+                            //req.type = Request.convertRequestOptsToType(req);
                             $scope.print_selection.push(req);
                             resolve(req);
                         }, function(response) {

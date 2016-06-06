@@ -158,6 +158,7 @@ public class RequestFormService {
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
+            request.setClinicalDataRequest(fetchBooleanVariable("is_clinical_data_request", variables));
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
 
             request.setDateAssigned((Date)variables.get("assigned_date"));
@@ -278,6 +279,7 @@ public class RequestFormService {
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
+            request.setClinicalDataRequest(fetchBooleanVariable("is_clinical_data_request", variables));
 
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
 
@@ -509,6 +511,7 @@ public class RequestFormService {
         variables.put("is_excerpts_request", (Boolean)request.isExcerptsRequest());
         variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
         variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
+        variables.put("is_clinical_data_request", (Boolean)request.isClinicalDataRequest());
 
         variables.put("pathologist_name", request.getPathologistName());
         variables.put("pathologist_email", request.getPathologistEmail());

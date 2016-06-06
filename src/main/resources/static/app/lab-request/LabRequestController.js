@@ -158,7 +158,7 @@ angular.module('ProcessApp.controllers')
                 }
 
                 restInstance.get().then(function (result) {
-                    result.request.type = Request.convertRequestOptsToType(result.request);
+                    //result.request.type = Request.convertRequestOptsToType(result.request);
                     $scope.labRequest = result;
                     $scope.labRequest.htmlRequesterAddress = getHTMLAddress($scope.labRequest.requester.contactData);
                     $scope.labRequest.htmlRequesterLabAddress = getHTMLAddressForLab($scope.labRequest.requesterLab);
@@ -478,6 +478,7 @@ angular.module('ProcessApp.controllers')
             $scope.update = function (labRequest) {
                 var obj = {
                     'paReportsSent': labRequest.paReportsSent,
+                    'clinicalDataSent': labRequest.clinicalDataSent,
                     'hubAssistanceRequested': labRequest.hubAssistanceRequested
                 };
                 Restangular.one('labrequests', labRequest.id)

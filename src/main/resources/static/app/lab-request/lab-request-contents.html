@@ -79,14 +79,30 @@
             labRequest.request.paReportRequest">
         <label class="control-label col-xs-4 col-md-2">{{ 'PA reports' | translate }}</label>
         <div class="col-xs-8 col-md-10">
-            <p class="form-control-static">
-        <span ng-if="labRequest.paReportsSent">
-            {{ 'PA reports have been sent to the requester.' | translate }}
+        <p class="form-control-static"
+        ><span ng-if="labRequest.paReportsSent"><span class="noprint"><i class="glyphicon glyphicon-ok ok"></i> &nbsp;</span>{{
+        'PA reports have been sent to the requester.' | translate }}
         </span>
-        <span ng-if="!labRequest.paReportsSent">
-            {{ 'PA reports have NOT been sent to the requester.' | translate }}
-        </span>
-            </p>
+        <span ng-if="!labRequest.paReportsSent">{{
+        'PA reports have NOT been sent to the requester.' | translate }}</span>
+        </p>
+        </div>
+    </div>
+
+    <!-- Clinical Data Status -->
+    <div class="row" ng-if="
+            labRequest.status != 'Waiting for lab approval' &&
+            labRequest.status != 'Rejected' &&
+            labRequest.request.clinicalDataRequest">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Clinical data' | translate }}</label>
+        <div class="col-xs-8 col-md-10">
+        <p class="form-control-static"
+        ><span ng-if="labRequest.clinicalDataSent"
+        ><span class="noprint"><i class="glyphicon glyphicon-ok ok"></i> &nbsp;</span>{{
+        'Clinical data has been sent to the requester.' | translate }}</span>
+        <span ng-if="!labRequest.clinicalDataSent">{{
+        'Clinical data has NOT been sent to the requester.' | translate }}</span>
+        </p>
         </div>
     </div>
 
@@ -175,10 +191,12 @@
     <!-- Request Type -->
     <div class="row">
         <label class="control-label col-xs-4 col-md-2">{{ 'Request type' | translate }}</label>
-        <div class="col-xs-8 col-md-10" ng-init="">
-            <p class="form-control-static">
-                {{"Request_Type_" + labRequest.request.type | translate}}
-            </p>
+        <div class="col-xs-8 col-md-10">
+            <div ng-if="labRequest.request.statisticsRequest">{{'Numbers only, exploratory request'|translate}}<br /></div>
+            <div ng-if="labRequest.request.excerptsRequest">{{'Excerpts'|translate}}<br /></div>
+            <div ng-if="labRequest.request.paReportRequest">{{'PA reports'|translate}}<br /></div>
+            <div ng-if="labRequest.request.materialsRequest">{{'PA material'|translate}}<br /></div>
+            <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
         </div>
     </div>
 

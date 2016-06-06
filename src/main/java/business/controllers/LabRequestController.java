@@ -524,6 +524,8 @@ public class LabRequestController {
             if (paReportSendingStatuses.contains(labRequest.getStatus())) {
                 labRequest.setPaReportsSent(body.isPaReportsSent());
                 log.debug("Updating PA reports sent: " + labRequest.isPaReportsSent());
+                labRequest.setClinicalDataSent(body.isClinicalDataSent());
+                log.debug("Updating PA clinical data sent: " + labRequest.IsClinicalDataSent());
                 labRequest = labRequestService.save(labRequest);
             }
         }

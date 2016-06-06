@@ -55,6 +55,7 @@ public class RequestRepresentation {
     private boolean excerptsRequest;
     private boolean paReportRequest;
     private boolean materialsRequest;
+    private boolean clinicalDataRequest;
 
     private boolean linkageWithPersonalData;
     private String linkageWithPersonalDataNotes;
@@ -263,6 +264,14 @@ public class RequestRepresentation {
 
     public void setMaterialsRequest(boolean materialsRequest) {
         this.materialsRequest = materialsRequest;
+    }
+
+    public boolean isClinicalDataRequest() {
+        return clinicalDataRequest;
+    }
+
+    public void setClinicalDataRequest(boolean clinicalDataRequest) {
+        this.clinicalDataRequest = clinicalDataRequest;
     }
 
     public boolean isLinkageWithPersonalData() {

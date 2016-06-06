@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://thehyve.nl/dntp">
-<process id="dntp_request_002" isExecutable="true" name="DNTP Request">
+<process id="dntp_request_003" isExecutable="true" name="DNTP Request">
     <documentation>Definition for a request process for pathology data and materials.</documentation>
 
     <startEvent id="request_start" name="Start" activiti:initiator="initiator">
@@ -46,6 +46,8 @@
                                    variable="is_pa_report_request" required="true"></activiti:formProperty>
             <activiti:formProperty id="is_materials_request" name="Request for samples/materials" type="boolean"
                                    variable="is_materials_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_clinical_data_request" name="Request for clinical data" type="boolean"
+                                   variable="is_clinical_data_request" required="true"></activiti:formProperty>
             <!--Optionals-->
             <activiti:formProperty id="is_linkage_with_personal_data" name="Linkage with own or external personal data"
                                    type="boolean" variable="is_linkage_with_personal_data"
@@ -221,12 +223,12 @@
     <exclusiveGateway id="to_selection_review_or_closed" name="Selection review or closed" />
     <sequenceFlow id="data_delivery_to_status_selection_review" sourceRef="to_selection_review_or_closed" targetRef="status_selection_review">
         <conditionExpression xsi:type="tFormalExpression">
-            <![CDATA[ ${is_pa_report_request == true || is_materials_request == true} ]]>
+            <![CDATA[ ${is_pa_report_request == true || is_materials_request == true || is_clinical_data_request == true} ]]>
         </conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="data_delivery_to_status_closed" sourceRef="to_selection_review_or_closed" targetRef="status_closed">
         <conditionExpression xsi:type="tFormalExpression">
-            <![CDATA[ ${is_pa_report_request == false && is_materials_request == false} ]]>
+            <![CDATA[ ${is_pa_report_request == false && is_materials_request == false && is_clinical_data_request == false} ]]>
         </conditionExpression>
     </sequenceFlow>
 

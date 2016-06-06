@@ -29,12 +29,12 @@ This file is distributed under the GNU Affero General Public License
 <table st-table="paNumbersDisplayedCollection" st-safe-src="labRequest.pathologyList" class="table table-striped">
   <thead>
   <tr>
-        <th class="print-pa-id-col" style="width: 5em;">{{'Sequence number' | translate}}</th>
-        <th class="print-pa-no-col" st-sort="palgaPatientNr" style="width: 10em;">{{'PALGA patiëntnr' | translate}}</th>
-        <th class="print-pa-no-col" st-sort="palgaExcerptNr" style="width: 10em;">{{'PALGA excerptnr' | translate}}</th>
-        <th class="print-pa-no-col" st-sort="palgaExcerptId" style="width: 10em;">{{'PALGA excerptid' | translate}}</th>
-        <th class="print-pa-no-col" st-sort="paNumber" style="width: 10em;">{{'PA number' | translate}}</th>
-        <th class="print-pa-samples-col" st-sort="samples">{{'Samples' | translate}}</th>
+        <th class="print-pa-id-col sortable" st-sort="sequenceNumber" style="width: 13em;">{{'Sequence number' | translate}}</th>
+        <th class="print-pa-no-col sortable" st-sort="palgaPatientNr" style="width: 12em;">{{'PALGA patiëntnr' | translate}}</th>
+        <th class="print-pa-no-col sortable" st-sort="palgaExcerptNr" style="width: 12em;">{{'PALGA excerptnr' | translate}}</th>
+        <th class="print-pa-no-col sortable" st-sort="palgaExcerptId" style="width: 12em;">{{'PALGA excerptid' | translate}}</th>
+        <th class="print-pa-no-col sortable" st-sort="paNumber" style="width: 12em;">{{'PA number' | translate}}</th>
+        <th class="print-pa-samples-col sortable" st-sort="samples">{{'Samples' | translate}}</th>
         <th class="print-pa-total-col" style="width: 5em;">{{'Number of samples' | translate}}</th>
         <th class="no-print" style="width: 10em;"
             ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)
@@ -43,8 +43,10 @@ This file is distributed under the GNU Affero General Public License
         </th>
   </tr>
   <tr class="no-print">
-    <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
+    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
     </th>
+    <th></th>
+    <th></th>
   </tr>
   </thead>
   <tbody>

@@ -99,6 +99,7 @@ public class LabRequest {
     @Column
     private Boolean isPaReportsSent;
 
+    @OrderBy("sequenceNumber ASC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @BatchSize(size = 10000)
     List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();

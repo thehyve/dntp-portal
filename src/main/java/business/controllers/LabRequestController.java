@@ -96,6 +96,7 @@ public class LabRequestController {
     @PreAuthorize("isAuthenticated() and "
             + "(hasRole('palga') "
             + " or hasPermission(#id, 'isLabRequestRequester') "
+            + " or hasPermission(#id, 'isLabRequestPathologistOrContactPerson') "
             + " or hasPermission(#id, 'isLabRequestLabuser') "
             + " or hasPermission(#id, 'isLabRequestHubuser') "
             + ")")

@@ -332,8 +332,8 @@ public class CustomPermissionService {
 
     /**
      * Usage: {@code hasPermission(#labRequestId, 'isLabRequestRequester')}<br>
-     * Checks if the user is a requester and if the user is the requester or assigned as pathologist of
-     * the main request to which the lab request with id {@code labRequestId}
+     * Checks if the user is a requester and if the user is the requester or the pathologist
+     * or the contact person of the main request to which the lab request with id {@code labRequestId}
      * belongs.
      * @param user
      * @param labRequestId
@@ -353,11 +353,44 @@ public class CustomPermissionService {
         // FIXME: use more direct way to check if the requesterId of the request
         // matches the userId.
         requestFormService.transferData(instance, request, user);
-        if (request.getRequesterId().equals(user.getId().toString()) || request.getPathologistEmail().equals(user.getUsername())) {
+        if (request.getRequesterId().equals(user.getId().toString())) {
             logDecision("isLabRequestRequester", user, labRequestId.toString(), "OK.");
             return true;
         } else {
             logDecision("isLabRequestRequester", user, labRequestId.toString(), "DENIED (user is not the requester of the request).");
+            return false;
+        }
+    }
+
+    /**
+     * Usage: {@code hasPermission(#labRequestId, 'isLabRequestPathologistOrContactPerson')}<br>
+     * Checks if the user is a requester and if the user is the pathologist or the contact person
+     * of the main request to which the lab request with id {@code labRequestId} belongs.
+     * @param user
+     * @param labRequestId
+     */
+    public boolean checkIsLabRequestPathologistOrContactPerson(User user, Long labRequestId) {
+        if (!user.isRequester()) {
+            logDecision("isLabRequestPathologistOrContactPerson", user, labRequestId.toString(), "DENIED (not a requester).");
+            return false;
+        }
+        LabRequest labRequest = labRequestRepository.findOne(labRequestId);
+        HistoricProcessInstance instance = requestService.findProcessInstance(labRequest.getProcessInstanceId());
+        if (instance == null) {
+            logDecision("isLabRequestPathologistOrContactPerson", user, labRequestId.toString(), "DENIED (request not found).");
+            return false;
+        }
+        RequestRepresentation request = new RequestRepresentation();
+        // FIXME: use more direct way to check if the requesterId of the request
+        // matches the userId.
+        requestFormService.transferData(instance, request, user);
+        if (    request.getPathologistEmail().equals(user.getUsername()) ||
+                request.getContactPersonEmail().equals(user.getUsername())) {
+            logDecision("isLabRequestPathologistOrContactPerson", user, labRequestId.toString(), "OK.");
+            return true;
+        } else {
+            logDecision("isLabRequestPathologistOrContactPerson", user, labRequestId.toString(),
+                    "DENIED (user is not the pathologist or contact person of the request).");
             return false;
         }
     }

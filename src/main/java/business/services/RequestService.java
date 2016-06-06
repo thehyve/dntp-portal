@@ -216,12 +216,12 @@ public class RequestService {
      * @return
      */
     public List<HistoricProcessInstance> getProcessInstancesForUser(
-            UserAuthenticationToken user) {
+            User user) {
         List<HistoricProcessInstance> processInstances;
 
         if (user == null) {
             processInstances = new ArrayList<HistoricProcessInstance>();
-        } else if (user.getUser().isPalga()) {
+        } else if (user.isPalga()) {
             processInstances = new ArrayList<HistoricProcessInstance>();
             processInstances.addAll(
                     historyService
@@ -238,7 +238,7 @@ public class RequestService {
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Open")
                     .list());
-        } else if (user.getUser().isScientificCouncilMember()) {
+        } else if (user.isScientificCouncilMember()) {
             Date start = new Date();
             List<HistoricTaskInstance> approvalTasks = historyService
                     .createHistoricTaskInstanceQuery()
@@ -256,8 +256,9 @@ public class RequestService {
                     .list();
             Date end = new Date();
             log.info("GET: query took " + (end.getTime() - start.getTime()) + " ms.");
-        } else if (user.getUser().isLabUser() || user.getUser().isHubUser()) {
-            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
+        } else if (user.isLabUser() || user.isHubUser()) {
+            List<LabRequestRepresentation> labRequests =
+                    labRequestService.findLabRequestsForLabUserOrHubUser(user, false);
             Set<String> processInstanceIds = new HashSet<String>();
             for (LabRequestRepresentation labRequest: labRequests) {
                 processInstanceIds.add(labRequest.getProcessInstanceId());
@@ -273,7 +274,7 @@ public class RequestService {
                 processInstances = new ArrayList<HistoricProcessInstance>();
             }
         } else {
-            String userEmail = user.getUser().getUsername();
+            String userEmail = user.getUsername();
             log.info("Fetching requester requests for user:" + userEmail);
             processInstances = new ArrayList<HistoricProcessInstance>();
             for (HistoricProcessInstance instance: historyService
@@ -294,13 +295,13 @@ public class RequestService {
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
-                    .variableValueEquals("pathologist_email", user.getUser().getUsername())
+                    .variableValueEquals("pathologist_email", user.getUsername())
                     .list());
             processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
-                    .variableValueEquals("contact_person_email", user.getUser().getUsername())
+                    .variableValueEquals("contact_person_email", user.getUsername())
                     .list());
         }
         return processInstances;

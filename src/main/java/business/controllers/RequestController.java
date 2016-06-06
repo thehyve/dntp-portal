@@ -118,7 +118,7 @@ public class RequestController {
         List<RequestListRepresentation> result = new ArrayList<RequestListRepresentation>();
 
         Date start = new Date();
-        List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user);
+        List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user.getUser());
         for (HistoricProcessInstance instance : processInstances) {
             RequestListRepresentation request = new RequestListRepresentation();
             requestFormService.transferData(instance, request, user.getUser());
@@ -155,7 +155,7 @@ public class RequestController {
 
         Date start = new Date();
         Map<String, Long> counts = new HashMap<String, Long>();
-        List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user);
+        List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user.getUser());
         Date middle = new Date();
         log.info("Fetching process instances took " + (middle.getTime() - start.getTime()) + "ms.");
         Set<String> suspendedRequestIds = requestPropertiesService.getProcessInstanceIdsByReviewStatus(ReviewStatus.SUSPENDED);

@@ -30,8 +30,7 @@
                         {label:'Longziekten', value: 'Longziekten'},
                         {label:'Urologie', value: 'Urologie'},
                         {label:'Neurologie', value: 'Neurologie'},
-                        {label:'Endocrinologie', value: 'Endocrinologie'},
-                        {label:'(Other)', value: ''} // other
+                        {label:'Endocrinologie', value: 'Endocrinologie'}
                     ]
                 };
 
@@ -40,7 +39,7 @@
                  * with '(Other)' as the last element
                  * @returns Array of ordered list
                  */
-                service.getSpecialisms = function() {
+                service.getSpecialismsOld = function() {
                     var specs = angular.copy(this.specialisms);
 
                     _.remove(specs, function(s) {
@@ -56,6 +55,12 @@
                     return sortedSpecs;
                 };
 
+                service.getSpecialisms = function() {
+                    var sortedSpecs = _.sortBy(this.specialisms, 'label');
+                    sortedSpecs.push({label:'(Other)', value: '---'});
+                    return sortedSpecs;
+                };
+
                 /**
                  * Check if value predefined specialism
                  * @param value
@@ -66,7 +71,7 @@
                 };
 
                 service.getOther = function () {
-                    return _.last(this.specialisms);
+                    return {label:'(Other)', value: ''};
                 };
 
                 return service;

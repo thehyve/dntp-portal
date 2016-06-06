@@ -33,7 +33,7 @@
                             var _existingSpecialism = SpecialismService.findPredefined(scope.modelValue);
 
                             // if not then it is 'Other'
-                            if (!_existingSpecialism)  {
+                            if (!scope.selectedSpecialism && !_.isEmpty(_existingSpecialism))  {
                                 _existingSpecialism = SpecialismService.getOther();
                             }
 
@@ -47,7 +47,7 @@
                             scope.selectedSpecialism  = SpecialismService.findPredefined(newVal);
 
                             // if not then it is 'Other'
-                            if (!scope.selectedSpecialism)  {
+                            if (!scope.selectedSpecialism && !_.isEmpty(newVal))  {
                                 scope.selectedSpecialism  = SpecialismService.getOther();
                             }
                         });
@@ -55,9 +55,9 @@
                         /**
                          * Update specialism model
                          */
-                        scope.updateSpecialismText = function () {
-                            scope.modelValue = _.isEmpty(scope.selectedSpecialism) ?
-                                '':scope.selectedSpecialism.value;
+                        scope.updateSpecialismText = function (obj) {
+                            scope.modelValue = _.isEmpty(obj) ?
+                                '':obj.value;
                         };
 
                         /**

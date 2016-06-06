@@ -34,7 +34,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import business.controllers.RequestController;
-import business.models.File;
 import business.models.User;
 import business.representation.FileRepresentation;
 import business.representation.RequestRepresentation;
@@ -63,7 +62,7 @@ public class UploadTests extends AbstractTestNGSpringContextTests {
     protected String processInstanceId;
 
     protected UserAuthenticationToken getRequester() {
-        User user = userService.findByUsername("requester@dntp.thehyve.nl");
+        User user = userService.findByUsername("test+requester@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
     }

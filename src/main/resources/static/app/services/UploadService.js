@@ -26,10 +26,8 @@ angular.module('ProcessApp.services')
                 return s.toFixed() + ' ' + _units[i];
             };
 
-            var generateRandomString = function() {
-                var buffer = new Uint8Array(16);
-                asmCrypto.getRandomValues(buffer);
-                return btoa(String.fromCharCode.apply(null, buffer));
+            var getTimestampString = function() {
+                return new Date().getTime().toString();
             };
 
             /**
@@ -41,8 +39,8 @@ angular.module('ProcessApp.services')
             var generateUniqueIdentifier = function(file) {
               var relativePath = file.relativePath || file.webkitRelativePath || file.fileName || file.name;
               return file.size + '-' +
-                  relativePath.replace(/[^0-9a-zA-Z_-]/img, '') + '-' +
-                  generateRandomString();
+                  relativePath.replace(/[^0-9a-zA-Z_-]/img, '') +
+                  getTimestampString();
             };
 
             /*

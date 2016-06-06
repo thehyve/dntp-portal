@@ -139,6 +139,8 @@ public class RequestFormService {
             request.setMethods((String) variables.get("methods"));
             request.setPathologistName((String)variables.get("pathologist_name"));
             request.setPathologistEmail((String)variables.get("pathologist_email"));
+            request.setContactPersonName((String)variables.get("contact_person_name"));
+            request.setContactPersonEmail((String)variables.get("contact_person_email"));
             request.setStatus(RequestStatus.forDescription((String)variables.get("status")));
             request.setDateCreated((Date)variables.get("date_created"));
             String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();
@@ -260,6 +262,7 @@ public class RequestFormService {
             request.setDateAssigned((Date)variables.get("assigned_date"));
 
             request.setContactPersonName((String)variables.get("contact_person_name"));
+            request.setContactPersonEmail((String)variables.get("contact_person_email"));
             request.setTitle((String)variables.get("title"));
             request.setBackground((String)variables.get("background"));
             request.setResearchQuestion((String)variables.get("research_question"));
@@ -519,6 +522,7 @@ public class RequestFormService {
 
         variables.put("return_date", request.getReturnDate());
         variables.put("contact_person_name", request.getContactPersonName());
+        variables.put("contact_person_email", request.getContactPersonEmail());
 
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         properties.setChargeNumber(request.getChargeNumber());

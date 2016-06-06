@@ -102,27 +102,48 @@ public class CustomPermissionService {
     }
 
     /**
-     * Usage: {@code hasPermission(#id, 'requestAssignedToUserAsPathologist')}<br>
+     * Usage: {@code hasPermission(#id, 'isRequestPathologist')}<br>
      * @param user
      * @param requestId
      * @return
      */
-    public boolean checkRequestAssignedToUserAsPathologist(User user, String requestId) {
+    public boolean checkRequestPathologist(User user, String requestId) {
         long count = taskService.createTaskQuery()
                 .processInstanceId(requestId)
                 .active()
-                .processVariableValueEquals("pathologist_email", user.getContactData().getEmail())
+                .processVariableValueEquals("pathologist_email", user.getUsername())
                 .count();
         if (count > 0) {
-            logDecision("requestAssignedToUserAsPathologist", user, requestId, "OK.");
+            logDecision("isRequestPathologist", user, requestId, "OK.");
             return true;
         } else {
-            logDecision("requestAssignedToUserAsPathologist", user, requestId,
-                    "DENIED (no task found for request assigned to user as pathologist).");
+            logDecision("isRequestPathologist", user, requestId,
+                    "DENIED (user email does not match pathologist email address).");
             return false;
         }
     }
 
+    /**
+     * Usage: {@code hasPermission(#id, 'isRequestContactPerson')}<br>
+     * @param user
+     * @param requestId
+     * @return
+     */
+    public boolean checkRequestContactPerson(User user, String requestId) {
+        long count = taskService.createTaskQuery()
+                .processInstanceId(requestId)
+                .active()
+                .processVariableValueEquals("contact_person_email", user.getUsername())
+                .count();
+        if (count > 0) {
+            logDecision("isRequestContactPerson", user, requestId, "OK.");
+            return true;
+        } else {
+            logDecision("isRequestContactPerson", user, requestId,
+                    "DENIED (user email does not match contact person email address).");
+            return false;
+        }
+    }
 
     /**
      * Usage: {@code hasPermission(#labRequestId, 'requestAssignedToUser')}<br>

@@ -216,12 +216,12 @@ public class RequestService {
      * @return
      */
     public List<HistoricProcessInstance> getProcessInstancesForUser(
-            UserAuthenticationToken user) {
+            User user) {
         List<HistoricProcessInstance> processInstances;
 
         if (user == null) {
             processInstances = new ArrayList<HistoricProcessInstance>();
-        } else if (user.getUser().isPalga()) {
+        } else if (user.isPalga()) {
             processInstances = new ArrayList<HistoricProcessInstance>();
             processInstances.addAll(
                     historyService
@@ -238,7 +238,7 @@ public class RequestService {
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Open")
                     .list());
-        } else if (user.getUser().isScientificCouncilMember()) {
+        } else if (user.isScientificCouncilMember()) {
             Date start = new Date();
             List<HistoricTaskInstance> approvalTasks = historyService
                     .createHistoricTaskInstanceQuery()
@@ -256,8 +256,9 @@ public class RequestService {
                     .list();
             Date end = new Date();
             log.info("GET: query took " + (end.getTime() - start.getTime()) + " ms.");
-        } else if (user.getUser().isLabUser() || user.getUser().isHubUser()) {
-            List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), false);
+        } else if (user.isLabUser() || user.isHubUser()) {
+            List<LabRequestRepresentation> labRequests =
+                    labRequestService.findLabRequestsForLabUserOrHubUser(user, false);
             Set<String> processInstanceIds = new HashSet<String>();
             for (LabRequestRepresentation labRequest: labRequests) {
                 processInstanceIds.add(labRequest.getProcessInstanceId());
@@ -273,21 +274,35 @@ public class RequestService {
                 processInstances = new ArrayList<HistoricProcessInstance>();
             }
         } else {
+            String userEmail = user.getUsername();
+            log.info("Fetching requester requests for user:" + userEmail);
             processInstances = new ArrayList<HistoricProcessInstance>();
-            processInstances.addAll(historyService
+            for (HistoricProcessInstance instance: historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
                     .involvedUser(user.getId().toString())
-                    .variableValueNotEquals("pathologist_email", user.getUser().getContactData().getEmail())
+                    .list()) {
+                Map<String, Object> variables = instance.getProcessVariables();
+                String pathologistEmail = (String)variables.get("pathologist_email");
+                String contactPersonEmail = (String)variables.get("contact_person_email");
+                if ((pathologistEmail == null || !pathologistEmail.equals(userEmail)) &&
+                        (contactPersonEmail == null || !contactPersonEmail.equals(userEmail))) {
+                    processInstances.add(instance);
+                }
+            }
+            processInstances.addAll(historyService
+                    .createHistoricProcessInstanceQuery()
+                    .notDeleted()
+                    .includeProcessVariables()
+                    .variableValueEquals("pathologist_email", user.getUsername())
                     .list());
             processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
-                    .variableValueEquals("pathologist_email", user.getUser().getContactData().getEmail())
+                    .variableValueEquals("contact_person_email", user.getUsername())
                     .list());
-
         }
         return processInstances;
     }
@@ -322,7 +337,7 @@ public class RequestService {
     public RequestRepresentation forkRequest(User user, String parentId) {
         HistoricProcessInstance parentInstance = getProcessInstance(parentId);
         RequestRepresentation parentRequest = new RequestRepresentation();
-        requestFormService.transferData(parentInstance, parentRequest, null);
+        requestFormService.transferData(parentInstance, parentRequest, user);
         if (parentRequest.getStatus() != RequestStatus.LAB_REQUEST) {
             throw new InvalidActionInStatus("Forking of requests not allowed in status " +
                     parentRequest.getStatus() + ".");

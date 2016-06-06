@@ -79,7 +79,7 @@ public class ProcessControllerTests {
     private SecurityContext securityContext;
 
     protected UserAuthenticationToken getPalga() {
-        User user = userService.findByUsername("palga@dntp.thehyve.nl");
+        User user = userService.findByUsername("test+palga@dntp.thehyve.nl");
         user.setPassword(passwordService.getEncoder().encode("palga")); // because of password tests
         userService.save(user);
 
@@ -104,15 +104,15 @@ public class ProcessControllerTests {
     }
 
     private String users_test_expected_template =
-        "{\"id\":%d,\"username\":\"palga@dntp.thehyve.nl\",\"password\":\"palga\",\"active\":true,"
+        "{\"id\":%d,\"username\":\"test+palga@dntp.thehyve.nl\",\"password\":\"palga\",\"active\":true,"
         + "\"deleted\":false,\"lab\":null,\"institute\":null,"
-        + "\"contactData\":{\"id\":%d,\"telephone\":null,\"email\":\"palga@dntp.thehyve.nl\","
+        + "\"contactData\":{\"id\":%d,\"telephone\":null,\"email\":\"test+palga@dntp.thehyve.nl\","
         + "\"address1\":null,\"address2\":null,\"postalCode\":null,\"city\":null,"
         + "\"stateProvince\":null,\"country\":\"NL\"},\"roles\":[{\"id\":%d,\"name\":\"palga\"}]}";
 
     @Test
     public void getUser() throws Exception {
-        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("palga@dntp.thehyve.nl");
+        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("test+palga@dntp.thehyve.nl");
         Role role = null;
         for(Role r: user.getRoles()) {
             role = r;
@@ -121,7 +121,7 @@ public class ProcessControllerTests {
                 user.getId(), 
                 user.getContactData()==null ? null : user.getContactData().getId(),
                 role.getId());
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/user?username={username}", "palga@dntp.thehyve.nl")
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/user?username={username}", "test+palga@dntp.thehyve.nl")
             .accept(MediaType.APPLICATION_JSON))
                 .andDo(new ResultHandler(){
             @Override
@@ -137,20 +137,20 @@ public class ProcessControllerTests {
     }
 
     private String json_put_test_template =
-            "{\"id\":%d,\"currentRole\":\"scientific_council\",\"username\":\"scientific_council@dntp.thehyve.nl\",\"password\":\"\",\"active\":true,"
-            + "\"deleted\":false,\"contactData\":{\"email\":\"scientific_council@dntp.thehyve.nl\"}}";
+            "{\"id\":%d,\"currentRole\":\"scientific_council\",\"username\":\"test+scientific_council@dntp.thehyve.nl\",\"password\":\"\",\"active\":true,"
+            + "\"deleted\":false,\"contactData\":{\"email\":\"test+scientific_council@dntp.thehyve.nl\"}}";
     // tests.users.json_put_test2 = {"id":8,"username":"scientific_council@dntp.thehyve.nl","password":"","active":true,"deleted":false,"lab":null,"institute":null,"contactData":{"id":9,"telephone":null,"email":"scientific_council@dntp.thehyve.nl","address1":null,"address2":null,"postalCode":null,"city":null,"stateProvince":null,"country":"NL"},"roles":[{"id":7,"name":"scientific_council"}]}
-    private String json_put_test_expected_template = 
-            "{\"id\":%d,\"username\":\"scientific_council@dntp.thehyve.nl\"," 
+    private String json_put_test_expected_template =
+            "{\"id\":%d,\"username\":\"test+scientific_council@dntp.thehyve.nl\","
             + "\"password\":\"\",\"active\":true,\"deleted\":false,\"lab\":null,\"institute\":null,"
-            +"\"contactData\":{\"id\":9,\"telephone\":null,\"email\":\"scientific_council@dntp.thehyve.nl\","
+            +"\"contactData\":{\"id\":9,\"telephone\":null,\"email\":\"test+scientific_council@dntp.thehyve.nl\","
             + "\"address1\":null,\"address2\":null,\"postalCode\":null,\"city\":null,"
             + "\"stateProvince\":null,\"country\":\"NL\"}}";
 
     @Test
     public void serialiseUser() throws Exception {
-        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("scientific_council@dntp.thehyve.nl");
-                
+        User user = userRepository.findByUsernameAndActiveTrueAndEmailValidatedTrueAndDeletedFalse("test+scientific_council@dntp.thehyve.nl");
+
         String test_string = String.format(json_put_test_template, user.getId());
         String expected = String.format(json_put_test_expected_template, user.getId());
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/users/{id}", user.getId())

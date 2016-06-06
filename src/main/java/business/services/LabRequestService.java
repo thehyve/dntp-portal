@@ -52,6 +52,7 @@ import business.representation.LabRequestRepresentation;
 import business.representation.PathologyRepresentation;
 import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
+import business.representation.RequestStatus;
 
 @Service
 public class LabRequestService {
@@ -358,9 +359,9 @@ public class LabRequestService {
         }
         return representations;
     }
-    
+
     @Transactional
-    public List<LabRequestRepresentation> findLabRequestsForUser(User user, boolean fetchDetails) {
+    public List<LabRequestRepresentation> findLabRequestsForLabUserOrHubUser(User user, boolean fetchDetails) {
         List<LabRequestRepresentation> representations = null;
         List<LabRequest> labRequests;
 
@@ -378,30 +379,35 @@ public class LabRequestService {
             }
             labRequests = labRequestRepository.findAllByLabIn(hubLabs, sortByIdDesc());
             representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
+        }
+        return representations;
+    }
+
+    @Transactional
+    public List<LabRequestRepresentation> findLabRequestsForUser(User user, boolean fetchDetails) {
+        List<LabRequestRepresentation> representations = null;
+        if (user.isLabUser() || user.isHubUser()) {
+            representations = findLabRequestsForLabUserOrHubUser(user, fetchDetails);
         } else if (user.isPalga()) {
             // Palga
-            labRequests = labRequestRepository.findAll(sortByIdDesc());
+            List<LabRequest> labRequests = labRequestRepository.findAll(sortByIdDesc());
             representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
         } else {
             // fetch requests in status "LabRequest" for requester
-            List<HistoricProcessInstance> historicInstances = new ArrayList<HistoricProcessInstance>();
-            historicInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .includeProcessVariables()
-                    .involvedUser(user.getId().toString())
-                    .variableValueNotEquals("pathologist_email", user.getContactData().getEmail())
-                    .variableValueEquals("status", "LabRequest")
-                    .list());
-            historicInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .includeProcessVariables()
-                    .variableValueEquals("pathologist_email", user.getContactData().getEmail())
-                    .variableValueEquals("status", "LabRequest")
-                    .list());
+            List<HistoricProcessInstance> historicInstances = new ArrayList<>();
+            for (HistoricProcessInstance instance: requestService.getProcessInstancesForUser(user)) {
+                String statusText = (String)instance.getProcessVariables().get("status");
+                if (statusText != null) {
+                    RequestStatus status = RequestStatus.forDescription(statusText);
+                    if (status == RequestStatus.LAB_REQUEST) {
+                        historicInstances.add(instance);
+                    }
+                }
+            }
             log.info("#instances: " + historicInstances.size());
             // find associated lab requests
             for (HistoricProcessInstance instance : historicInstances) {
-                labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
+                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
                 representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
             }
         }

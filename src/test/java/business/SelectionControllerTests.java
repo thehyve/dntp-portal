@@ -72,13 +72,13 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     protected String processInstanceId;
 
     protected UserAuthenticationToken getRequester() {
-        User user = userService.findByUsername("requester@dntp.thehyve.nl");
+        User user = userService.findByUsername("test+requester@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
     }
 
     protected UserAuthenticationToken getPalga() {
-        User user = userService.findByUsername("palga@dntp.thehyve.nl");
+        User user = userService.findByUsername("test+palga@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "palga"); // because of password tests
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
     }

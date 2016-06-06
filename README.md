@@ -120,10 +120,22 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 ## Release notes
 
 ### 0.0.46
+Add these new columns definitions to an existing database:
 ```sql
 alter table excerpt_list add column palga_patient_nr_column int4 not null default -1;
 alter table excerpt_list add column palga_excerpt_nr_column int4 not null default -1;
 alter table excerpt_list add column palga_excerpt_id_column int4 not null default -1;
+```
+Update existing `pathology_item` records to have the sequence number from the
+excerpt list:
+```sql
+update pathology_item
+set sequence_number = (select e.sequence_number
+    from excerpt_entry e
+    join excerpt_list l on l.id = e.excerpt_list_id
+    join lab_request r on r.process_instance_id = l.process_instance_id
+    join pathology_item i on i.pa_number = e.pa_number and i.lab_request_id = r.id
+    where i.id = pathology_item.id);
 ```
 
 ### 0.0.42

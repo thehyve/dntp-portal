@@ -45,11 +45,13 @@ module.exports = {
         'samples': 'samples'
     },
     users: {
-        'palga': { username: 'palga@dntp.thehyve.nl', password: 'palga' },
-        'requester': { username: 'requester@dntp.thehyve.nl', password: 'requester' },
-        'scientific council': { username: 'scientific_council@dntp.thehyve.nl', password: 'scientific_council' },
-        'lab': { username: 'lab_user106@dntp.thehyve.nl', password: 'lab_user' },
-        'hub': { username: 'hub_user@dntp.thehyve.nl', password: 'hub_user' },
+        'palga': { username: 'test+palga@dntp.thehyve.nl', password: 'palga' },
+        'requester': { username: 'test+requester@dntp.thehyve.nl', password: 'requester' },
+        'pathologist': { username: 'test+pathologist@dntp.thehyve.nl', password: 'requester' },
+        'principal_investigator': { username: 'test+contactperson@dntp.thehyve.nl', password: 'requester' },
+        'scientific council': { username: 'test+scientific_council@dntp.thehyve.nl', password: 'scientific_council' },
+        'lab': { username: 'test+lab_user106@dntp.thehyve.nl', password: 'lab_user' },
+        'hub': { username: 'test+hub_user@dntp.thehyve.nl', password: 'hub_user' },
         'invalid': { username: 'kjaurtyqkuwygf', password: '784yfsda' }
     },
     'mappings': mappings,
@@ -69,7 +71,7 @@ module.exports = {
         var matches = user.match(/^lab (\d+)$/);
         if (matches !== null) {
             var labId = matches[1];
-            userObj = { username: 'lab_user' + labId + '@dntp.thehyve.nl', password: 'lab_user' };
+            userObj = { username: 'test+lab_user' + labId + '@dntp.thehyve.nl', password: 'lab_user' };
         } else {
             userObj = this.users[user];
         }

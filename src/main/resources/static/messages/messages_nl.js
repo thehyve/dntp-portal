@@ -34,6 +34,8 @@
         /* ========= */
         'Principal investigator': 'Projectleider',
         'popover: Principal investigator': 'Projectleider is de eindverantwoordelijk onderzoeker.',
+        'Principal investigator email': 'E-mail projectleider',
+        'popover: Principal investigator email': 'E-mailadres projectleider.',
         'popover: Pathologist': 'De patholoog betrokken bij dit onderzoek. ',
         'Pathologist': 'Patholoog',
         'popover: Pathologist email': 'E-mailadres patholoog.',

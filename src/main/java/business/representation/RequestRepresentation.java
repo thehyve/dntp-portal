@@ -63,6 +63,7 @@ public class RequestRepresentation {
 
     private Date returnDate;
     private String contactPersonName;
+    private String contactPersonEmail;
 
     private List<FileRepresentation> attachments;
     private List<FileRepresentation> agreementAttachments;
@@ -310,6 +311,14 @@ public class RequestRepresentation {
 
     public void setContactPersonName(String contactPersonName) {
         this.contactPersonName = contactPersonName;
+    }
+
+    public String getContactPersonEmail() {
+        return contactPersonEmail;
+    }
+
+    public void setContactPersonEmail(String contactPersonEmail) {
+        this.contactPersonEmail = contactPersonEmail;
     }
 
     public boolean isRequesterValid() {

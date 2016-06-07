@@ -93,7 +93,7 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().csrfTokenRepository(csrfTokenRepository())
         .and()
             .headers()
-            .addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only", "default-src 'self' 'unsafe-inline'"))
+            .addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only", "default-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"))
         ;
     }
 

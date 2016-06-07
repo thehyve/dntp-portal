@@ -135,7 +135,7 @@ This file is distributed under the GNU Affero General Public License
                         <span class="pull-left">
                         <span class="btn-group btn-group-sm">
                             <button
-                                 ng-if="isMyRequest(req) && req.status == 'Open'"
+                                 ng-if="isMyRequest(req) && req.status == 'Open' && !request.reopenRequest"
                                  class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
                                 <span><i class="glyphicon glyphicon-trash"></i></span>
                             </button>

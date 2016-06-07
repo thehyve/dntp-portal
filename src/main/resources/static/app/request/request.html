@@ -138,7 +138,7 @@ Stichting PALGA%0A
                     {{'Unclaim' | translate}}
                 </button>
                 <button class="btn btn-default" type="button" ng-click="remove(request)" title="{{'Delete' | translate}}"
-                        ng-if="isMyRequest(request) && request.status == 'Open'">
+                        ng-if="isMyRequest(request) && request.status == 'Open' && !request.reopenRequest">
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                     {{'Delete' | translate}}
                 </button>

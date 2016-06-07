@@ -590,10 +590,13 @@ public class RequestController {
         if (!request.getRequesterId().equals(user.getUser().getId().toString())) {
             throw new RequestNotFound();
         }
-
         if (!request.getStatus().equals(RequestStatus.OPEN)){
             throw new InvalidActionInStatus();
         }
+        if (request.isReopenRequest()) {
+            throw new InvalidActionInStatus("Removing not allowed for reopened requests.");
+        }
+
         log.info("deleting process instance " + id);
         runtimeService.deleteProcessInstance(id, "Removed by user: " + user.getName());
         log.info("process instance " + id + " deleted.");

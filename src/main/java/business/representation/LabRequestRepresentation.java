@@ -63,6 +63,8 @@ public class LabRequestRepresentation {
 
     private Boolean isPaReportsSent;
 
+    private Boolean isClinicalDataSent;
+
     private List<CommentRepresentation> comments;
     
     private Boolean samplesMissing;
@@ -86,6 +88,7 @@ public class LabRequestRepresentation {
         this.setRejectReason(labRequest.getRejectReason());
         this.setHubAssistanceRequested(labRequest.isHubAssistanceRequested());
         this.setPaReportsSent(labRequest.isPaReportsSent());
+        this.setClinicalDataSent(labRequest.IsClinicalDataSent());
     }
 
     public void setLabRequestCode() {
@@ -258,6 +261,14 @@ public class LabRequestRepresentation {
 
     public void setPaReportsSent(Boolean isPaReportsSent) {
         this.isPaReportsSent = isPaReportsSent;
+    }
+
+    public Boolean isClinicalDataSent() {
+        return isClinicalDataSent;
+    }
+
+    public void setClinicalDataSent(Boolean isClinicalDataSent) {
+        this.isClinicalDataSent = isClinicalDataSent;
     }
 
     public Date getRejectDate() {

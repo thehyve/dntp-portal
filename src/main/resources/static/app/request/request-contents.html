@@ -162,8 +162,12 @@
     <!-- Request Type -->
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Request type' | translate }}</label>
-        <div class="col-xs-6 col-sm-6" ng-init="">
-            {{'Request_Type_' + request.type | translate}}
+        <div class="col-xs-6 col-sm-6">
+            <div ng-if="request.statisticsRequest">{{'Numbers only, exploratory request'|translate}}<br /></div>
+            <div ng-if="request.excerptsRequest">{{'Excerpts'|translate}}<br /></div>
+            <div ng-if="request.paReportRequest">{{'PA reports'|translate}}<br /></div>
+            <div ng-if="request.materialsRequest">{{'PA material'|translate}}<br /></div>
+            <div ng-if="request.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
         </div>
     </div>
 

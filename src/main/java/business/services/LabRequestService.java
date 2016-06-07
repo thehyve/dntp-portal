@@ -405,10 +405,11 @@ public class LabRequestService {
                 }
             }
             log.info("#instances: " + historicInstances.size());
+            representations = new ArrayList<>();
             // find associated lab requests
             for (HistoricProcessInstance instance : historicInstances) {
                 List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
-                representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
+                representations.addAll(convertLabRequestsToRepresentations(labRequests, fetchDetails));
             }
         }
         return representations;

@@ -208,10 +208,19 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!--Request Type-->
-                    <div class="form-group" ng-mouseenter="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')">
-                        <label class="control-label col-sm-3">
-                            {{'Request type' | translate}}
-                        </label>
+                    <div class="form-group" ng-mouseenter="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')"
+                        ng-class="{ 'has-error' : !isValidRequestType(request) && (
+                          requestEditForm.statisticsRequest.$dirty ||
+                          requestEditForm.excerptsRequest.$dirty ||
+                          requestEditForm.paReportRequest.$dirty ||
+                          requestEditForm.materialsRequest.$dirty ||
+                          requestEditForm.clinicalDataRequest.$dirty )}">
+                        <div class="col-sm-3">
+                            <label class="control-label">{{'Request type' | translate}}</label>
+                            <span class="control-label help-block" ng-show="!isValidRequestType(request)">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
                         <div class="col-sm-6"
                             id="requestTypePopover"
                             data-placement="top-right" data-animation="am-flip-x"
@@ -219,6 +228,7 @@ This file is distributed under the GNU Affero General Public License
                             data-trigger="manual" bs-show="popover.requestType" bs-popover
                             title="{{'Request type' | translate}}"
                             >
+<!--
                             <input name="requestType" type="radio" ng-model="request.type" value="1" id="radio-numbers">
                             <label class="normal" for="radio-numbers">{{'Request_Type_1' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="2" id="radio-excerpts">
@@ -233,6 +243,40 @@ This file is distributed under the GNU Affero General Public License
                             <label class="normal" for="radio-PA">{{'Request_Type_6' | translate}}</label><br>
                             <input name="requestType" type="radio" ng-model="request.type" value="7" id="radio-materials">
                             <label class="normal" for="radio-materials">{{'Request_Type_7' | translate}}</label>
+-->
+                            <input id="statisticsRequestTrue" name="statisticsRequest" type="radio"
+                                ng-model="request.statisticsRequest" ng-value="true" ng-checked="request.statisticsRequest"
+                                ng-click="resetNonStatistcsRequestType(request);"> &nbsp;
+                            <label class="normal radio-label" for="statisticsRequestTrue">{{'Numbers only, exploratory request' | translate}}</label><br>
+
+                            <input id="statisticsRequestFalse" name="statisticsRequest" type="radio"
+                                ng-model="request.statisticsRequest" ng-value="false" ng-checked="!request.statisticsRequest"> &nbsp;
+                            <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material or clinical data' | translate}}</label><br>
+
+                            <div>
+                            <input type="checkbox" id="excerptsRequest" name="excerptsRequest" value="1"
+                                ng-disabled="request.statisticsRequest"
+                                ng-model="request.excerptsRequest"> &nbsp;
+                            <label class="normal radio-label" for="excerptsRequest">{{ 'Excerpts' | translate }}</label>
+
+                            <input type="checkbox" id="paReportRequest" name="paReportRequest" value="1"
+                                ng-disabled="request.statisticsRequest"
+                                ng-model="request.paReportRequest"> &nbsp;
+                            <label class="normal radio-label" for="paReportRequest">{{ 'PA reports' | translate }}</label>
+
+                            <input type="checkbox" id="materialsRequest" name="materialsRequest" value="1"
+                                ng-disabled="request.statisticsRequest"
+                                ng-model="request.materialsRequest"> &nbsp;
+                            <label class="normal radio-label" for="materialsRequest">{{ 'PA material' | translate }}</label>
+
+                            <div ng-if="isClinicalDataEnabled(request)">
+                            <input type="checkbox" id="clinicalDataRequest" name="clinicalDataRequest" value="1"
+                                ng-disabled="request.statisticsRequest"
+                                ng-model="request.clinicalDataRequest"> &nbsp;
+                            <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data' | translate }}</label>
+                            </div>
+
+                            </div>
                         </div>
                     </div>
 
@@ -344,7 +388,7 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
 
-                    <div ng-show="request.type != 1">
+                    <div ng-show="!request.statisticsRequest">
                     <h4 class="h4">{{ 'Data linkage' | translate }}</h4>
                     <hr>
 
@@ -369,7 +413,7 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!-- Data Linkage Notes  -->
-                    <div class="form-group" ng-show="request.type != 1 && request.linkageWithPersonalData"
+                    <div class="form-group" ng-show="!request.statisticsRequest && request.linkageWithPersonalData"
                          ng-class="{ 'has-error' : requestEditForm.linkageWithPersonalDataNotes.$invalid  && requestEditForm.linkageWithPersonalDataNotes.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Data linkage information' | translate }}</label>
                         <div class="col-sm-8">
@@ -386,7 +430,7 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!-- Informed Consent  -->
-                    <div class="form-group" ng-class="" ng-show="request.type != 1 && request.linkageWithPersonalData"
+                    <div class="form-group" ng-class="" ng-show="!request.statisticsRequest && request.linkageWithPersonalData"
                             ng-mouseenter="showPopover('informedConsentPopover')" ng-mouseleave="hidePopover('informedConsentPopover')">
                         <label class="control-label col-sm-3" for="informedConsentYes">
                             {{'Informed consent (IC)' | translate}}
@@ -405,7 +449,7 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!-- Reason Using Personal Data  -->
-                    <div class="form-group" ng-show="(request.type != 1 && request.linkageWithPersonalData)"
+                    <div class="form-group" ng-show="(!request.statisticsRequest && request.linkageWithPersonalData)"
                          ng-class="{ 'has-error' : requestEditForm.reasonUsingPersonalData.$invalid && requestEditForm.reasonUsingPersonalData.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
                         <div class="col-sm-8">
@@ -702,13 +746,14 @@ This file is distributed under the GNU Affero General Public License
                     <button id="submit-new-request" class="btn btn-warning" type="button"
                         ng-if="request.status=='Open'"
                         ng-click="submitRequest(request)"
-                        ng-disabled="requestEditForm.$invalid || dataLoading">
+                        ng-disabled="requestEditForm.$invalid || !isValidRequestType(request) || dataLoading">
                         {{'Submit'|translate}}
                     </button>
                     <button class="btn btn-warning" type="button"
                         ng-if="request.status=='Review' && isPalga()"
                         ng-click="submitForApproval(request)"
                         ng-disabled="requestEditForm.$invalid
+                            || !isValidRequestType(request)
                             || !request.agreementReached
                             || !request.requesterValid
                             || !request.requesterAllowed

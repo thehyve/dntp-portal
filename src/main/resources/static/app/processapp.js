@@ -262,7 +262,7 @@
 
                 $rootScope.isMyRequest = function (req) {
                     var isMyReq = false;
-                    if (req.hasOwnProperty('requesterId')) {
+                    if (req && req.hasOwnProperty('requesterId')) {
                         isMyReq = req.requesterId.toString() === $rootScope.currentUserId;
                     }
                     return isMyReq;

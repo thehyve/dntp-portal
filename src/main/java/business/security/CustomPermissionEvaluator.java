@@ -105,8 +105,14 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
      *      the main request to which the lab request with id {@code labRequestId}
      *      belongs.
      * </li>
+     * <li><strong>isLabRequestPathologistOrContactPerson</strong>:
+     *      Usage: {@code hasPermission(#labRequestId, 'isLabRequestPathologistOrContactPerson')}<br>
+     *      Checks if the user is a requester and if the user is the pathologist or contact person of
+     *      the main request to which the lab request with id {@code labRequestId}
+     *      belongs.
+     * </li>
      * </ul>
-     * 
+     *
      * @param targetDomainObject - the request id ({@code processInstanceId}) or
      *        the lab request id, depending on the value of {@code permission}
      * @param permission - the permission rule name, see above.
@@ -203,6 +209,12 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             checkTargetDomainObjectNotNull(targetDomainObject);
             Long labRequestId = (Long)targetDomainObject;
             return permissionService.checkIsLabRequestRequester(user, labRequestId);
+        }
+        else if ("isLabRequestPathologistOrContactPerson".equals(permission))
+        {
+            checkTargetDomainObjectNotNull(targetDomainObject);
+            Long labRequestId = (Long)targetDomainObject;
+            return permissionService.checkIsLabRequestPathologistOrContactPerson(user, labRequestId);
         }
         else
         {

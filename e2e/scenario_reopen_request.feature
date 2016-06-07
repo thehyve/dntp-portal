@@ -39,7 +39,10 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the following objects
     """
     previousContactYes
-    radio-excerpts-PA-materials
+    statisticsRequestFalse
+    excerptsRequest
+    paReportRequest
+    materialsRequest
     linkageWithPersonalDataYes
     informedConsentNo
     """

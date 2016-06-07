@@ -39,25 +39,13 @@
                  * with '(Other)' as the last element
                  * @returns Array of ordered list
                  */
-                service.getSpecialismsOld = function() {
-                    var specs = angular.copy(this.specialisms);
-
-                    _.remove(specs, function(s) {
-                        return s.value == '';
-                    });
-
-                    _.forEach(specs, function(s) {
+                service.getSpecialisms = function() {
+                    _.forEach(this.specialisms, function(s) {
                         s.label = $rootScope.translate(s.label);
                     });
-
-                    var sortedSpecs = _.sortBy(specs, 'label');
-                    sortedSpecs.push(this.getOther());
-                    return sortedSpecs;
-                };
-
-                service.getSpecialisms = function() {
                     var sortedSpecs = _.sortBy(this.specialisms, 'label');
-                    sortedSpecs.push({label:'(Other)', value: '---'});
+                    sortedSpecs.unshift({label:'(Please select a specialism)', value: null}); // put at beginning
+                    sortedSpecs.push({label:'(Other)', value: ''}); // put at end
                     return sortedSpecs;
                 };
 

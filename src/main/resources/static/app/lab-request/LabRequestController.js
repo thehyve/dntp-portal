@@ -112,11 +112,6 @@ angular.module('ProcessApp.controllers')
              */
             var getHTMLAddress = function (contactData) {
 
-                var _createEmailTmp = function (email) {
-                    return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' + 
-                        email + '">' + email + '</a>';
-                };
-
                 var _createPhoneTmp = function (phone) {
                     return '<span><i class="glyphicon glyphicon-earphone"></i></span> ' + phone;
                 };
@@ -129,7 +124,6 @@ angular.module('ProcessApp.controllers')
                     .concat(contactData.city !== null || contactData.postalCode !== null ? '<br>' : '')
                     .concat(contactData.country !== null ? contactData.country + '<br>' : '')
                     .concat(contactData.telephone !== null ? _createPhoneTmp(contactData.telephone) + '<br>' : '')
-                    .concat(contactData.email !== null ? _createEmailTmp(contactData.email) + '<br>' : '')
                     : '';
             };
 
@@ -140,7 +134,6 @@ angular.module('ProcessApp.controllers')
              */
             var getHTMLAddressForLab = function (lab) {
                 var contactData = lab.contactData;
-                contactData.email = lab.emailAddresses.join(', ');
                 return getHTMLAddress(contactData);
             };
 

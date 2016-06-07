@@ -160,6 +160,8 @@ public class RequestFormService {
             request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
             request.setClinicalDataRequest(fetchBooleanVariable("is_clinical_data_request", variables));
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
+            request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
+            request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
 
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }

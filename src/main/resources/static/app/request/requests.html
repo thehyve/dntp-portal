@@ -73,12 +73,13 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="number" style="width: 6em" class="sortable">#</th>
                         <th st-sort="title" class="sortable">{{'Title'|translate}}</th>
                         <th st-sort="status" class="sortable">{{'Status'|translate}}</th>
-                        <th st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
+                        <th>{{'Request type'|translate}}</th>
+                        <th ng-if="isPalga()">{{'Data linkage'|translate}}</th>
+                        <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
                         <th ng-if="isScientificCouncil()" st-sort="vote" class="sortable">{{'My verdict'|translate}}</th>
                         <th ng-if="isPalga()"  st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
                         <th st-sort="pathologistName" class="sortable">{{'Pathologist'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="assigneeName" class="sortable">{{'PALGA advisor'|translate}}</th>
-                        <th ng-if="isPalga()" st-sort="dateAssigned" class="sortable">{{'Date assigned'|translate}}</th>
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
                     <tr class="no-print">
@@ -93,16 +94,17 @@ This file is distributed under the GNU Affero General Public License
                             </select>
                         </th>
                         <th>&nbsp;</th>
+                        <th ng-if="isPalga()">&nbsp;</th>
+                        <th ng-if="isRequester()">&nbsp;</th>
                         <th ng-if="isScientificCouncil()" class="request-vote">&nbsp;</th>
                         <th ng-if="isPalga()"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th ng-if="isPalga()">&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th colspan="{{isPalga() ? 7 : (isScientificCouncil() ? 6 : 5)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="{{isPalga() ? 8 : (isScientificCouncil() ? 6 : 6)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -119,18 +121,26 @@ This file is distributed under the GNU Affero General Public License
                         <td class="request-status">{{req.status | translate}}
                             <span class="badge" ng-if="req.status=='Approval' && isPalga()" >
                             {{req.numberOfApprovalVotes ? req.numberOfApprovalVotes : 0 }}
-                            </span>                        
+                            </span>
                         </td>
-                        <td><small>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</small></td>
+                        <td>
+                            <div ng-if="req.statisticsRequest">{{'Numbers only, exploratory request'|translate}}<br /></div>
+                            <div ng-if="req.excerptsRequest">{{'Excerpts'|translate}}<br /></div>
+                            <div ng-if="req.paReportRequest">{{'PA reports'|translate}}<br /></div>
+                            <div ng-if="req.materialsRequest">{{'PA material'|translate}}<br /></div>
+                            <div ng-if="req.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
+                        </td>
+                        <td ng-if="isPalga()">
+                            {{req.linkageWithPersonalData ? 'Yes' :
+                            (req.linkageWithPersonalData == false ? 'No' : '&ndash;') |translate }}
+                        </td>
+                        <td ng-if="isRequester()"><small>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</small></td>
                         <td ng-if="isScientificCouncil()" class="request-vote">
                             {{req.approvalVote | translate}}
                         </td>
                         <td ng-if="isPalga()">{{req.requesterName}}</td>
                         <td><a href="mailto:{{req.pathologistEmail}}"> {{req.pathologistName}}</a></td>
                         <td ng-if="isPalga()">{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
-                        <td ng-if="isPalga()">
-                            <small>{{req.dateAssigned | date: 'EEE dd MMMM yyyy  H:mm'}}</small>
-                        </td>
                         <td class="no-print">
                         <span class="pull-left">
                         <span class="btn-group btn-group-sm">
@@ -180,7 +190,7 @@ This file is distributed under the GNU Affero General Public License
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="9" class="text-center">
+                            <td colspan="{{isPalga() ? 10 : (isScientificCouncil() ? 8 : 8)}}" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                             </td>
                         </tr>

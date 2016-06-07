@@ -23,7 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import business.models.PathologyItem;
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 
 
 @Service

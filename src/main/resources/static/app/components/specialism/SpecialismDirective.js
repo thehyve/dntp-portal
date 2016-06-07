@@ -33,7 +33,7 @@
                             var _existingSpecialism = SpecialismService.findPredefined(scope.modelValue);
 
                             // if not then it is 'Other'
-                            if (!scope.selectedSpecialism && !_.isEmpty(_existingSpecialism))  {
+                            if (!scope.selectedSpecialism)  {
                                 _existingSpecialism = SpecialismService.getOther();
                             }
 
@@ -43,12 +43,16 @@
 
                         // Watch value changes especially to handle asynchronous result
                         scope.$watch('modelValue', function (newVal) {
-                            // find if specialism is predefined
-                            scope.selectedSpecialism  = SpecialismService.findPredefined(newVal);
-
-                            // if not then it is 'Other'
-                            if (!scope.selectedSpecialism && !_.isEmpty(newVal))  {
-                                scope.selectedSpecialism  = SpecialismService.getOther();
+                            if (newVal === undefined || newVal === null) {  // things undefined or null assigned to
+                                                                            // first selection
+                                scope.selectedSpecialism = {label:'(Please select a specialism)', value: null};
+                            } else {
+                                // find if specialism is predefined
+                                scope.selectedSpecialism  = SpecialismService.findPredefined(newVal);
+                                // if not then it is 'Other'
+                                if (!scope.selectedSpecialism)  {
+                                    scope.selectedSpecialism  = SpecialismService.getOther();
+                                }
                             }
                         });
 

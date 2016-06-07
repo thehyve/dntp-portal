@@ -79,7 +79,7 @@
             }
         });
 
-
+/*
         _requestFactory.convertRequestTypeToOpts = function (request) {
             var _type = request.type;
             var cases = {
@@ -194,6 +194,7 @@
                 }
             }
         };
+*/
 
         _requestFactory.privacyCommitteeRationaleOptions = [
             'ppc_handled_according_mandate',

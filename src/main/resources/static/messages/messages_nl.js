@@ -80,6 +80,11 @@
         'Excerpts, PA reports and PA material': 'Excerpten, complete PA-verslagen en PA-materiaal',
         'Full PA reports only (no excerpts)': 'Alleen PA-verslagen',
         'PA material only': 'Alleen PA-materiaal',
+        'Excerpts, reports, material or clinical data': 'Excerpten, PA-verslagen, PA-materiaal of klinische gegevens',
+        'Excerpts': 'Excerpten',
+        'PA reports': 'Complete PA-verslagen',
+        'PA material': 'PA-materiaal',
+        'Clinical data': 'Klinische gegevens',
 
         'Request_Type_1': 'Alleen aantallen, oriënterende zoekvraag',
         'Request_Type_2': 'Alleen excerpten',
@@ -358,6 +363,13 @@
         'Sequence number': 'Volgnummer',
         'Enter sample codes': 'Vul samplecodes in',
         'Number of samples': 'Aantal samples',
+        'PA reports have been sent to the requester.': 'PA-verslagen zijn naar de aanvrager verstuurd.',
+        'PA reports have NOT been sent to the requester.': 'PA-verslagen zijn NIET naar de aanvrager verstuurd.',
+        'Update PA reports status': 'Verzendstatus PA-verslagen opslaan',
+        'Clinical data has been sent to the requester.': 'Klinische gegevens zijn naar de aanvrager verstuurd.',
+        'Clinical data has NOT been sent to the requester.': 'Klinische gegevens zijn NIET naar de aanvrager verstuurd.',
+        'Update clinical data status': 'Verzendstatus klinische data opslaan',
+        'The lab request has been approved.': 'Het labverzoek is goedgekeurd.',
 
         /* ===================== */
         /* User overview */

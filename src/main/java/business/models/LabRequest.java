@@ -99,6 +99,9 @@ public class LabRequest {
     @Column
     private Boolean isPaReportsSent;
 
+    @Column
+    private Boolean isClinicalDataSent;
+
     @OrderBy("sequenceNumber ASC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @BatchSize(size = 10000)
@@ -158,6 +161,14 @@ public class LabRequest {
 
     public void setPaReportsSent(Boolean isPaReportsSent) {
         this.isPaReportsSent = isPaReportsSent;
+    }
+
+    public Boolean IsClinicalDataSent() {
+        return isClinicalDataSent;
+    }
+
+    public void setClinicalDataSent(Boolean isClinicalDataSent) {
+        this.isClinicalDataSent = isClinicalDataSent;
     }
 
     public String getTaskId() {

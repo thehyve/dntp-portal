@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.apache.commons.logging.Log;
@@ -44,9 +47,14 @@ public class UserService {
 
     Log log = LogFactory.getLog(getClass());
 
+    private Object lock = new Object();
+
+    @PersistenceContext
+    private EntityManager em;
+
     @Autowired
     UserRepository userRepository;
-    
+
     @Autowired
     RoleRepository roleRepository;
 
@@ -58,18 +66,24 @@ public class UserService {
 
     @Autowired
     PasswordService passwordService;
-    
+
     @Autowired
     ActivationLinkRepository activationLinkRepository;
 
+    @Transactional
     public User save(User user) throws EmailAddressNotAvailable {
         assert(user.getRoles().size() == 1);
-        User result = userRepository.save(user);
-        long count = userRepository.countByUsernameAndDeletedFalse(user.getUsername());
-        if (count <= 1) {
-            return result;
+        synchronized (lock) {
+            em.persist(user);
+            em.flush();
+            em.refresh(user, LockModeType.PESSIMISTIC_WRITE);
+            em.flush();
+            long count = userRepository.countByUsernameAndDeletedFalse(user.getUsername());
+            if (count > 1) {
+                throw new EmailAddressNotUnique();
+            }
         }
-        throw new EmailAddressNotUnique();
+        return user;
     }
 
     public User findByUsername(String username) {
@@ -172,6 +186,7 @@ public class UserService {
 
     }
 
+    @Transactional
     public ProfileRepresentation createNewUser(User currentUser, ProfileRepresentation body, NewUserLinkType linkType) {
         if (body == null || body.getContactData() == null || body.getContactData().getEmail() == null) {
             throw new InvalidUserData("Invalid user data.");

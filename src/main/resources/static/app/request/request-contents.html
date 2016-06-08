@@ -84,7 +84,8 @@
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Principal investigator email' | translate }}</label>
         <p class="col-xs-6 col-sm-6">
-            {{request.contactPersonEmail}}
+            <span><i class="glyphicon glyphicon-envelope"></i></span>
+            <a class="no-print-url" href="mailto:{{request.contactPersonEmail}}">{{request.contactPersonEmail}}</a>
         </p>
     </div>
 
@@ -100,7 +101,8 @@
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist email' | translate }}</label>
         <p class="col-xs-6 col-sm-6">
-            {{request.pathologistEmail}}
+            <span><i class="glyphicon glyphicon-envelope"></i></span>
+            <a class="no-print-url" href="mailto:{{request.pathologistEmail}}">{{request.pathologistEmail}}</a>
         </p>
     </div>
 

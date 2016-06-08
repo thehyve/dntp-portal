@@ -78,7 +78,7 @@ This file is distributed under the GNU Affero General Public License
                         <th ng-if="isPalga()">{{'Data linkage'|translate}}</th>
                         <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
                         <th ng-if="isScientificCouncil()" st-sort="vote" class="sortable">{{'My verdict'|translate}}</th>
-                        <th ng-if="isPalga()"  st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
+                        <th st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
                         <th st-sort="pathologistName" class="sortable">{{'Pathologist'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="assigneeName" class="sortable">{{'PALGA advisor'|translate}}</th>
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
@@ -99,14 +99,14 @@ This file is distributed under the GNU Affero General Public License
                         <th ng-if="isPalga()">&nbsp;</th>
                         <th ng-if="isRequester()">&nbsp;</th>
                         <th ng-if="isScientificCouncil()" class="request-vote">&nbsp;</th>
-                        <th ng-if="isPalga()"><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th class="no-print">&nbsp;</th>
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th colspan="{{isPalga() ? 9 : (isScientificCouncil() ? 7 : 7)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="{{isPalga() ? 9 : (isScientificCouncil() ? 8 : 8)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -146,8 +146,8 @@ This file is distributed under the GNU Affero General Public License
                         <td ng-if="isScientificCouncil()" class="request-vote">
                             {{req.approvalVote | translate}}
                         </td>
-                        <td ng-if="isPalga()">{{req.requesterName}}</td>
-                        <td><a href="mailto:{{req.pathologistEmail}}"> {{req.pathologistName}}</a></td>
+                        <td><span ng-if="!isMyRequest(req)">{{req.requesterName}}</span></td>
+                        <td><a href="mailto:{{req.pathologistName}} &lt;{{req.pathologistEmail}}&gt;">{{req.pathologistName}}</a></td>
                         <td ng-if="isPalga()">{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
                         <td class="no-print">
                         <span class="pull-left">
@@ -198,7 +198,7 @@ This file is distributed under the GNU Affero General Public License
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="{{isPalga() ? 11 : (isScientificCouncil() ? 9 : 9)}}" class="text-center">
+                            <td colspan="{{isPalga() ? 11 : (isScientificCouncil() ? 10 : 10)}}" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                             </td>
                         </tr>

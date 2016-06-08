@@ -10,7 +10,7 @@ This file is distributed under the GNU Affero General Public License
 
     <a href="mailto:{{scientificCouncilEmail}}?subject=Request {{request.requestNumber}}&amp;body=Request {{request.requestNumber}}%0AView: {{serverurl}}/#/request/view/{{request.processInstanceId}}
     "
-        ng-if="globals.currentUser.roles.indexOf('palga') != -1 && scientificCouncilEmail"
+        ng-if="isPalga() && request.status=='Approval' && scientificCouncilEmail"
     >
     <button class="btn btn-default" type="button" title="{{'Compose mail to members' | translate}}">
         <span><i class="glyphicon glyphicon-envelope"></i></span>

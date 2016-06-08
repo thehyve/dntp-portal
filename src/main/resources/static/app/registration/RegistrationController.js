@@ -14,6 +14,8 @@ angular.module('ProcessApp.controllers')
                 Restangular,
                 $location, $alert) {
 
+        $scope.dataLoading = false;
+
         $scope.labs = []; // init labs
 
         // Get lab list
@@ -24,18 +26,21 @@ angular.module('ProcessApp.controllers')
 
         $scope.submit = function (user) {
             if ($scope.registrationForm.$valid) {
+                $scope.dataLoading = true;
                 user.currentRole = 'requester';
                 user.username = user.contactData.email;
                 $rootScope.registrant = user;
                 Restangular.all('register/users').post(user)
                     .then(function () {
                         $location.path('/register/success');
+                        $scope.dataLoading = false;
                     }, function (response) {
                         if (response.data) {
                             _error(response.data.message);
                         } else {
                             _error('Error');
                         }
+                        $scope.dataLoading = false;
                     });
             }
         };

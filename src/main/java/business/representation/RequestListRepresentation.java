@@ -42,6 +42,9 @@ public class RequestListRepresentation {
     private boolean materialsRequest;
     private boolean clinicalDataRequest;
 
+    private boolean linkageWithPersonalData;
+    private boolean informedConsent;
+
     private boolean reopenRequest;
 
     private String approvalVote;
@@ -274,6 +277,22 @@ public class RequestListRepresentation {
 
     public void setClinicalDataRequest(boolean clinicalDataRequest) {
         this.clinicalDataRequest = clinicalDataRequest;
+    }
+
+    public boolean isLinkageWithPersonalData() {
+        return linkageWithPersonalData;
+    }
+
+    public void setLinkageWithPersonalData(boolean linkageWithPersonalData) {
+        this.linkageWithPersonalData = linkageWithPersonalData;
+    }
+
+    public boolean isInformedConsent() {
+        return informedConsent;
+    }
+
+    public void setInformedConsent(boolean informedConsent) {
+        this.informedConsent = informedConsent;
     }
 
     public boolean isReopenRequest() {

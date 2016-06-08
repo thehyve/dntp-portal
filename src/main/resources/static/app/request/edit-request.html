@@ -20,9 +20,6 @@ This file is distributed under the GNU Affero General Public License
                         {{ error }}
                     </div>
 
-                    <!--<h4 class="h4">{{'General details' |translate}}</h4>-->
-                    <!--<hr>-->
-
                     <!-- Principal Investigator -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonName.$invalid && requestEditForm.contactPersonName.$dirty }">
                         <label class="control-label col-sm-3" for="contactPersonName">{{ 'Principal investigator' | translate }}</label>
@@ -226,57 +223,51 @@ This file is distributed under the GNU Affero General Public License
                             data-placement="top-right" data-animation="am-flip-x"
                             data-content="{{'popover: Request type'|translate}}" data-html="true"
                             data-trigger="manual" bs-show="popover.requestType" bs-popover
-                            title="{{'Request type' | translate}}"
-                            >
-<!--
-                            <input name="requestType" type="radio" ng-model="request.type" value="1" id="radio-numbers">
-                            <label class="normal" for="radio-numbers">{{'Request_Type_1' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="2" id="radio-excerpts">
-                            <label class="normal" for="radio-excerpts">{{'Request_Type_2' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="3" id="radio-excerpts-PA">
-                            <label class="normal" for="radio-excerpts-PA">{{'Request_Type_3' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="4" id="radio-excerpts-materials">
-                            <label class="normal" for="radio-excerpts-materials">{{'Request_Type_4' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="5" id="radio-excerpts-PA-materials">
-                            <label class="normal" for="radio-excerpts-PA-materials">{{'Request_Type_5' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="6" id="radio-PA">
-                            <label class="normal" for="radio-PA">{{'Request_Type_6' | translate}}</label><br>
-                            <input name="requestType" type="radio" ng-model="request.type" value="7" id="radio-materials">
-                            <label class="normal" for="radio-materials">{{'Request_Type_7' | translate}}</label>
--->
-                            <input id="statisticsRequestTrue" name="statisticsRequest" type="radio"
-                                ng-model="request.statisticsRequest" ng-value="true" ng-checked="request.statisticsRequest"
-                                ng-click="resetNonStatistcsRequestType(request);"> &nbsp;
-                            <label class="normal radio-label" for="statisticsRequestTrue">{{'Numbers only, exploratory request' | translate}}</label><br>
-
-                            <input id="statisticsRequestFalse" name="statisticsRequest" type="radio"
-                                ng-model="request.statisticsRequest" ng-value="false" ng-checked="!request.statisticsRequest"> &nbsp;
-                            <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material or clinical data' | translate}}</label><br>
-
-                            <div>
-                            <input type="checkbox" id="excerptsRequest" name="excerptsRequest" value="1"
-                                ng-disabled="request.statisticsRequest"
-                                ng-model="request.excerptsRequest"> &nbsp;
-                            <label class="normal radio-label" for="excerptsRequest">{{ 'Excerpts' | translate }}</label>
-
-                            <input type="checkbox" id="paReportRequest" name="paReportRequest" value="1"
-                                ng-disabled="request.statisticsRequest"
-                                ng-model="request.paReportRequest"> &nbsp;
-                            <label class="normal radio-label" for="paReportRequest">{{ 'PA reports' | translate }}</label>
-
-                            <input type="checkbox" id="materialsRequest" name="materialsRequest" value="1"
-                                ng-disabled="request.statisticsRequest"
-                                ng-model="request.materialsRequest"> &nbsp;
-                            <label class="normal radio-label" for="materialsRequest">{{ 'PA material' | translate }}</label>
-
-                            <div ng-if="isClinicalDataEnabled(request)">
-                            <input type="checkbox" id="clinicalDataRequest" name="clinicalDataRequest" value="1"
-                                ng-disabled="request.statisticsRequest"
-                                ng-model="request.clinicalDataRequest"> &nbsp;
-                            <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data' | translate }}</label>
+                            title="{{'Request type' | translate}}">
+                            <div class="radio">
+                                <input id="statisticsRequestTrue" name="statisticsRequest" type="radio"
+                                    ng-model="request.statisticsRequest" ng-value="true" ng-checked="request.statisticsRequest"
+                                    ng-click="resetNonStatistcsRequestType(request);"> &nbsp;
+                                <label class="normal radio-label" for="statisticsRequestTrue">{{'Numbers only, exploratory request' | translate}}</label><br>
                             </div>
 
+                            <div class="radio">
+                                <input id="statisticsRequestFalse" name="statisticsRequest" type="radio"
+                                    ng-model="request.statisticsRequest" ng-value="false" ng-checked="!request.statisticsRequest"> &nbsp;
+                                <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material or clinical data' | translate}}</label><br>
+
+                                <div style="padding-left: 45px;">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="excerptsRequest" name="excerptsRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.excerptsRequest"> &nbsp;
+                                        <label class="normal radio-label" for="excerptsRequest">{{ 'Excerpts' | translate }}</label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="paReportRequest" name="paReportRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.paReportRequest"> &nbsp;
+                                        <label class="normal radio-label" for="paReportRequest">{{ 'PA reports' | translate }}</label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="materialsRequest" name="materialsRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.materialsRequest"> &nbsp;
+                                        <label class="normal radio-label" for="materialsRequest">{{ 'PA material' | translate }}</label>
+                                    </div>
+
+                                    <div ng-if="isClinicalDataEnabled(request)" class="checkbox">
+                                        <input type="checkbox" id="clinicalDataRequest" name="clinicalDataRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.clinicalDataRequest"> &nbsp;
+                                        <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data' | translate }}</label>
+                                    </div>
+                                </div>
+
                             </div>
+
                         </div>
                     </div>
 
@@ -634,30 +625,15 @@ This file is distributed under the GNU Affero General Public License
                         <h4 class="h4 h4-palga">{{'Review by PALGA privacy commitee'|translate}}</h4>
                         <hr>
 
-                        <!-- Is sent to privacy commitee -->
-                        <!--
-                        <div class="form-group" ng-class="">
-                            <label class="control-label col-sm-3">
-                                &nbsp;
-                            </label>
-                            <div class="col-sm-8">
-                                <input type="checkbox" id="sentToPrivacyComm" name="sentToPrivacyComm" value="1"
-                                       ng-model="request.sentToPrivacyCommittee"> &nbsp;
-                                <label class="normal" for="sentToPrivacyComm">{{
-                                'This request was sent by email to the privacy committee.' | translate }}</label>
-                            </div>
-                        </div>
-                        -->
-
                         <!-- Privacy committee result rationale -->
                         <div class="form-group">
-                            <label class="control-label col-sm-3" for="privacyCommitteeRationale">{{'Review PPC' | translate}}</label>
+                            <label class="control-label col-sm-3">{{'Review PPC' | translate}}</label>
                             <div class="col-sm-8">
-                            <div ng-repeat="option in privacyCommitteeRationaleOptions">
-                            <input name="privacyCommitteeRationale" type="radio" id="radio-{{option}}"
-                                ng-model="request.privacyCommitteeRationale" value="{{option}}">
-                            <label class="normal" for="radio-{{option}}">{{option | translate}}</label>
-                            </div>
+                                <div ng-repeat="option in privacyCommitteeRationaleOptions">
+                                    <input name="privacyCommitteeRationale" type="radio" id="radio-{{option}}"
+                                        ng-model="request.privacyCommitteeRationale" value="{{option}}">
+                                    <label class="normal" for="radio-{{option}}">{{option | translate}}</label>
+                                </div>
                             </div>
                         </div>
 

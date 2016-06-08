@@ -70,7 +70,6 @@ This file is distributed under the GNU Affero General Public License
                         <tr class="no-print">
                             <th class="no-print">&nbsp;</th>
                             <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <!--<th>&nbsp;</th>-->
                             <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
@@ -79,7 +78,6 @@ This file is distributed under the GNU Affero General Public License
                                     <option value="true" ng-selected="activeSidebar === 'hub_assistance_requested'">{{ 'Yes' | translate}}</option>
                                     <option value="false">{{ 'No' | translate}}</option>
                                 </select></td>
-                            <!--<th><input st-search="dateCreated" placeholder="Filter by date" class="input-sm form-control" type="search"/></th>-->
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
@@ -109,8 +107,6 @@ This file is distributed under the GNU Affero General Public License
                                 ng-model="selected_lab_requests[labRequest.id]" />
                         </td>
                         <td>
-                            <!--{{labRequest.id}}-->
-                            <!--{{labRequest.request.processInstanceId}} - {{labRequest.lab.number}}-->
                           <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.labRequestCode}}</a>
                         </td>
                         <td>

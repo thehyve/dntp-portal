@@ -112,9 +112,10 @@ This file is distributed under the GNU Affero General Public License
                             </div>
                         </div>
 
-                        <div ng-if="isRequester()">
+                        <div ng-if="isRequester() || isLabUser()">
                             <!--Requester info-->
                             <!--Displayed only to users with non requester role-->
+
                             <!-- Requester -->
                             <div class="row">
                                 <label class="control-label col-xs-4 col-md-2">{{ 'Requester' | translate }}</label>
@@ -125,6 +126,23 @@ This file is distributed under the GNU Affero General Public License
                                     </p>
                                 </div>
                             </div>
+
+                            <!-- Pathologist name -->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist' | translate }}</label>
+                                <p class="col-xs-6 col-sm-6">
+                                    {{labRequest.request.pathologistName}}
+                                </p>
+                            </div>
+
+                            <!-- Pathologist email -->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist email' | translate }}</label>
+                                <p class="col-xs-6 col-sm-6">
+                                    {{labRequest.request.pathologistEmail}}
+                                </p>
+                            </div>
+
                         </div> <!-- end if -->
 
                         <!--Requester lab Info-->
@@ -137,7 +155,7 @@ This file is distributed under the GNU Affero General Public License
                                 <p class="form-control-static">
                                     {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
                                     {{labRequest.requesterLab.name}}
-                                <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddress"></address>
+                                <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
                                 </p>
                             </div>
                         </div>

@@ -108,12 +108,13 @@ angular.module('ProcessApp.controllers')
             /**
              * Get address in html format
              * @param contactData
+             * @param noEmail
              * @returns {string}
              */
-            var getHTMLAddress = function (contactData) {
+            var getHTMLAddress = function (contactData, noEmail) {
 
                 var _createEmailTmp = function (email) {
-                    return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' + 
+                    return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' +
                         email + '">' + email + '</a>';
                 };
 
@@ -129,19 +130,20 @@ angular.module('ProcessApp.controllers')
                     .concat(contactData.city !== null || contactData.postalCode !== null ? '<br>' : '')
                     .concat(contactData.country !== null ? contactData.country + '<br>' : '')
                     .concat(contactData.telephone !== null ? _createPhoneTmp(contactData.telephone) + '<br>' : '')
-                    .concat(contactData.email !== null ? _createEmailTmp(contactData.email) + '<br>' : '')
+                    .concat(contactData.email !== null && !noEmail ? _createEmailTmp(contactData.email) + '<br>' : '')
                     : '';
             };
 
             /**
              * Get address in html format
              * @param contactData
+             * @param noEmail
              * @returns {string}
              */
-            var getHTMLAddressForLab = function (lab) {
+            var getHTMLAddressForLab = function (lab, noEmail) {
                 var contactData = lab.contactData;
                 contactData.email = lab.emailAddresses.join(', ');
-                return getHTMLAddress(contactData);
+                return getHTMLAddress(contactData, noEmail);
             };
 
             /**
@@ -162,6 +164,7 @@ angular.module('ProcessApp.controllers')
                     $scope.labRequest = result;
                     $scope.labRequest.htmlRequesterAddress = getHTMLAddress($scope.labRequest.requester.contactData);
                     $scope.labRequest.htmlRequesterLabAddress = getHTMLAddressForLab($scope.labRequest.requesterLab);
+                    $scope.labRequest.htmlRequesterLabAddressPrint = getHTMLAddressForLab($scope.labRequest.requesterLab, true);
                     $scope.labRequest.htmlLabAddress = getHTMLAddressForLab($scope.labRequest.lab);
                     deferred.resolve($scope.labRequest);
                 }, function (err) {

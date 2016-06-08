@@ -5,11 +5,18 @@
  */
 package business.services;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,8 +34,16 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.format.datetime.DateFormatter;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import com.opencsv.CSVWriter;
+
+import business.exceptions.FileDownloadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
@@ -38,10 +53,11 @@ import business.models.User;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
-import business.security.UserAuthenticationToken;
 
 @Service
 public class RequestService {
+
+    public static final String CSV_CHARACTER_ENCODING = "UTF-8";
 
     Log log = LogFactory.getLog(getClass());
 
@@ -375,6 +391,75 @@ public class RequestService {
         RequestRepresentation childRequest = new RequestRepresentation();
         requestFormService.transferData(childInstance, childRequest, null);
         return childRequest;
+    }
+
+    final static String[] CSV_COLUMN_NAMES = {
+            "Request number",
+            "Date created",
+            "Numbers only",
+            "Excerpts",
+            "PA reports",
+            "PA material",
+            "Clinical data",
+            "Requester name",
+            "Requester lab",
+            "Specialism",
+            "# Hub assistance lab requests",
+            "Pathologist"
+    };
+
+    final static Locale LOCALE = Locale.getDefault();
+
+    final static DateFormatter DATE_FORMATTER = new DateFormatter("yyyy-MM-dd");
+
+    public HttpEntity<InputStreamResource> writeRequestListCsv(List<RequestRepresentation> requests) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Writer writer = new OutputStreamWriter(out, CSV_CHARACTER_ENCODING);
+            CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
+            csvwriter.writeNext(CSV_COLUMN_NAMES);
+
+            for (RequestRepresentation request: requests) {
+                List<String> values = new ArrayList<>();
+                values.add(request.getRequestNumber());
+                values.add(DATE_FORMATTER.print(request.getDateCreated(), LOCALE));
+                values.add(Boolean.toString(request.isStatisticsRequest()));
+                values.add(Boolean.toString(request.isExcerptsRequest()));
+                values.add(Boolean.toString(request.isPaReportRequest()));
+                values.add(Boolean.toString(request.isMaterialsRequest()));
+                values.add(Boolean.toString(request.isClinicalDataRequest()));
+                values.add(request.getRequesterName());
+                values.add(request.getLab().getNumber().toString());
+                values.add(request.getRequester().getSpecialism());
+                values.add(labRequestService.countHubAssistanceLabRequestsForRequest(
+                        request.getProcessInstanceId()).toString());
+                values.add(request.getPathologistName());
+                csvwriter.writeNext(values.toArray(new String[]{}));
+            }
+            csvwriter.flush();
+            writer.flush();
+            out.flush();
+            InputStream in = new ByteArrayInputStream(out.toByteArray());
+            csvwriter.close();
+            writer.close();
+            out.close();
+            InputStreamResource resource = new InputStreamResource(in);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.valueOf("text/csv"));
+            String filename = "requests_" +
+                    DATE_FORMATTER.print(new Date(), LOCALE) +
+                    ".csv";
+            headers.set("Content-Disposition",
+                       "attachment; filename=" + filename);
+            HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
+            log.info("Returning reponse.");
+            return response;
+        } catch (IOException e) {
+            log.error(e.getStackTrace());
+            log.error(e.getMessage());
+            throw new FileDownloadError();
+        }
+
     }
 
 }

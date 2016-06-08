@@ -14,7 +14,7 @@ import business.models.ContactData;
 import business.models.Lab;
 import business.models.RequestProperties.ReviewStatus;
 
-public class RequestRepresentation {
+public class RequestRepresentation implements RequestListElement {
 
     private String processInstanceId;
     private String processId;

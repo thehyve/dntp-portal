@@ -9,10 +9,10 @@ import java.util.Comparator;
 
 import org.springframework.stereotype.Component;
 
-import business.representation.RequestListRepresentation;
+import business.representation.RequestListElement;
 
 @Component
-public class RequestListRepresentationComparator implements Comparator<RequestListRepresentation> {
+public class RequestListRepresentationComparator implements Comparator<RequestListElement> {
 
     public int compareRequestNumbers(String number0, String number1) {
         int year0 = -1;
@@ -42,7 +42,7 @@ public class RequestListRepresentationComparator implements Comparator<RequestLi
     }
 
     @Override
-    public int compare(RequestListRepresentation arg0, RequestListRepresentation arg1) {
+    public int compare(RequestListElement arg0, RequestListElement arg1) {
         if (arg0.getProcessInstanceId().equals(arg1.getProcessInstanceId())) {
             return 0;
         }

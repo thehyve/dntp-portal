@@ -204,6 +204,13 @@
         'Other data files': 'Overige databestanden',
         'No data files.': 'Geen databestanden.',
         'Upload data files': 'Databestanden uploaden',
+        'The file with PALGA data is ready for download.': 'Het bestand met PALGA-gegevens staat voor u klaar.',
+
+        'Request number': 'Aanvraagnummer',
+        'Additional requests': 'Aanvullende verzoeken',
+        'Create additional request': 'Aanvullend verzoek aanmaken',
+        'Are you sure you want to create an additional request?': 'Weet je zeker dat je een aanvullend verzoek wilt aanmaken?',
+        'No additional requests.': 'Geen aanvullende verzoeken.',
 
         /* ========= */
         /* Login */
@@ -435,6 +442,10 @@
         'Returned': 'Retour ontvangen',
         'Completed': 'Afgerond',
         'Closed': 'Afgesloten',
+
+        'Approved, waiting for data': 'Goedgekeurd, wachten op data',
+        'Data delivered': 'Data geleverd',
+        'Data delivered, select excerpts': 'Data geleverd, excerptselectie',
 
         'Download ...': '{{filename}} downloaden',
         'Uploading ?' : 'Bezig met uploaden van {{filename}}',

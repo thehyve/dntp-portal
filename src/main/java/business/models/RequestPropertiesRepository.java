@@ -29,4 +29,7 @@ public interface RequestPropertiesRepository extends JpaRepository<RequestProper
     @Query("SELECT p.requestNumber FROM RequestProperties p WHERE processInstanceId = :processInstanceId)")
     String getRequestNumberByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
 
+    @Query("SELECT COUNT(da.id) FROM RequestProperties p JOIN p.dataAttachments da WHERE p.processInstanceId = :processInstanceId")
+    long countDataAttachmentsByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
+
 }

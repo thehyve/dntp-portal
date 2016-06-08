@@ -55,6 +55,10 @@ public class RequestListRepresentation {
     private List<FileRepresentation> dataAttachments;
     private List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments;
 
+    private boolean excerptListUploaded;
+
+    private Long dataAttachmentCount;
+
     public RequestListRepresentation() {
 
     }
@@ -334,6 +338,22 @@ public class RequestListRepresentation {
     public void setMedicalEthicalCommitteeApprovalAttachments(
             List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments) {
         this.medicalEthicalCommitteeApprovalAttachments = medicalEthicalCommitteeApprovalAttachments;
+    }
+
+    public boolean isExcerptListUploaded() {
+        return excerptListUploaded;
+    }
+
+    public void setExcerptListUploaded(boolean excerptListUploaded) {
+        this.excerptListUploaded = excerptListUploaded;
+    }
+
+    public Long getDataAttachmentCount() {
+        return dataAttachmentCount;
+    }
+
+    public void setDataAttachmentCount(Long dataAttachmentCount) {
+        this.dataAttachmentCount = dataAttachmentCount;
     }
 
 }

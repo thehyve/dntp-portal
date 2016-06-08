@@ -128,6 +128,8 @@ public class RequestFormService {
         request.setProcessInstanceId(instance.getId());
         request.setProcessId(instance.getProcessDefinitionId());
         request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
+        request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
+        request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
 
         Map<String, Object> variables = instance.getProcessVariables();
 
@@ -337,6 +339,8 @@ public class RequestFormService {
                     }
                 }
             }
+            request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
+            request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
             request.setRequestNumber(properties.getRequestNumber());

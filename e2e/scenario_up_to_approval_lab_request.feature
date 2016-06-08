@@ -93,7 +93,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And I go to the 'requests' page
-    Then request 'Request 2' should have status 'Data delivery and selection'
+    Then request 'Request 2' should have status 'Data delivered, select excerpts'
 
   Scenario: 5a check receipt of excerpt lists
     Given I am on the requests page

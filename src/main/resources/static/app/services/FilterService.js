@@ -57,10 +57,37 @@ angular.module('ProcessApp.services')
                     .value();
             };
 
+            var _matchesStatus = function(status) {
+                switch(status) {
+                case 'Approved, waiting for data':
+                    return function(request) {
+                        return request.status == 'DataDelivery' && (
+                            (request.statisticsRequest && request.dataAttachmentCount == 0) ||
+                            (!request.statisticsRequest && !request.excerptListUploaded));
+                    };
+                case 'Data delivered':
+                    return function(request) {
+                    return request.status == 'DataDelivery' &&
+                        (request.statisticsRequest && request.dataAttachmentCount > 0) ||
+                        (request.excerptListUploaded &&
+                        !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest));
+                    };
+                case 'Data delivered, select excerpts':
+                    return function(request) {
+                        var result = request.status == 'DataDelivery' &&
+                            request.excerptListUploaded &&
+                            (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest);
+                        return result;
+                    };
+                default:
+                    return _.matches({status: status});
+                }
+            };
+
             filterService.selectByStatus = function (status) {
                 return function (requests) {
                     return _.chain(requests)
-                        .filter(_.matches({status: status}))
+                        .filter(_matchesStatus(status))
                         .filter(_isNotSuspended)
                         .value();
                 };

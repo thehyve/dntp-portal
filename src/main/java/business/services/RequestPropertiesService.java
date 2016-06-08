@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.InputStreamResource;
@@ -41,6 +42,7 @@ public class RequestPropertiesService {
     FileService fileService;
 
 
+    @CacheEvict(value = "dataattachmentcount", key = "#properties.processInstanceId")
     @Transactional
     public RequestProperties save(RequestProperties properties) {
         return requestPropertiesRepository.save(properties);
@@ -58,6 +60,11 @@ public class RequestPropertiesService {
             log.warn("RequestPropertiesService: query took " + (end.getTime() - start.getTime()) + " ms.");
         }
         return properties;
+    }
+
+    @Cacheable("dataattachmentcount")
+    public Long getDataAttachmentCount(String processInstanceId) {
+        return requestPropertiesRepository.countDataAttachmentsByProcessInstanceId(processInstanceId);
     }
 
     @Cacheable("requestnumber")

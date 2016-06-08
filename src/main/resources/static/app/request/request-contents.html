@@ -3,7 +3,7 @@
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Status' | translate }}</label>
         <p class="col-xs-6 col-sm-6">
-            {{request.status |translate}}
+            {{ getStatusText(request) | translate}}
             <br>
         </p>
     </div>
@@ -42,12 +42,13 @@
     <div ng-if="!request.parent && (isPalga() || request.children.length > 0 )">
         <h4 class="h4">{{'Additional requests' | translate}}</h4>
         <button class="btn btn-default" type="button" ng-click="fork(request)"
-                title="{{'Add additional request' | translate}}"
+                title="{{'Create additional request' | translate}}"
                 ng-if="!request.parent && isPalga() && request.status == 'LabRequest' && isForkEnabled(request)">
             <span><i class="glyphicon glyphicon-duplicate"></i></span>
             {{'Create additional request' | translate}}
         </button>
-        <table class="table table-striped">
+        <em ng-if="request.children.length == 0">{{'No additional requests.'|translate}}</em>
+        <table ng-if="request.children.length > 0" class="table table-striped">
         <thead>
         <tr>
             <th style="width: 33.3%">{{'Request number' | translate}}</th>
@@ -83,7 +84,8 @@
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Principal investigator email' | translate }}</label>
         <p class="col-xs-6 col-sm-6">
-            {{request.contactPersonEmail}}
+            <span><i class="glyphicon glyphicon-envelope"></i></span>
+            <a class="no-print-url" href="mailto:{{request.contactPersonEmail}}">{{request.contactPersonEmail}}</a>
         </p>
     </div>
 
@@ -99,7 +101,8 @@
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist email' | translate }}</label>
         <p class="col-xs-6 col-sm-6">
-            {{request.pathologistEmail}}
+            <span><i class="glyphicon glyphicon-envelope"></i></span>
+            <a class="no-print-url" href="mailto:{{request.pathologistEmail}}">{{request.pathologistEmail}}</a>
         </p>
     </div>
 

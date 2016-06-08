@@ -57,11 +57,27 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.getStatusText = function(request) {
+                if (request.status == 'DataDelivery') {
+                    if (request.statisticsRequest && request.dataAttachmentCount > 0) {
+                        return 'Data delivered';
+                    } else if (request.excerptListUploaded &&
+                            (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)) {
+                        return 'Data delivered, select excerpts';
+                    } else {
+                        return 'Approved, waiting for data';
+                    }
+                } else {
+                    return request.status;
+                }
+            };
+
             $scope.getRequests = function() {
                 Request.query().$promise.then(function(response) {
                     $scope.allRequests = response ? response : [];
                     $scope.allRequests.forEach(function(req) {
                         req.number = Request.convertRequestNumber(req);
+                        req.statusText = $scope.getStatusText(req);
                         //req.type = Request.convertRequestOptsToType(req);
                     });
                 }, function(response) {
@@ -185,6 +201,7 @@ angular.module('ProcessApp.controllers')
                 request.agreementAttachments = result.agreementAttachments;
                 request.excerptList = result.excerptList;
                 request.dataAttachments = result.dataAttachments;
+                request.dataAttachmentCount = result.dataAttachments.length;
                 request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 

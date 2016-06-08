@@ -333,7 +333,7 @@
     </div>
 
 
-    <div ng-if="request.status=='Approval' && isPalga()">
+    <div ng-if="isPalga()">
 
         <!--*****************-->
         <!--Privacy Committee-->
@@ -388,7 +388,7 @@
 
     <!--Approvals-->
     <div ng-include="'app/request/approvals.html'"
-         ng-if="(request.status=='Approval' && isPalga()) ||
+         ng-if="isPalga() ||
                 ((request.status=='Approval' || request.approvalVotes != null) && isScientificCouncil() )">
     </div>
     <!--Comments-->

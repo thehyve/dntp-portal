@@ -96,7 +96,8 @@ The location of the file is: {{serverurl}}/#/request/view/{{request.processInsta
 With kind regards,%0A
 Stichting PALGA%0A
 088-0402700 / aanvraag@palga.nl%0A"
-                ng-if="isPalga() && request.status == 'DataDelivery' && request.excerptList"
+                ng-if="isPalga() && request.status == 'DataDelivery' &&
+                (request.excerptList || (request.dataAttachments && request.dataAttachments.length > 0))"
                 class="btn btn-default" role="button" title="{{'Compose notification mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose notification mail' | translate}}
@@ -137,7 +138,7 @@ Stichting PALGA%0A
                     {{'Unclaim' | translate}}
                 </button>
                 <button class="btn btn-default" type="button" ng-click="remove(request)" title="{{'Delete' | translate}}"
-                        ng-if="isMyRequest(request) && request.status == 'Open'">
+                        ng-if="isMyRequest(request) && request.status == 'Open' && !request.reopenRequest">
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                     {{'Delete' | translate}}
                 </button>

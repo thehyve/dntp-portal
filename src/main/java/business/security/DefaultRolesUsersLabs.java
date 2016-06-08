@@ -115,7 +115,7 @@ public class DefaultRolesUsersLabs {
             }
             List<String> emailAddresses = new ArrayList<>(Arrays.asList(new String[]{
                 getEmailAddress("lab_" + l.getNumber()),
-                getEmailAddress("lab_" + l.getNumber())
+                getEmailAddress("lab_" + l.getNumber() + "_test")
             }));
             if (!emailAddresses.equals(l.getEmailAddresses())) {
                 log.debug("Updating email addresses for lab " + l.getNumber() + ".");

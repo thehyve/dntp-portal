@@ -32,8 +32,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import business.exceptions.ExcerptListDownloadError;
 import business.exceptions.ExcerptListNotFound;
 import business.exceptions.ExcerptListUploadError;

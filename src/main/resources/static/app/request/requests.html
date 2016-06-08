@@ -73,6 +73,7 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="number" style="width: 6em" class="sortable">#</th>
                         <th st-sort="title" class="sortable">{{'Title'|translate}}</th>
                         <th st-sort="status" class="sortable">{{'Status'|translate}}</th>
+                        <th></th>
                         <th>{{'Request type'|translate}}</th>
                         <th ng-if="isPalga()">{{'Data linkage'|translate}}</th>
                         <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
@@ -86,13 +87,14 @@ This file is distributed under the GNU Affero General Public License
                         <th class="no-print">&nbsp;</th>
                         <th><input st-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th><select st-search="status" class="input-sm form-control" type="search" st-input-event="change">
+                        <th><select st-search="statusText" class="input-sm form-control" type="search" st-input-event="change">
                                 <option value="">{{'Filter by status' | translate}}</option>
                                 <option ng-repeat="status in statuses"
                                     ng-selected="status === activeSidebar"
                                     value="{{status}}">{{ status | translate}}</option>
                             </select>
                         </th>
+                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th ng-if="isPalga()">&nbsp;</th>
                         <th ng-if="isRequester()">&nbsp;</th>
@@ -104,7 +106,7 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th colspan="{{isPalga() ? 8 : (isScientificCouncil() ? 6 : 6)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="{{isPalga() ? 9 : (isScientificCouncil() ? 7 : 7)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -118,10 +120,16 @@ This file is distributed under the GNU Affero General Public License
                         </td>
                         <td>{{req.requestNumber}}</td>
                         <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
-                        <td class="request-status">{{req.status | translate}}
+                        <td class="request-status">
+                            {{ getStatusText(req) | translate}}
                             <span class="badge" ng-if="req.status=='Approval' && isPalga()" >
                             {{req.numberOfApprovalVotes ? req.numberOfApprovalVotes : 0 }}
                             </span>
+                        </td>
+                        <td>
+                        <span ng-if="(req.statisticsRequest && req.dataAttachmentCount > 0) || req.excerptListUploaded"
+                            title="{{'The file with PALGA data is ready for download.'|translate}}"
+                            ><i class="glyphicon glyphicon-paperclip"></i></span>
                         </td>
                         <td>
                             <div ng-if="req.statisticsRequest">{{'Numbers only, exploratory request'|translate}}<br /></div>
@@ -190,7 +198,7 @@ This file is distributed under the GNU Affero General Public License
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="{{isPalga() ? 10 : (isScientificCouncil() ? 8 : 8)}}" class="text-center">
+                            <td colspan="{{isPalga() ? 11 : (isScientificCouncil() ? 9 : 9)}}" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
                             </td>
                         </tr>

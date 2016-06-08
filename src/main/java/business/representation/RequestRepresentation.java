@@ -74,11 +74,15 @@ public class RequestRepresentation {
 
     private List<CommentRepresentation> approvalComments;
     private Map<Long, ApprovalVoteRepresentation> approvalVotes;
-    
+
+    private boolean excerptListUploaded;
+
+    private Long dataAttachmentCount;
+
     private ExcerptListRepresentation excerptList;
-    
+
     private Set<Integer> selectedLabs;
-    
+
     // Palga specific
     private boolean requesterValid;
     private boolean requesterAllowed;
@@ -505,6 +509,22 @@ public class RequestRepresentation {
 
     public void setPrivacyCommitteeOutcome(String privacyCommitteeOutcome) {
         this.privacyCommitteeOutcome = privacyCommitteeOutcome;
+    }
+
+    public boolean isExcerptListUploaded() {
+        return excerptListUploaded;
+    }
+
+    public void setExcerptListUploaded(boolean excerptListUploaded) {
+        this.excerptListUploaded = excerptListUploaded;
+    }
+
+    public Long getDataAttachmentCount() {
+        return dataAttachmentCount;
+    }
+
+    public void setDataAttachmentCount(Long dataAttachmentCount) {
+        this.dataAttachmentCount = dataAttachmentCount;
     }
 
     public ExcerptListRepresentation getExcerptList() {

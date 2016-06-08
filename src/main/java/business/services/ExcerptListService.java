@@ -26,6 +26,8 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -89,6 +91,11 @@ public class ExcerptListService {
         return result;
     }
 
+    @Cacheable("excerptlistexists")
+    public Boolean hasExcerptList(String processInstanceId) {
+        return excerptListRepository.findByProcessInstanceId(processInstanceId) != null;
+    }
+
     public Integer countEntriesByExcerptListId(Long excerptListId) {
         return excerptEntryRepository.countByExcerptListId(excerptListId);
     }
@@ -110,6 +117,7 @@ public class ExcerptListService {
         }
     }
 
+    @CacheEvict(value = "excerptlistexists", key = "#list.processInstanceId")
     @Transactional
     public ExcerptList save(ExcerptList list) {
         return excerptListRepository.save(list);
@@ -135,6 +143,7 @@ public class ExcerptListService {
         return result;
     }
 
+    @CacheEvict(value = "excerptListExists", key = "#list.processInstanceId")
     @Transactional
     public ExcerptList processExcerptList(ExcerptList list, InputStream input) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();

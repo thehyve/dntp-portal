@@ -3,7 +3,7 @@
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Status' | translate }}</label>
         <p class="col-xs-6 col-sm-6">
-            {{request.status |translate}}
+            {{ getStatusText(request) | translate}}
             <br>
         </p>
     </div>

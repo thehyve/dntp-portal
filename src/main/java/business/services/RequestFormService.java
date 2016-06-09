@@ -139,6 +139,7 @@ public class RequestFormService {
             request.setResearchQuestion((String)variables.get("research_question"));
             request.setHypothesis((String) variables.get("hypothesis"));
             request.setMethods((String) variables.get("methods"));
+
             request.setPathologistName((String)variables.get("pathologist_name"));
             request.setPathologistEmail((String)variables.get("pathologist_email"));
             request.setContactPersonName((String)variables.get("contact_person_name"));
@@ -345,8 +346,14 @@ public class RequestFormService {
                     instance.getId());
             request.setRequestNumber(properties.getRequestNumber());
             request.setReviewStatus(properties.getReviewStatus());
+
+            request.setSearchCriteria(properties.getSearchCriteria());
+            request.setStudyPeriod(properties.getStudyPeriod());
+            request.setLaboratoryTechniques(properties.getLaboratoryTechniques());
+
             request.setBillingAddress(properties.getBillingAddress());
             request.setChargeNumber(properties.getChargeNumber());
+            request.setGrantProvider(properties.getGrantProvider());
             request.setResearchNumber(properties.getReseachNumber());
 
             {
@@ -534,7 +541,13 @@ public class RequestFormService {
         variables.put("contact_person_email", request.getContactPersonEmail());
 
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
+
+        properties.setSearchCriteria(request.getSearchCriteria());
+        properties.setStudyPeriod(request.getStudyPeriod());
+        properties.setLaboratoryTechniques(request.getLaboratoryTechniques());
+
         properties.setChargeNumber(request.getChargeNumber());
+        properties.setGrantProvider(request.getGrantProvider());
         properties.setReseachNumber(request.getResearchNumber());
         ContactData billingAddress;
         if (request.getBillingAddress() != null) {

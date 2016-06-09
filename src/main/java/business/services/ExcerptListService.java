@@ -54,7 +54,7 @@ import business.representation.RequestRepresentation;
 @Service
 public class ExcerptListService {
 
-    public static final String EXCERPT_LIST_CHARACTER_ENCODING = "UTF-8";
+    public static final String EXCERPT_LIST_CHARACTER_ENCODING = "ISO-8859-1";
 
     Log log = LogFactory.getLog(getClass());
 
@@ -261,7 +261,7 @@ public class ExcerptListService {
             out.close();
             InputStreamResource resource = new InputStreamResource(in);
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.valueOf("text/csv"));
+            headers.setContentType(MediaType.valueOf("text/csv;charset=" + EXCERPT_LIST_CHARACTER_ENCODING));
             String filename = (selectedOnly ? "selection" : "excerpts")
                                 + "_" + list.getProcessInstanceId() + ".csv";
             headers.set("Content-Disposition",

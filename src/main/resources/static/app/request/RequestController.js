@@ -23,7 +23,7 @@ angular.module('ProcessApp.controllers')
                   $templateCache, $http,
                   AgreementFormTemplate) {
 
-            $scope.statuses = Request.statuses;
+            $scope.displayStatuses = Request.displayStatuses;
 
             $scope.claimableStates = Request.claimableStates;
 
@@ -59,7 +59,9 @@ angular.module('ProcessApp.controllers')
 
             $scope.getStatusText = function(request) {
                 if (request.status == 'DataDelivery') {
-                    if (request.statisticsRequest && request.dataAttachmentCount > 0) {
+                    if ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
+                        (request.excerptListUploaded &&
+                            !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest))) {
                         return 'Data delivered';
                     } else if (request.excerptListUploaded &&
                             (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)) {

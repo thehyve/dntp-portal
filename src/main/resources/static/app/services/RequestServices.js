@@ -218,6 +218,17 @@
             'Open',
             'Review',
             'Approval',
+            'DataDelivery',
+            'SelectionReview',
+            'LabRequest',
+            'Rejected',
+            'Closed'
+        ];
+
+        _requestFactory.displayStatuses = [
+            'Open',
+            'Review',
+            'Approval',
             'Approved, waiting for data',
             'Data delivered',
             'Data delivered, select excerpts',
@@ -242,9 +253,9 @@
         ];
 
         _requestFactory.statusesForRole = {
-            'palga': _requestFactory.statuses,
-            'requester': _requestFactory.statuses,
-            'scientific_council': _.difference(_requestFactory.statuses,
+            'palga': _requestFactory.displayStatuses,
+            'requester': _requestFactory.displayStatuses,
+            'scientific_council': _.difference(_requestFactory.displayStatuses,
                     ['Open', 'Review']),
             'lab_user': ['LabRequest', 'Rejected', 'Closed'],
             'hub_user': ['LabRequest', 'Rejected', 'Closed']

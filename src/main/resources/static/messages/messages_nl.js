@@ -377,6 +377,8 @@
         'Clinical data has NOT been sent to the requester.': 'Klinische gegevens zijn NIET naar de aanvrager verstuurd.',
         'Update clinical data status': 'Verzendstatus klinische data opslaan',
         'The lab request has been approved.': 'Het labverzoek is goedgekeurd.',
+        'A researcher has requested data and/or materials from your lab.' : 'Een onderzoeker heeft gegevens en/of materiaal gevraagd aan uw lab.',
+        'Select "Approve" to accept or "Reject" to decline this request.' : 'Als u instemt met het verzoek, kies dan "Goedkeuren" anders "Afwijzen".',
 
         /* ===================== */
         /* User overview */

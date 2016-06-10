@@ -3,330 +3,365 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
+
 <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-    <form class="form-horizontal" role="form" name="labRequestEditForm" novalidate ng-keypress="cancelByEscKey($event, request);">
+            <form class="form-horizontal" role="form" name="labRequestEditForm" novalidate
+                  ng-keypress="cancelByEscKey($event, request);">
 
-      <!--HEADER-->
-      <div class="modal-header">
-        <!--<h3 class="modal-title">{{'Lab request' | translate}}: {{labRequest.id}}</h3>-->
-        <h3 class="modal-title">{{'Lab request' | translate}}: {{labRequest.labRequestCode}}</h3>
-      </div>
+                <!--HEADER-->
+                <div class="modal-header">
+                    <h3 class="modal-title">{{'Lab request' | translate}}: {{labRequest.labRequestCode}}</h3>
+                </div>
 
-      <!--BODY-->
-      <div class="modal-body form-horizontal">
+                <!--BODY-->
+                <div class="modal-body form-horizontal">
+                    <!-- Alert -->
+                    <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                ng-click="closeAlert();">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{alert.msg | translate}}
+                    </div>
 
-        <!-- Alert -->
-        <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="closeAlert();">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            {{alert.msg | translate}}
-        </div>
+                    <!--Status-->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
+                        <p class="col-sm-7 form-control-static">
+                            {{labRequest.status | translate}}
+                        </p>
+                    </div>
 
-        <!--Status-->
-        <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Status' | translate }}</label>
-          <p class="col-sm-7 form-control-static">
-            {{labRequest.status | translate}}
-            <br>
-          </p>
-        </div>
+                    <!--Rejected details-->
+                    <div ng-if="labRequest.status == 'Rejected'">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">{{ 'Reject date' | translate }}</label>
+                            <p class="col-sm-7 form-control-static">
+                                {{labRequest.rejectDate | date}}
+                            </p>
+                        </div>
+                        <div class="form-group" ng-if="isLabUser()">
+                            <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
+                            <p class="col-sm-7 form-control-static">
+                                {{labRequest.rejectReason}}
+                                <a href="mailto:{{labRequest.requesterEmail}} ?
+                                            subject=Lab request rejected, request number {{labRequest.labRequestCode}}
+                                            &amp;
+                                            body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}">
+                                    <button
+                                            class="btn btn-default" type="button"
+                                            title="{{'Compose rejection mail' | translate}}">
+                                        <span><i class="glyphicon glyphicon-envelope"></i></span>
+                                        {{'Compose rejection mail' | translate}}
+                                    </button>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
 
-        <!--Rejected details-->
-        <div ng-if="labRequest.status == 'Rejected'">
-        <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Reject date' | translate }}</label>
-          <p class="col-sm-7 form-control-static">
-            {{labRequest.rejectDate | date}}
-            <br>
-          </p>
-        </div>
-        <div class="form-group" ng-if="isLabUser()">
-          <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
-          <p class="col-sm-7 form-control-static">
-            {{labRequest.rejectReason}}
-            <br><br>
-            <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected, request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}
-                ">
-            <button
-            class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
-                <span><i class="glyphicon glyphicon-envelope"></i></span>
-                {{'Compose rejection mail' | translate}}
-            </button></a>
-          </p>
-        </div>
-        </div>
+                    <!--Parent request details-->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">{{ 'Request title' | translate }}</label>
+                        <p class="col-sm-7 form-control-static">
+                            {{labRequest.request.title}}
+                            <br>
+                        </p>
+                    </div>
 
-        <!--Parent request details-->
-        <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Request title' | translate }}</label>
-          <p class="col-sm-7 form-control-static">
-            {{labRequest.request.title}}
-            <br>
-          </p>
-        </div>
-        <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Creation date' | translate }}</label>
-          <p class="col-sm-7 form-control-static">
-            {{labRequest.request.dateCreated | date }}
-            <br>
-          </p>
-        </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">{{ 'Creation date' | translate }}</label>
+                        <p class="col-sm-7 form-control-static">
+                            {{labRequest.request.dateCreated | date }}
+                            <br>
+                        </p>
+                    </div>
 
-        <div ng-if="isRequester()" >
-          <!--Requester info-->
-          <!--Displayed only to users with non requester role-->
-          <div class="form-group">
-            <label class="control-label col-sm-3">{{ 'Requester name' | translate }}</label>
-            <p class="col-sm-7 form-control-static">
-              {{labRequest.requesterName}}
-              <br>
-            </p>
-          </div>
+                    <div ng-if="isRequester()">
+                        <!--Requester info-->
+                        <!--Displayed only to users with non requester role-->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">{{ 'Requester name' | translate }}</label>
+                            <p class="col-sm-7 form-control-static">
+                                {{labRequest.requesterName}}
+                                <br>
+                            </p>
+                        </div>
 
-          <div class="form-group">
-            <label class="control-label col-sm-3">{{ 'Email' | translate }}</label>
-            <p class="col-sm-7 form-control-static">
-              {{labRequest.requesterEmail}}
-              <br>
-            </p>
-          </div>
-        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">{{ 'Email' | translate }}</label>
+                            <p class="col-sm-7 form-control-static">
+                                {{labRequest.requesterEmail}}
+                                <br>
+                            </p>
+                        </div>
+                    </div>
 
-        <div ng-if="!isLabUser()" >
-          <!--Lab Info-->
-          <!--Displayed only to users with non lab user role-->
-          <div class="form-group">
-            <label class="control-label col-sm-3">{{ 'Lab' | translate }}</label>
-            <p class="col-sm-7 form-control-static">
-              {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
-              <br>
-            </p>
-          </div>
-        </div>
+                    <div ng-if="!isLabUser()">
+                        <!--Lab Info-->
+                        <!--Displayed only to users with non lab user role-->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">{{ 'Lab' | translate }}</label>
+                            <p class="col-sm-7 form-control-static">
+                                {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
+                                <br>
+                            </p>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-          <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
-          <p class="col-sm-7 form-control-static">
-            {{labRequest.requesterEmail}}
-            <br>
-          </p>
-        </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
+                        <p class="col-sm-7 form-control-static">
+                            {{labRequest.requesterEmail}}
+                            <br>
+                        </p>
+                    </div>
 
-        <!-- PA reports -->
-        <div class="panel panel-default"
-            ng-if="
+                    <!-- PA reports -->
+                    <div class="panel panel-default"
+                         ng-if="
             isLabOrHubUserStatus(labRequest.status) &&
             labRequest.status != 'Waiting for lab approval' &&
             labRequest.status != 'Rejected' &&
             labRequest.request.paReportRequest">
-          <div class="panel-heading">
-            <h4>{{'PA reports'|translate}}</h4>
-          </div>
-          <div class="panel-body">
+                        <div class="panel-heading">
+                            <h4>{{'PA reports'|translate}}</h4>
+                        </div>
+                        <div class="panel-body">
 
-          <div class="col-sm-8">
-            <input type="checkbox" id="paReportsSent" name="paReportsSent"
-                   ng-model="labRequest.paReportsSent"> &nbsp;
-            <label class="normal" for="paReportsSent">{{ 'PA reports have been sent to the requester.' | translate }}</label>
-          </div>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="paReportsSent" name="paReportsSent"
+                                       ng-model="labRequest.paReportsSent"> &nbsp;
+                                <label class="normal" for="paReportsSent">
+                                    {{ 'PA reports have been sent to the requester.' | translate }}
+                                </label>
+                            </div>
 
-          </div>
+                        </div>
 
-          <div class="panel-footer clearfix">
+                        <div class="panel-footer clearfix">
               <span class="pull-right">
                 <button class="btn btn-default btn-primary"
-                    ng-if="labRequest.request.paReportRequest"
-                    ng-click="update(labRequest);">{{'Update PA reports status'|translate}}</button>
+                        ng-if="labRequest.request.paReportRequest"
+                        ng-click="update(labRequest);">{{'Update PA reports status'|translate}}
+                </button>
                 </span>
-          </div>
-        </div>
+                        </div>
+                    </div>
 
-        <!-- Clinical data -->
-        <div class="panel panel-default"
-            ng-if="
-            isLabOrHubUserStatus(labRequest.status) &&
-            labRequest.status != 'Waiting for lab approval' &&
-            labRequest.status != 'Rejected' &&
-            labRequest.request.clinicalDataRequest">
-          <div class="panel-heading">
-            <h4>{{'Clinical data'|translate}}</h4>
-          </div>
-          <div class="panel-body">
+                    <!-- Clinical data -->
+                    <div class="panel panel-default"
+                         ng-if="
+                                isLabOrHubUserStatus(labRequest.status) &&
+                                labRequest.status != 'Waiting for lab approval' &&
+                                labRequest.status != 'Rejected' &&
+                                labRequest.request.clinicalDataRequest">
+                        <div class="panel-heading">
+                            <h4>{{'Clinical data'|translate}}</h4>
+                        </div>
 
-          <div class="col-sm-8">
-            <input type="checkbox" id="clinicalDataSent" name="clinicalDataSent"
-                   ng-model="labRequest.clinicalDataSent"> &nbsp;
-            <label class="normal" for="clinicalDataSent">{{ 'Clinical data has been sent to the requester.' | translate }}</label>
-          </div>
+                        <div class="panel-body">
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="clinicalDataSent" name="clinicalDataSent"
+                                       ng-model="labRequest.clinicalDataSent"> &nbsp;
+                                <label class="normal" for="clinicalDataSent">
+                                    {{ 'Clinical data has been sent to the requester.' | translate }}
+                                </label>
+                            </div>
+                        </div>
 
-          </div>
+                        <div class="panel-footer clearfix">
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-primary"
+                                        ng-if="labRequest.request.clinicalDataRequest"
+                                        ng-click="update(labRequest);">{{'Update clinical data status'|translate}}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
 
-          <div class="panel-footer clearfix">
-              <span class="pull-right">
-                <button class="btn btn-default btn-primary"
-                    ng-if="labRequest.request.clinicalDataRequest"
-                    ng-click="update(labRequest);">{{'Update clinical data status'|translate}}</button>
-                </span>
-          </div>
-        </div>
+                    <!-- Approval -->
+                    <div class="panel panel-default"
+                         ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
 
-        <!-- Approval -->
-        <div class="panel panel-default" 
-            ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
-          <div class="panel-heading">
-            <h4>{{labRequest.status|translate}}</h4>
-          </div>
-          <div class="panel-body">
-              {{'Would you like hub assistance for this lab request?' | translate }}
-              &nbsp;
-              <input type="radio" id="hubAssistanceRequestedYes" name="hubAssistanceRequested"
-                  ng-disabled="!labRequest.lab.hubAssistanceEnabled"
-                  ng-model="labRequest.hubAssistanceRequested" ng-value="true" ng-checked="labRequest.hubAssistanceRequested">
-              <label class="normal" for="hubAssistanceRequestedYes">{{'Yes' | translate}}</label>
-              &nbsp;
-              <input type="radio" id="hubAssistanceRequestedNo" name="hubAssistanceRequested"
-                  ng-disabled="!labRequest.lab.hubAssistanceEnabled"
-                  ng-model="labRequest.hubAssistanceRequested" ng-value="false" ng-checked="!labRequest.hubAssistanceRequested">
-              <label class="normal" for="hubAssistanceRequestedNo">{{'No' | translate}}</label>
+                        <div class="panel-heading">
+                            <h4>{{labRequest.status|translate}}</h4>
+                        </div>
 
-              <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
-                   {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
-              </span>
-          </div>
-          <div class="panel-body">
-             {{'A researcher has requested data and/or materials from your lab. Do you approve this request?'|translate}}
-          </div>
+                        <div class="panel-body">
+                            <p>
+                                {{'A researcher has requested data and/or materials from your lab.'|translate}}
+                                {{'Select "Approve" to accept or "Reject" to decline this request.'|translate}}
+                            </p>
 
-          <div class="panel-footer clearfix">
-              <span class="pull-right">
-                <button class="btn btn-default btn-primary"
-                    ng-click="approve(labRequest);">{{'Approve'|translate}}</button>
-                <button class="btn btn-default btn-warning"
-                    ng-click="reject(labRequest);">{{'Reject'|translate}}</button>
-            </span>
-          </div>
-        </div>
+                            <p>
+                                <strong>{{'Would you like hub assistance for this lab request?' | translate }}</strong>
+                                &nbsp;
+                                <span>
+                                    <label for="hubAssistanceRequestedYes">
+                                        <input type="radio" id="hubAssistanceRequestedYes" name="hubAssistanceRequested"
+                                               ng-disabled="!labRequest.lab.hubAssistanceEnabled"
+                                               ng-model="labRequest.hubAssistanceRequested" ng-value="true"
+                                               ng-checked="labRequest.hubAssistanceRequested">
+                                        {{'Yes' | translate}}
+                                    </label>&nbsp;
+                                    <label for="hubAssistanceRequestedNo">
+                                        <input type="radio" id="hubAssistanceRequestedNo" name="hubAssistanceRequested"
+                                               ng-disabled="!labRequest.lab.hubAssistanceEnabled"
+                                               ng-model="labRequest.hubAssistanceRequested" ng-value="false"
+                                               ng-checked="!labRequest.hubAssistanceRequested">
+                                        {{'No' | translate}}
+                                    </label>
+                                </span>
+                            </p>
 
-        <div class="panel panel-default" 
-            ng-if="(isLabUser() || isHubUser()) && labRequest.status == 'Approved'">
-          <div class="panel-heading">
-            <h4>{{'Approved'|translate}}</h4>
-          </div>
-          <div class="panel-body">
-          
-          <div class="col-sm-8">
-          {{'The lab request has been approved.'|translate}}
-          </div>
-          
-          </div>
-          <div class="panel-footer clearfix">
-              <span class="pull-right">
-                <button class="btn btn-default btn-primary"
-                    ng-if="labRequest.request.materialsRequest"
-                    ng-click="sending(labRequest);">{{'Send materials'|translate}}</button>
-                <button class="btn btn-default btn-primary"
-                    ng-if="!labRequest.request.materialsRequest"
-                    ng-click="completeReportsOnly(labRequest);">{{'Complete'|translate}}</button>
-            </span>
-          </div>
-        </div>
+                            <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
+                                {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
+                            </span>
 
-        <div class="panel panel-default"
-            ng-if="(isPalga() || isLabUser() || isHubUser()) && labRequest.status == 'Rejected'">
-          <div class="panel-heading">
-            <h4>{{'Rejected'|translate}}</h4>
-          </div>
-          <div class="panel-body">
+                        </div>
 
-          <div class="col-sm-8">
-          {{'The lab request has been rejected.'|translate}}
-          </div>
+                        <div class="panel-footer clearfix">
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-primary"
+                                        ng-click="approve(labRequest);">{{'Approve'|translate}}
+                                </button>
+                                <button class="btn btn-default btn-warning"
+                                        ng-click="reject(labRequest);">{{'Reject'|translate}}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
 
-          </div>
-          <div class="panel-footer clearfix">
-              <span class="pull-right">
-                <button class="btn btn-default btn-primary"
-                    ng-if="isPalga()"
-                    ng-click="completeRejected(labRequest);">{{'Complete'|translate}}</button>
-                <button class="btn btn-default btn-primary"
-                    ng-if="isLabUser() || isHubUser()"
-                    ng-click="undoReject(labRequest);">{{'Undo rejection'|translate}}</button>
-            </span>
-          </div>
-        </div>
+                    <div class="panel panel-default"
+                         ng-if="(isLabUser() || isHubUser()) && labRequest.status == 'Approved'">
+                        <div class="panel-heading">
+                            <h4>{{'Approved'|translate}}</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-8">
+                                {{'The lab request has been approved.'|translate}}
+                            </div>
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-primary"
+                                        ng-if="labRequest.request.materialsRequest"
+                                        ng-click="sending(labRequest);">{{'Send materials'|translate}}
+                                </button>
+                                <button class="btn btn-default btn-primary"
+                                        ng-if="!labRequest.request.materialsRequest"
+                                        ng-click="completeReportsOnly(labRequest);">{{'Complete'|translate}}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
 
-        <div class="panel panel-default" 
-            ng-if="isRequester() && labRequest.status == 'Received'">
-          <div class="panel-heading">
-            <h4>{{'Received'|translate}}</h4>
-          </div>
-          <div class="panel-body">
-          
-          <div class="col-sm-8">
-          {{'Materials have been received.'|translate}}
-          </div>
-          
-          </div>
-          <div class="panel-footer clearfix">
-              <span class="pull-right">
-                <button class="btn btn-default btn-primary"
-                    ng-click="returning(labRequest);">{{'Return materials'|translate}}</button>
-            </span>
-          </div>
-        </div>
+                    <div class="panel panel-default"
+                         ng-if="(isPalga() || isLabUser() || isHubUser()) && labRequest.status == 'Rejected'">
+                        <div class="panel-heading">
+                            <h4>{{'Rejected'|translate}}</h4>
+                        </div>
+                        <div class="panel-body">
 
-        <div class="panel panel-default" 
-            ng-if=" isRequester() && labRequest.status == 'Sending' || 
+                            <div class="col-sm-8">
+                                {{'The lab request has been rejected.'|translate}}
+                            </div>
+
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-primary"
+                                    ng-if="isPalga()"
+                                    ng-click="completeRejected(labRequest);">{{'Complete'|translate}}
+                                </button>
+                                <button class="btn btn-default btn-primary"
+                                    ng-if="isLabUser() || isHubUser()"
+                                    ng-click="undoReject(labRequest);">{{'Undo rejection'|translate}}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default"
+                         ng-if="isRequester() && labRequest.status == 'Received'">
+                        <div class="panel-heading">
+                            <h4>{{'Received'|translate}}</h4>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="col-sm-8">
+                                {{'Materials have been received.'|translate}}
+                            </div>
+
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-primary"
+                                    ng-click="returning(labRequest);">
+                                    {{'Return materials'|translate}}
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default"
+                         ng-if=" isRequester() && labRequest.status == 'Sending' ||
                     (isLabUser() || isHubUser()) && (
                             labRequest.status == 'Returning'
                             || labRequest.status == 'Sending'
                             || labRequest.status == 'Received'
                         )">
-          <div class="panel-heading">
-            <h4>{{labRequest.status|translate}}</h4>
-          </div>
-          <div class="panel-body">
-          
-          <div class="col-sm-8" ng-class="{ 'has-error' : labRequestEditForm.missingSamples.$invalid }">
-              <input type="checkbox" id="samplesMissing" name="samplesMissing"
-                   ng-model="labRequest.samplesMissing"> &nbsp; <label class="normal" for="samplesMissing">{{ 'Materials are missing.' | translate }}</label>
-                <textarea class="form-control" id="missingSamples" name="missingSamples" placeholder="{{'Missing materials'|translate}}"
-                  ng-model="labRequest.missingSamples.contents"
-                  ng-required="labRequest.samplesMissing"
-                  ng-show="labRequest.samplesMissing"
-                  >
-                </textarea>
-          </div>
-          
-          </div>
-          <div class="panel-footer clearfix">
-            <span class="pull-right">
-            <span ng-if="isRequester() && labRequest.status == 'Sending'">
-                <button class="btn btn-default btn-primary"
-                    ng-disabled="labRequestEditForm.$invalid"
-                    ng-click="received(labRequest);">{{'Materials received'|translate}}</button>
-            </span>
-            <span ng-if="isLabUser() || isHubUser()">
-                <button class="btn btn-default btn-primary"
-                        ng-click="completeReturned(labRequest);">{{'Materials returned'|translate}}</button>
-            </span>
-            </span>
-          </div>
+                        <div class="panel-heading">
+                            <h4>{{labRequest.status|translate}}</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-8"
+                                 ng-class="{ 'has-error' : labRequestEditForm.missingSamples.$invalid }">
+                                <input type="checkbox" id="samplesMissing" name="samplesMissing"
+                                       ng-model="labRequest.samplesMissing"> &nbsp;
+                                <label class="normal" for="samplesMissing">
+                                    {{'Materials are missing.' | translate }}
+                                </label>
+                                <textarea class="form-control" id="missingSamples" name="missingSamples"
+                                          placeholder="{{'Missing materials'|translate}}"
+                                          ng-model="labRequest.missingSamples.contents"
+                                          ng-required="labRequest.samplesMissing"
+                                          ng-show="labRequest.samplesMissing"
+                                >
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <div class="panel-footer clearfix">
+                            <span class="pull-right">
+                                <span ng-if="isRequester() && labRequest.status == 'Sending'">
+                                    <button class="btn btn-default btn-primary"
+                                            ng-disabled="labRequestEditForm.$invalid"
+                                            ng-click="received(labRequest);">
+                                        {{'Materials received'|translate}}
+                                    </button>
+                                </span>
+                                <span ng-if="isLabUser() || isHubUser()">
+                                    <button class="btn btn-default btn-primary"
+                                            ng-click="completeReturned(labRequest);">
+                                        {{'Materials returned'|translate}}
+                                    </button>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--FOOTER-->
+                <div class="modal-footer">
+                    <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
+                </div>
+
+            </form>
         </div>
-
-      </div>
-
-      <!--FOOTER-->
-      <div class="modal-footer">
-        <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
-      </div>
-
-    </form>
     </div>
-  </div>
 </div>
-

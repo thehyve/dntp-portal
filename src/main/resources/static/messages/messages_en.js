@@ -98,9 +98,14 @@
         'Completed': 'Completed',
         'Closed': 'Closed',
 
+
+        'A researcher has requested data and/or materials from your lab.' : 'A researcher has requested data and/or materials from your lab.',
+        'Select "Approve" to accept or "Reject" to decline this request.' : 'Select "Approve" to accept or "Reject" to decline this request',
+
         /* ===================== */
         /* My Lab */
         /* ===================== */
+
 
         /* ===================== */
         /* Specialism */

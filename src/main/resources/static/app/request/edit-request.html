@@ -282,7 +282,7 @@ This file is distributed under the GNU Affero General Public License
                             <div class="radio">
                                 <input id="statisticsRequestFalse" name="statisticsRequest" type="radio"
                                     ng-model="request.statisticsRequest" ng-value="false" ng-checked="!request.statisticsRequest"> &nbsp;
-                                <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material or clinical data' | translate}}</label><br>
+                                <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material and/or clinical data' | translate}}</label><br>
 
                                 <div style="padding-left: 45px;">
                                     <div class="checkbox">
@@ -310,7 +310,7 @@ This file is distributed under the GNU Affero General Public License
                                         <input type="checkbox" id="clinicalDataRequest" name="clinicalDataRequest" value="1"
                                                ng-disabled="request.statisticsRequest"
                                                ng-model="request.clinicalDataRequest"> &nbsp;
-                                        <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data' | translate }}</label>
+                                        <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data from practitioner' | translate }}</label>
                                     </div>
                                 </div>
 

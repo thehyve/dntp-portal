@@ -88,11 +88,12 @@
         'Excerpts, PA reports and PA material': 'Excerpten, complete PA-verslagen en PA-materiaal',
         'Full PA reports only (no excerpts)': 'Alleen PA-verslagen',
         'PA material only': 'Alleen PA-materiaal',
-        'Excerpts, reports, material or clinical data': 'Excerpten, PA-verslagen, PA-materiaal of klinische gegevens',
+        'Excerpts, reports, material and/or clinical data': 'Excerpten, PA-verslagen, PA-materiaal en/of klinische gegevens',
         'Excerpts': 'Excerpten',
         'PA reports': 'Complete PA-verslagen',
         'PA material': 'PA-materiaal',
         'Clinical data': 'Klinische gegevens',
+        'Clinical data from practitioner': 'Klinische gegevens via behandelaar',
 
         'Request_Type_1': 'Alleen aantallen, oriënterende zoekvraag',
         'Request_Type_2': 'Alleen excerpten',

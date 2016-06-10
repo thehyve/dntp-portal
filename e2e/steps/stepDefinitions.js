@@ -134,7 +134,7 @@ module.exports = function() {
         });
     });
 
-    this.When(/^I click on the lab request with id '(.+)'$/, function(id, next) {
+    this.When(/^I click on the( lab)? request with id '(.+)'$/, function(extra, id, next) {
         element(by.linkText(id.replace('YYYY', new Date().getFullYear()))).click().then(function() {
             next()
         });
@@ -294,6 +294,11 @@ module.exports = function() {
 
     this.Then(/^I should see (\d+) links? with title '(.+)'$/, function(reqAmount, reqName, next) {
         expect(element.all(by.linkText(reqName)).count()).to.eventually.equal(parseInt(reqAmount)).and.notify(next);
+    });
+
+    this.When(/^I should see a link to the request with id '(.+)'$/, function(id, next) {
+        expect(element(by.linkText(id.replace('YYYY', new Date().getFullYear()))).isPresent())
+            .to.eventually.be.true.and.notify(next);
     });
 
     this.Then('an excerpt should be attached to the request', function(next) {

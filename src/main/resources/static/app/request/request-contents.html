@@ -43,6 +43,7 @@
         <h4 class="h4">{{'Additional requests' | translate}}</h4>
         <button class="btn btn-default" type="button" ng-click="fork(request)"
                 title="{{'Create additional request' | translate}}"
+                id="create_additional_request"
                 ng-if="!request.parent && isPalga() && request.status == 'LabRequest' && isForkEnabled(request)">
             <span><i class="glyphicon glyphicon-duplicate"></i></span>
             {{'Create additional request' | translate}}

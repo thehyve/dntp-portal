@@ -118,7 +118,7 @@ This file is distributed under the GNU Affero General Public License
                                 type="checkbox" value="1"
                                 ng-model="selected_requests[req.processInstanceId]" />
                         </td>
-                        <td>{{req.requestNumber}}</td>
+                        <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.requestNumber}}</a></td>
                         <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
                         <td class="request-status">
                             {{ getStatusText(req) | translate}}

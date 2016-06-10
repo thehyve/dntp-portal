@@ -20,7 +20,19 @@
         </script>
     </scriptTask>
 
-    <sequenceFlow id="open_to_request_form" sourceRef="status_open" targetRef="request_form"></sequenceFlow>
+    <sequenceFlow id="open_to_request_form_or_data_delivery" sourceRef="status_open" targetRef="to_request_form_or_data_delivery"></sequenceFlow>
+
+    <!-- Choice between:
+        - 'status_data_delivery' if jump_to_data_delivery (in the case of an additional request);
+        - 'request_form' if not jump_to_data_delivery (in the case of a new request).
+    -->
+    <exclusiveGateway id="to_request_form_or_data_delivery" name="Open or data delivery" />
+    <sequenceFlow id="open_to_data_delivery" sourceRef="to_request_form_or_data_delivery" targetRef="status_data_delivery">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${jump_to_data_delivery == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="open_to_request_form" sourceRef="to_request_form_or_data_delivery" targetRef="request_form">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${jump_to_data_delivery == false} ]]></conditionExpression>
+    </sequenceFlow>
 
     <userTask id="request_form" name="Request form" activiti:assignee="${requester_id}">
         <documentation>Request form filled in by the requester.

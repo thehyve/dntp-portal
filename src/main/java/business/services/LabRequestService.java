@@ -114,6 +114,10 @@ public class LabRequestService {
         return labRequestRepository.findAllByProcessInstanceId(processInstanceId);
     }
 
+    public Long countHubAssistanceLabRequestsForRequest(String processInstanceId) {
+        return labRequestRepository.countByProcessInstanceIdAndHubAssistanceRequestedTrue(processInstanceId);
+    }
+
     /**
      * Finds task.
      * @param taskId

@@ -10,7 +10,7 @@ import java.util.List;
 
 import business.models.RequestProperties.ReviewStatus;
 
-public class RequestListRepresentation {
+public class RequestListRepresentation implements RequestListElement {
 
     private String processInstanceId;
     private String processId;

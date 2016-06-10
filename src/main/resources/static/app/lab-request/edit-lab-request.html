@@ -193,7 +193,6 @@ This file is distributed under the GNU Affero General Public License
                         <div class="panel-body">
                             <p>
                                 {{'A researcher has requested data and/or materials from your lab.'|translate}}
-                                {{'Select "Approve" to accept or "Reject" to decline this request.'|translate}}
                             </p>
 
                             <p>
@@ -216,6 +215,8 @@ This file is distributed under the GNU Affero General Public License
                                     </label>
                                 </span>
                             </p>
+
+                            <p>{{'Select "Approve" to accept or "Reject" to decline this request.'|translate}}</p>
 
                             <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
                                 {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}

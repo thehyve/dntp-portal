@@ -154,6 +154,7 @@ This file is distributed under the GNU Affero General Public License
             </a>
             <a type="button" class="btn btn-primary" title="Submit"
                 ng-if="isRequester() && request.status=='DataDelivery'"
+                ng-disabled="dataLoading"
                 ng-click="submitExcerptSelection(request)">
                 {{'Submit selection'|translate}}
             </a>
@@ -164,13 +165,13 @@ This file is distributed under the GNU Affero General Public License
 
     <div ng-if="request.status == 'SelectionReview' && isPalga()">
         <button type="button" class="btn btn-primary"
-                ng-disabled="!isCurrentUser(request.assignee)"
+                ng-disabled="!isCurrentUser(request.assignee) || dataLoading"
                 ng-click="approveSelection(request)"
           >
           {{'Approve selection'|translate}}
         </button>
         <button type="button" class="btn btn-danger"
-                ng-disabled="!isCurrentUser(request.assignee)"
+                ng-disabled="!isCurrentUser(request.assignee) || dataLoading"
                 ng-click="rejectSelection(request)"
           >
           {{'Reject selection'|translate}}

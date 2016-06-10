@@ -142,6 +142,21 @@ public class RequestController {
         return result;
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
+    @RequestMapping(value = "/requests/csv", method = RequestMethod.GET)
+    public HttpEntity<InputStreamResource> downloadRequestList(UserAuthenticationToken user) {
+        log.info("GET /requests/requests/csv");
+        List<RequestRepresentation> result = new ArrayList<RequestRepresentation>();
+        List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user.getUser());
+        for (HistoricProcessInstance instance : processInstances) {
+            RequestRepresentation request = new RequestRepresentation();
+            requestFormService.transferData(instance, request, user.getUser());
+            result.add(request);
+        }
+        Collections.sort(result, requestListRepresentationComparator);
+        return requestService.writeRequestListCsv(result);
+    }
+
     private void incrementCount(Map<String, Long> counts, String key) {
         Long count = counts.get(key);
         counts.put(key, ((count == null) ? 0 : count.longValue()) + 1);

@@ -28,4 +28,7 @@ public interface LabRequestRepository extends JpaRepository<LabRequest, Long> {
     Long countByProcessInstanceIdAndLab(String processInstanceId, Lab lab);
 
     Long countByProcessInstanceIdAndLabIn(String processInstanceId, Collection<Lab> labs);
+
+    Long countByProcessInstanceIdAndHubAssistanceRequestedTrue(String processInstanceId);
+
 }

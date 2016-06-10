@@ -142,7 +142,7 @@ angular.module('ProcessApp.controllers')
              */
             var getHTMLAddressForLab = function (lab, noEmail) {
                 var contactData = lab.contactData;
-                contactData.email = lab.emailAddresses.join(', ');
+                contactData.email = lab.emailAddresses.join(',');
                 return getHTMLAddress(contactData, noEmail);
             };
 

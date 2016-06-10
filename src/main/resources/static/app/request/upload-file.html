@@ -74,7 +74,7 @@ This file is distributed under the GNU Affero General Public License
         && (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)
         && isPalga()"
         ng-controller="SelectionController">
-        <a class="btn btn-primary" title="Select all"
+        <a class="btn btn-primary" title="Select all" id="select_all_excerpts"
             ng-click="selectAllExcerpts(request)"
             ng-disabled="!isCurrentUser(request.assignee)">
         <i class="glyphicon glyphicon-check"></i>

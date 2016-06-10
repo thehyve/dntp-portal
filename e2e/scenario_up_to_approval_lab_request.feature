@@ -1,6 +1,6 @@
 #Complete process for request for excerpts, PA reports and materials
 
-Feature: scenario request Request for excerpts + PA reports + materials
+Feature: scenario request Request for excerpts + PA reports + materials + clinical data
   Background:
     Given I am logged out
 

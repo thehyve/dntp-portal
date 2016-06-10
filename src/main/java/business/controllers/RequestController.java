@@ -480,18 +480,21 @@ public class RequestController {
     public RequestRepresentation reject(
             UserAuthenticationToken user,
             @PathVariable String id,
-            @RequestBody RequestRepresentation request) {
+            @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/reject");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
 
-        request.setReopenRequest(false);
-        if (request.getStatus().equals(RequestStatus.REVIEW)) {
-            request.setRequestAdmissible(false);
-        } else if (request.getStatus().equals(RequestStatus.APPROVAL)) {
-            request.setRequestApproved(false);
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+
+        body.setReopenRequest(false);
+        if (request.getStatus() == RequestStatus.REVIEW) {
+            body.setRequestAdmissible(false);
+        } else if (request.getStatus() == RequestStatus.APPROVAL) {
+            body.setRequestApproved(false);
         }
-        request.setRejectDate(new Date());
-        Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
+        body.setRejectDate(new Date());
+        Map<String, Object> variables = requestFormService.transferFormData(body, instance, user.getUser());
         runtimeService.setVariables(instance.getId(), variables);
 
         instance = requestService.getProcessInstance(id);
@@ -501,7 +504,7 @@ public class RequestController {
         log.info("Reject request.");
         log.info("Reject reason: " + updatedRequest.getRejectReason());
 
-        if (updatedRequest.getStatus().equals(RequestStatus.REVIEW)) {
+        if (updatedRequest.getStatus() == RequestStatus.REVIEW) {
             log.info("Fetching palga_request_review task");
             Task palgaTask = requestService.getTaskByRequestId(id, "palga_request_review");
             if (palgaTask.getDelegationState()==DelegationState.PENDING) {
@@ -509,7 +512,7 @@ public class RequestController {
             }
             taskService.complete(palgaTask.getId());
 
-        } else if (updatedRequest.getStatus().equals(RequestStatus.APPROVAL)) {
+        } else if (updatedRequest.getStatus() == RequestStatus.APPROVAL) {
             log.info("Fetching scientific_council_approval task");
             Task councilTask = requestService.getTaskByRequestId(id, "scientific_council_approval");
             if (councilTask.getDelegationState()==DelegationState.PENDING) {
@@ -537,10 +540,20 @@ public class RequestController {
     public RequestRepresentation close(
             UserAuthenticationToken user,
             @PathVariable String id,
-            @RequestBody RequestRepresentation request) {
+            @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/close");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
+
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+        if (request.getStatus() != RequestStatus.DATA_DELIVERY) {
+            throw new InvalidActionInStatus("Cannot close requests in status " + request.getStatus());
+        }
+        if (request.isPaReportRequest() || request.isMaterialsRequest() || request.isClinicalDataRequest()) {
+            throw new InvalidActionInStatus("Cannot close requests for reports, material or clinical data.");
+        }
+
+        Map<String, Object> variables = requestFormService.transferFormData(body, instance, user.getUser());
         runtimeService.setVariables(instance.getId(), variables);
 
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
@@ -605,7 +618,7 @@ public class RequestController {
         if (!request.getRequesterId().equals(user.getUser().getId().toString())) {
             throw new RequestNotFound();
         }
-        if (!request.getStatus().equals(RequestStatus.OPEN)){
+        if (request.getStatus() != RequestStatus.OPEN){
             throw new InvalidActionInStatus();
         }
         if (request.isReopenRequest()) {

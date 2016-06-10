@@ -412,6 +412,15 @@ public class RequestService {
 
     final static DateFormatter DATE_FORMATTER = new DateFormatter("yyyy-MM-dd");
 
+    final static String booleanToString(Boolean value) {
+        if (value == null) return "";
+        if (value.booleanValue()) {
+            return "Yes";
+        } else {
+            return "No";
+        }
+    }
+
     public HttpEntity<InputStreamResource> writeRequestListCsv(List<RequestRepresentation> requests) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -423,11 +432,11 @@ public class RequestService {
                 List<String> values = new ArrayList<>();
                 values.add(request.getRequestNumber());
                 values.add(DATE_FORMATTER.print(request.getDateCreated(), LOCALE));
-                values.add(Boolean.toString(request.isStatisticsRequest()));
-                values.add(Boolean.toString(request.isExcerptsRequest()));
-                values.add(Boolean.toString(request.isPaReportRequest()));
-                values.add(Boolean.toString(request.isMaterialsRequest()));
-                values.add(Boolean.toString(request.isClinicalDataRequest()));
+                values.add(booleanToString(request.isStatisticsRequest()));
+                values.add(booleanToString(request.isExcerptsRequest()));
+                values.add(booleanToString(request.isPaReportRequest()));
+                values.add(booleanToString(request.isMaterialsRequest()));
+                values.add(booleanToString(request.isClinicalDataRequest()));
                 values.add(request.getRequesterName());
                 values.add(request.getLab().getNumber().toString());
                 values.add(request.getRequester().getSpecialism());

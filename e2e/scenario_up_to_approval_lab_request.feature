@@ -26,12 +26,16 @@ Feature: scenario request Request for excerpts + PA reports + materials
     researchQuestion: test
     hypothesis: theory
     methods: Modern methods
+    searchCriteria: methods + test + modern
+    studyPeriod: 2015--2016
+    laboratoryTechniques: Cucumber, protractor
     address1: dreef
     postalcode: 1234
     city: Amsterdam
     billingEmail: fin@f.f
     telephone: 1234567890
     chargeNumber: 1234
+    grantProvider: Some sponsor
     researchNumber: 10    
     """
     And I click on the following objects

@@ -42,6 +42,10 @@ public class RequestRepresentation implements RequestListElement {
     private String hypothesis;
     private String methods;
 
+    private String searchCriteria;
+    private String studyPeriod;
+    private String laboratoryTechniques;
+
     private String pathologistName;
     private String pathologistEmail;
     private boolean previousContact;
@@ -49,8 +53,9 @@ public class RequestRepresentation implements RequestListElement {
     
     private ContactData billingAddress;
     private String chargeNumber;
+    private String grantProvider;
     private String researchNumber;
-    
+
     private boolean statisticsRequest;
     private boolean excerptsRequest;
     private boolean paReportRequest;
@@ -236,6 +241,30 @@ public class RequestRepresentation implements RequestListElement {
 
     public void setMethods(String methods) {
         this.methods = methods;
+    }
+
+    public String getSearchCriteria() {
+        return searchCriteria;
+    }
+
+    public void setSearchCriteria(String searchCriteria) {
+        this.searchCriteria = searchCriteria;
+    }
+
+    public String getStudyPeriod() {
+        return studyPeriod;
+    }
+
+    public void setStudyPeriod(String studyPeriod) {
+        this.studyPeriod = studyPeriod;
+    }
+
+    public String getLaboratoryTechniques() {
+        return laboratoryTechniques;
+    }
+
+    public void setLaboratoryTechniques(String laboratoryTechniques) {
+        this.laboratoryTechniques = laboratoryTechniques;
     }
 
     public boolean isStatisticsRequest() {
@@ -670,6 +699,14 @@ public class RequestRepresentation implements RequestListElement {
 
     public void setChargeNumber(String chargeNumber) {
         this.chargeNumber = chargeNumber;
+    }
+
+    public String getGrantProvider() {
+        return grantProvider;
+    }
+
+    public void setGrantProvider(String grantProvider) {
+        this.grantProvider = grantProvider;
     }
 
     public String getResearchNumber() {

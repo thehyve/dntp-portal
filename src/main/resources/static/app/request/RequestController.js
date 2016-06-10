@@ -23,7 +23,7 @@ angular.module('ProcessApp.controllers')
                   $templateCache, $http,
                   AgreementFormTemplate) {
 
-            $scope.statuses = Request.statuses;
+            $scope.displayStatuses = Request.displayStatuses;
 
             $scope.claimableStates = Request.claimableStates;
 
@@ -59,7 +59,9 @@ angular.module('ProcessApp.controllers')
 
             $scope.getStatusText = function(request) {
                 if (request.status == 'DataDelivery') {
-                    if (request.statisticsRequest && request.dataAttachmentCount > 0) {
+                    if ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
+                        (request.excerptListUploaded &&
+                            !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest))) {
                         return 'Data delivered';
                     } else if (request.excerptListUploaded &&
                             (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)) {
@@ -480,7 +482,6 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.reject = function(request) {
-                $scope.dataLoading = true;
                 bootbox.confirm(
                     '<h4>' + $rootScope.translate('Are you sure you want to reject the request?') + '</h4>\n' +
                     '<form id="reject" action="">' +
@@ -490,6 +491,7 @@ angular.module('ProcessApp.controllers')
                     '</form>',
                     function(result) {
                         if (result) {
+                            $scope.dataLoading = true;
                             request.rejectReason = jQuery('#rejectReason').val();
                             request.$reject(function(result) {
                                 $scope.refresh(request, result);
@@ -500,7 +502,6 @@ angular.module('ProcessApp.controllers')
                                 $scope.dataLoading = false;
                             });
                         } else {
-                            $scope.dataLoading = false;
                             $scope.$apply();
                         }
                     }
@@ -513,6 +514,7 @@ angular.module('ProcessApp.controllers')
                     'After approving, lab requests will be generated.'),
                     function(confirmed) {
                         if (confirmed) {
+                            $scope.dataLoading = true;
                             request.selectionApproved = true;
                             request.$updateExcerptSelectionApproval(function(result) {
                                 $scope.refresh(request, result);
@@ -531,6 +533,7 @@ angular.module('ProcessApp.controllers')
                     'After rejecting, the status will return to \'Data delivery.\''),
                     function(confirmed) {
                         if (confirmed) {
+                            $scope.dataLoading = true;
                             request.selectionApproved = false;
                             request.$updateExcerptSelectionApproval(function(result) {
                                 $scope.refresh(request, result);

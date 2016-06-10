@@ -177,7 +177,7 @@ This file is distributed under the GNU Affero General Public License
 
                     <!-- Hypothesis -->
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.hypothesis.$invalid || requestEditForm.hypothesis.$error.required) && requestEditForm.hypothesis.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Hypothesis' | translate }}</label>
+                        <label class="control-label col-sm-3" for="hypothesis">{{ 'Hypothesis' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" 
                             placeholder="{{ 'Hypothesis' | translate }}" title="{{ 'Hypothesis' | translate }}"
@@ -190,15 +190,63 @@ This file is distributed under the GNU Affero General Public License
 
                     <!-- Methods -->
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.methods.$invalid || requestEditForm.methods.$error.required) && requestEditForm.methods.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Methods' | translate }}</label>
+                        <label class="control-label col-sm-3" for="methods">{{ 'Methods' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="methods" name="methods" 
+                        <textarea type="text" class="form-control" id="methods" name="methods"
                             placeholder="{{ 'Methods' | translate }}" title="{{ 'Methods' | translate }}"
                             ng-model="request.methods" 
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Methods'|translate}}" data-trigger="focus" bs-popover
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.methods.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Search criteria -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.searchCriteria.$invalid || requestEditForm.searchCriteria.$error.required) && requestEditForm.searchCriteria.$dirty }">
+                        <label class="control-label col-sm-3" for="searchCriteria">{{ 'Search criteria' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="searchCriteria" name="searchCriteria"
+                            placeholder="{{ 'Search criteria' | translate }}" title="{{ 'Search criteria' | translate }}"
+                            ng-model="request.searchCriteria"
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Search criteria'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.searchCriteria.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Study period -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.studyPeriod.$invalid || requestEditForm.studyPeriod.$error.required) && requestEditForm.studyPeriod.$dirty }">
+                        <label class="control-label col-sm-3" for="studyPeriod">{{ 'Study period' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="studyPeriod" name="studyPeriod"
+                            placeholder="{{ 'Study period' | translate }}" title="{{ 'Study period' | translate }}"
+                            ng-model="request.studyPeriod"
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Study period'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.studyPeriod.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Laboratory techniques -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.laboratoryTechniques.$invalid || requestEditForm.laboratoryTechniques.$error.required) && requestEditForm.laboratoryTechniques.$dirty }">
+                        <label class="control-label col-sm-3" for="laboratoryTechniques">{{ 'Laboratory techniques' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="laboratoryTechniques" name="laboratoryTechniques"
+                            placeholder="{{ 'Laboratory techniques' | translate }}" title="{{ 'Laboratory techniques' | translate }}"
+                            ng-model="request.laboratoryTechniques"
+                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Laboratory techniques'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.laboratoryTechniques.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
                         </div>
@@ -234,7 +282,7 @@ This file is distributed under the GNU Affero General Public License
                             <div class="radio">
                                 <input id="statisticsRequestFalse" name="statisticsRequest" type="radio"
                                     ng-model="request.statisticsRequest" ng-value="false" ng-checked="!request.statisticsRequest"> &nbsp;
-                                <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material or clinical data' | translate}}</label><br>
+                                <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material and/or clinical data' | translate}}</label><br>
 
                                 <div style="padding-left: 45px;">
                                     <div class="checkbox">
@@ -262,7 +310,7 @@ This file is distributed under the GNU Affero General Public License
                                         <input type="checkbox" id="clinicalDataRequest" name="clinicalDataRequest" value="1"
                                                ng-disabled="request.statisticsRequest"
                                                ng-model="request.clinicalDataRequest"> &nbsp;
-                                        <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data' | translate }}</label>
+                                        <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data from practitioner' | translate }}</label>
                                     </div>
                                 </div>
 
@@ -365,6 +413,23 @@ This file is distributed under the GNU Affero General Public License
                         </div>
                     </div>
 
+                    <!-- Grant provider -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.grantProvider.$invalid && requestEditForm.grantProvider.$dirty }">
+                        <label class="control-label col-sm-3" for="grantProvider">{{ 'Grant provider' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="grantProvider" name="grantProvider"
+                                placeholder="{{ 'Grant provider' | translate }}" title="{{ 'Grant provider' | translate }}"
+                                ng-model="request.grantProvider" ng-maxlength="100"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Grant provider'|translate}}" data-trigger="focus" bs-popover
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.grantProvider.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.grantProvider.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
                     <!-- Grant number -->
                     <div class="form-group" ng-class="{ 'has-error' : requestEditForm.researchNumber.$invalid && requestEditForm.researchNumber.$dirty }">
                         <label class="control-label col-sm-3" for="researchNumber">{{ 'Grant number' | translate }}</label>
@@ -406,7 +471,7 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Data Linkage Notes  -->
                     <div class="form-group" ng-show="!request.statisticsRequest && request.linkageWithPersonalData"
                          ng-class="{ 'has-error' : requestEditForm.linkageWithPersonalDataNotes.$invalid  && requestEditForm.linkageWithPersonalDataNotes.$dirty }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Data linkage information' | translate }}</label>
+                        <label class="control-label col-sm-3" for="linkageWithPersonalDataNotes">{{ 'Data linkage information' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes" 
                             placeholder="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}" title="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}"
@@ -423,7 +488,7 @@ This file is distributed under the GNU Affero General Public License
                     <!-- Informed Consent  -->
                     <div class="form-group" ng-class="" ng-show="!request.statisticsRequest && request.linkageWithPersonalData"
                             ng-mouseenter="showPopover('informedConsentPopover')" ng-mouseleave="hidePopover('informedConsentPopover')">
-                        <label class="control-label col-sm-3" for="informedConsentYes">
+                        <label class="control-label col-sm-3">
                             {{'Informed consent (IC)' | translate}}
                         </label>
                         <div class="col-sm-6"

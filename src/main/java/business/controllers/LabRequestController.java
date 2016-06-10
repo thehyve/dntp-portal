@@ -521,14 +521,16 @@ public class LabRequestController {
         RequestRepresentation request = new RequestRepresentation();
         HistoricProcessInstance instance = requestService.getProcessInstance(labRequest.getProcessInstanceId());
         requestFormService.transferData(instance, request, user);
-        if (request.isPaReportRequest()) {
-            if (paReportSendingStatuses.contains(labRequest.getStatus())) {
+        if (paReportSendingStatuses.contains(labRequest.getStatus())) {
+            if (request.isPaReportRequest()) {
                 labRequest.setPaReportsSent(body.isPaReportsSent());
                 log.debug("Updating PA reports sent: " + labRequest.isPaReportsSent());
+            }
+            if (request.isClinicalDataRequest()) {
                 labRequest.setClinicalDataSent(body.isClinicalDataSent());
                 log.debug("Updating PA clinical data sent: " + labRequest.IsClinicalDataSent());
-                labRequest = labRequestService.save(labRequest);
             }
+            labRequest = labRequestService.save(labRequest);
         }
         if (setHubAssistanceStatuses.contains(labRequest.getStatus())) {
             labRequest.setHubAssistanceRequested(Boolean.TRUE.equals(body.isHubAssistanceRequested()));

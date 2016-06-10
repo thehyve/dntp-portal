@@ -9,13 +9,13 @@
 angular.module('ProcessApp.controllers')
     .controller('SelectionController',[
         '$rootScope', '$scope',
-        '$modal',
+        '$modal', '$alert',
         '$location', '$route',
         '$q',
         'Request', 'ExcerptList', 'ExcerptEntry',
 
         function ($rootScope, $scope,
-                  $modal,
+                  $modal, $alert,
                   $location, $route,
                   $q,
                   Request, ExcerptList, ExcerptEntry) {
@@ -72,7 +72,7 @@ angular.module('ProcessApp.controllers')
                     //console.log('selection updated at index ' + index);
                     request.excerptList.entries[index] = result;
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + '\n';
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
@@ -103,7 +103,7 @@ angular.module('ProcessApp.controllers')
                 request.$selectAll(function(result) {
                     $scope.request = result;
                 }, function(response) {
-                    $scope.error = $scope.error + response.data.message + '\n';
+                    $rootScope.logErrorResponse(response);
                 });
             };
 
@@ -116,15 +116,32 @@ angular.module('ProcessApp.controllers')
                         if (result) {
                             request.excerptListRemark = result;
                             request.$submitExcerptSelection(function(result) {
-                                console.log('Selection submitted: ' + result);
+                                var content = $rootScope.translate('Successfully submitted selection.');
+                                $alert({
+                                    title : $rootScope.translate('Excerpt selection'),
+                                    content : content,
+                                    placement : 'top-right',
+                                    type : 'success',
+                                    show : true,
+                                    duration : 5
+                                });
                                 $location.path('/');
                                 _.defer(function(){
                                     $scope.$apply();
                                 });
                             }, function(response) {
-                                $scope.error = $scope.error + response.data.message + '\n';
+                                $rootScope.logErrorResponse(response);
                             });
                         } else {
+                            var content = $rootScope.translate('No selection submitted.');
+                            $alert({
+                                title : $rootScope.translate('Excerpt selection'),
+                                content : content,
+                                placement : 'top-right',
+                                type : 'danger',
+                                show : true,
+                                duration : 5
+                            });
                             $scope.enableSpaceSelects();
                         }
                     }

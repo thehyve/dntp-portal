@@ -162,6 +162,30 @@
         </p>
     </div>
 
+    <!-- Search criteria -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Search criteria' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.searchCriteria}}
+        </p>
+    </div>
+
+    <!-- Study period -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Study period' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.studyPeriod}}
+        </p>
+    </div>
+
+    <!-- Laboratory techniques -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Laboratory techniques' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.laboratoryTechniques}}
+        </p>
+    </div>
+
     <!-- Request Type -->
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Request type' | translate }}</label>
@@ -170,7 +194,7 @@
             <div ng-if="request.excerptsRequest">{{'Excerpts'|translate}}<br /></div>
             <div ng-if="request.paReportRequest">{{'PA reports'|translate}}<br /></div>
             <div ng-if="request.materialsRequest">{{'PA material'|translate}}<br /></div>
-            <div ng-if="request.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
+            <div ng-if="request.clinicalDataRequest">{{'Clinical data from practitioner'|translate}}<br /></div>
         </div>
     </div>
 
@@ -185,6 +209,14 @@
         <label class="control-label col-xs-4 col-sm-4">{{ 'Charge number' | translate }}</label>
         <p class="col-xs-6 col-sm-6">
             {{request.chargeNumber}}
+        </p>
+    </div>
+
+    <!-- Grant provider -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Grant provider' | translate }}</label>
+        <p class="col-xs-6 col-sm-6">
+            {{request.grantProvider}}
         </p>
     </div>
 

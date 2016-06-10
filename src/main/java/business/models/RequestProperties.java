@@ -59,10 +59,18 @@ public class RequestProperties {
 
     private ReviewStatus reviewStatus;
 
+    private String searchCriteria;
+
+    private String studyPeriod;
+
+    private String laboratoryTechniques;
+
     @OneToOne
     private ContactData billingAddress;
 
     private String chargeNumber;
+
+    private String grantProvider;
 
     private String reseachNumber;
 
@@ -283,6 +291,30 @@ public class RequestProperties {
         this.medicalEthicalCommiteeApprovalAttachments = medicalEthicalCommiteeApprovalAttachments;
     }
 
+    public String getSearchCriteria() {
+        return searchCriteria;
+    }
+
+    public void setSearchCriteria(String searchCriteria) {
+        this.searchCriteria = searchCriteria;
+    }
+
+    public String getStudyPeriod() {
+        return studyPeriod;
+    }
+
+    public void setStudyPeriod(String studyPeriod) {
+        this.studyPeriod = studyPeriod;
+    }
+
+    public String getLaboratoryTechniques() {
+        return laboratoryTechniques;
+    }
+
+    public void setLaboratoryTechniques(String laboratoryTechniques) {
+        this.laboratoryTechniques = laboratoryTechniques;
+    }
+
     public ContactData getBillingAddress() {
         return billingAddress;
     }
@@ -297,6 +329,14 @@ public class RequestProperties {
 
     public void setChargeNumber(String chargeNumber) {
         this.chargeNumber = chargeNumber;
+    }
+
+    public String getGrantProvider() {
+        return grantProvider;
+    }
+
+    public void setGrantProvider(String grantProvider) {
+        this.grantProvider = grantProvider;
     }
 
     public String getReseachNumber() {

@@ -134,8 +134,9 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-sm-8">
                                 <input type="checkbox" id="paReportsSent" name="paReportsSent"
                                        ng-model="labRequest.paReportsSent"> &nbsp;
-                                <label class="normal" for="paReportsSent">{{ 'PA reports have been sent to the
-                                    requester.' | translate }}</label>
+                                <label class="normal" for="paReportsSent">
+                                    {{ 'PA reports have been sent to the requester.' | translate }}
+                                </label>
                             </div>
 
                         </div>
@@ -165,8 +166,9 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-sm-8">
                                 <input type="checkbox" id="clinicalDataSent" name="clinicalDataSent"
                                        ng-model="labRequest.clinicalDataSent"> &nbsp;
-                                <label class="normal" for="clinicalDataSent">{{ 'Clinical data has been sent to the
-                                    requester.' | translate }}</label>
+                                <label class="normal" for="clinicalDataSent">
+                                    {{ 'Clinical data has been sent to the requester.' | translate }}
+                                </label>
                             </div>
                         </div>
 
@@ -218,6 +220,7 @@ This file is distributed under the GNU Affero General Public License
                             <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
                                 {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
                             </span>
+
                         </div>
 
                         <div class="panel-footer clearfix">
@@ -297,7 +300,8 @@ This file is distributed under the GNU Affero General Public License
                         <div class="panel-footer clearfix">
                             <span class="pull-right">
                                 <button class="btn btn-default btn-primary"
-                                    ng-click="returning(labRequest);">{{'Return materials'|translate}}
+                                    ng-click="returning(labRequest);">
+                                    {{'Return materials'|translate}}
                                 </button>
                             </span>
                         </div>
@@ -317,9 +321,10 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-sm-8"
                                  ng-class="{ 'has-error' : labRequestEditForm.missingSamples.$invalid }">
                                 <input type="checkbox" id="samplesMissing" name="samplesMissing"
-                                       ng-model="labRequest.samplesMissing"> &nbsp; <label class="normal"
-                                                                                           for="samplesMissing">{{
-                                'Materials are missing.' | translate }}</label>
+                                       ng-model="labRequest.samplesMissing"> &nbsp;
+                                <label class="normal" for="samplesMissing">
+                                    {{'Materials are missing.' | translate }}
+                                </label>
                                 <textarea class="form-control" id="missingSamples" name="missingSamples"
                                           placeholder="{{'Missing materials'|translate}}"
                                           ng-model="labRequest.missingSamples.contents"
@@ -335,12 +340,14 @@ This file is distributed under the GNU Affero General Public License
                                 <span ng-if="isRequester() && labRequest.status == 'Sending'">
                                     <button class="btn btn-default btn-primary"
                                             ng-disabled="labRequestEditForm.$invalid"
-                                            ng-click="received(labRequest);">{{'Materials received'|translate}}
+                                            ng-click="received(labRequest);">
+                                        {{'Materials received'|translate}}
                                     </button>
                                 </span>
                                 <span ng-if="isLabUser() || isHubUser()">
                                     <button class="btn btn-default btn-primary"
-                                            ng-click="completeReturned(labRequest);">{{'Materials returned'|translate}}
+                                            ng-click="completeReturned(labRequest);">
+                                        {{'Materials returned'|translate}}
                                     </button>
                                 </span>
                             </span>

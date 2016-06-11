@@ -60,8 +60,8 @@ public class SmallExcerptListTests extends SelectionControllerTests {
         Integer flowTotalChunks = 1;
         Integer flowChunkNumber = 1;
         String flowIdentifier = "flow";
-        
-        representation = requestController.uploadExcerptList(
+
+        int entryCount = requestController.uploadExcerptList(
                 palga, 
                 processInstanceId, 
                 resource.getFile(),
@@ -69,12 +69,12 @@ public class SmallExcerptListTests extends SelectionControllerTests {
                 flowChunkNumber, 
                 flowIdentifier,
                 file);
-        
-        assertEquals(3, representation.getExcerptList().getEntryCount().intValue());
-        
+
+        assertEquals(3, entryCount);
+
         SecurityContextHolder.clearContext();
     }
-    
+
     @Test(groups="request", dependsOnMethods="uploadExcerptList")
     public void selectExcerpts() {
         UserAuthenticationToken requester = getRequester();

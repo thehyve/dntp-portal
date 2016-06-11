@@ -878,7 +878,7 @@ public class RequestController {
     @Profile("dev")
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/excerptList/useExample", method = RequestMethod.POST)
-    public RequestRepresentation useExampleExcerptList (
+    public Integer useExampleExcerptList (
             UserAuthenticationToken user, 
             @PathVariable String id
             ) {
@@ -910,7 +910,7 @@ public class RequestController {
     // FIXME: refactor
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.POST)
-    public RequestRepresentation uploadExcerptList(
+    public Integer uploadExcerptList(
             UserAuthenticationToken user, 
             @PathVariable String id,
             @RequestParam("flowFilename") String name,
@@ -921,10 +921,10 @@ public class RequestController {
         log.info("POST /requests/" + id + "/excerptList: chunk " + chunk + " / " + chunks);
 
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
-        
+
+        Integer excerptCount = 0;
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.EXCERPT_LIST, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
-        
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
 
             // remove existing excerpt list attachment.
@@ -952,6 +952,7 @@ public class RequestController {
                 properties.setExcerptListAttachment(attachment);
                 log.info("Saving excerpt list.");
                 list = excerptListService.save(list);
+                excerptCount = excerptListService.countEntriesByExcerptListId(list.getId());
                 log.info("Done.");
             } catch (RuntimeException e) {
                 // revert uploading
@@ -960,10 +961,7 @@ public class RequestController {
             }
         }
 
-        HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        RequestRepresentation request = new RequestRepresentation();
-        requestFormService.transferData(instance, request, user.getUser());
-        return request;
+        return excerptCount;
     }
 
     @PreAuthorize("isAuthenticated() and (hasRole('palga') or hasPermission(#id, 'isRequester'))")

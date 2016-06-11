@@ -29,7 +29,7 @@ This file is distributed under the GNU Affero General Public License
              flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/excerptList'})"
              flow-name="excerptListFlow"
              flow-files-submitted="fileuploadsubmitted('excerpt_list'); Upload.uploadFile($flow)"
-             flow-file-success="Upload.fileUploadSuccess('excerpt list', $message, $file); fileuploadsuccess(request, $message, 'excerpt_list', $flow)"
+             flow-file-success="Upload.fileUploadSuccess('excerpt list', $message, $file); excerptlistuploadsuccess(request, $message, 'excerpt_list', $flow)"
              flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'excerpt_list')"
              >
             <div class="alert alert-danger" role="alert" ng-if="upload_result['excerpt_list'] == 'error'">
@@ -95,7 +95,7 @@ This file is distributed under the GNU Affero General Public License
              flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/selection/csv'})"
              flow-name="excerptSelectionFlow"
              flow-files-submitted="fileuploadsubmitted('excerpt_selection'); Upload.uploadFile($flow)"
-             flow-file-success="Upload.fileUploadSuccess('excerpt selection', $message, $file); fileuploadsuccess(request, $message, 'excerpt_selection', $flow)"
+             flow-file-success="Upload.fileUploadSuccess('excerpt selection', $message, $file); excerptselectionuploadsuccess(request, $message, 'excerpt_selection', $flow)"
              flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'excerpt_selection')"
              ng-if="isRequester() && request.status=='DataDelivery'"
             >

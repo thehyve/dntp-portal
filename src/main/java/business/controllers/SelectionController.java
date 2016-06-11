@@ -136,7 +136,7 @@ public class SelectionController {
             + "hasRole('requester') and "
             + "hasPermission(#id, 'isRequester')")
     @RequestMapping(value = "/requests/{id}/selection/csv", method = RequestMethod.POST)
-    public RequestRepresentation uploadExcerptSelection(
+    public Integer uploadExcerptSelection(
             UserAuthenticationToken user, 
             @PathVariable String id,
             @RequestParam("flowFilename") String name,
@@ -147,7 +147,9 @@ public class SelectionController {
         log.info("POST /requests/" + id + "/selection/csv: chunk " + chunk + " / " + chunks);
 
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
-        
+
+        Integer selectedCount = 0;
+
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.EXCERPT_SELECTION, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
         
@@ -155,6 +157,7 @@ public class SelectionController {
             try {
                 InputStream input = fileService.getInputStream(attachment);
                 List<Integer> selected = excerptListService.processExcerptSelection(input);
+                selectedCount = selected.size();
                 try {
                     input.close();
                 } catch (IOException e) {
@@ -185,13 +188,9 @@ public class SelectionController {
                 throw e;
             }
         }
-            
-        HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        RequestRepresentation request = new RequestRepresentation();
-        requestFormService.transferData(instance, request, user.getUser());
-        return request;
+        return selectedCount;
     }
-    
+
     private static final Set<RequestStatus> excerptSelectionStatuses = new HashSet<>();
     {
         excerptSelectionStatuses.add(RequestStatus.DATA_DELIVERY);

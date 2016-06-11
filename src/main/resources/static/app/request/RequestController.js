@@ -207,6 +207,26 @@ angular.module('ProcessApp.controllers')
                 request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 
+            $scope.excerptlistuploadsuccess = function(request, data, type, flow) {
+                $scope.uploading = false;
+                $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
+                $scope.upload_result[type] = 'success';
+                $scope.upload_error[type] = '';
+                $scope.$apply();
+                var excerptEntryCount = data;
+                request.excerptList.entryCount = excerptEntryCount;
+            };
+
+            $scope.excerptselectionuploadsuccess = function(request, data, type, flow) {
+                $scope.uploading = false;
+                $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
+                $scope.upload_result[type] = 'success';
+                $scope.upload_error[type] = '';
+                $scope.$apply();
+                var excerptSelectionCount = data;
+                request.excerptList.selectedCount = excerptSelectionCount;
+            };
+
             $scope.fileuploaderror = function(message, type) {
                 $scope.uploading = false;
                 console.log('Upload error: ' + message);

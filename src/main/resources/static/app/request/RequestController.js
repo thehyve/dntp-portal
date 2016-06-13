@@ -213,8 +213,8 @@ angular.module('ProcessApp.controllers')
                 $scope.upload_result[type] = 'success';
                 $scope.upload_error[type] = '';
                 $scope.$apply();
-                var excerptEntryCount = data;
-                request.excerptList.entryCount = excerptEntryCount;
+                request.excerptListUploaded = true;
+                request.excerptList = {entryCount: data};
             };
 
             $scope.excerptselectionuploadsuccess = function(request, data, type, flow) {
@@ -223,8 +223,7 @@ angular.module('ProcessApp.controllers')
                 $scope.upload_result[type] = 'success';
                 $scope.upload_error[type] = '';
                 $scope.$apply();
-                var excerptSelectionCount = data;
-                request.excerptList.selectedCount = excerptSelectionCount;
+                request.excerptList.selectedCount = data;
             };
 
             $scope.fileuploaderror = function(message, type) {

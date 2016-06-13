@@ -166,6 +166,8 @@ public class RequestFormService {
             request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
             request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
 
+            request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
+
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }
     }

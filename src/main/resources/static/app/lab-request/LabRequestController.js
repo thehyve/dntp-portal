@@ -9,12 +9,14 @@ angular.module('ProcessApp.controllers')
         '$templateCache', '$http',
         '$timeout',
         '$location', '$route', '$routeParams', '$window',
+        '$filter',
         'Request', 'LabRequest', 'Restangular', 'LabRequestFilter',
         function (
                 $q, $rootScope, $scope, $modal,
                 $templateCache, $http,
                 $timeout,
                 $location, $route, $routeParams, $window,
+                $filter,
                 Request, LabRequest, Restangular, LabRequestFilter) {
 
             'use strict';
@@ -70,7 +72,41 @@ angular.module('ProcessApp.controllers')
                         }
                     }
                 }
-                $scope.paNumbersDisplayedCollection = [].concat($scope.samples);
+                //$scope.paNumbersDisplayedCollection = [].concat($scope.samples);
+            };
+
+            /* from: http://lorenzofox3.github.io/smart-table-website/ */
+            $scope.getSamplesPage = function(start, number, params) {
+                var deferred = $q.defer();
+
+                var filtered = params.search.predicateObject ? $filter('filter')($scope.samples, params.search.predicateObject) : $scope.samples;
+
+                if (params.sort.predicate) {
+                    filtered = $filter('orderBy')(filtered, params.sort.predicate, params.sort.reverse);
+                }
+
+                var result = filtered.slice(start, start + number);
+
+                $timeout(function () {
+                    deferred.resolve({
+                        data: result,
+                        numberOfPages: Math.ceil(filtered.length / number)
+                    });
+                }, 1500);
+
+                return deferred.promise;
+            };
+
+            /* from: http://lorenzofox3.github.io/smart-table-website/ */
+            $scope.updateSampleTable = function(tableState) {
+                var pagination = tableState.pagination;
+                var start = pagination.start || 0;
+                var number = pagination.number || 10;
+
+                $scope.getSamplesPage(start, number, tableState).then(function (result) {
+                    $scope.paNumbersDisplayedCollection = result.data;
+                    tableState.pagination.numberOfPages = result.numberOfPages; //set the number of pages so the pagination can update
+                });
             };
 
             //$scope.sequenceNumberColumnName = 'PALGAexcerptnr';

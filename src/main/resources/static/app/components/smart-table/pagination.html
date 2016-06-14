@@ -1,0 +1,11 @@
+<nav ng-if="numPages && pages.length >= 2">
+<ul class="pagination">
+    <li ng-if="pages[0] != 1"><a href="javascript: void(0);" ng-click="selectPage(1)">1</a></li>
+</ul>
+<ul class="pagination">
+    <li ng-repeat="page in pages" ng-class="{active: page==currentPage}"><a href="javascript: void(0);" ng-click="selectPage(page)">{{page}}</a></li>
+</ul>
+<ul class="pagination">
+    <li ng-if="pages[pages.length-1] != numPages"><a href="javascript: void(0);" ng-click="selectPage(numPages)">{{numPages}}</a></li>
+</ul>
+</nav>

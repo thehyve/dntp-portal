@@ -16,6 +16,7 @@
         'Available' : 'Available',
         'Not Available' : 'Not Available',
         'Request type': 'Required data and/or materials',
+        'Input value is too long (max. ? characters)': 'Input value is too long (max. {{max}} characters)',
 
         /* ========= */
         /* Request */

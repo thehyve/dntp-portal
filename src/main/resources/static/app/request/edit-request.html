@@ -30,7 +30,9 @@ This file is distributed under the GNU Affero General Public License
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Principal investigator'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -43,11 +45,13 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                             <input type="email" class="form-control" id="contactPersonEmail" name="contactPersonEmail"
                                 placeholder="{{ 'Principal investigator email' | translate }}" title="{{ 'Principal investigator email' | translate }}"
-                                ng-model="request.contactPersonEmail" ng-maxlength="100"
+                                ng-model="request.contactPersonEmail" ng-maxlength="254"
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Principal investigator email'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.contactPersonEmail.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.contactPersonEmail.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 254 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.contactPersonEmail.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -67,7 +71,9 @@ This file is distributed under the GNU Affero General Public License
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Pathologist'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.pathologistName.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistName.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.pathologistName.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -80,11 +86,13 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                             <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail" 
                                 placeholder="{{ 'Pathologist email' | translate }}" title="{{ 'Pathologist email' | translate }}"
-                                ng-model="request.pathologistEmail" ng-maxlength="100"
+                                ng-model="request.pathologistEmail" ng-maxlength="254"
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Pathologist email'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 254 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -124,13 +132,17 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" 
                             placeholder="{{ 'Description of previous contact.' | translate }}" title="{{ 'Description of previous contact.' | translate }}"
-                            ng-model="request.previousContactDescription" 
+                            ng-model="request.previousContactDescription"
+                            ng-maxlength="2000"
                             ng-required="request.previousContact"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Description of previous contact'|translate}}" data-trigger="focus" bs-popover
                             ></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required">
                                 {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
                             </span>
                         </div>
                     </div>
@@ -141,11 +153,11 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="requestTitle" name="requestTitle" 
                                 placeholder="{{ 'Title' | translate }}" title="{{ 'Title' | translate }}"
-                                ng-model="request.title" ng-maxlength="50"
+                                ng-model="request.title" ng-maxlength="100"
                                 required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
-                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}</span>
                         </div>
                     </div>
 
@@ -155,10 +167,14 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="background" name="background" 
                             placeholder="{{ 'Background' | translate }}" title="{{ 'Background' | translate }}"
-                            ng-model="request.background" 
+                            ng-model="request.background"
+                            ng-maxlength="2000"
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.background.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
                         </div>
                     </div>
 
@@ -168,10 +184,14 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" 
                             placeholder="{{ 'Research question' | translate }}" title="{{ 'Research question' | translate }}"
-                            ng-model="request.researchQuestion" 
+                            ng-model="request.researchQuestion"
+                            ng-maxlength="2000"
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
                         </div>
                     </div>
 
@@ -181,10 +201,14 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="hypothesis" name="hypothesis" 
                             placeholder="{{ 'Hypothesis' | translate }}" title="{{ 'Hypothesis' | translate }}"
-                            ng-model="request.hypothesis" 
+                            ng-model="request.hypothesis"
+                            ng-maxlength="2000"
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
                         </div>
                     </div>
 
@@ -194,12 +218,16 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="methods" name="methods"
                             placeholder="{{ 'Methods' | translate }}" title="{{ 'Methods' | translate }}"
-                            ng-model="request.methods" 
+                            ng-model="request.methods"
+                            ng-maxlength="2000"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Methods'|translate}}" data-trigger="focus" bs-popover
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.methods.$error.required">
                                 {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.methods.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
                             </span>
                         </div>
                     </div>
@@ -211,11 +239,15 @@ This file is distributed under the GNU Affero General Public License
                         <textarea type="text" class="form-control" id="searchCriteria" name="searchCriteria"
                             placeholder="{{ 'Search criteria' | translate }}" title="{{ 'Search criteria' | translate }}"
                             ng-model="request.searchCriteria"
+                            ng-maxlength="2000"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Search criteria'|translate}}" data-trigger="focus" bs-popover
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.searchCriteria.$error.required">
                                 {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.searchCriteria.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
                             </span>
                         </div>
                     </div>
@@ -224,14 +256,18 @@ This file is distributed under the GNU Affero General Public License
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.studyPeriod.$invalid || requestEditForm.studyPeriod.$error.required) && requestEditForm.studyPeriod.$dirty }">
                         <label class="control-label col-sm-3" for="studyPeriod">{{ 'Study period' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="studyPeriod" name="studyPeriod"
-                            placeholder="{{ 'Study period' | translate }}" title="{{ 'Study period' | translate }}"
-                            ng-model="request.studyPeriod"
-                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Study period'|translate}}" data-trigger="focus" bs-popover
-                            required></textarea>
+                            <input type="text" class="form-control" id="studyPeriod" name="studyPeriod"
+                                placeholder="{{ 'Study period' | translate }}" title="{{ 'Study period' | translate }}"
+                                ng-model="request.studyPeriod"
+                                ng-maxlength="100"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Study period'|translate}}" data-trigger="focus" bs-popover
+                            required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.studyPeriod.$error.required">
                                 {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.studyPeriod.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
                             </span>
                         </div>
                     </div>
@@ -243,11 +279,15 @@ This file is distributed under the GNU Affero General Public License
                         <textarea type="text" class="form-control" id="laboratoryTechniques" name="laboratoryTechniques"
                             placeholder="{{ 'Laboratory techniques' | translate }}" title="{{ 'Laboratory techniques' | translate }}"
                             ng-model="request.laboratoryTechniques"
+                            ng-maxlength="2000"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Laboratory techniques'|translate}}" data-trigger="focus" bs-popover
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.laboratoryTechniques.$error.required">
                                 {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.laboratoryTechniques.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
                             </span>
                         </div>
                     </div>
@@ -323,20 +363,30 @@ This file is distributed under the GNU Affero General Public License
                     <hr>
                     <!-- Address -->
                     <div class="form-group"
-                        ng-class="{ 'has-error' : requestEditForm.address1.$invalid && requestEditForm.address1.$dirty }">
+                        ng-class="{ 'has-error' : (requestEditForm.address1.$invalid && requestEditForm.address1.$dirty) ||
+                            (requestEditForm.address2.$invalid && requestEditForm.address2.$dirty) }">
                         <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="address1" id="address1" 
-                            placeholder="{{ 'Address' | translate }}" title="{{ 'Address' | translate }}"
-                            ng-model="request.billingAddress.address1" 
-                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Address'|translate}}" data-trigger="focus" bs-popover
+                            <input type="text" class="form-control" name="address1" id="address1"
+                                placeholder="{{ 'Address' | translate }}" title="{{ 'Address' | translate }}"
+                                ng-model="request.billingAddress.address1"
+                                ng-maxlength="100"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Address'|translate}}" data-trigger="focus" bs-popover
                             required>
                             <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.address1.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.address1.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
-                            <input type="text" class="form-control" id="address2"
-                            ng-model="request.billingAddress.address2" >
+                            <input type="text" class="form-control" id="address2" name="address2"
+                                ng-model="request.billingAddress.address2"
+                                ng-maxlength="100">
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.address2.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                         </div>
                     </div>
 
@@ -348,16 +398,24 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="postalcode" id="postalcode" 
                             placeholder="{{ 'Postal code' | translate }}" title="{{ 'Postal code' | translate }}"
+                            ng-maxlength="100"
                             ng-model="request.billingAddress.postalCode" required>
                             <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.postalcode.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.postalcode.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
-                            <input type="text" class="form-control" name="city" id="city" 
-                            placeholder="{{ 'City' | translate }}" title="{{ 'City' | translate }}"
-                            ng-model="request.billingAddress.city"
-                            required>
+                            <input type="text" class="form-control" name="city" id="city"
+                                placeholder="{{ 'City' | translate }}" title="{{ 'City' | translate }}"
+                                ng-model="request.billingAddress.city"
+                                ng-maxlength="100"
+                                required>
                             <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.city.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.city.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -370,11 +428,13 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                             <input type="email" class="form-control" name="billingEmail" id="billingEmail" 
                             placeholder="{{ 'Email' | translate }}" title="{{ 'Email' | translate }}"
-                            ng-model="request.billingAddress.email" ng-maxlength="255"
+                            ng-model="request.billingAddress.email" ng-maxlength="254"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: E-mail'|translate}}" data-trigger="focus" bs-popover
                             >
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.billingEmail.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.billingEmail.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 254 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.billingEmail.$invalid && requestEditForm.billingEmail.$dirty">
                                 {{ 'Email format is invalid' | translate }}
                             </span>
@@ -383,14 +443,18 @@ This file is distributed under the GNU Affero General Public License
                     </div>
             
                     <!-- Telephone -->
-                    <div class="form-group">
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.telephone.$invalid && requestEditForm.telephone.$dirty }">
                         <label class="control-label col-sm-3" for="telephone">{{ 'Telephone number' | translate }}</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="telephone" 
-                            placeholder="{{ 'Telephone number' | translate }}" title="{{ 'Telephone number' | translate }}"
-                            ng-model="request.billingAddress.telephone" 
-                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Telephone'|translate}}" data-trigger="focus" bs-popover
+                            <input type="text" class="form-control" id="telephone" name="telephone"
+                                placeholder="{{ 'Telephone number' | translate }}" title="{{ 'Telephone number' | translate }}"
+                                ng-model="request.billingAddress.telephone"
+                                ng-maxlength="100"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Telephone'|translate}}" data-trigger="focus" bs-popover
                             >
+                            <span class="help-block" ng-show="requestEditForm.telephone.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                         </div>
                     </div>
 
@@ -406,7 +470,9 @@ This file is distributed under the GNU Affero General Public License
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Charge number'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -423,7 +489,9 @@ This file is distributed under the GNU Affero General Public License
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Grant provider'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.grantProvider.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.grantProvider.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                             <span class="help-block" ng-show="requestEditForm.grantProvider.$error.required">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -439,7 +507,9 @@ This file is distributed under the GNU Affero General Public License
                                 ng-model="request.researchNumber" ng-maxlength="100"
                                 >
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.researchNumber.$error.maxlength">{{ 'Input value is too long' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.researchNumber.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
                         </div>
                     </div>
 
@@ -475,12 +545,16 @@ This file is distributed under the GNU Affero General Public License
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes" 
                             placeholder="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}" title="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}"
-                            ng-model="request.linkageWithPersonalDataNotes" 
+                            ng-model="request.linkageWithPersonalDataNotes"
+                            ng-maxlength="2000"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Notes for linkage with personal data'|translate}}" data-trigger="focus" bs-popover
                             ng-required="request.linkageWithPersonalData"></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.linkageWithPersonalDataNotes.$error.required">
                                 {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.linkageWithPersonalDataNotes.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
                             </span>
                         </div>
                     </div>
@@ -509,15 +583,19 @@ This file is distributed under the GNU Affero General Public License
                          ng-class="{ 'has-error' : requestEditForm.reasonUsingPersonalData.$invalid && requestEditForm.reasonUsingPersonalData.$dirty }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
                         <div class="col-sm-8">
-                        <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" 
-                            placeholder="{{ 'Explanation why linkage is allowed without informed consent' | translate }}" title="{{ 'Explanation why linkage is allowed without informed consent' | translate }}"
-                            ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent" 
-                            data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Reason using personal data'|translate}}" data-trigger="focus" bs-popover
-                            ng-required="(request.type != 1 && request.linkageWithPersonalData && !request.informedConsent)"></textarea>
-                        <!-- errors -->
-                        <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.required">
-                            {{ 'Required field' | translate }}
-                        </span>
+                            <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData" 
+                                placeholder="{{ 'Explanation why linkage is allowed without informed consent' | translate }}" title="{{ 'Explanation why linkage is allowed without informed consent' | translate }}"
+                                ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"
+                                ng-maxlength="2000"
+                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Reason using personal data'|translate}}" data-trigger="focus" bs-popover
+                                ng-required="(request.type != 1 && request.linkageWithPersonalData && !request.informedConsent)"></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
                         </div>
                     </div>
 
@@ -697,25 +775,39 @@ This file is distributed under the GNU Affero General Public License
                         </div>
 
                         <!-- Review result -->
-                        <div class="form-group">
+                        <div class="form-group"
+                            ng-class="{ 'has-error' : requestEditForm.privacyCommitteeOutcome.$invalid && requestEditForm.privacyCommitteeOutcome.$dirty }"
+                            >
                             <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Review result' | translate
                                 }}</label>
                             <div class="col-sm-8">
-                            <textarea type="text" class="form-control" id="privacyCommitteeOutcome"
+                                <textarea type="text" class="form-control" id="privacyCommitteeOutcome"
                                       name="privacyCommitteeOutcome" placeholder="{{ 'Review result' | translate }}"
-                                      ng-model="request.privacyCommitteeOutcome"></textarea>
+                                      ng-model="request.privacyCommitteeOutcome"
+                                      ng-maxlength="2000"
+                                      ></textarea>
+                                <span class="help-block" ng-show="requestEditForm.privacyCommitteeOutcome.$error.maxlength">
+                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                </span>
                             </div>
                         </div>
 
                         <!-- Outcome Reference -->
-                        <div class="form-group">
+                        <div class="form-group"
+                            ng-class="{ 'has-error' : requestEditForm.privacyCommitteeOutcomeRef.$invalid && requestEditForm.privacyCommitteeOutcomeRef.$dirty }"
+                            >
                             <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{
                             'Explanation for PPC' | translate }}</label>
                             <div class="col-sm-8">
-                            <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
+                                <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
                                       name="privacyCommitteeOutcomeRef"
                                       placeholder="{{ 'Explanation for PPC' | translate }}"
-                                      ng-model="request.privacyCommitteeOutcomeRef"></textarea>
+                                      ng-model="request.privacyCommitteeOutcomeRef"
+                                      ng-maxlength="2000"
+                                      ></textarea>
+                                <span class="help-block" ng-show="requestEditForm.privacyCommitteeOutcomeRef.$error.maxlength">
+                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                </span>
                             </div>
                         </div>
 

@@ -59,10 +59,12 @@ public class RequestProperties {
 
     private ReviewStatus reviewStatus;
 
+    @Column(length = 10000)
     private String searchCriteria;
 
     private String studyPeriod;
 
+    @Column(length = 10000)
     private String laboratoryTechniques;
 
     @OneToOne
@@ -104,7 +106,7 @@ public class RequestProperties {
     @Column
     private boolean sentToPrivacyCommittee;
 
-    @Column
+    @Column(length = 10000)
     private String privacyCommitteeRationale;
 
     @Column(length = 10000)

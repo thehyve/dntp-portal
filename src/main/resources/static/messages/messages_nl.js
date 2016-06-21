@@ -272,6 +272,7 @@
         'Request account': 'Account aanvragen',
         'Required field': 'Verplicht veld',
         'Input value is too long': 'Invoerwaarde is te lang',
+        'Input value is too long (max. ? characters)': 'Invoerwaarde is te lang (max. {{max}} tekens)',
         'Pathology lab': 'Pathologielaboratorium',
         'Select lab': 'Selecteer laboratorium',
     

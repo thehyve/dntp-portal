@@ -119,8 +119,16 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
+### 0.0.48
+Modify these column definitions in an existing database:
+```sql
+alter table request_properties alter search_criteria type varchar(10000);
+alter table request_properties alter laboratory_techniques type varchar(10000);
+alter table request_properties alter privacy_committee_rationale type varchar(10000);
+```
+
 ### 0.0.46
-Add these new columns definitions to an existing database:
+Add these new column definitions to an existing database:
 ```sql
 alter table excerpt_list add column palga_patient_nr_column int4 not null default -1;
 alter table excerpt_list add column palga_excerpt_nr_column int4 not null default -1;

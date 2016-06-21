@@ -70,9 +70,10 @@ This file is distributed under the GNU Affero General Public License
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <label id="language_selection" class="navbar-text dropdown-toggle" role="button" data-toggle="dropdown">
+                    <a id="language_selection" class="dropdown-toggle" role="button" data-toggle="dropdown">
                         {{ 'Language' | translate }}: {{currentLanguage}}
-                    </label>
+                        <span class="caret"></span>
+                    </a>
                     <ul class="dropdown-menu" role="menu">
                         <li id="select_language_en"><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
                             {{ 'English' | translate }} (en)
@@ -84,7 +85,8 @@ This file is distributed under the GNU Affero General Public License
                 </li>
                 <li ng-if="authenticated" class="dropdown">
                     <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="profile_menu"><span
-                            class="glyphicon glyphicon-user"></span> {{currentUsername}} <small>({{rolesText()}})</small></a>
+                            class="glyphicon glyphicon-user"></span> {{currentUsername}} <small>({{rolesText()}})</small>
+                        <span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
                         <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>

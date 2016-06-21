@@ -14,6 +14,7 @@
                     restrict: 'E',
                     scope: {
                         modelValue : '=ngModel',
+                        maxlength: '=ngMaxlength',
                         customClass : '@'
                     },
                     require: 'ngModel',
@@ -71,6 +72,15 @@
                          */
                         ctrl.$validators.required = function (modelValue) {
                             return !ctrl.$isEmpty(modelValue);
+                        };
+
+                        /**
+                         * Override built in 'maxlength' validation
+                         * @param modelValue
+                         * @returns {boolean}
+                         */
+                        ctrl.$validators.maxlength = function (modelValue) {
+                            return !modelValue || modelValue.length <= scope.maxlength;
                         };
 
                     }

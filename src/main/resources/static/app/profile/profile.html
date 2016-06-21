@@ -40,10 +40,22 @@ This file is distributed under the GNU Affero General Public License
         </div>
 
         <!-- Telephone -->
-        <div class="form-group">
+        <div class="form-group"
+            ng-class="{ 'has-error' : profileForm.telephone.$invalid}">
             <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="telephone" ng-model="user.contactData.telephone">
+                <input type="text" class="form-control" id="telephone" name="telephone"
+                    ng-model="user.contactData.telephone"
+                    ng-maxlength="50"
+                    required
+                >
+                <!-- errors -->
+                <span class="help-block" ng-show="profileForm.telephone.$error.required">
+                    {{ 'Required field' | translate }}
+                </span>
+                <span class="help-block" ng-show="profileForm.telephone.$error.maxlength">
+                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
+                </span>
             </div>
         </div>
 
@@ -62,15 +74,19 @@ This file is distributed under the GNU Affero General Public License
                 <specialism-combo-box
                         name="specialism"
                         ng-model="user.specialism"
+                        ng-maxlength="50"
                         custom-class="form-control" required>
                 </specialism-combo-box>
                 <!-- errors -->
-                    <span ng-show="profileForm.specialism.$error.required"
-                          class="help-block">
-                            {{ 'Required field' | translate }}
-                    </span>
+                <span ng-show="profileForm.specialism.$error.required"
+                      class="help-block">
+                        {{ 'Required field' | translate }}
+                </span>
+                <span class="help-block" ng-show="profileForm.specialism.$error.maxlength">
+                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
+                </span>
             </div>
-        </div>        
+        </div>
 
         <!-- Pathology Dept. Member -->
         <div class="form-group">

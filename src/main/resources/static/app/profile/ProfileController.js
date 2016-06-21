@@ -7,7 +7,8 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('ProfileController', ['$scope', '$timeout', 'Restangular', function ($scope, $timeout, Restangular, $log) {
+    .controller('ProfileController', ['$scope', '$timeout', 'Restangular', '$log',
+          function ($scope, $timeout, Restangular, $log) {
         $scope.loaded = false;
         $scope.submitted = false;
 

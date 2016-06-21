@@ -115,7 +115,7 @@ angular.module('ProcessApp.controllers')
                     callback: function(result) {
                         if (result) {
                             request.excerptListRemark = result;
-                            request.$submitExcerptSelection(function(result) {
+                            request.$submitExcerptSelection(function() {
                                 var content = $rootScope.translate('Successfully submitted selection.');
                                 $alert({
                                     title : $rootScope.translate('Excerpt selection'),

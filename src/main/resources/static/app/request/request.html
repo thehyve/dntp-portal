@@ -78,7 +78,6 @@ Stichting PALGA%0A
                 <a href="mailto:{{request.requesterEmail}}?subject=PALGA-gegevens staan voor u klaar, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A
 %0A
 Het bestand met PALGA-gegevens voor aanvraag {{request.requestNumber}} (&ldquo;{{request.title}}&rdquo;) staat voor u klaar.%0A
-Meer informatie m.b.t. het bestand vindt u in een aparte email van Stichting PALGA.%0A
 De locatie van het bestand is: {{serverurl}}/#/request/view/{{request.processInstanceId}}%0A
 %0A
 Met vriendelijke groet,%0A
@@ -90,14 +89,39 @@ Stichting PALGA%0A
 Dear Sir/Madam,%0A
 %0A
 The file with PALGA data for request {{request.requestNumber}} (&ldquo;{{request.title}}&rdquo;) is ready for download.%0A
-You will be informed in detail in a separate email from Stichting PALGA.%0A
 The location of the file is: {{serverurl}}/#/request/view/{{request.processInstanceId}}%0A
 %0A
 With kind regards,%0A
 Stichting PALGA%0A
 088-0402700 / aanvraag@palga.nl%0A"
                 ng-if="isPalga() && request.status == 'DataDelivery' &&
+                !request.statisticsRequest &&
                 (request.excerptList || (request.dataAttachments && request.dataAttachments.length > 0))"
+                class="btn btn-default" role="button" title="{{'Compose notification mail' | translate}}">
+                    <span><i class="glyphicon glyphicon-envelope"></i></span>
+                    {{'Compose notification mail' | translate}}
+                </a>
+                <a href="mailto:{{request.requesterEmail}}?subject=PALGA-gegevens staan voor u klaar, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A
+%0A
+Het bestand met PALGA-aantallen voor uw ori&euml;nterende aanvraag {{request.requestNumber}} (&ldquo;{{request.title}}&rdquo;) staat voor u klaar.%0A
+De locatie van het bestand is: {{serverurl}}/#/request/view/{{request.processInstanceId}}%0A
+%0A
+Met vriendelijke groet,%0A
+Stichting PALGA%0A
+088-0402700 / aanvraag@palga.nl%0A
+%0A
+====================%0A
+%0A
+Dear Sir/Madam,%0A
+%0A
+The file with PALGA numbers for your exploratory request {{request.requestNumber}} (&ldquo;{{request.title}}&rdquo;) is ready for download.%0A
+The location of the file is: {{serverurl}}/#/request/view/{{request.processInstanceId}}%0A
+%0A
+With kind regards,%0A
+Stichting PALGA%0A
+088-0402700 / aanvraag@palga.nl%0A"
+                ng-if="isPalga() && request.status == 'DataDelivery' &&
+                request.statisticsRequest && request.dataAttachments && request.dataAttachments.length > 0"
                 class="btn btn-default" role="button" title="{{'Compose notification mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Compose notification mail' | translate}}

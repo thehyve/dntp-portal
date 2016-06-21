@@ -75,7 +75,8 @@ public class MailService {
             "Geachte heer/mevrouw,\n"
           + "\n"
           + "PALGA heeft uw aanvraag ontvangen.\n"
-          + "Vul het handtekeningformulier in (%1$s) en stuur het naar PALGA, aanvraag@palga.nl.\n"
+          + "Vul het formulier authentificatie en instemming aanvraag in (%1$s) "
+          + "en stuur het naar PALGA, aanvraag@palga.nl.\n"
           + "\n"
           + "Met vriendelijke groet,\n"
           + "Stichting PALGA\n"
@@ -90,7 +91,8 @@ public class MailService {
           + "Dear Sir/Madam,\n"
           + "\n"
           + "PALGA has received your request.\n"
-          + "Please complete the agreement form (%1$s) and send it to PALGA, aanvraag@palga.nl.\n"
+          + "Please complete the form authentification and agreement request (%1$s) "
+          + "and send it to PALGA, aanvraag@palga.nl.\n"
           + "\n"
           + "With kind regards,\n"
           + "Stichting PALGA\n"
@@ -98,7 +100,7 @@ public class MailService {
           + "\n"
           + "--\n"
           + "This is an automatically generated message. "
-          + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+          + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
           ;
 
     @Transactional
@@ -212,7 +214,7 @@ public class MailService {
           + "\n"
           + "--\n"
           + "This is an automatically generated message. "
-          + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+          + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
           ;
 
     public void notifyLab(@NotNull LabRequestRepresentation labRequest) {
@@ -254,10 +256,10 @@ public class MailService {
     }
 
     static final String hubUserNotificationTemplate =
-            "Geachte heer/mevrouw,\n"
+            "Beste DNTP-hubmedewerker,\n"
           + "\n"
           + "PALGA heeft aanvragen ontvangen bestemd voor laboratoria waaraan "
-          + "u gekoppeld bent als hubmedewerker.\n"
+          + "jij gekoppeld bent als hubmedewerker.\n"
           + "Het gaat om de volgende verzoeken:\n"
           + "\n"
           + "%1$s\n"
@@ -268,7 +270,7 @@ public class MailService {
           + "\n"
           + "--\n"
           + "Dit is een automatisch gegenereerd bericht. "
-          + "Heeft u vragen, stuur dan een mail naar: aanvraag@palga.nl.\n"
+          + "Heb je vragen, stuur dan een mail naar: aanvraag@palga.nl.\n"
           ;
 
     static final String hubUserNotificationLabSnippet =
@@ -362,7 +364,7 @@ public class MailService {
             + "\n"
             + "--\n"
             + "This is an automatically generated message. "
-            + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+            + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
             ;
 
     public void sendActivationEmail(@NotNull ActivationLink link) {
@@ -413,7 +415,7 @@ public class MailService {
             + "\n"
             + "--\n"
             + "This is an automatically generated message. "
-            + "If you have questions, please send an email to aanvraag@palga.nl.\n"
+            + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
             ;
 
     public static final String passwordRecoverySubject = "Nieuw PALGA-wachtwoord instellen / Create new PALGA password";

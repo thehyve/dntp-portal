@@ -130,7 +130,7 @@ public class LabRequestController {
 
         LabRequest labRequest = labRequestService.findOne(id);
 
-        if (!labRequest.getStatus().equals(Status.WAITING_FOR_LAB_APPROVAL)) {
+        if (labRequest.getStatus() != Status.WAITING_FOR_LAB_APPROVAL) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -161,7 +161,7 @@ public class LabRequestController {
 
         LabRequest labRequest = labRequestService.findOne(id);
 
-        if (!labRequest.getStatus().equals(Status.REJECTED)) {
+        if (labRequest.getStatus() != Status.REJECTED) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -190,7 +190,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/approve");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals(Status.WAITING_FOR_LAB_APPROVAL)) {
+        if (labRequest.getStatus() != Status.WAITING_FOR_LAB_APPROVAL) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -213,7 +213,7 @@ public class LabRequestController {
 
         LabRequest labRequest = labRequestService.findOne(id);
 
-        if (!labRequest.getStatus().equals(Status.APPROVED)) {
+        if (labRequest.getStatus() != Status.APPROVED) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -245,7 +245,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/received");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals(Status.SENDING)) {
+        if (labRequest.getStatus() != Status.SENDING) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -282,7 +282,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/returning");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals(Status.RECEIVED)) {
+        if (labRequest.getStatus() != Status.RECEIVED) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -367,7 +367,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/completerejected");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals(Status.REJECTED)) {
+        if (labRequest.getStatus() != Status.REJECTED) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -397,7 +397,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/completereportsonly");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!labRequest.getStatus().equals(Status.APPROVED)) {
+        if (labRequest.getStatus() != Status.APPROVED) {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
@@ -470,6 +470,16 @@ public class LabRequestController {
       return representation;
     }
 
+    static Set<Status> paNumberDownloadStatuses;
+    {
+        paNumberDownloadStatuses = new HashSet<Status>(Arrays.asList(
+                Status.APPROVED,
+                Status.COMPLETED,
+                Status.SENDING,
+                Status.RECEIVED,
+                Status.RETURNING));
+    }
+
     @PreAuthorize("isAuthenticated() and "
       + "(hasRole('palga') "
       + " or hasPermission(#id, 'isLabRequestRequester') "
@@ -481,15 +491,20 @@ public class LabRequestController {
         log.info("GET /labrequests/" + id + "/panumbers/csv for userId " + user.getId());
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (labRequest.getStatus().equals(Status.WAITING_FOR_LAB_APPROVAL)
-            || labRequest.getStatus().equals(Status.REJECTED)) {
+        if (!paNumberDownloadStatuses.contains(labRequest.getStatus())) {
             log.error("Download not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Download not allowed in status '" + labRequest.getStatus() + "'");
         }
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestData(representation, false);
+
         HttpEntity<InputStreamResource> file = null;
 
         try {
-          file =  paNumberService.writePaNumbers(labRequest.getPathologyList(), labRequest.getLab().getName());
+          file =  paNumberService.writePaNumbers(
+                  labRequest.getPathologyList(),
+                  representation.getLab().getNumber(),
+                  representation.getLabRequestCode());
         } catch (Exception e) {
           log.error(e.getMessage());
           throw new PaNumbersDownloadError();

@@ -51,7 +51,7 @@ This file is distributed under the GNU Affero General Public License
                  (isRequester() || isLabUser() || isHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                        <span><i class="glyphicon glyphicon-download-alt"></i></span>
-                       {{'Download ...' |translate: {filename: 'panumbers_' + labRequest.id + '.csv'} }}
+                       {{'Download ...' |translate: {filename: 'panumbers_' + labRequest.labRequestCode + '.csv'} }}
                    </a>
                  </span>
                 <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected,

@@ -33,7 +33,10 @@ public class PaNumberService {
 
   String[] FILE_HEADER = "LAB_NO;PA_NUMBER;SAMPLES;NOTES".split(";");
 
-  public HttpEntity<InputStreamResource> writePaNumbers(List<PathologyItem> items, String labNo) throws Exception {
+  public HttpEntity<InputStreamResource> writePaNumbers(
+          List<PathologyItem> items,
+          Integer labNumber,
+          String labRequestCode) throws Exception {
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     Writer writer = new PrintWriter(out);
@@ -44,11 +47,11 @@ public class PaNumberService {
 
     for (PathologyItem item : items) {
         log.info(item.getPaNumber());
-        String[] toppings = {labNo, item.getPaNumber(), "", ""};
+        String[] toppings = {labNumber.toString(), item.getPaNumber(), "", ""};
         csvwriter.writeNext(toppings);
     }
 
-    String filename = "panumber_" + labNo + ".csv";
+    String filename = "panumbers_" + labRequestCode + ".csv";
 
     try {
         csvwriter.flush();

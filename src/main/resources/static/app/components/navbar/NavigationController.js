@@ -120,8 +120,16 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            /* Fix nl locale for bootbox */
+            bootbox.removeLocale('nl');
+            bootbox.addLocale('nl', {
+                OK : 'OK',
+                CANCEL : 'Annuleren',
+                CONFIRM : 'OK'
+            });
+
             var _languages = ['nl', 'en'];
-            
+
             $scope.changeLanguage = function(langKey) {
                 if (_languages.indexOf(langKey) != -1) {
                     console.log('change language: ' + langKey);

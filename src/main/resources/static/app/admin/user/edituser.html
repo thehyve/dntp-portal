@@ -133,7 +133,7 @@
                                 <select class="form-control" id="lab" name="lab" ng-switch-default
                                         ng-model="edituser.labId" ng-required="true"
                                         ng-options="lab.id as lab.number + '. ' + lab.name disable when !lab.active for lab in labs">
-                                    <option value="" disabled>None</option>
+                                    <option value="" disabled>{{'None' | translate}}</option>
                                 </select>
                                 <div
                                         ng-switch-when="hub_user"

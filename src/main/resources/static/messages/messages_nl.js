@@ -137,6 +137,7 @@
         'The requester is allowed to submit the request.': 'De aanvrager is bevoegd deze aanvraag in te dienen.',
         'The contact person been checked and is authorised to support the request.': 'De hoofdaanvrager is bekend en ondersteunt deze aanvraag.',
         'Authentification and agreement request': 'Authentificatie en instemming aanvraag',
+        'Form authentification and agreement request': 'Formulier authentificatie en instemming aanvraag',
         'Agreement has been reached.': 'Formulier ontvangen',
         'Upload form': 'Upload formulier',
         'Upload signed authentificaton and agreement form': 'Upload ondertekend formulier authentificatie en instemming aanvraag',

@@ -80,13 +80,13 @@ This file is distributed under the GNU Affero General Public License
                                 </button>
                                 <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
                                         ng-if="!user.active"
-                                        type="button" title="Activate"
+                                        type="button" title="{{'Activate'|translate}}"
                                         ng-click="activate(user)" ng-disabled="dataLoading">
                                     <span class="glyphicon glyphicon-repeat"></span>
                                 </button>
                                 <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
                                         ng-if="user.active"
-                                        type="button" title="Dectivate"
+                                        type="button" title="{{'Deactivate'|translate}}"
                                         ng-click="deactivate(user)" ng-disabled="dataLoading">
                                     <span class="glyphicon glyphicon-ban-circle"></span>
                                 </button>

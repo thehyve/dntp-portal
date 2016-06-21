@@ -14,10 +14,10 @@ public class CacheControlConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Add caching for static resources (1 week).
+        // Add caching for static resources (1 hour).
         registry.addResourceHandler("/**")
             .addResourceLocations("classpath:/static/")
-            .setCachePeriod(3600*24*7);
+            .setCachePeriod(3600);
     }
 
 }

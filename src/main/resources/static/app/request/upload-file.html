@@ -188,16 +188,15 @@ This file is distributed under the GNU Affero General Public License
     <a ng-repeat="file in request.dataAttachments"
        ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
        class="list-group-item">
-      <i class="glyphicon glyphicon-file"></i> {{file.name}}
-      <span class="pull-right">
-      <span class="btn-group btn-group-xs">
-          <button class="btn btn-xs btn-default" type="button" title="{{'Delete'|translate}}"
-                  ng-click="removeDataFile(file); $event.preventDefault();"
-            >
-            <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
-          </button>
-      </span>
-      </span>
+      <i class="glyphicon glyphicon-file"></i>
+      {{file.name}}
+      <button class="btn btn-xs btn-default pull-right" type="button" title="{{'Delete'|translate}}"
+              ng-click="removeDataFile(file); $event.preventDefault();"
+              ng-if="isPalga()"
+              ng-disabled="!isCurrentUser(request.assignee) || dataLoading"
+        >
+        <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
+      </button>
     </a>
   </div>
   <p ng-if="!request.dataAttachments || request.dataAttachments.length < 1">

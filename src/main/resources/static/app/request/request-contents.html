@@ -272,28 +272,33 @@
 
     <h4 class="h4">{{ 'Attachments' | translate }}</h4>
 
-    <div ng-if="request.attachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
-
-    <div class="list-group files" id="attachments">
-        <a ng-repeat="file in request.attachments"
-           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
-           class="list-group-item no-print-url">
-            <i class="glyphicon glyphicon-file"></i> {{file.name}}
-        </a>
+    <div class="row">
+    <div class="col-xs-6 col-sm-6">
+        <div ng-if="request.attachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+        <div class="list-group files" id="attachments">
+            <a ng-repeat="file in request.attachments"
+               ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+               class="list-group-item no-print-url">
+                <i class="glyphicon glyphicon-file"></i> {{file.name}}
+            </a>
+        </div>
+    </div>
     </div>
 
     <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
 
-    <div ng-if="request.medicalEthicalCommitteeApprovalAttachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
-
-    <div class="list-group files" id="medicalEthicalCommitteeApprovalAttachments">
-        <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
-           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
-           class="list-group-item no-print-url">
-            <i class="glyphicon glyphicon-file"></i> {{file.name}}
-        </a>
+    <div class="row">
+    <div class="col-xs-6 col-sm-6">
+        <div ng-if="request.medicalEthicalCommitteeApprovalAttachments.length == 0"><p><i>{{'No attachments uploaded.' | translate}}</i></p></div>
+        <div class="list-group files" id="medicalEthicalCommitteeApprovalAttachments">
+            <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
+               ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+               class="list-group-item no-print-url">
+                <i class="glyphicon glyphicon-file"></i> {{file.name}}
+            </a>
+        </div>
     </div>
-
+    </div>
 
     <div ng-if="isPalga()">
         <h4 class="h4 h4-palga">{{'Authentification checks by PALGA'|translate}}</h4>

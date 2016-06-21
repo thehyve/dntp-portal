@@ -68,23 +68,20 @@ This file is distributed under the GNU Affero General Public License
   </div>
 
   <div class="row">
-  <div class="col-sm-8">
+  <div class="col-xs-6 col-sm-6">
   <p ng-show="request.agreementAttachments.length < 1"><em>{{'No form uploaded.' | translate}}</em></p>
   <div class="list-group">
     <a ng-repeat="file in request.agreementAttachments"
        ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
        class="list-group-item">
-      <label><span><i class="glyphicon glyphicon-file"></i></span> {{file.name}}</label>
-                                <span class="pull-right">
-                                <span class="btn-group btn-group-sm">
-                                    <button class="btn btn-default" type="button" title="{{'Delete'|translate}}"
-                                            ng-click="removeAgreementFile(file); $event.preventDefault();"
-                                            ng-if="request.status=='Review'"
-                                      >
-                                      {{'Delete'|translate}}
-                                    </button>
-                                </span>
-                                </span>
+      <span><i class="glyphicon glyphicon-file"></i></span>
+      {{file.name}}
+      <button class="btn btn-xs btn-default pull-right" type="button" title="{{'Delete'|translate}}"
+              ng-click="removeAgreementFile(file); $event.preventDefault();"
+              ng-if="request.status=='Review'"
+        >
+        <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
+      </button>
     </a>
   </div>
   </div>

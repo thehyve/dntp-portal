@@ -47,12 +47,13 @@ This file is distributed under the GNU Affero General Public License
                             <label class="control-label col-sm-3">{{ 'Reject reason' | translate }}</label>
                             <p class="col-sm-7 form-control-static">
                                 {{labRequest.rejectReason}}
-                                <a href="mailto:{{labRequest.requesterEmail}} ?
-                                            subject=Lab request rejected, request number {{labRequest.labRequestCode}}
-                                            &amp;
-                                            body=Lab request rejected.%0AReject reason: {{labRequest.rejectReason}}">
+                                <br>
+                                <br>
+                                <a href="mailto:{{ labRequest.requesterEmail
+                                }}?subject=Lab request rejected, request number {{ labRequest.labRequestCode
+                                }}&amp;body=Lab request rejected.%0AReject reason: {{ labRequest.rejectReason }}">
                                     <button
-                                            class="btn btn-default" type="button"
+                                            class="btn btn-sm btn-default" type="button"
                                             title="{{'Compose rejection mail' | translate}}">
                                         <span><i class="glyphicon glyphicon-envelope"></i></span>
                                         {{'Compose rejection mail' | translate}}

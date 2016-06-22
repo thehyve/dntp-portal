@@ -421,6 +421,9 @@
         'Missing materials': 'Ontbrekend materiaal',
         'PA material has been sent.': 'PA-materiaal is verstuurd.',
         'PA material has been returned.': 'PA-materiaal is teruggestuurd.',
+        'The lab request has been rejected.': 'Het labverzoek is afgewezen.',
+        'Reject date': 'Datum afwijzing',
+        'Reject reason': 'Reden afwijzing',
 
         /* ===================== */
         /* User overview */

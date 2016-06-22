@@ -396,6 +396,10 @@ public class RequestService {
     final static String[] CSV_COLUMN_NAMES = {
             "Request number",
             "Date created",
+            "Title",
+            "Status",
+            "Linkage",
+            "Linkage notes",
             "Numbers only",
             "Excerpts",
             "PA reports",
@@ -432,6 +436,10 @@ public class RequestService {
                 List<String> values = new ArrayList<>();
                 values.add(request.getRequestNumber());
                 values.add(DATE_FORMATTER.print(request.getDateCreated(), LOCALE));
+                values.add(request.getTitle());
+                values.add(request.getStatus().toString());
+                values.add(booleanToString(request.isLinkageWithPersonalData()));
+                values.add(request.getLinkageWithPersonalDataNotes());
                 values.add(booleanToString(request.isStatisticsRequest()));
                 values.add(booleanToString(request.isExcerptsRequest()));
                 values.add(booleanToString(request.isPaReportRequest()));

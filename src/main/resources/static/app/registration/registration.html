@@ -152,7 +152,7 @@ This file is distributed under the GNU Affero General Public License
                 <div class="col-sm-10">
                     <select class="form-control" name="lab" id="lab"
                          ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
-                         data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Pathology laboratory'|translate}}" data-trigger="focus" bs-popover
+                         data-placement="bottom-right" data-animation="am-flip-x" data-content="{{'popover: Pathology laboratory'|translate}}" data-trigger="focus hover" bs-popover
                          ng-required="true">
                         <option value="" ng-selected="selected">&ndash; {{'Select laboratory' | translate}} &ndash;</option>
                     </select>

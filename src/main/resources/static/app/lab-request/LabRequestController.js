@@ -38,7 +38,7 @@ angular.module('ProcessApp.controllers')
             });
 
             $scope.alerts = [];
-            $scope.labRequest = {};
+            //$scope.labRequest = {};
             $scope.itemsPerPage = 20;
 
             var _getRecallMailRecipients = function(labRequest) {
@@ -339,7 +339,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.approve = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Approve this lab request?'),
+                bootbox.confirm($rootScope.translate('Do you want to approve this request to your laboratory?'),
                         function (result) {
                     if (result) {
                         labRequest.customPUT(labRequest, 'approve').then(function () {
@@ -355,7 +355,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.sending = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Are the materials being sent?'),
+                bootbox.confirm($rootScope.translate('Have you sent the material to the requester?'),
                         function (result) {
                     if (result) {
                         labRequest.customPUT({}, 'sending').then(function () {
@@ -371,7 +371,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.received = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Have the materials been received?'),
+                bootbox.confirm($rootScope.translate('Did you receive the material?'),
                         function (result) {
                     if (result) {
                         var obj = { id: labRequest.id,
@@ -391,7 +391,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.returning = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Return the materials to the sending lab?'),
+                bootbox.confirm($rootScope.translate('Do you want to return the material?'),
                         function (result) {
                     if (result) {
                         labRequest.customPUT({}, 'returning').then(function () {
@@ -407,7 +407,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.completeReturned = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Have the materials been received in return?'),
+                bootbox.confirm($rootScope.translate('Did you receive the material in return?'),
                         function (result) {
                     if (result) {
                         var obj = { id: labRequest.id,
@@ -426,7 +426,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.completeReportsOnly = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Complete PA reports request?'),
+                bootbox.confirm($rootScope.translate('Do you want to finish the request for PA reports?'),
                         function (result) {
                     if (result) {
                         labRequest.customPUT(labRequest, 'completereportsonly').then(function () {
@@ -442,7 +442,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.completeRejected = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Complete rejected request?'),
+                bootbox.confirm($rootScope.translate('Do you want to complete the rejected request?'),
                         function (result) {
                     if (result) {
                         labRequest.customPUT(labRequest, 'completerejected').then(function () {

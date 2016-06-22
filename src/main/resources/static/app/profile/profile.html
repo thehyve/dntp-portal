@@ -11,7 +11,7 @@ This file is distributed under the GNU Affero General Public License
     <h2 ng-show="!loaded">Loading</h2>
     <form class="form-horizontal" role="form" name="profileForm" ng-show="loaded" novalidate>
         <div class="alert alert-success" role="alert">
-            {{ 'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA.' | translate }}
+            {{ 'You are only allowed to edit your telephone number and specialism. If you would like to change other information please contact PALGA.' | translate }}
         </div>
     
     
@@ -91,7 +91,7 @@ This file is distributed under the GNU Affero General Public License
         <!-- Pathology Dept. Member -->
         <div class="form-group">
             <label class="control-label col-sm-2">
-              {{ 'Pathology lab' | translate }}
+              {{ 'Pathology laboratory' | translate }}
             </label>
             <p class="form-control-static col-sm-10">
                 <span ng-repeat="lab in labs" ng-if="user.labId==lab.id">{{lab.name}}</span>

@@ -19,7 +19,6 @@
                         {label:'Interne geneeskunde', value: 'Interne geneeskunde'},
                         {label:'Radiologie', value: 'Radiologie'},
                         {label:'Radiotherapie', value: 'Radiotherapie'},
-                        {label:'Chirurgie', value: 'Chirurgie'},
                         {label:'Hematologie', value: 'Hematologie'},
                         {label:'Keel-neus-oor', value: 'Keel-neus-oor'},
                         {label:'Heelkunde', value: 'Heelkunde'},

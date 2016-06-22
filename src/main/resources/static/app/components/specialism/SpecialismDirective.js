@@ -80,7 +80,7 @@
                          * @returns {boolean}
                          */
                         ctrl.$validators.maxlength = function (modelValue) {
-                            return !modelValue || modelValue.length <= scope.maxlength;
+                            return !modelValue || !scope.maxlength || modelValue.length <= scope.maxlength;
                         };
 
                     }

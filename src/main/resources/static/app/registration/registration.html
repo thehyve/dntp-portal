@@ -146,13 +146,15 @@ This file is distributed under the GNU Affero General Public License
             <!-- Pathology Dept. Member -->
             <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required && registrationForm.lab.$dirty}">
                 <label class="control-label col-sm-2" for="lab">
-                    {{'Pathology lab'|translate}}
+                    {{'Pathology laboratory'|translate}}
                 </label>
 
                 <div class="col-sm-10">
-                    <select class="form-control" name="lab" id="lab" ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
-                             ng-required="true">
-                        <option value="" ng-selected="selected">&ndash; {{'Select lab' | translate}} &ndash;</option>
+                    <select class="form-control" name="lab" id="lab"
+                         ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
+                         data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Pathology laboratory'|translate}}" data-trigger="focus" bs-popover
+                         ng-required="true">
+                        <option value="" ng-selected="selected">&ndash; {{'Select laboratory' | translate}} &ndash;</option>
                     </select>
                     <!-- errors -->
                     <span ng-show="registrationForm.lab.$error.required" class="help-block">

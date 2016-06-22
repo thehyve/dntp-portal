@@ -46,7 +46,6 @@ This file is distributed under the GNU Affero General Public License
                             <input type="email" class="form-control" id="contactPersonEmail" name="contactPersonEmail"
                                 placeholder="{{ 'Principal investigator email' | translate }}" title="{{ 'Principal investigator email' | translate }}"
                                 ng-model="request.contactPersonEmail" ng-maxlength="254"
-                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Principal investigator email'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.contactPersonEmail.$error.maxlength">
@@ -87,7 +86,6 @@ This file is distributed under the GNU Affero General Public License
                             <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail" 
                                 placeholder="{{ 'Pathologist email' | translate }}" title="{{ 'Pathologist email' | translate }}"
                                 ng-model="request.pathologistEmail" ng-maxlength="254"
-                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Pathologist email'|translate}}" data-trigger="focus" bs-popover
                                 required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.maxlength">
@@ -103,15 +101,11 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <!-- Previous contact -->
-                    <div class="form-group" ng-mouseenter="showPopover('previousContactPopover')" ng-mouseleave="hidePopover('previousContactPopover')">
+                    <div class="form-group">
                         <label class="control-label col-sm-3">
                             {{'Previous contact' | translate}}
                         </label>
                         <div class="col-sm-6 form-control-static"
-                            id="previousContactPopover"
-                            data-placement="top-right" data-animation="am-flip-x" 
-                            data-content="{{'popover: Previous contact'|translate}}" 
-                            data-trigger="manual" bs-show="popover.previousContact" bs-popover
                             title="{{'Previous contact' | translate}}"
                             >
                             {{'Did you contact Palga previously?' | translate}}
@@ -260,7 +254,6 @@ This file is distributed under the GNU Affero General Public License
                                 placeholder="{{ 'Study period' | translate }}" title="{{ 'Study period' | translate }}"
                                 ng-model="request.studyPeriod"
                                 ng-maxlength="100"
-                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Study period'|translate}}" data-trigger="focus" bs-popover
                             required>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.studyPeriod.$error.required">
@@ -450,7 +443,6 @@ This file is distributed under the GNU Affero General Public License
                                 placeholder="{{ 'Telephone number' | translate }}" title="{{ 'Telephone number' | translate }}"
                                 ng-model="request.billingAddress.telephone"
                                 ng-maxlength="100"
-                                data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Telephone'|translate}}" data-trigger="focus" bs-popover
                             >
                             <span class="help-block" ng-show="requestEditForm.telephone.$error.maxlength">
                                 {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
@@ -898,7 +890,7 @@ This file is distributed under the GNU Affero General Public License
                             || !request.privacyCommitteeApproved
                             || dataLoading
                         ">
-                            {{'Finish'|translate}}
+                            {{'Finish submission process'|translate}}
                     </button>
                     <button class="btn btn-danger" type="button"
                         ng-if="(request.status=='Review' || request.status=='Approval') && isPalga()"

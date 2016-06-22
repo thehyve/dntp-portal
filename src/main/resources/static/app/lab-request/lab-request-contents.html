@@ -99,9 +99,9 @@
         <p class="form-control-static"
         ><span ng-if="labRequest.clinicalDataSent"
         ><span class="noprint"><i class="glyphicon glyphicon-ok ok"></i> &nbsp;</span>{{
-        'Clinical data has been sent to the requester.' | translate }}</span>
+        'Desired information for retrieving clinical data from treating physician was sent to the requester.' | translate }}</span>
         <span ng-if="!labRequest.clinicalDataSent">{{
-        'Clinical data has NOT been sent to the requester.' | translate }}</span>
+        'Desired information for retrieving clinical data from treating physician was NOT sent to the requester.' | translate }}</span>
         </p>
         </div>
     </div>
@@ -196,7 +196,7 @@
             <div ng-if="labRequest.request.excerptsRequest">{{'Excerpts'|translate}}<br /></div>
             <div ng-if="labRequest.request.paReportRequest">{{'PA reports'|translate}}<br /></div>
             <div ng-if="labRequest.request.materialsRequest">{{'PA material'|translate}}<br /></div>
-            <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
+            <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data from practitioner'|translate}}<br /></div>
         </div>
     </div>
 

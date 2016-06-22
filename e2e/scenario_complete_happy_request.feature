@@ -124,7 +124,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
       scientificCouncilApproved
       privacyCommitteeApproved
       """
-    And I click on the 'Finish' button
+    And I click on the 'Finish submission process' button
     And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And I go to the 'requests' page
@@ -278,7 +278,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     """
     missingSamples: 1, 2, 3
     """
-    And I click on the 'Materials received' button
+    And I click on the 'PA material received' button
     And I click on the 'OK' button
     Then the current request should have 'Received' status
 
@@ -317,7 +317,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
    """
    missingSamples: 1, 2, 3
    """
-   And I click on the 'Materials returned' button
+   And I click on the 'PA material returned' button
    And I am on the lab requests page
    Then the page should contain the text 'Completed'
 

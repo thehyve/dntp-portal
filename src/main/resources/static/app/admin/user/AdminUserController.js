@@ -112,7 +112,9 @@ angular.module('ProcessApp.controllers')
                         $scope.editUserModal.destroy();
                         result = _addInfoToUser(result);
                         $scope.users.unshift(result);
-                        bootbox.alert('User has been added. A password reset mail has been sent to ' + result.username + '.');
+                        bootbox.alert(
+                                $rootScope.translate('User has been added. A password reset mail has been sent to ?.',
+                                        {email: result.username}));
                     }, function(response) {
                         $scope.dataLoading = false;
                         if (response.data) {
@@ -141,8 +143,8 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.remove = function(user) {
-                bootbox.confirm('Are you sure you want to delete user ' +
-                        $scope.getName(user) + '?',
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete user ? ?',
+                        {name: $scope.getName(user)}),
                     function(result) {
                         if (result) {
                             user.$remove(function() {

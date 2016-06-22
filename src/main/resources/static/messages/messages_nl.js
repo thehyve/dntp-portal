@@ -10,6 +10,11 @@
         /* ========= */
         /* Global */
         /* ========= */
+        'role_palga': 'PALGA',
+        'role_requester': 'Aanvrager',
+        'role_lab_user': 'Labmedewerker',
+        'role_hub_user': 'Hubmedewerker',
+        'role_scientific_council': 'Wetenschappelijke raad',
 
         'Management': 'Beheer',
         'Source': 'Bron',
@@ -28,6 +33,12 @@
         'Thank you': 'Bedankt',
         'Registration completed. An email with an activation link was sent to ?.': 'Registratie is afgerond. Een e-mail met de activatielink is gestuurd naar {{email}}.',
         'Password must be 8 or more characters long, contain numbers, letters, and a special character.': 'Wachtwoord moet ten minste 8 tekens lang zijn en cijfers, letters en een speciaal teken bevatten.',
+        'User has been added. A password reset mail has been sent to ?.':
+            'Gebruiker is toegevoegd. De gebruiker ontvangt een mail op {{email}} om het wachtwoord aan te passen.',
+        'Are you sure you want to delete user ? ?': 'Weet je zeker dat je gebruiker {{name}} wilt verwijderen?',
+        'only visible for PALGA': 'alleen zichtbaar voor PALGA-adviseurs',
+        'Export requests': 'Aanvragen exporteren',
+        'Main request': 'Hoofdaanvraag',
 
         /* ========= */
         /* Request */
@@ -35,10 +46,8 @@
         'Principal investigator': 'Projectleider',
         'popover: Principal investigator': 'Projectleider is de eindverantwoordelijk onderzoeker.',
         'Principal investigator email': 'E-mail projectleider',
-        'popover: Principal investigator email': 'E-mailadres projectleider.',
         'popover: Pathologist': 'De patholoog betrokken bij dit onderzoek. ',
         'Pathologist': 'Patholoog',
-        'popover: Pathologist email': 'E-mailadres patholoog.',
         'Postal code': 'Postcode',
         'popover: Postal code': 'De postcode.',
         'City': 'Plaats',
@@ -46,7 +55,6 @@
         'Address': 'Adres',
         'popover: Address': 'Postadres waar factuur naar verzonden mag worden. ',
         'popover: E-mail': 'E-mail crediteurenadministratie.',
-        'popover: Telephone': 'Het telefoonnummer.',
         'Billing address': 'Facturatieadres',
         'Billing details': 'Facturatiedetails',
         'Charge number': 'Kostenplaats',
@@ -56,14 +64,13 @@
         'Grant number': 'Subsidienummer',
         'popover: Research number': 'Projectnummer van subsidieverstrekker.',
         'Previous contact': 'Vorig contact',
-        'popover: Previous contact': 'Heeft u contact gehad met PALGA over deze aanvraag?',
         'Did you contact Palga previously?': 'Heeft u contact gehad met PALGA over deze aanvraag?',
         'popover: Description of previous contact': 'Met wie heeft u contact gehad en wat is besproken?',
         'Description of previous contact.': 'Beschrijf het contact.',
         'Yes': 'Ja',
         'No': 'Nee',
         'Running title': 'Titel onderzoeksproject',
-        'popover: Title': 'De titel van het onderzoek.',
+        'popover: Title': 'De titel van het onderzoek (max. 100 tekens).',
         'Background': 'Achtergrond',
         'popover: Background': 'Achtergrond van het onderzoek.',
         'Research question': 'Onderzoeksvraag',
@@ -71,17 +78,16 @@
         'Hypothesis': 'Hypothese',
         'popover: Hypothesis': 'De hypothese.',
         'Methods': 'Methode',
-        'popover: Methods': 'Methods.',
+        'popover: Methods': 'De onderzoeksmethode die u gaat gebruiken zoals trial, prospectief/retrospectief cohort, patiëntcontrole onderzoek etc, de uitkomstmaat en beoogde data-analyses. Wat is het minimaal aantal patiënten dat nodig is om deze vraag te kunnen beantwoorden?',
         'Search criteria': 'Zoekcriteria',
-        'popover: Search criteria': 'Search criteria.',
+        'popover: Search criteria': 'Mocht u al een idee hebben voor de gewenste zoekcriteria, zoals soort onderzoek of specifieke PALGA-termen, dan kunt u die hier noteren. U kunt ook de algemene medische termen noteren, dan overleggen wij later met u over de exacte zoekcriteria.',
         'Study period': 'Studieperiode',
-        'popover: Study period': 'Study period.',
         'Laboratory techniques': 'Laboratoriumtechnieken',
-        'popover: Laboratory techniques': 'Welke technieken (bijv. kiembaanmutatieanalyse/moleculaire technieken, immuunhistochemie, tissue micro array enz.) worden gebruikt om tot beantwoording van de hypothese te komen? Wat is het minimaal aantal patiënten dat nodig is om deze vraag te kunnen beantwoorden?',
+        'popover: Laboratory techniques': 'Indien van toepassing: welke labtechnieken (bijv. kiembaanmutatieanalyse/moleculaire technieken, immuunhistochemie, tissue micro array etc.) worden gebruikt?',
         'Request type': 'Benodigde data en/of materialen',
-        'popover: Request type': 'Benodigde data en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" tabindex="-1" href="http://www.palga.nl/gegevensaanvragen/excerpten.html">www.palga.nl/gegevensaanvragen/excerpten.html</a>.',
+        'popover: Request type': 'Benodigde data en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" tabindex="-1" href="http://www.palga.nl/gegevensaanvragen/zoekvragen.html">www.palga.nl/gegevensaanvragen/zoekvragen.html</a>.',
 
-        'Numbers only, exploratory request': 'Alleen aantallen, oriënterende zoekvraag',
+        'Numbers only, exploratory request': 'Alleen aantallen; oriënterende zoekvraag',
         'Excerpts only': 'Alleen excerpten',
         'Excerpts and full PA reports': 'Excerpten en complete PA-verslagen',
         'Excerpts and PA material': 'Excerpten en PA-materiaal',
@@ -120,13 +126,13 @@
         'Are you sure you want to submit the request? After submission the request cannot be edited anymore.' :
             'Weet u zeker dat u de aanvraag wilt indienen? Na het indienen kan de aanvraag niet meer bewerkt worden.',
         'Are you sure you want to send the request to the scientific council?': 'Weet je zeker dat je de aanvraag naar de wetenschappelijk raad wilt sturen?',
-        'Are you sure you want to finalise the request?': 'Weet u zeker dat u de aanvraag wilt afronden?',
+        'Are you sure you want to finalise the request?': 'Weet je zeker dat je de aanvraagprocedure wilt afronden?',
         'Are you sure you want to close the request?<br>After closing, no data files can be added.': 'Weet je zeker dat je de aanvraag wilt afsluiten?<br>Na het sluiten kunnen geen bestanden meer worden toegevoegd.',
         'Are you sure you want to reject the request?': 'Weet je zeker dat je de aanvraag wilt afwijzen?',
         'Please enter the reason for rejection.': 'Vul de reden van afwijzing in.',
-        'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Data delivery.\'' :
-            'Weet u zeker dat u de selectie wilt afwijzen?<br>' +
-            'Na afwijzing wordt de status veranderd naar \'Datauitgifte.\'',
+        'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Approved, waiting for data.\'' :
+            'Weet je zeker dat je de selectie wilt afwijzen?<br>' +
+            'Na afwijzing wordt de status veranderd naar \'Goedgekeurd, wachten op data.\'',
         'Are you sure you want to submit the selection?<br>You may enter a remark:':
             'Weet u zeker dat u de selectie wilt insturen?<br>U kunt hier een opmerking plaatsen:',
         'Remark': 'Opmerking',
@@ -150,7 +156,7 @@
         'Linkage with own patients or cohort or linkage between registries.': 'Koppeling van eigen patiënten of eigen cohort of koppeling tussen registraties.',
         'No data linkage required.': 'Geen koppeling vereist.',
         'Informed consent (IC)': 'Informed consent (IC)',
-        'popover: Informed consent': 'Informed consent (IC).',
+        'popover: Informed consent': 'Upload de patiëntinformatie en een blanco informed consent formulier.',
         'Data linkage information': 'Koppelingsinformatie',
         'popover: Data linkage': 'Koppelingsinformatie.',
         'Which cohort or registry do you want to link to PALGA?': 'Geef aan met welke persoonsgegevens of welke registratie u wilt koppelen.',
@@ -163,15 +169,16 @@
         'Pathologist email': 'E-mail patholoog',
         'General details': 'Algemene details',
         'Review by PALGA privacy commitee': 'Toetsing door PALGA privacycommissie (PPC)',
-        'This request was sent by email to the privacy committee.': 'Deze aanvraag is schriftelijk voorgelegd naar de PPC',
+        'This request was sent by email to the privacy committee.': 'Deze aanvraag is schriftelijk voorgelegd aan de PPC',
         'Review PPC': 'Beoordeling PPC',
         'Review result': 'Oordeel PPC',
         'Explanation for PPC': 'Toelichting voor PPC',
         'Summary review procces': 'Samenvatting schriftelijke procedure',
         'Final checks before data delivery': 'Laatste controles voor datalevering',
-        'Approved by scientific council.': 'De wetenschappelijke raad heeft toestemming gegeven',
-        'Approved by privacy committee.': 'Afgehandeld conform mandaat PPC',
+        'Approved by scientific council.': 'De wetenschappelijke raad heeft deze aanvraag positief beoordeeld.',
+        'Approved by privacy committee.': 'De privacycommissie heeft deze aanvraag positief beoordeeld.',
         'Finish': 'Afronden',
+        'Finish submission process': 'Aanvraagprocedure afronden',
         'Contact information': 'Contactinformatie',
         'Validation': 'Validatie',
         'Reopen': 'Heropenen',
@@ -188,7 +195,7 @@
         'Lab requests claimed by me': 'Door mij geclaimde labverzoeken',
         'Unclaimed lab requests': 'Openstaande labverzoeken',
 
-        'Review by the scientific council': 'Beoordeling door de wetenschappelijke raad',
+        'Review by the scientific council': 'Beoordeling door de wetenschappelijke raad (WR)',
         'Review_short': 'Beoordeling',
         'Discussion': 'Discussie',
         'Update comment': 'Opmerking bewerken',
@@ -210,6 +217,8 @@
         'Select all excerpts and continue': 'Alle excerpten selecteren en doorgaan',
         'Excerpt selection': 'Excerptselectie',
         'Download selection': 'Selectie downloaden',
+        'Approve selection': 'Selectie goedkeuren',
+        'Reject selection': 'Selectie afwijzen',
 
         'Other data files': 'Overige databestanden',
         'No data files.': 'Geen databestanden.',
@@ -273,9 +282,10 @@
         'Required field': 'Verplicht veld',
         'Input value is too long': 'Invoerwaarde is te lang',
         'Input value is too long (max. ? characters)': 'Invoerwaarde is te lang (max. {{max}} tekens)',
-        'Pathology lab': 'Pathologielaboratorium',
-        'Select lab': 'Selecteer laboratorium',
-    
+        'Pathology laboratory': 'Pathologielaboratorium',
+        'Select laboratory': 'Selecteer laboratorium',
+        'popover: Pathology laboratory': 'Selecteer het pathologielaboratorium waar u werkzaam bent of waarmee u samenwerkt.',
+
         /* ================= */
         /* Email validation */
         /* ================= */
@@ -292,8 +302,8 @@
         'Update profile': 'Profiel bijwerken',
         'Change password': 'Wachtwoord wijzigen',
         'Update': 'Bijwerken',
-        'You are only allowed to edit your telephone number. If you would like to change other information please contact PALGA.': 
-            'U kunt alleen uw telefoonnummer aanpassen. Indien u andere informatie wilt wijzigen, neem dan contact op met PALGA.',
+        'You are only allowed to edit your telephone number and specialism. If you would like to change other information please contact PALGA.': 
+            'U kunt alleen uw telefoonnummer en uw specialisme aanpassen. Indien u andere informatie wilt wijzigen, neem dan contact op met PALGA.',
         'Your profile has been updated': 'Uw profiel is bijgewerkt',
     
         /* ===================== */
@@ -325,6 +335,7 @@
         'Creation date': 'Aangemaakt op',
         'Requester': 'Aanvrager',
         'Assignee': 'Gevolmachtigde',
+        'Claimed by': 'Geclaimd door',
         'PALGA advisor': 'PALGA-adviseur',
         'Actions': 'Acties',
         'Details': 'Details',
@@ -354,6 +365,14 @@
         /* ===================== */
         /* Lab request details */
         /* ===================== */
+        'Lab request status': 'Status labverzoek',
+        'Result': 'Resultaat',
+        'REPORTS_ONLY': 'Verzoek om PA-rapporten afgerond',
+        'RETURNED': 'PA-materiaal is retour ontvangen',
+        'NONE': 'Geen',
+        'Packing list': 'Pakbon',
+        'Download PA numbers': 'Download PA-nummers',
+        'Delivery address': 'Afleveradres',
         'Approve': 'Goedkeuren',
         'Request details': 'Aanvraagdetails',
         'Request ID': 'Aanvraag ID',
@@ -361,13 +380,13 @@
         'Sending lab': 'Versturend lab',
         'Lab request code': 'Labverzoekcode',
         'Are you sure you want to reject the lab request?': 'Weet u zeker dat u het labverzoek wilt afwijzen?',
-        'Approve this lab request?': 'Het labverzoek goedkeuren?',
-        'Is the material being sent?': 'Is het materiaal verstuurd?',
-        'Has the material been received?': 'Is het materiaal ontvangen?',
-        'Return the material to the sending lab?': 'Het materiaal terugsturen naar het versturende lab?',
-        'Has the material been received in return?': 'Is het materiaal terugontvangen?',
-        'Complete PA reports request?': 'Het verzoek op PA-verlagen afronden?',
-        'Complete rejected request?': 'Het afgewezen labverzoek afronden?',
+        'Do you want to approve this request to your laboratory?': 'Wilt u dit verzoek aan uw laboratorium goedkeuren?',
+        'Have you sent the material to the requester?': 'Heeft u het materiaal verstuurd naar de aanvrager?',
+        'Did you receive the material?': 'Heeft u het materiaal ontvangen?',
+        'Do you want to return the material?': 'Wilt u het materiaal terugsturen naar het laboratorium waarvan het materiaal afkomstig is?',
+        'Did you receive the material in return?': 'Heeft u het materiaal retour ontvangen?',
+        'Do you want to finish the request for PA reports?': 'Wilt u het verzoek voor PA-verslagen afronden?',
+        'Do you want to complete the rejected request?': 'Wilt u het afgewezen verzoek afronden?',
         'Are you sure you want to delete the PA number?': 'Weet u zeker dat u het PA-nummer wilt verwijderen?',
         'Return this lab request to status \'Under review by lab\'?':
             'Het labverzoek terugzetten naar \'Beoordeling door lab\'?',
@@ -384,12 +403,24 @@
         'PA reports have been sent to the requester.': 'PA-verslagen zijn naar de aanvrager verstuurd.',
         'PA reports have NOT been sent to the requester.': 'PA-verslagen zijn NIET naar de aanvrager verstuurd.',
         'Update PA reports status': 'Verzendstatus PA-verslagen opslaan',
-        'Clinical data has been sent to the requester.': 'Klinische gegevens zijn naar de aanvrager verstuurd.',
-        'Clinical data has NOT been sent to the requester.': 'Klinische gegevens zijn NIET naar de aanvrager verstuurd.',
+        'Desired information for retrieving clinical data from treating physician was sent to the requester.':
+            'Benodigde informatie voor het opvragen van klinische gegevens via de behandelaar zijn naar de aanvrager verstuurd.',
+        'Desired information for retrieving clinical data from treating physician was NOT sent to the requester.':
+            'Benodigde informatie voor het opvragen van klinische gegevens via de behandelaar zijn NIET naar de aanvrager verstuurd.',
         'Update clinical data status': 'Verzendstatus klinische data opslaan',
         'The lab request has been approved.': 'Het labverzoek is goedgekeurd.',
-        'A researcher has requested data and/or materials from your lab.' : 'Een onderzoeker heeft gegevens en/of materiaal gevraagd aan uw lab.',
-        'Select "Approve" to accept or "Reject" to decline this request.' : 'Als u instemt met het verzoek, kies dan "Goedkeuren" anders "Afwijzen".',
+        'Your laboratory is asked for PA reports, PA material or clinical data from the treating physician.' : 'Een onderzoeker vraagt uw laboratorium om PA-verlagen, PA-materiaal of klinische gegevens via de behandelaar.',
+        'Select ‘Approve’ to accept or ‘Reject’ to decline this request.' : 'Als u instemt met het verzoek, kies dan ‘Goedkeuren’ anders ‘Afwijzen.’',
+        'Send materials': 'Materiaal versturen',
+        'Materials are missing.': 'Materiaal ontbreekt.',
+        'PA material returned': 'PA-materiaal retour ontvangen',
+        'PA material received': 'PA-materiaal ontvangen',
+        'PA material has been received.': 'PA-materiaal is ontvangen.',
+        'PA material has been received by the requester.': 'PA-materiaal is ontvangen door de aanvrager.',
+        'Return materials': 'Materiaal retour sturen',
+        'Missing materials': 'Ontbrekend materiaal',
+        'PA material has been sent.': 'PA-materiaal is verstuurd.',
+        'PA material has been returned.': 'PA-materiaal is teruggestuurd.',
 
         /* ===================== */
         /* User overview */
@@ -477,7 +508,7 @@
         /* ===================== */
         'My lab': 'Mijn lab',
         'Edit my lab': 'Bewerk mijn lab',
-        'Enable hub assistance.': 'Inzet hubmedewerker toestaan.',
+        'Enable hub assistance.': 'Hubmedewerker inzetten.',
         'Would you like hub assistance for this lab request?': 'Wilt u de inzet van de hubmedewerker toestaan voor dit labverzoek?',
         'Request hub assistance.': 'Hubmedewerker inschakelen.',
         'Option not available because hub assistance is not enabled by your lab.': 'De optie is niet beschikbaar omdat uw lab de inzet van de hubmedewerker niet toestaat.',
@@ -500,7 +531,6 @@
         'Interne geneeskunde':'Interne geneeskunde',
         'Radiologie':'Radiologie',
         'Radiotherapie':'Radiotherapie',
-        'Chirurgie':'Chirurgie',
         'Hematologie':'Hematologie',
         'Keel-neus-oor':'Keel-neus-oor',
         'Heelkunde':'Heelkunde',

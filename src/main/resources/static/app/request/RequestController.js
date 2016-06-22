@@ -341,7 +341,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.remove = function(request) {
-                bootbox.confirm($rootScope.translate('Are you sure you want to delete request ?', {id: request.processInstanceId}), function(choice) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete request ?', {id: request.requestNumber}), function(choice) {
                     if (choice) {
                         request.$remove(function() {
                             $scope.allRequests.splice($scope.allRequests.indexOf(request), 1);
@@ -549,7 +549,7 @@ angular.module('ProcessApp.controllers')
             $scope.rejectSelection = function(request) {
                 bootbox.confirm(
                     $rootScope.translate('Are you sure you want to reject the selection?<br>' +
-                    'After rejecting, the status will return to \'Data delivery.\''),
+                    'After rejecting, the status will return to \'Approved, waiting for data.\''),
                     function(confirmed) {
                         if (confirmed) {
                             $scope.dataLoading = true;
@@ -723,7 +723,6 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.popoverEnablers = {
-                previousContactPopover: ['previousContactYes', 'previousContactNo'],
                 requestTypePopover: ['radio-numbers', 'radio-excerpts', 'radio-excerpts-PA', 'radio-excerpts-materials',
                                      'radio-excerpts-PA-materials', 'radio-PA', 'radio-materials'],
                 dataLinkagePopover: ['linkageWithPersonalDataYes', 'linkageWithPersonalDataNo'],

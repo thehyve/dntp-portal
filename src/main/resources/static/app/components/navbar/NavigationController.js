@@ -25,7 +25,12 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.rolesText = function() {
-                return _.get($rootScope.globals, 'currentUser.roles', []).join(', ');
+                return _.map(
+                        _.get($rootScope.globals, 'currentUser.roles', []),
+                        function(role) {
+                            return $rootScope.translate('role_'+role);
+                        })
+                        .join(', ');
             };
 
             $scope.isViewLabsAllowed = function() {

@@ -22,7 +22,7 @@
                         <div class="col-sm-8">
                             <select class="form-control" ng-model="edituser.currentRole" name="currentRole" id="currentRole">
                                 <option ng-repeat="role in roles" value="{{role.name}}"
-                                        ng-selected="role.name == edituser.currentRole">{{role.name}}
+                                        ng-selected="role.name == edituser.currentRole">{{'role_' + role.name | translate}}
                                 </option>
                             </select>
                         </div>
@@ -162,6 +162,7 @@
                             <specialism-combo-box
                                     name="specialism"
                                     ng-model="edituser.specialism"
+                                    ng-maxlength="50"
                                     custom-class="form-control" required>
                             </specialism-combo-box>
                             <!-- errors -->

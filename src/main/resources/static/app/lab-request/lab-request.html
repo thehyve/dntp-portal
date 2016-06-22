@@ -51,7 +51,7 @@ This file is distributed under the GNU Affero General Public License
                  (isRequester() || isLabUser() || isHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                        <span><i class="glyphicon glyphicon-download-alt"></i></span>
-                       {{'Download ...' |translate: {filename: 'panumbers_' + labRequest.labRequestCode + '.csv'} }}
+                       {{'Download PA numbers' |translate}}
                    </a>
                  </span>
                 <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected,
@@ -85,7 +85,7 @@ This file is distributed under the GNU Affero General Public License
                         ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' &&
                         labRequest.status != 'Waiting for lab approval')">
                     <span><i class="glyphicon glyphicon-print"></i></span>
-                    {{'Print preview' | translate}}
+                    {{'Packing list' | translate}}
                 </button>
             </div>
 

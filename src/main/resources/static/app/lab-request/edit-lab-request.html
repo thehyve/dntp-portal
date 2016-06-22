@@ -67,7 +67,6 @@ This file is distributed under the GNU Affero General Public License
                         <label class="control-label col-sm-3">{{ 'Request title' | translate }}</label>
                         <p class="col-sm-7 form-control-static">
                             {{labRequest.request.title}}
-                            <br>
                         </p>
                     </div>
 
@@ -75,7 +74,6 @@ This file is distributed under the GNU Affero General Public License
                         <label class="control-label col-sm-3">{{ 'Creation date' | translate }}</label>
                         <p class="col-sm-7 form-control-static">
                             {{labRequest.request.dateCreated | date }}
-                            <br>
                         </p>
                     </div>
 
@@ -86,7 +84,6 @@ This file is distributed under the GNU Affero General Public License
                             <label class="control-label col-sm-3">{{ 'Requester name' | translate }}</label>
                             <p class="col-sm-7 form-control-static">
                                 {{labRequest.requesterName}}
-                                <br>
                             </p>
                         </div>
 
@@ -94,7 +91,6 @@ This file is distributed under the GNU Affero General Public License
                             <label class="control-label col-sm-3">{{ 'Email' | translate }}</label>
                             <p class="col-sm-7 form-control-static">
                                 {{labRequest.requesterEmail}}
-                                <br>
                             </p>
                         </div>
                     </div>
@@ -106,7 +102,6 @@ This file is distributed under the GNU Affero General Public License
                             <label class="control-label col-sm-3">{{ 'Lab' | translate }}</label>
                             <p class="col-sm-7 form-control-static">
                                 {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
-                                <br>
                             </p>
                         </div>
                     </div>
@@ -115,7 +110,6 @@ This file is distributed under the GNU Affero General Public License
                         <label class="control-label col-sm-3">{{ 'Contact' | translate }}</label>
                         <p class="col-sm-7 form-control-static">
                             {{labRequest.requesterEmail}}
-                            <br>
                         </p>
                     </div>
 
@@ -134,7 +128,7 @@ This file is distributed under the GNU Affero General Public License
                             <div class="col-sm-8">
                                 <input type="checkbox" id="paReportsSent" name="paReportsSent"
                                        ng-model="labRequest.paReportsSent"> &nbsp;
-                                <label class="normal" for="paReportsSent">
+                                <label class="normal radio-label" for="paReportsSent">
                                     {{ 'PA reports have been sent to the requester.' | translate }}
                                 </label>
                             </div>
@@ -159,15 +153,15 @@ This file is distributed under the GNU Affero General Public License
                                 labRequest.status != 'Rejected' &&
                                 labRequest.request.clinicalDataRequest">
                         <div class="panel-heading">
-                            <h4>{{'Clinical data'|translate}}</h4>
+                            <h4>{{'Clinical data from practitioner'|translate}}</h4>
                         </div>
 
                         <div class="panel-body">
                             <div class="col-sm-8">
                                 <input type="checkbox" id="clinicalDataSent" name="clinicalDataSent"
                                        ng-model="labRequest.clinicalDataSent"> &nbsp;
-                                <label class="normal" for="clinicalDataSent">
-                                    {{ 'Clinical data has been sent to the requester.' | translate }}
+                                <label class="normal radio-label" for="clinicalDataSent">
+                                    {{ 'Desired information for retrieving clinical data from treating physician was sent to the requester.' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -187,13 +181,14 @@ This file is distributed under the GNU Affero General Public License
                          ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
 
                         <div class="panel-heading">
-                            <h4>{{labRequest.status|translate}}</h4>
+                            <h4>{{'Lab request status'|translate}}: {{labRequest.status|translate}}</h4>
                         </div>
 
                         <div class="panel-body">
                             <p>
-                                {{'A researcher has requested data and/or materials from your lab.'|translate}}
+                                {{'Your laboratory is asked for PA reports, PA material or clinical data from the treating physician.'|translate}}
                             </p>
+                            <p>&nbsp;</p>
 
                             <p>
                                 <strong>{{'Would you like hub assistance for this lab request?' | translate }}</strong>
@@ -216,7 +211,7 @@ This file is distributed under the GNU Affero General Public License
                                 </span>
                             </p>
 
-                            <p>{{'Select "Approve" to accept or "Reject" to decline this request.'|translate}}</p>
+                            <p>{{'Select &lsquo;Approve&rsquo; to accept or &lsquo;Reject&rsquo; to decline this request.'|translate}}</p>
 
                             <span class="help-block" ng-show="!labRequest.lab.hubAssistanceEnabled">
                                 {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
@@ -239,7 +234,7 @@ This file is distributed under the GNU Affero General Public License
                     <div class="panel panel-default"
                          ng-if="(isLabUser() || isHubUser()) && labRequest.status == 'Approved'">
                         <div class="panel-heading">
-                            <h4>{{'Approved'|translate}}</h4>
+                            <h4>{{'Lab request status'|translate}}: {{'Approved'|translate}}</h4>
                         </div>
                         <div class="panel-body">
                             <div class="col-sm-8">
@@ -263,7 +258,7 @@ This file is distributed under the GNU Affero General Public License
                     <div class="panel panel-default"
                          ng-if="(isPalga() || isLabUser() || isHubUser()) && labRequest.status == 'Rejected'">
                         <div class="panel-heading">
-                            <h4>{{'Rejected'|translate}}</h4>
+                            <h4>{{'Lab request status'|translate}}: {{'Rejected'|translate}}</h4>
                         </div>
                         <div class="panel-body">
 
@@ -289,12 +284,12 @@ This file is distributed under the GNU Affero General Public License
                     <div class="panel panel-default"
                          ng-if="isRequester() && labRequest.status == 'Received'">
                         <div class="panel-heading">
-                            <h4>{{'Received'|translate}}</h4>
+                            <h4>{{'Lab request status'|translate}}: {{'Received'|translate}}</h4>
                         </div>
                         <div class="panel-body">
 
                             <div class="col-sm-8">
-                                {{'Materials have been received.'|translate}}
+                                {{'PA material has been received.'|translate}}
                             </div>
 
                         </div>
@@ -309,21 +304,37 @@ This file is distributed under the GNU Affero General Public License
                     </div>
 
                     <div class="panel panel-default"
-                         ng-if=" isRequester() && labRequest.status == 'Sending' ||
+                         ng-if="isRequester() && labRequest.status == 'Sending' ||
                     (isLabUser() || isHubUser()) && (
                             labRequest.status == 'Returning'
                             || labRequest.status == 'Sending'
                             || labRequest.status == 'Received'
                         )">
                         <div class="panel-heading">
-                            <h4>{{labRequest.status|translate}}</h4>
+                            <h4>{{'Lab request status'|translate}}: {{labRequest.status|translate}}</h4>
                         </div>
                         <div class="panel-body">
+                            <div class="col-sm-8"
+                                ng-if="labRequest.status == 'Received'">
+                                <p>{{'PA material has been received by the requester.'|translate}}</p>
+                                <p>&nbsp;</p>
+                            </div>
+                            <div class="col-sm-8"
+                                ng-if="labRequest.status == 'Sending'">
+                                <p>{{'PA material has been sent.'|translate}}</p>
+                                <p>&nbsp;</p>
+                            </div>
+                            <div class="col-sm-8"
+                                ng-if="labRequest.status == 'Returning'">
+                                <p>{{'PA material has been returned.'|translate}}</p>
+                                <p>&nbsp;</p>
+                            </div>
+
                             <div class="col-sm-8"
                                  ng-class="{ 'has-error' : labRequestEditForm.missingSamples.$invalid }">
                                 <input type="checkbox" id="samplesMissing" name="samplesMissing"
                                        ng-model="labRequest.samplesMissing"> &nbsp;
-                                <label class="normal" for="samplesMissing">
+                                <label class="normal radio-label" for="samplesMissing">
                                     {{'Materials are missing.' | translate }}
                                 </label>
                                 <textarea class="form-control" id="missingSamples" name="missingSamples"
@@ -342,13 +353,13 @@ This file is distributed under the GNU Affero General Public License
                                     <button class="btn btn-default btn-primary"
                                             ng-disabled="labRequestEditForm.$invalid"
                                             ng-click="received(labRequest);">
-                                        {{'Materials received'|translate}}
+                                        {{'PA material received'|translate}}
                                     </button>
                                 </span>
                                 <span ng-if="isLabUser() || isHubUser()">
                                     <button class="btn btn-default btn-primary"
                                             ng-click="completeReturned(labRequest);">
-                                        {{'Materials returned'|translate}}
+                                        {{'PA material returned'|translate}}
                                     </button>
                                 </span>
                             </span>

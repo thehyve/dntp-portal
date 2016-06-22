@@ -46,7 +46,9 @@ This file is distributed under the GNU Affero General Public License
     <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
     </th>
     <th></th>
-    <th></th>
+    <th class="no-print" ng-if="(isLabUser() || isHubUser()) &&
+                isCurrentUser(labRequest.assignee) &&
+                (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending')"></th>
   </tr>
   </thead>
   <tbody>
@@ -131,7 +133,9 @@ This file is distributed under the GNU Affero General Public License
   <tr>
     <td colspan="7" class="text-center">
     </td>
-    <td class="no-print"></td>
+    <td class="no-print" ng-if="(isLabUser() || isHubUser()) &&
+                isCurrentUser(labRequest.assignee) &&
+                (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending')"></td>
   </tr>
   </tfoot>
 </table>

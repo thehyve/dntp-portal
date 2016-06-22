@@ -58,7 +58,7 @@ This file is distributed under the GNU Affero General Public License
                         <td><span ng-if="user.emailValidated">{{'Validated'|translate}}</span>
                             <span class="text-danger" ng-if="!user.emailValidated">{{'Not validated'|translate}}</span>
                         </td>
-                        <td>{{user.currentRole}}</td>
+                        <td>{{'role_' + user.currentRole | translate}}</td>
                         <td>
                             <span ng-class="{
                                   'label label-success':isPredefinedSpecialism(user.specialism),

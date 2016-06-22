@@ -10,6 +10,12 @@
         /* ========= */
         /* Global */
         /* ========= */
+        'role_palga': 'PALGA',
+        'role_requester': 'Requester',
+        'role_lab_user': 'Lab user',
+        'role_hub_user': 'Hub user',
+        'role_scientific_council': 'Scientific council',
+
         'An email has been sent to ? with instructions on how to reset your password.': 'An email has been sent to {{email}} with instructions on how to reset your password.',
         'Registration completed. An email with an activation link was sent to ?.': 'Registration completed. An email with an activation link was sent to {{email}}.',
         'Postal code': 'Zip code',
@@ -17,31 +23,30 @@
         'Not Available' : 'Not Available',
         'Request type': 'Required data and/or materials',
         'Input value is too long (max. ? characters)': 'Input value is too long (max. {{max}} characters)',
+        'User has been added. A password reset mail has been sent to ?.':
+            'User has been added. A password reset mail has been sent to {{email}}.',
+        'Are you sure you want to delete user ? ?': 'Are you sure you want to delete user {{name}}?',
 
         /* ========= */
         /* Request */
         /* ========= */
         'popover: Principal investigator': 'Principal investigator of this research project.',
         'popover: Pathologist': 'Pathologist involved in this research project. ',
-        'popover: Pathologist email' : 'Email address of the pathologist.',
         'popover: Address': 'Address where the invoice should be sent to.',
         'popover: E-mail': 'Email billing department.',
         'popover: Charge number': 'Account where the project can be booked.',
         'popover: Grant provider': 'Grant provider.',
         'popover: Research number': 'Grant number.',
         'Running title': 'Title',
-        'popover: Title' : 'Title of the research project.',
+        'popover: Title' : 'Title of the research project (max. 100 characters).',
         'popover: Background': 'Project background.',
         'popover: Research question': 'Research question(s).',
         'popover: Hypothesis': 'Hypothesis.',
         'popover: Methods': 'Methods.',
         'popover: Search criteria': 'Search criteria.',
-        'popover: Study period': 'Study period.',
         'popover: Laboratory techniques': 'Used techniques (e.g., germline mutation analysis, moleculair techniques, immuno histochemistry, tissue micro array). How many patients do you need (at least) to answer this research question?',
         'popover: Postal code': 'Zip code.',
         'popover: City': 'City',
-        'popover: Telephone': 'Telephone number.',
-        'popover: Previous contact' : 'Did you contact PALGA previously about the current request?',
         'popover: Description of previous contact': 'With whom did you speak and what did you discuss?',
         'popover: Request type': 'Required data and/or materials.',
         'popover: Data linkage' : 'Data linkage information.',
@@ -49,7 +54,8 @@
         'popover: Reason using personal data': 'Explain why linkage is allowed without informed consent.',
         'popover: Upload file' : 'Upload file.',
         'popover: Upload medical ethical committee approval' : 'Upload letter of medical research ethics committee.',
-        'popover: Informed consent': 'Informed consent (IC).',
+        'popover: Informed consent': 'Upload patient information and blank informed consent form.',
+        'popover: Pathology laboratory': 'Select the pathology laboratory where you work or with which you collaborate.',
 
         'Are you sure you want to delete file ?' : 'Are you sure you want to delete file {{name}}?',
         'Maximum file size ? MB.': 'Maximum file size {{mb_max}} MB.',
@@ -73,11 +79,11 @@
         'Request_Type_6' : 'Full PA reports only (no excerpts)',
         'Request_Type_7' : 'PA material only',
 
-        'ppc_handled_according_mandate': 'Handled according to mandate PPC',
-        'ppc_handled_according_mandate_explanation': 'Handled according to mandate PPC, see explanation',
+        'ppc_handled_according_mandate': 'Approved according to mandate PPC',
+        'ppc_handled_according_mandate_explanation': 'Approved according to mandate PPC, see explanation',
         'ppc_approved_written_procedure': 'Approved after written procedure',
-        'ppc_discuss': 'Discuss in meeting',
-        'ppc_rationale_exploratory_request': 'Exploratory request, no assessment required',
+        'ppc_discuss': 'Review in half year meeting',
+        'ppc_rationale_exploratory_request': 'Exploratory request, no review required',
 
         /* ===================== */
         /* Agreement overview    */
@@ -103,6 +109,9 @@
         'Completed': 'Completed',
         'Closed': 'Closed',
 
+        'REPORTS_ONLY': 'Request for PA reports completed',
+        'RETURNED': 'PA material has been returned',
+        'NONE': 'None',
 
         'A researcher has requested data and/or materials from your lab.' : 'A researcher has requested data and/or materials from your lab.',
         'Select "Approve" to accept or "Reject" to decline this request.' : 'Select "Approve" to accept or "Reject" to decline this request',
@@ -115,18 +124,17 @@
         /* ===================== */
         /* Specialism */
         /* ===================== */
-        'Maag-darm-lever-ziekten':'Gastrointestinal-liver-disease',
-        'Gynaecologie':'Gynecology',
+        'Maag-darm-lever-ziekten':'Gastroenterology',
+        'Gynaecologie':'Gynaecology',
         'Dermatologie':'Dermatology',
         'Medische Oncologie':'Medical Oncology',
         'Interne geneeskunde':'Internal Medicine',
         'Radiologie':'Radiology',
         'Radiotherapie':'Radiotherapy',
-        'Chirurgie':'Surgery (Chirurgie)',
         'Hematologie':'Haematology',
         'Keel-neus-oor':'Throat-nose-ear',
-        'Heelkunde':'Surgery (Heelkunde)',
-        'Epidemiologie':'Epidemiologie',
+        'Heelkunde':'Surgery',
+        'Epidemiologie':'Epidemiology',
         'Eerstelijnsgeneeskunde':'Primary care',
         'Cardiologie':'Cardiology',
         'Pathologie':'Pathology',

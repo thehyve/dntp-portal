@@ -89,7 +89,7 @@ Feature: scenario additional request
       scientificCouncilApproved
       privacyCommitteeApproved
       """
-    And I click on the 'Finish' button
+    And I click on the 'Finish submission process' button
     And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And I go to the 'requests' page

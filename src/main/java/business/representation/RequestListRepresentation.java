@@ -26,6 +26,8 @@ public class RequestListRepresentation implements RequestListElement {
     private String assigneeName;
     private Date dateAssigned;
 
+    private RequestListRepresentation parent;
+
     private String title;
     private String background;
     private String researchQuestion;
@@ -221,6 +223,14 @@ public class RequestListRepresentation implements RequestListElement {
 
     public void setDateAssigned(Date dateAssigned) {
         this.dateAssigned = dateAssigned;
+    }
+
+    public RequestListRepresentation getParent() {
+        return parent;
+    }
+
+    public void setParent(RequestListRepresentation parent) {
+        this.parent = parent;
     }
 
     public void setAssigneeName(String assigneeName) {

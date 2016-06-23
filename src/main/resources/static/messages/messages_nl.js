@@ -109,6 +109,7 @@
         'Request_Type_6': 'Alleen PA-verslagen',
         'Request_Type_7': 'Alleen PA-materiaal',
 
+        'Additional request for request ?': 'Aanvullend verzoek voor {{requestNumber}}',
         'Upload file': 'Upload bestand(en)',
         'drag and drop your file here': 'sleep bestanden hierheen',
         'No attachments uploaded.': 'Nog geen attachments geüpload.',

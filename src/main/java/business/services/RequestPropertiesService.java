@@ -24,6 +24,9 @@ import business.exceptions.AttachmentNotFound;
 import business.models.File;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
+import business.representation.RequestListRepresentation;
+import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
 import business.models.RequestPropertiesRepository;
 import business.models.User;
 
@@ -82,6 +85,18 @@ public class RequestPropertiesService {
             properties =  save(properties);
         }
         return properties.getRequestNumber();
+    }
+
+    @Cacheable("parentlistrepresentation")
+    public RequestListRepresentation getParentListRepresentation(String processInstanceId) {
+        RequestProperties parentProperties = requestPropertiesRepository.getParentByProcessInstanceId(processInstanceId);
+        if (parentProperties == null) {
+            return null;
+        }
+        RequestListRepresentation parent = new RequestListRepresentation();
+        parent.setRequestNumber(parentProperties.getRequestNumber());
+        parent.setProcessInstanceId(parentProperties.getProcessInstanceId());
+        return parent;
     }
 
     public ReviewStatus getRequestReviewStatus(String processInstanceId) {

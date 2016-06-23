@@ -130,9 +130,14 @@ public class RequestFormService {
         request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
         request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
         request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
+        {
+            RequestListRepresentation parent = requestPropertiesService.getParentListRepresentation(instance.getId());
+            if (parent != null) {
+                request.setParent(parent);
+            }
+        }
 
         Map<String, Object> variables = instance.getProcessVariables();
-
         if (variables != null) {
             request.setTitle((String)variables.get("title"));
             request.setBackground((String)variables.get("background"));

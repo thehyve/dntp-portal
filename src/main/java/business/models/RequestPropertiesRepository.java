@@ -20,16 +20,19 @@ public interface RequestPropertiesRepository extends JpaRepository<RequestProper
 
     List<RequestProperties> findByRequestNumberNull();
 
-    @Query("SELECT p.reviewStatus FROM RequestProperties p WHERE processInstanceId = :processInstanceId)")
+    @Query("SELECT p.reviewStatus FROM RequestProperties p WHERE processInstanceId = :processInstanceId")
     ReviewStatus getRequestReviewStatusByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
 
-    @Query("SELECT p.processInstanceId FROM RequestProperties p WHERE reviewStatus = :reviewStatus)")
+    @Query("SELECT p.processInstanceId FROM RequestProperties p WHERE reviewStatus = :reviewStatus")
     Set<String> getProcessInstanceIdsByReviewStatus(@Param("reviewStatus") ReviewStatus reviewStatus);
 
-    @Query("SELECT p.requestNumber FROM RequestProperties p WHERE processInstanceId = :processInstanceId)")
+    @Query("SELECT p.requestNumber FROM RequestProperties p WHERE processInstanceId = :processInstanceId")
     String getRequestNumberByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
 
     @Query("SELECT COUNT(da.id) FROM RequestProperties p JOIN p.dataAttachments da WHERE p.processInstanceId = :processInstanceId")
     long countDataAttachmentsByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
+
+    @Query("SELECT p FROM RequestProperties r JOIN r.parent p WHERE r.processInstanceId = :processInstanceId")
+    RequestProperties getParentByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
 
 }

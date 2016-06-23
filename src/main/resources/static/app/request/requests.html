@@ -118,7 +118,14 @@ This file is distributed under the GNU Affero General Public License
                                 type="checkbox" value="1"
                                 ng-model="selected_requests[req.processInstanceId]" />
                         </td>
-                        <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.requestNumber}}</a></td>
+                        <td>
+                            <a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.requestNumber}}</a>
+                            <span ng-if="req.parent" class="pull-right"><a
+                                    title="{{'Additional request for request ?' | translate: {requestNumber: req.parent.requestNumber} }}"
+                                    ng-href="/#/request/view/{{req.parent.processInstanceId}}">
+                                <small><i class="glyphicon glyphicon-duplicate"></i></small></a>
+                            </span>
+                        </td>
                         <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
                         <td class="request-status">
                             {{ getStatusText(req) | translate}}

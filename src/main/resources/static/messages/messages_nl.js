@@ -349,6 +349,8 @@
         'Filter by requester': 'Filteren op aanvrager',
         'Filter by assignee': 'Filteren op gevolmachtigde',
         'Filter by PALGA advisor': 'Filteren op PALGA-adviseur',
+        'Filter by pathologist': 'Filteren op patholoog',
+        'Filter by linkage': 'Filteren op koppeling',
         'Date assigned': 'Toegekend op',
         'My verdict': 'Mijn oordeel',
 

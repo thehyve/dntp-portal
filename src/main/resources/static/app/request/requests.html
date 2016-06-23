@@ -75,7 +75,7 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="status" class="sortable">{{'Status'|translate}}</th>
                         <th></th>
                         <th>{{'Request type'|translate}}</th>
-                        <th ng-if="isPalga()">{{'Data linkage'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="linkageWithPersonalData" class="sortable">{{'Data linkage'|translate}}</th>
                         <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
                         <th ng-if="isScientificCouncil()" st-sort="approvalVote" class="sortable">{{'My verdict'|translate}}</th>
                         <th st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
@@ -96,7 +96,12 @@ This file is distributed under the GNU Affero General Public License
                         </th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
-                        <th ng-if="isPalga()">&nbsp;</th>
+                        <th ng-if="isPalga()"><select st-search="linkageWithPersonalData" class="input-sm form-control" type="search" st-input-event="change">
+                                <option value="">{{'Filter by linkage' | translate}}</option>
+                                <option value="true">{{ 'Yes' | translate}}</option>
+                                <option value="false">{{ 'No' | translate}}</option>
+                            </select>
+                        </th>
                         <th ng-if="isRequester()">&nbsp;</th>
                         <th ng-if="isScientificCouncil()" class="request-vote">&nbsp;</th>
                         <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>

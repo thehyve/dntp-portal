@@ -135,7 +135,7 @@ public class RequestController {
             Date endSort = new Date();
             log.info("GET: sorting took " + (endSort.getTime() - endQ.getTime()) + " ms.");
         } else {
-            Collections.sort(result, requestListRepresentationComparator);
+            Collections.sort(result, Collections.reverseOrder(requestListRepresentationComparator));
             Date endSort = new Date();
             log.info("GET: sorting took " + (endSort.getTime() - endQ.getTime()) + " ms.");
         }

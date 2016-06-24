@@ -26,7 +26,7 @@ This file is distributed under the GNU Affero General Public License
                         <span><i class="glyphicon glyphicon-pencil"></i></span> {{'Update'|translate}}
                     </button>
                 </div>
-                <span class="pull-right no-print">
+                <span class="pull-right no-print" ng-if="isCurrentUser(comment.creator.id.toString())">
                     <span class="btn-group btn-group-xs">
                         <button class="btn btn-info" type="button" title="Edit"
                                 ng-click="commentEditVisibility[comment.id] = 1">

@@ -70,17 +70,17 @@ This file is distributed under the GNU Affero General Public License
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="comment in request.approvalComments">
             <div>
-            <div ng-if="!approval_comment_edit_visibility[comment.id]">{{comment.contents}}</div>
-            <div ng-if="approval_comment_edit_visibility[comment.id]">
-                   <textarea class="form-control" name="commentText" placeholder="{{'Add comment'|translate}}"
-                             ng-model="comment.contents">
-                   </textarea>
-                <button class="btn btn-default" type="button" title="{{'Update comment'|translate}}"
-                        ng-click="updateComment(request, comment)" ng-disabled="dataLoading">
-                    {{'Update comment'|translate}}
+            <div ng-if="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
+            <div ng-if="commentEditVisibility[comment.id]">
+                <textarea class="form-control" name="commentText" placeholder="{{'Add comment'|translate}}"
+                          ng-model="comment.contents">
+                </textarea>
+                <button class="btn btn-primary btn-xs no-print" type="button" title="{{'Update comment'|translate}}"
+                        ng-click="updateApprovalComment(request, comment)" ng-disabled="dataLoading">
+                    <span><i class="glyphicon glyphicon-pencil"></i></span> {{'Update'|translate}}
                 </button>
             </div>
-                <span class="pull-right no-print" ng-if="globals.currentUser.id==comment.creator.id">
+                <span class="pull-right no-print" ng-if="isCurrentUser(comment.creator.id.toString())">
                 <span class="btn-group btn-group-xs">
                     <button class="btn btn-info {{commentEditVisibility[comment.id] ? 'active' : ''}}" type="button"
                             title="Edit"

@@ -39,11 +39,11 @@ public class CommentController {
 
     @Autowired
     private LabRequestRepository labRequestRepository;
-    
+
     @Autowired
     private CommentRepository commentRepository;
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.GET)
     public List<CommentRepresentation> getComments(
             UserAuthenticationToken user,
@@ -58,7 +58,7 @@ public class CommentController {
     }
 
     @PreAuthorize("isAuthenticated() and "
-            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
+            + "(hasRole('palga') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.GET)
     public List<CommentRepresentation> getApprovalComments(
             UserAuthenticationToken user,
@@ -72,7 +72,7 @@ public class CommentController {
         return comments;
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.POST)
     public CommentRepresentation addComment(
             UserAuthenticationToken user,
@@ -89,7 +89,7 @@ public class CommentController {
     }
 
     @PreAuthorize("isAuthenticated() and "
-            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
+            + "(hasRole('palga') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/approvalComments", method = RequestMethod.POST)
     public CommentRepresentation addApprovalComment(
             UserAuthenticationToken user,
@@ -105,7 +105,8 @@ public class CommentController {
         return new CommentRepresentation(comment);
     }
 
-    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isPalgaUser')")
+    @PreAuthorize("isAuthenticated() and "
+            + "(hasRole('palga') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.PUT)
     public CommentRepresentation updateComment(
             UserAuthenticationToken user,
@@ -124,12 +125,13 @@ public class CommentController {
         return new CommentRepresentation(comment);
     }
 
+    @PreAuthorize("isAuthenticated() and hasRole('palga')")
     @RequestMapping(value = "/requests/{id}/comments/{commentId}", method = RequestMethod.DELETE)
     public void removeComment(
             UserAuthenticationToken user,
             @PathVariable String id,
             @PathVariable Long commentId) {
-        log.info("PUT /requests/" + id + "/comments");
+        log.info("DELETE /requests/" + id + "/comments");
         Comment comment = commentRepository.findOne(commentId);
         if (!comment.getCreator().getId().equals(user.getUser().getId())) {
             throw new UpdateNotAllowed();
@@ -140,7 +142,7 @@ public class CommentController {
     }
 
     @PreAuthorize("isAuthenticated() and "
-            + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
+            + "(hasRole('palga') or hasPermission(#id, 'isScientificCouncil'))")
     @RequestMapping(value = "/requests/{id}/approvalComments/{commentId}", method = RequestMethod.DELETE)
     public void removeApprovalComment(
             UserAuthenticationToken user,

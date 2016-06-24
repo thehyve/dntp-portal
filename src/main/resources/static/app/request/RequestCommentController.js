@@ -13,13 +13,16 @@ angular.module('ProcessApp.controllers')
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment) {
 
+            $scope.editComment = {};
+            $scope.commentEditVisibility = {};
+
             $scope.addComment = function(request, body) {
                 $scope.dataLoading = true;
                 var comment = new RequestComment(body);
                 comment.processInstanceId = request.processInstanceId;
                 comment.$save(function(result) {
                     request.comments.push(result);
-                    $scope.edit_comment = {};
+                    $scope.editComment = {};
                     $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = response.statusText;

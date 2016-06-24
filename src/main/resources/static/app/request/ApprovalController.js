@@ -8,10 +8,13 @@
 
 angular.module('ProcessApp.controllers')
     .controller('ApprovalController',['$rootScope', '$scope', '$modal', '$location', '$route',
-        'User', 'Request', 'ApprovalComment', 'ApprovalVote',
+        'User', 'Request', 'RequestComment', 'ApprovalComment', 'ApprovalVote',
 
         function ($rootScope, $scope, $modal, $location, $route,
-                User, Request, ApprovalComment, ApprovalVote) {
+                User, Request, RequestComment, ApprovalComment, ApprovalVote) {
+
+            $scope.approvalComment = {};
+            $scope.commentEditVisibility = {};
 
             if ($rootScope.isPalga()) {
                 User.queryScientificCouncil().$promise.then(function(response) {
@@ -64,12 +67,12 @@ angular.module('ProcessApp.controllers')
 
             $scope.updateApprovalComment = function(request, body) {
                 $scope.dataLoading = true;
-                var comment = new ApprovalComment(body);
+                var comment = new RequestComment(body);
                 comment.$update(function(result) {
                     var index = $scope.request.approvalComments.indexOf(body);
                     //console.log('Updating comment at index ' + index);
                     $scope.request.approvalComments[index] = result;
-                    $scope.approval_comment_edit_visibility[comment.id] = 0;
+                    $scope.commentEditVisibility[comment.id] = 0;
                     $scope.dataLoading = false;
                 }, function(response) {
                     $scope.error = $scope.error + response.data.message + '\n';

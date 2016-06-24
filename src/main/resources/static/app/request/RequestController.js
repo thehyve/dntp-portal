@@ -44,9 +44,6 @@ angular.module('ProcessApp.controllers')
                 if (!$scope.allRequests) {
                     $scope.allRequests = [];
                 }
-                $scope.editComment = {};
-                $scope.approvalComment = {};
-                $scope.commentEditVisibility = {};
                 Request.get({id:$routeParams.requestId}, function (req) {
                     //req.type = Request.convertRequestOptsToType(req);
                     // set date -- to be used in the agreement form

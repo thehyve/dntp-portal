@@ -123,7 +123,7 @@ This file is distributed under the GNU Affero General Public License
                     <tbody>
                     <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': isCurrentUser(req.assignee)}">
                         <td class="no-print">
-                            <input class="input-sm form-control"
+                            <input class="input-sm form-control request-selection"
                                 ng-if="isPalga()"
                                 type="checkbox" value="1"
                                 ng-model="selected_requests[req.processInstanceId]" />

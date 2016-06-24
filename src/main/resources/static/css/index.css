@@ -168,7 +168,7 @@ h2, .h2, h3, .h3, h4, .h4 {
 
 
 .smart-table-selected {
-    background-color: #c8e5bc;
+    background-color: #e8f7cd; /*#c8e5bc;*/
 }
 .smart-table-not-selected {
     background-color: #ffffff;
@@ -361,4 +361,9 @@ address {margin-bottom: 0px;}
 
 .ok {
     color: green;
+}
+
+input.request-selection {
+    height: 18px;
+    margin: 2px 0 0;
 }

@@ -101,7 +101,7 @@ This file is distributed under the GNU Affero General Public License
                     <tr ng-repeat="labRequest in displayedLabRequests track by $index"
                         ng-class="{'smart-table-selected': isCurrentUser(labRequest.assignee)}">
                         <td class="no-print">
-                            <input class="input-sm form-control"
+                            <input class="input-sm form-control request-selection"
                                 ng-if="isLabUser() || isHubUser()"
                                 type="checkbox" value="1"
                                 ng-model="selected_lab_requests[labRequest.id]" />

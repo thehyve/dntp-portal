@@ -103,7 +103,12 @@ This file is distributed under the GNU Affero General Public License
                             </select>
                         </th>
                         <th ng-if="isRequester()">&nbsp;</th>
-                        <th ng-if="isScientificCouncil()" class="request-vote">&nbsp;</th>
+                        <th ng-if="isScientificCouncil()" class="request-vote"><select st-search="approvalVote" class="input-sm form-control" type="search" st-input-event="change">
+                                <option value="">{{'Filter by verdict' | translate}}</option>
+                                <option value="ACCEPTED">{{ 'Accepted' | translate}}</option>
+                                <option value="REJECTED">{{ 'Rejected' | translate}}</option>
+                            </select>
+                        </th>
                         <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>

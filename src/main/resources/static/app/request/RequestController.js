@@ -80,6 +80,9 @@ angular.module('ProcessApp.controllers')
                     $scope.allRequests.forEach(function(req) {
                         req.number = Request.convertRequestNumber(req);
                         req.statusText = $scope.getStatusText(req);
+                        if (req.approvalVote == null) {
+                            req.approvalVote = '';
+                        }
                         //req.type = Request.convertRequestOptsToType(req);
                     });
                 }, function(response) {

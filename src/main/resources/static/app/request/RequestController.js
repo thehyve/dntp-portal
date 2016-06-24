@@ -14,6 +14,7 @@ angular.module('ProcessApp.controllers')
         '$alert', '$timeout', '$q',
         '$templateCache', '$http',
         'AgreementFormTemplate',
+        'Popover',
 
         function ($rootScope, $scope, $modal, $location, $route,
                   Request, RequestAttachment, RequestComment,
@@ -21,7 +22,8 @@ angular.module('ProcessApp.controllers')
                   Upload, $routeParams, RequestFilter,
                   $alert, $timeout, $q,
                   $templateCache, $http,
-                  AgreementFormTemplate) {
+                  AgreementFormTemplate,
+                  Popover) {
 
             $scope.displayStatuses = Request.displayStatuses;
 
@@ -726,8 +728,9 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.popoverEnablers = {
-                requestTypePopover: ['radio-numbers', 'radio-excerpts', 'radio-excerpts-PA', 'radio-excerpts-materials',
-                                     'radio-excerpts-PA-materials', 'radio-PA', 'radio-materials'],
+                requestTypePopover: ['statisticsRequestTrue', 'statisticsRequestFalse',
+                                     'excerptsRequest', 'paReportRequest',
+                                     'materialsRequest', 'clinicalDataRequest'],
                 dataLinkagePopover: ['linkageWithPersonalDataYes', 'linkageWithPersonalDataNo'],
                 informedConsentPopover: ['informedConsentYes', 'informedConsentNo'],
                 uploadFilePopover: ['button_upload_attachment'],
@@ -735,35 +738,15 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.showPopover = function(id) {
-                jQuery('#'+id).popover('show');
+                Popover.showPopover(id);
             };
 
             $scope.hidePopover = function(id) {
-                $timeout(function() {
-                    var enablersHaveFocus = false;
-                    _($scope.popoverEnablers[id]).forEach(function(enabler) {
-                        if (jQuery('#'+enabler).is(':focus')) {
-                            enablersHaveFocus = true;
-                        }
-                    });
-                    if (!enablersHaveFocus) { jQuery('#'+id).popover('hide'); }
-                });
+                Popover.hidePopover(id, $scope.popoverEnablers);
             };
 
             $scope.enablePopovers = function() {
-                $timeout(function() {
-                _($scope.popoverEnablers).forIn(function(enablers, id) {
-                    _(enablers).forEach(function(enabler) {
-                        var el = jQuery('#'+enabler);
-                        el.focus(function() {
-                            $scope.showPopover(id);
-                        });
-                        el.blur(function() {
-                            $scope.hidePopover(id);
-                        });
-                    });
-                });
-                });
+                Popover.enablePopovers($scope.popoverEnablers);
             };
 
             $scope.selected_requests = {};

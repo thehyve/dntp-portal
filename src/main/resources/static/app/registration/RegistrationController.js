@@ -10,9 +10,11 @@ angular.module('ProcessApp.controllers')
     .controller('RegistrationController',['$scope', '$rootScope',
                                           'Restangular',
                                           '$location', '$alert',
+                                          'Popover',
         function ($scope, $rootScope,
                 Restangular,
-                $location, $alert) {
+                $location, $alert,
+                Popover) {
 
         $scope.dataLoading = false;
 
@@ -54,6 +56,14 @@ angular.module('ProcessApp.controllers')
                 show : true,
                 duration : 5
             });
+        };
+
+        $scope.popoverEnablers = {
+            labPopover: ['lab']
+        };
+
+        $scope.enablePopovers = function() {
+            Popover.enablePopovers($scope.popoverEnablers);
         };
 
         angular.element(document).ready(function() {

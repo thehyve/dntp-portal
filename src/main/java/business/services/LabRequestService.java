@@ -46,8 +46,6 @@ import business.models.LabRequestRepository;
 import business.models.PathologyItem;
 import business.models.User;
 import business.representation.CommentRepresentation;
-import business.representation.ExcerptEntryRepresentation;
-import business.representation.ExcerptListRepresentation;
 import business.representation.LabRequestRepresentation;
 import business.representation.PathologyRepresentation;
 import business.representation.ProfileRepresentation;
@@ -180,9 +178,9 @@ public class LabRequestService {
         HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request");
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setEndDate(task.getEndTime());
-        labRequestRepresentation.setAssignee(task.getAssignee());
 
-        if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
+        if (task.getEndTime() == null && task.getAssignee() != null && !task.getAssignee().isEmpty()) {
+            labRequestRepresentation.setAssignee(task.getAssignee());
             Long assigneeId = null;
             try {
                 assigneeId = Long.valueOf(task.getAssignee());

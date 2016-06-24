@@ -116,7 +116,7 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th colspan="{{isPalga() ? 9 : (isScientificCouncil() ? 8 : 8)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="{{isPalga() ? 9 : (isScientificCouncil() || isRequester() ? 8 : 7)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -215,7 +215,7 @@ This file is distributed under the GNU Affero General Public License
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="{{isPalga() ? 11 : (isScientificCouncil() ? 10 : 10)}}" class="text-center">
+                            <td colspan="{{isPalga() ? 11 : (isScientificCouncil() || isRequester() ? 10 : 9)}}" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
                             </td>
                         </tr>

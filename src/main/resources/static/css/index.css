@@ -367,3 +367,9 @@ input.request-selection {
     height: 18px;
     margin: 2px 0 0;
 }
+
+.print-pa-id-col { width: 10em; }
+.print-palga-no-col { width: 8em; }
+.print-pa-no-col { width: 10em; }
+.print-pa-samples-col { /* min-width: 65%; */ }
+.print-pa-total-col { width: 5em; }

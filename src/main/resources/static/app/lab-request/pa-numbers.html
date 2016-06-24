@@ -29,14 +29,14 @@ This file is distributed under the GNU Affero General Public License
 <table st-table="paNumbersDisplayedCollection" st-safe-src="labRequest.pathologyList" class="table table-striped">
   <thead>
   <tr>
-        <th class="print-pa-id-col sortable" st-sort="sequenceNumber" style="width: 13em;">{{'Sequence number' | translate}}</th>
-        <th class="print-pa-no-col sortable" st-sort="palgaPatientNr" style="width: 12em;">{{'PALGA patiëntnr' | translate}}</th>
-        <th class="print-pa-no-col sortable" st-sort="palgaExcerptNr" style="width: 12em;">{{'PALGA excerptnr' | translate}}</th>
-        <th class="print-pa-no-col sortable" st-sort="palgaExcerptId" style="width: 12em;">{{'PALGA excerptid' | translate}}</th>
-        <th class="print-pa-no-col sortable" st-sort="paNumber" style="width: 12em;">{{'PA number' | translate}}</th>
+        <th class="print-pa-id-col sortable" st-sort="sequenceNumber">{{'Sequence number' | translate}}</th>
+        <th class="print-palga-no-col sortable" st-sort="palgaPatientNr">{{'Patiëntnr' | translate}}</th>
+        <th class="print-palga-no-col sortable" st-sort="palgaExcerptNr">{{'Excerptnr' | translate}}</th>
+        <th class="print-palga-no-col sortable" st-sort="palgaExcerptId">{{'Excerptid' | translate}}</th>
+        <th class="print-pa-no-col sortable" st-sort="paNumber">{{'PA number' | translate}}</th>
         <th class="print-pa-samples-col sortable" st-sort="samples">{{'Samples' | translate}}</th>
-        <th class="print-pa-total-col" style="width: 5em;">{{'Number of samples' | translate}}</th>
-        <th class="no-print" style="width: 10em;"
+        <th class="print-pa-total-col">{{'Number of samples' | translate}}</th>
+        <th class="no-print" style="width: 12em;"
             ng-if="(isLabUser() || isHubUser()) && isCurrentUser(labRequest.assignee)
                 && (labRequest.status == 'Approved' || labRequest.status=='Received' || labRequest.status=='Sending')">
             &nbsp;
@@ -56,13 +56,13 @@ This file is distributed under the GNU Affero General Public License
     <td class="print-pa-id-col">
       {{pathology.sequenceNumber}}
     </td>
-    <td class="print-pa-no-col">
+    <td class="print-palga-no-col">
       {{pathology.palgaPatientNr}}
     </td>
-    <td class="print-pa-no-col">
+    <td class="print-palga-no-col">
       {{pathology.palgaExcerptNr}}
     </td>
-    <td class="print-pa-no-col">
+    <td class="print-palga-no-col">
       {{pathology.palgaExcerptId}}
     </td>
     <td class="print-pa-no-col">
@@ -110,9 +110,9 @@ This file is distributed under the GNU Affero General Public License
                    href="mailto:{{getRecallMailRecipients(labRequest)
                     }}?subject=Regarding request {{labRequest.labRequestCode}}, recall sample {{pathology.paNumber}}
                     &amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
-                   class="btn btn-default" role="button" title="{{'Recall sample' | translate}}">
+                   class="btn btn-default" role="button" title="{{'Compose recall mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
-                    {{'Compose recall mail' | translate}}
+                    {{'Recall' | translate}}
                 </a>
                 <a  ng-click="pathology.samples.length > 0 ? false : toggleAvailability(labRequest, pathology)"
                     ng-disabled="pathology.samples.length > 0"

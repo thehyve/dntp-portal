@@ -70,12 +70,23 @@ input[type='text'] {
     display: none !important;
 }
 
-.table th, td { text-align: left; }
+.table th, td { text-align: left; vertical-align: top; }
+.table th { vertical-align: bottom; }
 .table { width: 100% }
-.print-pa-id-col { min-width: 5em; }
-.print-pa-no-col { min-width: 10em; }
-.print-pa-samples-col { /* min-width: 65%; */ }
-.print-pa-total-col { min-width: 5em; }
+.print-pa-id-col { min-width: 4em; }
+.print-palga-no-col { min-width: 4em; }
+.print-pa-no-col { min-width: 6em; }
+.print-pa-samples-col { min-width: 8em; }
+.print-pa-total-col { min-width: 3em; }
+
+.print-pa-samples-col ul {
+    padding: 0;
+    margin: 0;
+}
+
+li.tag-item {
+    margin-right: 1em;
+}
 
 ul li { display: inline; }
 .remove-button {display: none; }

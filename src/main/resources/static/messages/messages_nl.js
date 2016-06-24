@@ -427,6 +427,8 @@
         'The lab request has been rejected.': 'Het labverzoek is afgewezen.',
         'Reject date': 'Datum afwijzing',
         'Reject reason': 'Reden afwijzing',
+        'Recall': 'Terugroepen',
+        'Compose recall mail': 'Terugroepmail opstellen',
 
         /* ===================== */
         /* User overview */

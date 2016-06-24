@@ -74,7 +74,7 @@ h2, .h2, h3, .h3, h4, .h4 {
         z-index: 1000;
         display: block;
         padding: 20px;
-        margin-bottom: 40px;
+        margin-bottom: 36px;
         overflow-x: hidden;
         overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
         background-color: aliceblue;

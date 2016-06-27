@@ -426,7 +426,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.completeReportsOnly = function (labRequest) {
-                bootbox.confirm($rootScope.translate('Do you want to finish the request for PA reports?'),
+                bootbox.confirm($rootScope.translate('Do you want to finish the request for PA reports and/or clinical data?'),
                         function (result) {
                     if (result) {
                         labRequest.customPUT(labRequest, 'completereportsonly').then(function () {

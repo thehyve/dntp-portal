@@ -110,7 +110,7 @@
         'Completed': 'Completed',
         'Closed': 'Closed',
 
-        'REPORTS_ONLY': 'Request for PA reports completed',
+        'REPORTS_ONLY': 'Request for PA reports and/or clinical data completed',
         'RETURNED': 'PA material has been returned',
         'NONE': 'None',
 

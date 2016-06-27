@@ -370,7 +370,7 @@
         /* ===================== */
         'Lab request status': 'Status labverzoek',
         'Result': 'Resultaat',
-        'REPORTS_ONLY': 'Verzoek om PA-rapporten afgerond',
+        'REPORTS_ONLY': 'Verzoek om PA-rapporten en/of klinische gegevens afgerond',
         'RETURNED': 'PA-materiaal is retour ontvangen',
         'NONE': 'Geen',
         'Packing list': 'Pakbon',
@@ -388,7 +388,7 @@
         'Did you receive the material?': 'Heeft u het materiaal ontvangen?',
         'Do you want to return the material?': 'Wilt u het materiaal terugsturen naar het laboratorium waarvan het materiaal afkomstig is?',
         'Did you receive the material in return?': 'Heeft u het materiaal retour ontvangen?',
-        'Do you want to finish the request for PA reports?': 'Wilt u het verzoek voor PA-verslagen afronden?',
+        'Do you want to finish the request for PA reports and/or clinical data?': 'Wilt u het verzoek voor PA-verslagen en/of klinische gegevens afronden?',
         'Do you want to complete the rejected request?': 'Wilt u het afgewezen verzoek afronden?',
         'Are you sure you want to delete the PA number?': 'Weet u zeker dat u het PA-nummer wilt verwijderen?',
         'Return this lab request to status \'Under review by lab\'?':
@@ -410,7 +410,7 @@
             'Benodigde informatie voor het opvragen van klinische gegevens via de behandelaar zijn naar de aanvrager verstuurd.',
         'Desired information for retrieving clinical data from treating physician was NOT sent to the requester.':
             'Benodigde informatie voor het opvragen van klinische gegevens via de behandelaar zijn NIET naar de aanvrager verstuurd.',
-        'Update clinical data status': 'Verzendstatus klinische data opslaan',
+        'Update clinical data status': 'Verzendstatus klinische gegevens opslaan',
         'The lab request has been approved.': 'Het labverzoek is goedgekeurd.',
         'Your laboratory is asked for PA reports, PA material or clinical data from the treating physician.' : 'Een onderzoeker vraagt uw laboratorium om PA-verlagen, PA-materiaal of klinische gegevens via de behandelaar.',
         'Select ‘Approve’ to accept or ‘Reject’ to decline this request.' : 'Als u instemt met het verzoek, kies dan ‘Goedkeuren’ anders ‘Afwijzen.’',

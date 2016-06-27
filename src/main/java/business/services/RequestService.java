@@ -354,7 +354,8 @@ public class RequestService {
         HistoricProcessInstance parentInstance = getProcessInstance(parentId);
         RequestRepresentation parentRequest = new RequestRepresentation();
         requestFormService.transferData(parentInstance, parentRequest, user);
-        if (parentRequest.getStatus() != RequestStatus.LAB_REQUEST) {
+        if (parentRequest.getStatus() != RequestStatus.LAB_REQUEST &&
+                parentRequest.getStatus() != RequestStatus.CLOSED) {
             throw new InvalidActionInStatus("Forking of requests not allowed in status " +
                     parentRequest.getStatus() + ".");
         }

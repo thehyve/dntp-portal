@@ -161,6 +161,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated() and "
             + "(hasPermission(#id, 'isLabRequestRequester') "
             + " or hasPermission(#id, 'isLabRequestLabuser') "
+            + " or hasPermission(#id, 'isLabRequestHubuser') "
             + " or hasRole('palga')"
             + ")")
     @RequestMapping(value = "/labrequests/{id}/comments", method = RequestMethod.POST)
@@ -182,6 +183,7 @@ public class CommentController {
             + "(hasRole('palga')"
             + " or hasPermission(#id, 'isLabRequestRequester') "
             + " or hasPermission(#id, 'isLabRequestLabuser') "
+            + " or hasPermission(#id, 'isLabRequestHubuser') "
             + ")")
     @RequestMapping(value = "/labrequests/{id}/comments/{commentId}", method = RequestMethod.PUT)
     public CommentRepresentation updateLabRequestComment(
@@ -211,6 +213,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated() and "
             + "(hasRole('palga')"
             + " or hasPermission(#id, 'isLabRequestRequester') "
+            + " or hasPermission(#id, 'isLabRequestHubuser') "
             + " or hasPermission(#id, 'isLabRequestLabuser') "
             + ")")
     @RequestMapping(value = "/labrequests/{id}/comments/{commentId}", method = RequestMethod.DELETE)

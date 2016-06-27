@@ -7,6 +7,7 @@ package business.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import business.controllers.LabRequestComparator;
 import business.exceptions.EmailError;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
@@ -89,6 +91,9 @@ public class LabRequestService {
 
     @Autowired
     private ExcerptListService excerptListService;
+
+    @Autowired
+    private LabRequestComparator labRequestComparator;
 
     @Transactional
     public LabRequest save(LabRequest labRequest) {
@@ -415,6 +420,7 @@ public class LabRequestService {
                 representations.addAll(convertLabRequestsToRepresentations(labRequests, fetchDetails));
             }
         }
+        Collections.sort(representations, Collections.reverseOrder(labRequestComparator));
         return representations;
     }
 

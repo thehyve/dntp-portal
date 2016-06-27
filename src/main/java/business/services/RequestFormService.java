@@ -18,6 +18,7 @@ import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
@@ -71,6 +72,9 @@ public class RequestFormService {
 
     @Autowired
     private RuntimeService runtimeService;
+
+    @Autowired
+    private HistoryService historyService;
 
     /**
      * Casts variable 'name' to type Boolean if it exists as key in the variable map;
@@ -369,10 +373,12 @@ public class RequestFormService {
                     RequestRepresentation parent = new RequestRepresentation();
                     parent.setRequestNumber(parentProperties.getRequestNumber());
                     parent.setProcessInstanceId(parentProperties.getProcessInstanceId());
-                    parent.setStatus(RequestStatus.forDescription(
-                            runtimeService.getVariable(
-                                    parentProperties.getProcessInstanceId(),
-                                    "status", String.class)));
+                    parent.setStatus(RequestStatus.forDescription((String)
+                            historyService.createHistoricVariableInstanceQuery()
+                                .processInstanceId(parentProperties.getProcessInstanceId())
+                                .variableName("status")
+                                .singleResult()
+                                .getValue()));
                     request.setParent(parent);
                 }
             }
@@ -382,10 +388,12 @@ public class RequestFormService {
                     RequestRepresentation child = new RequestRepresentation();
                     child.setRequestNumber(childProperties.getRequestNumber());
                     child.setProcessInstanceId(childProperties.getProcessInstanceId());
-                    child.setStatus(RequestStatus.forDescription(
-                            runtimeService.getVariable(
-                                    childProperties.getProcessInstanceId(),
-                                    "status", String.class)));
+                    child.setStatus(RequestStatus.forDescription((String)
+                            historyService.createHistoricVariableInstanceQuery()
+                            .processInstanceId(childProperties.getProcessInstanceId())
+                            .variableName("status")
+                            .singleResult()
+                            .getValue()));
                     children.add(child);
                 }
                 request.setChildren(children);

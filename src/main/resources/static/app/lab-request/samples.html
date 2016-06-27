@@ -66,10 +66,10 @@ This file is distributed under the GNU Affero General Public License
                     <td>
                         <a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestCode}}</a>
                     </td>
-                    <td>{{pathology.sequenceNumber}}</td>
+                    <td class="numeric">{{pathology.sequenceNumber}}</td>
                     <td>{{pathology.palgaPatientNr}}</td>
-                    <td>{{pathology.palgaExcerptNr}}</td>
-                    <td>{{pathology.palgaExcerptId}}</td>
+                    <td class="numeric">{{pathology.palgaExcerptNr}}</td>
+                    <td class="numeric">{{pathology.palgaExcerptId}}</td>
                     <td>{{pathology.paNumber}}</td>
                     <td><span
                         ng-if="!isCurrentUser(labRequest.assignee)">

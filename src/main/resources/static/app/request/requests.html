@@ -155,7 +155,7 @@ This file is distributed under the GNU Affero General Public License
                             <div ng-if="req.materialsRequest">{{'PA material'|translate}}<br /></div>
                             <div ng-if="req.clinicalDataRequest">{{'Clinical data from practitioner'|translate}}<br /></div>
                         </td>
-                        <td ng-if="isPalga()">
+                        <td class="centertext" ng-if="isPalga()">
                             {{req.linkageWithPersonalData ? 'Yes' :
                             (req.linkageWithPersonalData == false ? 'No' : '&ndash;') |translate }}
                         </td>

@@ -303,6 +303,11 @@ address {margin-bottom: 0px;}
     text-align: center;
 }
 
+.numeric, .table td.numeric, .table th.numeric {
+    text-align: right;
+    padding-right: 2em;
+}
+
 .developedby {
     font-size: .9em;
     color: #777;

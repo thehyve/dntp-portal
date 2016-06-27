@@ -53,16 +53,16 @@ This file is distributed under the GNU Affero General Public License
   </thead>
   <tbody>
   <tr ng-repeat="pathology in paNumbersDisplayedCollection">
-    <td class="print-pa-id-col">
+    <td class="print-pa-id-col numeric">
       {{pathology.sequenceNumber}}
     </td>
     <td class="print-palga-no-col">
       {{pathology.palgaPatientNr}}
     </td>
-    <td class="print-palga-no-col">
+    <td class="print-palga-no-col numeric">
       {{pathology.palgaExcerptNr}}
     </td>
-    <td class="print-palga-no-col">
+    <td class="print-palga-no-col numeric">
       {{pathology.palgaExcerptId}}
     </td>
     <td class="print-pa-no-col">
@@ -95,7 +95,7 @@ This file is distributed under the GNU Affero General Public License
             {{'Samples are not available' | translate}}
         </i>
     </td>
-    <td>{{pathology.samples.length}}</td>
+    <td class="numeric">{{pathology.samples.length}}</td>
     <td class="no-print" ng-if="(isLabUser() || isHubUser()) &&
                 isCurrentUser(labRequest.assignee) &&
                 (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending')">

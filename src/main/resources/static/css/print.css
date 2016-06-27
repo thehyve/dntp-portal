@@ -196,6 +196,11 @@ hr.page-boundary {
     font-weight: bold;
 }
 
+.numeric {
+    text-align: right;
+    padding-right: 1em;
+}
+
 html {
     margin: 0;
 }

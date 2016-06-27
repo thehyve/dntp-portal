@@ -139,6 +139,7 @@ public class LabRequestService {
             request = requestFormService.getRequestListDataCached(labRequestRepresentation.getProcessInstanceId());
         } else {
             request = requestFormService.getRequestListData(labRequestRepresentation.getProcessInstanceId());
+            requestFormService.transferPropertiesData(labRequestRepresentation.getProcessInstanceId(), request);
         }
         labRequestRepresentation.setRequest(request);
         if (request.getRequesterId() != null) {

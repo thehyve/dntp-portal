@@ -19,7 +19,6 @@ import java.util.TreeSet;
 import javax.transaction.Transactional;
 
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -69,9 +68,6 @@ public class RequestFormService {
 
     @Autowired
     private ContactDataRepository contactDataRepository;
-
-    @Autowired
-    private RuntimeService runtimeService;
 
     @Autowired
     private HistoryService historyService;
@@ -179,6 +175,17 @@ public class RequestFormService {
 
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }
+    }
+
+    /**
+     * Transfer fields stored in request properties.
+     */
+    public void transferPropertiesData(String processInstanceId, RequestListRepresentation request) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                processInstanceId);
+        request.setSearchCriteria(properties.getSearchCriteria());
+        request.setStudyPeriod(properties.getStudyPeriod());
+        request.setLaboratoryTechniques(properties.getLaboratoryTechniques());
     }
 
     public void transferAttachmentData(HistoricProcessInstance instance, RequestListRepresentation request) {

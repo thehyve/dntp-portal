@@ -33,6 +33,11 @@ public class RequestListRepresentation implements RequestListElement {
     private String researchQuestion;
     private String hypothesis;
     private String methods;
+
+    private String searchCriteria;
+    private String studyPeriod;
+    private String laboratoryTechniques;
+
     private String pathologistName;
     private String pathologistEmail;
     private String contactPersonName;
@@ -171,6 +176,30 @@ public class RequestListRepresentation implements RequestListElement {
 
     public void setMethods(String methods) {
         this.methods = methods;
+    }
+
+    public String getSearchCriteria() {
+        return searchCriteria;
+    }
+
+    public void setSearchCriteria(String searchCriteria) {
+        this.searchCriteria = searchCriteria;
+    }
+
+    public String getStudyPeriod() {
+        return studyPeriod;
+    }
+
+    public void setStudyPeriod(String studyPeriod) {
+        this.studyPeriod = studyPeriod;
+    }
+
+    public String getLaboratoryTechniques() {
+        return laboratoryTechniques;
+    }
+
+    public void setLaboratoryTechniques(String laboratoryTechniques) {
+        this.laboratoryTechniques = laboratoryTechniques;
     }
 
     public String getPathologistName() {

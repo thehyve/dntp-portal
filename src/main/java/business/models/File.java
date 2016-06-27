@@ -53,17 +53,16 @@ public class File {
         this.mimeType = mimeType;
     }
 
-    public void copy(File other) {
-        if (other != null) {
-            this.id = other.id;
-            this.name = other.name;
-            this.type = other.type;
-            this.description = other.description;
-            this.filename = other.filename;
-            this.uploader = other.uploader;
-            this.date = other.date;
-            this.mimeType = other.mimeType;
-        }
+    public File clone() {
+        File result = new File();
+        result.name = this.name;
+        result.description = this.description;
+        result.filename = this.filename;
+        result.type = this.type;
+        result.uploader = this.uploader;
+        result.date = this.date;
+        result.mimeType = this.mimeType;
+        return result;
     }
 
     public Long getId() {

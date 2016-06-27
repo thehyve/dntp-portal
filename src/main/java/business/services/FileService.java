@@ -40,6 +40,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import business.exceptions.FileCopyError;
 import business.exceptions.FileDeleteError;
 import business.exceptions.FileDownloadError;
 import business.exceptions.FileNotFound;
@@ -52,9 +53,9 @@ import business.models.User;
 public class FileService {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     FileSystem fileSystem = FileSystems.getDefault();
-    
+
     @Autowired
     FileRepository fileRepository;
 
@@ -71,7 +72,7 @@ public class FileService {
         }
         log.info("File upload path: " + path.toAbsolutePath());
     }
-    
+
     public static String getBasename(String name) {
         String[] tokens = name.split("\\.(?=[^\\.]+$)");
         if (tokens.length > 0) {
@@ -80,7 +81,7 @@ public class FileService {
             return "";
         }
     }
-    
+
     public static String getExtension(String name) {
         String[] tokens = name.split("\\.(?=[^\\.]+$)");
         if (tokens.length > 1) {
@@ -89,9 +90,9 @@ public class FileService {
             return "";
         }
     }
-    
+
     Map<String, SortedMap<Integer, Path>> uploadChunks = new HashMap<String, SortedMap<Integer,Path>>();
-    
+
     public File uploadPart(User user, String name, File.AttachmentType type, MultipartFile file,
             Integer chunk, Integer chunks, String flowIdentifier) {
         try {
@@ -187,7 +188,7 @@ public class FileService {
             throw new FileUploadError(e.getMessage());
         }
     }
-    
+
     public InputStream getInputStream(File attachment) {
         if (attachment == null) {
             throw new FileNotFound();
@@ -202,7 +203,7 @@ public class FileService {
             throw new FileDownloadError();
         }
     }
-    
+
     public HttpEntity<InputStreamResource> download(Long id) {
         try {
             File attachment = fileRepository.findOne(id);
@@ -229,6 +230,33 @@ public class FileService {
         }
     }
 
+    public File save(File file) {
+        return fileRepository.save(file);
+    }
+
+    public File clone(File file) {
+        try {
+            FileSystem fileSystem = FileSystems.getDefault();
+            // source
+            Path source = fileSystem.getPath(uploadPath, file.getFilename());
+            // target
+            Path path = fileSystem.getPath(uploadPath).normalize();
+            String prefix = getBasename(file.getFilename());
+            String suffix = getExtension(file.getFilename());
+            Path target = Files.createTempFile(path, prefix, suffix).normalize();
+            // copy
+            log.info("Copying " + source + " to " + target + " ...");
+            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+            // save clone
+            File result = file.clone();
+            result.setFilename(target.getFileName().toString());
+            return save(result);
+        } catch(IOException e) {
+            log.error(e);
+            throw new FileCopyError();
+        }
+    }
+
     public void removeAttachment(File attachment) {
         fileRepository.delete(attachment);
         Path path = fileSystem.getPath(uploadPath, attachment.getFilename());
@@ -239,7 +267,7 @@ public class FileService {
             throw new FileDeleteError();
         }
     }
-    
+
     public boolean checkUploadPath() {
         Path path = fileSystem.getPath(uploadPath).normalize();
         java.io.File f = path.toFile();

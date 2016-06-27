@@ -48,6 +48,7 @@ import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
+import business.models.File;
 import business.models.RequestProperties;
 import business.models.User;
 import business.representation.LabRequestRepresentation;
@@ -81,6 +82,9 @@ public class RequestService {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private FileService fileService;
 
     /**
      * Finds task. 
@@ -387,6 +391,21 @@ public class RequestService {
         childProperties.setParent(parentProperties);
         parentProperties.getChildren().add(childProperties);
         requestPropertiesService.save(parentProperties);
+
+        // copy attachments
+        for (File file: parentProperties.getRequestAttachments()) {
+            File clone = fileService.clone(file);
+            childProperties.getRequestAttachments().add(clone);
+        }
+        for (File file: parentProperties.getAgreementAttachments()) {
+            File clone = fileService.clone(file);
+            childProperties.getAgreementAttachments().add(clone);
+        }
+        for (File file: parentProperties.getMedicalEthicalCommiteeApprovalAttachments()) {
+            File clone = fileService.clone(file);
+            childProperties.getMedicalEthicalCommiteeApprovalAttachments().add(clone);
+        }
+        requestPropertiesService.save(childProperties);
 
         childInstance = getProcessInstance(childId);
         RequestRepresentation childRequest = new RequestRepresentation();

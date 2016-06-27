@@ -652,7 +652,7 @@ This file is distributed under the GNU Affero General Public License
                             data-trigger="manual"
                             data-content="{{'popover: Upload file'|translate}}">
                             <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
-                            <button class="btn btn-default"
+                            <button class="btn btn-default" type="button"
                                 id="button_upload_attachment"
                                 ng-disabled="uploading"
                                 flow-btn>{{'Upload file'|translate}}</button>
@@ -729,7 +729,7 @@ This file is distributed under the GNU Affero General Public License
                             data-trigger="manual"
                             >
                             <input type="file" flow-btn id="test-upload-attachment2" style="display:none"/>
-                            <button class="btn btn-default"
+                            <button class="btn btn-default" type="button"
                                     id="button_upload_metc_letter"
                                     ng-disabled="uploading"
                                     flow-btn>{{'Upload letter'|translate}}
@@ -905,7 +905,7 @@ This file is distributed under the GNU Affero General Public License
                             {{'Reopen'|translate}}
                     </button>
                     <button class="btn btn-info" type="submit" ng-click="update(request);"
-                            ng-disabled="dataLoading">{{'Save'|translate}}
+                            ng-disabled="dataLoading || requestEditForm.$error.maxlength">{{'Save'|translate}}
                     </button>
                 </div>
             </form>

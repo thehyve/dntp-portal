@@ -58,10 +58,10 @@ This file is distributed under the GNU Affero General Public License
                             <th st-sort="labRequestCode" class="sortable">{{'Lab request ID' | translate}}</th>
                             <th st-sort="request.title" class="sortable">{{'Request title' | translate}}</th>
                             <th st-sort="requesterName" class="sortable">{{'Requester' | translate}}</th>
-                            <th st-sort="lab.name" class="sortable">{{'Lab' | translate}}</th>
+                            <th ng-if="isLabUser()" st-sort="requesterLab.name" class="sortable">{{'Requester lab' | translate}}</th>
+                            <th ng-if="!isLabUser()" st-sort="lab.name" class="sortable">{{'Lab' | translate}}</th>
+                            <th>{{'Request type' | translate}}</th>
                             <th st-sort="hubAssistanceRequested" class="sortable">{{'Hub assistance'|translate}}</th>
-                            <th st-sort="dateCreated" class="sortable">{{'Creation date' | translate}}</th>
-                            <th st-sort="endDate" class="sortable">{{'End date' | translate}}</th>
                             <th st-sort="pathologyCount" class="sortable">{{'# PA numbers' | translate}}</th>
                             <th st-sort="status" class="sortable">{{'Status' | translate}}</th>
                             <th st-sort="assigneeName" class="sortable">{{'Claimed by'|translate}}</th>
@@ -72,14 +72,14 @@ This file is distributed under the GNU Affero General Public License
                             <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <td><select st-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <th ng-if="isLabUser()"><input st-search="requesterLab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th ng-if="!isLabUser()"><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th></th>
+                            <th><select st-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by hub assistance'|translate}}</option>
                                     <option value="true" ng-selected="activeSidebar === 'hub_assistance_requested'">{{ 'Yes' | translate}}</option>
                                     <option value="false">{{ 'No' | translate}}</option>
-                                </select></td>
-                            <th>&nbsp;</th>
-                            <th>&nbsp;</th>
+                                </select></th>
                             <th>&nbsp;</th>
                             <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by status' | translate}}</option>
@@ -93,7 +93,7 @@ This file is distributed under the GNU Affero General Public License
                         </tr>
                         <tr class="no-print">
                             <th class="no-print">&nbsp;</th>
-                            <th colspan="10"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                            <th colspan="9"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -116,18 +116,18 @@ This file is distributed under the GNU Affero General Public License
                             {{labRequest.requesterName}}
                         </td>
                         <td>
-                            {{labRequest.lab.name}}
+                            <span ng-if="isLabUser()">{{labRequest.requesterLab.name}}</span>
+                            <span ng-if="!isLabUser()">{{labRequest.lab.name}}</span>
+                        </td>
+                        <td>
+                            <div ng-if="labRequest.request.paReportRequest">{{'PA reports'|translate}}<br /></div>
+                            <div ng-if="labRequest.request.materialsRequest">{{'PA material'|translate}}<br /></div>
+                            <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
                         </td>
                         <td class="centertext">
                             {{labRequest.hubAssistanceRequested ? 'Yes' :
                               labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
                               | translate }}
-                        </td>
-                        <td>
-                            <small>{{labRequest.dateCreated | date: 'EEE, dd MMMM yyyy H:mm'}}</small>
-                        </td>
-                        <td>
-                            <small>{{labRequest.endDate | date: 'EEE, dd MMMM yyyy H:mm'}}</small>
                         </td>
                         <td class="numeric">
                             {{labRequest.pathologyCount}}
@@ -163,7 +163,7 @@ This file is distributed under the GNU Affero General Public License
                     <tfoot>
                         <tr>
                             <td class="no-print"></td>
-                            <td colspan="10" class="text-center">
+                            <td colspan="9" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
                             </td>
                             <td class="no-print"></td>

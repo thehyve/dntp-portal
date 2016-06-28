@@ -40,13 +40,16 @@ import business.exceptions.ExcerptListDownloadError;
 import business.exceptions.ExcerptListNotFound;
 import business.exceptions.ExcerptListUploadError;
 import business.exceptions.ExcerptSelectionUploadError;
+import business.exceptions.FileDeleteError;
 import business.exceptions.FileUploadError;
 import business.exceptions.RequestNotFound;
 import business.models.ExcerptEntry;
 import business.models.ExcerptEntryRepository;
 import business.models.ExcerptList;
 import business.models.ExcerptListRepository;
+import business.models.File;
 import business.models.Lab;
+import business.models.RequestProperties;
 import business.representation.ExcerptEntryRepresentation;
 import business.representation.ExcerptListRepresentation;
 import business.representation.RequestRepresentation;
@@ -68,10 +71,13 @@ public class ExcerptListService {
 
     @Autowired RequestService requestService;
 
+    @Autowired RequestPropertiesService requestPropertiesService;
+
     @Autowired TaskService taskService;
 
     @Autowired LabRequestService labRequestService;
 
+    @Autowired FileService fileService;
 
     @Transactional
     public ExcerptList findByProcessInstanceId(String processInstanceId) {
@@ -143,7 +149,7 @@ public class ExcerptListService {
         return result;
     }
 
-    @CacheEvict(value = "excerptListExists", key = "#list.processInstanceId")
+    @CacheEvict(value = "excerptlistexists", key = "#list.processInstanceId")
     @Transactional
     public ExcerptList processExcerptList(ExcerptList list, InputStream input) {
         Set<Integer> validLabNumbers = new TreeSet<Integer>();
@@ -316,6 +322,56 @@ public class ExcerptListService {
         // generate lab requests
         if (body.isSelectionApproved()) {
             labRequestService.generateLabRequests(id);
+        }
+    }
+
+    @CacheEvict(value = "excerptlistexists", key = "#processInstanceId")
+    @Transactional
+    public Long replaceExcerptList(String processInstanceId, File attachment) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(processInstanceId);
+
+        // store existing excerpt list attachment, to be removed later
+        File toBeRemoved = properties.getExcerptListAttachment();
+        // delete existing excerpt list
+        deleteByProcessInstanceId(properties.getProcessInstanceId());
+        {
+            ExcerptList list = findByProcessInstanceId(processInstanceId);
+            assert(list == null);
+        }
+
+        // process new list
+        try {
+            InputStream input = fileService.getInputStream(attachment);
+            ExcerptList list = new ExcerptList();
+            list.setProcessInstanceId(properties.getProcessInstanceId());
+            list.setPropertiesId(properties.getId());
+            list = save(list);
+            list = processExcerptList(list, input);
+            try {
+                input.close();
+            } catch (IOException e) {
+                log.error("Error while closing input stream: " + e.getMessage());
+            }
+            log.info("Saving excerpt list.");
+            list = save(list);
+            // remove existing excerpt list attachment
+            try {
+                if (toBeRemoved != null) {
+                    log.info("Removing previous excerpt list attachment.");
+                    fileService.removeAttachment(toBeRemoved);
+                }
+            } catch (FileDeleteError e) {
+                log.error("Error deleting file: " + e.getMessage());
+            }
+            log.info("Saving excerpt list attachment.");
+            properties.setExcerptListAttachment(attachment);
+            properties = requestPropertiesService.save(properties);
+            log.info("Done.");
+            return list.getId();
+        } catch (RuntimeException e) {
+            // revert uploading
+            fileService.removeAttachment(attachment);
+            throw e;
         }
     }
 

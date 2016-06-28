@@ -21,7 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -162,7 +161,7 @@ public class ExcerptList {
         this.paNumberColumn = -1;
         for (int i=0; i < columnNames.length; i++) {
             String name_ = columnNames[i].trim().toLowerCase();
-            log.info("column name: " + name_);
+            log.debug("column name: " + name_);
             if (name_.equals("palgapatiëntnr")) {
                 palgaPatientNrColumn = i;
             } else if (name_.equals("palgaexcerptnr")) {

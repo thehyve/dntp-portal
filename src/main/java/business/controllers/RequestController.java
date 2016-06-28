@@ -925,40 +925,8 @@ public class RequestController {
         Integer excerptCount = 0;
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.EXCERPT_LIST, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-
-            // remove existing excerpt list attachment.
-            File toBeRemoved = properties.getExcerptListAttachment();
-            if (toBeRemoved != null) {
-                properties.setExcerptListAttachment(null);
-                fileService.removeAttachment(toBeRemoved);
-            }
-            excerptListService.deleteByProcessInstanceId(id);
-
-            // process list
-            try {
-                InputStream input = fileService.getInputStream(attachment);
-                ExcerptList list = new ExcerptList();
-                list.setProcessInstanceId(id);
-                list.setPropertiesId(properties.getId());
-                list = excerptListService.save(list);
-                list = excerptListService.processExcerptList(list, input);
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    log.error("Error while closing input stream: " + e.getMessage());
-                }
-                // if not exception thrown, save list and attachment
-                properties.setExcerptListAttachment(attachment);
-                log.info("Saving excerpt list.");
-                list = excerptListService.save(list);
-                excerptCount = excerptListService.countEntriesByExcerptListId(list.getId());
-                log.info("Done.");
-            } catch (RuntimeException e) {
-                // revert uploading
-                fileService.removeAttachment(attachment);
-                throw e;
-            }
+            Long excerptListId = excerptListService.replaceExcerptList(id, attachment);
+            excerptCount = excerptListService.countEntriesByExcerptListId(excerptListId);
         }
 
         return excerptCount;

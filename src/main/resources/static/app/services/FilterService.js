@@ -99,6 +99,9 @@ angular.module('ProcessApp.services')
         function() {
             var filterService = {};
 
+            var _isCompleted = _.matches({status: 'Completed'});
+            var _isNotCompleted = _.negate(_isCompleted);
+
             filterService.selectAll = function (requests) {
                 return requests;
             };
@@ -114,6 +117,7 @@ angular.module('ProcessApp.services')
             filterService.selectUnclaimed = function (requests) {
                 return _.chain(requests)
                     .filter(_.matches({assignee: null}))
+                    .filter(_isNotCompleted)
                     .value();
             };
 

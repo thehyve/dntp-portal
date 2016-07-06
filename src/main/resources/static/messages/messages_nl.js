@@ -166,6 +166,7 @@
         'popover: Reason using personal data': 'Geef aan waarom u denkt dat informed consent niet nodig is.',
         'Notes': 'Notities',
         'Add note': 'Notitie toevoegen',
+        'Please add a note.': 'Voeg een notitie toe.',
         'Edit request': 'Aanvraag bewerken',
         'Pathologist email': 'E-mail patholoog',
         'General details': 'Algemene details',

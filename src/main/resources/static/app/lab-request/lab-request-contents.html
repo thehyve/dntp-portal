@@ -123,7 +123,13 @@
         <label class="control-label col-xs-4 col-md-2">{{ 'Request ID' | translate }}</label>
         <div class="col-xs-8 col-md-10">
             <p class="form-control-static">
-                {{labRequest.request.requestNumber}}
+                <a ng-href="/#/request/view/{{labRequest.request.processInstanceId}}"
+                >{{labRequest.request.requestNumber}}</a>
+                <span ng-if="labRequest.request.parent">&nbsp;&nbsp;<a
+                        title="{{'Additional request for request ?' | translate: {requestNumber: labRequest.request.parent.requestNumber} }}"
+                        ng-href="/#/request/view/{{labRequest.request.parent.processInstanceId}}"
+                        ><small><i class="glyphicon glyphicon-duplicate"></i></small></a>
+                </span>
             </p>
         </div>
     </div>
@@ -132,9 +138,7 @@
         <label class="control-label col-xs-4 col-md-2">{{ 'Request title' | translate }}</label>
         <div class="col-xs-8 col-md-10">
             <p class="form-control-static">
-                <a ng-href="/#/request/view/{{labRequest.processInstanceId}}">
-                    {{labRequest.request.title}}
-                </a>
+                {{labRequest.request.title}}
             </p>
         </div>
     </div>

@@ -107,7 +107,12 @@ This file is distributed under the GNU Affero General Public License
                                 ng-model="selected_lab_requests[labRequest.id]" />
                         </td>
                         <td>
-                          <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.labRequestCode}}</a>
+                            <a ng-href="#/lab-request/view/{{labRequest.id}}">{{labRequest.labRequestCode}}</a>
+                            <span ng-if="labRequest.request.parent" class="pull-right"><a
+                                    title="{{'Additional request for request ?' | translate: {requestNumber: labRequest.request.parent.requestNumber} }}"
+                                    ng-href="/#/request/view/{{labRequest.request.parent.processInstanceId}}">
+                                <small><i class="glyphicon glyphicon-duplicate"></i></small></a>
+                            </span>
                         </td>
                         <td>
                            {{labRequest.request.title}}

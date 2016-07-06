@@ -196,8 +196,6 @@ public class LabRequestController {
         }
         labRequest = labRequestService.updateStatus(labRequest, Status.APPROVED);
 
-        labRequest = transferLabRequestFormData(body, labRequest, user.getUser());
-
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
         labRequestService.transferLabRequestData(representation, false);

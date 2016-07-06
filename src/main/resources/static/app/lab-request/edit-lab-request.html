@@ -1,9 +1,3 @@
-<!--
-Copyright (C) 2016  Stichting PALGA
-This file is distributed under the GNU Affero General Public License
-(see accompanying file LICENSE).
--->
-
 <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -188,28 +182,6 @@ This file is distributed under the GNU Affero General Public License
                         <div class="panel-body">
                             <p>
                                 {{'Your laboratory is asked for PA reports, PA material or clinical data from the treating physician.'|translate}}
-                            </p>
-                            <p>&nbsp;</p>
-
-                            <p>
-                                <strong>{{'Would you like hub assistance for this lab request?' | translate }}</strong>
-                                &nbsp;
-                                <span>
-                                    <label for="hubAssistanceRequestedYes">
-                                        <input type="radio" id="hubAssistanceRequestedYes" name="hubAssistanceRequested"
-                                               ng-disabled="!labRequest.lab.hubAssistanceEnabled"
-                                               ng-model="labRequest.hubAssistanceRequested" ng-value="true"
-                                               ng-checked="labRequest.hubAssistanceRequested">
-                                        {{'Yes' | translate}}
-                                    </label>&nbsp;
-                                    <label for="hubAssistanceRequestedNo">
-                                        <input type="radio" id="hubAssistanceRequestedNo" name="hubAssistanceRequested"
-                                               ng-disabled="!labRequest.lab.hubAssistanceEnabled"
-                                               ng-model="labRequest.hubAssistanceRequested" ng-value="false"
-                                               ng-checked="!labRequest.hubAssistanceRequested">
-                                        {{'No' | translate}}
-                                    </label>
-                                </span>
                             </p>
 
                             <p>{{'Select &lsquo;Approve&rsquo; to accept or &lsquo;Reject&rsquo; to decline this request.'|translate}}</p>

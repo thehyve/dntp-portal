@@ -346,7 +346,7 @@ angular.module('ProcessApp.controllers')
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
-                            _loadData();
+                            $scope.editHubAssistance(labRequest);
                         }, function (err) {
                             $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                         });

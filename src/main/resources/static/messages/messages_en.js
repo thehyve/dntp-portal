@@ -17,6 +17,7 @@
         'role_scientific_council': 'Scientific council',
 
         'An email has been sent to ? with instructions on how to reset your password.': 'An email has been sent to {{email}} with instructions on how to reset your password.',
+        'If an account with email address ? exists, an email with instructions on how to reset your password has been sent.': 'If an account with email address {{email}} exists, an email with instructions on how to reset your password has been sent.',
         'Registration completed. An email with an activation link was sent to ?.': 'Registration completed. An email with an activation link was sent to {{email}}.',
         'Postal code': 'Zip code',
         'Available' : 'Available',

@@ -323,6 +323,7 @@
         'Your password has been successfully reset.': 'Uw wachtwoord is successvol gereset.',
         'Send email': 'Stuur e-mail',
         'An email has been sent to ? with instructions on how to reset your password.': 'We hebben een email gestuurd naar {{email}} met instructies om uw wachtwoord te resetten.',
+        'If an account with email address ? exists, an email with instructions on how to reset your password has been sent.': 'Als een gebruiker bestaat met emailadres {{email}}, dan hebben we een email gestuurd met instructies om uw wachtwoord te resetten.',
         'Do not forget to store the password in a secure location. It is advised to use the password manager of your browser.': 'Vergeet niet het wachtwoord op een veilige locatie te bewaren. Het wordt aangeraden om de password manager van uw browser te gebruiken.',
         'Generate password': 'Genereer een wachtwoord',
     

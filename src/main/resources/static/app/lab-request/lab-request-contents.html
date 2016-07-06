@@ -108,13 +108,10 @@
     </div>
 
     <!-- Excerpt list remark -->
-    <div class="row">
+    <div class="row" ng-if="labRequest.request.excerptListRemark">
         <label class="control-label col-xs-4 col-md-2">{{ 'Remark' | translate }}</label>
-        <p class="col-xs-8 col-md-10" ng-if="labRequest.request.excerptListRemark">
+        <p class="col-xs-8 col-md-10">
             {{labRequest.request.excerptListRemark}}
-        </p>
-        <p class="col-xs-8 col-md-10" ng-if="!labRequest.request.excerptListRemark">
-            <em>{{'None' | translate}}</em>
         </p>
     </div>
 

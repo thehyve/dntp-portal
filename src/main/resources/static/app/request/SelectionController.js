@@ -109,12 +109,10 @@ angular.module('ProcessApp.controllers')
 
             $scope.submitExcerptSelection = function(request) {
                 $scope.disableSpaceSelects();
-                bootbox.prompt({
-                    title: $rootScope.translate(
-                            'Are you sure you want to submit the selection?<br>You may enter a remark:'),
-                    callback: function(result) {
+                bootbox.confirm($rootScope.translate(
+                            'Are you sure you want to submit the selection?'),
+                    function(result) {
                         if (result) {
-                            request.excerptListRemark = result;
                             request.$submitExcerptSelection(function() {
                                 var content = $rootScope.translate('Successfully submitted selection.');
                                 $alert({
@@ -145,7 +143,7 @@ angular.module('ProcessApp.controllers')
                             $scope.enableSpaceSelects();
                         }
                     }
-                });
+                );
             };
 
             $scope.scrollToCurrent = function() {

@@ -134,8 +134,7 @@
         'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Approved, waiting for data.\'' :
             'Weet je zeker dat je de selectie wilt afwijzen?<br>' +
             'Na afwijzing wordt de status veranderd naar \'Goedgekeurd, wachten op data.\'',
-        'Are you sure you want to submit the selection?<br>You may enter a remark:':
-            'Weet u zeker dat u de selectie wilt insturen?<br>U kunt hier een opmerking plaatsen:',
+        'Are you sure you want to submit the selection?': 'Weet u zeker dat u de selectie wilt insturen?',
         'Remark': 'Opmerking',
 
         'Authentification checks by PALGA': 'Authentificatiecontroles door PALGA',

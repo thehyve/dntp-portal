@@ -5,6 +5,7 @@
  */
 package business.security;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -257,17 +258,22 @@ public class CustomPermissionService {
             logDecision("isLabuser", user, requestId, "DENIED (not a lab user).");
             return false;
         }
-        long count = taskService
-                .createTaskQuery()
-                .processInstanceId(requestId)
-                .processVariableValueEquals("lab", user.getLab().getNumber())
-                .count();
+        Set<Lab> lab_singleton = Collections.singleton(user.getLab());
+        long count = labRequestRepository.countByProcessInstanceIdAndLabIn(requestId, lab_singleton);
         if (count > 0) {
             logDecision("isLabuser", user, requestId, "OK.");
             return true;
         } else {
-            logDecision("isLabuser", user, requestId, "DENIED (no task found for user and request).");
-            return false;
+            log.info("Checking if request is parent request of a lab request: " + requestId);
+            count = labRequestRepository.countByChildProcessInstanceIdAndLabIn(requestId, lab_singleton);
+            log.info("Count: " + count);
+            if (count > 0) {
+                logDecision("isLabuser", user, requestId, "OK.");
+                return true;
+            } else {
+                logDecision("isLabuser", user, requestId, "DENIED (no task found for user and request).");
+                return false;
+            }
         }
     }
 
@@ -300,8 +306,16 @@ public class CustomPermissionService {
             logDecision("isHubuser", user, requestId, "OK.");
             return true;
         } else {
-            logDecision("isHubuser", user, requestId, "DENIED (no task found for user and request).");
-            return false;
+            log.info("Checking if request is parent request of a lab request: " + requestId);
+            count = labRequestRepository.countByChildProcessInstanceIdAndLabIn(requestId, hubLabs);
+            log.info("Count: " + count);
+            if (count > 0) {
+                logDecision("isHubuser", user, requestId, "OK.");
+                return true;
+            } else {
+                logDecision("isHubuser", user, requestId, "DENIED (no task found for user and request).");
+                return false;
+            }
         }
     }
 

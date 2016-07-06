@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface LabRequestRepository extends JpaRepository<LabRequest, Long> {
 
@@ -28,6 +30,16 @@ public interface LabRequestRepository extends JpaRepository<LabRequest, Long> {
     Long countByProcessInstanceIdAndLab(String processInstanceId, Lab lab);
 
     Long countByProcessInstanceIdAndLabIn(String processInstanceId, Collection<Lab> labs);
+
+    @Query("SELECT COUNT(lr) FROM LabRequest lr,"
+            + " RequestProperties c"
+            + " JOIN c.parent AS p"
+            + " WHERE p.processInstanceId = :processInstanceId"
+            + " AND lr.processInstanceId = c.processInstanceId "
+            + " AND lr.lab IN :labs")
+    Long countByChildProcessInstanceIdAndLabIn(
+            @Param("processInstanceId") String processInstanceId,
+            @Param("labs")Collection<Lab> labs);
 
     Long countByProcessInstanceIdAndHubAssistanceRequestedTrue(String processInstanceId);
 

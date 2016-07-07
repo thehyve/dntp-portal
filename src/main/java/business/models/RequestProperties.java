@@ -90,13 +90,15 @@ public class RequestProperties {
 
     @OneToOne
     private File excerptListAttachment;
-    
+
     @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderColumn
     private List<Comment> comments = new ArrayList<Comment>();
 
     @OrderBy("timeCreated")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderColumn
     private List<Comment> approvalComments = new ArrayList<Comment>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

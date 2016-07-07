@@ -119,6 +119,52 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
+### 0.0.53
+Modify these column definitions in an existing database:
+```sql
+# Add columns
+alter table lab_request_comments add column comments_order int4 not null default -1;
+alter table request_properties_comments add column comments_order int4 not null default -1;
+alter table request_properties_approval_comments add column approval_comments_order int4 not null default -1;
+
+# For lab request comments:
+
+# Check if there are existing records that need to be updated
+select * from lab_request_comments join comment on lab_request_comments.comments_id = comment.id where comments_order = -1 order by time_created;
+
+# Select the top comments for each lab request
+select * from lab_request_comments lrc where lrc.comments_id in (
+    select lrc2.comments_id from lab_request_comments lrc2 join comment on lrc2.comments_id = comment.id where lrc2.lab_request_id = lrc.lab_request_id and lrc2.comments_order = -1 order by time_created limit 1);
+
+# Update their comments_order to N (start with 0, increase every iteration)
+update lab_request_comments set comments_order = N where comments_id in (
+    select lrc.comments_id from lab_request_comments lrc where lrc.comments_id in (
+        select lrc2.comments_id from lab_request_comments lrc2 join comment on lrc2.comments_id = comment.id where lrc2.lab_request_id = lrc.lab_request_id and lrc2.comments_order = -1 order by time_created limit 1)
+);
+
+# Same for request comments:
+select * from request_properties_comments join comment on request_properties_comments.comments_id = comment.id where comments_order = -1 order by time_created;
+
+select * from request_properties_comments lrc where lrc.comments_id in (
+    select lrc2.comments_id from request_properties_comments lrc2 join comment on lrc2.comments_id = comment.id where lrc2.request_properties_id = lrc.request_properties_id and lrc2.comments_order = -1 order by time_created limit 1);
+
+update request_properties_comments set comments_order = N where comments_id in (
+    select lrc.comments_id from request_properties_comments lrc where lrc.comments_id in (
+        select lrc2.comments_id from request_properties_comments lrc2 join comment on lrc2.comments_id = comment.id where lrc2.request_properties_id = lrc.request_properties_id and lrc2.comments_order = -1 order by time_created limit 1)
+);
+
+# Same for request approval comments:
+select * from request_properties_approval_comments join comment on request_properties_approval_comments.approval_comments_id = comment.id where approval_comments_order = -1 order by time_created;
+
+select * from request_properties_approval_comments lrc where lrc.approval_comments_id in (
+    select lrc2.approval_comments_id from request_properties_approval_comments lrc2 join comment on lrc2.approval_comments_id = comment.id where lrc2.request_properties_id = lrc.request_properties_id and lrc2.approval_comments_order = -1 order by time_created limit 1);
+
+update request_properties_approval_comments set approval_comments_order = N where approval_comments_id in (
+    select lrc.approval_comments_id from request_properties_approval_comments lrc where lrc.approval_comments_id in (
+        select lrc2.approval_comments_id from request_properties_approval_comments lrc2 join comment on lrc2.approval_comments_id = comment.id where lrc2.request_properties_id = lrc.request_properties_id and lrc2.approval_comments_order = -1 order by time_created limit 1)
+);
+```
+
 ### 0.0.48
 Modify these column definitions in an existing database:
 ```sql

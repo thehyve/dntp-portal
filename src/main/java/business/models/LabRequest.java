@@ -105,6 +105,7 @@ public class LabRequest {
     @OrderBy("sequenceNumber ASC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @BatchSize(size = 10000)
+    //@OrderColumn // FIXME
     List<PathologyItem> pathologyList = new ArrayList<PathologyItem>();
 
     private String rejectReason;
@@ -117,6 +118,7 @@ public class LabRequest {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)
     @BatchSize(size = 1000)
+    @OrderColumn
     private List<Comment> comments = new ArrayList<Comment>();
 
     public LabRequest() {

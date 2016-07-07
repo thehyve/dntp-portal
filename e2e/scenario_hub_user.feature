@@ -185,7 +185,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     And I click on the object with id 'clinicalDataSent'
     And I click on the 'Update clinical data status' button
     Then the page should contain the text 'Approved'
-    And the page should contain the text 'Clinical data has been sent to the requester.'
+    And the page should contain the text 'Desired information for retrieving clinical data from treating physician was sent to the requester.'
 
   Scenario: 10 samples are visible for the hub user
     Given I am logged in as the hub user
@@ -211,7 +211,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     """
     missingSamples: 1, 2, 3
     """
-    And I click on the 'Materials received' button
+    And I click on the 'PA material received' button
     And I click on the 'OK' button
     Then the current request should have 'Received' status
 
@@ -234,6 +234,6 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
    """
    missingSamples: 1, 2, 3
    """
-   And I click on the 'Materials returned' button
+   And I click on the 'PA material returned' button
    And I am on the lab requests page
    Then the page should contain the text 'Completed'

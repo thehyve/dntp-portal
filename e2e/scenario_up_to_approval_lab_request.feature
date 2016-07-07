@@ -115,7 +115,6 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
    # We should be able to do it automatically... But it doesn't work, so we do it manually
    And testing is paused to select all PA numbers of the current request
    And I click on the 'Submit selection' button
-   And I enter the text 'no remarks'
    And I click on the 'OK' button
    Then I should see 0 lab requests in the list
 

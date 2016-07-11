@@ -156,14 +156,16 @@
 
                     <!-- Specialism -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : registrationForm.specialism.$invalid}">
+                         ng-class="{ 'has-error' : registrationForm.specialism.$invalid}"
+                         ng-if="edituser.currentRole == 'requester'">
                         <label class="control-label col-sm-3">{{ 'Specialism' | translate }}</label>
                         <div class="col-sm-8">
                             <specialism-combo-box
                                     name="specialism"
                                     ng-model="edituser.specialism"
                                     ng-maxlength="50"
-                                    custom-class="form-control" required>
+                                    custom-class="form-control"
+                                    ng-required="edituser.currentRole == 'requester'">
                             </specialism-combo-box>
                             <!-- errors -->
                             <span ng-show="registrationForm.specialism.$error.required"

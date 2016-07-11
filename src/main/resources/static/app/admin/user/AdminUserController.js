@@ -89,6 +89,9 @@ angular.module('ProcessApp.controllers')
             _loadLabsAndUsers();
 
             $scope.update = function(userdata) {
+                if (userdata.currentRole !== 'requester') {
+                    userdata.specialism = '';
+                }
                 userdata.hubLabIds = _.map(userdata.hubLabs, function(lab) { return lab.id; });
                 $scope.dataLoading = true;
                 if (!isNaN(parseInt(userdata.id, 10))) {

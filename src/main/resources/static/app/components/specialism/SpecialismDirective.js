@@ -15,6 +15,7 @@
                     scope: {
                         modelValue : '=ngModel',
                         maxlength: '=ngMaxlength',
+                        required: '=ngRequired',
                         customClass : '@'
                     },
                     require: 'ngModel',
@@ -71,7 +72,7 @@
                          * @returns {boolean}
                          */
                         ctrl.$validators.required = function (modelValue) {
-                            return !ctrl.$isEmpty(modelValue);
+                            return scope.required === false || !ctrl.$isEmpty(modelValue);
                         };
 
                         /**

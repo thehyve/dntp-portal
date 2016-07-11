@@ -123,7 +123,7 @@ This file is distributed under the GNU Affero General Public License
             <div>
                 <button ng-click="selectPANumbers(request)" id="select-pa-numbers" class="btn btn-primary"
                     ng-disabled="!request.excerptList || excerptCountExceedsSelectionLimit(request.excerptList.entryCount)"
-                    title="{{ excerptCountExceedsSelectionLimit(request.excerptList.entryCount) ? 'Manual selection disabled for large excerpt lists.' : ''}}">
+                    title="{{ excerptCountExceedsSelectionLimit(request.excerptList.entryCount) ? 'Manual selection disabled for large excerpt lists.' : '' | translate}}">
                     <i class="glyphicon glyphicon-edit"></i>
                     {{'Select PA numbers'|translate}}
                 </button>

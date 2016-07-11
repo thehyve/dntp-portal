@@ -141,6 +141,10 @@
         'Remark': 'Opmerking',
         'The excerpt list exceeds the limit of ?. The requester cannot use the excerpt selection interface for this request.':
             'De excerptlijst overschrijft de grens van {{limit}} excerpten. De aanvrager kan daardoor de interface voor excerptselectie niet gebruiken.',
+        'Upload excerpt selection': 'Excerptselectie uploaden',
+        'Submit selection': 'Selectie opsturen',
+        'Select PA numbers': 'PA-nummers selecteren',
+        'Manual selection disabled for large excerpt lists.': 'De interface voor excerptselectie is uitgeschakeld voor grote excerptlijsten.',
 
         'Authentification checks by PALGA': 'Authentificatiecontroles door PALGA',
         'Requester\'s identity was established.': 'De identiteit van de aanvrager is vastgesteld/gecontroleerd.',

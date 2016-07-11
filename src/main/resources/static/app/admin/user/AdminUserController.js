@@ -98,6 +98,7 @@ angular.module('ProcessApp.controllers')
                     userdata.$update(function() {
                         userdata = _addInfoToUser(userdata);
                         $scope.dataLoading = false;
+                        $scope.editUserModal.hide();
                         $scope.editUserModal.destroy();
                     }, function(response) {
                         $scope.dataLoading = false;
@@ -112,6 +113,7 @@ angular.module('ProcessApp.controllers')
                     user.$save(function(result) {
                         $scope.dataLoading = false;
                         $scope.editerror = '';
+                        $scope.editUserModal.hide();
                         $scope.editUserModal.destroy();
                         result = _addInfoToUser(result);
                         $scope.users.unshift(result);
@@ -131,16 +133,18 @@ angular.module('ProcessApp.controllers')
 
             $scope.activate = function(user) {
                 $scope.dataLoading = true;
-                user.$activate(function(result) {
-                    $scope.users[$scope.users.indexOf(user)] = result;
+                var usr = new User(user);
+                usr.$activate(function(result) {
+                    $scope.users[$scope.users.indexOf(user)].active = result.active;
                     $scope.dataLoading = false;
                 });
             };
 
             $scope.deactivate = function(user) {
                 $scope.dataLoading = true;
-                user.$deactivate(function(result) {
-                    $scope.users[$scope.users.indexOf(user)] = result;
+                var usr = new User(user);
+                usr.$deactivate(function(result) {
+                    $scope.users[$scope.users.indexOf(user)].active = result.active;
                     $scope.dataLoading = false;
                 });
             };

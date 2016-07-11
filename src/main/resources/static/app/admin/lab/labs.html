@@ -48,7 +48,8 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="lab in displayedCollection" class="{{lab.active ? '' : 'disabled' }}">
+                    <tr ng-repeat="lab in displayedCollection" class="{{lab.active ? '' : 'row-disabled' }}"
+                        title="{{lab.active ? '' : 'Laboratory disabled' |translate }}">
                         <td>{{lab.number}}</td>
                         <td>{{lab.name}}</td>
                         <td>
@@ -71,19 +72,21 @@ This file is distributed under the GNU Affero General Public License
                             </span>
                         </td>
                         <td>{{lab.emailAddresses.join(', ')}}</td>
-                        <td>
+                        <td class="dntp-tool-column">
                             <span class="pull-right">
                                 <span class="btn-group btn-group-sm">
                                     <button class="btn btn-default" type="button" title="{{'Edit' | translate}}" ng-click="edit(lab)">
                                         <span><i class="glyphicon glyphicon-pencil"></i></span>
                                     </button>
-                                    <button class="btn btn-default {{lab.active ? 'disabled' : ''}}" type="button"
+                                    <button class="btn btn-default {{lab.active ? 'disabled' : 'activate-button'}}" type="button"
                                             title="{{'Activate' | translate}}"
+                                            ng-if="!lab.active"
                                             ng-click="activate(lab)" ng-disabled="dataLoading">
                                         <span><i class="glyphicon glyphicon-repeat"></i></span>
                                     </button>
-                                    <button class="btn btn-default {{lab.active ? '' : 'disabled'}}" type="button"
+                                    <button class="btn btn-default {{lab.active ? 'deactivate-button' : 'disabled'}}" type="button"
                                             title="{{'Deactivate' | translate}}"
+                                            ng-if="lab.active"
                                             ng-click="deactivate(lab)" ng-disabled="dataLoading">
                                         <span><i class="glyphicon glyphicon-ban-circle"></i></span>
                                     </button>

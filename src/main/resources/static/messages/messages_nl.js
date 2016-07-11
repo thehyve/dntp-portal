@@ -39,6 +39,9 @@
         'only visible for PALGA': 'alleen zichtbaar voor PALGA-adviseurs',
         'Export requests': 'Aanvragen exporteren',
         'Main request': 'Hoofdaanvraag',
+        'User disabled': 'Gebruiker geblokkeerd',
+        'Laboratory disabled': 'Laboratorium geblokkeerd',
+        'Remove': 'Verwijder',
 
         /* ========= */
         /* Request */

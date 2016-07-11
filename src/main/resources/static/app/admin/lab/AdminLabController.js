@@ -55,6 +55,7 @@ angular.module('ProcessApp.controllers')
                         function(obj) { return obj.text; });
                 if (labdata.id > 0) {
                     labdata.$update(function() {
+                        $scope.editLabModal.hide();
                         $scope.editLabModal.destroy();
                         $scope.dataLoading = false;
                     }, function(response) {
@@ -64,6 +65,7 @@ angular.module('ProcessApp.controllers')
                 } else {
                     var lab = new Lab(labdata);
                     lab.$save(function(result) {
+                        $scope.editLabModal.hide();
                         $scope.editLabModal.destroy();
                         $scope.labs.unshift(result);
                         $scope.dataLoading = false;

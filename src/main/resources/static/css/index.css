@@ -349,6 +349,16 @@ address {margin-bottom: 0px;}
 .dntp-success-color {color: green;}
 .dntp-error-color {color: indianred;}
 
+.row-disabled td:not(.dntp-tool-column) { opacity: 0.5; }
+
+.activate-button:hover {
+    color: green;
+}
+
+.deactivate-button:hover {
+    color: red;
+}
+
 .radio-label {
     vertical-align: top;
     width: 90%;

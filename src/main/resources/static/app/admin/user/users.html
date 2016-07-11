@@ -52,7 +52,8 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="user in displayedCollection">
+                    <tr ng-repeat="user in displayedCollection" class="{{user.active ? '' : 'row-disabled' }}"
+                        title="{{user.active ? '' : 'User disabled' |translate }}">
                         <td>{{user.displayName}}</td>
                         <td>{{user.username}}</td>
                         <td><span ng-if="user.emailValidated">{{'Validated'|translate}}</span>
@@ -78,13 +79,13 @@ This file is distributed under the GNU Affero General Public License
                                         ng-click="edit(user)">
                                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                                 </button>
-                                <button class="btn btn-default {{user.active ? 'disabled' : ''}}"
+                                <button class="btn btn-default {{user.active ? 'disabled' : 'activate-button'}}"
                                         ng-if="!user.active"
                                         type="button" title="{{'Activate'|translate}}"
                                         ng-click="activate(user)" ng-disabled="dataLoading">
                                     <span class="glyphicon glyphicon-repeat"></span>
                                 </button>
-                                <button class="btn btn-default {{user.active ? '' : 'disabled'}}"
+                                <button class="btn btn-default {{user.active ? 'deactivate-button' : 'disabled'}}"
                                         ng-if="user.active"
                                         type="button" title="{{'Deactivate'|translate}}"
                                         ng-click="deactivate(user)" ng-disabled="dataLoading">

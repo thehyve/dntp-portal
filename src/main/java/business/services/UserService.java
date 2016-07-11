@@ -99,7 +99,7 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        return userRepository.findByDeletedFalse();
+        return userRepository.findByDeletedFalseOrderByUsernameAsc();
     }
 
     public List<User> findScientificCouncilMembers() {
@@ -242,7 +242,7 @@ public class UserService {
      * Convert all usernames to lowercase.
      */
     public void lowerCaseUsernames() {
-        List<User> users = userRepository.findByDeletedFalse();
+        List<User> users = userRepository.findByDeletedFalseOrderByUsernameAsc();
         for(User user: users) {
             if (!user.getUsername().equals(user.getUsername().toLowerCase())) {
                 log.info("Changing username " + user.getUsername() + " to lowercase: " + user.getUsername().toLowerCase());

@@ -104,16 +104,16 @@ public class MailService {
           ;
 
     @Transactional
-    public void sendAgreementFormLink(@NotNull User requester,
+    public void sendAgreementFormLink(@NotNull String email,
             @NotNull RequestProperties request) {
-        log.info("Send agreement form link to requester for request "
+        log.info("Send agreement form link for request "
                 + request.getRequestNumber() + ".");
 
-        log.info("Sending link to user " + requester.getUsername());
+        log.info("Sending link to " + email);
         try {
             MimeMessageHelper message = new MimeMessageHelper(
                     mailSender.createMimeMessage());
-            message.setTo(requester.getContactData().getEmail());
+            message.setTo(email);
             message.setFrom(getFrom(), fromName);
             message.setReplyTo(replyAddress, replyName);
             message.setSubject(String.format("Nieuwe PALGA-aanvraag ontvangen, aanvraagnummer: %s", request.getRequestNumber()));

@@ -96,7 +96,6 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         securityContext.setAuthentication(requester);
         
         RequestRepresentation representation = new RequestRepresentation();
-        representation.setTitle("Test request");
         representation = requestController.start(requester, representation);
         log.info("Started request " + representation.getProcessInstanceId());
         log.info("Status: " + representation.getStatus());
@@ -120,6 +119,8 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         RequestRepresentation representation = 
                 requestController.getRequestById(requester, processInstanceId);
         log.info("Status: " + representation.getStatus());
+        representation.setTitle("Test request");
+        representation.setPathologistEmail("test+pathologist@dntp.thehyve.nl");
         representation = requestController.submit(requester, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
         assertEquals(RequestStatus.REVIEW, representation.getStatus());

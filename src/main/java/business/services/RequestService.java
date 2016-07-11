@@ -43,6 +43,7 @@ import org.springframework.stereotype.Service;
 
 import com.opencsv.CSVWriter;
 
+import business.exceptions.EmailError;
 import business.exceptions.FileDownloadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
@@ -52,6 +53,7 @@ import business.models.File;
 import business.models.RequestProperties;
 import business.models.User;
 import business.representation.LabRequestRepresentation;
+import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
 
@@ -345,7 +347,21 @@ public class RequestService {
 
         properties.setRequestNumber(requestPropertiesService.getNewRequestNumber(properties));
 
-        mailService.sendAgreementFormLink(requester, properties);
+        try {
+            log.info("Sending agreement form link to requester: " + requester.getUsername());
+            mailService.sendAgreementFormLink(requester.getUsername(), properties);
+        } catch (EmailError e) {
+            log.error("Email error while sending mail to requester: " + e.getMessage());
+        }
+        try {
+            HistoricProcessInstance instance = getProcessInstance(id);
+            RequestListRepresentation request = new RequestListRepresentation();
+            requestFormService.transferBasicData(instance, request);
+            log.info("Sending agreement form link to pathologist: " + request.getPathologistEmail());
+            mailService.sendAgreementFormLink(request.getPathologistEmail(), properties);
+        } catch (EmailError e) {
+            log.error("Email error while sending mail to pathologist: " + e.getMessage());
+        }
 
         return properties;
     }

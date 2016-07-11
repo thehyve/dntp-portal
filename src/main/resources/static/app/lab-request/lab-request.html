@@ -48,7 +48,7 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}
                 </button>
-                 <span ng-if="labRequest.status != 'Waiting for lab approval' && labRequest.status != 'Rejected' &&
+                 <span ng-if="labRequest.status != 'Rejected' &&
                  (isRequester() || isLabUser() || isHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                        <span><i class="glyphicon glyphicon-download-alt"></i></span>

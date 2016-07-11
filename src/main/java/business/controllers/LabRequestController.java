@@ -471,6 +471,7 @@ public class LabRequestController {
     static Set<Status> paNumberDownloadStatuses;
     {
         paNumberDownloadStatuses = new HashSet<Status>(Arrays.asList(
+                Status.WAITING_FOR_LAB_APPROVAL,
                 Status.APPROVED,
                 Status.COMPLETED,
                 Status.SENDING,

@@ -209,14 +209,26 @@ angular.module('ProcessApp.controllers')
                 request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
             };
 
+            $scope.EXCERPT_SELECTION_LIMIT = 1000;
+
+            $scope.excerptCountExceedsSelectionLimit = function(count) {
+                return count > $scope.EXCERPT_SELECTION_LIMIT;
+            };
+
             $scope.excerptlistuploadsuccess = function(request, data, type, flow) {
+                var entryCount = Number(data);
                 $scope.uploading = false;
                 $scope.lastUploadedFileName = flow.files[flow.files.length-1].name;
                 $scope.upload_result[type] = 'success';
                 $scope.upload_error[type] = '';
                 $scope.$apply();
                 request.excerptListUploaded = true;
-                request.excerptList = {entryCount: data};
+                request.excerptList = {entryCount: entryCount};
+                if ($scope.excerptCountExceedsSelectionLimit(entryCount)) {
+                    bootbox.alert(
+                        $rootScope.translate('The excerpt list exceeds the limit of ?. The requester cannot use the excerpt selection interface for this request.',
+                                {limit: $scope.EXCERPT_SELECTION_LIMIT}));
+                }
             };
 
             $scope.excerptselectionuploadsuccess = function(request, data, type, flow) {

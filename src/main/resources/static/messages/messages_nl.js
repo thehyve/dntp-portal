@@ -139,6 +139,8 @@
             'Na afwijzing wordt de status veranderd naar \'Goedgekeurd, wachten op data.\'',
         'Are you sure you want to submit the selection?': 'Weet u zeker dat u de selectie wilt insturen?',
         'Remark': 'Opmerking',
+        'The excerpt list exceeds the limit of ?. The requester cannot use the excerpt selection interface for this request.':
+            'De excerptlijst overschrijft de grens van {{limit}} excerpten. De aanvrager kan daardoor de interface voor excerptselectie niet gebruiken.',
 
         'Authentification checks by PALGA': 'Authentificatiecontroles door PALGA',
         'Requester\'s identity was established.': 'De identiteit van de aanvrager is vastgesteld/gecontroleerd.',

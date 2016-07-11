@@ -67,6 +67,8 @@
         'Download ...' : 'Download {{filename}}',
         'Uploading ?' : 'Uploading {{filename}}',
         'Done uploading file ?' : 'Done uploading file {{filename}}',
+        'The excerpt list exceeds the limit of ?. The requester cannot use the excerpt selection interface for this request.':
+            'The excerpt list exceeds the limit of {{limit}}. The requester cannot use the excerpt selection interface for this request.',
 
         'Review_short': 'Review',
 

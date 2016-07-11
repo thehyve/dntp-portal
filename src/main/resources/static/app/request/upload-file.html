@@ -121,12 +121,12 @@ This file is distributed under the GNU Affero General Public License
                 </div>
             </div>
             <div>
-                <span ng-click="request.excerptList.entryCount <= 1000 ? selectPANumbers(request) : false" id="select-pa-numbers" class="btn btn-primary"
-                    ng-disabled="!request.excerptList || request.excerptList.entryCount > 1000"
-                    title="{{ request.excerptList.entryCount > 1000 ? 'Manual selection disabled for large excerpt lists.' : ''}}">
+                <button ng-click="selectPANumbers(request)" id="select-pa-numbers" class="btn btn-primary"
+                    ng-disabled="!request.excerptList || excerptCountExceedsSelectionLimit(request.excerptList.entryCount)"
+                    title="{{ excerptCountExceedsSelectionLimit(request.excerptList.entryCount) ? 'Manual selection disabled for large excerpt lists.' : ''}}">
                     <i class="glyphicon glyphicon-edit"></i>
                     {{'Select PA numbers'|translate}}
-                </span>
+                </button>
                 <input type="file" flow-btn id="test-upload-excerpt-selection" style="display:none" />
                 <button class="btn btn-default" flow-btn
                     ng-disabled="uploading">

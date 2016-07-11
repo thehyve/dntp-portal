@@ -60,8 +60,7 @@ This file is distributed under the GNU Affero General Public License
                     {{fieldName}}
                 </div>
                 <div class="col-xs-10 col-md-5">
-                    <span ng-bind-html="xls2html(excerpt.values[relevantIndexes[$index]]) | limitTo: 100"></span>
-                    {{(excerpt.values[relevantIndexes[$index]].length > 100) ? '...' : ''}}
+                    <span ng-bind-html="xls2html(excerpt.values[relevantIndexes[$index]])"></span>
                 </div>
             </div>
             </div>

@@ -44,6 +44,9 @@ This file is distributed under the GNU Affero General Public License
                     <th st-sort="paNumber" class="sortable">{{'PA number' | translate}}</th>
                     <th>{{'Samples' | translate}}</th>
                     <th st-sort="status" class="sortable">{{'Status' | translate}}</th>
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">
+                        {{'Actions' | translate}}
+                    </th>
                 </tr>
                 <tr class="no-print">
                     <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
@@ -53,12 +56,20 @@ This file is distributed under the GNU Affero General Public License
                     <th><input st-search="palgaExcerptId" placeholder="{{'Filter by PALGA excerptid'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <option value="">{{'Filter by status' | translate}}</option>
+                            <option ng-repeat="status in statuses"
+                                ng-selected="activeSidebar === status"
+                                value="{{status}}">{{ status | translate}}</option>
+                        </select>
+                    </th>
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
                 </tr>
                 <tr class="no-print">
                     <th colspan="8"><input id="request-search"
                         st-search="" class="form-control"
                         placeholder="{{'Search'|translate}} ..." type="text" /></th>
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,12 +89,26 @@ This file is distributed under the GNU Affero General Public License
                                 <label class="label label-primary">{{sample}}</label>
                         </span>
                     </span></td>
-                    <td>{{pathology.status}}</td>
+                    <td>{{pathology.status | translate}}</td>
+                    <td class="no-print" ng-if="isLabUser() || isHubUser()">
+                        <span class="pull-right">
+                        <span class="btn-group btn-group-sm">
+                        <a ng-if="pathology.status=='Received' || pathology.status=='Sending'"
+                           href="mailto:{{pathology.email
+                            }}?subject=Regarding request {{pathology.labRequestCode}}, recall sample {{pathology.paNumber
+                            }}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
+                           class="btn btn-default" role="button" title="{{'Compose recall mail' | translate}}">
+                            <span><i class="glyphicon glyphicon-envelope"></i></span>
+                            {{'Recall' | translate}}
+                        </a>
+                        </span>
+                        </span>
+                    </td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="8" class="text-center">
+                    <td colspan="9" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
                     </td>
                 </tr>

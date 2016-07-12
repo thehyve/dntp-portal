@@ -94,13 +94,35 @@
     <div class="alert alert-danger" role="alert" ng-if="upload_result['agreement'] == 'error'">
         <span ng-bind-html="upload_error['agreement']"></span>
     </div>
+    <div ng-repeat="file in $flow.files">
+        <span ng-if="file.isUploading()">
+            {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+        </span>
+        <span ng-if="file.isComplete()">
+            {{'Done uploading file ?. The attachment has been saved.' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}})
+        </span>
+        <div class="alert alert-danger" role="alert" ng-if="file.error">
+            {{file.error}}
+        </div>
+        <br />
+        <div class="progress">
+            <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                style="min-width: 2em;"
+                ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+        </div>
+    </div>
     <div>
-      <span title="{{'Upload signed authentificaton and agreement form' | translate}}" class="btn btn-default" flow-btn>{{'Upload form'|translate}}</span>
+      <button title="{{'Upload signed authentificaton and agreement form' | translate}}"
+        class="btn btn-default"
+        ng-disabled="uploading"
+        flow-btn>{{'Upload form'|translate}}</button>
     </div>
     <br>
     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
          flow-drag-enter="style={border:'4px dashed lightgreen'}"
          flow-drag-leave="style={border: '2px dashed gray'}"
+         ng-hide="uploading"
          ng-style="style">
       ({{'drag and drop your file here'|translate}})
     </div>

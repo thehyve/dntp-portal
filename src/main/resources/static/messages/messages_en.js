@@ -67,6 +67,7 @@
         'Download ...' : 'Download {{filename}}',
         'Uploading ?' : 'Uploading {{filename}}',
         'Done uploading file ?' : 'Done uploading file {{filename}}',
+        'Done uploading file ?. The attachment has been saved.' : 'Done uploading file {{filename}}. The attachment has been saved.',
         'The excerpt list exceeds the limit of ?. The requester cannot use the excerpt selection interface for this request.':
             'The excerpt list exceeds the limit of {{limit}}. The requester cannot use the excerpt selection interface for this request.',
 

@@ -512,6 +512,7 @@
         'Download ...': '{{filename}} downloaden',
         'Uploading ?' : 'Bezig met uploaden van {{filename}}',
         'Done uploading file ?' : 'Klaar met uploaden van {{filename}}',
+        'Done uploading file ?. The attachment has been saved.' : 'Klaar met uploaden van {{filename}}. De bijlage is opgeslagen.',
 
 
         /* ===================== */

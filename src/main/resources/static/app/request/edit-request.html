@@ -626,7 +626,7 @@
                                 {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
                             </span>
                             <span ng-if="file.isComplete()">
-                                {{'Done uploading file ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}).
+                                {{'Done uploading file ?. The attachment has been saved.' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}})
                             </span>
                             <div class="alert alert-danger" role="alert" ng-if="file.error">
                                 {{file.error}}
@@ -703,7 +703,7 @@
                                 {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
                             </span>
                             <span ng-if="file.isComplete()">
-                                {{'Done uploading file ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}).
+                                {{'Done uploading file ?. The attachment has been saved.' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}})
                             </span>
                             <div class="alert alert-danger" role="alert" ng-if="file.error">
                                 {{file.error}}

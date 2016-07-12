@@ -63,11 +63,9 @@ public class ProfileController {
         log.info("PUT profile for user with id " + user.getId());
 
         if (form == null) {
-            log.info("form is null!");
+            log.warn("form is null!");
             return;
         }
-
-        // LATER: Validate data (password requirements, no html tags, etc)
 
         // Get user
         User currentUser = userService.getOne(user.getId());
@@ -83,21 +81,20 @@ public class ProfileController {
         // Only update the telephone number
         ContactData modifiedData = form.getContactData();
         if (modifiedData == null) {
-            log.info("new contact data is null!");
+            log.warn("new contact data is null!");
         } else {
             cData.setTelephone(modifiedData.getTelephone());
         }
 
-        String specialism = currentUser.getSpecialism();
-
-        // update specialism for any changes
-        if (!form.getSpecialism().equals(specialism)) {
-            currentUser.setSpecialism(form.getSpecialism());
+        if (currentUser.isRequester()) {
+            String specialism = currentUser.getSpecialism();
+            // update specialism for any changes
+            if (form.getSpecialism() != null && !form.getSpecialism().equals(specialism)) {
+                currentUser.setSpecialism(form.getSpecialism());
+            }
         }
 
         // Save
         userService.save(currentUser);
-
-        // FIXME probably we should return an error message in case validation fails
     }
 }

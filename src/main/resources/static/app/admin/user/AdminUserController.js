@@ -97,9 +97,10 @@ angular.module('ProcessApp.controllers')
                 if (!isNaN(parseInt(userdata.id, 10))) {
                     userdata.$update(function() {
                         userdata = _addInfoToUser(userdata);
-                        $scope.dataLoading = false;
                         $scope.editUserModal.hide();
                         $scope.editUserModal.destroy();
+                        _loadUsers();
+                        $scope.dataLoading = false;
                     }, function(response) {
                         $scope.dataLoading = false;
                         if (response.data) {
@@ -178,7 +179,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.edit = function(usr) {
-                $scope.edituser = usr;
+                $scope.edituser = _.clone(usr);
                 $scope.hubLabs = _.map($scope.labs, function (lab) { lab.disabled = !lab.active; return lab; });
                 $scope.edituser.hubLabs = _.map($scope.labs, function(lab) {
                     lab.ticked = _.includes($scope.edituser.hubLabIds, lab.id);

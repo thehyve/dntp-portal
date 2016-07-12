@@ -37,12 +37,15 @@ angular.module('ProcessApp.controllers')
                 return email.length > 1 && email.length <= 255 && EMAIL_REGEXP.test(email);
             };
 
-            Lab.query().$promise.then(function(response) {
-                $scope.labs = response ? response : [];
-                $scope.displayedCollection = [].concat($scope.labs);
-            }, function(response) {
-                $rootScope.logErrorResponse(response);
-            });
+            var _loadLabs = function() {
+                Lab.query().$promise.then(function(response) {
+                    $scope.labs = response ? response : [];
+                    $scope.displayedCollection = [].concat($scope.labs);
+                }, function(response) {
+                    $rootScope.logErrorResponse(response);
+                });
+            };
+            _loadLabs();
 
             $scope.add = function() {
                 $scope.edit(new Lab());
@@ -57,6 +60,7 @@ angular.module('ProcessApp.controllers')
                     labdata.$update(function() {
                         $scope.editLabModal.hide();
                         $scope.editLabModal.destroy();
+                        _loadLabs();
                         $scope.dataLoading = false;
                     }, function(response) {
                         _error(response.data.message);
@@ -112,7 +116,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.edit = function(lb) {
-                $scope.editlab = lb;
+                $scope.editlab = _.clone(lb);
                 var emailAddresses = _.get(lb, 'emailAddresses', []);
                 $scope.editlab.emailAddressData = [].concat(emailAddresses);
                 $scope.editLabModal = $modal({

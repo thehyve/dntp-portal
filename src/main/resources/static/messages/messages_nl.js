@@ -361,6 +361,11 @@
         'Filter by PALGA advisor': 'Filteren op PALGA-adviseur',
         'Filter by pathologist': 'Filteren op patholoog',
         'Filter by linkage': 'Filteren op koppeling',
+        'Filter by sequence number': 'Filteren op volgnummer',
+        'Filter by PALGA patiëntnr': 'Filteren op PALGA patiëntnr',
+        'Filter by PALGA excerptnr': 'Filteren op PALGA excerptnr',
+        'Filter by PALGA excerptid': 'Filteren op PALGA excerptid',
+        'Filter by verdict': 'Filteren op oordeel',
         'Date assigned': 'Toegekend op',
         'My verdict': 'Mijn oordeel',
 

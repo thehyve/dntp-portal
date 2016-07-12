@@ -13,7 +13,7 @@ angular.module('ProcessApp.services')
 
             var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
             var _isNotSuspended = _.negate(_isSuspended);
-            var _isNotVoted = _.matches({approvalVote: null});
+            var _isNotVoted = _.matches({approvalVote: ''});
             var _isVoted = _.negate(_isNotVoted);
             var _approvalStatus = 'Approval';
 

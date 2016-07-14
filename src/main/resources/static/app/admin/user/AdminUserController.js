@@ -179,7 +179,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.edit = function(usr) {
-                $scope.edituser = _.clone(usr);
+                $scope.edituser = _.cloneDeep(usr);
                 $scope.hubLabs = _.map($scope.labs, function (lab) { lab.disabled = !lab.active; return lab; });
                 $scope.edituser.hubLabs = _.map($scope.labs, function(lab) {
                     lab.ticked = _.includes($scope.edituser.hubLabIds, lab.id);

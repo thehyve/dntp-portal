@@ -116,7 +116,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.edit = function(lb) {
-                $scope.editlab = _.clone(lb);
+                $scope.editlab = _.cloneDeep(lb);
                 var emailAddresses = _.get(lb, 'emailAddresses', []);
                 $scope.editlab.emailAddressData = [].concat(emailAddresses);
                 $scope.editLabModal = $modal({

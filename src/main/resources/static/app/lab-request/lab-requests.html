@@ -28,12 +28,19 @@ This file is distributed under the GNU Affero General Public License
 
             <h1>{{ 'Lab requests' | translate }}</h1>
             <hr>
-            <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser()">
-            <li role="presentation" title="{{'Print selected'|translate}}">
+            <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser() || isPalga()">
+            <li ng-if="isLabUser() || isHubUser()"
+                role="presentation" title="{{'Print selected'|translate}}">
                 <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
                     <span><i class="glyphicon glyphicon-print"></i></span>
                     {{'Print selected'|translate}}
                 </button>
+            </li>
+            <li role="presentation">
+            <span><a class="btn btn-default" role="button" ng-href="/labrequests/panumbers/csv">
+                <span><i class="glyphicon glyphicon-download-alt"></i></span>
+                {{'Download PA numbers'|translate}}
+            </a></span>
             </li>
             </ul>
 

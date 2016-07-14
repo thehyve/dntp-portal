@@ -35,6 +35,7 @@ public class LabRequestRepresentation {
     private Long requesterId;
     private String requesterName;
     private String requesterEmail;
+    private String requesterTelephone;
     private ProfileRepresentation requester;
     private Lab requesterLab;
 
@@ -157,6 +158,14 @@ public class LabRequestRepresentation {
 
     public void setRequesterEmail(String requesterEmail) {
         this.requesterEmail = requesterEmail;
+    }
+
+    public String getRequesterTelephone() {
+        return requesterTelephone;
+    }
+
+    public void setRequesterTelephone(String requesterTelephone) {
+        this.requesterTelephone = requesterTelephone;
     }
 
     public ProfileRepresentation getRequester() {

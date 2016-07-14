@@ -5,11 +5,14 @@
  */
 package business.controllers;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -509,6 +512,23 @@ public class LabRequestController {
           throw new PaNumbersDownloadError();
         }
         return file;
+    }
+
+    @PreAuthorize("isAuthenticated() and " +
+            "(hasRole('palga') or hasRole('lab_user') or hasRole('hub_user'))")
+    @RequestMapping(value = "/labrequests/panumbers/csv", method = RequestMethod.GET)
+    public HttpEntity<InputStreamResource> downloadAllPANumbers(UserAuthenticationToken user) {
+        log.info("GET /labrequests/panumbers/csv for userId " + user.getId());
+
+        List<LabRequestRepresentation> labRequests = labRequestService.findLabRequestsForUser(user.getUser(), true);
+
+        try {
+            return paNumberService.writeAllPaNumbers(labRequests);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            throw new PaNumbersDownloadError();
+        }
     }
 
     static Set<Status> paReportSendingStatuses;

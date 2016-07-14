@@ -157,6 +157,7 @@ public class LabRequestService {
                 user = userService.findOne(request.getRequesterId());
             }
             labRequestRepresentation.setRequesterEmail(user.getContactData().getEmail());
+            labRequestRepresentation.setRequesterTelephone(user.getContactData().getTelephone());
             labRequestRepresentation.setRequester(new ProfileRepresentation(user));
             labRequestRepresentation.setRequesterLab(user.getLab());
         }

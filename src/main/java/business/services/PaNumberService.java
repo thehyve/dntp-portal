@@ -5,12 +5,11 @@
  */
 package business.services;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
 
@@ -23,53 +22,109 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import business.models.PathologyItem;
-import com.opencsv.CSVWriter;
+import business.representation.LabRequestRepresentation;
+import business.representation.PathologyRepresentation;
 
+import com.opencsv.CSVWriter;
 
 @Service
 public class PaNumberService {
 
-  Log log = LogFactory.getLog(getClass());
+    public static final String PA_NUMBERS_DOWNLOAD_CHARACTER_ENCODING = "UTF-8";
 
-  String[] FILE_HEADER = "LAB_NO;PA_NUMBER;SAMPLES;NOTES".split(";");
+    Log log = LogFactory.getLog(getClass());
 
-  public HttpEntity<InputStreamResource> writePaNumbers(
-          List<PathologyItem> items,
-          Integer labNumber,
-          String labRequestCode) throws Exception {
+    String[] FILE_HEADER = "LAB_NO;PA_NUMBER;SAMPLES;NOTES".split(";");
 
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Writer writer = new PrintWriter(out);
-    CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
+    public HttpEntity<InputStreamResource> writePaNumbers(List<PathologyItem> items, Integer labNumber,
+            String labRequestCode) throws Exception {
 
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Writer writer = new OutputStreamWriter(out, PA_NUMBERS_DOWNLOAD_CHARACTER_ENCODING);
+        CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
 
-    csvwriter.writeNext(FILE_HEADER);
+        csvwriter.writeNext(FILE_HEADER);
 
-    for (PathologyItem item : items) {
-        log.info(item.getPaNumber());
-        String[] toppings = {labNumber.toString(), item.getPaNumber(), "", ""};
-        csvwriter.writeNext(toppings);
+        for (PathologyItem item : items) {
+            log.info(item.getPaNumber());
+            String[] toppings = { labNumber.toString(), item.getPaNumber(), "", "" };
+            csvwriter.writeNext(toppings);
+        }
+
+        String filename = "panumbers_" + labRequestCode + ".csv";
+
+        try {
+            csvwriter.flush();
+            writer.flush();
+            out.flush();
+            InputStream in = new ByteArrayInputStream(out.toByteArray());
+            csvwriter.close();
+            writer.close();
+            out.close();
+            InputStreamResource resource = new InputStreamResource(in);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.valueOf("text/csv;charset=" + PA_NUMBERS_DOWNLOAD_CHARACTER_ENCODING));
+            headers.set("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+            HttpEntity<InputStreamResource> response = new HttpEntity<InputStreamResource>(resource, headers);
+            return response;
+        } catch (IOException e) {
+            throw new Exception(e);
+        }
     }
 
-    String filename = "panumbers_" + labRequestCode + ".csv";
+    static final String[] PA_NUMBERS_HEADER = new String[]{
+       "Request number",
+       "Status",
+       "PA number",
+       "Laboratory",
+       "Requester name",
+       "Requester email",
+       "Requester telephone number",
+       "Sent date"
+    };
 
-    try {
+    public HttpEntity<InputStreamResource> writeAllPaNumbers(
+            List<LabRequestRepresentation> labRequests) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Writer writer = new OutputStreamWriter(out, PA_NUMBERS_DOWNLOAD_CHARACTER_ENCODING);
+        CSVWriter csvwriter = new CSVWriter(writer, ',', '"');
+        csvwriter.writeNext(PA_NUMBERS_HEADER);
+        for (LabRequestRepresentation labRequest: labRequests) {
+            String labRequestCode = labRequest.getLabRequestCode();
+            String status = labRequest.getStatus().toString();
+            String labName = labRequest.getLab().getName();
+            String requesterName = labRequest.getRequesterName();
+            String requesterEmail = labRequest.getRequesterEmail();
+            String requesterTelephone = labRequest.getRequesterTelephone();
+            String labRequestSentDate = labRequest.getSendDate() == null ? "" : labRequest.getSendDate().toString();
+            for (PathologyRepresentation item: labRequest.getPathologyList()) {
+                csvwriter.writeNext(new String[] {
+                    labRequestCode,
+                    status,
+                    item.getPaNumber(),
+                    labName,
+                    requesterName,
+                    requesterEmail,
+                    requesterTelephone,
+                    labRequestSentDate
+                });
+            }
+        }
         csvwriter.flush();
-        csvwriter.close();
         writer.flush();
-        writer.close();
         out.flush();
         InputStream in = new ByteArrayInputStream(out.toByteArray());
+        csvwriter.close();
+        writer.close();
         out.close();
         InputStreamResource resource = new InputStreamResource(in);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf("text/csv"));
+        headers.setContentType(MediaType.valueOf("text/csv;charset=" + PA_NUMBERS_DOWNLOAD_CHARACTER_ENCODING));
+        String filename = "pa_numbers.csv";
         headers.set("Content-Disposition",
-          "attachment; filename=\"" + filename + "\"");
+                   "attachment; filename=" + filename);
         HttpEntity<InputStreamResource> response = new HttpEntity<InputStreamResource>(resource, headers);
         return response;
-    } catch (IOException e) {
-        throw new Exception(e);
     }
-  }
+
 }

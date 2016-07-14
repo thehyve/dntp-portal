@@ -366,6 +366,7 @@
         'Filter by PALGA excerptnr': 'Filteren op PALGA excerptnr',
         'Filter by PALGA excerptid': 'Filteren op PALGA excerptid',
         'Filter by verdict': 'Filteren op oordeel',
+        'Filter by hub assistance': 'Filteren op inzet hubmedewerker',
         'Date assigned': 'Toegekend op',
         'My verdict': 'Mijn oordeel',
 

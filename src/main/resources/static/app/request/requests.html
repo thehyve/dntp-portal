@@ -77,7 +77,7 @@ This file is distributed under the GNU Affero General Public License
                         <th>{{'Request type'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="linkageWithPersonalData" class="sortable">{{'Data linkage'|translate}}</th>
                         <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
-                        <th ng-if="isScientificCouncil()" st-sort="approvalVote" class="sortable">{{'My verdict'|translate}}</th>
+                        <th ng-if="isScientificCouncil()" st-sort="approvalVote" class="sortable">{{'My review'|translate}}</th>
                         <th st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
                         <th st-sort="pathologistName" class="sortable">{{'Pathologist'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="assigneeName" class="sortable">{{'PALGA advisor'|translate}}</th>
@@ -104,7 +104,7 @@ This file is distributed under the GNU Affero General Public License
                         </th>
                         <th ng-if="isRequester()">&nbsp;</th>
                         <th ng-if="isScientificCouncil()" class="request-vote"><select st-search="approvalVote" class="input-sm form-control" type="search" st-input-event="change">
-                                <option value="">{{'Filter by verdict' | translate}}</option>
+                                <option value="">{{'Filter by review' | translate}}</option>
                                 <option value="ACCEPTED">{{ 'Accepted' | translate}}</option>
                                 <option value="REJECTED">{{ 'Rejected' | translate}}</option>
                             </select>

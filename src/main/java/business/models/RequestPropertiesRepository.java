@@ -5,6 +5,7 @@
  */
 package business.models;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -34,5 +35,8 @@ public interface RequestPropertiesRepository extends JpaRepository<RequestProper
 
     @Query("SELECT p FROM RequestProperties r JOIN r.parent p WHERE r.processInstanceId = :processInstanceId")
     RequestProperties getParentByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
+
+    @Query("SELECT p.dateSubmitted FROM RequestProperties p WHERE processInstanceId = :processInstanceId")
+    Date getDateSubmittedByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
 
 }

@@ -62,13 +62,14 @@ This file is distributed under the GNU Affero General Public License
                                     <i class="mdi mdi-check-all"></i>
                                 </a>
                             </th>
-                            <th st-sort="labRequestCode" class="sortable">{{'Lab request ID' | translate}}</th>
+                            <th st-sort="code" class="sortable">{{'Lab request ID' | translate}}</th>
                             <th st-sort="request.title" class="sortable">{{'Request title' | translate}}</th>
                             <th st-sort="requesterName" class="sortable">{{'Requester' | translate}}</th>
                             <th ng-if="isLabUser()" st-sort="requesterLab.name" class="sortable">{{'Requester lab' | translate}}</th>
                             <th ng-if="!isLabUser()" st-sort="lab.name" class="sortable">{{'Lab' | translate}}</th>
                             <th>{{'Request type' | translate}}</th>
                             <th st-sort="hubAssistanceRequested" class="sortable">{{'Hub assistance'|translate}}</th>
+                            <th st-sort="dateCreated" class="sortable">{{'Creation date' | translate}}</th>
                             <th st-sort="pathologyCount" class="sortable">{{'# PA numbers' | translate}}</th>
                             <th st-sort="status" class="sortable">{{'Status' | translate}}</th>
                             <th st-sort="assigneeName" class="sortable">{{'Claimed by'|translate}}</th>
@@ -88,6 +89,7 @@ This file is distributed under the GNU Affero General Public License
                                     <option value="false">{{ 'No' | translate}}</option>
                                 </select></th>
                             <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                             <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by status' | translate}}</option>
                                     <option ng-repeat="status in statuses"
@@ -100,7 +102,7 @@ This file is distributed under the GNU Affero General Public License
                         </tr>
                         <tr class="no-print">
                             <th class="no-print">&nbsp;</th>
-                            <th colspan="9"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                            <th colspan="10"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -141,6 +143,9 @@ This file is distributed under the GNU Affero General Public License
                               labRequest.hubAssistanceRequested == false ? 'No' : '&ndash;'
                               | translate }}
                         </td>
+                        <td>
+                            <small>{{labRequest.dateCreated | date: 'dd-MM-yyyy H:mm'}}</small>
+                        </td>
                         <td class="numeric">
                             {{labRequest.pathologyCount}}
                         </td>
@@ -175,7 +180,7 @@ This file is distributed under the GNU Affero General Public License
                     <tfoot>
                         <tr>
                             <td class="no-print"></td>
-                            <td colspan="9" class="text-center">
+                            <td colspan="10" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
                             </td>
                             <td class="no-print"></td>

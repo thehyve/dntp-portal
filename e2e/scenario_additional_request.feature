@@ -124,15 +124,15 @@ Feature: scenario additional request
   Scenario: 8a additional request contains link to parent
     Given I am logged in as the palga user
     Then I should see a link to the request with id 'YYYY-1'
-    And I should see a link to the request with id 'YYYY-2'
+    And I should see a link to the request with id 'YYYY-1-A1'
 
   Scenario: 8b parent contains link to additional request
     Given I am logged in as the palga user
     When I click on the request with id 'YYYY-1'
-    Then I should see a link to the request with id 'YYYY-2'
+    Then I should see a link to the request with id 'YYYY-1-A1'
 
   Scenario: 8c additional request contains link to parent
     Given I am logged in as the palga user
-    When I click on the request with id 'YYYY-2'
+    When I click on the request with id 'YYYY-1-A1'
     Then I should see a link to the request with id 'YYYY-1'
     # TODO: add checks for copied request data

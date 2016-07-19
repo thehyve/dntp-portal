@@ -10,4 +10,6 @@ public interface RequestListElement {
 
     Date getDateCreated();
 
+    Date getDateSubmitted();
+
 }

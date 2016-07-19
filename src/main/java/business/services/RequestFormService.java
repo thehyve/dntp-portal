@@ -128,6 +128,7 @@ public class RequestFormService {
         request.setProcessInstanceId(instance.getId());
         request.setProcessId(instance.getProcessDefinitionId());
         request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
+        request.setDateSubmitted(requestPropertiesService.getDateSubmitted(instance.getId()));
         request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
         request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
         {
@@ -363,6 +364,7 @@ public class RequestFormService {
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
                     instance.getId());
             request.setRequestNumber(properties.getRequestNumber());
+            request.setDateSubmitted(properties.getDateSubmitted());
             request.setReviewStatus(properties.getReviewStatus());
 
             request.setSearchCriteria(properties.getSearchCriteria());

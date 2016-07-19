@@ -207,8 +207,32 @@
         _requestFactory.convertRequestNumber = function (request) {
             var _number = '' + request.requestNumber;
             if (_number.length > 5) {
-                var value = Number(_number.substring(0,4))*1000000;
-                value += Number(_number.substring(5, _number.length));
+                var parts = _number.split('-');
+                if (parts.length > 1) {
+                    var value = Number(parts[0])*1000000000;
+                    value += Number(parts[1]*1000);
+                    if (parts.length > 2) {
+                        value += Number(parts[2].substring(1, parts[2].length));
+                    }
+                    return value;
+                }
+                return -1;
+            }
+            return -1;
+        };
+
+        _requestFactory.convertLabRequestCode = function (labrequest) {
+            var _number = '' + labrequest.labRequestCode;
+            var parts = _number.split('-');
+            if (parts.length >= 3) {
+                var value = Number(parts[0])*1000*1000*1000*1000;
+                value += Number(parts[1]*1000*1000);
+                if (parts.length >= 4) {
+                    value += Number(parts[2].substring(1, parts[2].length)) * 1000;
+                    value += Number(parts[3]);
+                } else {
+                    value += Number(parts[2]);
+                }
                 return value;
             }
             return -1;

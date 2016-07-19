@@ -6,6 +6,7 @@
 package business.models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,11 @@ public class RequestProperties {
     private String grantProvider;
 
     private String reseachNumber;
+
+    /**
+     * The datetime on which the request number is generated.
+     */
+    private Date dateSubmitted;
 
     @OneToMany
     private List<File> requestAttachments = new ArrayList<File>();
@@ -166,6 +172,14 @@ public class RequestProperties {
 
     public void setRequestNumber(String requestNumber) {
         this.requestNumber = requestNumber;
+    }
+
+    public Date getDateSubmitted() {
+        return dateSubmitted;
+    }
+
+    public void setDateSubmitted(Date dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
     }
 
     public ReviewStatus getReviewStatus() {

@@ -240,6 +240,8 @@
         'Create additional request': 'Aanvullend verzoek aanmaken',
         'Are you sure you want to create an additional request?': 'Weet je zeker dat je een aanvullend verzoek wilt aanmaken?',
         'No additional requests.': 'Geen aanvullende verzoeken.',
+        'Date submitted': 'Datum ingediend',
+        'Date created': 'Datum aangemaakt',
 
         /* ========= */
         /* Login */
@@ -264,7 +266,7 @@
         Dutch: 'Nederlands',
         Task: 'Taak',
         Tasks: 'Taken',
-        Registration: 'Registeren',
+        Registration: 'Registreren',
         Request: 'Aanvraag',
         Requests: 'Aanvragen',
         'Not logged in': 'Niet ingelogd',

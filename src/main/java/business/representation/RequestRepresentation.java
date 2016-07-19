@@ -26,6 +26,7 @@ public class RequestRepresentation implements RequestListElement {
     private ProfileRepresentation requester;
     private RequestStatus status = RequestStatus.NONE;
     private Date dateCreated;
+    private Date dateSubmitted;
     private Lab lab;
     private String assignee;
     private String assigneeName;
@@ -185,6 +186,14 @@ public class RequestRepresentation implements RequestListElement {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Date getDateSubmitted() {
+        return dateSubmitted;
+    }
+
+    public void setDateSubmitted(Date dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
     }
 
     public RequestRepresentation getParent() {

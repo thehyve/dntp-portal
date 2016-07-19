@@ -70,7 +70,7 @@ This file is distributed under the GNU Affero General Public License
                                 <i class="mdi mdi-check-all"></i>
                             </a>
                         </th>
-                        <th st-sort="number" style="width: 6em" class="sortable">#</th>
+                        <th st-sort="number" style="width: 9em" class="sortable">#</th>
                         <th st-sort="title" class="sortable">{{'Title'|translate}}</th>
                         <th st-sort="status" class="sortable">{{'Status'|translate}}</th>
                         <th></th>
@@ -81,6 +81,8 @@ This file is distributed under the GNU Affero General Public License
                         <th st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
                         <th st-sort="pathologistName" class="sortable">{{'Pathologist'|translate}}</th>
                         <th ng-if="isPalga()" st-sort="assigneeName" class="sortable">{{'PALGA advisor'|translate}}</th>
+                        <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Date created'|translate}}</th>
+                        <th ng-if="!isRequester()" st-sort="dateSubmitted" class="sortable">{{'Date submitted'|translate}}</th>
                         <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
                     </tr>
                     <tr class="no-print">
@@ -112,11 +114,12 @@ This file is distributed under the GNU Affero General Public License
                         <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><input st-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th>&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th colspan="{{isPalga() ? 9 : (isScientificCouncil() || isRequester() ? 8 : 7)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="{{isPalga() ? 10 : (isScientificCouncil() || isRequester() ? 9 : 8)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -166,6 +169,10 @@ This file is distributed under the GNU Affero General Public License
                         <td><span ng-if="!isMyRequest(req)">{{req.requesterName}}</span></td>
                         <td><a href="mailto:{{req.pathologistName}} &lt;{{req.pathologistEmail}}&gt;">{{req.pathologistName}}</a></td>
                         <td ng-if="isPalga()">{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
+                        <td>
+                            <small ng-if="isRequester()">{{(req.dateCreated | date: 'dd-MM-yyyy H:mm') || '&ndash;'}}</small>
+                            <small ng-if="!isRequester()">{{(req.dateSubmitted | date: 'dd-MM-yyyy H:mm') || '&ndash;'}}</small>
+                        </td>
                         <td class="no-print">
                         <span class="pull-left">
                         <span class="btn-group btn-group-sm">
@@ -215,7 +222,7 @@ This file is distributed under the GNU Affero General Public License
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="{{isPalga() ? 11 : (isScientificCouncil() || isRequester() ? 10 : 9)}}" class="text-center">
+                            <td colspan="{{isPalga() ? 12 : (isScientificCouncil() || isRequester() ? 11 : 10)}}" class="text-center">
                                 <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
                             </td>
                         </tr>

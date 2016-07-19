@@ -119,6 +119,20 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
+### 0.0.55
+Set `date_submitted` for existing requests:
+```sql
+alter table request_properties add column date_submitted timestamp;
+
+update request_properties set date_submitted =
+(select t.start_time_
+	from act_hi_taskinst t
+	where request_properties.process_instance_id = t.proc_inst_id_
+	and t.task_def_key_ = 'palga_request_review'
+)
+where date_submitted is null;
+```
+
 ### 0.0.53
 Modify these column definitions in an existing database:
 ```sql

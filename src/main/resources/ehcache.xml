@@ -31,7 +31,14 @@
         <eh:key-type>java.lang.String</eh:key-type>
         <eh:value-type>java.lang.String</eh:value-type>
         <eh:expiry><eh:ttl unit="hours">1</eh:ttl></eh:expiry>
-        <eh:heap unit="entries">1000</eh:heap>
+        <eh:heap unit="entries">10000</eh:heap>
+    </eh:cache>
+
+    <eh:cache alias="datesubmitted">
+        <eh:key-type>java.lang.String</eh:key-type>
+        <eh:value-type>java.util.Date</eh:value-type>
+        <eh:expiry><eh:ttl unit="hours">1</eh:ttl></eh:expiry>
+        <eh:heap unit="entries">10000</eh:heap>
     </eh:cache>
 
     <eh:cache alias="pathologycount">

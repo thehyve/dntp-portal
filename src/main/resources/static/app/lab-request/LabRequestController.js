@@ -64,6 +64,7 @@ angular.module('ProcessApp.controllers')
                             var item = pathologyList[j];
                             item.labRequestId = labRequests[i].id;
                             item.labRequestCode = labRequests[i].labRequestCode;
+                            item.code = labRequests[i].code;
                             item.processInstanceId = labRequests[i].processInstanceId;
                             item.status = labRequests[i].status;
                             item.assignee = labRequests[i].assignee;
@@ -131,6 +132,9 @@ angular.module('ProcessApp.controllers')
                 Restangular.all(fetchSampleList ? 'labrequests/detailed' : 'labrequests')
                 .getList().then(function (labRequests) {
                     $scope.allLabRequests = labRequests;
+                    $scope.allLabRequests.forEach(function(labRequest) {
+                        labRequest.code = Request.convertLabRequestCode(labRequest);
+                    });
                     if (fetchSampleList) {
                         _createSampleList(labRequests);
                     }

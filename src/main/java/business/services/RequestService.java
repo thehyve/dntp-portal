@@ -20,6 +20,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.activiti.engine.HistoryService;
@@ -87,6 +90,9 @@ public class RequestService {
 
     @Autowired
     private FileService fileService;
+
+    @PersistenceContext
+    private EntityManager em;
 
     /**
      * Finds task. 
@@ -400,14 +406,26 @@ public class RequestService {
         runtimeService.setVariables(childId, variables);
 
         RequestProperties childProperties = requestPropertiesService.findByProcessInstanceId(childId);
-        // generate new request number
-        childProperties.setRequestNumber(requestPropertiesService.getNewRequestNumber(childProperties));
-        // set link between parent and child request
-        RequestProperties parentProperties = requestPropertiesService.findByProcessInstanceId(parentId);
-        childProperties.setParent(parentProperties);
-        parentProperties.getChildren().add(childProperties);
-        requestPropertiesService.save(parentProperties);
 
+        RequestProperties parentProperties = requestPropertiesService.findByProcessInstanceId(parentId);
+        synchronized (parentProperties) {
+            em.refresh(parentProperties, LockModeType.PESSIMISTIC_WRITE);
+            // generate new request number
+            String childRequestNumber = String.format("%s-A%d",
+                    parentProperties.getRequestNumber(),
+                    parentProperties.getChildren().size() + 1
+            );
+            log.info("Create child request with number: " + childRequestNumber);
+            childProperties.setRequestNumber(childRequestNumber);
+            // set link between parent and child request
+            childProperties.setParent(parentProperties);
+            parentProperties.getChildren().add(childProperties);
+            em.persist(parentProperties);
+            em.flush();
+        }
+
+        // set submit date to now
+        childProperties.setDateSubmitted(new Date());
         // copy attachments
         for (File file: parentProperties.getRequestAttachments()) {
             File clone = fileService.clone(file);

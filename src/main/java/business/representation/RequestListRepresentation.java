@@ -19,6 +19,7 @@ public class RequestListRepresentation implements RequestListElement {
     private String requesterName;
     private RequestStatus status = RequestStatus.NONE;
     private Date dateCreated;
+    private Date dateSubmitted;
 
     private ReviewStatus reviewStatus;
 
@@ -128,6 +129,14 @@ public class RequestListRepresentation implements RequestListElement {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Date getDateSubmitted() {
+        return dateSubmitted;
+    }
+
+    public void setDateSubmitted(Date dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
     }
 
     public ReviewStatus getReviewStatus() {

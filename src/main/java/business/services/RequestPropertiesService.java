@@ -25,8 +25,6 @@ import business.models.File;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
 import business.representation.RequestListRepresentation;
-import business.representation.RequestRepresentation;
-import business.representation.RequestStatus;
 import business.models.RequestPropertiesRepository;
 import business.models.User;
 
@@ -75,14 +73,29 @@ public class RequestPropertiesService {
         return requestPropertiesRepository.getRequestNumberByProcessInstanceId(processInstanceId);
     }
 
+    @Cacheable("datesubmitted")
+    public Date getDateSubmitted(String processInstanceId) {
+        return requestPropertiesRepository.getDateSubmittedByProcessInstanceId(processInstanceId);
+    }
+
+    /**
+     * Retrieves the request number of a request if it exists or generates a new one.
+     * The request number cache is updated as a result of this action.
+     * When a new request number is generated, also the <code>dateSubmitted</code> is set.
+     *
+     * @param properties the request properties object representing the request.
+     * @return the request number.
+     */
     @CachePut(value = "requestnumber", key = "#properties.processInstanceId")
+    @CacheEvict(value = "datesubmitted", key = "#properties.processInstanceId")
     @Transactional
     public String getNewRequestNumber(RequestProperties properties) {
         if (properties.getRequestNumber() == null || properties.getRequestNumber().isEmpty()) {
             // The request is a new request and needs to have a new number assigned.
             String requestNumber = requestNumberService.getNewRequestNumber();
             properties.setRequestNumber(requestNumber);
-            properties =  save(properties);
+            properties.setDateSubmitted(new Date());
+            properties = save(properties);
         }
         return properties.getRequestNumber();
     }

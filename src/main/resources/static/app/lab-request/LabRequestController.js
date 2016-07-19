@@ -346,7 +346,13 @@ angular.module('ProcessApp.controllers')
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }
-                            $scope.editHubAssistance(labRequest);
+                            // Check if hub assistance is enabled.
+                            // Otherwise just reload the data.
+                            if(labRequest.lab.hubAssistanceEnabled) {
+                                $scope.editHubAssistance(labRequest);
+                            } else {
+                                _loadData();
+                            }
                         }, function (err) {
                             $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                         });

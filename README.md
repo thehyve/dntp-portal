@@ -129,6 +129,7 @@ update request_properties set date_submitted =
 	from act_hi_taskinst t
 	where request_properties.process_instance_id = t.proc_inst_id_
 	and t.task_def_key_ = 'palga_request_review'
+	limit 1
 )
 where date_submitted is null;
 ```

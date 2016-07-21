@@ -70,7 +70,7 @@ only accept framework generated sessions; session tokens long enough and securel
 limited cookie domain);
 \item Logout links;
 \item No leaking of the session id in URLs;
-\item HttpOnly (V3.14?);
+\item HttpOnly (V3.14);
 \item Secure properties for session cookies (V3.15);
 \item Disallow duplicate sessions for a user originating from different machines (V3.16).
 \end{itemize}
@@ -211,7 +211,7 @@ For securing the infrastructure:
 \item Apache proxy in between, application not directly approachable;
 \item Only ports 22, 80, and 443 open from the outside (firewall rules);
 \item On port 80, Apache should only forward to https (rewrite rule, 
-status 301 (Moved permanently)) [TODO];
+status 301 (Moved permanently));
 \item \texttt{mod\_security} has been added to Apache;
 \item Access log by Apache, logging all incoming requests (URIs, not data),
 \texttt{mod\_security} and by the application.
@@ -228,8 +228,8 @@ they are not included in the checks in the next section.
 (\textit{Trying multiple passwords will result in blocking; trying multiple accounts not, but there won't be many accounts, so this is OK.})
 \item Possibility to disallow a number of previously chosen passwords (V2.25);
 (\textit{Actually, this requirement does not add security.})
-\item HttpOnly (V3.14);
-\item Secure properties for session cookies (V3.15);
+\item HttpOnly (V3.14); \emph{OK}
+\item Secure properties for session cookies (V3.15); \emph{OK}
 \item Disallow duplicate sessions for a user originating from different machines (V3.16);
 (\textit{Won't implement.})
 \item Aggregate access control protection  (V4.17), e.g., scraping by generating 
@@ -240,8 +240,8 @@ a large sequence of requests (a possibly authenticated user looking for security
 (\textit{Should be provided by Spring and Angular}.)
 \item Protection against parameter pollution attacks (V5.18).
 (\textit{Should be provided by Spring and Angular}.)
-\item \texttt{no-cache} and \texttt{no-store} Cache-Control headers for sensitive data (V9.4);
-\item SSL connection failures are logged (V10.4);
+\item \texttt{no-cache} and \texttt{no-store} Cache-Control headers for sensitive data (V9.4); \emph{OK}
+\item SSL connection failures are logged (V10.4); \emph{OK}
 \item Headers contain only printable ASCII characters (V11.6); 
 (\textit{For cookies, this is enforced by \texttt{mod\_security}.})
 \item Do not allow HTTP headers to be spoofed (V11.9);
@@ -290,10 +290,18 @@ Checking this list is part of deployment to production.
 \item No action \texttt{/test/clear/} available;
 \item Check account blocking period after $n$ failed login attempts.
 \item Check for SSL certificate, make sure key chain is secure and valid. Check with: \url{https://www.ssllabs.com/ssltest/}.
-\item Check that requests on port 80 are forwarded to https.
+\item Check that requests on port 80 are forwarded to \texttt{https}.
 \item Check that the database is not accessible (except from localhost) and passwords are properly set.
 \item Check that database password in the application configuration is not exposed (e.g., in \texttt{puppet}).
-\item Perhaps, write a script that checks if the current deployment uses the newest versions of included frameworks.
+\item Use scripts that checks if the current deployment uses the
+newest versions of included frameworks:
+\begin{itemize}
+  \item \texttt{mvn versions:display-dependency-updates}
+  \item \texttt{mvn versions:display-plugin-updates}
+  \item \texttt{mvn dependency-check:check}
+  \item \texttt{npm outdated}
+  \item \texttt{bower list}
+\end{itemize}
 \end{itemize}
 
 

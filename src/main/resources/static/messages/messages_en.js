@@ -70,6 +70,14 @@
         'Done uploading file ?. The attachment has been saved.' : 'Done uploading file {{filename}}. The attachment has been saved.',
         'The excerpt list exceeds the limit of ?. The requester cannot use the excerpt selection interface for this request.':
             'The excerpt list exceeds the limit of {{limit}}. The requester cannot use the excerpt selection interface for this request.',
+        'Successfully added filename? (type?).' : 'Successfully added {{filename}} ({{type}}).',
+        'Failed to upload filename?.': 'Failed to upload {{filename}}.',
+        'filetype_agreement': 'Form authentification and agreement request',
+        'filetype_attachment': 'Attachment',
+        'filetype_MEC approval': 'Letter of medical research ethics committee',
+        'filetype_excerpt list': 'Excerpt list',
+        'filetype_excerpt selection': 'Excerpt selection',
+        'filetype_data': 'Data',
 
         'Review_short': 'Review',
 

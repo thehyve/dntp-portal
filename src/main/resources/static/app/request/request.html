@@ -9,7 +9,7 @@ This file is distributed under the GNU Affero General Public License
         <!--Side Bar-->
         <div class="col-sm-2 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li class="active"><a href="#/">{{'View'|translate}}</a></li>
+                <li class="active"><a href="#/">{{'Request'|translate}}</a></li>
             </ul>
         </div>
 
@@ -97,9 +97,9 @@ Stichting PALGA%0A
                 ng-if="isPalga() && request.status == 'DataDelivery' &&
                 !request.statisticsRequest &&
                 (request.excerptList || (request.dataAttachments && request.dataAttachments.length > 0))"
-                class="btn btn-default" role="button" title="{{'Compose notification mail' | translate}}">
+                class="btn btn-default" role="button" title="{{'Compose mail to requester' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
-                    {{'Compose notification mail' | translate}}
+                    {{'Compose mail to requester' | translate}}
                 </a>
                 <a href="mailto:{{request.requesterEmail}}?subject=PALGA-gegevens staan voor u klaar, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A
 %0A
@@ -122,9 +122,9 @@ Stichting PALGA%0A
 088-0402700 / aanvraag@palga.nl%0A"
                 ng-if="isPalga() && request.status == 'DataDelivery' &&
                 request.statisticsRequest && request.dataAttachments && request.dataAttachments.length > 0"
-                class="btn btn-default" role="button" title="{{'Compose notification mail' | translate}}">
+                class="btn btn-default" role="button" title="{{'Compose mail to requester' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
-                    {{'Compose notification mail' | translate}}
+                    {{'Compose mail to requester' | translate}}
                 </a>
 
                 <a href="mailto:{{request.requesterEmail}}?subject=PALGA-aanvraag is heropend, aanvraagnummer: {{request.requestNumber}}&amp;body=Geachte heer/mevrouw,%0A

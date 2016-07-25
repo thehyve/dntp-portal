@@ -42,6 +42,8 @@
         'User disabled': 'Gebruiker geblokkeerd',
         'Laboratory disabled': 'Laboratorium geblokkeerd',
         'Remove': 'Verwijder',
+        'Suspend': 'Pauzeren',
+        'Resume': 'Hervatten',
 
         /* ========= */
         /* Request */
@@ -214,6 +216,7 @@
         'popover: Upload medical ethical committee approval': 'Upload brief van medisch-ethische toetsingscommissie.',
         'Close request': 'Aanvraag afsluiten',
         'Compose mail to members': 'Schrijf e-mail aan leden',
+        'Compose mail to requester': 'E-mail aanvrager',
         'Compose reopen email': 'Meld heropenen aanvraag',
 
         'ppc_handled_according_mandate': 'Afgehandeld conform mandaat PPC',
@@ -430,7 +433,7 @@
             'Benodigde informatie voor het opvragen van klinische gegevens via de behandelaar zijn NIET naar de aanvrager verstuurd.',
         'Update clinical data status': 'Verzendstatus klinische gegevens opslaan',
         'The lab request has been approved.': 'Het labverzoek is goedgekeurd.',
-        'Your laboratory is asked for PA reports, PA material or clinical data from the treating physician.' : 'Een onderzoeker vraagt uw laboratorium om PA-verlagen, PA-materiaal of klinische gegevens via de behandelaar.',
+        'Your laboratory is asked for PA reports, PA material and/or clinical data from the treating physician.' : 'Een onderzoeker vraagt uw laboratorium om PA-verslagen, PA-materiaal en/of klinische gegevens via de behandelaar.',
         'Select ‘Approve’ to accept or ‘Reject’ to decline this request.' : 'Als u instemt met het verzoek, kies dan ‘Goedkeuren’ anders ‘Afwijzen.’',
         'Send materials': 'Materiaal versturen',
         'Materials are missing.': 'Materiaal ontbreekt.',
@@ -521,7 +524,16 @@
         'Uploading ?' : 'Bezig met uploaden van {{filename}}',
         'Done uploading file ?' : 'Klaar met uploaden van {{filename}}',
         'Done uploading file ?. The attachment has been saved.' : 'Klaar met uploaden van {{filename}}. De bijlage is opgeslagen.',
-
+        'Successfully added filename? (type?).' : 'Bestand {{filename}} toegevoegd ({{type}}).',
+        'Upload success': 'Uploaden gelukt',
+        'Upload failed': 'Uploaden niet gelukt',
+        'Failed to upload filename?.': 'Het uploaden van {{filename}} is niet gelukt.',
+        'filetype_agreement': 'Formulier authentificatie en instemming aanvraag',
+        'filetype_attachment': 'Bijlage',
+        'filetype_MEC approval': 'Brief van medisch-ethische toetsingscommissie',
+        'filetype_excerpt list': 'Excerptlijst',
+        'filetype_excerpt selection': 'Excerptselectie',
+        'filetype_data': 'Databestand',
 
         /* ===================== */
         /* Agreement overview */

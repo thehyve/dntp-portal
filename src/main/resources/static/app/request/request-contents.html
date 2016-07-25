@@ -444,17 +444,16 @@
 
     <div ng-if="!isScientificCouncil() && request.status == 'LabRequest'">
 
-    <h4 class="h4">{{ 'Lab request details' | translate }}</h4>
+    <div ng-if="request.excerptListRemark">
+        <h4 class="h4">{{ 'Lab request details' | translate }}</h4>
 
-    <!-- Excerpt list remark -->
-    <div class="row">
-        <label class="control-label col-xs-4 col-sm-4">{{ 'Remark' | translate }}</label>
-        <p class="col-xs-6 col-sm-6" ng-if="request.excerptListRemark">
-            {{request.excerptListRemark}}
-        </p>
-        <p class="col-xs-6 col-sm-6" ng-if="!request.excerptListRemark">
-            <em>{{'None' | translate}}</em>
-        </p>
+        <!-- Excerpt list remark -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Remark' | translate }}</label>
+            <p class="col-xs-6 col-sm-6">
+                {{request.excerptListRemark}}
+            </p>
+        </div>
     </div>
 
     </div> <!-- endif LabRequest -->

@@ -7,8 +7,8 @@
 'use strict';
 
 angular.module('ProcessApp.services')
-    .factory('Upload', ['$http', '$alert', 'FlowOptionService',
-        function($http, $alert, FlowOptionService) {
+    .factory('Upload', ['$http', '$alert', 'FlowOptionService', '$rootScope',
+        function($http, $alert, FlowOptionService, $rootScope) {
             var uploadService = {};
 
             var _units = ['B', 'kB', 'MB', 'GB', 'TB'];
@@ -63,10 +63,12 @@ angular.module('ProcessApp.services')
             };
 
             uploadService.fileUploadSuccess = function(type, data, file) {
-                //console.log('Upload success: ', file);
-                var content = 'Successfully added ' + file.name + ' ('+ type +').';
+                var title = $rootScope.translate('Upload success');
+                var filetype = $rootScope.translate('filetype_' + type);
+                var content = $rootScope.translate('Successfully added filename? (type?).',
+                        {filename: file.name, type: filetype});
                 $alert({
-                    title : 'Upload success',
+                    title : title,
                     content : content,
                     placement : 'top-right',
                     type : 'success',
@@ -85,10 +87,11 @@ angular.module('ProcessApp.services')
                     // console.log('warning: ' + e);
                 }
                 console.log('Error uploading \'' + file.name + '\': ' + message);
-                var content = 'Failed to upload ' + file.name +
+                var title = $rootScope.translate('Upload failed');
+                var content = $rootScope.translate('Failed to upload filename?.', {filename: file.name}) +
                     (message ? '<br>' + message : '');
                 $alert({
-                    title : 'Upload failed',
+                    title : title,
                     content : content,
                     placement : 'top-right',
                     type : 'danger',

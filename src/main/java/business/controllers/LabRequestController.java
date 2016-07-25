@@ -493,7 +493,8 @@ public class LabRequestController {
         log.info("GET /labrequests/" + id + "/panumbers/csv for userId " + user.getId());
 
         LabRequest labRequest = labRequestService.findOne(id);
-        if (!paNumberDownloadStatuses.contains(labRequest.getStatus())) {
+        if (!paNumberDownloadStatuses.contains(labRequest.getStatus()) ||
+                (user.getUser().isRequester() && labRequest.getStatus() == Status.WAITING_FOR_LAB_APPROVAL)) {
             log.error("Download not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Download not allowed in status '" + labRequest.getStatus() + "'");
         }

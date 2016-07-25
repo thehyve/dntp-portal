@@ -49,7 +49,8 @@ This file is distributed under the GNU Affero General Public License
                     {{'Notes' | translate}}
                 </button>
                  <span ng-if="labRequest.status != 'Rejected' &&
-                 (isRequester() || isLabUser() || isHubUser())">
+                     !(labRequest.status == 'Waiting for lab approval' && isRequester()) &&
+                     (isRequester() || isLabUser() || isHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                        <span><i class="glyphicon glyphicon-download-alt"></i></span>
                        {{'Download PA numbers' |translate}}

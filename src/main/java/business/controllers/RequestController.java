@@ -271,9 +271,7 @@ public class RequestController {
             @PathVariable String id) {
         log.info("PUT /requests/" + id + "/suspend");
 
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        properties.setReviewStatus(ReviewStatus.SUSPENDED);
-        requestPropertiesService.save(properties);
+        requestPropertiesService.suspendRequest(id);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
@@ -288,9 +286,7 @@ public class RequestController {
             @PathVariable String id) {
         log.info("PUT /requests/" + id + "/resume");
 
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        properties.setReviewStatus(ReviewStatus.ACTIVE);
-        requestPropertiesService.save(properties);
+        requestPropertiesService.resumeRequest(id);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
@@ -427,6 +423,9 @@ public class RequestController {
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/reopen");
+
+        requestPropertiesService.resumeRequest(id);
+
         request.setReopenRequest(true);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
@@ -483,6 +482,8 @@ public class RequestController {
             @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/reject");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
+
+        requestPropertiesService.resumeRequest(id);
 
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -552,6 +553,8 @@ public class RequestController {
         if (request.isPaReportRequest() || request.isMaterialsRequest() || request.isClinicalDataRequest()) {
             throw new InvalidActionInStatus("Cannot close requests for reports, material or clinical data.");
         }
+
+        requestPropertiesService.resumeRequest(id);
 
         Map<String, Object> variables = requestFormService.transferFormData(body, instance, user.getUser());
         runtimeService.setVariables(instance.getId(), variables);

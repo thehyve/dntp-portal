@@ -295,6 +295,8 @@ public class ExcerptListService {
     @Transactional
     public void setExcerptSelectionApproval(String id,
             RequestRepresentation body) {
+        requestPropertiesService.resumeRequest(id);
+
         // Set approval
         runtimeService.setVariable(id, "selection_approved", body.isSelectionApproved());
 

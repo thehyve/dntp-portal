@@ -63,6 +63,37 @@ public class RequestPropertiesService {
         return properties;
     }
 
+    /**
+     * Suspend the request if it is not suspended.
+     *
+     * This will not disable any functionality, but display it in a different
+     * list in the user interface.
+     *
+     * @param processInstanceId the processInstanceId of the request.
+     */
+    @Transactional
+    public void suspendRequest(String processInstanceId) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        if (properties.getReviewStatus() != ReviewStatus.SUSPENDED) {
+            properties.setReviewStatus(ReviewStatus.SUSPENDED);
+            save(properties);
+        }
+    }
+
+    /**
+     * Resume the request if it is suspended.
+     *
+     * @param processInstanceId the processInstanceId of the request.
+     */
+    @Transactional
+    public void resumeRequest(String processInstanceId) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        if (properties.getReviewStatus() != ReviewStatus.ACTIVE) {
+            properties.setReviewStatus(ReviewStatus.ACTIVE);
+            save(properties);
+        }
+    }
+
     @Cacheable("dataattachmentcount")
     public Long getDataAttachmentCount(String processInstanceId) {
         return requestPropertiesRepository.countDataAttachmentsByProcessInstanceId(processInstanceId);

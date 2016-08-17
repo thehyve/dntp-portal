@@ -653,7 +653,7 @@ angular.module('ProcessApp.controllers')
                         $scope.editRequestModal = $modal({
                             id: 'editRequestWindow',
                             scope: $scope,
-                            template: '/app/request/edit-request.html',
+                            templateUrl: '/app/request/edit-request.html',
                             backdrop: 'static'
                         });
                         $scope.dataLoading = false;

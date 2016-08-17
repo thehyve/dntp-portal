@@ -548,7 +548,7 @@
         'My lab': 'Mijn lab',
         'Edit my lab': 'Bewerk mijn lab',
         'Enable hub assistance.': 'Hubmedewerker inzetten.',
-        'Would you like hub assistance for this lab request?': 'Wilt u de inzet van de hubmedewerker toestaan voor dit labverzoek?',
+        'Would you like hub assistance for this lab request?': 'Wilt u assistentie van de hubmedewerker voor dit labverzoek?',
         'Request hub assistance.': 'Hubmedewerker inschakelen.',
         'Option not available because hub assistance is not enabled by your lab.': 'De optie is niet beschikbaar omdat uw lab de inzet van de hubmedewerker niet toestaat.',
         'Active': 'Actief',

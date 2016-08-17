@@ -137,8 +137,8 @@
 
         })
 
-        .run(['$rootScope', '$location', '$cookies', '$http', '$alert', '$translate',
-            function ($rootScope, $location, $cookies, $http, $alert, $translate) {
+        .run(['$rootScope', '$location', '$cookies', '$http', '$alert', '$translate', 'LoginService',
+            function ($rootScope, $location, $cookies, $http, $alert, $translate, LoginService) {
 
                 /**
                  * To authorize feature based on role
@@ -278,6 +278,10 @@
 
                 $rootScope.isScientificCouncil = function() {
                     return $rootScope.hasRole('scientific_council');
+                };
+
+                $rootScope.showLoginModal = function(reloadPageAfterLogin) {
+                    LoginService.showLogin(reloadPageAfterLogin);
                 };
 
                 $rootScope.logErrorResponse = function(response) {

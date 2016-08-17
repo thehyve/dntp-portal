@@ -3,7 +3,7 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
-(function(console, _, angular) {
+(function(jQuery, console, _, angular) {
     'use strict';
 
     angular.module('ProcessApp.services')
@@ -53,4 +53,4 @@
 
                 return service;
             }]);
-})(console, _, angular);
+})(jQuery, console, _, angular);

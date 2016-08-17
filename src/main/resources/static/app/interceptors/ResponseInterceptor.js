@@ -21,6 +21,7 @@ angular.module('ProcessApp.interceptors')
 
         return {
             'responseError': function(response) {
+                var method = _.get(response, 'config.method', '');
                 var url = _.get(response, 'config.url', '').trim();
 
                 switch(response.status) {
@@ -56,7 +57,8 @@ angular.module('ProcessApp.interceptors')
                             duration : 5
                         });
                         _logout();
-                        $location.path('/login');
+                        //$location.path('/login');
+                        $rootScope.showLoginModal(method === 'GET');
                         return $q.reject(response);
                     });
                 case 400:

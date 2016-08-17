@@ -6,105 +6,48 @@
 'use strict';
 
 angular.module('ProcessApp.controllers')
-    .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$cookies', '$log',
-        function ($scope, $http, $rootScope, $location, $cookies, $log) {
+    .controller('LoginController',['$scope', '$http', '$rootScope', '$location', '$route', '$cookies', '$log', 'LoginService',
+        function ($scope, $http, $rootScope, $location, $route, $cookies, $log, LoginService) {
 
-            var _serialiseRoles = function(roles) {
-                if (!jQuery.isArray(roles)) { 
-                    return ''; 
-                } else {
-                    return roles.join(',');
-                }
-            };
-
-            var _storeUserdata = function(userdata) {
-                $cookies.put('userid', userdata.userid);
-                $cookies.put('username', userdata.username);
-                $cookies.put('roles', _serialiseRoles(userdata.roles));
-            };
-
-            var authenticate = function(callback) {
-                $http.get('user').success(function(data) {
-                    if (data.username) {
-                        var userdata = {
-                            userid: ''+data.id,
-                            username: data.username,
-                            roles: [],
-                            features: [],
-                            lab: null
-                        };
-                        if (data.roles) {
-                            for(var i in data.roles) {
-                                userdata.roles.push(data.roles[i].name);
-                            }
-                        }
-                        _storeUserdata(userdata);
-                        $rootScope.updateUserData(userdata);
-                    } else {
-                        $rootScope.authenticated = false;
-                    }
-                    if (callback) { callback(); }
-                }).error(function() {
-                    $rootScope.authenticated = false;
-                    if (callback) { callback(); }
-                });
-            };
+            $scope.dataLoading = false;
 
             $scope.credentials = {
                 username: $cookies.get('username')
             };
 
-            var _refreshCookie = function() {
-                return $http.get('/ping');
+            $scope.login = function(closemodal) {
+                $scope.dataLoading = true;
+                LoginService.login($scope.credentials).then(function() {
+                    // successful login
+                    $scope.dataLoading = false;
+                    if (closemodal) {
+                        LoginService.hideLogin();
+                        if ($scope.reloadPageAfterLogin) {
+                            $route.reload();
+                        }
+                    } else {
+                        var redirectUrl = $rootScope.redirectUrl;
+                        if (!redirectUrl) {
+                            if ($rootScope.isLabUser() || $rootScope.isHubUser()) {
+                                redirectUrl = '/lab-requests';
+                            } else {
+                                redirectUrl = '/';
+                            }
+                        }
+                        $location.path(redirectUrl);
+                    }
+                }, function() {
+                    // login failed. message in $rootScope.errormessage.
+                    $scope.dataLoading = false;
+                });
             };
 
-            $scope.login = function() {
-                $scope.dataLoading = true;
-                _refreshCookie()
-                .then(function() {
-                    $http.post('login', jQuery.param($scope.credentials), {
-                        headers : {
-                            'content-type' : 'application/x-www-form-urlencoded'
-                        }
-                    }).success(function() {
-                        authenticate(function() {
-                            $scope.dataLoading = false;
-                            if ($rootScope.authenticated) {
-                                $rootScope.error = false;
-                                var redirectUrl = $rootScope.redirectUrl;
-                                if (!redirectUrl) {
-                                    if ($rootScope.isLabUser() || $rootScope.isHubUser()) {
-                                        redirectUrl = '/lab-requests';
-                                    } else {
-                                        redirectUrl = '/';
-                                    }
-                                }
-                                $location.path(redirectUrl);
-                            } else {
-                                $location.path('/login');
-                                $rootScope.error = true;
-                                $rootScope.errormessage = '';
-                                $scope.dataLoading = false;
-                            }
-                        });
-                    }).error(function(data) {
-                        $location.path('/login');
-                        $rootScope.error = true;
-                        if (data.message) {
-                            $rootScope.errormessage = data.message;
-                        }
-                        $rootScope.authenticated = false;
-                        $scope.dataLoading = false;
-                    });
-                }, function(data) {
-                    $rootScope.error = true;
-                    if (data.message) {
-                        $log.error("Error: " + data.message);
-                        $rootScope.errormessage = data.message;
-                    } else {
-                        $log.error("Error: " + data);
-                    }
-                });
+            $scope.cancelByEscKey = function (key) {
+                //console.log('In cancelByEscKey');
+                if (key.keyCode === 27) {
+                    //console.log('Escape key');
+                    LoginService.hideLogin();
+                }
             };
 
             angular.element(document).ready(function() {

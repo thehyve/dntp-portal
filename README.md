@@ -179,7 +179,8 @@ set sequence_number = (select e.sequence_number
     join excerpt_list l on l.id = e.excerpt_list_id
     join lab_request r on r.process_instance_id = l.process_instance_id
     join pathology_item i on i.pa_number = e.pa_number and i.lab_request_id = r.id
-    where i.id = pathology_item.id);
+    where i.id = pathology_item.id
+    limit 1);
 ```
 
 ### 0.0.42

@@ -12,10 +12,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 
@@ -58,6 +60,8 @@ import business.representation.RequestRepresentation;
 public class ExcerptListService {
 
     public static final String EXCERPT_LIST_CHARACTER_ENCODING = "ISO-8859-1";
+
+    public static final int EXCERPT_ENTRY_REMARK_MAX_LENGTH = 200;
 
     Log log = LogFactory.getLog(getClass());
 
@@ -123,12 +127,29 @@ public class ExcerptListService {
         }
     }
 
+    /**
+     * Saves the excerpt list and returns the saved list.
+     * Also, the cache for {@link #hasExcerptList(String)} is cleared for key <code>list.processInstanceId</code>.
+     *
+     * @param list the excerpt list.
+     * @return the saved excerpt list.
+     */
     @CacheEvict(value = "excerptlistexists", key = "#list.processInstanceId")
     @Transactional
     public ExcerptList save(ExcerptList list) {
         return excerptListRepository.save(list);
     }
 
+    /**
+     * Updates the excerpt list selection for the request with process instance id <code>processInstanceId</code>.
+     * Its updates the entries of the excerpt list based on the values in the <code>body</code>.
+     * Entries that are not referred to in the <code>body</code> will be ignored.
+     * The updated list is saved and a representation is returned.
+     *
+     * @param processInstanceId the process instance id of the request to which the excerpt list belongs.
+     * @param body
+     * @return a representation of the excerpt list.
+     */
     @Transactional
     public ExcerptListRepresentation updateExcerptListSelection(String processInstanceId, ExcerptListRepresentation body) {
         ExcerptList excerptList = findByProcessInstanceId(processInstanceId);
@@ -149,6 +170,15 @@ public class ExcerptListService {
         return result;
     }
 
+    /**
+     * Processes the excerpt list in the input stream and stores the data read from the stream
+     * in the excerpt list <code>list</code>.
+     * Also, the cache for {@link #hasExcerptList(String)} is cleared for key <code>processInstanceId</code>.
+     *
+     * @param list the excerpt list in which the data is stored.
+     * @param input an input stream with CSV (comma separated values) data.
+     * @return the excerpt list <code>list</code>.
+     */
     @CacheEvict(value = "excerptlistexists", key = "#list.processInstanceId")
     @Transactional
     public ExcerptList processExcerptList(ExcerptList list, InputStream input) {
@@ -182,7 +212,6 @@ public class ExcerptListService {
                             validLabNumbers.add(entry.getLabNumber());
                         }
                     }
-                    
                 } catch (RuntimeException e) {
                     log.error("Error while processing line " + line + ": " + e.getMessage());
                     reader.close();
@@ -199,32 +228,103 @@ public class ExcerptListService {
         }
     }
 
+    /**
+     * Updates the excerpt selection and 'Extra' fields based on a map from
+     * selected sequence numbers to 'Extra' values.
+     * Excerpt entries with sequence numbers in the key set of this map will
+     * be selected, all others will be selected.
+     * The remark field of the selected entries will be updated with the associated
+     * 'Extra' value.
+     *
+     * @param id the process instance id of the request to which the excerpt list belongs.
+     * @param selected a map from sequence numbers to 'Extra' values (remarks).
+     */
     @Transactional
-    public List<Integer> processExcerptSelection(InputStream input) {
-        List<Integer> result = new ArrayList<Integer>();
+    public void updateExcerptSelection(String id, Map<Integer, String> selected) {
+        ExcerptList excerptList = findByProcessInstanceId(id);
+        excerptList.deselectAll();
+        log.info("Saving selection.");
+        for(Entry<Integer, String> e: selected.entrySet()) {
+            Integer number = e.getKey();
+            String remark = e.getValue();
+            ExcerptEntry entry = excerptList.getEntries().get(number - 1);
+            if (entry == null) {
+                log.warn("Null entry in selection (for number '" + number + "').");
+            } else if (!number.equals(entry.getSequenceNumber())) {
+                log.error("Excerpt list " + excerptList.getId() + " is inconsistent: "
+                        + "entry with sequence number " + entry.getSequenceNumber()
+                        + " at index " + number);
+                throw new ExcerptListUploadError("Excerpt list is inconsistent.");
+            } else {
+                entry.setSelected(true);
+                entry.setRemark(remark);
+            }
+        }
+        save(excerptList);
+    }
+
+    /**
+     * Reads an excerpt selection file (as CSV) from an input stream and returns a map from
+     * selected sequence numbers to remarks associated with the excerpt entry, present
+     * in the 'Extra' column of the input file. The 'Extra' column is optional.
+     * The 'Sequence number' column should be the first column.
+     * A header row is mandatory.
+     *
+     * @param input an input stream with CSV (comma separated values) data.
+     * @return a map from selected sequence numbers to remarks.
+     */
+    @Transactional
+    public Map<Integer, String> processExcerptSelection(InputStream input) {
+        Map<Integer, String> result = new TreeMap<>();
         log.info("Processing excerpt selection");
+        CSVReader reader = null;
         try {
-            CSVReader reader = new CSVReader(new InputStreamReader(input), ';', '"');
+            reader = new CSVReader(new InputStreamReader(input), ';', '"');
             String [] nextLine;
-            log.debug("Column names.");
+            log.info("Column names.");
             nextLine = reader.readNext();
-            if (nextLine == null || nextLine.length == 0 || !nextLine[0].equals("Sequence number")) {
+            if (nextLine == null || nextLine.length < 2) {
                 reader.close();
                 throw new ExcerptSelectionUploadError("Invalid header");
             }
+            if (!nextLine[0].equals("Sequence number")) {
+                reader.close();
+                throw new ExcerptSelectionUploadError("Invalid header: Column 'Sequence number' not found.");
+            }
+            int remarkColumn = -1;
+            for (int i=0; i < nextLine.length; i++) {
+                String name_ = nextLine[i].trim().toLowerCase();
+                if (name_.equals("extra")) {
+                    remarkColumn = i;
+                    break;
+                }
+            }
+            if (remarkColumn == -1) {
+                log.debug("Column 'Extra' not found.");
+            }
             int line = 2;
             while ((nextLine = reader.readNext()) != null) {
-                log.debug("Line " + line);
-                if (nextLine != null || nextLine.length > 0) {
+                log.info("Line " + line);
+                if (nextLine != null && nextLine.length > 0) {
                     try {
                         Integer selected = Integer.valueOf(nextLine[0]);
-                        if (result.contains(selected)) {
+                        String remark = "";
+                        if (remarkColumn > -1) {
+                            if (nextLine.length < remarkColumn) {
+                                throw new ExcerptSelectionUploadError("'Extra' field missing on line " + line + ".");
+                            }
+                            remark = nextLine[remarkColumn];
+                            if (remark.length() > EXCERPT_ENTRY_REMARK_MAX_LENGTH) {
+                                throw new ExcerptSelectionUploadError("'Extra' field too long on line " + line + ".");
+                            }
+                        }
+                        if (result.containsKey(selected)) {
                             log.warn("Number already selected before: " + selected + " (line " + line + ")");
                         }
                         if (selected == null) {
                             log.warn("Number null (line " + line + ")");
                         } else {
-                            result.add(selected);
+                            result.put(selected, remark);
                         }
                     } catch (NumberFormatException e) {
                         log.warn("Invalid number at line " + line);
@@ -232,14 +332,21 @@ public class ExcerptListService {
                 }
                 line++;
             }
-            reader.close();
             log.info("Selected " + result.size() + " entries.");
             return result;
         } catch(IOException e) {
             throw new FileUploadError(e.getMessage());
+        } finally {
+            if (reader != null) {
+                try {
+                reader.close();
+                } catch (IOException e) {
+                    throw new FileUploadError(e.getMessage());
+                }
+            }
         }
     }
-    
+
     /**
      * Write the excerpt list as a file.
      * @param list - the list
@@ -327,6 +434,15 @@ public class ExcerptListService {
         }
     }
 
+    /**
+     * Replaces an excerpt list with a new one, passed as <code>attachment</code>.
+     * The list in the file is processed and stored and the id of the new excerpt list is returned.
+     * Also, the cache for {@link #hasExcerptList(String)} is cleared for key <code>processInstanceId</code>.
+     *
+     * @param processInstanceId the process instance id of the request to which the excerpt list belongs.
+     * @param attachment
+     * @return the id of the new excerpt list.
+     */
     @CacheEvict(value = "excerptlistexists", key = "#processInstanceId")
     @Transactional
     public Long replaceExcerptList(String processInstanceId, File attachment) {

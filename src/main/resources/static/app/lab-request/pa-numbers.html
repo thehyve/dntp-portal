@@ -34,6 +34,7 @@ This file is distributed under the GNU Affero General Public License
         <th class="print-palga-no-col sortable" st-sort="palgaExcerptNr">{{'Excerptnr' | translate}}</th>
         <th class="print-palga-no-col sortable" st-sort="palgaExcerptId">{{'Excerptid' | translate}}</th>
         <th class="print-pa-no-col sortable" st-sort="paNumber">{{'PA number' | translate}}</th>
+        <th class="print-palga-no-col sortable" st-sort="remark">{{'Extra' | translate}}</th>
         <th class="print-pa-samples-col sortable" st-sort="samples">{{'Samples' | translate}}</th>
         <th class="print-pa-total-col">{{'Number of samples' | translate}}</th>
         <th class="no-print" style="width: 12em;"
@@ -43,7 +44,7 @@ This file is distributed under the GNU Affero General Public License
         </th>
   </tr>
   <tr class="no-print">
-    <th colspan="6"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
+    <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
     </th>
     <th></th>
     <th class="no-print" ng-if="(isLabUser() || isHubUser()) &&
@@ -67,6 +68,9 @@ This file is distributed under the GNU Affero General Public License
     </td>
     <td class="print-pa-no-col">
       {{pathology.paNumber}}
+    </td>
+    <td class="print-palga-no-col">
+      {{pathology.remark}}
     </td>
     <td class="print-pa-samples-col">
       <tags-input 
@@ -131,7 +135,7 @@ This file is distributed under the GNU Affero General Public License
   </tbody>
   <tfoot>
   <tr>
-    <td colspan="7" class="text-center">
+    <td colspan="8" class="text-center">
     </td>
     <td class="no-print" ng-if="(isLabUser() || isHubUser()) &&
                 isCurrentUser(labRequest.assignee) &&

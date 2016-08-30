@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import business.exceptions.ExcerptListUploadError;
+import business.exceptions.ExcerptSelectionUploadError;
 
 @ControllerAdvice
 public class GlobalExceptionHandlerController {
 
     Log log = LogFactory.getLog(getClass());
-    
+
     @ExceptionHandler(ExcerptListUploadError.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -28,4 +29,13 @@ public class GlobalExceptionHandlerController {
         log.error("ExcerptListUploadError: " + e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ExcerptSelectionUploadError.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<String> handleExcerptListUploadError(ExcerptSelectionUploadError e) {
+        log.error("ExcerptSelectionUploadError: " + e.getMessage());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }

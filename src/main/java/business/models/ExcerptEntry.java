@@ -47,6 +47,8 @@ public class ExcerptEntry {
 
     private Boolean selected;
 
+    private String remark;
+
     @ElementCollection
     @Cascade(value={CascadeType.ALL})
     //@Column(length = 32767)
@@ -132,6 +134,14 @@ public class ExcerptEntry {
         this.selected = selected;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public List<String> getValues() {
         return values;
     }
@@ -145,12 +155,13 @@ public class ExcerptEntry {
     }
 
     public String[] getCsvValues() {
-        String[] result = new String[this.getValues().size() + 4];
+        String[] result = new String[this.getValues().size() + 5];
         result[0] = this.sequenceNumber.toString();
         result[1] = this.palgaPatientNr;
         result[2] = this.palgaExcerptNr;
         result[3] = this.palgaExcerptId;
-        int i = 4;
+        result[4] = this.remark;
+        int i = 5;
         for (String value: this.getValues()) {
             result[i] = value;
             i++;
@@ -159,14 +170,15 @@ public class ExcerptEntry {
     }
 
     public String[] getLabRequestValues() {
-        String[] result = new String[this.getValues().size() + 6];
+        String[] result = new String[this.getValues().size() + 7];
         result[0] = this.sequenceNumber.toString();
         result[1] = this.palgaPatientNr;
         result[2] = this.palgaExcerptNr;
         result[3] = this.palgaExcerptId;
-        result[4] = this.labNumber.toString();
-        result[5] = this.paNumber;
-        int i = 6;
+        result[4] = this.remark;
+        result[5] = this.labNumber.toString();
+        result[6] = this.paNumber;
+        int i = 7;
         for (String value: this.getValues()) {
             result[i] = value;
             i++;

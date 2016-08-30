@@ -8,7 +8,7 @@ package business.controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.activiti.engine.TaskService;
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import business.exceptions.ExcerptListNotFound;
-import business.exceptions.ExcerptListUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.models.ExcerptEntry;
@@ -152,11 +151,10 @@ public class SelectionController {
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.EXCERPT_SELECTION, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
-        
             // process list
             try {
                 InputStream input = fileService.getInputStream(attachment);
-                List<Integer> selected = excerptListService.processExcerptSelection(input);
+                Map<Integer, String> selected = excerptListService.processExcerptSelection(input);
                 selectedCount = selected.size();
                 try {
                     input.close();
@@ -164,23 +162,7 @@ public class SelectionController {
                     log.error("Error while closing input stream: " + e.getMessage());
                 }
                 // if not exception thrown, save selection
-                ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
-                excerptList.deselectAll();
-                log.info("Saving selection.");
-                for(Integer number: selected) {
-                    ExcerptEntry entry = excerptList.getEntries().get(number - 1);
-                    if (entry == null) {
-                        log.warn("Null entry in selection (for number '" + number + "').");
-                    } else if (!number.equals(entry.getSequenceNumber())) {
-                        log.error("Excerpt list " + excerptList.getId() + " is inconsistent: "
-                                + "entry with sequence number " + entry.getSequenceNumber() 
-                                + " at index " + number);
-                        throw new ExcerptListUploadError("Excerpt list is inconsistent.");
-                    } else { 
-                        entry.setSelected(true);
-                    }
-                }
-                excerptListService.save(excerptList);
+                excerptListService.updateExcerptSelection(id, selected);
                 log.info("Done.");
             } catch (RuntimeException e) {
                 // revert uploading

@@ -49,6 +49,7 @@ This file is distributed under the GNU Affero General Public License
                     <th st-sort="palgaExcerptNr" class="sortable">{{'PALGA excerptnr' | translate}}</th>
                     <th st-sort="palgaExcerptId" class="sortable">{{'PALGA excerptid' | translate}}</th>
                     <th st-sort="paNumber" class="sortable">{{'PA number' | translate}}</th>
+                    <th>{{'Extra' | translate}}</th>
                     <th>{{'Samples' | translate}}</th>
                     <th st-sort="status" class="sortable">{{'Status' | translate}}</th>
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">
@@ -62,6 +63,7 @@ This file is distributed under the GNU Affero General Public License
                     <th><input st-search="palgaExcerptNr" placeholder="{{'Filter by PALGA excerptnr'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="palgaExcerptId" placeholder="{{'Filter by PALGA excerptid'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-search="remark" placeholder="{{'Filter by extra'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><input st-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
                     <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                             <option value="">{{'Filter by status' | translate}}</option>
@@ -73,7 +75,7 @@ This file is distributed under the GNU Affero General Public License
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
                 </tr>
                 <tr class="no-print">
-                    <th colspan="8"><input id="request-search"
+                    <th colspan="9"><input id="request-search"
                         st-search="" class="form-control"
                         placeholder="{{'Search'|translate}} ..." type="text" /></th>
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
@@ -89,6 +91,7 @@ This file is distributed under the GNU Affero General Public License
                     <td class="numeric">{{pathology.palgaExcerptNr}}</td>
                     <td class="numeric">{{pathology.palgaExcerptId}}</td>
                     <td>{{pathology.paNumber}}</td>
+                    <td>{{pathology.remark}}</td>
                     <td><span
                         ng-if="!isCurrentUser(labRequest.assignee)">
                             <span
@@ -115,7 +118,7 @@ This file is distributed under the GNU Affero General Public License
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="9" class="text-center">
+                    <td colspan="10" class="text-center">
                         <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
                     </td>
                 </tr>

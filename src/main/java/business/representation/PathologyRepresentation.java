@@ -22,6 +22,8 @@ public class PathologyRepresentation {
 
     private String palgaExcerptId;
 
+    private String remark;
+
     private Integer sequenceNumber;
 
     List<String> samples = new ArrayList<String>();
@@ -38,6 +40,7 @@ public class PathologyRepresentation {
         this.palgaPatientNr = item.getPalgaPatientNr();
         this.palgaExcerptNr = item.getPalgaExcerptNr();
         this.palgaExcerptId = item.getPalgaExcerptId();
+        this.remark = item.getRemark();
         this.sequenceNumber = item.getSequenceNumber();
         this.samplesAvailable = item.isSamplesAvailable();
     }
@@ -80,6 +83,14 @@ public class PathologyRepresentation {
 
     public void setPalgaExcerptId(String palgaExcerptId) {
         this.palgaExcerptId = palgaExcerptId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Integer getSequenceNumber() {

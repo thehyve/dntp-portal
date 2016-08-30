@@ -62,6 +62,8 @@ public class ExcerptList {
 
     private int palgaExcerptIdColumn = -1;
 
+    private int remarkColumn = -1;
+
     private int labNumberColumn = -1;
 
     private int paNumberColumn = -1;
@@ -111,12 +113,13 @@ public class ExcerptList {
     }
 
     public String[] getCsvColumnNames() {
-        String[] result = new String[columnNames.size() + 4];
+        String[] result = new String[columnNames.size() + 5];
         result[0] = "Sequence number";
         result[1] = "PALGAPatiëntnr";
         result[2] = "PALGAExcerptnr";
         result[3] = "PALGAExcerptid";
-        int i = 4;
+        result[4] = "Extra";
+        int i = 5;
         for (String name: columnNames) {
             result[i] = name;
             i++;
@@ -125,14 +128,15 @@ public class ExcerptList {
     }
 
     public String[] getLabRequestColumnNames() {
-        String[] result = new String[columnNames.size() + 6];
+        String[] result = new String[columnNames.size() + 7];
         result[0] = "Sequence number";
         result[1] = "PALGAPatiëntnr";
         result[2] = "PALGAExcerptnr";
         result[3] = "PALGAExcerptid";
-        result[4] = "Lab";
-        result[5] = "PA number";
-        int i = 6;
+        result[4] = "Extra";
+        result[5] = "Lab";
+        result[6] = "PA number";
+        int i = 7;
         for (String name: columnNames) {
             result[i] = name;
             i++;
@@ -156,7 +160,8 @@ public class ExcerptList {
         this.columnNames = new ArrayList<String>();
         this.palgaPatientNrColumn = -1;
         this.palgaExcerptNrColumn = -1;
-        this.palgaExcerptIdColumn =-1;
+        this.palgaExcerptIdColumn = -1;
+        this.remarkColumn = -1;
         this.labNumberColumn = -1;
         this.paNumberColumn = -1;
         for (int i=0; i < columnNames.length; i++) {
@@ -168,6 +173,8 @@ public class ExcerptList {
                 palgaExcerptNrColumn = i;
             } else if (name_.equals("palgaexcerptid")) {
                 palgaExcerptIdColumn = i;
+            } else if (name_.equals("extra")) {
+                remarkColumn = i;
             } else if (name_.equals("palab_nu")) {
                 labNumberColumn = i;
             } else if (name_.equals("pa_nummer_nu")) {
@@ -229,6 +236,11 @@ public class ExcerptList {
         }
         if (validIndex(palgaExcerptIdColumn, data)) {
             entry.setPalgaExcerptId(data[palgaExcerptIdColumn]);
+        }
+        if (validIndex(remarkColumn, data)) {
+            entry.setRemark(data[remarkColumn]);
+        } else {
+            entry.setRemark("");
         }
         entry.setLabNumber(Integer.valueOf(data[labNumberColumn]));
         entry.setPaNumber(data[paNumberColumn]);

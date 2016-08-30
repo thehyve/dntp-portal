@@ -41,6 +41,8 @@ public class PathologyItem {
 
     private String palgaExcerptId;
 
+    private String remark;
+
     private Integer sequenceNumber;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -51,7 +53,7 @@ public class PathologyItem {
     List<String> samples = new ArrayList<String>();
 
     private Boolean samplesAvailable;
-    
+
     public PathologyItem() {
         
     }
@@ -62,6 +64,7 @@ public class PathologyItem {
         this.palgaPatientNr = entry.getPalgaPatientNr();
         this.palgaExcerptNr = entry.getPalgaExcerptNr();
         this.palgaExcerptId = entry.getPalgaExcerptId();
+        this.remark = entry.getRemark();
         this.sequenceNumber = entry.getSequenceNumber();
     }
 
@@ -111,6 +114,14 @@ public class PathologyItem {
 
     public void setPalgaExcerptId(String palgaExcerptId) {
         this.palgaExcerptId = palgaExcerptId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Integer getSequenceNumber() {

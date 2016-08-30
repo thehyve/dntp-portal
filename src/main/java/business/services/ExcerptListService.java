@@ -281,7 +281,7 @@ public class ExcerptListService {
         try {
             reader = new CSVReader(new InputStreamReader(input), ';', '"');
             String [] nextLine;
-            log.info("Column names.");
+            log.debug("Column names.");
             nextLine = reader.readNext();
             if (nextLine == null || nextLine.length < 2) {
                 reader.close();
@@ -304,7 +304,7 @@ public class ExcerptListService {
             }
             int line = 2;
             while ((nextLine = reader.readNext()) != null) {
-                log.info("Line " + line);
+                log.debug("Line " + line);
                 if (nextLine != null && nextLine.length > 0) {
                     try {
                         Integer selected = Integer.valueOf(nextLine[0]);

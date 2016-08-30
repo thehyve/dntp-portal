@@ -17,6 +17,7 @@
 /.settings/
 /.classpath
 /.project
+/.externalToolBuilders
 *.DS_Store
 *.iml
 *.ipr

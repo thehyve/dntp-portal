@@ -28,11 +28,18 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import business.exceptions.ExcerptSelectionUploadError;
 import business.exceptions.InvalidRow;
 
 @Entity
 @Table(indexes = @Index(columnList="propertiesId"))
 public class ExcerptList {
+
+	/**
+	 * A limit to the length of the remark ('Extra') field.
+	 * The limit is there for display purposes.
+	 */
+    public static final int EXCERPT_ENTRY_REMARK_MAX_LENGTH = 200;
 
     static final Log log = LogFactory.getLog(ExcerptList.class);
 
@@ -198,6 +205,9 @@ public class ExcerptList {
         if (paNumberColumn == -1) {
             throw new InvalidHeader("No PA number column (PA_Nummer_Nu).");
         }
+        if (remarkColumn == -1) {
+        	log.warn("No remark column (Extra).");
+        }
     }
 
     /**
@@ -223,9 +233,13 @@ public class ExcerptList {
         return index >= 0 && index < data.length;
     }
 
-    public ExcerptEntry addEntry(String[] data) {
-        if (data.length != columnNames.size() + 5) {
-            throw new InvalidRow("Row length does not match header length.");
+    int getHeaderLength() {
+    	return columnNames.size() + 5 + (remarkColumn == -1 ? 0 : 1);
+    }
+
+    public ExcerptEntry addEntry(String[] data, int line) {
+        if (data.length != getHeaderLength()) {
+            throw new InvalidRow("Row length (" + data.length + ") does not match header length (" + getHeaderLength() + ").");
         }
         ExcerptEntry entry = new ExcerptEntry();
         if (validIndex(palgaPatientNrColumn, data)) {
@@ -238,6 +252,9 @@ public class ExcerptList {
             entry.setPalgaExcerptId(data[palgaExcerptIdColumn]);
         }
         if (validIndex(remarkColumn, data)) {
+            if (data[remarkColumn].length() > EXCERPT_ENTRY_REMARK_MAX_LENGTH) {
+                throw new ExcerptSelectionUploadError("'Extra' field too long on line " + line + ".");
+            }
             entry.setRemark(data[remarkColumn]);
         } else {
             entry.setRemark("");

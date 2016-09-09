@@ -147,6 +147,7 @@
         'Submit selection': 'Selectie opsturen',
         'Select PA numbers': 'PA-nummers selecteren',
         'Manual selection disabled for large excerpt lists.': 'De interface voor excerptselectie is uitgeschakeld voor grote excerptlijsten.',
+        'No excerpt list.': 'Geen excerptlijst.',
 
         'Authentification checks by PALGA': 'Authentificatiecontroles door PALGA',
         'Requester\'s identity was established.': 'De identiteit van de aanvrager is vastgesteld/gecontroleerd.',

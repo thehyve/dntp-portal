@@ -910,7 +910,6 @@ public class RequestController {
         }
     }
 
-    // FIXME: refactor
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.POST)
     public Integer uploadExcerptList(

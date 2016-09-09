@@ -13,11 +13,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 
@@ -60,8 +57,6 @@ import business.representation.RequestRepresentation;
 public class ExcerptListService {
 
     public static final String EXCERPT_LIST_CHARACTER_ENCODING = "ISO-8859-1";
-
-    public static final int EXCERPT_ENTRY_REMARK_MAX_LENGTH = 200;
 
     Log log = LogFactory.getLog(getClass());
 
@@ -201,7 +196,7 @@ public class ExcerptListService {
             while ((nextLine = reader.readNext()) != null) {
                 log.debug("Line " + line);
                 try {
-                    ExcerptEntry entry = list.addEntry(nextLine);
+                    ExcerptEntry entry = list.addEntry(nextLine, line);
                     // check lab number
                     if (!validLabNumbers.contains(entry.getLabNumber())) {
                         Lab lab = labService.findByNumber(entry.getLabNumber());
@@ -240,13 +235,11 @@ public class ExcerptListService {
      * @param selected a map from sequence numbers to 'Extra' values (remarks).
      */
     @Transactional
-    public void updateExcerptSelection(String id, Map<Integer, String> selected) {
+    public void updateExcerptSelection(String id, Set<Integer> selected) {
         ExcerptList excerptList = findByProcessInstanceId(id);
         excerptList.deselectAll();
         log.info("Saving selection.");
-        for(Entry<Integer, String> e: selected.entrySet()) {
-            Integer number = e.getKey();
-            String remark = e.getValue();
+        for (Integer number: selected) {
             ExcerptEntry entry = excerptList.getEntries().get(number - 1);
             if (entry == null) {
                 log.warn("Null entry in selection (for number '" + number + "').");
@@ -257,7 +250,6 @@ public class ExcerptListService {
                 throw new ExcerptListUploadError("Excerpt list is inconsistent.");
             } else {
                 entry.setSelected(true);
-                entry.setRemark(remark);
             }
         }
         save(excerptList);
@@ -274,8 +266,8 @@ public class ExcerptListService {
      * @return a map from selected sequence numbers to remarks.
      */
     @Transactional
-    public Map<Integer, String> processExcerptSelection(InputStream input) {
-        Map<Integer, String> result = new TreeMap<>();
+    public Set<Integer> processExcerptSelection(InputStream input) {
+        Set<Integer> result = new TreeSet<>();
         log.info("Processing excerpt selection");
         CSVReader reader = null;
         try {
@@ -291,40 +283,19 @@ public class ExcerptListService {
                 reader.close();
                 throw new ExcerptSelectionUploadError("Invalid header: Column 'Sequence number' not found.");
             }
-            int remarkColumn = -1;
-            for (int i=0; i < nextLine.length; i++) {
-                String name_ = nextLine[i].trim().toLowerCase();
-                if (name_.equals("extra")) {
-                    remarkColumn = i;
-                    break;
-                }
-            }
-            if (remarkColumn == -1) {
-                log.debug("Column 'Extra' not found.");
-            }
             int line = 2;
             while ((nextLine = reader.readNext()) != null) {
                 log.debug("Line " + line);
                 if (nextLine != null && nextLine.length > 0) {
                     try {
                         Integer selected = Integer.valueOf(nextLine[0]);
-                        String remark = "";
-                        if (remarkColumn > -1) {
-                            if (nextLine.length < remarkColumn) {
-                                throw new ExcerptSelectionUploadError("'Extra' field missing on line " + line + ".");
-                            }
-                            remark = nextLine[remarkColumn];
-                            if (remark.length() > EXCERPT_ENTRY_REMARK_MAX_LENGTH) {
-                                throw new ExcerptSelectionUploadError("'Extra' field too long on line " + line + ".");
-                            }
-                        }
-                        if (result.containsKey(selected)) {
+                        if (result.contains(selected)) {
                             log.warn("Number already selected before: " + selected + " (line " + line + ")");
                         }
                         if (selected == null) {
                             log.warn("Number null (line " + line + ")");
                         } else {
-                            result.put(selected, remark);
+                            result.add(selected);
                         }
                     } catch (NumberFormatException e) {
                         log.warn("Invalid number at line " + line);

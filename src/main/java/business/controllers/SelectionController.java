@@ -8,7 +8,6 @@ package business.controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.activiti.engine.TaskService;
@@ -154,7 +153,7 @@ public class SelectionController {
             // process list
             try {
                 InputStream input = fileService.getInputStream(attachment);
-                Map<Integer, String> selected = excerptListService.processExcerptSelection(input);
+                Set<Integer> selected = excerptListService.processExcerptSelection(input);
                 selectedCount = selected.size();
                 try {
                     input.close();

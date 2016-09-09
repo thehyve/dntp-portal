@@ -266,7 +266,8 @@ public class ExcerptList {
                     i == palgaExcerptNrColumn ||
                     i == palgaExcerptIdColumn ||
                     i == labNumberColumn ||
-                    i == paNumberColumn) {
+                    i == paNumberColumn ||
+                    i == remarkColumn) {
                 continue;
             }
             entry.addValue(data[i]);

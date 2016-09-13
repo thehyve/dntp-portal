@@ -34,7 +34,7 @@ public class PaNumberService {
 
     Log log = LogFactory.getLog(getClass());
 
-    String[] FILE_HEADER = "LAB_NO;PA_NUMBER;SAMPLES;NOTES".split(";");
+    static final String[] FILE_HEADER = "LAB_NO;PA_NUMBER;SAMPLES;NOTES;EXTRA".split(";");
 
     public HttpEntity<InputStreamResource> writePaNumbers(List<PathologyItem> items, Integer labNumber,
             String labRequestCode) throws Exception {
@@ -47,7 +47,7 @@ public class PaNumberService {
 
         for (PathologyItem item : items) {
             log.info(item.getPaNumber());
-            String[] toppings = { labNumber.toString(), item.getPaNumber(), "", "" };
+            String[] toppings = { labNumber.toString(), item.getPaNumber(), "", "", item.getRemark() };
             csvwriter.writeNext(toppings);
         }
 

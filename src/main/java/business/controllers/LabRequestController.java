@@ -489,7 +489,7 @@ public class LabRequestController {
       + " or hasPermission(#id, 'isLabRequestHubuser') "
       + ")")
     @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
-    public HttpEntity<InputStreamResource> downloadPANumber(UserAuthenticationToken user, @PathVariable Long id) {
+    public HttpEntity<InputStreamResource> downloadPANumbers(UserAuthenticationToken user, @PathVariable Long id) {
         log.info("GET /labrequests/" + id + "/panumbers/csv for userId " + user.getId());
 
         LabRequest labRequest = labRequestService.findOne(id);

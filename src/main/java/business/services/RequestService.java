@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -319,18 +320,28 @@ public class RequestService {
                     processInstances.add(instance);
                 }
             }
+            final Set<String> idSet1 = processInstances.stream().map(i -> i.getId()).collect(Collectors.toSet());
             processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
                     .variableValueEquals("pathologist_email", user.getUsername())
-                    .list());
+                    .list()
+                    .stream()
+                    .filter(i -> !idSet1.contains(i.getId()))
+                    .collect(Collectors.toList())
+                    );
+            final Set<String> idSet2 = processInstances.stream().map(i -> i.getId()).collect(Collectors.toSet());
             processInstances.addAll(historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
                     .includeProcessVariables()
                     .variableValueEquals("contact_person_email", user.getUsername())
-                    .list());
+                    .list()
+                    .stream()
+                    .filter(i -> !idSet2.contains(i.getId()))
+                    .collect(Collectors.toList())
+                    );
         }
         return processInstances;
     }

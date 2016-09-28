@@ -511,7 +511,10 @@ public class RequestService {
                 values.add(booleanToString(request.isMaterialsRequest()));
                 values.add(booleanToString(request.isClinicalDataRequest()));
                 values.add(request.getRequesterName());
-                values.add(request.getLab() == null ? "" : request.getLab().getNumber().toString());
+                values.add(request.getLab() == null ?
+                        "" :
+                        request.getLab().getNumber().toString() + ". " + request.getLab().getName()
+                        );
                 values.add(request.getRequester() == null ? "" : request.getRequester().getSpecialism());
                 values.add(labRequestService.countHubAssistanceLabRequestsForRequest(
                         request.getProcessInstanceId()).toString());

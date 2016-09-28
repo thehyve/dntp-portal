@@ -37,6 +37,14 @@ angular.module('ProcessApp.controllers')
                 show: false
             });
 
+            $scope.rejectLabRequestModal = $modal({
+                id: 'rejectLabRequestWindow',
+                scope: $scope,
+                templateUrl: '/app/lab-request/reject-lab-request.html',
+                backdrop: 'static',
+                show: false
+            });
+
             $scope.alerts = [];
             //$scope.labRequest = {};
             $scope.itemsPerPage = 20;
@@ -299,31 +307,32 @@ angular.module('ProcessApp.controllers')
                 $scope.alerts.splice(index, 1);
             };
 
-            $scope.reject = function (labRequest) {
-                bootbox.confirm(
-                    '<h4>' +
-                    $rootScope.translate('Are you sure you want to reject the lab request?') +
-                    '</h4>\n' +
-                    '<form id="reject" action="">' +
-                    $rootScope.translate('Please enter the reason for rejection.') +
-                    '\n<br><br>\n' +
-                    '<textarea type="text" class="form-control" name="rejectReason" id="rejectReason" ' +
-                    'required autofocus ng-model="rejectReason"></textarea>' +
-                    '</form>',
-                    function(result) {
-                        if (result) {
-                            labRequest.rejectReason = jQuery('#rejectReason').val();
-                            labRequest.customPUT(labRequest, 'reject').then(function () {
-                                if ($scope.labReqModal) {
-                                    $scope.labReqModal.hide();
-                                }
-                                _loadData();
-                            }, function (err) {
-                                $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
-                            });
-                        }
+            $scope.commitReject = function(labRequest, rejectReason) {
+                labRequest.rejectReason = rejectReason;
+                labRequest.customPUT(labRequest, 'reject').then(function () {
+                    if ($scope.rejectLabRequestModal) {
+                        $scope.rejectLabRequestModal.hide();
                     }
-                );
+                    if ($scope.labReqModal) {
+                        $scope.labReqModal.hide();
+                    }
+                    _loadData();
+                }, function (err) {
+                    $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                });
+            };
+
+            $scope.cancelReject = function() {
+                if ($scope.rejectLabRequestModal) {
+                    $scope.rejectLabRequestModal.hide();
+                }
+            };
+
+            $scope.reject = function(labRequest) {
+            	$scope.rejectReason = '';
+                if ($scope.rejectLabRequestModal) {
+                    $scope.rejectLabRequestModal.show();
+                }
             };
 
             $scope.undoReject = function (labRequest) {

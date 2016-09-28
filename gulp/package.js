@@ -35,7 +35,7 @@ gulp.task('js-css-combine-revision', ['copy-static'], function() {
         .pipe(useref())             // Concatenate with gulp-useref
         .pipe(jsFilter)
         .pipe(ngAnnotate())
-        .pipe(uglify())             // Minify any javascript sources
+        .pipe(uglify({mangle: false}))             // Minify any javascript sources
         //.pipe(gzip())
         .pipe(rev())                // Rename the concatenated files
         .pipe(jsFilter.restore)

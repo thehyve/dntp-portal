@@ -21,10 +21,10 @@
         </div>
         <div class="row">
         <div class="col-sm-8">
-        	{{'Please enter the reason for rejection.' | translate }}
+            {{'Please enter the reason for rejection (max. 2000 characters).' | translate }}
             <br><br>
             <textarea type="text" class="form-control" name="rejectReason" id="rejectReason"
-             	required autofocus ng-model="rejectReason" ng-maxlength="2000"></textarea>
+                required autofocus ng-model="rejectReason" ng-maxlength="2000"></textarea>
             <span class="help-block" ng-show="rejectLabRequestForm.rejectReason.$error.maxlength">
             {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
             </span>
@@ -40,8 +40,8 @@
         </span>
         <span class="pull-right">
             <button class="btn btn-default btn-primary"
-            	role="button"
-            	ng-disabled="rejectLabRequestForm.$invalid"
+                role="button"
+                ng-disabled="rejectLabRequestForm.$invalid"
                 ng-click="commitReject(labRequest, rejectReason);">{{'OK'|translate}}</button>
         </span>
       </div>

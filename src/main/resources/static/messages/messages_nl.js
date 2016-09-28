@@ -136,6 +136,7 @@
         'Are you sure you want to close the request?<br>After closing, no data files can be added.': 'Weet je zeker dat je de aanvraag wilt afsluiten?<br>Na het sluiten kunnen geen bestanden meer worden toegevoegd.',
         'Are you sure you want to reject the request?': 'Weet je zeker dat je de aanvraag wilt afwijzen?',
         'Please enter the reason for rejection.': 'Vul de reden van afwijzing in.',
+        'Please enter the reason for rejection (max. 2000 characters).': 'Vul de reden van afwijzing in (max. 2000 tekens).', 
         'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Approved, waiting for data.\'' :
             'Weet je zeker dat je de selectie wilt afwijzen?<br>' +
             'Na afwijzing wordt de status veranderd naar \'Goedgekeurd, wachten op data.\'',

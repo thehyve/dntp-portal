@@ -329,7 +329,8 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.reject = function(labRequest) {
-            	$scope.rejectReason = '';
+                $scope.labRequest = labRequest;
+                $scope.rejectReason = '';
                 if ($scope.rejectLabRequestModal) {
                     $scope.rejectLabRequestModal.show();
                 }

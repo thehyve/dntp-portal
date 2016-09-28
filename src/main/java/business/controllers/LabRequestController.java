@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -128,7 +129,7 @@ public class LabRequestController {
             + "hasPermission(#id, 'isLabRequestLabuser')")
     @RequestMapping(value = "/labrequests/{id}/reject", method = RequestMethod.PUT)
     public LabRequestRepresentation reject(UserAuthenticationToken user,
-            @PathVariable Long id, @RequestBody LabRequestRepresentation body) {
+            @PathVariable Long id, @Valid @RequestBody LabRequestRepresentation body) {
         log.info("PUT /labrequests/" + id + "/reject");
 
         LabRequest labRequest = labRequestService.findOne(id);

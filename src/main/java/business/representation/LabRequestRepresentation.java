@@ -8,6 +8,8 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import business.models.Lab;
 import business.models.LabRequest;
 import business.models.LabRequest.Result;
@@ -56,6 +58,7 @@ public class LabRequestRepresentation {
 
     private String excerptListRemark;
 
+    @Size(max=2000)
     private String rejectReason;
 
     private Date rejectDate;

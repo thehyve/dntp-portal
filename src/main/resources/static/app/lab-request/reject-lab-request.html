@@ -24,9 +24,9 @@
         	{{'Please enter the reason for rejection.' | translate }}
             <br><br>
             <textarea type="text" class="form-control" name="rejectReason" id="rejectReason"
-             	required autofocus ng-model="rejectReason" ng-maxlength="10000"></textarea>
+             	required autofocus ng-model="rejectReason" ng-maxlength="2000"></textarea>
             <span class="help-block" ng-show="rejectLabRequestForm.rejectReason.$error.maxlength">
-            {{ 'Input value is too long (max. ? characters)' | translate: { max: 10000 } }}
+            {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
             </span>
         </div>
         </div>

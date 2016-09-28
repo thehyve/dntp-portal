@@ -119,6 +119,11 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
+### 0.0.65
+```sql
+alter table lab_request alter reject_reason type varchar(10000);
+```
+
 ### 0.0.60
 ```sql
 alter table excerpt_list add column remark_column int4 not null default -1;

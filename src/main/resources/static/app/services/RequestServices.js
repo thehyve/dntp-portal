@@ -201,7 +201,8 @@
             'ppc_handled_according_mandate_explanation',
             'ppc_approved_written_procedure',
             'ppc_discuss',
-            'ppc_rationale_exploratory_request'
+            'ppc_rationale_exploratory_request',
+            'ppc_local_request'
         ];
 
         _requestFactory.convertRequestNumber = function (request) {

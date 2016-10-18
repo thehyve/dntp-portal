@@ -97,6 +97,7 @@
         'ppc_approved_written_procedure': 'Approved after written procedure',
         'ppc_discuss': 'Review in half year meeting',
         'ppc_rationale_exploratory_request': 'Exploratory request, no review required',
+        'ppc_local_request': 'Local request for PA material, no review required',
 
         /* ===================== */
         /* Agreement overview    */

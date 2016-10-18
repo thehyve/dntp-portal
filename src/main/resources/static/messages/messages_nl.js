@@ -226,6 +226,7 @@
         'ppc_approved_written_procedure': 'Goedgekeurd na schriftelijke procedure',
         'ppc_discuss': 'Bespreken in vergadering',
         'ppc_rationale_exploratory_request': 'Oriënterende aanvraag, geen oordeel vereist',
+        'ppc_local_request': 'Lokale aanvraag PA-materiaal, geen oordeel vereist',
 
         'Excerpt list': 'Excerptlijst',
         'Upload excerpt list': 'Excerptlijst uploaden',

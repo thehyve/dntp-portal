@@ -187,7 +187,7 @@
         'Review PPC': 'Beoordeling PPC',
         'Review result': 'Oordeel PPC',
         'Explanation for PPC': 'Toelichting voor PPC',
-        'Summary review procces': 'Samenvatting schriftelijke procedure',
+        'Summary review process': 'Samenvatting schriftelijke procedure',
         'Final checks before data delivery': 'Laatste controles voor datalevering',
         'Approved by scientific council.': 'De wetenschappelijke raad heeft deze aanvraag positief beoordeeld.',
         'Approved by privacy committee.': 'De privacycommissie heeft deze aanvraag positief beoordeeld.',

@@ -122,7 +122,7 @@
                         <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription" 
                             placeholder="{{ 'Description of previous contact.' | translate }}" title="{{ 'Description of previous contact.' | translate }}"
                             ng-model="request.previousContactDescription"
-                            ng-maxlength="2000"
+                            ng-maxlength="4000"
                             ng-required="request.previousContact"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Description of previous contact'|translate}}" data-trigger="focus" bs-popover
                             ></textarea>
@@ -131,7 +131,7 @@
                                 {{ 'Required field' | translate }}
                             </span>
                             <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.maxlength">
-                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
                             </span>
                         </div>
                     </div>
@@ -157,12 +157,12 @@
                         <textarea type="text" class="form-control" id="background" name="background" 
                             placeholder="{{ 'Background' | translate }}" title="{{ 'Background' | translate }}"
                             ng-model="request.background"
-                            ng-maxlength="2000"
+                            ng-maxlength="4000"
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.background.$error.maxlength">
-                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
                             </span>
                         </div>
                     </div>
@@ -174,12 +174,12 @@
                         <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion" 
                             placeholder="{{ 'Research question' | translate }}" title="{{ 'Research question' | translate }}"
                             ng-model="request.researchQuestion"
-                            ng-maxlength="2000"
+                            ng-maxlength="4000"
                             required></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
                             <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.maxlength">
-                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
                             </span>
                         </div>
                     </div>
@@ -208,7 +208,7 @@
                         <textarea type="text" class="form-control" id="methods" name="methods"
                             placeholder="{{ 'Methods' | translate }}" title="{{ 'Methods' | translate }}"
                             ng-model="request.methods"
-                            ng-maxlength="2000"
+                            ng-maxlength="4000"
                             data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Methods'|translate}}" data-trigger="focus" bs-popover
                             required></textarea>
                             <!-- errors -->
@@ -216,7 +216,7 @@
                                 {{ 'Required field' | translate }}
                             </span>
                             <span class="help-block" ng-show="requestEditForm.methods.$error.maxlength">
-                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
                             </span>
                         </div>
                     </div>

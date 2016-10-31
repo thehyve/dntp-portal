@@ -269,13 +269,12 @@ public class SelectionController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("PUT /requests/" + id + "/selectAll");
-        
+
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
-        
-        if (request.isPaReportRequest() || request.isMaterialsRequest()) {
-        
+
+        if (request.isPaReportRequest() || request.isMaterialsRequest() || request.isClinicalDataRequest()) {
             // set lab numbers for creating lab requests.
             ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
             if (excerptList == null) {
@@ -283,20 +282,20 @@ public class SelectionController {
             }
             excerptList.selectAll();
             excerptList = excerptListService.save(excerptList);
-            
+
             Task task = requestService.getTaskByRequestId(id, "data_delivery");
             if (task.getDelegationState()==DelegationState.PENDING) {
                 taskService.resolveTask(task.getId());
             }
             taskService.complete(task.getId());
-            
+
             requestService.claimCurrentPalgaTask(id, user.getUser());
-            
+
             instance = requestService.getProcessInstance(id);
             request = new RequestRepresentation();
             requestFormService.transferData(instance, request, user.getUser());
         }
         return request;
     }
-    
+
 }

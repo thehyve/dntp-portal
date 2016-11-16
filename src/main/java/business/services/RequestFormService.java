@@ -114,6 +114,7 @@ public class RequestFormService {
         return getRequestListData(processInstanceId);
     }
 
+    // TODO:: DEPRECATED?
     @Cacheable("requestlistattachmentsdata")
     public RequestListRepresentation getRequestListDataWithAttachmentsCached(String processInstanceId) {
         HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
@@ -147,9 +148,19 @@ public class RequestFormService {
             request.setMethods((String) variables.get("methods"));
 
             request.setPathologistName((String)variables.get("pathologist_name"));
-            request.setPathologistEmail((String)variables.get("pathologist_email"));
+            String pathologistEmail = (String)variables.get("pathologist_email");
+
+            if (pathologistEmail != null) {
+                request.setPathologistEmail(pathologistEmail.trim().toLowerCase());
+            }
+
             request.setContactPersonName((String)variables.get("contact_person_name"));
-            request.setContactPersonEmail((String)variables.get("contact_person_email"));
+            String contactPersonEmail = (String)variables.get("contact_person_email");
+
+            if(contactPersonEmail != null) {
+                request.setContactPersonEmail(contactPersonEmail.trim().toLowerCase());
+            }
+
             request.setStatus(RequestStatus.forDescription((String)variables.get("status")));
             request.setDateCreated((Date)variables.get("date_created"));
             String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();
@@ -287,7 +298,12 @@ public class RequestFormService {
             request.setDateAssigned((Date)variables.get("assigned_date"));
 
             request.setContactPersonName((String)variables.get("contact_person_name"));
-            request.setContactPersonEmail((String)variables.get("contact_person_email"));
+            String contactPersonEmail = (String)variables.get("contact_person_email");
+
+            if(contactPersonEmail != null) {
+                request.setContactPersonEmail(contactPersonEmail.trim().toLowerCase());
+            }
+
             request.setTitle((String)variables.get("title"));
             request.setBackground((String)variables.get("background"));
             request.setResearchQuestion((String)variables.get("research_question"));
@@ -295,7 +311,12 @@ public class RequestFormService {
             request.setMethods((String) variables.get("methods"));
             
             request.setPathologistName((String)variables.get("pathologist_name"));
-            request.setPathologistEmail((String)variables.get("pathologist_email"));
+            String pathologistEmail = (String)variables.get("pathologist_email");
+
+            if (pathologistEmail != null) {
+                request.setPathologistEmail(pathologistEmail.trim().toLowerCase());
+            }
+
             request.setPreviousContact(fetchBooleanVariable("previous_contact", variables));
             request.setPreviousContactDescription((String)variables.get("previous_contact_description"));
 

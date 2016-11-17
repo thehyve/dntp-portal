@@ -88,11 +88,15 @@ public class PaNumberService {
        "Request number",
        "Status",
        "PA number",
+       "PALGA patient nr",
+       "PALGA excerpt ID",
+       "PALGA excerpt nr",
        "Laboratory",
        "Requester name",
        "Requester email",
        "Requester telephone number",
-       "Sent date"
+       "Sent date",
+       "Extra"
     };
 
     public HttpEntity<InputStreamResource> writeAllPaNumbers(
@@ -109,16 +113,21 @@ public class PaNumberService {
             String requesterEmail = labRequest.getRequesterEmail();
             String requesterTelephone = labRequest.getRequesterTelephone();
             String labRequestSentDate = labRequest.getSendDate() == null ? "" : labRequest.getSendDate().toString();
+
             for (PathologyRepresentation item: labRequest.getPathologyList()) {
                 csvwriter.writeNext(new String[] {
                     labRequestCode,
                     status,
                     item.getPaNumber(),
+                    item.getPalgaPatientNr(),
+                    item.getPalgaExcerptId(),
+                    item.getPalgaExcerptNr(),
                     labName,
                     requesterName,
                     requesterEmail,
                     requesterTelephone,
-                    labRequestSentDate
+                    labRequestSentDate,
+                    item.getRemark()
                 });
             }
         }

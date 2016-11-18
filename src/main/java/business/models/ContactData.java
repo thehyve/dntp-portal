@@ -44,7 +44,7 @@ public class ContactData {
             String stateProvince, String country) {
         this.id = id;
         this.telephone = telephone;
-        this.email = email;
+        this.email = email.toLowerCase();
         this.address1 = address1;
         this.address2 = address2;
         this.postalCode = postalCode;
@@ -56,7 +56,7 @@ public class ContactData {
     public void copy(ContactData other) {
         if (other != null) {
             this.telephone = other.telephone;
-            this.email = other.email;
+            this.email = other.email.toLowerCase();
             this.address1 = other.address1;
             this.address2 = other.address2;
             this.postalCode = other.postalCode;

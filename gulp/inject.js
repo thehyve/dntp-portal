@@ -20,7 +20,7 @@ gulp.task('inject-reload', ['inject'], function() {
   browserSync.reload();
 });
 
-gulp.task('inject', ['scripts'], function () {
+gulp.task('inject', ['scripts', 'styles'], function () {
   var injectStyles = gulp.src([
     path.join(conf.paths.src, '/css/**/*.css')
   ], { read: false });

@@ -95,7 +95,7 @@ angular.module('ProcessApp.services')
                     var varname = name.match(varNamePattern)[1];
                     var varnameRegExp = new RegExp('{{'+varname+'}}', 'g');
                     var value = _.get(obj, varname);
-	                value = _.escape(value);
+					value = _.escape(value);
                     value = $sanitize(value);
                     contents = contents.replace(varnameRegExp, value);
                 });

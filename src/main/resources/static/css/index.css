@@ -1,12 +1,18 @@
 .container { padding-top: 10px; margin-bottom: 30px;}
-.solid-footer { background-color: #b4effc; padding-top: 10px;}
+.login-container {padding-top: 290px;}
+.solid-footer, .solid-footer-login { background-color: #b4effc; padding-top: 10px; }
+.solid-footer-login {padding-bottom: 10px;}
+.navbar-fixed-top .container-fluid { padding-left: 0}
+.navbar-login {height: 302px; background-image: url("../images/login-bg-loop.jpg")}
+.navbar-login-menu{text-align: right; padding: 15px;}
+.navbar-header {margin-left: 2px !important; background-color: #0074D9}
 .navbar-default {background-color: #b4effc;}
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus,
 .navbar-default .navbar-nav>.active>a:hover
 {
     background-color: #76dcf3;
 }
-
+#nav_login {margin-right: 15px;}
 .badge { background-color: #00285f; }
 
 /** **/
@@ -32,7 +38,7 @@ body {
         padding: 0;
     }
 }
-h1, h2, h3 { color: steelblue; }
+h1, h2, h3 { color: #002454; }
 h3 { color: #949494; }
 h1, .h1 {
     margin: 5px 0px 15px;
@@ -297,8 +303,11 @@ address {margin-bottom: 0px;}
     align-items: center;
 }
 .logo {
-    display: inline-block;
-    margin: 0 auto;
+    padding-left: 3em;
+}
+.logo-header {
+    text-align: right;
+    padding-top: 20px;
 }
 .bigskip {
     margin-top: 10em;
@@ -314,6 +323,10 @@ address {margin-bottom: 0px;}
 .numeric, .table td.numeric, .table th.numeric {
     text-align: right;
     padding-right: 2em;
+}
+
+.center-block {
+    text-align: center;
 }
 
 .developedby {
@@ -391,6 +404,25 @@ input.request-selection {
     margin: 2px 0 0;
 }
 
+.span-lang {margin-top: 12px; margin-left: 5px;}
+.login-title-div {min-height: 300px; position: relative;}
+.login-title {position: absolute; bottom: 0;left: 20px;}
+.login-icon {
+    width: 110px;
+    height: 110px;
+    background-color: #00285f;
+    margin: 0px auto;
+    border-radius: 50%;
+    text-align: center;
+}
+.login-icon-div {
+    text-align: center;
+}
+.login-icon span {
+    font-size: 3.5em;
+    color: #009ee0;
+    margin-top: 32px;
+}
 .print-pa-id-col { width: 10em; }
 .print-palga-no-col { width: 8em; }
 .print-pa-no-col { width: 10em; }

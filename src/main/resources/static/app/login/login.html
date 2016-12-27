@@ -3,62 +3,71 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-<div class="container">
-
-<div class="row">
-<div class="col-xs-offset-1 col-xs-6 col-sm-offset-2 col-sm-6 col-md-offset-3 col-md-6 col-lg-offset-3 col-lg-6">
-    <div class="page-header ">
-        <h1>{{'Login' | translate}}</h1>
-    </div>
-
-    <div class="alert alert-danger" ng-show="error">
-        {{'There is a problem logging in.' | translate}}
-        {{errormessage | translate}}
-    </div>
-    <div class="alert alert-danger" ng-show="!error && errormessage">
-        {{errormessage | translate}}
-    </div>
-
+<div class="login-container">
     <div class="row">
-    <form role="form" ng-submit="login()">
-        <div class="form-group">
-            <label for="username">{{'Username' | translate}}:</label>
-            <input type="text" lowercase-only="lowercase-only" class="form-control"
-                id="username" name="username" ng-model="credentials.username"
-                placeholder="{{ 'Email address (lower case)' | translate }}"
-                />
+        <div class="col-sm-4">&nbsp;</div>
+
+        <div class="col-sm-4">
+            <!--<div class="page-header ">-->
+                <!--<h1>{{'Login' | translate}}</h1>-->
+            <!--</div>-->
+
+            <div class="alert alert-danger" ng-show="error">
+                {{'There is a problem logging in.' | translate}}
+                {{errormessage | translate}}
+            </div>
+            <div class="alert alert-danger" ng-show="!error && errormessage">
+                {{errormessage | translate}}
+            </div>
+
+            <div>
+                <form role="form" ng-submit="login()">
+                    <div class="form-group">
+                        <label for="username">{{'Username' | translate}}:</label>
+                        <input type="text" lowercase-only="lowercase-only" class="form-control"
+                            id="username" name="username" ng-model="credentials.username"
+                            placeholder="{{ 'Email address (lower case)' | translate }}"
+                            />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">{{'Password' | translate}}:</label>
+                        <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password"/>
+                    </div>
+                    <!--
+
+<button type="submit" class="btn btn-primary"  ng-disabled="dataLoading">
+<span class="glyphicon glyphicon-user"></span> {{'Login' | translate}}
+</button>
+<a ng-href="#/register" class="btn btn-default">{{'Create an account' | translate}}</a>
+&nbsp;<a href="#/login/forgot-password" id="forgot-password">{{'Forgot password' | translate}}</a>.
+
+-->
+                    <div class="row">
+                        <div class="col-sm-4 login-icon-div">
+                            <a href="#" ng-click="login()">
+                                <div class="login-icon"><span class="mdi mdi-account"></span></div>
+                            </a>
+                            <h4>{{'Login' | translate}}</h4>
+                        </div>
+                        <div class="col-sm-4 login-icon-div">
+                            <a href="#/register">
+                                <div class="login-icon"><span class="mdi mdi-account-plus"></span></div>
+                            </a>
+                            <h4>{{'Create an account' | translate}}</h4>
+                        </div>
+                        <div class="col-sm-4 login-icon-div">
+                            <a href="#/login/forgot-password">
+                                <div class="login-icon"><span class="mdi mdi-lock"></span></div>
+                            </a>
+                            <h4>{{'Forgot password' | translate}}</h4>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="password">{{'Password' | translate}}:</label>
-            <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password"/>
-        </div>
-        <button type="submit" class="btn btn-primary"  ng-disabled="dataLoading">
-            <span class="glyphicon glyphicon-user"></span> {{'Login' | translate}}
-        </button>
-        <a ng-href="#/register" class="btn btn-default">{{'Create an account' | translate}}</a>
-        &nbsp;<a href="#/login/forgot-password" id="forgot-password">{{'Forgot password' | translate}}</a>.
-    </form>
-    </div>
-</div>
-</div>
 
-<div class="row bigskip">
-    <div class="col-xs-6 col-md-2 col-md-offset-2 logocell">
-        <a class="logo" href="http://www.palga.nl" target="_blank"><img src="images/logo_palga.png" alt="PALGA" /></a>
-    </div>
-    <div class="col-xs-6 col-md-2 logocell">
-        <a class="logo" href="http://dntp.nl" target="_blank"><img src="images/logo_dntp.png" alt="DNTP" /></a>
-    </div>
-    <div class="col-xs-6 col-md-2 logocell">
-        <a class="logo" href="http://pathology.nl" target="_blank"><img src="images/logo_nvvp.png" alt="NVVP" /></a>
-    </div>
-    <div class="col-xs-6 col-md-2 logocell">
-        <a class="logo" href="http://bbmri.nl" target="_blank"><img src="images/logo_bbmri.png" alt="BBMRI" /></a>
-    </div>
-</div>
+        <div class="col-sm-4">&nbsp;</div>
 
-<div class="row centertext medskip">
-    <em class="developedby">Developed by<br /><a href="http://thehyve.nl" target="_blank"><img src="images/thehyve_green.png" alt="The Hyve" /></a></em>
-</div>
-
+    </div>
 </div>

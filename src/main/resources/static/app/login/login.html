@@ -8,10 +8,6 @@ This file is distributed under the GNU Affero General Public License
         <div class="col-sm-4">&nbsp;</div>
 
         <div class="col-sm-4">
-            <!--<div class="page-header ">-->
-                <!--<h1>{{'Login' | translate}}</h1>-->
-            <!--</div>-->
-
             <div class="alert alert-danger" ng-show="error">
                 {{'There is a problem logging in.' | translate}}
                 {{errormessage | translate}}
@@ -33,15 +29,7 @@ This file is distributed under the GNU Affero General Public License
                         <label for="password">{{'Password' | translate}}:</label>
                         <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password"/>
                     </div>
-                    <!--
 
-<button type="submit" class="btn btn-primary"  ng-disabled="dataLoading">
-<span class="glyphicon glyphicon-user"></span> {{'Login' | translate}}
-</button>
-<a ng-href="#/register" class="btn btn-default">{{'Create an account' | translate}}</a>
-&nbsp;<a href="#/login/forgot-password" id="forgot-password">{{'Forgot password' | translate}}</a>.
-
--->
                     <div class="row">
                         <div class="col-sm-4 login-icon-div">
                             <a href="#" ng-click="login()">

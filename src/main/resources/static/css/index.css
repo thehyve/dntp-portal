@@ -28,6 +28,7 @@ body {
     padding-top: 50px;
     padding-bottom: 40px;
     font-size: 1.3em;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 @media print {
     html {
@@ -50,7 +51,8 @@ h2, .h2, h3, .h3, h4, .h4 {
 }
 .row {
     min-height: 1.5em;
-    padding: 2px 0;
+    margin-right: 0;
+    margin-left: 0;
 }
 
 
@@ -422,6 +424,9 @@ input.request-selection {
     font-size: 3.5em;
     color: #009ee0;
     margin-top: 32px;
+}
+.login-icon span:hover {
+    color: #FFF;
 }
 .print-pa-id-col { width: 10em; }
 .print-palga-no-col { width: 8em; }

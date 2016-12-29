@@ -89,11 +89,12 @@ h2, .h2, h3, .h3, h4, .h4 {
 /* Hide for mobile, show later */
 .sidebar {
     display: block;
+    top: 100px;
 }
 @media (min-width: 768px) {
     .sidebar {
         position: fixed;
-        top: 51px;
+        top: 100px;
         bottom: 0;
         left: 0;
         z-index: 1000;
@@ -419,6 +420,16 @@ input.request-selection {
 .span-login {margin-left: 20px;}
 .login-title-div {min-height: 300px; position: relative;}
 .floating-title {margin-bottom: 2em;}
+.floating-header-logo {
+    height:100px;
+    float:left;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1035;
+    background-image: url(../images/login-bg-loop.jpg);
+}
+.floating-header-logo img {margin-top: 10px;}
 .login-icon {
     width: 110px;
     height: 110px;

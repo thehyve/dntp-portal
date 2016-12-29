@@ -16,6 +16,8 @@ This file is distributed under the GNU Affero General Public License
                 {{errormessage | translate}}
             </div>
 
+            <h1 class="floating-title" class="h2-floating">{{'Login' | translate}}</h1>
+
             <div>
                 <form role="form" ng-submit="login()">
                     <div class="form-group">
@@ -30,7 +32,7 @@ This file is distributed under the GNU Affero General Public License
                         <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password"/>
                     </div>
 
-                    <div class="row">
+                    <div class="row login-button-group">
                         <div class="col-sm-4 login-icon-div">
                             <a href="#" ng-click="login()">
                                 <div class="login-icon"><span class="mdi mdi-account"></span></div>

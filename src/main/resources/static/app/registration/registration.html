@@ -4,10 +4,10 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div ng-controller="RegistrationController" ng-init="enablePopovers();">
-    <div class="container">
+    <div class="col-sm-4">&nbsp;</div>
+    <div class="col-sm-4 registration-container">
 
-        <h2>{{ 'Registration' | translate }}</h2>
-        <hr>
+        <h2 class="floating-title">{{ 'Registration' | translate }}</h2>
 
         <form class="form-horizontal" role="form" name="registrationForm" ng-submit="submit(user)" novalidate>
 
@@ -15,9 +15,9 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.firstName.$invalid ||
                  registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
-                <label class="control-label col-sm-2" for="firstName">{{ 'First name' | translate }}</label>
+                <label class="control-label col-sm-4" for="firstName">{{ 'First name' | translate }}</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <input type="text" class="form-control" id="firstName" name="firstName"
                            placeholder="{{ 'First name' | translate }}"
                            ng-model="user.firstName" ng-maxlength="50" required>
@@ -36,9 +36,9 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.lastName.$invalid ||
                  registrationForm.lastName.$error.required) && registrationForm.lastName.$dirty }">
-                <label class="control-label col-sm-2" for="lastName">{{ 'Last name' | translate }}</label>
+                <label class="control-label col-sm-4" for="lastName">{{ 'Last name' | translate }}</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <input type="text" class="form-control" id="lastName" name="lastName"
                            placeholder="{{ 'Last name' | translate }}"
                            ng-model="user.lastName" ng-maxlength="50" required>
@@ -57,9 +57,9 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.email.$invalid ||
                  registrationForm.email.$error.required) && registrationForm.email.$dirty }">
-                <label class="control-label col-sm-2" for="email">{{ 'Email' | translate }}</label>
+                <label class="control-label col-sm-4" for="email">{{ 'Email' | translate }}</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <input type="email" class="form-control" id="email" name="email"
                            lowercase-only="lowercase-only"
                            placeholder="{{ 'Email address (lower case)' | translate }}"
@@ -83,9 +83,9 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.telephone.$invalid ||
                  registrationForm.telephone.$error.required) && registrationForm.telephone.$dirty }">
-                <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
+                <label class="control-label col-sm-4" for="telephone">{{ 'Telephone number' | translate }}</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <input type="text" class="form-control" id="telephone" name="telephone"
                            placeholder="{{ 'Telephone number' | translate }}"
                            ng-model="user.contactData.telephone" ng-maxlength="50" required>
@@ -104,9 +104,9 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.institute.$invalid ||
                     registrationForm.institute.$error.required) && registrationForm.institute.$dirty }">
-                <label class="control-label col-sm-2" for="institute">{{ 'Institute' | translate }}</label>
+                <label class="control-label col-sm-4" for="institute">{{ 'Institute' | translate }}</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <input type="text" class="form-control" id="institute" name="institute"
                            placeholder="{{ 'Institute' | translate }}"
                            ng-model="user.institute" ng-maxlength="50" required>
@@ -124,8 +124,8 @@ This file is distributed under the GNU Affero General Public License
             <!-- Specialism -->
             <div class="form-group"
                  ng-class="{ 'has-error' : registrationForm.specialism.$invalid}">
-                <label class="control-label col-sm-2">{{ 'Specialism' | translate }}</label>
-                <div class="col-sm-6">
+                <label class="control-label col-sm-4">{{ 'Specialism' | translate }}</label>
+                <div class="col-sm-8">
                     <specialism-combo-box
                             name="specialism"
                             ng-model="user.specialism"
@@ -145,11 +145,11 @@ This file is distributed under the GNU Affero General Public License
 
             <!-- Pathology laboratory -->
             <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required && registrationForm.lab.$dirty}">
-                <label class="control-label col-sm-2" for="lab">
+                <label class="control-label col-sm-4" for="lab">
                     {{'Pathology laboratory'|translate}}
                 </label>
 
-                <div class="col-sm-6" id="labPopover"
+                <div class="col-sm-8" id="labPopover"
                     data-placement="top" data-animation="am-flip-x" data-content="{{'popover: Pathology laboratory'|translate}}" data-trigger="manual" bs-popover
                     >
                     <select class="form-control" name="lab" id="lab"
@@ -169,9 +169,9 @@ This file is distributed under the GNU Affero General Public License
             <div class="form-group"
                  ng-class="{ 'has-error' : (registrationForm.password.$invalid ||
                  registrationForm.password.$error.required) && registrationForm.password.$dirty }">
-                <label class="control-label col-sm-2" for="password">{{ 'Password' | translate }}</label>
+                <label class="control-label col-sm-4" for="password">{{ 'Password' | translate }}</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <input type="password" class="form-control" id="password" name="password"
                            ng-model="user.password1"
                            placeholder="{{ 'Password must be 8 or more characters long, contain numbers, letters, and a special character.' | translate }}"
@@ -191,9 +191,9 @@ This file is distributed under the GNU Affero General Public License
             <!-- Repeat password -->
             <div class="form-group"
                  ng-class="{ 'has-error' : registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty }">
-                <label class="control-label col-sm-2" for="repeatPassword">{{ 'Repeat password' | translate }}</label>
+                <label class="control-label col-sm-4" for="repeatPassword">{{ 'Repeat password' | translate }}</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
                            ng-model="user.password2" placeholder="{{ 'Repeat password' | translate }}"
                            compare-to="user.password1" required>
@@ -207,7 +207,7 @@ This file is distributed under the GNU Affero General Public License
 
             <!-- Submit -->
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-6">
+                <div class="col-sm-offset-4 col-sm-8">
                     <button type="submit" class="btn btn-primary" ng-disabled="dataLoading || registrationForm.$invalid">
                         {{ 'Request account' | translate }}
                     </button>
@@ -216,4 +216,5 @@ This file is distributed under the GNU Affero General Public License
         </form>
 
     </div>
+    <div class="col-sm-4">&nbsp;</div>
 </div>

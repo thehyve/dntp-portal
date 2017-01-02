@@ -1,0 +1,35 @@
+<!--
+Copyright (C) 2016  Stichting PALGA
+This file is distributed under the GNU Affero General Public License
+(see accompanying file LICENSE).
+-->
+<nav class="navbar navbar-default navbar-fixed-top navbar-login" ng-controller="NavigationController">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4 logo-header">
+                <img src="images/login-palga-logo.png" alt="PALGA LOGO">
+            </div>
+            <div class="col-sm-4 login-title-div">
+               &nbsp;
+            </div>
+            <div class="col-sm-4 navbar-login-menu">
+                <span class="span-lang">
+                    <a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
+                        <img src="images/en.png" alt="{{ 'English' | translate }}">
+                    </a>
+                </span>
+                <span class="span-lang">
+                    <a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
+                        <img src="images/nl.png" alt="{{ 'Dutch' | translate }} (nl)">
+                    </a>
+                </span>
+                <span class="span-login">
+                    <a href="" ng-click="login()" id="login"><span class="glyphicon glyphicon-log-in"></span>
+                        {{'Login'|translate}}
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</nav>
+

@@ -1,5 +1,28 @@
 .container { padding-top: 10px; margin-bottom: 30px;}
-.solid-footer { background-color: #f5f5f5; padding-top: 10px;}
+.login-container, .forgot-password-container,  .registration-container {
+    padding-top: 180px;
+    position: relative;
+    z-index: 1;
+}
+.registration-container {margin-bottom: 150px;}
+.solid-footer, .solid-footer-login { background-color: #b4effc; padding-top: 10px; }
+.solid-footer-login {padding-bottom: 10px;}
+.navbar-fixed-top .container-fluid { padding-left: 0}
+.navbar-login {
+    height: 302px;
+    background-image: url(../images/login-bg-loop.jpg);
+    z-index: 0;
+}
+.navbar-login-menu{text-align: right; padding: 15px;}
+.navbar-header {margin-left: 2px !important; background-color: #0074D9}
+.navbar-default {background-color: #b4effc;}
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus,
+.navbar-default .navbar-nav>.active>a:hover
+{
+    background-color: #76dcf3;
+}
+#nav_login {margin-right: 15px;}
+.badge { background-color: #00285f; }
 
 /** **/
 .nav-pills { padding-bottom: 1%}
@@ -14,6 +37,7 @@ body {
     padding-top: 50px;
     padding-bottom: 40px;
     font-size: 1.3em;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 @media print {
     html {
@@ -24,7 +48,7 @@ body {
         padding: 0;
     }
 }
-h1, h2, h3 { color: steelblue; }
+h1, h2, h3 { color: #002454; }
 h3 { color: #949494; }
 h1, .h1 {
     margin: 5px 0px 15px;
@@ -36,7 +60,8 @@ h2, .h2, h3, .h3, h4, .h4 {
 }
 .row {
     min-height: 1.5em;
-    padding: 2px 0;
+    margin-right: 0;
+    margin-left: 0;
 }
 
 
@@ -64,11 +89,12 @@ h2, .h2, h3, .h3, h4, .h4 {
 /* Hide for mobile, show later */
 .sidebar {
     display: block;
+    top: 100px;
 }
 @media (min-width: 768px) {
     .sidebar {
         position: fixed;
-        top: 51px;
+        top: 100px;
         bottom: 0;
         left: 0;
         z-index: 1000;
@@ -289,8 +315,11 @@ address {margin-bottom: 0px;}
     align-items: center;
 }
 .logo {
-    display: inline-block;
-    margin: 0 auto;
+    padding-left: 3em;
+}
+.logo-header {
+    text-align: right;
+    padding-top: 20px;
 }
 .bigskip {
     margin-top: 10em;
@@ -306,6 +335,10 @@ address {margin-bottom: 0px;}
 .numeric, .table td.numeric, .table th.numeric {
     text-align: right;
     padding-right: 2em;
+}
+
+.center-block {
+    text-align: center;
 }
 
 .developedby {
@@ -383,6 +416,40 @@ input.request-selection {
     margin: 2px 0 0;
 }
 
+.span-lang {margin-top: 12px; margin-left: 5px;}
+.span-login {margin-left: 20px;}
+.login-title-div {min-height: 300px; position: relative;}
+.floating-title {margin-bottom: 2em;}
+.floating-header-logo {
+    height:100px;
+    float:left;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1035;
+    background-image: url(../images/login-bg-loop.jpg);
+}
+.floating-header-logo img {margin-top: 10px;}
+.login-icon {
+    width: 110px;
+    height: 110px;
+    background-color: #00285f;
+    margin: 0px auto;
+    border-radius: 50%;
+    text-align: center;
+}
+.login-icon-div {
+    text-align: center;
+}
+.login-icon span {
+    font-size: 3.5em;
+    color: #009ee0;
+    margin-top: 32px;
+}
+.login-icon span:hover {
+    color: #FFF;
+}
+.login-button-group {margin-top: 2em}
 .print-pa-id-col { width: 10em; }
 .print-palga-no-col { width: 8em; }
 .print-pa-no-col { width: 10em; }

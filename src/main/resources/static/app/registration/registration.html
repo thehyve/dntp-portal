@@ -4,24 +4,26 @@ This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
 <div ng-controller="RegistrationController" ng-init="enablePopovers();">
-    <div class="container">
+    <div class="col-sm-4">&nbsp;</div>
+    <div class="col-sm-4 registration-container">
 
-        <h2>{{ 'Registration' | translate }}</h2>
-        <hr>
+        <h2 class="floating-title">{{ 'Registration' | translate }}</h2>
 
-        <form class="form-horizontal" role="form" name="registrationForm" ng-submit="submit(user)" novalidate>
+        <div class="panel panel-default">
+            <form class="form-horizontal panel-body" role="form" name="registrationForm" ng-submit="submit(user)"
+                  novalidate>
 
-            <!-- First Name -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : (registrationForm.firstName.$invalid ||
+                <!-- First Name -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : (registrationForm.firstName.$invalid ||
                  registrationForm.firstName.$error.required) && registrationForm.firstName.$dirty }">
-                <label class="control-label col-sm-2" for="firstName">{{ 'First name' | translate }}</label>
+                    <label class="control-label col-sm-4" for="firstName">{{ 'First name' | translate }}</label>
 
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="firstName" name="firstName"
-                           placeholder="{{ 'First name' | translate }}"
-                           ng-model="user.firstName" ng-maxlength="50" required>
-                    <!-- errors -->
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="firstName" name="firstName"
+                               placeholder="{{ 'First name' | translate }}"
+                               ng-model="user.firstName" ng-maxlength="50" required>
+                        <!-- errors -->
                     <span class="help-block"
                           ng-show="registrationForm.firstName.$error.required">
                         {{ 'Required field' | translate }}
@@ -29,20 +31,20 @@ This file is distributed under the GNU Affero General Public License
                     <span class="help-block" ng-show="registrationForm.firstName.$error.maxlength">
                         {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Last Name -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : (registrationForm.lastName.$invalid ||
+                <!-- Last Name -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : (registrationForm.lastName.$invalid ||
                  registrationForm.lastName.$error.required) && registrationForm.lastName.$dirty }">
-                <label class="control-label col-sm-2" for="lastName">{{ 'Last name' | translate }}</label>
+                    <label class="control-label col-sm-4" for="lastName">{{ 'Last name' | translate }}</label>
 
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="lastName" name="lastName"
-                           placeholder="{{ 'Last name' | translate }}"
-                           ng-model="user.lastName" ng-maxlength="50" required>
-                    <!-- errors -->
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                               placeholder="{{ 'Last name' | translate }}"
+                               ng-model="user.lastName" ng-maxlength="50" required>
+                        <!-- errors -->
                     <span class="help-block"
                           ng-show="registrationForm.lastName.$error.required">
                         {{ 'Required field' | translate }}
@@ -50,22 +52,22 @@ This file is distributed under the GNU Affero General Public License
                     <span class="help-block" ng-show="registrationForm.lastName.$error.maxlength">
                         {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- E-mail -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : (registrationForm.email.$invalid ||
+                <!-- E-mail -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : (registrationForm.email.$invalid ||
                  registrationForm.email.$error.required) && registrationForm.email.$dirty }">
-                <label class="control-label col-sm-2" for="email">{{ 'Email' | translate }}</label>
+                    <label class="control-label col-sm-4" for="email">{{ 'Email' | translate }}</label>
 
-                <div class="col-sm-6">
-                    <input type="email" class="form-control" id="email" name="email"
-                           lowercase-only="lowercase-only"
-                           placeholder="{{ 'Email address (lower case)' | translate }}"
-                           ng-maxlength="254"
-                           ng-model="user.contactData.email" required>
-                    <!-- errors -->
+                    <div class="col-sm-8">
+                        <input type="email" class="form-control" id="email" name="email"
+                               lowercase-only="lowercase-only"
+                               placeholder="{{ 'Email address (lower case)' | translate }}"
+                               ng-maxlength="254"
+                               ng-model="user.contactData.email" required>
+                        <!-- errors -->
                     <span class="help-block"
                           ng-show="registrationForm.email.$error.required">
                         {{ 'Required field' | translate }}
@@ -76,20 +78,20 @@ This file is distributed under the GNU Affero General Public License
                     <span class="help-block" ng-show="registrationForm.email.$invalid && registrationForm.email.$dirty">
                         {{ 'Email format is invalid' | translate }}
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Telephone -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : (registrationForm.telephone.$invalid ||
+                <!-- Telephone -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : (registrationForm.telephone.$invalid ||
                  registrationForm.telephone.$error.required) && registrationForm.telephone.$dirty }">
-                <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
+                    <label class="control-label col-sm-4" for="telephone">{{ 'Telephone number' | translate }}</label>
 
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="telephone" name="telephone"
-                           placeholder="{{ 'Telephone number' | translate }}"
-                           ng-model="user.contactData.telephone" ng-maxlength="50" required>
-                    <!-- errors -->
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="telephone" name="telephone"
+                               placeholder="{{ 'Telephone number' | translate }}"
+                               ng-model="user.contactData.telephone" ng-maxlength="50" required>
+                        <!-- errors -->
                     <span class="help-block"
                           ng-show="registrationForm.telephone.$error.required">
                         {{ 'Required field' | translate }}
@@ -97,20 +99,20 @@ This file is distributed under the GNU Affero General Public License
                     <span class="help-block" ng-show="registrationForm.telephone.$error.maxlength">
                         {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Institute -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : (registrationForm.institute.$invalid ||
+                <!-- Institute -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : (registrationForm.institute.$invalid ||
                     registrationForm.institute.$error.required) && registrationForm.institute.$dirty }">
-                <label class="control-label col-sm-2" for="institute">{{ 'Institute' | translate }}</label>
+                    <label class="control-label col-sm-4" for="institute">{{ 'Institute' | translate }}</label>
 
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="institute" name="institute"
-                           placeholder="{{ 'Institute' | translate }}"
-                           ng-model="user.institute" ng-maxlength="50" required>
-                    <!-- errors -->
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="institute" name="institute"
+                               placeholder="{{ 'Institute' | translate }}"
+                               ng-model="user.institute" ng-maxlength="50" required>
+                        <!-- errors -->
                     <span class="help-block"
                           ng-show="registrationForm.institute.$error.required">
                         {{ 'Required field' | translate }}
@@ -118,21 +120,21 @@ This file is distributed under the GNU Affero General Public License
                     <span class="help-block" ng-show="registrationForm.institute.$error.maxlength">
                         {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Specialism -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : registrationForm.specialism.$invalid}">
-                <label class="control-label col-sm-2">{{ 'Specialism' | translate }}</label>
-                <div class="col-sm-6">
-                    <specialism-combo-box
-                            name="specialism"
-                            ng-model="user.specialism"
-                            ng-maxlength="50"
-                            custom-class="form-control" required>
-                    </specialism-combo-box>
-                    <!-- errors -->
+                <!-- Specialism -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : registrationForm.specialism.$invalid}">
+                    <label class="control-label col-sm-4">{{ 'Specialism' | translate }}</label>
+                    <div class="col-sm-8">
+                        <specialism-combo-box
+                                name="specialism"
+                                ng-model="user.specialism"
+                                ng-maxlength="50"
+                                custom-class="form-control" required>
+                        </specialism-combo-box>
+                        <!-- errors -->
                     <span ng-show="registrationForm.specialism.$error.required"
                           class="help-block">
                             {{ 'Required field' | translate }}
@@ -140,43 +142,43 @@ This file is distributed under the GNU Affero General Public License
                     <span class="help-block" ng-show="registrationForm.specialism.$error.maxlength">
                         {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Pathology laboratory -->
-            <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required && registrationForm.lab.$dirty}">
-                <label class="control-label col-sm-2" for="lab">
-                    {{'Pathology laboratory'|translate}}
-                </label>
+                <!-- Pathology laboratory -->
+                <div class="form-group" ng-class="{ 'has-error' : registrationForm.lab.$error.required && registrationForm.lab.$dirty}">
+                    <label class="control-label col-sm-4" for="lab">
+                        {{'Pathology laboratory'|translate}}
+                    </label>
 
-                <div class="col-sm-6" id="labPopover"
-                    data-placement="top" data-animation="am-flip-x" data-content="{{'popover: Pathology laboratory'|translate}}" data-trigger="manual" bs-popover
+                    <div class="col-sm-8" id="labPopover"
+                         data-placement="top" data-animation="am-flip-x" data-content="{{'popover: Pathology laboratory'|translate}}" data-trigger="manual" bs-popover
                     >
-                    <select class="form-control" name="lab" id="lab"
-                         ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
-                         ng-required="true">
-                        <option value="" ng-selected="selected">&ndash; {{'Select laboratory' | translate}} &ndash;</option>
-                    </select>
-                    <!-- errors -->
+                        <select class="form-control" name="lab" id="lab"
+                                ng-model="user.labId" ng-options="lab.id as lab.name for lab in labs"
+                                ng-required="true">
+                            <option value="" ng-selected="selected">&ndash; {{'Select laboratory' | translate}} &ndash;</option>
+                        </select>
+                        <!-- errors -->
                     <span ng-show="registrationForm.lab.$error.required" class="help-block">
                         {{ 'Required field' | translate }}
                     </span>
+                    </div>
                 </div>
-            </div>
-            <br>
+                <br>
 
-            <!-- Password -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : (registrationForm.password.$invalid ||
+                <!-- Password -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : (registrationForm.password.$invalid ||
                  registrationForm.password.$error.required) && registrationForm.password.$dirty }">
-                <label class="control-label col-sm-2" for="password">{{ 'Password' | translate }}</label>
+                    <label class="control-label col-sm-4" for="password">{{ 'Password' | translate }}</label>
 
-                <div class="col-sm-6">
-                    <input type="password" class="form-control" id="password" name="password"
-                           ng-model="user.password1"
-                           placeholder="{{ 'Password must be 8 or more characters long, contain numbers, letters, and a special character.' | translate }}"
-                           ng-minlength="8" validate-password required >
-                    <!-- errors -->
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="password" name="password"
+                               ng-model="user.password1"
+                               placeholder="{{ 'Password must be 8 or more characters long, contain numbers, letters, and a special character.' | translate }}"
+                               ng-minlength="8" validate-password required >
+                        <!-- errors -->
                     <span ng-show="registrationForm.password.$error.required && registrationForm.password.$dirty"
                           class="help-block">
                         {{ 'Required field' | translate }}
@@ -185,35 +187,38 @@ This file is distributed under the GNU Affero General Public License
                           class="help-block">
                         {{ 'Password must be 8 or more characters long, contain numbers, letters, and a special character.' | translate }}
                     </span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Repeat password -->
-            <div class="form-group"
-                 ng-class="{ 'has-error' : registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty }">
-                <label class="control-label col-sm-2" for="repeatPassword">{{ 'Repeat password' | translate }}</label>
+                <!-- Repeat password -->
+                <div class="form-group"
+                     ng-class="{ 'has-error' : registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty }">
+                    <label class="control-label col-sm-4" for="repeatPassword">{{ 'Repeat password' | translate }}</label>
 
-                <div class="col-sm-6">
-                    <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
-                           ng-model="user.password2" placeholder="{{ 'Repeat password' | translate }}"
-                           compare-to="user.password1" required>
-                     <!-- errors -->
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
+                               ng-model="user.password2" placeholder="{{ 'Repeat password' | translate }}"
+                               compare-to="user.password1" required>
+                        <!-- errors -->
                     <span class="help-block" ng-show="registrationForm.repeatPassword.$error.compareTo && registrationForm.repeatPassword.$dirty">
                         {{ 'Passwords do not match.' | translate }}
                     </span>
+                    </div>
                 </div>
-            </div>
-            <br>
+                <br>
 
-            <!-- Submit -->
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-6">
-                    <button type="submit" class="btn btn-primary" ng-disabled="dataLoading || registrationForm.$invalid">
-                        {{ 'Request account' | translate }}
-                    </button>
+                <!-- Submit -->
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-primary" ng-disabled="dataLoading || registrationForm.$invalid">
+                            {{ 'Request account' | translate }}
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+
 
     </div>
+    <div class="col-sm-4">&nbsp;</div>
 </div>

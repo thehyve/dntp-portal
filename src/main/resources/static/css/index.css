@@ -2,7 +2,6 @@
 .login-container, .forgot-password-container,  .registration-container {
     padding-top: 180px;
     position: relative;
-    z-index: 1;
 }
 .registration-container {margin-bottom: 150px;}
 .solid-footer, .solid-footer-login { background-color: #b4effc; padding-top: 10px; }
@@ -11,7 +10,7 @@
 .navbar-login {
     height: 302px;
     background-image: url(../images/login-bg-loop.jpg);
-    z-index: 0;
+    z-index: 1;
 }
 .navbar-login-menu{text-align: right; padding: 15px;}
 .navbar-header {margin-left: 2px !important; background-color: #0074D9}
@@ -91,6 +90,7 @@ h2, .h2, h3, .h3, h4, .h4 {
     display: block;
     top: 100px;
 }
+
 @media (min-width: 768px) {
     .sidebar {
         position: fixed;
@@ -419,7 +419,12 @@ input.request-selection {
 .span-lang {margin-top: 12px; margin-left: 5px;}
 .span-login {margin-left: 20px;}
 .login-title-div {min-height: 300px; position: relative;}
-.floating-title {margin-bottom: 2em;}
+.floating-title {
+    margin-bottom: 2em;
+    position: fixed;
+    top: inherit;
+    z-index: 100;
+}
 .floating-header-logo {
     height:100px;
     float:left;
@@ -449,9 +454,49 @@ input.request-selection {
 .login-icon span:hover {
     color: #FFF;
 }
+.front-panel {
+    margin-top: 8em;
+}
 .login-button-group {margin-top: 2em}
 .print-pa-id-col { width: 10em; }
 .print-palga-no-col { width: 8em; }
 .print-pa-no-col { width: 10em; }
 .print-pa-samples-col { /* min-width: 65%; */ }
 .print-pa-total-col { width: 5em; }
+
+@media (max-width: 480px) {
+    .navbar-login {
+        height: 120px;
+    }
+    .navbar-login-menu {
+        text-align: right;
+        padding: 15px;
+        position: fixed;
+        top: 0;
+    }
+    .palga-home-logo {
+        width:50%;
+    }
+    .floating-title {
+        margin-bottom: 1em;
+        position: inherit;
+        top: inherit;
+        z-index: 0;
+    }
+    .login-container, .forgot-password-container, .registration-container {
+        padding-top: 70px;
+        position: relative;
+    }
+    .front-panel {
+        margin-top: 0;
+    }
+    .navbar-fixed-bottom {
+        position: inherit;
+    }
+    .registration-container {
+        margin-bottom: 0px;
+    }
+    body {
+        padding-bottom: 0;
+    }
+}

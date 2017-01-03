@@ -8,17 +8,16 @@ This file is distributed under the GNU Affero General Public License
         <div class="col-sm-4">&nbsp;</div>
 
         <div class="col-sm-4">
-            <div class="alert alert-danger" ng-show="error">
-                {{'There is a problem logging in.' | translate}}
-                {{errormessage | translate}}
-            </div>
-            <div class="alert alert-danger" ng-show="!error && errormessage">
-                {{errormessage | translate}}
-            </div>
-
             <h1 class="floating-title" class="h2-floating">{{'Login' | translate}}</h1>
 
-            <div>
+            <div class="front-panel">
+                <div class="alert alert-danger" ng-show="error">
+                    {{'There is a problem logging in.' | translate}}
+                    {{errormessage | translate}}
+                </div>
+                <div class="alert alert-danger" ng-show="!error && errormessage">
+                    {{errormessage | translate}}
+                </div>
                 <form role="form" ng-submit="login()">
                     <div class="form-group">
                         <label for="username">{{'Username' | translate}}:</label>

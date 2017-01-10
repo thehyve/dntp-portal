@@ -1,6 +1,6 @@
 {
   "name": "dntp_dortal",
-  "version": "0.0.71",
+  "version": "0.0.72",
   "dependencies": {
     "jquery": "~2.1.4",
     "lodash": "~4.6.1",

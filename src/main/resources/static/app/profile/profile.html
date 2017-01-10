@@ -6,111 +6,118 @@ This file is distributed under the GNU Affero General Public License
 <div ng-controller="ProfileController">
 <div class="container">
 
-    <h2>{{ 'Profile' | translate }}</h2>
-    <hr>
-    <h2 ng-show="!loaded">Loading</h2>
-    <form class="form-horizontal" role="form" name="profileForm" ng-show="loaded" novalidate>
-        <div class="alert alert-success" role="alert">
-            {{ 'You are only allowed to edit your telephone number and specialism. If you would like to change other information please contact PALGA.' | translate }}
-        </div>
-    
-    
-        <!-- First Name -->
-        <div class="form-group" ng-class="{ 'has-error' : (profileForm.firstName.$invalid || profileForm.firstName.$error.required) && profileForm.firstName.$dirty }">
-            <label class="control-label col-sm-2" for="firstName">{{ 'First name' | translate }}</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="firstName" ng-model="user.firstName" disabled>
-            </div>
-        </div>
+    <!--Side Bar-->
+    <div class="col-sm-3 col-md-2 sidebar">
+        &nbsp;
+    </div>
 
-        <!-- Last Name -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="lastName">{{ 'Last name' | translate }}</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="lastName" ng-model="user.lastName" disabled>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h2>{{ 'Profile' | translate }}</h2>
+        <hr>
+        <h2 ng-show="!loaded">Loading</h2>
+        <form class="form-horizontal" role="form" name="profileForm" ng-show="loaded" novalidate>
+            <div class="alert alert-success" role="alert">
+                {{ 'You are only allowed to edit your telephone number and specialism. If you would like to change other information please contact PALGA.' | translate }}
             </div>
-        </div>
 
-        <!-- E-mail -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="email">{{ 'Email' | translate }}</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="email" ng-model="user.contactData.email" disabled>
+
+            <!-- First Name -->
+            <div class="form-group" ng-class="{ 'has-error' : (profileForm.firstName.$invalid || profileForm.firstName.$error.required) && profileForm.firstName.$dirty }">
+                <label class="control-label col-sm-2" for="firstName">{{ 'First name' | translate }}</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="firstName" ng-model="user.firstName" disabled>
+                </div>
             </div>
-        </div>
 
-        <!-- Telephone -->
-        <div class="form-group"
-            ng-class="{ 'has-error' : profileForm.telephone.$invalid}">
-            <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="telephone" name="telephone"
-                    ng-model="user.contactData.telephone"
-                    ng-maxlength="50"
-                    required
-                >
-                <!-- errors -->
-                <span class="help-block" ng-show="profileForm.telephone.$error.required">
-                    {{ 'Required field' | translate }}
-                </span>
-                <span class="help-block" ng-show="profileForm.telephone.$error.maxlength">
-                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
-                </span>
+            <!-- Last Name -->
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="lastName">{{ 'Last name' | translate }}</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="lastName" ng-model="user.lastName" disabled>
+                </div>
             </div>
-        </div>
 
-        <!-- Institute -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="institute">{{ 'Institute' | translate }}</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="institute" ng-model="user.institute" disabled>
+            <!-- E-mail -->
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="email">{{ 'Email' | translate }}</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="email" ng-model="user.contactData.email" disabled>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group"
-             ng-if="currentRole == 'requester'"
-             ng-class="{ 'has-error' : profileForm.specialism.$invalid}">
-            <label class="control-label col-sm-2">{{ 'Specialism' | translate }}</label>
-            <div class="col-sm-10">
-                <specialism-combo-box
-                        name="specialism"
-                        ng-model="user.specialism"
-                        ng-maxlength="50"
-                        custom-class="form-control" required>
-                </specialism-combo-box>
-                <!-- errors -->
-                <span ng-show="profileForm.specialism.$error.required"
-                      class="help-block">
+            <!-- Telephone -->
+            <div class="form-group"
+                 ng-class="{ 'has-error' : profileForm.telephone.$invalid}">
+                <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="telephone" name="telephone"
+                           ng-model="user.contactData.telephone"
+                           ng-maxlength="50"
+                           required
+                    >
+                    <!-- errors -->
+                    <span class="help-block" ng-show="profileForm.telephone.$error.required">
                         {{ 'Required field' | translate }}
-                </span>
-                <span class="help-block" ng-show="profileForm.specialism.$error.maxlength">
-                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
-                </span>
+                    </span>
+                    <span class="help-block" ng-show="profileForm.telephone.$error.maxlength">
+                        {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
+                    </span>
+                </div>
             </div>
-        </div>
 
-        <!-- Pathology Dept. Member -->
-        <div class="form-group">
-            <label class="control-label col-sm-2">
-              {{ 'Pathology laboratory' | translate }}
-            </label>
-            <p class="form-control-static col-sm-10">
-                <span ng-repeat="lab in labs" ng-if="user.labId==lab.id">{{lab.name}}</span>
-            </p>
-        </div>
-        <div class="alert alert-success" ng-show="success">
-            {{ 'Your profile has been updated' | translate }}!
-        </div>
-        <br>
-
-        <!-- Submit -->
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" ng-disabled="profileForm.$invalid || submitted" ng-click="submitForm()">{{ 'Update' | translate }}</button>
-                <span class="label label-success" ng-show="submitted">{{ 'Loading' | translate }}...</span>
+            <!-- Institute -->
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="institute">{{ 'Institute' | translate }}</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="institute" ng-model="user.institute" disabled>
+                </div>
             </div>
-        </div>
-    </form>
+
+            <div class="form-group"
+                 ng-if="currentRole == 'requester'"
+                 ng-class="{ 'has-error' : profileForm.specialism.$invalid}">
+                <label class="control-label col-sm-2">{{ 'Specialism' | translate }}</label>
+                <div class="col-sm-10">
+                    <specialism-combo-box
+                            name="specialism"
+                            ng-model="user.specialism"
+                            ng-maxlength="50"
+                            custom-class="form-control" required>
+                    </specialism-combo-box>
+                    <!-- errors -->
+                    <span ng-show="profileForm.specialism.$error.required"
+                          class="help-block">
+                            {{ 'Required field' | translate }}
+                    </span>
+                    <span class="help-block" ng-show="profileForm.specialism.$error.maxlength">
+                        {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Pathology Dept. Member -->
+            <div class="form-group">
+                <label class="control-label col-sm-2">
+                    {{ 'Pathology laboratory' | translate }}
+                </label>
+                <p class="form-control-static col-sm-10">
+                    <span ng-repeat="lab in labs" ng-if="user.labId==lab.id">{{lab.name}}</span>
+                </p>
+            </div>
+            <div class="alert alert-success" ng-show="success">
+                {{ 'Your profile has been updated' | translate }}!
+            </div>
+            <br>
+
+            <!-- Submit -->
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary" ng-disabled="profileForm.$invalid || submitted" ng-click="submitForm()">{{ 'Update' | translate }}</button>
+                    <span class="label label-success" ng-show="submitted">{{ 'Loading' | translate }}...</span>
+                </div>
+            </div>
+        </form>
+    </div>
 
 </div>
 </div>

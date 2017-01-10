@@ -3,9 +3,9 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-<nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationController">
+<nav class="navbar navbar-default navbar-fixed-top " ng-controller="NavigationController">
     <div class="container-fluid">
-        <div class="navbar-header">
+        <div class="navbar-header col-sm-3 col-md-2 " ng-if="authenticated">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                     aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">{{'Toggle navigation'|translate}}</span>

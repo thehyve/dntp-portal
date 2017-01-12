@@ -1,8 +1,12 @@
 .container { padding-top: 10px; margin-bottom: 30px;}
-.login-container, .forgot-password-container,  .registration-container {
+.login-container, .forgot-password-container,  .registration-container, .thank-you-container {
     padding-top: 180px;
     position: relative;
 }
+.thank-you-container > .front-panel {
+    font-weight: 600;
+}
+
 .registration-container {margin-bottom: 150px;}
 .solid-footer, .solid-footer-login { background-color: #b4effc; padding-top: 10px; }
 .solid-footer-login {padding-bottom: 10px;}
@@ -446,6 +450,13 @@ input.request-selection {
 .login-icon-div {
     text-align: center;
 }
+
+.login-icon-div > button {
+    background-color: #FFFFFF;
+    border: none;
+    outline: none;
+}
+
 .login-icon span {
     font-size: 3.5em;
     color: #009ee0;
@@ -483,7 +494,7 @@ input.request-selection {
         top: inherit;
         z-index: 0;
     }
-    .login-container, .forgot-password-container, .registration-container {
+    .login-container, .forgot-password-container, .registration-container, .thank-you-container {
         padding-top: 70px;
         position: relative;
     }

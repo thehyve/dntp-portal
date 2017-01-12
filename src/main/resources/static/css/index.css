@@ -450,6 +450,13 @@ input.request-selection {
 .login-icon-div {
     text-align: center;
 }
+
+.login-icon-div > button {
+    background-color: #FFFFFF;
+    border: none;
+    outline: none;
+}
+
 .login-icon span {
     font-size: 3.5em;
     color: #009ee0;

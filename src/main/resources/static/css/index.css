@@ -1,5 +1,5 @@
 .container { padding-top: 10px; margin-bottom: 30px;}
-.login-container, .forgot-password-container,  .registration-container, .thank-you-container {
+.login-container, .forgot-password-container,  .registration-container, .thank-you-container, .reset-password-container {
     padding-top: 180px;
     position: relative;
 }
@@ -494,7 +494,7 @@ input.request-selection {
         top: inherit;
         z-index: 0;
     }
-    .login-container, .forgot-password-container, .registration-container, .thank-you-container {
+    .login-container, .forgot-password-container, .registration-container, .thank-you-container, .reset-password-container {
         padding-top: 70px;
         position: relative;
     }

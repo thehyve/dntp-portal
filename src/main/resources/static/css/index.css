@@ -25,6 +25,7 @@
     background-color: #76dcf3;
 }
 #nav_login {margin-right: 15px;}
+
 .badge { background-color: #00285f; }
 
 /** **/
@@ -71,7 +72,6 @@ h2, .h2, h3, .h3, h4, .h4 {
 /*
  * Global add-ons
  */
-
 .sub-header {
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
@@ -83,6 +83,17 @@ h2, .h2, h3, .h3, h4, .h4 {
  */
 .navbar-fixed-top {
     border: 0;
+}
+
+.navbar-login-menu > li {
+    list-style: none;
+    display: inline;
+    margin-right: 15px;
+}
+
+.navbar-login-menu > li:hover {
+    cursor: pointer;
+    text-decoration: none;
 }
 
 /*

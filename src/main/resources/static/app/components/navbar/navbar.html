@@ -70,16 +70,22 @@ This file is distributed under the GNU Affero General Public License
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a id="language_selection" class="dropdown-toggle" role="button" data-toggle="dropdown">
-                        {{ 'Language' | translate }}: {{currentLanguage}}
+                    <a id="language_selection"
+                       ng-class="{
+                        'selected-language-en': currentLanguage == 'en',
+                        'selected-language-nl': currentLanguage == 'nl',
+                       }"
+                       class="dropdown-toggle" role="button" data-toggle="dropdown">
+                        <span ng-if="currentLanguage == 'en'"><img src="images/en.png" alt="{{ 'English' | translate }}"></span>
+                        <span ng-if="currentLanguage == 'nl'"><img src="images/nl.png" alt="{{ 'Dutch' | translate }}"></span>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li id="select_language_en"><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
-                            {{ 'English' | translate }} (en)
+                            <img src="images/en.png" alt="{{ 'English' | translate }}"> {{ 'English' | translate }} (en)
                         </a></li>
                         <li id="select_language_nl"><a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
-                            {{ 'Dutch' | translate }} (nl)
+                            <img src="images/nl.png" alt="{{ 'Dutch' | translate }} (nl)"> {{ 'Dutch' | translate }} (nl)
                         </a></li>
                     </ul>
                 </li>

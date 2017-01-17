@@ -231,7 +231,7 @@ module.exports = function() {
     });
 
     this.Then(/^the page should contain the text '(.*)'$/, function(text, next) {
-        expect(element(by.css('body')).getInnerHtml()).to.eventually.contain(text).and.notify(next);
+        expect(element(by.css('body')).getAttribute('innerHTML')).to.eventually.contain(text).and.notify(next);
     });
 
     this.Then(/^the object with class '(.*)' should be present$/, function(cls, next) {
@@ -239,7 +239,7 @@ module.exports = function() {
     });
 
     this.Then(/^the page should not contain the text '(.*)'$/, function(text, next) {
-        expect(element(by.css('body')).getInnerHtml()).to.eventually.not.contain(text).and.notify(next);
+        expect(element(by.css('body')).getAttribute('innerHTML')).to.eventually.not.contain(text).and.notify(next);
     });
 
     this.Then(/^I should see an? (.+) message$/, function(msgType, next) {

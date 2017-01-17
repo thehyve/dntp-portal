@@ -18,6 +18,7 @@ var LoginPage = function() {
     this.errorMessage = element(by.css('.alert-danger'));
 
     this.setUsername = function(username) {
+        this.username.clear();
         setText(this.username, username);
     }
 

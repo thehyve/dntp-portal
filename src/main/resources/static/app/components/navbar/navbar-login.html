@@ -15,7 +15,29 @@ This file is distributed under the GNU Affero General Public License
                &nbsp;
             </div>
             <div class="col-sm-4 navbar-login-menu">
-                <span class="span-lang">
+                <li class="dropdown">
+                    <a id="language_selection"
+                       ng-class="{
+                        'selected-language-en': currentLanguage == 'en',
+                        'selected-language-nl': currentLanguage == 'nl',
+                       }"
+                       class="dropdown-toggle" role="button" data-toggle="dropdown">
+	                    <span ng-if="currentLanguage == 'en'"><img src="images/en.png" alt="{{ 'English' | translate }}"></span>
+	                    <span ng-if="currentLanguage == 'nl'"><img src="images/nl.png" alt="{{ 'Dutch' | translate }}"></span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li id="select_language_en"><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
+                            <img src="images/en.png" alt="{{ 'English' | translate }}"> {{ 'English' | translate }} (en)
+                        </a></li>
+                        <li id="select_language_nl"><a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
+                            <img src="images/nl.png" alt="{{ 'Dutch' | translate }} (nl)"> {{ 'Dutch' | translate }} (nl)
+                        </a></li>
+                    </ul>
+                </li>
+
+
+                <!--<span class="span-lang">
                     <a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
                         <img src="images/en.png" alt="{{ 'English' | translate }}">
                     </a>
@@ -24,12 +46,15 @@ This file is distributed under the GNU Affero General Public License
                     <a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
                         <img src="images/nl.png" alt="{{ 'Dutch' | translate }} (nl)">
                     </a>
-                </span>
-                <span class="span-login">
-                    <a href="" ng-click="login()" id="login"><span class="glyphicon glyphicon-log-in"></span>
-                        {{'Login'|translate}}
-                    </a>
-                </span>
+                </span>-->
+                <li>
+					<span class="span-login">
+						<a href="" ng-click="login()" id="login"><span class="glyphicon glyphicon-log-in"></span>
+							{{'Login'|translate}}
+						</a>
+					</span>
+                </li>
+
             </div>
         </div>
     </div>

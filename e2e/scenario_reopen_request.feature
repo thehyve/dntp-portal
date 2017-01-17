@@ -11,7 +11,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     Given I am on the login page
     And I click on the object with id 'language_selection'
     And I click on the object with id 'select_language_en'
-    Then the page should contain the text 'Language: en'
+    Then the object with class 'selected-language-en' should be present
 
   Scenario: 1. Create request
     Given there are no requests
@@ -38,7 +38,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     telephone: 1234567890
     chargeNumber: 1234
     grantProvider: Some sponsor
-    researchNumber: 10    
+    researchNumber: 10
     """
     And I click on the following objects
     """

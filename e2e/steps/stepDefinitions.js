@@ -175,7 +175,7 @@ module.exports = function() {
             next();
         });
     });
-    
+
     this.When(/^I fill the text box with the words '(.+)'$/, function(text, next) {
         element(by.css('[type=text]')).sendKeys(text).then(function() {
             next();
@@ -232,6 +232,10 @@ module.exports = function() {
 
     this.Then(/^the page should contain the text '(.*)'$/, function(text, next) {
         expect(element(by.css('body')).getInnerHtml()).to.eventually.contain(text).and.notify(next);
+    });
+
+    this.Then(/^the object with class '(.*)' should be present$/, function(cls, next) {
+        expect(element(by.css('.'+cls)).isPresent()).to.become(true).and.notify(next);
     });
 
     this.Then(/^the page should not contain the text '(.*)'$/, function(text, next) {

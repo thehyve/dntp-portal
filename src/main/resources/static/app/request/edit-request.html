@@ -260,6 +260,25 @@
                         </div>
                     </div>
 
+                    <!-- Biobank request number -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.biobankRequestNumber.$invalid || requestEditForm.biobankRequestNumber.$error.required) && requestEditForm.biobankRequestNumber.$dirty }">
+                        <label class="control-label col-sm-3" for="biobankRequestNumber">{{ 'Biobank Requestnumber' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="biobankRequestNumber" name="biobankRequestNumber"
+                                   placeholder="{{ 'Biobank Requestnumber' | translate }}" title="{{ 'Biobank Requestnumber' | translate }}"
+                                   ng-model="request.biobankRequestNumber"
+                                   ng-maxlength="100"
+                                   required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.biobankRequestNumber.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.biobankRequestNumber.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                        </div>
+                    </div>
+
                     <!-- Laboratory techniques -->
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.laboratoryTechniques.$invalid || requestEditForm.laboratoryTechniques.$error.required) && requestEditForm.laboratoryTechniques.$dirty }">
                         <label class="control-label col-sm-3" for="laboratoryTechniques">{{ 'Laboratory techniques' | translate }}</label>

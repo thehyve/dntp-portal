@@ -335,6 +335,7 @@ public class RequestFormService {
 
             request.setReturnDate((Date)variables.get("return_date"));
             request.setRequesterId(variables.get("requester_id") == null ? "" : variables.get("requester_id").toString());
+            request.setBiobankRequestNumber((String) variables.get("biobank_request_number"));
             Long userId = null;
             try { userId = Long.valueOf(request.getRequesterId()); }
             catch(NumberFormatException e) {}
@@ -584,7 +585,7 @@ public class RequestFormService {
         variables.put("return_date", request.getReturnDate());
         variables.put("contact_person_name", request.getContactPersonName());
         variables.put("contact_person_email", request.getContactPersonEmail());
-
+        variables.put("biobank_request_number", request.getBiobankRequestNumber());
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
 
         properties.setSearchCriteria(request.getSearchCriteria());

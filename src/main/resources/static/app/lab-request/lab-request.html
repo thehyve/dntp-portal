@@ -100,14 +100,16 @@ This file is distributed under the GNU Affero General Public License
 
                         <h4 class="h4">{{ 'Details' | translate}}</h4>
                         <hr>
-                        <!--Lab Request Id-->
-                        <div class="row">
-                            <label class="control-label col-xs-4 col-md-2">{{ 'Lab request code' | translate }}</label>
-                            <div class="col-xs-8 col-md-10">
-                                <p class="form-control-static">{{labRequest.labRequestCode}}</p>
-                            </div>
-                        </div>
-
+                        <!--&lt;!&ndash;Lab Request Id&ndash;&gt;-->
+                        <!--<div class="row">-->
+                            <!--<label class="control-label col-xs-4 col-md-2">{{ 'Lab request code' | translate }}</label>-->
+                            <!--<div class="col-xs-8 col-md-10">-->
+                                <!--<p class="form-control-static">{{labRequest.labRequestCode}}</p>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <p>
+                            {{ 'Hereby you receive this material for a scientific study. We request you notify' | translate }}:
+                        </p>
                         <div ng-if="isRequester() || isLabUser()">
                             <!--Requester info-->
                             <!--Displayed only to users with non requester role-->
@@ -118,60 +120,157 @@ This file is distributed under the GNU Affero General Public License
                                 <div class="col-xs-8 col-md-10">
                                     <p class="form-control-static">
                                         {{labRequest.requesterName}}
-                                    <address ng-bind-html="labRequest.htmlRequesterAddress"></address>
                                     </p>
                                 </div>
                             </div>
 
-                            <!-- Pathologist name -->
+                            <!-- Requester Hospital -->
                             <div class="row">
-                                <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist' | translate }}</label>
+                                <label class="control-label col-xs-4 col-md-2">{{ 'Hospital' | translate }}</label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{labRequest.requester.institute}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Requester Specialism -->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-md-2">{{ 'Specialism' | translate }}</label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{labRequest.requester.specialism}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Requester Phone number -->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-md-2">{{ 'Phone number' | translate }}</label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{labRequest.requester.contactData.telephone}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Requester Email -->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-md-2">{{ 'Email address' | translate }}</label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{labRequest.requester.contactData.email}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Biobank Request Number -->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-sm-4">{{ 'Biobank Request Number' | translate }}</label>
                                 <p class="col-xs-6 col-sm-6">
-                                    {{labRequest.request.pathologistName}}
+                                    {{labRequest.request.biobankRequestNumber}}
                                 </p>
                             </div>
 
-                            <!-- Pathologist email -->
+                            <!--Requester lab Info-->
                             <div class="row">
-                                <label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist email' | translate }}</label>
-                                <p class="col-xs-6 col-sm-6">
-                                    {{labRequest.request.pathologistEmail}}
-                                </p>
+                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">{{ 'Delivery
+                                    address' | translate }}</label>
+                                <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">{{ 'Sender address' |
+                                    translate }}</label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
+                                        {{labRequest.requesterLab.name}}<br/>
+                                        {{labRequest.requesterLab.contactData.address1}}<br/>
+                                        {{labRequest.requesterLab.contactData.address2}}<br/>
+                                        {{labRequest.requesterLab.contactData.postalCode}} {{labRequest.requesterLab.contactData.city}}<br/>
+                                        {{labRequest.requesterLab.contactData.telephone}} <br/>
+                                        {{labRequest.requesterLab.contactData.email}} <br/>
+                                    <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
+                                    </p>
+                                </div>
                             </div>
+
+                            <!--Requester lab Info-->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">
+                                    {{ 'Billing Address' | translate }}
+                                </label>
+                                <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">
+                                    {{ 'Billing Address' | translate }}
+                                </label>
+
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
+                                        {{labRequest.requesterLab.name}}<br/>
+                                        {{labRequest.requesterLab.contactData.address1}}<br/>
+                                        {{labRequest.requesterLab.contactData.address2}}<br/>
+                                        {{labRequest.requesterLab.contactData.postalCode}} {{labRequest.requesterLab.contactData.city}}<br/>
+                                        {{labRequest.requesterLab.contactData.telephone}} <br/>
+                                        {{labRequest.requesterLab.contactData.email}} <br/>
+                                    <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Sending lab Info-->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-md-2">
+                                    {{ 'Return address' | translate }}
+                                </label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
+                                        {{labRequest.lab.name}}<br/>
+                                        {{labRequest.lab.contactData.address1}}<br/>
+                                        {{labRequest.lab.contactData.address2}}<br/>
+                                        {{labRequest.lab.contactData.postalCode}} {{labRequest.requesterLab.contactData.city}}<br/>
+                                        {{labRequest.lab.contactData.telephone}} <br/>
+                                        {{labRequest.lab.contactData.email}} <br/>
+                                    <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
+                                    </p>
+                                </div>
+                            </div>
+                            <!--<div ng-show="!isLabUser()">-->
+                                <!--&lt;!&ndash;Lab Info&ndash;&gt;-->
+                                <!--&lt;!&ndash;Displayed only to users with non lab user role&ndash;&gt;-->
+                                <!--<div class="row">-->
+                                    <!--<label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">{{ 'Delivery address'-->
+                                        <!--| translate }}</label>-->
+                                    <!--<label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">{{-->
+                                        <!--'Sender' | translate }}</label>-->
+                                    <!--<div class="col-xs-8 col-md-10">-->
+                                        <!--<p class="form-control-static">-->
+                                            <!--{{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}-->
+                                        <!--<address class="address" ng-bind-html="labRequest.htmlLabAddress"></address>-->
+                                        <!--</p>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--&lt;!&ndash; Pathologist name &ndash;&gt;-->
+                            <!--<div class="row">-->
+                                <!--<label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist' | translate }}</label>-->
+                                <!--<p class="col-xs-6 col-sm-6">-->
+                                    <!--{{labRequest.request.pathologistName}}-->
+                                <!--</p>-->
+                            <!--</div>-->
+
+                            <!--&lt;!&ndash; Pathologist email &ndash;&gt;-->
+                            <!--<div class="row">-->
+                                <!--<label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist email' | translate }}</label>-->
+                                <!--<p class="col-xs-6 col-sm-6">-->
+                                    <!--{{labRequest.request.pathologistEmail}}-->
+                                <!--</p>-->
+                            <!--</div>-->
+
+
 
                         </div> <!-- end if -->
 
-                        <!--Requester lab Info-->
-                        <div class="row">
-                            <label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">{{ 'Delivery
-                                address' | translate }}</label>
-                            <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">{{ 'Sender address' |
-                                translate }}</label>
-                            <div class="col-xs-8 col-md-10">
-                                <p class="form-control-static">
-                                    {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
-                                    {{labRequest.requesterLab.name}}
-                                <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
-                                </p>
-                            </div>
-                        </div>
 
-                        <div ng-show="!isLabUser()">
-                            <!--Lab Info-->
-                            <!--Displayed only to users with non lab user role-->
-                            <div class="row">
-                                <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">{{ 'Delivery address'
-                                    | translate }}</label>
-                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">{{
-                                    'Sender' | translate }}</label>
-                                <div class="col-xs-8 col-md-10">
-                                    <p class="form-control-static">
-                                        {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
-                                    <address class="address" ng-bind-html="labRequest.htmlLabAddress"></address>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div ng-include="'app/lab-request/pa-numbers.html'"></div>

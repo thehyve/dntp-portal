@@ -26,6 +26,7 @@ Feature: scenario additional request
     methods: Modern methods
     searchCriteria: methods + test + modern
     studyPeriod: 2015--2016
+    biobankRequestNumber: request_1
     laboratoryTechniques: Cucumber, protractor
     address1: dreef
     postalcode: 1234

@@ -396,6 +396,7 @@ public class RequestFormService {
             request.setBillingAddress(properties.getBillingAddress());
             request.setChargeNumber(properties.getChargeNumber());
             request.setGrantProvider(properties.getGrantProvider());
+            request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
             request.setResearchNumber(properties.getReseachNumber());
 
             {
@@ -585,9 +586,9 @@ public class RequestFormService {
         variables.put("return_date", request.getReturnDate());
         variables.put("contact_person_name", request.getContactPersonName());
         variables.put("contact_person_email", request.getContactPersonEmail());
-        variables.put("biobank_request_number", request.getBiobankRequestNumber());
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
 
+        properties.setBiobankRequestNumber(request.getBiobankRequestNumber());
         properties.setSearchCriteria(request.getSearchCriteria());
         properties.setStudyPeriod(request.getStudyPeriod());
         properties.setLaboratoryTechniques(request.getLaboratoryTechniques());

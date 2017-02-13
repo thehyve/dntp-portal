@@ -268,11 +268,8 @@
                                    placeholder="{{ 'Biobank Requestnumber' | translate }}" title="{{ 'Biobank Requestnumber' | translate }}"
                                    ng-model="request.biobankRequestNumber"
                                    ng-maxlength="100"
-                                   required>
+                                   >
                             <!-- errors -->
-                            <span class="help-block" ng-show="requestEditForm.biobankRequestNumber.$error.required">
-                                {{ 'Required field' | translate }}
-                            </span>
                             <span class="help-block" ng-show="requestEditForm.biobankRequestNumber.$error.maxlength">
                                 {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
                             </span>

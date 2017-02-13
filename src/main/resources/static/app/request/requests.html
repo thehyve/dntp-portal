@@ -54,7 +54,8 @@ This file is distributed under the GNU Affero General Public License
 
             <!--List of request-->
             <div class="table-responsive" ng-if="authenticated">
-                <table st-table="displayedCollection" st-safe-src="requests" class="table" st-export-filtered="filteredCollection">
+                <table st-table="displayedCollection" stPersist="requests" st-safe-src="requests" class="table" st-export-filtered="filteredCollection">
+                <!--<table st-table="displayedCollection" st-safe-src="requests" class="table" st-export-filtered="filteredCollection">-->
                 <!-- <table st-table="displayedCollection | filter:filterEmptyRequests" st-safe-src="requests" class="table"> -->
                     <thead>
                     <tr>

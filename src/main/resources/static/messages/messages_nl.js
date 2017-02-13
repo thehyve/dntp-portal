@@ -454,7 +454,7 @@
         'Reject reason': 'Reden afwijzing',
         'Recall': 'Terugroepen',
         'Compose recall mail': 'Terugroepmail opstellen',
-        'Hereby you receive this material for a scientific study. We request you notify': 'Hierbij ontvangt u dit materiaal voor wetenschappelijk onderzoek. We verzoeken u dit door te geven aan'
+        'Hereby you receive this material for a scientific study. We request you notify': 'Hierbij ontvangt u dit materiaal voor wetenschappelijk onderzoek. We verzoeken u dit door te geven aan',
         'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
         'Return address': 'Retouradres',
 

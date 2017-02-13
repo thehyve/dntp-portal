@@ -415,6 +415,7 @@
         'Do you want to finish the request for PA reports and/or clinical data?': 'Wilt u het verzoek voor PA-verslagen en/of klinische gegevens afronden?',
         'Do you want to complete the rejected request?': 'Wilt u het afgewezen verzoek afronden?',
         'Are you sure you want to delete the PA number?': 'Weet u zeker dat u het PA-nummer wilt verwijderen?',
+        'Palga request: ': 'Palga verzoek: ',
         'Return this lab request to status \'Under review by lab\'?':
             'Het labverzoek terugzetten naar \'Beoordeling door lab\'?',
         'Undo rejection': 'Afwijzing ongedaan maken',
@@ -453,6 +454,9 @@
         'Reject reason': 'Reden afwijzing',
         'Recall': 'Terugroepen',
         'Compose recall mail': 'Terugroepmail opstellen',
+        'Hereby you receive this material for a scientific study. We request you notify': 'Hierbij ontvangt u dit materiaal voor wetenschappelijk onderzoek. We verzoeken u dit door te geven aan'
+        'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
+        'Return address': 'Retouradres',
 
         /* ===================== */
         /* User overview */

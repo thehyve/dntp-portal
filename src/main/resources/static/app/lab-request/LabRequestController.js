@@ -610,7 +610,7 @@ angular.module('ProcessApp.controllers')
 
                 var _contents = '<html><head><link rel="stylesheet" type="text/css" href="./css/print.css" />' +
                     '</head><body onload="window.print()">'
-                        .concat('<h1>PALGA request: ' + document.getElementById('lab-request-title').innerHTML + '</h1>')
+                        .concat('<h1>' + $rootScope.translate('PALGA request: ') + document.getElementById('lab-request-title').innerHTML + '</h1>')
                         .concat(document.getElementById('pa-numbers').innerHTML)
                         .concat('</body></html>');
                 var _printWindow = window.open('', '_blank');

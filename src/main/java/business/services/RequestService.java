@@ -403,7 +403,8 @@ public class RequestService {
         // start new process instance
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", parentRequest.getRequesterId());
-        values.put("jump_to_data_delivery", Boolean.TRUE);
+        values.put("jump_to_approval", Boolean.TRUE);
+
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
                 "dntp_request_003", values);
         String childId = newInstance.getProcessInstanceId();
@@ -416,11 +417,9 @@ public class RequestService {
                 parentRequest, childInstance, user);
 
         // Set certain variables to False, so the new request doesn't start off pre-approved and palga users can edit the values.
-        //variables.put("request_is_admissible", Boolean.FALSE);
         variables.put("request_approved", Boolean.FALSE);
         variables.put("scientific_council_approved", Boolean.FALSE);
-        // Set status back to Review
-        variables.put("status", "Approval");
+
         runtimeService.setVariables(childId, variables);
 
         RequestProperties childProperties = requestPropertiesService.findByProcessInstanceId(childId);

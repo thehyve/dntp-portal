@@ -72,6 +72,26 @@ module.exports = function() {
         });
     });
 
+    this.Then(/^the form contains the following data\w*$/, function(fields, next) {
+        // fields is a multiline string containing lines of the following format:
+        // css_id: new_content
+        var regex = /^(.+): (.+)\s*$/;
+
+        var lines = fields.split('\n');
+
+        // Put all promises in the array
+        var promises = [];
+        for (var i in lines) {
+            var matches = lines[i].match(regex);
+            var id = matches[1];
+            var content = matches[2];
+            promises.push(expect(element(by.id(id)).getAttribute('value')).to.eventually.contain(content));
+        }
+
+        // Resolve all promises and call next at the end
+        Promise.all(promises).then(next, next);
+    });
+
     this.When(/^I fill the form with the following data\w*$/, function(fields, next) {
         // fields is a multiline string containing lines of the following format:
         // css_id: new_content

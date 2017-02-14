@@ -47,7 +47,8 @@ This file is distributed under the GNU Affero General Public License
                 </button>
                 {{alert.msg | translate}}
             </div>
-                <table ng-if="labRequests" st-table="displayedLabRequests" st-safe-src="labRequests"  class="table" st-export-filtered="filteredCollection">
+                <table ng-if="labRequests" st-table="displayedLabRequests" st-safe-src="labRequests"  class="table"
+                       st-export-filtered="filteredCollection" st-persist="requests">
                     <thead>
                         <tr>
                             <th class="no-print">

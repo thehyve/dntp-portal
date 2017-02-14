@@ -408,11 +408,11 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.isForkEnabled = function(request) {
-                return _checkVersionHigherThan(request.processId, 'dntp_request_004');
+                return _checkVersionHigherThan(request.processId, 'dntp_request_003');
             };
 
             $scope.isClinicalDataEnabled = function(request) {
-                return _checkVersionHigherThan(request.processId, 'dntp_request_004');
+                return _checkVersionHigherThan(request.processId, 'dntp_request_003');
             };
 
             $scope.fork = function(request) {

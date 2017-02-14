@@ -226,7 +226,7 @@ public class RequestController {
         values.put("jump_to_approval", Boolean.FALSE);
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                "dntp_request_003", values);
+                "dntp_request_004", values);
         runtimeService.addUserIdentityLink(newInstance.getId(), userId, IdentityLinkType.STARTER);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(newInstance.getId());

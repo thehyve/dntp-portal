@@ -406,7 +406,7 @@ public class RequestService {
         values.put("jump_to_approval", Boolean.TRUE);
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                "dntp_request_003", values);
+                "dntp_request_004", values);
         String childId = newInstance.getProcessInstanceId();
         log.info("New forked process instance started: " + childId);
         runtimeService.addUserIdentityLink(childId, parentRequest.getRequesterId(), IdentityLinkType.STARTER);

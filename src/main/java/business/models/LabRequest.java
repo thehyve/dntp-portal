@@ -121,8 +121,6 @@ public class LabRequest {
     @OrderColumn
     private List<Comment> comments = new ArrayList<Comment>();
 
-    private String biobankRequestNumber;
-
     public LabRequest() {
 
     }
@@ -249,14 +247,6 @@ public class LabRequest {
 
     public void setResult(Result result) {
         this.result = result;
-    }
-
-    public String getBiobankRequestNumber() {
-        return biobankRequestNumber;
-    }
-
-    public void setBiobankRequestNumber(String biobankRequestNumber) {
-        this.biobankRequestNumber = biobankRequestNumber;
     }
 
 }

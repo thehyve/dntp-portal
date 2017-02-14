@@ -403,9 +403,10 @@ public class RequestService {
         // start new process instance
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", parentRequest.getRequesterId());
-        values.put("jump_to_data_delivery", Boolean.TRUE);
+        values.put("jump_to_approval", Boolean.TRUE);
+
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                "dntp_request_003", values);
+                "dntp_request_004", values);
         String childId = newInstance.getProcessInstanceId();
         log.info("New forked process instance started: " + childId);
         runtimeService.addUserIdentityLink(childId, parentRequest.getRequesterId(), IdentityLinkType.STARTER);
@@ -414,6 +415,11 @@ public class RequestService {
         // copy all request properties to the new instance.
         Map<String, Object> variables = requestFormService.transferFormData(
                 parentRequest, childInstance, user);
+
+        // Set certain variables to False, so the new request doesn't start off pre-approved and palga users can edit the values.
+        variables.put("request_approved", Boolean.FALSE);
+        variables.put("scientific_council_approved", Boolean.FALSE);
+
         runtimeService.setVariables(childId, variables);
 
         RequestProperties childProperties = requestPropertiesService.findByProcessInstanceId(childId);

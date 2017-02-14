@@ -223,10 +223,10 @@ public class RequestController {
                 "POST /requests (initiator: " + userId + ")");
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", userId);
-        values.put("jump_to_data_delivery", Boolean.FALSE);
+        values.put("jump_to_approval", Boolean.FALSE);
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                "dntp_request_003", values);
+                "dntp_request_004", values);
         runtimeService.addUserIdentityLink(newInstance.getId(), userId, IdentityLinkType.STARTER);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(newInstance.getId());

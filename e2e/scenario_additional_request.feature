@@ -93,6 +93,7 @@ Feature: scenario additional request
     And I click on the 'Finish submission process' button
     And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
+    And testing is paused to wait a bit
     And I go to the 'requests' page
     Then request 'Request 1' should have status 'Data delivered, select excerpts'
 
@@ -112,6 +113,7 @@ Feature: scenario additional request
    And I click on the 'Approve selection' button
    And I click on the 'OK' button
    And I go to the 'lab requests' page
+   And testing is paused to wait a bit
    Then I should see 4 lab requests in the list
 
   Scenario: 7 create additional request

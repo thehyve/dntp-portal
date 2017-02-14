@@ -83,6 +83,7 @@
         'Address pathology lab. requester': 'Address pathology lab. requester',
         'Return address':'Return address',
         'Review_short': 'Review',
+        'Billing Address': 'Billing Address',
 
         'ACCEPTED' : 'Accepted',
         'REJECTED' : 'Rejected',

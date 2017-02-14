@@ -78,7 +78,10 @@
         'filetype_excerpt list': 'Excerpt list',
         'filetype_excerpt selection': 'Excerpt selection',
         'filetype_data': 'Data',
-
+        'Palga request: ': 'Palga request: ',
+        'Hereby you receive this material for a scientific study. We request you notify': 'Hereby you receive this material for a scientific study. We request you notify',
+        'Address pathology lab. requester': 'Address pathology lab. requester',
+        'Return address':'Return address',
         'Review_short': 'Review',
 
         'ACCEPTED' : 'Accepted',

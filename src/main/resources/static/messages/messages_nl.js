@@ -459,7 +459,6 @@
         'Compose recall mail': 'Terugroepmail opstellen',
         'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
         'Return address': 'Retouradres',
-        'Billing Address': 'Factuuradres',
 
         /* ===================== */
         /* User overview */

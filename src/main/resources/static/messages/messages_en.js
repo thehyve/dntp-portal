@@ -82,7 +82,6 @@
         'Palga request: ': 'Palga request: ',
         'Address pathology lab. requester': 'Address pathology lab. requester',
         'Review_short': 'Review',
-        'Billing Address': 'Billing Address',
 
         'ACCEPTED' : 'Accepted',
         'REJECTED' : 'Rejected',

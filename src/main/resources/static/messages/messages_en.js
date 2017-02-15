@@ -79,11 +79,8 @@
         'filetype_excerpt selection': 'Excerpt selection',
         'filetype_data': 'Data',
         'Palga request: ': 'Palga request: ',
-        'Hereby you receive this material for a scientific study. We request you notify': 'Hereby you receive this material for a scientific study. We request you notify',
         'Address pathology lab. requester': 'Address pathology lab. requester',
-        'Return address':'Return address',
         'Review_short': 'Review',
-        'Billing Address': 'Billing Address',
 
         'ACCEPTED' : 'Accepted',
         'REJECTED' : 'Rejected',
@@ -142,7 +139,7 @@
         /* Packing list */
         /* ===================== */
         'Delivery address':'Delivery address',
-        'Billing Address': 'Billing Address',
+        'Billing address': 'Billing address',
         'Return address': 'Return address',
         'Biobank Request Number': 'Biobank Request Number',
         'PALGA request': 'PALGA request',

@@ -65,6 +65,8 @@ public class RequestListRepresentation implements RequestListElement {
 
     private boolean excerptListUploaded;
 
+    private String biobankRequestNumber;
+
     private Long dataAttachmentCount;
 
     public RequestListRepresentation() {
@@ -404,4 +406,11 @@ public class RequestListRepresentation implements RequestListElement {
         this.dataAttachmentCount = dataAttachmentCount;
     }
 
+    public String getBiobankRequestNumber(){
+        return this.biobankRequestNumber;
+    }
+
+    public void setBiobankRequestNumber(String number){
+        this.biobankRequestNumber = number;
+    }
 }

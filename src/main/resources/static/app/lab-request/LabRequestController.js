@@ -610,7 +610,8 @@ angular.module('ProcessApp.controllers')
 
                 var _contents = '<html><head><link rel="stylesheet" type="text/css" href="./css/print.css" />' +
                     '</head><body onload="window.print()">'
-                        .concat('<h1>'+ $rootScope.translate('PALGA request') + ':' + document.getElementById('lab-request-title').innerHTML + '</h1>')
+                        .concat('<div class="header-div"><h1>'+ $rootScope.translate('PALGA request') + ':' + document.getElementById('lab-request-title').innerHTML + '</h1>')
+                        .concat('<img src="images/logo_palga-transparent.png" alt="PALGA" width="144" height="75"></div>')
                         .concat(document.getElementById('pa-numbers').innerHTML)
                         .concat('</body></html>');
                 var _printWindow = window.open('', '_blank');

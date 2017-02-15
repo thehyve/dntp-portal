@@ -358,7 +358,7 @@ public class RequestProperties {
     }
 
     public String getBiobankRequestNumber() {
-        return biobankRequestNumber;
+        return this.biobankRequestNumber;
     }
 
     public void setBiobankRequestNumber(String biobankRequestNumber) {

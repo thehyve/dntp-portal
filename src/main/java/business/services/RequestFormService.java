@@ -184,7 +184,7 @@ public class RequestFormService {
             request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
 
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
-
+            request.setBiobankRequestNumber((String)variables.get("biobank_request_number"));
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }
     }

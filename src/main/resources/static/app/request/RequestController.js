@@ -101,16 +101,19 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = RequestFilter.selectByStatus(status);
             });
 
+	        $scope.checkTableFilterStatus = function() {
+		        // Table filter status
+		        var tfs = $scope.activeSidebar;
+		        $scope.tableFilterStatus = tfs;
+
+		        if(tfs == 'overview' || tfs == 'claimed' || tfs == 'unclaimed' || tfs == 'voted' || tfs == 'notvoted') {
+			        $scope.tableFilterStatus = "";
+		        }
+		        $scope.$apply();
+	        };
+
             $scope.showSelection = function(requests) {
                 var selection = $scope.activeSidebar;
-	            // Table filter status
-	            var tfs = $scope.activeSidebar;
-
-	            $scope.tableFilterStatus = $scope.activeSidebar;
-
-	            if(tfs == 'overview' || tfs == 'claimed' || tfs == 'unclaimed') {
-	                $scope.tableFilterStatus = "";
-                }
 
                 if (requests && selection in $scope.selections) {
                     $scope.requests = $scope.selections[selection](requests);
@@ -123,6 +126,9 @@ angular.module('ProcessApp.controllers')
             $scope.$watch('allRequests', function(newValue) {
                 if (newValue) {
                     $scope.showSelection(newValue);
+                    $timeout( function() {
+	                    $scope.checkTableFilterStatus();
+                    },10);
                 }
             });
 

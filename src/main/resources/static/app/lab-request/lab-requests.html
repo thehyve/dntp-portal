@@ -48,7 +48,7 @@ This file is distributed under the GNU Affero General Public License
                 {{alert.msg | translate}}
             </div>
                 <table ng-if="labRequests" st-table="displayedLabRequests" st-safe-src="labRequests"  class="table"
-                       st-export-filtered="filteredCollection" st-persist="requests">
+                       st-export-filtered="filteredCollection" st-persist="labRequests">
                     <thead>
                         <tr>
                             <th class="no-print">
@@ -90,7 +90,7 @@ This file is distributed under the GNU Affero General Public License
                             <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by status' | translate}}</option>
                                     <option ng-repeat="status in statuses"
-                                        ng-selected="activeSidebar === status"
+                                        ng-selected="tableFilterStatus === status"
                                         value="{{status}}">{{ status | translate}}</option>
                                 </select>
                             </th>

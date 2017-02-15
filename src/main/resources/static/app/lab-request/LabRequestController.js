@@ -233,6 +233,17 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = LabRequestFilter.selectByStatus(status);
             });
 
+	        $scope.checkTableFilterStatus = function() {
+		        // Table filter status
+		        var tfs = $scope.activeSidebar;
+		        $scope.tableFilterStatus = tfs;
+
+		        if(tfs == 'overview' || tfs == 'claimed' || tfs == 'unclaimed' || tfs == 'hub_assistance_requested') {
+			        $scope.tableFilterStatus = "";
+		        }
+		        $scope.$apply();
+	        };
+
             $scope.showSelection = function(labRequests) {
                 var selection = $scope.activeSidebar;
                 if (labRequests && selection in $scope.selections) {
@@ -246,6 +257,9 @@ angular.module('ProcessApp.controllers')
             $scope.$watch('allLabRequests', function(newValue) {
                 if (newValue) {
                     $scope.showSelection(newValue);
+	                $timeout( function() {
+		                $scope.checkTableFilterStatus();
+	                },10);
                 }
             });
 
@@ -296,13 +310,13 @@ angular.module('ProcessApp.controllers')
                             return err.data.message;
                         }
                         return JSON.stringify(err.data);
-                    } 
+                    }
                     return JSON.stringify(err);
                 } else {
                     return err;
                 }
             };
-            
+
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
             };
@@ -575,7 +589,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.editPathology = {};
-            
+
             $scope.addPathology = function (labRequest, pathology) {
                 Restangular.one('labrequests', labRequest.id).post('pathology', pathology)
                     .then(function () {
@@ -586,7 +600,7 @@ angular.module('ProcessApp.controllers')
                         $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
-            
+
             $scope.deletePathology = function (labRequest, pathology) {
                 bootbox.confirm(
                     '<h4>' +

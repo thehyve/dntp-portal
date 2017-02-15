@@ -262,11 +262,12 @@
 
                     <!-- Biobank request number -->
                     <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.biobankRequestNumber.$invalid || requestEditForm.biobankRequestNumber.$error.required) && requestEditForm.biobankRequestNumber.$dirty }">
-                        <label class="control-label col-sm-3" for="biobankRequestNumber">{{ 'Biobank Requestnumber' | translate }}</label>
+                        <label class="control-label col-sm-3" for="biobankRequestNumber">{{ 'Biobank request number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="biobankRequestNumber" name="biobankRequestNumber"
                                    placeholder="{{ 'Biobank Requestnumber' | translate }}" title="{{ 'Biobank Requestnumber' | translate }}"
                                    ng-model="request.biobankRequestNumber"
+                                   data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Biobank request'|translate}}" data-trigger="focus" bs-popover
                                    ng-maxlength="100"
                                    >
                             <!-- errors -->

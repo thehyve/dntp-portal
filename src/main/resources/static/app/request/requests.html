@@ -87,7 +87,7 @@ This file is distributed under the GNU Affero General Public License
                         <th><select st-search="statusText" class="input-sm form-control" type="search" st-input-event="change">
                                 <option value="">{{'Filter by status' | translate}}</option>
                                 <option ng-repeat="status in displayStatuses"
-                                    ng-selected="status === activeSidebar"
+                                    ng-selected="status === tableFilterStatus"
                                     value="{{status}}">{{ status | translate}}</option>
                             </select>
                         </th>

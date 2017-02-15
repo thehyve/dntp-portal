@@ -103,6 +103,15 @@ angular.module('ProcessApp.controllers')
 
             $scope.showSelection = function(requests) {
                 var selection = $scope.activeSidebar;
+	            // Table filter status
+	            var tfs = $scope.activeSidebar;
+
+	            $scope.tableFilterStatus = $scope.activeSidebar;
+
+	            if(tfs == 'overview' || tfs == 'claimed' || tfs == 'unclaimed') {
+	                $scope.tableFilterStatus = "";
+                }
+
                 if (requests && selection in $scope.selections) {
                     $scope.requests = $scope.selections[selection](requests);
                 } else {
@@ -190,7 +199,7 @@ angular.module('ProcessApp.controllers')
                 $scope.upload_result[type] = '';
                 if (type in $scope.upload_error) {
                     delete $scope.upload_error[type];
-                } 
+                }
             };
 
             $scope.fileuploadsuccess = function(request, data, type, flow) {
@@ -321,7 +330,7 @@ angular.module('ProcessApp.controllers')
                     }
                 });
             };
-            
+
             $scope.removeDataFile = function(f) {
                 bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
                     if (result) {
@@ -559,7 +568,7 @@ angular.module('ProcessApp.controllers')
                         }
                     });
             };
-            
+
             $scope.rejectSelection = function(request) {
                 bootbox.confirm(
                     $rootScope.translate('Are you sure you want to reject the selection?<br>' +
@@ -607,7 +616,7 @@ angular.module('ProcessApp.controllers')
                     $scope.cancel(request);
                 }
             };
-            
+
             $scope.cancel = function (request) {
                 if ($rootScope.tempRequest.title === null) {
                     request.$remove(function (result) {

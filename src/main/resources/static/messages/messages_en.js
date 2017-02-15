@@ -78,7 +78,8 @@
         'filetype_excerpt list': 'Excerpt list',
         'filetype_excerpt selection': 'Excerpt selection',
         'filetype_data': 'Data',
-
+        'Palga request: ': 'Palga request: ',
+        'Address pathology lab. requester': 'Address pathology lab. requester',
         'Review_short': 'Review',
 
         'ACCEPTED' : 'Accepted',
@@ -134,6 +135,15 @@
         /* My Lab */
         /* ===================== */
 
+        /* ===================== */
+        /* Packing list */
+        /* ===================== */
+        'Delivery address':'Delivery address',
+        'Billing address': 'Billing address',
+        'Return address': 'Return address',
+        'Biobank Request Number': 'Biobank Request Number',
+        'PALGA request': 'PALGA request',
+        'Hereby you receive this material for a scientific study. We request you notify': 'Hereby you receive this material for a scientific study. We request you notify',
 
         /* ===================== */
         /* Specialism */

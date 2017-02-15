@@ -293,7 +293,6 @@
         'First name': 'Voornaam',
         'Last name': 'Achternaam',
         'Telephone number': 'Telefoonnummer',
-        'Phone number': 'Telefoonnummer',
         'Institute': 'Instelling',
         'Specialism': 'Specialisme',
         'Department': 'Afdeling',

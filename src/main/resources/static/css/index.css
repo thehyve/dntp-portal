@@ -16,6 +16,7 @@
     background-image: url(../images/login-bg-loop.jpg);
     z-index: 1;
 }
+.login-navbar{margin-bottom:35px;}
 .navbar-login-menu{text-align: right; padding: 15px;}
 .navbar-header {margin-left: 2px !important; background-color: #0074D9}
 .navbar-default {background-color: #b4effc;}

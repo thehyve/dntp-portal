@@ -134,6 +134,15 @@
         /* My Lab */
         /* ===================== */
 
+        /* ===================== */
+        /* Packing list */
+        /* ===================== */
+        'Delivery address':'Delivery address',
+        'Billing Address': 'Billing Address',
+        'Return address': 'Return address',
+        'Biobank Request Number': 'Biobank Request Number',
+        'PALGA request': 'PALGA request',
+        'Hereby you receive this material for a scientific study. We request you notify': 'Hereby you receive this material for a scientific study. We request you notify',
 
         /* ===================== */
         /* Specialism */

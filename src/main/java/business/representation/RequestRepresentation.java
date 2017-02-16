@@ -56,6 +56,7 @@ public class RequestRepresentation implements RequestListElement {
     private String chargeNumber;
     private String grantProvider;
     private String researchNumber;
+    private String biobankRequestNumber;
 
     private boolean statisticsRequest;
     private boolean excerptsRequest;
@@ -718,6 +719,13 @@ public class RequestRepresentation implements RequestListElement {
         this.grantProvider = grantProvider;
     }
 
+    public String getBiobankRequestNumber() {
+        return biobankRequestNumber;
+    }
+
+    public void setBiobankRequestNumber(String biobankRequestNumber) {
+        this.biobankRequestNumber = biobankRequestNumber;
+    }
     public String getResearchNumber() {
         return researchNumber;
     }

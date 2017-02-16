@@ -101,8 +101,21 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = RequestFilter.selectByStatus(status);
             });
 
+	        $scope.checkTableFilterStatus = function() {
+		        // Table filter status
+		        var tfs = $scope.activeSidebar;
+		        $scope.tableFilterStatus = tfs;
+
+		        if(!tfs in $scope.selections) {
+			        $scope.tableFilterStatus = "";
+		        }
+		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
+		        $scope.$apply();
+	        };
+
             $scope.showSelection = function(requests) {
                 var selection = $scope.activeSidebar;
+
                 if (requests && selection in $scope.selections) {
                     $scope.requests = $scope.selections[selection](requests);
                 } else {
@@ -114,6 +127,9 @@ angular.module('ProcessApp.controllers')
             $scope.$watch('allRequests', function(newValue) {
                 if (newValue) {
                     $scope.showSelection(newValue);
+                    $timeout( function() {
+	                    $scope.checkTableFilterStatus();
+                    },10);
                 }
             });
 
@@ -190,7 +206,7 @@ angular.module('ProcessApp.controllers')
                 $scope.upload_result[type] = '';
                 if (type in $scope.upload_error) {
                     delete $scope.upload_error[type];
-                } 
+                }
             };
 
             $scope.fileuploadsuccess = function(request, data, type, flow) {
@@ -321,7 +337,7 @@ angular.module('ProcessApp.controllers')
                     }
                 });
             };
-            
+
             $scope.removeDataFile = function(f) {
                 bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
                     if (result) {
@@ -559,7 +575,7 @@ angular.module('ProcessApp.controllers')
                         }
                     });
             };
-            
+
             $scope.rejectSelection = function(request) {
                 bootbox.confirm(
                     $rootScope.translate('Are you sure you want to reject the selection?<br>' +
@@ -607,7 +623,7 @@ angular.module('ProcessApp.controllers')
                     $scope.cancel(request);
                 }
             };
-            
+
             $scope.cancel = function (request) {
                 if ($rootScope.tempRequest.title === null) {
                     request.$remove(function (result) {

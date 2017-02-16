@@ -74,7 +74,7 @@ public class RequestProperties {
     private String chargeNumber;
 
     private String grantProvider;
-
+    private String biobankRequestNumber;
     private String reseachNumber;
 
     /**
@@ -355,6 +355,14 @@ public class RequestProperties {
 
     public void setGrantProvider(String grantProvider) {
         this.grantProvider = grantProvider;
+    }
+
+    public String getBiobankRequestNumber() {
+        return biobankRequestNumber;
+    }
+
+    public void setBiobankRequestNumber(String biobankRequestNumber) {
+        this.biobankRequestNumber = biobankRequestNumber;
     }
 
     public String getReseachNumber() {

@@ -233,6 +233,18 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = LabRequestFilter.selectByStatus(status);
             });
 
+	        $scope.checkTableFilterStatus = function() {
+		        // Table filter status
+		        var tfs = $scope.activeSidebar;
+		        $scope.tableFilterStatus = tfs;
+
+		        if(!tfs in $scope.selections) {
+			        $scope.tableFilterStatus = "";
+		        }
+		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
+		        $scope.$apply();
+	        };
+
             $scope.showSelection = function(labRequests) {
                 var selection = $scope.activeSidebar;
                 if (labRequests && selection in $scope.selections) {
@@ -246,6 +258,9 @@ angular.module('ProcessApp.controllers')
             $scope.$watch('allLabRequests', function(newValue) {
                 if (newValue) {
                     $scope.showSelection(newValue);
+	                $timeout( function() {
+		                $scope.checkTableFilterStatus();
+	                },10);
                 }
             });
 
@@ -296,13 +311,13 @@ angular.module('ProcessApp.controllers')
                             return err.data.message;
                         }
                         return JSON.stringify(err.data);
-                    } 
+                    }
                     return JSON.stringify(err);
                 } else {
                     return err;
                 }
             };
-            
+
             $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
             };
@@ -575,7 +590,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.editPathology = {};
-            
+
             $scope.addPathology = function (labRequest, pathology) {
                 Restangular.one('labrequests', labRequest.id).post('pathology', pathology)
                     .then(function () {
@@ -586,7 +601,7 @@ angular.module('ProcessApp.controllers')
                         $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                     });
             };
-            
+
             $scope.deletePathology = function (labRequest, pathology) {
                 bootbox.confirm(
                     '<h4>' +
@@ -610,7 +625,8 @@ angular.module('ProcessApp.controllers')
 
                 var _contents = '<html><head><link rel="stylesheet" type="text/css" href="./css/print.css" />' +
                     '</head><body onload="window.print()">'
-                        .concat('<h1>' + document.getElementById('lab-request-title').innerHTML + '</h1>')
+                        .concat('<div class="header-div"><h1>'+ $rootScope.translate('PALGA request') + ':' + document.getElementById('lab-request-title').innerHTML + '</h1>')
+                        .concat('<img src="images/logo_palga-transparent.png" alt="PALGA" width="144" height="75"></div>')
                         .concat(document.getElementById('pa-numbers').innerHTML)
                         .concat('</body></html>');
                 var _printWindow = window.open('', '_blank');

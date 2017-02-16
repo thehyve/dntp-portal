@@ -139,6 +139,9 @@ public class RequestFormService {
             }
         }
 
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
+        request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
+
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
             request.setTitle((String)variables.get("title"));
@@ -184,7 +187,6 @@ public class RequestFormService {
             request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
 
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
-
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }
     }
@@ -286,7 +288,6 @@ public class RequestFormService {
     public void transferData(HistoricProcessInstance instance, RequestRepresentation request, User currentUser) {
         boolean is_palga = currentUser == null ? false : currentUser.isPalga();
         boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();
-
         request.setProcessInstanceId(instance.getId());
         request.setProcessId(instance.getProcessDefinitionId());
         //request.setActivityId(instance.getActivityId()); // fetch from runtimeService?
@@ -382,8 +383,7 @@ public class RequestFormService {
             }
             request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
             request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                    instance.getId());
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
             request.setRequestNumber(properties.getRequestNumber());
             request.setDateSubmitted(properties.getDateSubmitted());
             request.setReviewStatus(properties.getReviewStatus());
@@ -395,6 +395,7 @@ public class RequestFormService {
             request.setBillingAddress(properties.getBillingAddress());
             request.setChargeNumber(properties.getChargeNumber());
             request.setGrantProvider(properties.getGrantProvider());
+            request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
             request.setResearchNumber(properties.getReseachNumber());
 
             {
@@ -584,9 +585,9 @@ public class RequestFormService {
         variables.put("return_date", request.getReturnDate());
         variables.put("contact_person_name", request.getContactPersonName());
         variables.put("contact_person_email", request.getContactPersonEmail());
-
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
 
+        properties.setBiobankRequestNumber(request.getBiobankRequestNumber());
         properties.setSearchCriteria(request.getSearchCriteria());
         properties.setStudyPeriod(request.getStudyPeriod());
         properties.setLaboratoryTechniques(request.getLaboratoryTechniques());

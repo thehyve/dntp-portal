@@ -45,6 +45,7 @@
         'popover: Hypothesis': 'Hypothesis.',
         'popover: Methods': 'Methods.',
         'popover: Search criteria': 'Search criteria.',
+	    'popover: Biobank request': 'Ask your biobank or pathology department if a biobank request number is required',
         'popover: Laboratory techniques': 'Used techniques (e.g., germline mutation analysis, moleculair techniques, immuno histochemistry, tissue micro array). How many patients do you need (at least) to answer this research question?',
         'popover: Postal code': 'Zip code.',
         'popover: City': 'City',
@@ -78,7 +79,8 @@
         'filetype_excerpt list': 'Excerpt list',
         'filetype_excerpt selection': 'Excerpt selection',
         'filetype_data': 'Data',
-
+        'Palga request: ': 'Palga request: ',
+        'Address pathology lab. requester': 'Address pathology lab. requester',
         'Review_short': 'Review',
 
         'ACCEPTED' : 'Accepted',
@@ -134,6 +136,15 @@
         /* My Lab */
         /* ===================== */
 
+        /* ===================== */
+        /* Packing list */
+        /* ===================== */
+        'Delivery address':'Delivery address',
+        'Billing address': 'Billing address',
+        'Return address': 'Return address',
+        'Biobank request number': 'Biobank request number',
+        'PALGA request': 'PALGA request',
+        'Hereby you receive this material for a scientific study. We request you notify': 'Hereby you receive this material for a scientific study. We request you notify',
 
         /* ===================== */
         /* Specialism */

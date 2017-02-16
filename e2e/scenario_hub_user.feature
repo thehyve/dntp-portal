@@ -29,6 +29,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     methods: Modern methods
     searchCriteria: methods + test + modern
     studyPeriod: 2015--2016
+    biobankRequestNumber: request_1
     laboratoryTechniques: Cucumber, protractor
     address1: dreef
     postalcode: 1234
@@ -58,6 +59,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     """
     #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment1'
     #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment2'
+    And testing is paused to wait a bit
     And I click on the object with id 'submit-new-request'
     And I click on the 'OK' button
     Then I should be on the requests page

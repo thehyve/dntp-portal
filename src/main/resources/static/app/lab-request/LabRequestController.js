@@ -238,9 +238,10 @@ angular.module('ProcessApp.controllers')
 		        var tfs = $scope.activeSidebar;
 		        $scope.tableFilterStatus = tfs;
 
-		        if(tfs == 'overview' || tfs == 'claimed' || tfs == 'unclaimed' || tfs == 'hub_assistance_requested') {
+		        if(!tfs in $scope.selections) {
 			        $scope.tableFilterStatus = "";
 		        }
+		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
 		        $scope.$apply();
 	        };
 

@@ -107,9 +107,10 @@ module.exports = function() {
     });
 
     this.When(/^I click on the object with id '(.+)'$/, function(id, next) {
-        element(by.id(id)).click().then(function() {
-            next();
-        });
+        if (id == 'submit-new-request') { //this is a hack to prevent failure on some screens. should be fixed in a page object.
+            browser.executeScript("angular.element($('#uploadFilePopover')).scope().hidePopover('uploadFilePopover')");
+        }
+        element(by.id(id)).click().then(next,next);
     });
 
     this.When(/^I claim the request with title '(.+)'$/, function(reqName, next) {

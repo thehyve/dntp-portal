@@ -8,6 +8,7 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 
+import business.models.ContactData;
 import business.models.RequestProperties.ReviewStatus;
 
 public class RequestListRepresentation implements RequestListElement {
@@ -68,6 +69,8 @@ public class RequestListRepresentation implements RequestListElement {
     private String biobankRequestNumber;
 
     private Long dataAttachmentCount;
+
+    private ContactData billingAddress;
 
     public RequestListRepresentation() {
 
@@ -412,5 +415,13 @@ public class RequestListRepresentation implements RequestListElement {
 
     public void setBiobankRequestNumber(String number){
         this.biobankRequestNumber = number;
+    }
+
+    public ContactData getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(ContactData billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }

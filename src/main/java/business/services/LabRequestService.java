@@ -19,6 +19,7 @@ import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
@@ -176,6 +177,11 @@ public class LabRequestService {
             throw new RequestNotFound();
         }
         labRequestRepresentation.setExcerptListRemark(excerptList.getRemark());
+    }
+
+    @Transactional
+    public void transferBillingData(@NotNull LabRequestRepresentation labRequestRepresentation) {
+        String request = "";
     }
 
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation, boolean cached) {

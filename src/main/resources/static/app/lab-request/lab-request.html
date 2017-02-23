@@ -185,11 +185,10 @@ This file is distributed under the GNU Affero General Public License
                                     <p class="form-control-static">
                                         {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
                                         {{labRequest.requesterLab.name}}<br/>
-                                        {{labRequest.requesterLab.contactData.address1}}<br/>
-                                        {{labRequest.requesterLab.contactData.address2}}<br/>
-                                        {{labRequest.requesterLab.contactData.postalCode}} {{labRequest.requesterLab.contactData.city}}<br/>
-                                        {{labRequest.requesterLab.contactData.telephone}} <br/>
-                                        {{labRequest.requesterLab.contactData.email}} <br/>
+                                        {{labRequest.request.billingAddress.address1}}<br/>
+                                        {{labRequest.request.billingAddress.address2}}<br/>
+                                        {{labRequest.request.billingAddress.postalCode}} {{labRequest.request.billingAddress.city}}<br/>
+                                        {{labRequest.request.billingAddress.telephone}} <br/>
                                     <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
                                     </p>
                                 </div>
@@ -206,14 +205,9 @@ This file is distributed under the GNU Affero General Public License
 
                                 <div class="col-xs-8 col-md-10">
                                     <p class="form-control-static">
-                                        {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
-                                        {{labRequest.requesterLab.name}}<br/>
-                                        {{labRequest.requesterLab.contactData.address1}}<br/>
-                                        {{labRequest.requesterLab.contactData.address2}}<br/>
-                                        {{labRequest.requesterLab.contactData.postalCode}} {{labRequest.requesterLab.contactData.city}}<br/>
-                                        {{labRequest.requesterLab.contactData.telephone}} <br/>
-                                        {{labRequest.requesterLab.contactData.email}} <br/>
-                                    <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
+                                        {{labRequest.request.billingAddress.address1}}<br/>
+                                        {{labRequest.request.billingAddress.address2}}<br/>
+                                        {{labRequest.request.billingAddress.postalCode}} {{labRequest.request.billingAddress.city}}<br/>
                                     </p>
                                 </div>
                             </div>
@@ -229,10 +223,8 @@ This file is distributed under the GNU Affero General Public License
                                         {{labRequest.lab.name}}<br/>
                                         {{labRequest.lab.contactData.address1}}<br/>
                                         {{labRequest.lab.contactData.address2}}<br/>
-                                        {{labRequest.lab.contactData.postalCode}} {{labRequest.requesterLab.contactData.city}}<br/>
+                                        {{labRequest.lab.contactData.postalCode}} {{labRequest.request.billingAddress.city}}<br/>
                                         {{labRequest.lab.contactData.telephone}} <br/>
-                                        {{labRequest.lab.contactData.email}} <br/>
-                                    <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
                                     </p>
                                 </div>
                             </div>
@@ -252,24 +244,6 @@ This file is distributed under the GNU Affero General Public License
                                     </div>
                                 </div>
                             </div>
-
-                            <!--&lt;!&ndash; Pathologist name &ndash;&gt;-->
-                            <!--<div class="row">-->
-                                <!--<label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist' | translate }}</label>-->
-                                <!--<p class="col-xs-6 col-sm-6">-->
-                                    <!--{{labRequest.request.pathologistName}}-->
-                                <!--</p>-->
-                            <!--</div>-->
-
-                            <!--&lt;!&ndash; Pathologist email &ndash;&gt;-->
-                            <!--<div class="row">-->
-                                <!--<label class="control-label col-xs-4 col-sm-4">{{ 'Pathologist email' | translate }}</label>-->
-                                <!--<p class="col-xs-6 col-sm-6">-->
-                                    <!--{{labRequest.request.pathologistEmail}}-->
-                                <!--</p>-->
-                            <!--</div>-->
-
-
 
                         </div> <!-- end if -->
 

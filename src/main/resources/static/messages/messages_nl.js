@@ -109,7 +109,7 @@
         'Clinical data from practitioner': 'Klinische gegevens via behandelaar',
         'Biobank request number': 'Biobank aanvraagnummer',
         'Hereby you receive this material for a scientific study. We request you notify': 'Hierbij ontvangt u dit materiaal voor onderzoek. We verzoeken u om contact op te nemen met',
-        'PALGA request': 'PALGA verzoek',
+        'PALGA request': 'PALGA aanvraag',
         'Request_Type_1': 'Alleen aantallen, oriënterende zoekvraag',
         'Request_Type_2': 'Alleen excerpten',
         'Request_Type_3': 'Excerpten en complete PA-verslagen',
@@ -459,6 +459,7 @@
         'Compose recall mail': 'Terugroepmail opstellen',
         'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
         'Return address': 'Retouradres',
+        'Hospital': 'Ziekenhuis',
 
         /* ===================== */
         /* User overview */

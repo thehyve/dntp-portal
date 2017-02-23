@@ -268,6 +268,10 @@
                     return isMyReq;
                 };
 
+                $rootScope.isLabOrHubUser = function() {
+                    return $rootScope.isLabUser() || $rootScope.isHubUser();
+                };
+
                 $rootScope.isLabUser = function() {
                     return $rootScope.hasRole('lab_user');
                 };

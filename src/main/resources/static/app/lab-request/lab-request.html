@@ -33,7 +33,7 @@ This file is distributed under the GNU Affero General Public License
                         ng-if="isLabOrHubUserStatus(labRequest.status)
                             || (isMyRequest(labRequest.request) && isRequesterStatus(labRequest.status))
                             || (isPalga() && labRequest.status == 'Rejected')"
-                        ng-disabled="(isLabUser() || isHubUser()) && !isCurrentUser(labRequest.assignee)">
+                        ng-disabled="isLabOrHubUser() && !isCurrentUser(labRequest.assignee)">
                     <span><i class="glyphicon glyphicon-pencil"></i></span>
                     {{'Actions' | translate}}
                 </button>
@@ -44,7 +44,7 @@ This file is distributed under the GNU Affero General Public License
                 </button>
                  <span ng-if="labRequest.status != 'Rejected' &&
                      !(labRequest.status == 'Waiting for lab approval' && isRequester()) &&
-                     (isRequester() || isLabUser() || isHubUser())">
+                     (isRequester() || isLabOrHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                        <span><i class="glyphicon glyphicon-download-alt"></i></span>
                        {{'Download PA numbers' |translate}}
@@ -52,7 +52,7 @@ This file is distributed under the GNU Affero General Public License
                  </span>
                 <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected,
                 request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject
-                reason: {{labRequest.rejectReason}}" ng-if="labRequest.status=='Rejected' && isLabUser()">
+                reason: {{labRequest.rejectReason}}" ng-if="labRequest.status=='Rejected' && isLabOrHubUser()">
                     <button
                             class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
                         <span><i class="glyphicon glyphicon-envelope"></i></span>
@@ -78,7 +78,7 @@ This file is distributed under the GNU Affero General Public License
                         class="btn btn-default" type="button"
                         ng-click="printPreview();"
                         title="{{'Print preview' | translate}}"
-                        ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' &&
+                        ng-if="isLabOrHubUser() || (labRequest.status != 'Rejected' &&
                         labRequest.status != 'Waiting for lab approval')">
                     <span><i class="glyphicon glyphicon-print"></i></span>
                     {{'Packing list' | translate}}
@@ -93,7 +93,7 @@ This file is distributed under the GNU Affero General Public License
                 </div>
 
                 <div title="{{'Samples' | translate}}" name="PA Numbers" bs-pane id="pa-numbers"
-                     ng-if="isLabUser() || isHubUser() || (labRequest.status != 'Rejected' &&
+                     ng-if="isLabOrHubUser() || (labRequest.status != 'Rejected' &&
                      labRequest.status != 'Waiting for lab approval')">
 
                     <div id="print-samples-details" class="print-only">
@@ -110,7 +110,7 @@ This file is distributed under the GNU Affero General Public License
                         <p>
                             {{ 'Hereby you receive this material for a scientific study. We request you notify' | translate }}:
                         </p>
-                        <div ng-if="isRequester() || isLabUser()">
+                        <div ng-if="isRequester() || isLabOrHubUser()">
                             <!--Requester info-->
                             <!--Displayed only to users with non requester role-->
 
@@ -176,7 +176,7 @@ This file is distributed under the GNU Affero General Public License
 
                             <!--Requester lab Info-->
                             <div class="row">
-                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">
+                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabOrHubUser()">
                                     {{ 'Address pathology lab. requester' | translate }}
                                 </label>
                                 <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">{{ 'Sender address' |
@@ -196,7 +196,7 @@ This file is distributed under the GNU Affero General Public License
 
                             <!--Requester lab Info-->
                             <div class="row">
-                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">
+                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabOrHubUser()">
                                     {{ 'Billing address' | translate }}
                                 </label>
                                 <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">
@@ -228,13 +228,13 @@ This file is distributed under the GNU Affero General Public License
                                     </p>
                                 </div>
                             </div>
-                            <div ng-show="!isLabUser()">
+                            <div ng-show="!isLabOrHubUser()">
                                 <!--Lab Info-->
                                 <!--Displayed only to users with non lab user role-->
                                 <div class="row">
                                     <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">{{ 'Delivery address'
                                         | translate }}</label>
-                                    <label class="control-label col-xs-4 col-md-2" ng-if="isLabUser() || isHubUser()">{{
+                                    <label class="control-label col-xs-4 col-md-2" ng-if="isLabOrHubUser()">{{
                                         'Sender' | translate }}</label>
                                     <div class="col-xs-8 col-md-10">
                                         <p class="form-control-static">

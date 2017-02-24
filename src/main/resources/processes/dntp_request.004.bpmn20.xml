@@ -20,17 +20,17 @@
         </script>
     </scriptTask>
 
-    <sequenceFlow id="open_to_request_form_or_approval" sourceRef="status_open" targetRef="to_request_form_or_approval"></sequenceFlow>
+    <sequenceFlow id="open_to_request_form_or_review" sourceRef="status_open" targetRef="to_request_form_or_review"></sequenceFlow>
 
     <!-- Choice between:
         - 'status_review' if jump_to_review (in the case of an additional request);
         - 'request_form' if not jump_to_review (in the case of a new request).
     -->
-    <exclusiveGateway id="to_request_form_or_approval" name="Open or Approval" />
-    <sequenceFlow id="open_to_approval" sourceRef="to_request_form_or_approval" targetRef="status_review">
+    <exclusiveGateway id="to_request_form_or_review" name="Open or Review" />
+    <sequenceFlow id="open_to_review" sourceRef="to_request_form_or_review" targetRef="status_review">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${jump_to_review == true} ]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="open_to_request_form" sourceRef="to_request_form_or_approval" targetRef="request_form">
+    <sequenceFlow id="open_to_request_form" sourceRef="to_request_form_or_review" targetRef="request_form">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${jump_to_review == false} ]]></conditionExpression>
     </sequenceFlow>
 

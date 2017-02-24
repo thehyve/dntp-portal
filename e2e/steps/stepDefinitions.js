@@ -277,6 +277,10 @@ module.exports = function() {
         expect(element(by.css("." + divClass)).isPresent()).to.become(true).and.notify(next);
     });
 
+    this.Then(/^I close the print window$/, function(next) {
+        browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(next, next);
+    });
+
     this.Then(/^I should see (\d+) lab requests in the list$/, function(amount, next) {
         amount = parseInt(amount);
         expect(element.all(by.repeater('labRequest in displayedLabRequests track by $index')).count())

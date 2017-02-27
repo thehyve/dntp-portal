@@ -40,7 +40,8 @@ This file is distributed under the GNU Affero General Public License
         <table st-table="paNumbersDisplayedCollection"
             st-pipe="updateSampleTable"
             st-safe-src="samples"
-            class="table table-striped">
+            class="table table-striped"
+            st-persists="samples">
             <thead>
                 <tr>
                     <th st-sort="labRequestCode" class="sortable">{{'Lab request' | translate}}</th>

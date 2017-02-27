@@ -1,8 +1,0 @@
-Feature: The palga users should be able to manage existent requests
-  Background:
-    Given There is 1 new request
-    And I am logged in as the palga user
-  
-  Scenario: I am able to claim the request
-    When I click on the object with id 'claim-request'
-    Then I should be on the forgot password page

@@ -138,4 +138,106 @@ Feature: scenario additional request
     Given I am logged in as the palga user
     When I click on the request with id 'YYYY-1-A1'
     Then I should see a link to the request with id 'YYYY-1'
-    # TODO: add checks for copied request data
+	
+  Scenario: 8d additional request contains previously entered data
+    Given I am logged in as the palga user
+    When I click on the request with id 'YYYY-1-A1'
+	And the form contains the following data
+    """
+    contactPersonName: Dr. P. Investigator
+    contactPersonEmail: test+contactperson@dntp.thehyve.nl
+    pathologistName: Dr. A. Pathologist
+    pathologistEmail: test+pathologist@dntp.thehyve.nl
+    requestTitle: Request 1
+    background: None
+    researchQuestion: test
+    hypothesis: theory
+    methods: Modern methods
+    searchCriteria: methods + test + modern
+    studyPeriod: 2015--2016
+    biobankRequestNumber: request_1
+    laboratoryTechniques: Cucumber, protractor
+    address1: dreef
+    postalcode: 1234
+    city: Amsterdam
+    billingEmail: fin@f.f
+    telephone: 1234567890
+    chargeNumber: 1234
+    grantProvider: Some sponsor
+    researchNumber: 10
+    """
+	
+  Scenario: 8e change all fields in additional request
+    Given I am logged in as the palga user
+    When I click on the request with id 'YYYY-1-A1'
+	And I fill the form with the following data
+    """
+    contactPersonName: Dr. P.I
+    contactPersonEmail: test+contact@dntp.thehyve.nl
+    pathologistName: Dr. A. Pat
+    pathologistEmail: test+pat@dntp.thehyve.nl
+    requestTitle: Request 1a
+    background: Test
+    researchQuestion: test1a
+    hypothesis: theory 1a
+    methods: Modern methods  1a
+    searchCriteria: methods + test + modern
+    studyPeriod: 2015--2017
+    biobankRequestNumber: request_1a
+    laboratoryTechniques: Cucumber, protractor  1a
+    address1: straat
+    postalcode: 12
+    city: Amsterdam
+    billingEmail: financial@f.f
+    telephone: 111111111
+    chargeNumber: 12
+    grantProvider: Some sponsor 1a
+    researchNumber: 101
+	"""
+
+	Scenario: 9a. Claim and send requests to Scientific council for additional request
+    Given I am logged in as the palga user
+    When I claim the request with title 'Request 1a'
+    And I click on the request with title 'Request 1a'
+    And I click on the 'Edit' button
+    And I click on the 'Submit to scientific council' button
+    And I click on the 'OK' button
+    And I go to the 'requests' page
+    Then request 'Request 1a' should have status 'Waiting for approval'
+    And testing is paused to check email scientific council
+	
+  Scenario: 9b attach excerpt list for additional request
+    Given I am logged in as the palga user
+    When I click on the request with title 'Request 1a'
+    And I click on the 'Edit' button
+    And I click on the following objects
+      """
+      #radio-ppc_handled_according_mandate
+      scientificCouncilApproved
+      #privacyCommitteeApproved
+      """
+    And I click on the 'Finish submission process' button
+    And I click on the 'OK' button
+    When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
+    And testing is paused to wait a bit
+    And I go to the 'requests' page
+    Then request 'Request 1a' should have status 'Data delivered, select excerpts'
+
+  Scenario: 9c Select PA numbers for additional request
+   Given I am logged in as the palga user
+   When I click on the request with title 'Request 1a'
+   And I scroll to the bottom of the page
+   And testing is paused to wait a bit
+   And I click on the object with id 'select_all_excerpts'
+   Then the current request should have 'Selection received' status
+
+  Scenario: 9d Palga approves selection for additional request
+   Given I am logged in as the palga user
+   # And I am on the requests page
+   When I click on the request with title 'Request 1a'
+   And I scroll to the bottom of the page
+   And I click on the 'Approve selection' button
+   And I click on the 'OK' button
+   And I go to the 'lab requests' page
+   And testing is paused to wait a bit
+   Then I should see 8 lab requests in the list

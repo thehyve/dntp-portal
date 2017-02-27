@@ -12,7 +12,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the object with id 'select_language_en'
     Then the object with class 'selected-language-en' should be present
 
-  Scenario: 1. Create request
+    Scenario: 1. Create request
     Given there are no requests
     And I am logged in as the requester user
     When I go from the requests page to the create new request page
@@ -153,7 +153,6 @@ Feature: scenario request Request for excerpts + PA reports + materials
 
   Scenario: 6a Palga approves selection
    Given I am logged in as the palga user
-   # And I am on the requests page
    When I click on the request with title 'Request 1'
    And I scroll to the bottom of the page
    And I click on the 'Approve selection' button
@@ -242,6 +241,31 @@ Feature: scenario request Request for excerpts + PA reports + materials
     Then the page should contain the text 'T23-45678'
     And the page should not contain the text 'T34-56789'
 
+  Scenario: 13a biobanknumber present in lab request
+    Given I am logged in as the lab 106 user
+	When I click on the lab request with id 'YYYY-1-106'
+	Then the form contains the following data
+	"""
+	biobankRequestNumber: request_1
+	"""
+	
+	Scenario: 13b addresses and biobanknumber on pakbon correct
+    Given I am logged in as the lab 106 user
+	When I click on the lab request with id 'YYYY-1-106'
+	And I click on the
+	And I close the print screen
+	Then the page should contain the text '<div class="row">
+                                <label class="control-label col-xs-4 col-md-2 ng-binding">Biobank aanvraagnummer</label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static ng-binding">
+                                        XXX
+                                    </p>
+                                </div>
+                            </div>'
+	#And the page should contain the text '#aanvragend lab#'
+	#And the page should contain the text '#factuur adres#'
+	#And the page should contain the text '#retour adres#'
+	
   Scenario: 14 lab user can register which samples will be sent
     Given I am logged in as the lab 106 user
     # And I am on the lab requests page

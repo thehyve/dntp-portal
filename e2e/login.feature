@@ -6,27 +6,39 @@ Feature: Log in
   Background:
     Given I am logged out
 
-  Scenario: Correct log in
+  Scenario: 0. Select language
+    Given I am on the login page
+    And I click on the object with id 'language_selection'
+    And I click on the object with id 'select_language_en'
+    Then the object with class 'selected-language-en' should be present
+	
+  Scenario: 1.Correct log in Palga
     Given I am on the login page
     When I log in as the palga user
     Then I should be on the requests page
-    
-  Scenario: Correct log in 2
+	
+  Scenario: 2.Correct log in requester
     Given I am on the login page
     When I log in as the requester user
     Then I should be on the requests page
     
-  Scenario: Correct log in 3
+  Scenario: 3.Correct log in scientific council
     Given I am on the login page
     When I log in as the scientific council user
     Then I should be on the requests page
 
-  Scenario: Correct log in 4
+  Scenario: 4.Correct log in lab user
     Given I am on the login page
     When I log in as the lab user
     Then I should be on the lab requests page
+	
+  Scenario: 5.Correct log in hub user
+    Given I am on the login page
+    When I log in as the hub user
+    Then I should be on the lab requests page
 
-  Scenario: Incorrect log in
+  Scenario: 6.Incorrect log in
     Given I am on the login page
     When I log in as an invalid user
     Then I should see an error message
+	

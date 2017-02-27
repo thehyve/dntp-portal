@@ -43,6 +43,7 @@ module.exports = {
         'requests': '',
         'lab requests': 'lab-requests',
         'samples': 'samples'
+		'labs': 'labs'
     },
     users: {
         'palga': { username: 'test+palga@dntp.thehyve.nl', password: 'palga' },

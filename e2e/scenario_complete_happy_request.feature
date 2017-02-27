@@ -12,7 +12,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the object with id 'select_language_en'
     Then the object with class 'selected-language-en' should be present
 
-        Scenario: 1. Create request
+    Scenario: 1. Create request
     Given there are no requests
     And I am logged in as the requester user
     When I go from the requests page to the create new request page
@@ -249,7 +249,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     Given I am logged in as the lab 106 user
 	When I click on the lab request with id 'YYYY-1-106'
 	Then the page should contain the text 'bio_request_123'
-	
+
   Scenario: 13b addresses and biobanknumber on pakbon correct
     Given I am logged in as the lab 106 user
 	When I click on the lab request with id 'YYYY-1-106'
@@ -262,8 +262,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
 	Billing address: dreef
 	"""
 	And I close the tab
-	
-	
+
+
   Scenario: 14 lab user can register which samples will be sent
     Given I am logged in as the lab 106 user
     # And I am on the lab requests page
@@ -298,13 +298,13 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'Unapprove' button
     And I click on the 'OK' button
     Then the current request should have 'Under review by lab' status
-	
+
   Scenario: 16b samples status has changed to 'under review by lab'
     Given I am logged in as the lab 106 user
 	And I am on the samples page
 	And testing is paused to check whether samples for the lab request are on status under review by lab
 	Then the page contains the text 'Under review by lab'
-  
+
   Scenario: 16c lab user approves labrequest again
     Given I am logged in as the lab 106 user
     When I click on the lab request with id 'YYYY-1-106'
@@ -313,7 +313,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'OK' button
     Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
-	
+
   Scenario: 16d lab user marks PA numbers as sent for re-approved request
     Given I am logged in as the lab 106 user
     When I click on the lab request with id 'YYYY-1-106'
@@ -321,8 +321,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the object with id 'paReportsSent'
     And I click on the 'Update PA reports status' button
     Then the page should contain the text 'Approved'
-    And the page should contain the text 'PA reports have been sent to the requester.' 
-  
+    And the page should contain the text 'PA reports have been sent to the requester.'
+
   Scenario: 16e lab user can register that samples have been sent, leave return date empty
     Given I am logged in as the lab 106 user
     # And I am on the lab requests page
@@ -331,7 +331,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'Send materials' button
     And I click on the 'OK' button
     Then the current request should have 'Materials sent' status
-  
+
   Scenario: 17 palga is able to see that one of the lab requests has been sent
     Given I am logged in as the palga user
     When I go from the requests page to the lab requests page

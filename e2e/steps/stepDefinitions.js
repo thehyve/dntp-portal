@@ -141,6 +141,10 @@ module.exports = function() {
         });
     });
 
+    this.When(/^I click on '(.+)'$/, function(selectorString, next) {
+        $(selectorString).click().then(next, next);
+    });
+
     this.When('I claim the current request', function(next) {
         pages.request.claimButton.click().then(function() {
             next();

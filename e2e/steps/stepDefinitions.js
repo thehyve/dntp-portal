@@ -16,6 +16,7 @@ module.exports = function() {
     this.setDefaultTimeout(60 * 1000);
 
     this.Given(/^I am on the (.*) page$/, function(pageName, next) {
+        browser.sleep(100);
         util.getPage(pageName).then(function() {
             next();
         });
@@ -348,5 +349,26 @@ module.exports = function() {
 
     this.Then(/^the object with id '(.+)' should not be ticked$/, function(id, next) {
         expect(element(by.id(id)).getAttribute('class')).to.eventually.not.contain('glyphicon-check').and.notify(next);
+    });
+
+    this.Then(/^I open the '(.+)' form for '(.+)'$/, function (action, labName, next) { //Edit or Deactivate
+        browser.sleep(1000);
+        browser.executeScript("$('.navbar-fixed-bottom').remove();");
+
+        element.all(by.repeater('lab in displayedCollection')).then(function (labs) {
+            labs.forEach(function (lab) {
+                lab.$$('.ng-binding').then(function (elements) {
+                    Promise.resolve(
+                        elements[1].getText().then(function (text) {
+                            return text == labName
+                        }, next)
+                    ).then(function (v) {
+                        if (v) {
+                            lab.$('[title='+action+']').click().then(next, next);
+                        }
+                    }, next);
+                }, next);
+            })
+        }, next);
     });
 };

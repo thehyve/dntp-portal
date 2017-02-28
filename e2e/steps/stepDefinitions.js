@@ -142,6 +142,14 @@ module.exports = function() {
         });
     });
 
+    this.When(/^I claim the request with id '(.+)'$/, function(id, next) {
+        // We assume that we are on the requests page
+        var req = pages.requests.getRequestWithTitle(id.replace('YYYY', new Date().getFullYear()));
+        req.claimButton.click().then(function() {
+            next();
+        });
+    });
+
     this.When(/^I click on '(.+)'$/, function(selectorString, next) {
         $(selectorString).click().then(next, next);
     });

@@ -139,44 +139,51 @@ Feature: scenario additional request
     When I click on the request with id 'YYYY-1-A1'
     Then I should see a link to the request with id 'YYYY-1'
 	
-  Scenario: 8d additional request contains previously entered data
-    Given I am logged in as the palga user
-    When I click on the request with id 'YYYY-1-A1'
-	And the form contains the following data
-    """
-    contactPersonName: Dr. P. Investigator
-    contactPersonEmail: test+contactperson@dntp.thehyve.nl
-    pathologistName: Dr. A. Pathologist
-    pathologistEmail: test+pathologist@dntp.thehyve.nl
-    requestTitle: Request 1
-    background: None
-    researchQuestion: test
-    hypothesis: theory
-    methods: Modern methods
-    searchCriteria: methods + test + modern
-    studyPeriod: 2015--2016
-    biobankRequestNumber: request_1
-    laboratoryTechniques: Cucumber, protractor
-    address1: dreef
-    postalcode: 1234
-    city: Amsterdam
-    billingEmail: fin@f.f
-    telephone: 1234567890
-    chargeNumber: 1234
-    grantProvider: Some sponsor
-    researchNumber: 10
-    """
+  #Scenario: 8d additional request contains previously entered data
+   # Given I am logged in as the palga user
+    #When I claim the request with id 'YYYY-1-A1'
+	#And I click on the request with id 'YYYY-1-A1'
+#	And I click on the 'Edit' button
+#	And testing is paused to wait a bit
+#	And the form contains the following data
+ #   """
+  #  contactPersonName: Dr. P. Investigator
+#    contactPersonEmail: test+contactperson@dntp.thehyve.nl
+ #   pathologistName: Dr. A. Pathologist
+  #  pathologistEmail: test+pathologist@dntp.thehyve.nl
+   # requestTitle: Request 1
+#    background: None
+ #   researchQuestion: test
+  #  hypothesis: theory
+   # methods: Modern methods
+#    searchCriteria: methods + test + modern
+#    studyPeriod: 2015--2016
+#    biobankRequestNumber: request_1
+#    laboratoryTechniques: Cucumber, protractor
+#    address1: dreef
+ #   postalcode: 1234
+ #   city: Amsterdam
+  #  billingEmail: fin@f.f
+  #  telephone: 1234567890
+  #  chargeNumber: 1234
+#    grantProvider: Some sponsor
+#    researchNumber: 10
+#    """
 	
   Scenario: 8e change all fields in additional request
     Given I am logged in as the palga user
-    When I click on the request with id 'YYYY-1-A1'
-	And I fill the form with the following data
+	When I claim the request with id 'YYYY-1-A1'
+    And I claim the request with id 'YYYY-1-A1'
+    And I click on the request with id 'YYYY-1-A1'
+	And I click on the 'Edit' button
+	And testing is paused to wait a bit
+    And I fill the form with the following data
     """
     contactPersonName: Dr. P.I
     contactPersonEmail: test+contact@dntp.thehyve.nl
     pathologistName: Dr. A. Pat
     pathologistEmail: test+pat@dntp.thehyve.nl
-    requestTitle: Request 1a
+    requestTitle: Test_HP1
     background: Test
     researchQuestion: test1a
     hypothesis: theory 1a
@@ -194,6 +201,12 @@ Feature: scenario additional request
     grantProvider: Some sponsor 1a
     researchNumber: 101
 	"""
+	And I click on the object with id 'submit-new-request'
+    And I click on the 'OK' button
+    Then I should be on the requests page
+    And request 'Test_HP1' should be in the list of requests
+    And request 'Test_HP1' should have status
+	And testing is paused to wait a bit
 
 	Scenario: 9a. Claim and send requests to Scientific council for additional request
     Given I am logged in as the palga user

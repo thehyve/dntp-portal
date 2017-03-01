@@ -29,7 +29,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     methods: Modern methods
     searchCriteria: methods + test + modern
     studyPeriod: 2015--2016
-    biobankRequestNumber: request_1
+    biobankRequestNumber: bio_request_123
     laboratoryTechniques: Cucumber, protractor
     address1: dreef
     postalcode: 1234
@@ -244,25 +244,39 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 13a biobanknumber present in lab request
     Given I am logged in as the lab 106 user
 	When I click on the lab request with id 'YYYY-1-106'
-	Then the form contains the following data
-	"""
-	biobankRequestNumber: request_1
-	"""
+	Then the page should contain the text 'bio_request_123'
 	
 	Scenario: 13b addresses and biobanknumber on pakbon correct
     Given I am logged in as the lab 106 user
 	When I click on the lab request with id 'YYYY-1-106'
-	And I click on the
-	And I close the print screen
-	Then the page should contain the text '<div class="row">
-                                <label class="control-label col-xs-4 col-md-2 ng-binding">Biobank aanvraagnummer</label>
-                                <div class="col-xs-8 col-md-10">
-                                    <p class="form-control-static ng-binding">
-                                        XXX
-                                    </p>
-                                </div>
-                            </div>'
-	#And the page should contain the text '#aanvragend lab#'
+	And I click on '[title='Print preview']'
+	And I close the print window
+	Then the page should contain the text 'bio_request_123'
+	#And the page should contain the text '<div class="row">
+    #                            <label class="control-label col-xs-4 col-md-2 ng-binding">Biobank aanvraagnummer</label>
+    #                            <div class="col-xs-8 col-md-10">
+    #                                <p class="form-control-static ng-binding">
+    #                                    bio_request_123
+    #                                </p>
+    #                            </div>
+    #                        </div>'
+	#And the page should contain the text '<div class="row">
+                                #<!-- ngIf: isLabUser() || isHubUser() --><label class="control-label col-xs-4 col-md-2 ng-binding ng-scope" ng-if="isLabUser() || isHubUser()">
+                                #    Adres pathologie lab. aanvrager
+                                #</label><!-- end ngIf: isLabUser() || isHubUser() -->
+                                #<!-- ngIf: isRequester() -->
+                                #<div class="col-xs-8 col-md-10">
+                                    #<p class="form-control-static ng-binding">
+                                        #Laboratorium 100 -
+                                        #AMC, afd. Pathologie<br>
+                                        #address1<br>
+                                        #address2<br>
+                                         #Amsterdam<br>
+                                         #telnr<br>
+                                 #   </p><address class="address ng-binding" ng-bind-html="labRequest.htmlRequesterLabAddressPrint">Amsterdam<br>NL<br></address>
+                                  #  <p></p>
+                                #</div>
+                            #</div>'
 	#And the page should contain the text '#factuur adres#'
 	#And the page should contain the text '#retour adres#'
 	

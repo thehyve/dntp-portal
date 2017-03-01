@@ -56,7 +56,12 @@ public class ContactData {
     public void copy(ContactData other) {
         if (other != null) {
             this.telephone = other.telephone;
-            this.email = other.email.toLowerCase();
+            if (other.email != null){
+                this.email = other.email.toLowerCase();
+            } else {
+                this.email = null;
+            }
+
             this.address1 = other.address1;
             this.address2 = other.address2;
             this.postalCode = other.postalCode;

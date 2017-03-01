@@ -5,13 +5,13 @@ This file is distributed under the GNU Affero General Public License
 -->
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        <li ng-class="{active: activeSidebar === 'overview'}">
-            <a ng-href="/#/">{{'All requests'|translate}}  <span class="badge pull-right">{{allRequests.length}}</span></a>
+        <li ng-class="{active: activeSidebar === 'overview'}" onclick="localStorage.setItem('requests', JSON.stringify({}))">
+            <a ng-href="/#/">{{'All requests'|translate}}<span class="badge pull-right">{{allRequests.length}}</span></a>
         </li>
-        <li ng-if="isPalga()" ng-class="{active: activeSidebar === 'claimed'}">
+        <li ng-if="isPalga()" ng-class="{active: activeSidebar === 'claimed'}" onclick="localStorage.setItem('requests', JSON.stringify({}))">
             <a ng-href="/#/requests/claimed">{{'Requests claimed by me'|translate}} <span class="badge pull-right">{{claimedReqs.length}}</span></a>
         </li>
-        <li ng-if="isPalga()" ng-class="{active: activeSidebar === 'unclaimed'}">
+        <li ng-if="isPalga()" ng-class="{active: activeSidebar === 'unclaimed'}" onclick="localStorage.setItem('requests', JSON.stringify({}))">
             <a ng-href="/#/requests/unclaimed">{{'Unclaimed requests'|translate}} <span class="badge pull-right">{{unclaimedReqs.length}}</span></a>
         </li>
         <li ng-if="isScientificCouncil()" ng-class="{active: activeSidebar === 'voted'}">

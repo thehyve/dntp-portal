@@ -22,9 +22,6 @@ angular.module('ProcessApp.directives')
                 $scope.isPalga = $scope.$root.isPalga;
                 $scope.isScientificCouncil = $scope.$root.isScientificCouncil;
 
-                // Reset the stored filters for this table.
-                localStorage.setItem('requests', JSON.stringify({}));
-
                 /*eslint-disable no-unused-vars*/
                 $scope.$watch('allRequests', function(newValue, oldValue) {
                     if (newValue) {
@@ -40,6 +37,6 @@ angular.module('ProcessApp.directives')
                     }
                 });
                 /*eslint-enable no-unused-vars*/
-            }
+            },
         };
     }]);

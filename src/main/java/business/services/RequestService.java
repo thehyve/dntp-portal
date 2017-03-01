@@ -403,7 +403,7 @@ public class RequestService {
         // start new process instance
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", parentRequest.getRequesterId());
-        values.put("jump_to_approval", Boolean.TRUE);
+        values.put("jump_to_review", Boolean.TRUE);
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
                 "dntp_request_004", values);
@@ -420,6 +420,11 @@ public class RequestService {
         variables.put("request_approved", Boolean.FALSE);
         variables.put("scientific_council_approved", Boolean.FALSE);
 
+        // Requester and Lab are still approved though.
+        variables.put("requester_lab_is_valid", Boolean.TRUE);
+        variables.put("requester_is_valid", Boolean.TRUE);
+        variables.put("requester_allowed", Boolean.TRUE);
+        variables.put("contact_person_is_allowed", Boolean.TRUE);
         runtimeService.setVariables(childId, variables);
 
         RequestProperties childProperties = requestPropertiesService.findByProcessInstanceId(childId);

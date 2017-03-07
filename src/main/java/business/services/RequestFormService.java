@@ -141,7 +141,6 @@ public class RequestFormService {
         // Set biobank request number and billing address from properties
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
-        request.setBillingAddress(properties.getBillingAddress());
 
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {

@@ -21,7 +21,6 @@ This file is distributed under the GNU Affero General Public License
 
         <!--Main-->
         <div ng-if="labRequest" class="col-sm-9 col-sm-offset-3 col-xs-8 col-md-10 col-md-offset-2 main">
-
             <h2 id="lab-request-title">
                 {{labRequest.labRequestCode}}
             </h2>
@@ -73,7 +72,6 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
-                <!--<button ng-if="isLabUser()"-->
                 <button
                         class="btn btn-default" type="button"
                         ng-click="printPreview();"
@@ -95,18 +93,9 @@ This file is distributed under the GNU Affero General Public License
                 <div title="{{'Samples' | translate}}" name="PA Numbers" bs-pane id="pa-numbers"
                      ng-if="isLabOrHubUser() || (labRequest.status != 'Rejected' &&
                      labRequest.status != 'Waiting for lab approval')">
-
                     <div id="print-samples-details" class="print-only">
-
                         <h4 class="h4">{{ 'Details' | translate}}</h4>
                         <hr>
-                        <!--&lt;!&ndash;Lab Request Id&ndash;&gt;-->
-                        <!--<div class="row">-->
-                            <!--<label class="control-label col-xs-4 col-md-2">{{ 'Lab request code' | translate }}</label>-->
-                            <!--<div class="col-xs-8 col-md-10">-->
-                                <!--<p class="form-control-static">{{labRequest.labRequestCode}}</p>-->
-                            <!--</div>-->
-                        <!--</div>-->
                         <p>
                             {{ 'Hereby you receive this material for a scientific study. We request you notify' | translate }}:
                         </p>
@@ -185,10 +174,10 @@ This file is distributed under the GNU Affero General Public License
                                     <p class="form-control-static">
                                         {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
                                         {{labRequest.requesterLab.name}}<br/>
-                                        {{labRequest.request.billingAddress.address1}}<br/>
-                                        {{labRequest.request.billingAddress.address2}}<br/>
-                                        {{labRequest.request.billingAddress.postalCode}} {{labRequest.request.billingAddress.city}}<br/>
-                                        {{labRequest.request.billingAddress.telephone}} <br/>
+                                        {{labRequest.requesterLab.address1}}<br/>
+                                        {{labRequest.requesterLab.address2}}<br/>
+                                        {{labRequest.requesterLab.postalCode}} {{labRequest.requesterLab.city}}<br/>
+                                        {{labRequest.requesterLab.telephone}} <br/>
                                     <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
                                     </p>
                                 </div>
@@ -205,9 +194,9 @@ This file is distributed under the GNU Affero General Public License
 
                                 <div class="col-xs-8 col-md-10">
                                     <p class="form-control-static">
-                                        {{labRequest.request.billingAddress.address1}}<br/>
-                                        {{labRequest.request.billingAddress.address2}}<br/>
-                                        {{labRequest.request.billingAddress.postalCode}} {{labRequest.request.billingAddress.city}}<br/>
+                                        {{request.billingAddress.address1}}<br/>
+                                        {{request.billingAddress.address2}}<br/>
+                                        {{request.billingAddress.postalCode}} {{request.billingAddress.city}}<br/>
                                     </p>
                                 </div>
                             </div>
@@ -244,17 +233,11 @@ This file is distributed under the GNU Affero General Public License
                                     </div>
                                 </div>
                             </div>
-
                         </div> <!-- end if -->
-
-
                     </div>
-
                     <div ng-include="'app/lab-request/pa-numbers.html'"></div>
                 </div>
-
             </div>
-
             <!--Comments-->
             <div ng-include="'app/lab-request/comments.html'"></div>
         </div> <!-- end of main -->

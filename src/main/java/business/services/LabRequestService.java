@@ -179,11 +179,6 @@ public class LabRequestService {
         labRequestRepresentation.setExcerptListRemark(excerptList.getRemark());
     }
 
-    @Transactional
-    public void transferBillingData(@NotNull LabRequestRepresentation labRequestRepresentation) {
-        String request = "";
-    }
-
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation, boolean cached) {
         Date start = new Date();
 

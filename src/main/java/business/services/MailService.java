@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.EmailError;
@@ -103,6 +104,7 @@ public class MailService {
           + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
           ;
 
+    @Async
     @Transactional
     public void sendAgreementFormLink(@NotNull String email,
             @NotNull RequestProperties request) {
@@ -124,10 +126,7 @@ public class MailService {
             message.setText(String.format(
                     requesterAgreementFormLinkTemplate, agreementFormLink));
             mailSender.send(message.getMimeMessage());
-        } catch (MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch (UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
         }
@@ -148,6 +147,7 @@ public class MailService {
             + "088-0402700 / aanvraag@palga.nl.\n"
             ;
 
+    @Async
     @Transactional
     public void notifyScientificCouncil(@NotNull RequestRepresentation request) {
         log.info("Notify scientic council for request " + request.getProcessInstanceId() + ".");
@@ -164,10 +164,7 @@ public class MailService {
                 String requestLink = getLink("/#/request/view/" + request.getProcessInstanceId());
                 message.setText(String.format(scientificCouncilNotificationTemplate, requestLink));
                 mailSender.send(message.getMimeMessage());
-            } catch(MessagingException e) {
-                log.error(e.getMessage());
-                throw new EmailError("Email error: " + e.getMessage());
-            } catch(UnsupportedEncodingException e) {
+            } catch(MessagingException | UnsupportedEncodingException e) {
                 log.error(e.getMessage());
                 throw new EmailError("Email error: " + e.getMessage());
             }
@@ -217,6 +214,7 @@ public class MailService {
           + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
           ;
 
+    @Async
     public void notifyLab(@NotNull LabRequestRepresentation labRequest) {
         log.info("Notify lab for lab request " + labRequest.getId() + ".");
 
@@ -246,10 +244,7 @@ public class MailService {
                     );
             message.setText(body);
             mailSender.send(message.getMimeMessage());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
+        } catch(MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
         }
@@ -283,6 +278,7 @@ public class MailService {
           + "Instituut:\t%8$d %9$s\n"
           ;
 
+    @Async
     public void notifyHubuser(User hubUser, List<LabRequestRepresentation> labRequests) {
         if (!hubUser.isHubUser()) {
             log.warn("The user is no hub user: " + hubUser.getUsername());
@@ -326,10 +322,7 @@ public class MailService {
             String body = String.format(hubUserNotificationTemplate, labRequestSnippets /* %1 */);
             message.setText(body);
             mailSender.send(message.getMimeMessage());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
+        } catch(MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
         }
@@ -367,6 +360,7 @@ public class MailService {
             + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
             ;
 
+    @Async
     public void sendActivationEmail(@NotNull ActivationLink link) {
         // Send email to user
         try {
@@ -381,10 +375,7 @@ public class MailService {
             mailSender.send(message.getMimeMessage());
             log.info("Activation link token generated for " + recipient +
                     ": " + link.getToken());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
+        } catch(MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
         }
@@ -420,6 +411,7 @@ public class MailService {
 
     public static final String passwordRecoverySubject = "Nieuw PALGA-wachtwoord instellen / Create new PALGA password";
 
+    @Async
     public void sendPasswordRecoveryToken(NewPasswordRequest npr) {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
@@ -432,10 +424,7 @@ public class MailService {
             message.setText(String.format(passwordRecoveryTemplate, passwordRecoveryLink));
             log.info("Sending password recovery token to " + recipient + ".");
             mailSender.send(message.getMimeMessage());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
+        } catch(MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage());
             throw new EmailError("Email error: " + e.getMessage());
         }

@@ -99,6 +99,9 @@ public class PasswordControllerTests {
                 })
                 .andExpect(status().isOk());
 
+        // Mail sending is asynchronous. Sleep for 1 second.
+        Thread.sleep(1 * 1000);
+
         // Check that the link has been sent to the right user, only once
         Assert.assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
@@ -143,6 +146,9 @@ public class PasswordControllerTests {
                     }
                 })
                 .andExpect(status().isOk());
+
+        // Mail sending is asynchronous. Sleep for 1 second.
+        Thread.sleep(1 * 1000);
 
         // Check that no email has been sent
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();

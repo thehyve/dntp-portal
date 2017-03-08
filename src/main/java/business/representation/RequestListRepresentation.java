@@ -70,8 +70,6 @@ public class RequestListRepresentation implements RequestListElement {
 
     private Long dataAttachmentCount;
 
-    private ContactData billingAddress;
-
     public RequestListRepresentation() {
 
     }
@@ -415,13 +413,5 @@ public class RequestListRepresentation implements RequestListElement {
 
     public void setBiobankRequestNumber(String number){
         this.biobankRequestNumber = number;
-    }
-
-    public ContactData getBillingAddress() {
-        return billingAddress;
-    }
-
-    public void setBillingAddress(ContactData billingAddress) {
-        this.billingAddress = billingAddress;
     }
 }

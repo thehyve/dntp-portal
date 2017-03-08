@@ -54,6 +54,7 @@ public class RequestListRepresentation implements RequestListElement {
     private boolean informedConsent;
 
     private boolean reopenRequest;
+    private boolean skipStatusApproval;
 
     private String approvalVote;
     private Long numberOfApprovalVotes;
@@ -355,6 +356,14 @@ public class RequestListRepresentation implements RequestListElement {
 
     public void setReopenRequest(boolean reopenRequest) {
         this.reopenRequest = reopenRequest;
+    }
+
+    public boolean isSkipStatusApproval() {
+        return skipStatusApproval;
+    }
+
+    public void setSkipStatusApproval(boolean skipStatusApproval) {
+        this.skipStatusApproval = skipStatusApproval;
     }
 
     public List<FileRepresentation> getAttachments() {

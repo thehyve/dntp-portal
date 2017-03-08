@@ -388,7 +388,7 @@ angular.module('ProcessApp.controllers')
              * @param version_string e.g., 'dntp_request_002:1:4'
              * @param min_version e.g., dntp_request_002
              */
-            var _checkVersionHigherThan = function(version_string, min_version) {
+            var _checkVersionAtLeast = function(version_string, min_version) {
                 var parts = version_string.split(':');
                 if (parts.length != 3) {
                     return false;
@@ -399,7 +399,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.isReopenEnabled = function(request) {
-                return _checkVersionHigherThan(request.processId, 'dntp_request_002');
+                return _checkVersionAtLeast(request.processId, 'dntp_request_002');
             };
 
             $scope.reopen = function(request) {
@@ -424,11 +424,11 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.isForkEnabled = function(request) {
-                return _checkVersionHigherThan(request.processId, 'dntp_request_003');
+                return _checkVersionAtLeast(request.processId, 'dntp_request_003');
             };
 
             $scope.isClinicalDataEnabled = function(request) {
-                return _checkVersionHigherThan(request.processId, 'dntp_request_003');
+                return _checkVersionAtLeast(request.processId, 'dntp_request_003');
             };
 
             $scope.fork = function(request) {
@@ -477,7 +477,32 @@ angular.module('ProcessApp.controllers')
                         $rootScope.translate('Are you sure you want to send the request to the scientific council?'),
                     function(confirmed) {
                         if (confirmed) {
-                            request.$submitForApproval(function(result) {
+                            request.$submitReview(function(result) {
+                                $scope.refresh(request, result);
+                                $scope.editRequestModal.hide();
+                            }, function(response) {
+                                $rootScope.logErrorResponse(response);
+                            });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
+                        }
+                    });
+            };
+
+            $scope.isSkipApprovalEnabled = function(request) {
+                return _checkVersionAtLeast(request.processId, 'dntp_request_005');
+            };
+
+            $scope.submitReviewAndSkipApproval = function(request) {
+                $scope.dataLoading = true;
+                bootbox.confirm(
+                    $rootScope.translate('Are you sure you want to finish the submission process ' +
+                        'and skip the scientific council for this request?'),
+                    function(confirmed) {
+                        if (confirmed) {
+                            request.skipStatusApproval = true;
+                            request.$submitReview(function(result) {
                                 $scope.refresh(request, result);
                                 $scope.editRequestModal.hide();
                             }, function(response) {

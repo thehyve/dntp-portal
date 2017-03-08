@@ -26,8 +26,8 @@
                 url : '/requests/:id/submit',
                 method : 'PUT'
             },
-            submitForApproval : {
-                url : '/requests/:id/submitForApproval',
+            submitReview : {
+                url : '/requests/:id/submitReview',
                 method : 'PUT'
             },
             finalise : {

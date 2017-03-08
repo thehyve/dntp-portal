@@ -180,7 +180,7 @@
                         </goals>
                         <phase>prepare-package</phase>
                         <configuration>
-                            <arguments>update</arguments>
+                            <arguments>update --quiet</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -188,6 +188,9 @@
                         <goals>
                             <goal>bower</goal>
                         </goals>
+                        <configuration>
+                            <arguments>install --quiet</arguments>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>gulp test</id>

@@ -362,14 +362,15 @@ public class MailService {
             + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
             ;
 
+    public static final String activationSubject = "PALGA-account activeren / Activate PALGA account";
+
     @Async
     public void sendActivationEmail(@NotNull ActivationLink link) {
         // Send email to user
         String recipient = link.getUser().getUsername();
-        String subject = "PALGA-account activeren / Activate PALGA account";
         String activationLink = getLink("/#/activate/" + link.getToken());
         String content = String.format(activationEmailTemplate, activationLink);
-        sendEmail(recipient, subject, content);
+        sendEmail(recipient, activationSubject, content);
         log.info("Activation link token generated for {}: {}", recipient, link.getToken());
     }
 

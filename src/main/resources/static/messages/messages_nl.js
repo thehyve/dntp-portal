@@ -224,6 +224,8 @@
         'Compose mail to members': 'Schrijf e-mail aan leden',
         'Compose mail to requester': 'E-mail aanvrager',
         'Compose reopen email': 'Meld heropenen aanvraag',
+        'Finish submission process, skip scientific council': 'Aanvraagprocedure afronden, sla wetenschappelijke raad over',
+        'The scientific council has not been involved in this request.': 'De wetenschappelijke raad is niet betrokken bij deze aanvraag.',
 
         'ppc_handled_according_mandate': 'Afgehandeld conform mandaat PPC',
         'ppc_handled_according_mandate_explanation': 'Afgehandeld conform mandaat PPC, zie toelichting',

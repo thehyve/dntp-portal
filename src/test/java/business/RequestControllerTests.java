@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2016  Stichting PALGA
+ * Copyright (C) 2017  Stichting PALGA
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file <a href="{@docRoot}/LICENSE">LICENSE</a>).
  */
 package business;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.util.List;
-
-import javax.mail.internet.MimeMessage;
-
+import business.controllers.RequestController;
+import business.controllers.SelectionController;
+import business.models.PathologyItemRepository;
+import business.models.User;
+import business.representation.RequestRepresentation;
+import business.representation.RequestStatus;
+import business.security.MockConfiguration.MockMailSender;
+import business.security.UserAuthenticationToken;
+import business.services.LabRequestService;
+import business.services.UserService;
 import org.activiti.engine.TaskService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,28 +29,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import business.controllers.RequestController;
-import business.controllers.SelectionController;
-import business.models.PathologyItemRepository;
-import business.models.User;
-import business.representation.RequestRepresentation;
-import business.representation.RequestStatus;
-import business.security.MockConfiguration.MockMailSender;
-import business.security.UserAuthenticationToken;
-import business.services.LabRequestService;
-import business.services.UserService;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @Profile("dev")
 @SpringApplicationConfiguration(classes = {Application.class})
 @WebIntegrationTest("server.port = 8093")
-public abstract class SelectionControllerTests extends AbstractTestNGSpringContextTests {
+@Transactional
+public class RequestControllerTests extends AbstractTestNGSpringContextTests {
 
     Log log = LogFactory.getLog(this.getClass());
-    
-    FileSystem fileSystem = FileSystems.getDefault();
     
     @Autowired UserService userService;
 
@@ -88,9 +86,8 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         ((MockMailSender)this.mailSender).clear();
         log.info("TEST  Test: " + this.getClass().toString());
     }
-    
-    @Test(groups = "request")
-    public void createRequest() {
+
+    private void createRequest() {
         UserAuthenticationToken requester = getRequester();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
@@ -103,15 +100,10 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         assertEquals(RequestStatus.OPEN, representation.getStatus());
         processInstanceId = representation.getProcessInstanceId();
         
-        //testController.clearAll();
-        //List<RequestListRepresentation> requestList = requestController.getRequestList(requester);
-        //assertEquals(0, requestList.size());
-        
         SecurityContextHolder.clearContext();
     }
-    
-    @Test(groups = "request", dependsOnMethods = "createRequest")
-    public void submitRequest() {
+
+    private void submitRequest() {
         UserAuthenticationToken requester = getRequester();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
@@ -127,10 +119,8 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         
         SecurityContextHolder.clearContext();
     }
-    
 
-    @Test(groups = "request", dependsOnMethods = "submitRequest")
-    public void submitRequestForApproval() {
+    private void submitRequestForApproval() {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -142,7 +132,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         representation = requestController.claim(palga, processInstanceId, representation);
         
         ((MockMailSender)mailSender).clear();
-        
+
         // only enforced in front end, not in back end
         representation.setBackground("Background is testing.");
         representation.setHypothesis("Tests will pass");
@@ -156,11 +146,11 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         representation.setContactPersonAllowed(true);
         representation.setRequesterLabValid(true);
         representation.setAgreementReached(true);
-
+        
         representation = requestController.submitReview(palga, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
         assertEquals(RequestStatus.APPROVAL, representation.getStatus());
-
+        
         assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
         assertEquals(1, emails.size());
@@ -168,8 +158,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         SecurityContextHolder.clearContext();
     }
 
-    @Test(groups = "request", dependsOnMethods = "submitRequestForApproval")
-    public void approveRequest() {
+    private void approveRequest() {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -191,8 +180,82 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         SecurityContextHolder.clearContext();
     }
 
-    public abstract void uploadExcerptList() throws IOException;
+    @Test
+    public void testApproveRequest() {
+        createRequest();
+        submitRequest();
+        submitRequestForApproval();
+        approveRequest();
 
-    public abstract void selectExcerpts();
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        log.info("Status: " + representation.getStatus());
+        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
+
+        SecurityContextHolder.clearContext();
+    }
+
+    private void skipApproval() {
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        log.info("Status: " + representation.getStatus());
+
+        representation = requestController.claim(palga, processInstanceId, representation);
+
+        ((MockMailSender)mailSender).clear();
+
+        // Set the variable to skip the approval status
+        representation.setSkipStatusApproval(true);
+
+        // only enforced in front end, not in back end
+        representation.setBackground("Background is testing.");
+        representation.setHypothesis("Tests will pass");
+        representation.setMethods("JUnit");
+        // request type
+        representation.setMaterialsRequest(true);
+        representation.setPaReportRequest(true);
+        // required checks
+        representation.setRequesterValid(true);
+        representation.setRequesterAllowed(true);
+        representation.setContactPersonAllowed(true);
+        representation.setRequesterLabValid(true);
+        representation.setAgreementReached(true);
+
+        representation = requestController.submitReview(palga, processInstanceId, representation);
+        log.info("Status: " + representation.getStatus());
+        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
+
+        assertEquals(mailSender.getClass(), MockMailSender.class);
+        List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
+        assertEquals(0, emails.size());
+
+        SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    public void testSkipApproval() {
+        createRequest();
+        submitRequest();
+        skipApproval();
+
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        log.info("Status: " + representation.getStatus());
+        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
+
+        SecurityContextHolder.clearContext();
+    }
 
 }

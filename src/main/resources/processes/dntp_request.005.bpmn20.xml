@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://thehyve.nl/dntp">
+<process id="dntp_request_005" isExecutable="true" name="DNTP Request">
+    <documentation>Definition for a request process for pathology data and materials.</documentation>
+
+    <startEvent id="request_start" name="Start" activiti:initiator="initiator">
+        <documentation>Start a new request.
+        </documentation>
+    </startEvent>
+
+    <sequenceFlow id="start_to_open" sourceRef="request_start" targetRef="status_open"></sequenceFlow>
+
+    <scriptTask id="status_open" name="Update status to Open" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>
+            execution.setVariable("status", "Open")
+            execution.setVariable("requester_id", "${initiator}")
+            execution.setVariable("date_created", new Date())
+            execution.setVariable("lab_request_labs", [])
+        </script>
+    </scriptTask>
+
+    <sequenceFlow id="open_to_request_form_or_review" sourceRef="status_open" targetRef="to_request_form_or_review"></sequenceFlow>
+
+    <!-- Choice between:
+        - 'status_review' if jump_to_review (in the case of an additional request);
+        - 'request_form' if not jump_to_review (in the case of a new request).
+    -->
+    <exclusiveGateway id="to_request_form_or_review" name="Open or Review" />
+    <sequenceFlow id="open_to_review" sourceRef="to_request_form_or_review" targetRef="status_review">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${jump_to_review == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="open_to_request_form" sourceRef="to_request_form_or_review" targetRef="request_form">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${jump_to_review == false} ]]></conditionExpression>
+    </sequenceFlow>
+
+    <userTask id="request_form" name="Request form" activiti:assignee="${requester_id}">
+        <documentation>Request form filled in by the requester.
+        </documentation>
+        <extensionElements>
+            <!--Descriptions-->
+            <activiti:formProperty id="title" name="Title" type="string" variable="title"
+                                   required="true"></activiti:formProperty>
+            <activiti:formProperty id="background" name="Background" type="string"
+                                   variable="background" required="true"></activiti:formProperty>
+            <activiti:formProperty id="research_question" name="Research Question" type="string"
+                                   variable="research_question" required="true"></activiti:formProperty>
+            <activiti:formProperty id="hypothesis" name="Hypothesis" type="string" variable="hypothesis"
+                                   required="true"></activiti:formProperty>
+            <activiti:formProperty id="methods" name="Methods" type="string" variable="methods"
+                                   required="true"></activiti:formProperty>
+            <!--Types-->
+            <activiti:formProperty id="is_statistics_request" name="Request for statistics (OZV)" type="boolean"
+                                   variable="is_statistics_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_excerpts_request" name="Request for excerpts (LZV)" type="boolean"
+                                   variable="is_excerpts_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_pa_report_request" name="Request for PA reports" type="boolean"
+                                   variable="is_pa_report_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_materials_request" name="Request for samples/materials" type="boolean"
+                                   variable="is_materials_request" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_clinical_data_request" name="Request for clinical data" type="boolean"
+                                   variable="is_clinical_data_request" required="true"></activiti:formProperty>
+            <!--Optionals-->
+            <activiti:formProperty id="is_linkage_with_personal_data" name="Linkage with own or external personal data"
+                                   type="boolean" variable="is_linkage_with_personal_data"
+                                   required="true"></activiti:formProperty>
+            <activiti:formProperty id="linkage_with_personal_data_notes"
+                                   name="Notes for linkage with own or external personal data" type="string"
+                                   variable="linkage_with_personal_data_notes" required="true"></activiti:formProperty>
+            <activiti:formProperty id="is_informed_consent" name="Informed Consent" type="boolean"
+                                   variable="is_informed_consent" required="true"></activiti:formProperty>
+            <activiti:formProperty id="reason_using_personal_data" name="Reason for Using Personal Data" type="string"
+                                   variable="reason_using_personal_data" required="true"></activiti:formProperty>
+            <!--Others-->
+            <activiti:formProperty id="return_date" name="Return date" type="date"
+                                   variable="return date"></activiti:formProperty>
+            <activiti:formProperty id="contact_person_name" name="Principal Investigator" type="string"
+                                   variable="contact_person_name" required="true"></activiti:formProperty>
+            <activiti:formProperty id="contact_person_email" name="Principal Investigator email" type="string"
+                                   variable="contact_person_email" required="true"></activiti:formProperty>
+            <activiti:formProperty id="pathologist_name" name="Pathologist name" type="string"
+                                   variable="pathologist_name" required="true"></activiti:formProperty>
+            <activiti:formProperty id="pathologist_email" name="Pathologist email" type="string"
+                                   variable="pathologist_email" required="true"></activiti:formProperty>
+            <activiti:formProperty id="previous_contact" name="Did the requester contact Palga before?" type="boolean"
+                                   variable="previous_contact" required="true"></activiti:formProperty>
+            <activiti:formProperty id="previous_contact_description" name="Description of previous contact" type="string"
+                                   variable="previous_contact_description" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+    <sequenceFlow id="request_form_to_review" sourceRef="request_form" targetRef="status_review"></sequenceFlow>
+
+    <scriptTask id="status_review" name="Update status to Review" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>
+            execution.setVariable("status", "Review")
+        </script>
+    </scriptTask>
+
+    <sequenceFlow id="review_to_request_review" sourceRef="status_review" targetRef="palga_request_review"></sequenceFlow>
+
+    <userTask id="palga_request_review" name="Request review" activiti:candidateGroups="palga">
+        <documentation>
+        Review if the request is valid and admissible.
+        </documentation>
+        <extensionElements>
+        <activiti:formProperty id="assigned_date" name="Time when this task was assigned." type="date" variable="assigned_date" required="true"></activiti:formProperty>
+        <activiti:formProperty id="requester_is_valid" name="Is the requester valid?" type="boolean" variable="is_requester_validated" required="true"></activiti:formProperty>
+        <activiti:formProperty id="requester_is_allowed" name="Is the requester allowed?" type="boolean" variable="is_requester_allowed" required="true"></activiti:formProperty>
+        <activiti:formProperty id="contact_person_is_allowed" name="Is the contact person allowed?" type="boolean" variable="is_contact_person_allowed" required="true"></activiti:formProperty>
+        <activiti:formProperty id="requester_lab_is_valid" name="Is the requester lab valid?" type="boolean" variable="is_requester_lab_validated" required="true"></activiti:formProperty>
+        <activiti:formProperty id="request_is_admissible" name="Is the request admissible?" type="boolean" variable="request_is_admissible" required="true"></activiti:formProperty>
+        <activiti:formProperty id="agreement_reached" name="Has agreement been reached?" type="boolean" variable="agreement_reached" required="true"></activiti:formProperty>
+        <activiti:formProperty id="reopen_request" name="Should the request be reopened?" type="boolean" variable="reopen_request" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+    <sequenceFlow id="review_to_reopen_or_proceed" sourceRef="palga_request_review" targetRef="to_reopen_or_proceed"></sequenceFlow>
+
+    <!-- Choice between:
+        - 'status_reopen' if reopen_request
+        - 'to_approval_or_rejected' if not reopen_request;
+    -->
+    <exclusiveGateway id="to_reopen_or_proceed" name="Reopen or proceed" />
+    <sequenceFlow id="review_to_reopen" sourceRef="to_reopen_or_proceed" targetRef="status_reopen">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${reopen_request == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="review_to_proceed" sourceRef="to_reopen_or_proceed" targetRef="to_approval_or_rejected">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${reopen_request == false} ]]></conditionExpression>
+    </sequenceFlow>
+
+    <!-- Reopen request -->
+    <scriptTask id="status_reopen" name="Update status to Open (reopen request)" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "Open")</script>
+    </scriptTask>
+    <sequenceFlow id="reopen_to_request_form" sourceRef="status_reopen" targetRef="request_form"></sequenceFlow>
+
+    <!-- Choice between:
+        - 'rejected' if not request_is_admissible
+        - 'data delivery' or 'approval' if request_is_admissible;
+    -->
+    <exclusiveGateway id="to_approval_or_rejected" name="Approval or rejected" />
+    <sequenceFlow id="review_to_data_delivery_or_approval" sourceRef="to_approval_or_rejected" targetRef="to_data_delivery_or_approval">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="review_to_rejected" sourceRef="to_approval_or_rejected" targetRef="status_rejected">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == false} ]]></conditionExpression>
+    </sequenceFlow>
+
+    <!-- Choice between:
+        - 'data_delivery' if skip_status_approval
+        - 'approval' if not skip_status_approval;
+    -->
+    <exclusiveGateway id="to_data_delivery_or_approval" name="Data delivery or approval" />
+    <sequenceFlow id="skip_approval_gateway_to_data_delivery" sourceRef="to_data_delivery_or_approval" targetRef="status_data_delivery">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${skip_status_approval == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="skip_approval_gateway_to_approval" sourceRef="to_data_delivery_or_approval" targetRef="status_approval">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${skip_status_approval == false} ]]></conditionExpression>
+    </sequenceFlow>
+
+
+    <scriptTask id="status_approval" name="Update status to Approval" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "Approval")</script>
+    </scriptTask>
+
+    <!-- Start two tasks in parallel:
+        - approval by scientific council;
+        - update approval status by palga.
+    -->
+    <sequenceFlow id="approval_to_approval_task" sourceRef="status_approval" targetRef="approval_tasks"></sequenceFlow>
+    <parallelGateway id="approval_tasks" />
+    <sequenceFlow id="approval_tasks_to_scientific_council_approval" sourceRef="approval_tasks" targetRef="scientific_council_approval"></sequenceFlow>
+    <sequenceFlow id="approval_tasks_to_request_approval" sourceRef="approval_tasks" targetRef="request_approval"></sequenceFlow>
+
+    <userTask id="scientific_council_approval" name="Scientific council approval" activiti:candidateGroups="scientific_council">
+        <documentation>
+        Approval by scientific council. Members can vote and add comments.
+        </documentation>
+    </userTask>
+
+    <userTask id="request_approval" name="Request approval" activiti:candidateGroups="palga">
+        <documentation>
+        Approval by scientific council and privacy committee. Status updated by Palga.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="scientific_council_approved" name="Scientific council approval" type="boolean" variable="scientific_council_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="privacy_committee_approved" name="Privacy committee approval" type="boolean" variable="scientific_council_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="request_approved" name="Request approved" type="boolean" variable="request_approved" required="true"></activiti:formProperty>
+            <activiti:formProperty id="reject_reason" name="Reject reason" type="string" variable="reject_reason" required="false"></activiti:formProperty>
+            <activiti:formProperty id="reject_date" name="Reject date" type="date" variable="reject_date" required="false"></activiti:formProperty>
+            <activiti:formProperty id="reopen_request" name="Should the request be reopened?" type="boolean" variable="reopen_request" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+    <!-- Join the parallel approval tasks. -->
+    <sequenceFlow id="scientific_council_approval_to_end" sourceRef="scientific_council_approval" targetRef="approval_end"></sequenceFlow>
+    <sequenceFlow id="request_approval_to_end" sourceRef="request_approval" targetRef="approval_end"></sequenceFlow>
+    <parallelGateway id="approval_end" />
+
+    <sequenceFlow id="approval_end_to_reopen_or_proceed" sourceRef="approval_end" targetRef="approval_to_reopen_or_proceed"></sequenceFlow>
+
+    <!-- Choice between:
+        - 'status_reopen' if reopen_request
+        - 'to_delivery_or_rejected' if not reopen_request;
+    -->
+    <exclusiveGateway id="approval_to_reopen_or_proceed" name="Reopen or proceed" />
+    <sequenceFlow id="approval_to_reopen" sourceRef="approval_to_reopen_or_proceed" targetRef="status_reopen">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${reopen_request == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="approval_to_proceed" sourceRef="approval_to_reopen_or_proceed" targetRef="to_delivery_or_rejected">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${reopen_request == false} ]]></conditionExpression>
+    </sequenceFlow>
+
+    <!-- Choice between:
+        - 'data delivery' if request_approved;
+        - 'rejected' status otherwise.
+    -->
+    <exclusiveGateway id="to_delivery_or_rejected" name="Data delivery or rejected" />
+    <sequenceFlow id="approval_to_status_delivery" sourceRef="to_delivery_or_rejected" targetRef="status_data_delivery">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="approval_to_status_rejected" sourceRef="to_delivery_or_rejected" targetRef="status_rejected">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_approved == false} ]]></conditionExpression>
+    </sequenceFlow>
+
+
+    <scriptTask id="status_data_delivery" name="Update status to DataDelivery" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "DataDelivery")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_delivery_to_delivery_task" sourceRef="status_data_delivery" targetRef="data_delivery"></sequenceFlow>
+
+    <userTask id="data_delivery" name="Data delivery" activiti:candidateGroups="palga">
+        <documentation>
+        Delivery of data.
+        </documentation>
+    </userTask>
+
+
+    <sequenceFlow id="data_delivery_to_selection_review_or_closed" sourceRef="data_delivery" targetRef="to_selection_review_or_closed"></sequenceFlow>
+
+    <!-- Choice between 'selection review' (if is_pa_report_request or is_materials_request) or 'closed' status. -->
+    <exclusiveGateway id="to_selection_review_or_closed" name="Selection review or closed" />
+    <sequenceFlow id="data_delivery_to_status_selection_review" sourceRef="to_selection_review_or_closed" targetRef="status_selection_review">
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${is_pa_report_request == true || is_materials_request == true || is_clinical_data_request == true} ]]>
+        </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="data_delivery_to_status_closed" sourceRef="to_selection_review_or_closed" targetRef="status_closed">
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${is_pa_report_request == false && is_materials_request == false && is_clinical_data_request == false} ]]>
+        </conditionExpression>
+    </sequenceFlow>
+
+
+    <scriptTask id="status_selection_review" name="Update status to SelectionReview" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "SelectionReview")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_selection_review_to_selection_review_task" sourceRef="status_selection_review" targetRef="selection_review"></sequenceFlow>
+
+    <userTask id="selection_review" name="Selection review" activiti:candidateGroups="palga">
+        <documentation>
+        Review of the PA number selection.
+        </documentation>
+        <extensionElements>
+            <activiti:formProperty id="selection_approved" name="Selection approved" type="boolean" variable="selection_approved" required="true"></activiti:formProperty>
+        </extensionElements>
+    </userTask>
+
+
+    <sequenceFlow id="data_delivery_to_lab_request_or_closed" sourceRef="selection_review" targetRef="to_data_delivery_or_lab_request"></sequenceFlow>
+
+    <!-- Choice between returning to 'data delivery' or move on to 'lab request' (if selection_approved) status. -->
+    <exclusiveGateway id="to_data_delivery_or_lab_request" name="Data delivery or lab request" />
+    <sequenceFlow id="selection_review_to_status_data_delivery" sourceRef="to_data_delivery_or_lab_request" targetRef="status_data_delivery">
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${selection_approved == false} ]]>
+        </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="selection_review_to_status_lab_request" sourceRef="to_data_delivery_or_lab_request" targetRef="status_lab_request">
+        <conditionExpression xsi:type="tFormalExpression">
+            <![CDATA[ ${selection_approved == true} ]]>
+        </conditionExpression>
+    </sequenceFlow>
+
+
+    <scriptTask id="status_lab_request" name="Update status to LabRequest" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "LabRequest")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_lab_request_to_lab_request" sourceRef="status_lab_request" targetRef="lab_request"></sequenceFlow>
+
+    <userTask id="lab_request">
+        <multiInstanceLoopCharacteristics isSequential="false"
+            activiti:collection="${lab_request_labs}" activiti:elementVariable="lab">
+        </multiInstanceLoopCharacteristics>
+    </userTask>
+
+    <sequenceFlow id="lab_request_to_closed" sourceRef="lab_request" targetRef="status_closed"></sequenceFlow>
+
+
+    <scriptTask id="status_rejected" name="Update status to Rejected" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "Rejected")</script>
+    </scriptTask>
+
+    <sequenceFlow id="status_rejected_to_end" sourceRef="status_rejected" targetRef="request_end"></sequenceFlow>
+
+
+    <scriptTask id="status_closed" name="Update status to Closed" scriptFormat="groovy" activiti:autoStoreVariables="true">
+        <documentation>Update status.</documentation>
+        <script>execution.setVariable("status", "Closed")</script>
+    </scriptTask>
+
+    <sequenceFlow id="closed_to_end" sourceRef="status_closed" targetRef="request_end"></sequenceFlow>
+
+    <endEvent id="request_end" name="End"></endEvent>
+
+</process>
+</definitions>

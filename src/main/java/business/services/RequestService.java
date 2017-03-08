@@ -64,6 +64,8 @@ import business.representation.RequestStatus;
 @Service
 public class RequestService {
 
+    public static final String CURRENT_PROCESS_VERSION = "dntp_request_005";
+
     public static final String CSV_CHARACTER_ENCODING = "UTF-8";
 
     Log log = LogFactory.getLog(getClass());
@@ -404,9 +406,10 @@ public class RequestService {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", parentRequest.getRequesterId());
         values.put("jump_to_review", Boolean.TRUE);
+        values.put("skip_status_approval", Boolean.FALSE);
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                "dntp_request_004", values);
+                CURRENT_PROCESS_VERSION, values);
         String childId = newInstance.getProcessInstanceId();
         log.info("New forked process instance started: " + childId);
         runtimeService.addUserIdentityLink(childId, parentRequest.getRequesterId(), IdentityLinkType.STARTER);

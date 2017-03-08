@@ -215,6 +215,7 @@ angular.module('ProcessApp.controllers')
                     $scope.labRequest.htmlRequesterLabAddressPrint = getHTMLAddressForLab($scope.labRequest.requesterLab, true);
                     $scope.labRequest.htmlLabAddress = getHTMLAddressForLab($scope.labRequest.lab);
                     deferred.resolve($scope.labRequest);
+                    $scope.getRequestByLabRequest($scope.labRequest);
                 }, function (err) {
                     var errMsg = 'Error : ' + err.data.status + ' - ' + err.data.error;
                     $scope.alerts.push({type: 'danger', msg: errMsg});
@@ -761,4 +762,16 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-        }]);
+            $scope.getRequestByLabRequest = function(labRequest) {
+                Request.get({id:labRequest.processInstanceId}, function (req) {
+                    var now = new Date();
+                    req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
+                    $scope.request = req;
+                    $rootScope.tempRequest = jQuery.extend( true, {}, req ); // deep copy
+                }, function(response) {
+                    $rootScope.logErrorResponse(response);
+                });
+            };
+        }
+
+        ]);

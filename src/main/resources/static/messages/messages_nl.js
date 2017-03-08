@@ -108,8 +108,8 @@
         'Clinical data': 'Klinische gegevens',
         'Clinical data from practitioner': 'Klinische gegevens via behandelaar',
         'Biobank request number': 'Biobank aanvraagnummer',
-        'Hereby you receive this material for a scientific study. We request you notify': 'Hierbij ontvangt u dit materiaal voor onderzoek. We verzoeken u om contact op te nemen met',
-        'PALGA request': 'PALGA verzoek',
+        'Hereby you receive this material for a scientific study. We request you notify': 'Hierbij ontvangt u materiaal voor een wetenschappelijke studie. Wij verzoeken u dit door te geven aan',
+        'PALGA request': 'PALGA aanvraag',
         'Request_Type_1': 'Alleen aantallen, oriënterende zoekvraag',
         'Request_Type_2': 'Alleen excerpten',
         'Request_Type_3': 'Excerpten en complete PA-verslagen',
@@ -418,7 +418,7 @@
         'Do you want to finish the request for PA reports and/or clinical data?': 'Wilt u het verzoek voor PA-verslagen en/of klinische gegevens afronden?',
         'Do you want to complete the rejected request?': 'Wilt u het afgewezen verzoek afronden?',
         'Are you sure you want to delete the PA number?': 'Weet u zeker dat u het PA-nummer wilt verwijderen?',
-        'Palga request: ': 'Palga verzoek: ',
+        'Palga request: ': 'Palga aanvraag: ',
         'Return this lab request to status \'Under review by lab\'?':
             'Het labverzoek terugzetten naar \'Beoordeling door lab\'?',
         'Undo rejection': 'Afwijzing ongedaan maken',
@@ -459,6 +459,7 @@
         'Compose recall mail': 'Terugroepmail opstellen',
         'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
         'Return address': 'Retouradres',
+        'Hospital': 'Ziekenhuis',
 
         /* ===================== */
         /* User overview */

@@ -8,6 +8,7 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 
+import business.models.ContactData;
 import business.models.RequestProperties.ReviewStatus;
 
 public class RequestListRepresentation implements RequestListElement {

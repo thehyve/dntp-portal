@@ -138,7 +138,7 @@ public class RequestFormService {
                 request.setParent(parent);
             }
         }
-
+        // Set biobank request number and billing address from properties
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
 

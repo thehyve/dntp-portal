@@ -144,6 +144,7 @@
         'Return address': 'Return address',
         'Biobank request number': 'Biobank request number',
         'PALGA request': 'PALGA request',
+        'Hospital': 'Hospital',
         'Hereby you receive this material for a scientific study. We request you notify': 'Hereby you receive this material for a scientific study. We request you notify',
 
         /* ===================== */

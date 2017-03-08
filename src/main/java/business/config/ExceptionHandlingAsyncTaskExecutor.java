@@ -1,4 +1,4 @@
-package business;
+package business.config;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;

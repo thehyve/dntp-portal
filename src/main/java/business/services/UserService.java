@@ -195,10 +195,17 @@ public class UserService {
             throw new InvalidUserData("Passwords do not match.");
         }
         String email = body.getContactData().getEmail().trim().toLowerCase();
-        if (findByUsername(email) != null ) {
-            throw new EmailAddressNotAvailable();
+        User existingUser = findByUsername(email);
+        if (existingUser != null ) {
+            // Email address already in use
+            if (currentUser != null && currentUser.isPalga()) {
+                throw new EmailAddressNotAvailable();
+            } else {
+                mailService.sendAccountAlreadyExists(existingUser);
+                return null;
+            }
         }
-        Role role = null;
+        Role role;
         if (currentUser != null && currentUser.isPalga()) {
             role = roleRepository.findByName(body.getCurrentRole());
         } else {

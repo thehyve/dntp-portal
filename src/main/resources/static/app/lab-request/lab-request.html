@@ -173,30 +173,31 @@ This file is distributed under the GNU Affero General Public License
                                 <div class="col-xs-8 col-md-10">
                                     <p class="form-control-static">
                                         {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
-                                        {{labRequest.requesterLab.name}}<br/>
-                                        {{labRequest.requesterLab.address1}}<br/>
-                                        {{labRequest.requesterLab.address2}}<br/>
-                                        {{labRequest.requesterLab.postalCode}} {{labRequest.requesterLab.city}}<br/>
-                                        {{labRequest.requesterLab.telephone}} <br/>
-                                    <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
+                                        {{labRequest.requesterLab.name}}
                                     </p>
+                                    <address class="address" ng-bind-html="labRequest.htmlRequesterLabAddressPrint"></address>
+
                                 </div>
                             </div>
 
-                            <!--Requester lab Info-->
+                            <!--Billing Info-->
                             <div class="row">
-                                <label class="control-label col-xs-4 col-md-2" ng-if="isLabOrHubUser()">
+                                <label class="control-label col-xs-4 col-md-2">
                                     {{ 'Billing address' | translate }}
                                 </label>
-                                <label class="control-label col-xs-4 col-md-2" ng-if="isRequester()">
-                                    {{ 'Billing address' | translate }}
-                                </label>
+                                <div class="col-xs-8 col-md-10">
+                                    <address class="address" ng-bind-html="labRequest.htmlBillingAddress"></address>
+                                </div>
+                            </div>
 
+                            <!--Charge number-->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-md-2">
+                                    {{ 'Charge number' | translate }}
+                                </label>
                                 <div class="col-xs-8 col-md-10">
                                     <p class="form-control-static">
-                                        {{request.billingAddress.address1}}<br/>
-                                        {{request.billingAddress.address2}}<br/>
-                                        {{request.billingAddress.postalCode}} {{request.billingAddress.city}}<br/>
+                                        {{request.chargeNumber}}
                                     </p>
                                 </div>
                             </div>
@@ -209,12 +210,10 @@ This file is distributed under the GNU Affero General Public License
                                 <div class="col-xs-8 col-md-10">
                                     <p class="form-control-static">
                                         {{'Lab' | translate}} {{labRequest.requesterLab.number}} -
-                                        {{labRequest.lab.name}}<br/>
-                                        {{labRequest.lab.contactData.address1}}<br/>
-                                        {{labRequest.lab.contactData.address2}}<br/>
-                                        {{labRequest.lab.contactData.postalCode}} {{labRequest.request.billingAddress.city}}<br/>
-                                        {{labRequest.lab.contactData.telephone}} <br/>
+                                        {{labRequest.lab.name}}
                                     </p>
+                                    <address class="address" ng-bind-html="labRequest.htmlLabAddress"></address>
+
                                 </div>
                             </div>
                             <div ng-show="!isLabOrHubUser()">
@@ -228,8 +227,8 @@ This file is distributed under the GNU Affero General Public License
                                     <div class="col-xs-8 col-md-10">
                                         <p class="form-control-static">
                                             {{'Lab' | translate}} {{labRequest.lab.number}} - {{labRequest.lab.name}}
-                                        <address class="address" ng-bind-html="labRequest.htmlLabAddress"></address>
                                         </p>
+                                        <address class="address" ng-bind-html="labRequest.htmlLabAddress"></address>
                                     </div>
                                 </div>
                             </div>

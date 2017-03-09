@@ -406,7 +406,7 @@ public class RequestService {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", parentRequest.getRequesterId());
         values.put("jump_to_review", Boolean.TRUE);
-        values.put("skip_status_approval", Boolean.FALSE);
+
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
                 CURRENT_PROCESS_VERSION, values);
@@ -428,6 +428,8 @@ public class RequestService {
         variables.put("requester_is_valid", Boolean.TRUE);
         variables.put("requester_allowed", Boolean.TRUE);
         variables.put("contact_person_is_allowed", Boolean.TRUE);
+
+        variables.put("skip_status_approval", Boolean.FALSE);
         runtimeService.setVariables(childId, variables);
 
         RequestProperties childProperties = requestPropertiesService.findByProcessInstanceId(childId);

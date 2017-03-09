@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,7 @@ public class PasswordService {
             log.warn("New password requested for unknown username: " + email);
             // If the user doesn't exist we still return OK, since we don't want to let an attacker know if an email
             // exists in our database
+            mailService.sendPasswordRecoveryUserUnknown(email);
         } else {
             // Create a NewPasswordRequest for the user
             NewPasswordRequest npr = new NewPasswordRequest(user);

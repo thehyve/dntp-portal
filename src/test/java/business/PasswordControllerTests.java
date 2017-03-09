@@ -63,8 +63,7 @@ public class PasswordControllerTests {
     private UserRepository userRepository;
 
     private MockMvc mockMvc;
-    //public GreenMail greenMail;
-    
+
     @Autowired
     JavaMailSender mailSender;
 
@@ -74,14 +73,13 @@ public class PasswordControllerTests {
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //this.greenMail = new GreenMail(ServerSetupTest.SMTP);
-        ((MockMailSender)this.mailSender).clear();
     }
 
     @Test
     public void requestNewPasswordSendsCorrectEmail() throws Exception {
+        ((MockMailSender)this.mailSender).clear();
+
         EmailRepresentation emailForm = new EmailRepresentation("test+palga@dntp.thehyve.nl");
-        //greenMail.start();
 
         // Perform the request and ensure we get a correct result status
         mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
@@ -122,14 +120,13 @@ public class PasswordControllerTests {
         NewPasswordRequest passwordRequest = passwordRequestRepository.findByToken(link);
         Assert.assertNotNull(passwordRequest);
         Assert.assertEquals(passwordRequest.getUser().getUsername(), emailForm.getEmail());
-
-        //greenMail.stop();
     }
 
     @Test
     public void requestNewPasswordDoesNothingForUnknownUser() throws Exception {
+        ((MockMailSender)this.mailSender).clear();
+
         EmailRepresentation emailForm = new EmailRepresentation("somebody@nowhere.com");
-        //greenMail.start();
 
         // Perform the request and ensure we get a correct result status
         mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
@@ -150,11 +147,11 @@ public class PasswordControllerTests {
         // Mail sending is asynchronous. Sleep for 1 second.
         Thread.sleep(1 * 1000);
 
-        // Check that no email has been sent
+        // Check that an email has been sent
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
-        Assert.assertEquals(0, emails.size());
-
-        //greenMail.stop();
+        Assert.assertEquals(1, emails.size());
+        Assert.assertEquals(MailService.passwordRecoveryUserUnknownSubject, emails.get(0).getSubject());
+        Assert.assertEquals(emailForm.getEmail(), emails.get(0).getAllRecipients()[0].toString());
     }
 
     @Test

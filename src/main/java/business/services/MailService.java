@@ -432,6 +432,24 @@ public class MailService {
         }
     }
 
+    public static final String passwordRecoveryUserUnknownSubject = "Account niet bekend / User account unknown";
+
+    @Async
+    public void sendPasswordRecoveryUserUnknown(String email) {
+        try {
+            log.info("Sending password reset, user unknown email to '{}'", email);
+            String registrationLink = getLink("/#/register");
+            Template template = freemarkerConfiguration.getTemplate("passwordResetNoUserEmail.ftl");
+            Map<String, Object> params = new HashMap<>();
+            params.put("link", registrationLink);
+            CharArrayWriter writer = new CharArrayWriter(1000);
+            template.process(params, writer);
+            sendEmail(email, passwordRecoveryUserUnknownSubject, writer.toString());
+        } catch (IOException | TemplateException e) {
+            log.error("Error creating the mail message.", e);
+        }
+    }
+
     public boolean checkMailSender() {
         if (mailSender == null) {
             return false;

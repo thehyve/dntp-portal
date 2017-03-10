@@ -195,7 +195,8 @@ angular.module('ProcessApp.controllers')
                     'mec_approval': '',
                     'excerpt_list': '',
                     'excerpt_selection': '',
-                    'data': ''
+                    'data': '',
+                    'informed_consent_form': ''
             };
 
             $scope.uploading = false;
@@ -218,6 +219,7 @@ angular.module('ProcessApp.controllers')
                 var result = new Request(JSON.parse(data));
                 //$scope.refresh(request, result);
                 request.attachments = result.attachments;
+                request.informedConsentFormAttachments = result.informedConsentFormAttachments;
                 request.agreementAttachments = result.agreementAttachments;
                 request.excerptList = result.excerptList;
                 request.dataAttachments = result.dataAttachments;
@@ -303,6 +305,22 @@ angular.module('ProcessApp.controllers')
                 }, function(response) {
                     $rootScope.logErrorResponse(response);
                     $scope.dataLoading = false;
+                });
+            };
+
+            $scope.removeInformedConsentFormFile = function(f) {
+                bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
+                    if (result) {
+                        var attachment = new RequestAttachment();
+                        attachment.requestId = $scope.request.processInstanceId;
+                        attachment.id = f.id;
+                        attachment.removeInformedConsentFormFile(function() {
+                            $scope.request.informedConsentFormAttachments.splice($scope.request.informedConsentFormAttachments.indexOf(f), 1);
+                            bootbox.alert('File ' + f.name + ' deleted.');
+                        }, function(response) {
+                            $rootScope.logErrorResponse(response);
+                        });
+                    }
                 });
             };
 

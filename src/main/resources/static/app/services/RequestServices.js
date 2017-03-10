@@ -186,6 +186,10 @@
             remove : {
                 method : 'DELETE'
             },
+            removeInformedConsentFormFile : {
+                url : '/requests/:requestId/informedConsentFormFiles/:id',
+                method : 'DELETE'
+            },
             removeDataFile : {
                 url : '/requests/:requestId/dataFiles/:id',
                 method : 'DELETE'

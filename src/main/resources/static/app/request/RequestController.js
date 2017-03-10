@@ -184,13 +184,13 @@ angular.module('ProcessApp.controllers')
             AgreementFormTemplate.replaceVariables($scope, 'agreementFormTemplate.contents', 'request', 'template_contents');
         }
 
-        $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {
-            if (!isOnlyResetReason) {
-                request.linkageWithPersonalDataNotes = '';
-                request.informedConsent = false;
-            }
-            request.reasonUsingPersonalData = '';
-        };
+            $scope.resetDataLinkageValues = function (request, isOnlyResetReason) {
+                if (!isOnlyResetReason) {
+                    request.linkageWithPersonalDataNotes = '';
+                    request.informedConsent = false;
+                }
+                request.reasonUsingPersonalData = '';
+            };
 
         $scope.resetPreviousContactValues = function (request) {
             request.previousContactDescription = '';

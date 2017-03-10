@@ -24,7 +24,13 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
+import business.exceptions.*;
 import business.models.*;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
@@ -47,16 +53,12 @@ import org.springframework.stereotype.Service;
 
 import com.opencsv.CSVWriter;
 
-import business.exceptions.EmailError;
-import business.exceptions.FileDownloadError;
-import business.exceptions.InvalidActionInStatus;
-import business.exceptions.RequestNotFound;
-import business.exceptions.TaskNotFound;
-import business.exceptions.UserUnauthorised;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -357,6 +359,11 @@ public class RequestService {
             Set<ConstraintViolation<RequestRepresentation>> requestConstraintViolations = validator.validate(request);
             if (!requestConstraintViolations.isEmpty()) {
                 throw new InvalidRequest("Invalid request", requestConstraintViolations);
+            }
+
+            Set<ConstraintViolation<RequestProperties>> propertiesConstraintViolations = validator.validate(properties);
+            if (!propertiesConstraintViolations.isEmpty()) {
+                throw new InvalidRequest("Invalid request", propertiesConstraintViolations);
             }
         }
 

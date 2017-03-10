@@ -80,32 +80,32 @@ This file is distributed under the GNU Affero General Public License
                         </tr>
                         <tr class="no-print">
                             <th class="no-print">&nbsp;</th>
-                            <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th ng-if="isLabUser()"><input st-search="requesterLab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th ng-if="!isLabUser()"><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th ng-if="isLabUser()"><input st-persisted-search="requesterLab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th ng-if="!isLabUser()"><input st-persisted-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th></th>
-                            <th><select st-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <th><select st-persisted-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by hub assistance'|translate}}</option>
                                     <option value="true" ng-selected="activeSidebar === 'hub_assistance_requested'">{{ 'Yes' | translate}}</option>
                                     <option value="false">{{ 'No' | translate}}</option>
                                 </select></th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
-                            <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <th><select st-persisted-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by status' | translate}}</option>
                                     <option ng-repeat="status in statuses"
                                         ng-selected="activeSidebar === status"
                                         value="{{status}}">{{ status | translate}}</option>
                                 </select>
                             </th>
-                            <th><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th class="no-print">&nbsp;</th>
                         </tr>
                         <tr class="no-print">
                             <th class="no-print">&nbsp;</th>
-                            <th colspan="10"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                            <th colspan="10"><input id="lab-request-persisted-search" st-persisted-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>

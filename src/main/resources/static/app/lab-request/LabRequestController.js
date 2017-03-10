@@ -233,6 +233,8 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = LabRequestFilter.selectByStatus(status);
             });
 
+            $scope.persistKey = 'labrequests'
+
 	        $scope.checkTableFilterStatus = function() {
 		        // Table filter status
 		        var tfs = $scope.activeSidebar;
@@ -246,7 +248,7 @@ angular.module('ProcessApp.controllers')
 	        };
 
             $scope.resetFilters = function() {
-                localStorage.setItem('labrequests', JSON.stringify({}));
+                localStorage.setItem($scope.persistKey, JSON.stringify({}));
                 $route.reload();
             };
 

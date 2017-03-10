@@ -117,15 +117,11 @@ angular.module('ProcessApp.controllers')
 		        $scope.$apply();
 	        };
 
-	        $scope.getPersisted = function(field) {
-	            var state = JSON.parse(localStorage.getItem("requests"));
-	            if (state != null && state.search != null && state.search.predicateObject != null) {
-	                return state.search.predicateObject[field];
-                }
-            };
+	        // Used in the stPersistedSearch directive
+	        $scope.persistKey = 'requests';
 
 	        $scope.resetFilters = function() {
-	            localStorage.setItem('requests', JSON.stringify({}));
+	            localStorage.setItem($scope.persistKey, JSON.stringify({}));
                 $route.reload();
             };
 

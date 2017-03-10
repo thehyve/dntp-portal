@@ -1,66 +1,69 @@
 angular.module('ProcessApp.directives')
-  .directive('stPersistedSearch', ['stConfig', '$timeout','$parse', function (stConfig, $timeout, $parse) {
-    'use strict';
+    .directive('stPersistedSearch', ['stConfig', '$timeout', '$parse', function (stConfig, $timeout, $parse) {
+        'use strict';
 
-    var persistState = function(state) {
-      console.log('Persisting: ' + JSON.stringify(state));
-      localStorage.setItem('temp', JSON.stringify(state));
-    };
+        var persistState = function(key, state) {
+            console.log('Persisting table state = ' + JSON.stringify(state));
+            localStorage.setItem(key, JSON.stringify(state));
+        };
 
-    var getValue = function(field) {
-        var state = JSON.parse(localStorage.getItem('temp'));
-        var val = _.get(state, 'search.predicateObject.' + field, '');
-        console.log('Set ' + field + ' = ' + val);
-        return val;
-    };
+        var getValue = function(key, field) {
+            var state = JSON.parse(localStorage.getItem(key));
+            var val = _.get(state, 'search.predicateObject.' + field, '');
+            return val;
+        };
 
-    return {
-      require: '^stTable',
-      link: function (scope, element, attr, ctrl) {
-        var tableCtrl = ctrl;
-        var promise = null;
-        var throttle = attr.stDelay || stConfig.search.delay;
-        var event = attr.stInputEvent || stConfig.search.inputEvent;
+        var getPersistKey = function(scope) {
+            return scope.persistKey || 'st-persist';
+        };
 
-        attr.$observe('stPersistedSearch', function (newValue, oldValue) {
-          var input = element[0].value;
-          if (newValue !== oldValue && input) {
-            ctrl.tableState().search = {};
-            tableCtrl.search(input, newValue);
-          }
-        });
+        return {
+            require: '^stTable',
+            link: function (scope, element, attr, ctrl) {
+                var tableCtrl = ctrl;
+                var promise = null;
+                var throttle = attr.stDelay || stConfig.search.delay;
+                var event = attr.stInputEvent || stConfig.search.inputEvent;
 
-        //table state -> view
-        scope.$watch(function () {
-          return ctrl.tableState();
-        }, function (newValue, oldValue) {
-          var predicateExpression = attr.stPersistedSearch || '$';
-          if (newValue.predicateObject && $parse(predicateExpression)(newValue.predicateObject) !== element[0].value) {
-            element[0].value = $parse(predicateExpression)(newValue.predicateObject) || '';
-          }
-        }, true);
+                attr.$observe('stPersistedSearch', function (newValue, oldValue) {
+                    var input = element[0].value;
+                    if (newValue !== oldValue && input) {
+                        ctrl.tableState().search = {};
+                        tableCtrl.search(input, newValue);
+                    }
+                });
 
-        // view -> table state
-        element.bind(event, function (evt) {
-          evt = evt.originalEvent || evt;
-          if (promise !== null) {
-            $timeout.cancel(promise);
-          }
+                //table state -> view
+                scope.$watch(function () {
+                    return ctrl.tableState();
+                }, function (newValue, oldValue) {
+                    var predicateExpression = attr.stPersistedSearch || '$';
+                    if (newValue.predicateObject && $parse(predicateExpression)(newValue.predicateObject) !== element[0].value) {
+                        element[0].value = $parse(predicateExpression)(newValue.predicateObject) || '';
+                    }
+                }, true);
 
-          promise = $timeout(function () {
-            tableCtrl.search(evt.target.value, attr.stPersistedSearch || '');
-            persistState(tableCtrl.tableState());
-            promise = null;
-          }, throttle);
-        });
+                // view -> table state
+                element.bind(event, function (evt) {
+                    evt = evt.originalEvent || evt;
+                    if (promise !== null) {
+                        $timeout.cancel(promise);
+                    }
 
-        setTimeout(function(){
-            //do this after view has loaded :)
-            var field = attr.stPersistedSearch || '$';
-            var initialValue = getValue(field);
-            element.val(initialValue);
-            tableCtrl.search(initialValue, attr.stPersistedSearch || '');
-        }, 0);
-      }
-    };
-  }]);
+                    promise = $timeout(function () {
+                        tableCtrl.search(evt.target.value, attr.stPersistedSearch || '');
+                        console.log('Persisting table state for scope: ' + getPersistKey(scope));
+                        persistState(getPersistKey(scope), tableCtrl.tableState());
+                        promise = null;
+                    }, throttle);
+                });
+
+                setTimeout(function () {
+                    //do this after view has loaded :)
+                    var field = attr.stPersistedSearch || '$';
+                    var initialValue = getValue(getPersistKey(scope), field);
+                    element.val(initialValue);
+                }, 0);
+            }
+        };
+    }]);

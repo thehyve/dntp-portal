@@ -24,8 +24,9 @@ public class File {
         EXCERPT_LIST,
         EXCERPT_SELECTION,
         MEDICAL_ETHICAL_COMMITEE_APPROVAL,
-        DATA
-    };
+        DATA,
+        INFORMED_CONSENT_FORM
+    }
 
     private String name;
     private String description;

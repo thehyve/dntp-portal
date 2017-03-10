@@ -603,6 +603,84 @@
                         </div>
                     </div>
 
+                    <!-- Informed consent form  -->
+                    <div class="form-group" ng-show="(!request.statisticsRequest && request.linkageWithPersonalData && request.informedConsent)"
+                         ng-class="{ 'has-error' : request.informedConsentFormAttachments.length < 1 }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Upload informed consent form' | translate }}</label>
+                        <div class="col-sm-8">
+                            <p ng-show="request.informedConsentFormAttachments.length < 1"><em>{{'No informed consent form uploaded.' | translate}}</em></p>
+
+                            <div class="list-group">
+                                <a ng-repeat="file in request.informedConsentFormAttachments"
+                                   ng-href="/requests/{{request.processInstanceId}}/informedConsentFormFiles/{{file.id}}"
+                                   class="list-group-item">
+                                    <span><i class="glyphicon glyphicon-file"></i></span>
+                                    {{file.name}}
+                                    <button class="btn btn-xs btn-default pull-right" type="button" title="{{'Delete'|translate}}"
+                                            ng-click="removeInformedConsentFormFile(file); $event.preventDefault();"
+                                    >
+                                        <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
+                                    </button>
+                                </a>
+                            </div>
+                            <!-- Informed consent form upload -->
+                            <div class="form-control"
+                                 flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/informedConsentFormFiles'})"
+                                 flow-name="informedConsentFormFlow"
+                                 flow-files-submitted="fileuploadsubmitted('informed_consent_form'); Upload.uploadFile($flow)"
+                                 flow-file-success="Upload.fileUploadSuccess('informed_consent_form', $message, $file); fileuploadsuccess(request, $message, 'informed_consent_form', $flow)"
+                                 flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'informed_consent_form')"
+                                 ng-mouseenter="showPopover('uploadInformedConsentFormPopover')" ng-mouseleave="hidePopover('uploadInformedConsentFormPopover')">
+                                <div class="alert alert-danger" role="alert" ng-if="upload_result['informed_consent_form'] == 'error'">
+                                    <span ng-bind-html="upload_error['informed_consent_form']"></span>
+                                </div>
+                                <div ng-repeat="file in $flow.files">
+                                <span ng-if="file.isUploading()">
+                                    {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                                </span>
+                                    <span ng-if="file.isComplete()">
+                                    {{'Done uploading file ?. The attachment has been saved.' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}})
+                                </span>
+                                    <div class="alert alert-danger" role="alert" ng-if="file.error">
+                                        {{file.error}}
+                                    </div>
+                                    <br />
+                                    <div class="progress">
+                                        <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                                             style="min-width: 2em;"
+                                             ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                                        >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                                    </div>
+                                </div>
+
+                                <div id="uploadInformedConsentFormPopover"
+                                     bs-popover
+                                     title="{{'Upload form'|translate}}"
+                                     data-placement="top-right" data-animation="am-flip-x"
+                                     data-trigger="manual"
+                                     data-content="{{'popover: Upload informed consent form'|translate}}">
+                                    <input type="file" flow-btn id="test-upload-informed-consent-form" style="display:none" />
+                                    <button class="btn btn-default" type="button"
+                                            id="button_upload_informed_consent_form"
+                                            ng-disabled="uploading"
+                                            flow-btn>{{'Upload form'|translate}}</button>
+                                </div>
+                                <br>
+                                <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                                     flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                                     flow-drag-leave="style={border: '2px dashed gray'}"
+                                     ng-hide="uploading"
+                                     ng-style="style">
+                                    ({{'drag and drop your file here'|translate}})
+                                </div>
+                            </div>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="request.informedConsentFormAttachments.length < 1">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
 
                     <h4 class="h4">{{ 'Attachments' | translate }}</h4>
                     <hr>

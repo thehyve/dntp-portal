@@ -245,6 +245,11 @@ angular.module('ProcessApp.controllers')
 		        $scope.$apply();
 	        };
 
+            $scope.resetFilters = function() {
+                localStorage.setItem('labrequests', JSON.stringify({}));
+                $route.reload();
+            };
+
             $scope.showSelection = function(labRequests) {
                 var selection = $scope.activeSidebar;
                 if (labRequests && selection in $scope.selections) {

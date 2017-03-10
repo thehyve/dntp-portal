@@ -33,11 +33,17 @@ This file is distributed under the GNU Affero General Public License
                 </button>
             </li>
             </ul>
-            <ul class="nav nav-pills" ng-if="isPalga()">
-            <li role="presentation" title="{{'Print selected'|translate}}">
+            <ul class="nav nav-pills">
+            <li role="presentation" title="{{'Print selected'|translate}}" ng-if="isPalga()">
                 <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
                     <span><i class="glyphicon glyphicon-print"></i></span>
                     {{'Print selected'|translate}}
+                </button>
+            </li>
+            <li role="presentation" title="{{'Reset filters'|translate}}">
+                <button class="btn btn-default" ng-click="resetFilters()" id="reset-filters">
+                    <span><i class="mdi mdi-filter-remove-outline"></i></span>
+                    {{'Reset filters'|translate}}
                 </button>
             </li>
             </ul>
@@ -82,9 +88,9 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th><input st-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th><input st-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th><select st-search="statusText" class="input-sm form-control" type="search" st-input-event="change">
+                        <th><input st-persisted-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><select st-persisted-search="statusText" class="input-sm form-control" type="search" st-input-event="change" ng-disabled="isStatusPage()">
                                 <option value="">{{'Filter by status' | translate}}</option>
                                 <option ng-repeat="status in displayStatuses"
                                     ng-selected="status === activeSidebar"
@@ -93,28 +99,30 @@ This file is distributed under the GNU Affero General Public License
                         </th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
-                        <th ng-if="isPalga()"><select st-search="linkageWithPersonalData" class="input-sm form-control" type="search" st-input-event="change">
+                        <th ng-if="isPalga()"><select st-persisted-search="linkageWithPersonalData" class="input-sm form-control" type="search" st-input-event="change">
                                 <option value="">{{'Filter by linkage' | translate}}</option>
                                 <option value="true">{{ 'Yes' | translate}}</option>
                                 <option value="false">{{ 'No' | translate}}</option>
                             </select>
                         </th>
                         <th ng-if="isRequester()">&nbsp;</th>
-                        <th ng-if="isScientificCouncil()" class="request-vote"><select st-search="approvalVote" class="input-sm form-control" type="search" st-input-event="change">
+                        <th ng-if="isScientificCouncil()" class="request-vote"><select st-persisted-search="approvalVote" class="input-sm form-control" type="search" st-input-event="change">
                                 <option value="">{{'Filter by review' | translate}}</option>
                                 <option value="ACCEPTED">{{ 'Accepted' | translate}}</option>
                                 <option value="REJECTED">{{ 'Rejected' | translate}}</option>
                             </select>
                         </th>
-                        <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th><input st-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th ng-if="isPalga()"><input st-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="isPalga()"><input st-persisted-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th>&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th colspan="{{isPalga() ? 10 : (isScientificCouncil() || isRequester() ? 9 : 8)}}"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                        <th colspan="{{isPalga() ? 10 : (isScientificCouncil() || isRequester() ? 9 : 8)}}">
+                            <input id="request-persisted-search" st-persisted-search class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
+                        </th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>

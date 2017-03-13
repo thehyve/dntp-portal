@@ -136,5 +136,19 @@ angular.module('ProcessApp.services')
             };
 
             return filterService;
-    }]);
+    }])
+    .factory('requestStrictFilter', function($filter){
+        return function(input, predicate){
+            if( 'statusText' in predicate){
+                var temp_predicate = {'statusText': predicate['statusText']};
+                var temp_results   = $filter('filter')(input, temp_predicate, true);
+                delete predicate['statusText'];
+                return $filter('filter')(temp_results, predicate);
+            } else {
+                return $filter('filter')(input, predicate, false);
+            }
+
+        }
+
+    });
 })(console, _, angular);

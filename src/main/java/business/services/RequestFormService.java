@@ -138,10 +138,9 @@ public class RequestFormService {
                 request.setParent(parent);
             }
         }
-        // Set biobank request number, germline mutation and billing address from properties
+        // Set biobank request number and billing address from properties
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
-        request.setGermlineMutation(properties.getGermlineMutation());
 
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
@@ -400,7 +399,6 @@ public class RequestFormService {
             request.setChargeNumber(properties.getChargeNumber());
             request.setGrantProvider(properties.getGrantProvider());
             request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
-            request.setGermlineMutation(properties.getGermlineMutation());
             request.setResearchNumber(properties.getReseachNumber());
 
             {
@@ -593,7 +591,6 @@ public class RequestFormService {
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
 
         properties.setBiobankRequestNumber(request.getBiobankRequestNumber());
-        properties.setGermlineMutation(request.isGermlineMutation());
         properties.setSearchCriteria(request.getSearchCriteria());
         properties.setStudyPeriod(request.getStudyPeriod());
         properties.setLaboratoryTechniques(request.getLaboratoryTechniques());

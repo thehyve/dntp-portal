@@ -117,7 +117,7 @@
         'Request_Type_5': 'Excerpten, complete PA-verslagen en PA-materiaal',
         'Request_Type_6': 'Alleen PA-verslagen',
         'Request_Type_7': 'Alleen PA-materiaal',
-        'Germline mutation analysis': 'Kiembaanmutatieanalyse',
+
         'Additional request for request ?': 'Aanvullend verzoek bij {{requestNumber}}',
         'Upload file': 'Upload bestand(en)',
         'drag and drop your file here': 'sleep bestanden hierheen',

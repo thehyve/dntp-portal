@@ -58,8 +58,6 @@ public class RequestRepresentation implements RequestListElement {
     private String researchNumber;
     private String biobankRequestNumber;
 
-    private Boolean germlineMutation;
-
     private boolean statisticsRequest;
     private boolean excerptsRequest;
     private boolean paReportRequest;
@@ -744,19 +742,5 @@ public class RequestRepresentation implements RequestListElement {
 
     public boolean isSkipStatusApproval() {
         return skipStatusApproval;
-    }
-
-    public boolean isGermlineMutation() {
-        if (germlineMutation == null){
-            germlineMutation = false;
-        }
-        return germlineMutation;
-    }
-
-    public void setGermlineMutation(Boolean germlineMutation) {
-        if (germlineMutation == null){
-            germlineMutation = false;
-        }
-        this.germlineMutation = germlineMutation;
     }
 }

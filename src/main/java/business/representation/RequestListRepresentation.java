@@ -69,8 +69,6 @@ public class RequestListRepresentation implements RequestListElement {
 
     private String biobankRequestNumber;
 
-    private Boolean germlineMutation;
-
     private Long dataAttachmentCount;
 
     public RequestListRepresentation() {
@@ -424,19 +422,5 @@ public class RequestListRepresentation implements RequestListElement {
 
     public void setBiobankRequestNumber(String number){
         this.biobankRequestNumber = number;
-    }
-
-    public boolean getGermlineMutation() {
-        if (germlineMutation == null){
-            germlineMutation = false;
-        }
-        return germlineMutation;
-    }
-
-    public void setGermlineMutation(Boolean germlineMutation) {
-        if (germlineMutation == null){
-            germlineMutation = false;
-        }
-        this.germlineMutation = germlineMutation;
     }
 }

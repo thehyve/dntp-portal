@@ -77,8 +77,6 @@ public class RequestProperties {
     private String biobankRequestNumber;
     private String reseachNumber;
 
-    @Column
-    private Boolean germlineMutation;
     /**
      * The datetime on which the request number is generated.
      */
@@ -375,17 +373,4 @@ public class RequestProperties {
         this.reseachNumber = reseachNumber;
     }
 
-    public boolean getGermlineMutation() {
-        if (germlineMutation == null){
-            germlineMutation = false;
-        }
-        return germlineMutation;
-    }
-
-    public void setGermlineMutation(Boolean germlineMutation) {
-        if (germlineMutation == null){
-            germlineMutation = false;
-        }
-        this.germlineMutation = germlineMutation;
-    }
 }

@@ -22,9 +22,6 @@ angular.module('ProcessApp.directives')
                 $scope.isLabUser = $scope.$root.isLabUser;
                 $scope.isHubUser = $scope.$root.isHubUser;
 
-                // Reset the stored filters for this table
-                localStorage.setItem('labrequests', JSON.stringify({}));
-
                 /*eslint-disable no-unused-vars*/
                 $scope.$watch('allLabRequests', function(newValue, oldValue) {
                     if (newValue) {

@@ -17,7 +17,7 @@ angular.module('ProcessApp.directives')
                     return ctrl.tableState();
                 }, function (newValue, oldValue) {
                     if (ready) {
-                        console.log('Persisting table state = ' + JSON.stringify(newValue));
+                        console.log('Persisting table ' + nameSpace+ ' state = ' + JSON.stringify(newValue));
                         localStorage.setItem(nameSpace, JSON.stringify(newValue));
                     }
                 }, true);
@@ -25,7 +25,7 @@ angular.module('ProcessApp.directives')
                 setTimeout(function(){
                     //fetch the table state when the directive is loaded
                     if (localStorage.getItem(nameSpace)) {
-                        console.log('Loading table state = ' + localStorage.getItem(nameSpace));
+                        console.log('Loading table ' + nameSpace+ ' state = ' + localStorage.getItem(nameSpace));
                         var savedState = JSON.parse(localStorage.getItem(nameSpace));
                         var tableState = ctrl.tableState();
 

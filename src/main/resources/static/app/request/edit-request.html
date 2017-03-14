@@ -623,6 +623,7 @@
                     </div>
 
                     <!-- Informed consent form  -->
+
                     <div class="form-group" ng-show="(!request.statisticsRequest && request.linkageWithPersonalData && request.informedConsent)"
                          ng-class="{ 'has-error' : request.informedConsentFormAttachments.length < 1 }">
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Upload informed consent form' | translate }}</label>
@@ -642,8 +643,9 @@
                                     </button>
                                 </a>
                             </div>
+
                             <!-- Informed consent form upload -->
-                            <div class="form-control"
+                            <div class="form-group"
                                  flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/informedConsentFormFiles'})"
                                  flow-name="informedConsentFormFlow"
                                  flow-files-submitted="fileuploadsubmitted('informed_consent_form'); Upload.uploadFile($flow)"
@@ -671,19 +673,21 @@
                                         >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
                                     </div>
                                 </div>
-
                                 <div id="uploadInformedConsentFormPopover"
                                      bs-popover
-                                     title="{{'Upload form'|translate}}"
+                                     title="{{'Upload letter'|translate}}"
                                      data-placement="top-right" data-animation="am-flip-x"
+                                     data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
                                      data-trigger="manual"
-                                     data-content="{{'popover: Upload informed consent form'|translate}}">
-                                    <input type="file" flow-btn id="test-upload-informed-consent-form" style="display:none" />
+                                >
+                                    <input type="file" flow-btn id="test-upload-informed-consent-form" style="display:none"/>
                                     <button class="btn btn-default" type="button"
                                             id="button_upload_informed_consent_form"
                                             ng-disabled="uploading"
-                                            flow-btn>{{'Upload form'|translate}}</button>
+                                            flow-btn>{{'Upload form'|translate}}
+                                    </button>
                                 </div>
+
                                 <br>
                                 <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
                                      flow-drag-enter="style={border:'4px dashed lightgreen'}"

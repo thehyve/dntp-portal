@@ -110,7 +110,6 @@ angular.module('ProcessApp.controllers')
 		        // Table filter status
 		        var tfs = $scope.activeSidebar;
 		        $scope.tableFilterStatus = tfs;
-                console.log('tfs = ' + tfs);
 		        if(!$scope.isStatusPage()) {
                     $scope.tableFilterStatus = "";
                 }

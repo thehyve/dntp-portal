@@ -16,6 +16,11 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.login = function(closemodal) {
+                // Reset table filters
+                localStorage.setItem('labrequests', JSON.stringify({}));
+                localStorage.setItem('requests', JSON.stringify({}));
+                localStorage.setItem('samples', JSON.stringify({}));
+
                 $scope.dataLoading = true;
                 LoginService.login($scope.credentials).then(function() {
                     // successful login

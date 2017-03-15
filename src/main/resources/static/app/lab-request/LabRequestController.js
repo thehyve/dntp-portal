@@ -238,6 +238,8 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = LabRequestFilter.selectByStatus(status);
             });
 
+            $scope.persistKey = 'labrequests'
+
 	        $scope.checkTableFilterStatus = function() {
 		        // Table filter status
 		        var tfs = $scope.activeSidebar;
@@ -249,6 +251,11 @@ angular.module('ProcessApp.controllers')
 		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
 		        $scope.$apply();
 	        };
+
+            $scope.resetFilters = function() {
+                localStorage.setItem($scope.persistKey, JSON.stringify({}));
+                $route.reload();
+            };
 
             $scope.showSelection = function(labRequests) {
                 var selection = $scope.activeSidebar;

@@ -30,17 +30,27 @@ This file is distributed under the GNU Affero General Public License
 
         <h1>{{ 'PA numbers' | translate}}</h1>
         <hr>
-        <div class="nav nav-pills">
-            <a class="btn btn-default" role="button" ng-href="/labrequests/panumbers/csv">
-                <span><i class="glyphicon glyphicon-download-alt"></i></span>
-                {{'Download PA numbers'|translate}}
-            </a>
-        </div>
+
+        <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser() || isPalga()">
+            <li role="presentation" title="{{'Reset filters'|translate}}">
+                <button class="btn btn-default" ng-click="resetFilters()" id="reset-filters">
+                    <span><i class="mdi mdi-filter-remove-outline"></i></span>
+                    {{'Reset filters'|translate}}
+                </button>
+            </li>
+            <li role="presentation">
+                <span><a class="btn btn-default" role="button" ng-href="/labrequests/panumbers/csv">
+                    <span><i class="glyphicon glyphicon-download-alt"></i></span>
+                    {{'Download PA numbers'|translate}}
+                </a></span>
+            </li>
+        </ul>
 
         <table st-table="paNumbersDisplayedCollection"
-            st-pipe="updateSampleTable"
-            st-safe-src="samples"
-            class="table table-striped">
+        st-pipe="updateSampleTable"
+        st-safe-src="samples"
+        class="table table-striped"
+        st-persist="samples">
             <thead>
                 <tr>
                     <th st-sort="labRequestCode" class="sortable">{{'Lab request' | translate}}</th>
@@ -57,15 +67,15 @@ This file is distributed under the GNU Affero General Public License
                     </th>
                 </tr>
                 <tr class="no-print">
-                    <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="sequenceNumber" placeholder="{{'Filter by sequence number'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="palgaPatientNr" placeholder="{{'Filter by PALGA patiëntnr'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="palgaExcerptNr" placeholder="{{'Filter by PALGA excerptnr'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="palgaExcerptId" placeholder="{{'Filter by PALGA excerptid'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="remark" placeholder="{{'Filter by extra'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><input st-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
-                    <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                    <th><input st-persisted-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="sequenceNumber" placeholder="{{'Filter by sequence number'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="palgaPatientNr" placeholder="{{'Filter by PALGA patiëntnr'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="palgaExcerptNr" placeholder="{{'Filter by PALGA excerptnr'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="palgaExcerptId" placeholder="{{'Filter by PALGA excerptid'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="remark" placeholder="{{'Filter by extra'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><select st-persisted-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                             <option value="">{{'Filter by status' | translate}}</option>
                             <option ng-repeat="status in statuses"
                                 ng-selected="activeSidebar === status"
@@ -75,8 +85,8 @@ This file is distributed under the GNU Affero General Public License
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
                 </tr>
                 <tr class="no-print">
-                    <th colspan="9"><input id="request-search"
-                        st-search="" class="form-control"
+                    <th colspan="9"><input id="request-persisted-search"
+                        st-persisted-search="" class="form-control"
                         placeholder="{{'Search'|translate}} ..." type="text" /></th>
                     <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
                 </tr>

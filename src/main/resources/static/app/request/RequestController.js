@@ -101,6 +101,10 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = RequestFilter.selectByStatus(status);
             });
 
+            $scope.isStatusPage = function() {
+                return _.includes(Request.displayStatuses, $scope.tableFilterStatus);
+            };
+
 	        $scope.checkTableFilterStatus = function() {
 		        // Table filter status
 		        var tfs = $scope.activeSidebar;
@@ -112,6 +116,14 @@ angular.module('ProcessApp.controllers')
 		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
 		        $scope.$apply();
 	        };
+
+	        // Used in the stPersistedSearch directive
+	        $scope.persistKey = 'requests';
+
+	        $scope.resetFilters = function() {
+	            localStorage.setItem($scope.persistKey, JSON.stringify({}));
+                $route.reload();
+            };
 
             $scope.showSelection = function(requests) {
                 var selection = $scope.activeSidebar;

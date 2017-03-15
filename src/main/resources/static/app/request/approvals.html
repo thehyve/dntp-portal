@@ -8,7 +8,7 @@ This file is distributed under the GNU Affero General Public License
 
     <h4 class="h4 h4-palga">{{'Review by the scientific council'|translate}}</h4>
 
-    <span ng-if="request.skipStatusApproval">{{ 'The scientific council has not been involved in this request.' |translate}}</span>
+    <span ng-if="request.skipStatusApproval">{{ 'The scientific council and privacy committee have not been involved in this request.' |translate}}</span>
 
     <a href="mailto:{{scientificCouncilEmail}}?subject=Request {{request.requestNumber}}&amp;body=Request {{request.requestNumber}}%0AView: {{serverurl}}/#/request/view/{{request.processInstanceId}}
     "

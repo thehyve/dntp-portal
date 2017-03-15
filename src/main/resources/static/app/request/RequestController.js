@@ -98,8 +98,6 @@ angular.module('ProcessApp.controllers')
                 notvoted: RequestFilter.selectNotVoted
             };
 
-            $scope.overviewSelections = angular.copy($scope.selections);
-
             _(Request.getStatusesForRole($scope.currentRole)).forEach(function(status) {
                 $scope.selections[status] = RequestFilter.selectByStatus(status);
             });

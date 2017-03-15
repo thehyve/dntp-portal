@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://thehyve.nl/dntp">
-<process id="dntp_request_004" isExecutable="true" name="DNTP Request">
+<process id="dntp_request_005" isExecutable="true" name="DNTP Request">
     <documentation>Definition for a request process for pathology data and materials.</documentation>
 
     <startEvent id="request_start" name="Start" activiti:initiator="initiator">
@@ -139,15 +139,28 @@
 
     <!-- Choice between:
         - 'rejected' if not request_is_admissible
-        - 'approval' if request_is_admissible;
+        - 'data delivery' or 'approval' if request_is_admissible;
     -->
     <exclusiveGateway id="to_approval_or_rejected" name="Approval or rejected" />
-    <sequenceFlow id="review_to_approval" sourceRef="to_approval_or_rejected" targetRef="status_approval">
+    <sequenceFlow id="review_to_data_delivery_or_approval" sourceRef="to_approval_or_rejected" targetRef="to_data_delivery_or_approval">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == true} ]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="review_to_rejected" sourceRef="to_approval_or_rejected" targetRef="status_rejected">
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${request_is_admissible == false} ]]></conditionExpression>
     </sequenceFlow>
+
+    <!-- Choice between:
+        - 'data_delivery' if skip_status_approval
+        - 'approval' if not skip_status_approval;
+    -->
+    <exclusiveGateway id="to_data_delivery_or_approval" name="Data delivery or approval" />
+    <sequenceFlow id="skip_approval_gateway_to_data_delivery" sourceRef="to_data_delivery_or_approval" targetRef="status_data_delivery">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${skip_status_approval == true} ]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="skip_approval_gateway_to_approval" sourceRef="to_data_delivery_or_approval" targetRef="status_approval">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[ ${skip_status_approval == false} ]]></conditionExpression>
+    </sequenceFlow>
+
 
     <scriptTask id="status_approval" name="Update status to Approval" scriptFormat="groovy" activiti:autoStoreVariables="true">
         <documentation>Update status.</documentation>

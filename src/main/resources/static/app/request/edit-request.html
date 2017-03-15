@@ -894,6 +894,20 @@
                         ">
                             {{'Submit to scientific council'|translate}}
                     </button>
+                    <button id="button-skip-approval" class="btn btn-warning" type="button"
+                            ng-if="request.status=='Review' && isPalga() && isSkipApprovalEnabled(request)"
+                            ng-click="submitReviewAndSkipApproval(request)"
+                            ng-disabled="requestEditForm.$invalid
+                            || !isValidRequestType(request)
+                            || !request.agreementReached
+                            || !request.requesterValid
+                            || !request.requesterAllowed
+                            || !request.contactPersonAllowed
+                            || !request.requesterLabValid
+                            || dataLoading
+                        ">
+                        {{'Finish submission process, skip scientific council'|translate}}
+                    </button>
                     <button class="btn btn-warning" type="button"
                         ng-if="request.status=='Approval' && isPalga()"
                         ng-click="finalise(request)"

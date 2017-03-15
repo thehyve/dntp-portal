@@ -72,6 +72,26 @@ module.exports = function() {
         });
     });
 
+    this.Then(/^the form contains the following data\w*$/, function(fields, next) {
+        // fields is a multiline string containing lines of the following format:
+        // css_id: new_content
+        var regex = /^(.+): (.+)\s*$/;
+
+        var lines = fields.split('\n');
+
+        // Put all promises in the array
+        var promises = [];
+        for (var i in lines) {
+            var matches = lines[i].match(regex);
+            var id = matches[1];
+            var content = matches[2];
+            promises.push(expect(element(by.id(id)).getAttribute('value')).to.eventually.contain(content));
+        }
+
+        // Resolve all promises and call next at the end
+        Promise.all(promises).then(next, next);
+    });
+
     this.When(/^I fill the form with the following data\w*$/, function(fields, next) {
         // fields is a multiline string containing lines of the following format:
         // css_id: new_content
@@ -107,9 +127,10 @@ module.exports = function() {
     });
 
     this.When(/^I click on the object with id '(.+)'$/, function(id, next) {
-        element(by.id(id)).click().then(function() {
-            next();
-        });
+        if (id == 'submit-new-request') { //this is a hack to prevent failure on some screens. should be fixed in a page object.
+            browser.executeScript("angular.element($('#uploadFilePopover')).scope().hidePopover('uploadFilePopover')");
+        }
+        element(by.id(id)).click().then(next,next);
     });
 
     this.When(/^I claim the request with title '(.+)'$/, function(reqName, next) {
@@ -254,6 +275,10 @@ module.exports = function() {
 
         // This point is only reached if the message type exists
         expect(element(by.css("." + divClass)).isPresent()).to.become(true).and.notify(next);
+    });
+
+    this.Then(/^I close the print window$/, function(next) {
+        browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(next, next);
     });
 
     this.Then(/^I should see (\d+) lab requests in the list$/, function(amount, next) {

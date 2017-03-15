@@ -27,8 +27,8 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamResource;
@@ -51,7 +51,6 @@ import business.exceptions.RequestNotAdmissible;
 import business.exceptions.RequestNotApproved;
 import business.exceptions.RequestNotFound;
 import business.exceptions.UpdateNotAllowed;
-import business.models.ExcerptList;
 import business.models.File;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
@@ -71,7 +70,7 @@ import business.services.RequestService;
 @RestController
 public class RequestController {
 
-    Log log = LogFactory.getLog(getClass());
+    Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private RequestService requestService;
@@ -223,10 +222,11 @@ public class RequestController {
                 "POST /requests (initiator: " + userId + ")");
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", userId);
-        values.put("jump_to_approval", Boolean.FALSE);
+        values.put("jump_to_review", Boolean.FALSE);
+        values.put("skip_status_approval", Boolean.FALSE);
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                "dntp_request_004", values);
+                RequestService.CURRENT_PROCESS_VERSION, values);
         runtimeService.addUserIdentityLink(newInstance.getId(), userId, IdentityLinkType.STARTER);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(newInstance.getId());
@@ -326,12 +326,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/submitForApproval", method = RequestMethod.PUT)
-    public RequestRepresentation submitForApproval(
+    @RequestMapping(value = "/requests/{id}/submitReview", method = RequestMethod.PUT)
+    public RequestRepresentation submitReview(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id + "/submitForApproval");
+        log.info("PUT /requests/{}/submitReview", id);
         request.setRequestAdmissible(true);
         request.setReopenRequest(false);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
@@ -358,7 +358,11 @@ public class RequestController {
         updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
 
-        mailService.notifyScientificCouncil(updatedRequest);
+        if (!updatedRequest.isSkipStatusApproval()) {
+            mailService.notifyScientificCouncil(updatedRequest);
+        } else {
+            log.info("Skipping status 'Approval' for request {}", updatedRequest.getRequestNumber());
+        }
 
         return updatedRequest;
     }

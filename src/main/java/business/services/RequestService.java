@@ -64,6 +64,8 @@ import business.representation.RequestStatus;
 @Service
 public class RequestService {
 
+    public static final String CURRENT_PROCESS_VERSION = "dntp_request_005";
+
     public static final String CSV_CHARACTER_ENCODING = "UTF-8";
 
     Log log = LogFactory.getLog(getClass());
@@ -403,10 +405,11 @@ public class RequestService {
         // start new process instance
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", parentRequest.getRequesterId());
-        values.put("jump_to_approval", Boolean.TRUE);
+        values.put("jump_to_review", Boolean.TRUE);
+
 
         ProcessInstance newInstance = runtimeService.startProcessInstanceByKey(
-                "dntp_request_004", values);
+                CURRENT_PROCESS_VERSION, values);
         String childId = newInstance.getProcessInstanceId();
         log.info("New forked process instance started: " + childId);
         runtimeService.addUserIdentityLink(childId, parentRequest.getRequesterId(), IdentityLinkType.STARTER);
@@ -420,6 +423,13 @@ public class RequestService {
         variables.put("request_approved", Boolean.FALSE);
         variables.put("scientific_council_approved", Boolean.FALSE);
 
+        // Requester and Lab are still approved though.
+        variables.put("requester_lab_is_valid", Boolean.TRUE);
+        variables.put("requester_is_valid", Boolean.TRUE);
+        variables.put("requester_allowed", Boolean.TRUE);
+        variables.put("contact_person_is_allowed", Boolean.TRUE);
+
+        variables.put("skip_status_approval", Boolean.FALSE);
         runtimeService.setVariables(childId, variables);
 
         RequestProperties childProperties = requestPropertiesService.findByProcessInstanceId(childId);

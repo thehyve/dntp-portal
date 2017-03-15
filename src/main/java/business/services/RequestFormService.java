@@ -138,7 +138,7 @@ public class RequestFormService {
                 request.setParent(parent);
             }
         }
-
+        // Set biobank request number and billing address from properties
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
 
@@ -187,6 +187,7 @@ public class RequestFormService {
             request.setInformedConsent(fetchBooleanVariable("is_informed_consent", variables));
 
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
+            request.setSkipStatusApproval(fetchBooleanVariable("skip_status_approval", variables));
             request.setDateAssigned((Date)variables.get("assigned_date"));
         }
     }
@@ -328,6 +329,8 @@ public class RequestFormService {
             request.setClinicalDataRequest(fetchBooleanVariable("is_clinical_data_request", variables));
 
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
+
+            request.setSkipStatusApproval(fetchBooleanVariable("skip_status_approval", variables));
 
             request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
             request.setLinkageWithPersonalDataNotes((String) variables.get("linkage_with_personal_data_notes"));
@@ -615,6 +618,8 @@ public class RequestFormService {
             variables.put("request_is_admissible", (Boolean)request.isRequestAdmissible());
 
             variables.put("reopen_request", (Boolean)request.isReopenRequest());
+
+            variables.put("skip_status_approval", (Boolean)request.isSkipStatusApproval());
 
             variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
             variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());

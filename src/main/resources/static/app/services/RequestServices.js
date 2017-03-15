@@ -26,8 +26,8 @@
                 url : '/requests/:id/submit',
                 method : 'PUT'
             },
-            submitForApproval : {
-                url : '/requests/:id/submitForApproval',
+            submitReview : {
+                url : '/requests/:id/submitReview',
                 method : 'PUT'
             },
             finalise : {
@@ -78,123 +78,6 @@
                 method : 'PUT'
             }
         });
-
-/*
-        _requestFactory.convertRequestTypeToOpts = function (request) {
-            var _type = request.type;
-            var cases = {
-                1 : function() {
-                    request.statisticsRequest = true; //T
-                    request.excerptsRequest = false;
-                    request.paReportRequest = false;
-                    request.materialsRequest = false;
-                },
-                2 : function() {
-                    request.statisticsRequest = false;
-                    request.excerptsRequest = true; //T
-                    request.paReportRequest = false;
-                    request.materialsRequest = false;
-                },
-                3 : function() {
-                    request.statisticsRequest = false;
-                    request.excerptsRequest = true; //T
-                    request.paReportRequest = true; //T
-                    request.materialsRequest = false;
-                },
-                4 : function() {
-                    request.statisticsRequest = false;
-                    request.excerptsRequest = true; //T
-                    request.paReportRequest = false; //T
-                    request.materialsRequest = true;
-                },
-                5 : function() {
-                    request.statisticsRequest = false;
-                    request.excerptsRequest = true ;//T
-                    request.paReportRequest = true; //T
-                    request.materialsRequest = true; //T
-                },
-                6 : function() {
-                    request.statisticsRequest = false;
-                    request.excerptsRequest = false;
-                    request.paReportRequest = true; //T
-                    request.materialsRequest = false;
-                },
-                7 : function() {
-                    request.statisticsRequest = false;
-                    request.excerptsRequest = false;
-                    request.paReportRequest = false;
-                    request.materialsRequest = true;//T
-                }
-            };
-
-            if (cases[_type]) {
-                cases[_type]();
-            }
-
-            return request;
-        };
-
-        _requestFactory.convertRequestOptsToType = function (request) {
-
-            var mapTypeToOpts = [
-                {
-                    statisticsRequest : true, //T
-                    excerptsRequest : false,
-                    paReportRequest : false,
-                    materialsRequest : false
-                },
-                {
-                    statisticsRequest : false,
-                    excerptsRequest : true, //T
-                    paReportRequest : false,
-                    materialsRequest : false
-                },
-                {
-                    statisticsRequest : false,
-                    excerptsRequest : true, //T
-                    paReportRequest : true, //T
-                    materialsRequest : false
-                },
-                {
-                    statisticsRequest : false,
-                    excerptsRequest : true, //T
-                    paReportRequest : false, //T
-                    materialsRequest : true
-                },
-                {
-                    statisticsRequest : false,
-                    excerptsRequest : true ,//T
-                    paReportRequest : true, //T
-                    materialsRequest : true //T
-                },
-                {
-                    statisticsRequest : false,
-                    excerptsRequest : false,
-                    paReportRequest : true, //T
-                    materialsRequest : false
-                },
-                {
-                    statisticsRequest : false,
-                    excerptsRequest : false,
-                    paReportRequest : false,
-                    materialsRequest : true//T
-                }
-            ];
-
-            var requestOptsObj = {
-                'statisticsRequest': request.statisticsRequest,
-                'excerptsRequest': request.excerptsRequest,
-                'paReportRequest': request.paReportRequest,
-                'materialsRequest': request.materialsRequest
-            };
-
-            for (var i=0; i<mapTypeToOpts.length; i++) {
-                if (JSON.stringify(mapTypeToOpts[i]) === JSON.stringify(requestOptsObj)) {
-                    return i+1;
-                }
-            }
-        };
-*/
 
         _requestFactory.privacyCommitteeRationaleOptions = [
             'ppc_handled_according_mandate',

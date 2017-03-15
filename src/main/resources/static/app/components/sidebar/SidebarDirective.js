@@ -37,6 +37,6 @@ angular.module('ProcessApp.directives')
                     }
                 });
                 /*eslint-enable no-unused-vars*/
-            },
+            }
         };
     }]);

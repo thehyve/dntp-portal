@@ -488,6 +488,12 @@ input.request-selection {
 .print-pa-samples-col { /* min-width: 65%; */ }
 .print-pa-total-col { width: 5em; }
 
+.req-edit-button{
+    height: 50px;
+    max-width: 200px;
+    white-space: normal !important;
+}
+
 @media (max-width: 480px) {
     .navbar-login {
         height: 120px;

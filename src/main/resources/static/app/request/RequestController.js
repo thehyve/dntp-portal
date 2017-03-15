@@ -97,22 +97,25 @@ angular.module('ProcessApp.controllers')
                 voted: RequestFilter.selectVoted,
                 notvoted: RequestFilter.selectNotVoted
             };
+
+            $scope.overviewSelections = angular.copy($scope.selections);
+
             _(Request.getStatusesForRole($scope.currentRole)).forEach(function(status) {
                 $scope.selections[status] = RequestFilter.selectByStatus(status);
             });
 
             $scope.isStatusPage = function() {
-                return _.includes(Request.displayStatuses, $scope.tableFilterStatus);
+                return _.includes(Request.displayStatuses, $scope.activeSidebar);
             };
 
 	        $scope.checkTableFilterStatus = function() {
 		        // Table filter status
 		        var tfs = $scope.activeSidebar;
 		        $scope.tableFilterStatus = tfs;
-
-		        if(!tfs in $scope.selections) {
-			        $scope.tableFilterStatus = "";
-		        }
+                console.log('tfs = ' + tfs);
+		        if(!$scope.isStatusPage()) {
+                    $scope.tableFilterStatus = "";
+                }
 		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
 		        $scope.$apply();
 	        };
@@ -141,7 +144,15 @@ angular.module('ProcessApp.controllers')
                     $scope.showSelection(newValue);
                     $timeout( function() {
 	                    $scope.checkTableFilterStatus();
-                    },10);
+                        if($scope.isStatusPage()){
+                            $scope.tableFilterStatus = "";
+                            var table_state = JSON.parse(localStorage.getItem($scope.persistKey));
+                            if('search' in table_state && 'statusText' in table_state['search']['predicateObject']) {
+                                delete table_state['search']['predicateObject']['statusText'];
+                                localStorage.setItem($scope.persistKey, JSON.stringify(table_state));
+                            }
+                        }
+                    },0);
                 }
             });
 

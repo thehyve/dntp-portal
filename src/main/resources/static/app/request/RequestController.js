@@ -141,6 +141,8 @@ angular.module('ProcessApp.controllers')
                     $scope.showSelection(newValue);
                     $timeout( function() {
 	                    $scope.checkTableFilterStatus();
+	                    // Removing the statusText from the filter we store in localStorage. This to prevent
+                        // the stored filter from overwriting the sidebar button people clicked on. 
                         if($scope.isStatusPage()){
                             $scope.tableFilterStatus = "";
                             var table_state = JSON.parse(localStorage.getItem($scope.persistKey));

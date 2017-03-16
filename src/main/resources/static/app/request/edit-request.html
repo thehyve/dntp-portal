@@ -307,10 +307,10 @@
                         >
                             {{'Germline mutation analysis?' | translate}}
                             <br/>
-                            <input type="radio" id="germlinemutationYes" name="previousContact" ng-model="request.germlinemutation" ng-value="true" ng-checked="request.germlinemutation">
+                            <input type="radio" id="germlinemutationYes" name="germlineMutation" ng-model="request.germlinemutation" ng-value="true" ng-checked="request.germlinemutation">
                             <label class="normal" for="germlinemutationYes">{{'Yes' | translate}}</label>
                             &nbsp;
-                            <input type="radio" id="germlinemutationNo" name="previousContact" ng-model="request.germlinemutation" ng-value="false" ng-checked="!request.germlinemutation" ng-click="resetPreviousContactValues(request);">
+                            <input type="radio" id="germlinemutationNo" name="germlineMutation" ng-model="request.germlinemutation" ng-value="false" ng-checked="!request.germlinemutation">
                             <label class="normal" for="germlinemutationNo">{{'No' | translate}}</label>
                             <br>
                         </div>

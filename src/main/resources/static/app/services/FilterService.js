@@ -142,8 +142,14 @@ angular.module('ProcessApp.services')
             if( 'statusText' in predicate){
                 var temp_predicate = {'statusText': predicate['statusText']};
                 var temp_results   = $filter('filter')(input, temp_predicate, true);
+
+                var status_filter = predicate['statusText'];
                 delete predicate['statusText'];
-                return $filter('filter')(temp_results, predicate);
+
+                var final_results = $filter('filter')(temp_results, predicate);
+
+                predicate['statusText'] = status_filter;
+                return final_results;
             } else {
                 return $filter('filter')(input, predicate, false);
             }

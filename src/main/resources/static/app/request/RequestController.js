@@ -97,30 +97,30 @@ angular.module('ProcessApp.controllers')
                 voted: RequestFilter.selectVoted,
                 notvoted: RequestFilter.selectNotVoted
             };
+
             _(Request.getStatusesForRole($scope.currentRole)).forEach(function(status) {
                 $scope.selections[status] = RequestFilter.selectByStatus(status);
             });
 
             $scope.isStatusPage = function() {
-                return _.includes(Request.displayStatuses, $scope.tableFilterStatus);
+                return _.includes(Request.displayStatuses, $scope.activeSidebar);
             };
 
-	        $scope.checkTableFilterStatus = function() {
-		        // Table filter status
-		        var tfs = $scope.activeSidebar;
-		        $scope.tableFilterStatus = tfs;
+	    $scope.checkTableFilterStatus = function() {
+		// Table filter status
+		var tfs = $scope.activeSidebar;
+		$scope.tableFilterStatus = tfs;
+		if(!$scope.isStatusPage()) {
+                    $scope.tableFilterStatus = "";
+                }
+		// Apply the scope to trigger correct initialization of persisted local storage for smart table
+		$scope.$apply();
+	    };
 
-		        if(!tfs in $scope.selections) {
-			        $scope.tableFilterStatus = "";
-		        }
-		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
-		        $scope.$apply();
-	        };
+	    // Used in the stPersistedSearch directive
+	    $scope.persistKey = 'requests';
 
-	        // Used in the stPersistedSearch directive
-	        $scope.persistKey = 'requests';
-
-	        $scope.resetFilters = function() {
+	    $scope.resetFilters = function() {
 	            localStorage.setItem($scope.persistKey, JSON.stringify({}));
                 $route.reload();
             };
@@ -141,7 +141,17 @@ angular.module('ProcessApp.controllers')
                     $scope.showSelection(newValue);
                     $timeout( function() {
 	                    $scope.checkTableFilterStatus();
-                    },10);
+	                    // Removing the statusText from the filter we store in localStorage. This to prevent
+                        // the stored filter from overwriting the sidebar button people clicked on. 
+                        if($scope.isStatusPage()){
+                            $scope.tableFilterStatus = "";
+                            var table_state = JSON.parse(localStorage.getItem($scope.persistKey));
+                            if('search' in table_state && 'statusText' in table_state['search']['predicateObject']) {
+                                delete table_state['search']['predicateObject']['statusText'];
+                                localStorage.setItem($scope.persistKey, JSON.stringify(table_state));
+                            }
+                        }
+                    },0);
                 }
             });
 

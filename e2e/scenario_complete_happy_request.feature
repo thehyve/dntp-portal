@@ -236,7 +236,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And the page should contain the text 'T34-56789'
     When I fill the form with the following data
     """
-    request-search: T23
+    request-persisted-search: T23
     """
     Then the page should contain the text 'T23-45678'
     And the page should not contain the text 'T34-56789'

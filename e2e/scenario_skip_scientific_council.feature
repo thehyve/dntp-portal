@@ -105,7 +105,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 3. Check for scientific council not involved notice
     Given I am logged in as the palga user
     When I click on the request with title 'Request 1'
-    Then the page should contain the text 'The scientific council has not been involved in this request.'
+    Then the page should contain the text 'The scientific council and privacy committee have not been involved in this request.'
 
   Scenario: 4a attach excerpt list
     Given I am logged in as the palga user
@@ -219,7 +219,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And the page should contain the text 'T34-56789'
     When I fill the form with the following data
     """
-    request-search: T23
+    request-persisted-search: T23
     """
     Then the page should contain the text 'T23-45678'
     And the page should not contain the text 'T34-56789'

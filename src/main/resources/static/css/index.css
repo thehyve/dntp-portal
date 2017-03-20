@@ -492,7 +492,6 @@ input.request-selection {
     height: 75px;
     max-width: 220px;
     white-space: normal !important;
-    text-align-last: center;
 }
 
 @media (max-width: 480px) {

@@ -162,7 +162,7 @@ angular.module('ProcessApp.controllers')
             var getHTMLAddress = function (contactData, noEmail) {
 
                 var _createEmailTmp = function (email) {
-                    return '<span class="lab-email"><span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' +
+                    return '<span class="no-print"><span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' +
                         email + '">' + email + '</a></span>';
                 };
 

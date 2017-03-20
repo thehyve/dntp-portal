@@ -139,36 +139,34 @@ Feature: scenario additional request
     When I click on the request with id 'YYYY-1-A1'
     Then I should see a link to the request with id 'YYYY-1'
 	
-  #Scenario: 8d additional request contains previously entered data
-   # Given I am logged in as the palga user
+  Scenario: 8d additional request contains previously entered data
+    Given I am logged in as the palga user
     #When I claim the request with id 'YYYY-1-A1'
-	#And I click on the request with id 'YYYY-1-A1'
-#	And I click on the 'Edit' button
-#	And testing is paused to wait a bit
-#	And the form contains the following data
- #   """
-  #  contactPersonName: Dr. P. Investigator
-#    contactPersonEmail: test+contactperson@dntp.thehyve.nl
- #   pathologistName: Dr. A. Pathologist
-  #  pathologistEmail: test+pathologist@dntp.thehyve.nl
-   # requestTitle: Request 1
-#    background: None
- #   researchQuestion: test
-  #  hypothesis: theory
-   # methods: Modern methods
-#    searchCriteria: methods + test + modern
-#    studyPeriod: 2015--2016
-#    biobankRequestNumber: request_1
-#    laboratoryTechniques: Cucumber, protractor
-#    address1: dreef
- #   postalcode: 1234
- #   city: Amsterdam
-  #  billingEmail: fin@f.f
-  #  telephone: 1234567890
-  #  chargeNumber: 1234
-#    grantProvider: Some sponsor
-#    researchNumber: 10
-#    """
+	And I click on the request with id 'YYYY-1-A1'
+	#And I click on the 'Edit' button
+	And testing is paused to wait a bit
+	And the static form contains
+    """
+    Principal investigator: Dr. P. Investigator
+    Principal investigator email: test+contactperson@dntp.thehyve.nl
+	Pathologist: Dr. A. Pathologist
+    Pathologist email: test+pathologist@dntp.thehyve.nl
+    Title: Request 1
+    Background: None
+    Research question: test
+    Hypothesis: theory
+    Methods: Modern methods
+    Search criteria: methods + test + modern
+    Study period: 2015--2016
+    Laboratory techniques: Cucumber, protractor
+    Charge number: 1234
+    Grant provider: Some sponsor
+    Grant number: 10
+    Biobank request number: request_1
+    Data linkage: Linkage with own patients or cohort or linkage between registries.
+    Data linkage information: notes
+    Explanation why linkage is allowed without informed consent: reason
+    """
 	
   Scenario: 8e change all fields in additional request
     Given I am logged in as the palga user
@@ -201,23 +199,23 @@ Feature: scenario additional request
     grantProvider: Some sponsor 1a
     researchNumber: 101
 	"""
-	And I click on the object with id 'submit-new-request'
+	And I click on the object with id 'button-skip-approval'
     And I click on the 'OK' button
     Then I should be on the requests page
     And request 'Test_HP1' should be in the list of requests
-    And request 'Test_HP1' should have status
+    #And request 'Test_HP1' should have status
 	And testing is paused to wait a bit
 
-	Scenario: 9a. Claim and send requests to Scientific council for additional request
-    Given I am logged in as the palga user
-    When I claim the request with title 'Request 1a'
-    And I click on the request with title 'Request 1a'
-    And I click on the 'Edit' button
-    And I click on the 'Submit to scientific council' button
-    And I click on the 'OK' button
-    And I go to the 'requests' page
-    Then request 'Request 1a' should have status 'Waiting for approval'
-    And testing is paused to check email scientific council
+	#Scenario: 9a. Claim and send requests to Scientific council for additional request
+    #Given I am logged in as the palga user
+    #When I claim the request with title 'Request 1a'
+    #And I click on the request with title 'Request 1a'
+    #And I click on the 'Edit' button
+    #And I click on the 'Submit to scientific council' button
+    #And I click on the 'OK' button
+    #And I go to the 'requests' page
+    #Then request 'Request 1a' should have status 'Waiting for approval'
+    #And testing is paused to check email scientific council
 	
   Scenario: 9b attach excerpt list for additional request
     Given I am logged in as the palga user

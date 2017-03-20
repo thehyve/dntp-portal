@@ -123,7 +123,7 @@ module.exports = function () {
             field.sendKeys(text)
         ])
     }
-    
+
     this.When(/^I click on the following objects\w*$/, function (fields, next) {
         var lines = fields.split('\n');
 

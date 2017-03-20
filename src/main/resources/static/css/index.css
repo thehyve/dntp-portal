@@ -489,8 +489,8 @@ input.request-selection {
 .print-pa-total-col { width: 5em; }
 
 .req-edit-button{
-    height: 50px;
-    max-width: 200px;
+    height: 75px;
+    max-width: 220px;
     white-space: normal !important;
 }
 

@@ -71,7 +71,7 @@ angular.module('ProcessApp.services')
                             ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
                             (request.excerptListUploaded &&
                             !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)));
-                        return result
+                        return result;
                     };
                 case 'Data delivered, select excerpts':
                     return function(request) {

@@ -24,7 +24,7 @@ This file is distributed under the GNU Affero General Public License
 
             <h1>{{ 'Lab requests' | translate }}</h1>
             <hr>
-            <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser() || isPalga()">
+            <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser() || isPalga() || isRequester()">
             <li ng-if="isLabUser() || isHubUser()"
                 role="presentation" title="{{'Print selected'|translate}}">
                 <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
@@ -33,12 +33,12 @@ This file is distributed under the GNU Affero General Public License
                 </button>
             </li>
             <li role="presentation" title="{{'Reset filters'|translate}}">
-                <button class="btn btn-default" ng-click="resetFilters()" id="reset-filters">
+                <button class="btn btn-default" ng-click="resetFilters('labrequests')" id="reset-filters">
                     <span><i class="mdi mdi-filter-remove-outline"></i></span>
                     {{'Reset filters'|translate}}
                 </button>
             </li>
-            <li role="presentation">
+            <li role="presentation" ng-if="isLabUser() || isHubUser() || isPalga()">
             <span><a class="btn btn-default" role="button" ng-href="/labrequests/panumbers/csv">
                 <span><i class="glyphicon glyphicon-download-alt"></i></span>
                 {{'Download PA numbers'|translate}}

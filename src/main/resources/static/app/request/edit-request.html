@@ -881,6 +881,7 @@
                         {{'Submit'|translate}}
                     </button>
                     <button class="btn btn-warning req-edit-button" type="button"
+                            id="button-submit-scientific-council"
                         ng-if="request.status=='Review' && isPalga()"
                         ng-click="submitForApproval(request)"
                         ng-disabled="requestEditForm.$invalid
@@ -909,6 +910,7 @@
                         {{'Finish submission process, skip scientific council'|translate}}
                     </button>
                     <button class="btn btn-warning req-edit-button" type="button"
+                            id="button-finish-request"
                         ng-if="request.status=='Approval' && isPalga()"
                         ng-click="finalise(request)"
                         ng-disabled="requestEditForm.$invalid
@@ -919,18 +921,20 @@
                             {{'Finish submission process'|translate}}
                     </button>
                     <button class="btn btn-danger req-edit-button" type="button"
+                            id="button-reject-request"
                         ng-if="(request.status=='Review' || request.status=='Approval') && isPalga()"
                         ng-click="reject(request)"
                         ng-disabled="requestEditForm.$invalid || dataLoading">
                             {{'Reject'|translate}}
                     </button>
                     <button class="btn btn-warning req-edit-button" type="button"
+                            id="button-reopen-request"
                         ng-if="(request.status=='Review' || request.status=='Approval') && isPalga() && isReopenEnabled(request)"
                         ng-click="reopen(request)"
                         ng-disabled="dataLoading">
                             {{'Reopen'|translate}}
                     </button>
-                    <button class="btn btn-info req-edit-button" type="submit" ng-click="update(request);"
+                    <button class="btn btn-info req-edit-button" id="button-save-request" type="submit" ng-click="update(request);"
                             ng-disabled="dataLoading || requestEditForm.$error.maxlength">{{'Save'|translate}}
                     </button>
                 </div>

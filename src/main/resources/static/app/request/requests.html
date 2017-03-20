@@ -25,27 +25,25 @@ This file is distributed under the GNU Affero General Public License
             <h1>{{ 'Requests' | translate }}</h1>
             <hr>
             <!--Tool bar-->
-            <ul class="nav nav-pills" ng-if="isRequester()">
-            <li role="presentation" title="{{'Create a new request'|translate}}">
-                <button class="btn btn-default"  ng-click="start()" id="new-request">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                    {{'Create new request'|translate}}
-                </button>
-            </li>
-            </ul>
-            <ul class="nav nav-pills">
-            <li role="presentation" title="{{'Print selected'|translate}}" ng-if="isPalga()">
-                <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
-                    <span><i class="glyphicon glyphicon-print"></i></span>
-                    {{'Print selected'|translate}}
-                </button>
-            </li>
-            <li role="presentation" title="{{'Reset filters'|translate}}">
-                <button class="btn btn-default" ng-click="resetFilters()" id="reset-filters">
-                    <span><i class="mdi mdi-filter-remove-outline"></i></span>
-                    {{'Reset filters'|translate}}
-                </button>
-            </li>
+            <ul class="nav nav-pills" >
+                <li role="presentation" title="{{'Create a new request'|translate}}" ng-if="isRequester()">
+                    <button class="btn btn-default"  ng-click="start()" id="new-request">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        {{'Create new request'|translate}}
+                    </button>
+                </li>
+                <li role="presentation" title="{{'Print selected'|translate}}" ng-if="isPalga()">
+                    <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
+                        <span><i class="glyphicon glyphicon-print"></i></span>
+                        {{'Print selected'|translate}}
+                    </button>
+                </li>
+                <li role="presentation" title="{{'Reset filters'|translate}}">
+                    <button class="btn btn-default" ng-click="resetFilters('requests')" id="reset-filters">
+                        <span><i class="mdi mdi-filter-remove-outline"></i></span>
+                        {{'Reset filters'|translate}}
+                    </button>
+                </li>
             </ul>
             <div ng-controller="LoadTestController">
             <ul class="nav nav-pills" ng-if="loadTestEnabled()">

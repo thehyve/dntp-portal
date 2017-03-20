@@ -252,8 +252,8 @@ angular.module('ProcessApp.controllers')
 		        $scope.$apply();
 	        };
 
-            $scope.resetFilters = function() {
-                localStorage.setItem($scope.persistKey, JSON.stringify({}));
+            $scope.resetFilters = function(key) {
+                localStorage.setItem(key, JSON.stringify({}));
                 $route.reload();
             };
 

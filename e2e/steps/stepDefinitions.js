@@ -296,7 +296,9 @@ module.exports = function () {
     });
 
     this.Then(/^I close the print window$/, function (next) {
-        browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(next, next);
+        browser.sleep(3000).then(function(){
+		browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(next, next);	
+		},next)
     });
 
     this.Then(/^I should see (\d+) lab requests in the list$/, function (amount, next) {

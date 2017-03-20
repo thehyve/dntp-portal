@@ -370,10 +370,10 @@ public class RequestService {
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
             Validator validator = factory.getValidator();
 
-            Set<ConstraintViolation<RequestRepresentation>> requestConstraintViolations = validator.validate(request);
-            if (!requestConstraintViolations.isEmpty()) {
-                throw new InvalidRequest("Invalid request", requestConstraintViolations);
-            }
+//            Set<ConstraintViolation<RequestRepresentation>> requestConstraintViolations = validator.validate(request);
+//            if (!requestConstraintViolations.isEmpty()) {
+//                throw new InvalidRequest("Invalid request", requestConstraintViolations);
+//            }
 
             Set<ConstraintViolation<RequestProperties>> propertiesConstraintViolations = validator.validate(properties);
             if (!propertiesConstraintViolations.isEmpty()) {

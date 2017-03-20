@@ -871,9 +871,9 @@
                 </div> <!--end modal-body-->
 
                 <div class="modal-footer">
-                    <a id="cancel-new-request" class="btn btn-default pull-left req-edit-button" ng-click="cancel(request);">
+                    <button id="cancel-new-request" class="btn btn-default pull-left req-edit-button" ng-click="cancel(request);">
                         {{'Cancel'|translate}}
-                    </a>
+                    </button>
                     <button id="submit-new-request" class="btn btn-warning req-edit-button" type="button"
                         ng-if="request.status=='Open'"
                         ng-click="submitRequest(request)"

@@ -67,10 +67,11 @@ angular.module('ProcessApp.services')
                     };
                 case 'Data delivered':
                     return function(request) {
-                    return request.status == 'DataDelivery' &&
-                        (request.statisticsRequest && request.dataAttachmentCount > 0) ||
-                        (request.excerptListUploaded &&
-                        !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest));
+                        var result = request.status == 'DataDelivery' &&
+                            ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
+                            (request.excerptListUploaded &&
+                            !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)));
+                        return result
                     };
                 case 'Data delivered, select excerpts':
                     return function(request) {
@@ -125,7 +126,7 @@ angular.module('ProcessApp.services')
                 return _.chain(requests)
                     .filter(_.matches({hubAssistanceRequested: true}))
                     .value();
-            }
+            };
 
             filterService.selectByStatus = function (status) {
                 return function (requests) {

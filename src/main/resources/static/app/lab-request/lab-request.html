@@ -163,6 +163,16 @@ This file is distributed under the GNU Affero General Public License
                                 </div>
                             </div>
 
+                            <!-- Germline mutation -->
+                            <div class="row">
+                                <label class="control-label col-xs-4 col-md-2">{{ 'Germline mutation analysis' | translate }}</label>
+                                <div class="col-xs-8 col-md-10">
+                                    <p class="form-control-static">
+                                        {{labRequest.request.germlineMutation ? 'Yes' : 'No' | translate}}
+                                    </p>
+                                </div>
+                            </div>
+
                             <!--Requester lab Info-->
                             <div class="row">
                                 <label class="control-label col-xs-4 col-md-2" ng-if="isLabOrHubUser()">

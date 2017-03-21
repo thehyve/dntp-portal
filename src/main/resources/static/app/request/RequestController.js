@@ -334,7 +334,7 @@ angular.module('ProcessApp.controllers')
                     var attachment = new RequestAttachment();
                     attachment.requestId = $scope.request.processInstanceId;
                     attachment.id = f.id;
-                    attachment.removeInformedConsentFormFile(function() {
+                    attachment.$removeInformedConsentFormFile(function() {
                         $scope.request.informedConsentFormAttachments.splice($scope.request.informedConsentFormAttachments.indexOf(f), 1);
                         bootbox.alert('File ' + f.name + ' deleted.');
                     }, function(response) {

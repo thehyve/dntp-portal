@@ -251,6 +251,11 @@ public class RequestPropertiesService {
                 return fileService.download(file.getId());
             }
         }
+        for (File file: properties.getInformedConsentFormAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                return fileService.download(file.getId());
+            }
+        }
         throw new AttachmentNotFound();
     }
 

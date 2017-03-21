@@ -745,6 +745,16 @@ public class RequestController {
             + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
+
+    @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.GET)
+    public HttpEntity<InputStreamResource> getICFile(UserAuthenticationToken user, @PathVariable String id,
+                                                   @PathVariable Long attachmentId) {
+        log.info("GET /requests/" + id + "/informedConsentFormFiles/" + attachmentId);
+        HttpEntity<InputStreamResource> file = requestPropertiesService.getFile(user.getUser(), id, attachmentId);
+        return file;
+    }
+
+
     @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeInformedConsentFormAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                            @PathVariable Long attachmentId) {

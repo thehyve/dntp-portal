@@ -1,12 +1,29 @@
 language: java
 jdk:
  - oraclejdk8
-sudo: false
+node_js:
+ - 7.4.0
+sudo: required
+dist: trusty
 install: true
 
+addons:
+  apt:
+    sources:
+    - george-edison55-precise-backports
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
+    packages:
+    - gcc-5
+    - g++-5
+    - clang-3.7
+
+compiler: clang-3.7
+env: CC=clang-3.7 CXX=clang++-3.7
+
 script:
+- mvn -DskipTests -Dspring.profiles.active=dev package -q
 - mvn -Dspring.profiles.active=dev test
-- mvn -Dspring.profiles.active=dev package
 
 notifications:
   email:

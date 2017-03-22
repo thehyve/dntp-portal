@@ -177,9 +177,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register/users", method = RequestMethod.POST)
-    public ProfileRepresentation register(@RequestBody ProfileRepresentation body) {
+    public void register(@RequestBody ProfileRepresentation body) {
         log.info("POST /register new user");
-        return userService.createNewUser(null, body, NewUserLinkType.ACTIVATION_LINK);
+        userService.createNewUser(null, body, NewUserLinkType.ACTIVATION_LINK);
     }
 
     /**

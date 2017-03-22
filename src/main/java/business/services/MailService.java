@@ -5,20 +5,27 @@
  */
 package business.services;
 
+import java.io.CharArrayWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.apache.commons.lang3.CharEncoding;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import business.exceptions.EmailError;
@@ -33,13 +40,16 @@ import business.representation.RequestRepresentation;
 @Service
 public class MailService {
 
-    Log log = LogFactory.getLog(getClass());
-    
+    Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     UserService userService;
     
     @Autowired
     JavaMailSender mailSender;
+
+    @Autowired
+    Configuration freemarkerConfiguration;
 
     @Value("${dntp.server-name}")
     String serverName;
@@ -69,6 +79,37 @@ public class MailService {
         }
         return String.format("%s://%s%s%s", 
                 protocol, serverName, (writePort ? ":"+serverPort : ""), relativeURI);
+    }
+
+    @Async
+    public void sendEmail(Collection<String> to, String subject, String content) {
+        log.debug("Send e-mail to '{}' with subject '{}' and content={}", String.join(",", to), subject, content);
+
+        if (to.isEmpty()) {
+            return;
+        }
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, CharEncoding.UTF_8);
+            for(String email: to) {
+                message.addTo(email);
+            }
+            message.setFrom(getFrom(), fromName);
+            message.setReplyTo(replyAddress, replyName);
+            message.setSubject(subject);
+            message.setText(content);
+            mailSender.send(mimeMessage);
+            log.debug("Sent e-mail to '{}'", to);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            log.error("E-mail could not be sent to '{}'", to, e);
+            throw new EmailError("Email error: " + e.getMessage(), e);
+        }
+    }
+
+    @Async
+    public void sendEmail(String to, String subject, String content) {
+        sendEmail(Collections.singleton(to), subject, content);
     }
 
     static final String requesterAgreementFormLinkTemplate = 
@@ -103,6 +144,7 @@ public class MailService {
           + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
           ;
 
+    @Async
     @Transactional
     public void sendAgreementFormLink(@NotNull String email,
             @NotNull RequestProperties request) {
@@ -110,27 +152,14 @@ public class MailService {
                 + request.getRequestNumber() + ".");
 
         log.info("Sending link to " + email);
-        try {
-            MimeMessageHelper message = new MimeMessageHelper(
-                    mailSender.createMimeMessage());
-            message.setTo(email);
-            message.setFrom(getFrom(), fromName);
-            message.setReplyTo(replyAddress, replyName);
-            message.setSubject(String.format("Nieuwe PALGA-aanvraag ontvangen, aanvraagnummer: %s", request.getRequestNumber()));
-            String agreementFormLink = getLink(
-                    "/#/request/"
-                    + request.getProcessInstanceId()
-                    + "/agreementform");
-            message.setText(String.format(
-                    requesterAgreementFormLinkTemplate, agreementFormLink));
-            mailSender.send(message.getMimeMessage());
-        } catch (MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        }
+        String subject = String.format("Nieuwe PALGA-aanvraag ontvangen, aanvraagnummer: %s", request.getRequestNumber());
+        String agreementFormLink = getLink(
+                "/#/request/"
+                + request.getProcessInstanceId()
+                + "/agreementform");
+        String content = String.format(
+                requesterAgreementFormLinkTemplate, agreementFormLink);
+        sendEmail(email, subject, content);
     }
 
     static final String scientificCouncilNotificationTemplate = 
@@ -148,6 +177,7 @@ public class MailService {
             + "088-0402700 / aanvraag@palga.nl.\n"
             ;
 
+    @Async
     @Transactional
     public void notifyScientificCouncil(@NotNull RequestRepresentation request) {
         log.info("Notify scientic council for request " + request.getProcessInstanceId() + ".");
@@ -155,22 +185,11 @@ public class MailService {
         List<User> members = userService.findScientificCouncilMembers();
         for (User member: members) {
             log.info("Sending notification to user " + member.getUsername());
-            try {
-                MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-                message.setTo(member.getContactData().getEmail());
-                message.setFrom(getFrom(), fromName);
-                message.setReplyTo(replyAddress, replyName);
-                message.setSubject(String.format("Nieuwe PALGA-aanvraag aan u voorgelegd, aanvraagnummer: %s", request.getRequestNumber()));
-                String requestLink = getLink("/#/request/view/" + request.getProcessInstanceId());
-                message.setText(String.format(scientificCouncilNotificationTemplate, requestLink));
-                mailSender.send(message.getMimeMessage());
-            } catch(MessagingException e) {
-                log.error(e.getMessage());
-                throw new EmailError("Email error: " + e.getMessage());
-            } catch(UnsupportedEncodingException e) {
-                log.error(e.getMessage());
-                throw new EmailError("Email error: " + e.getMessage());
-            }
+            String to = member.getContactData().getEmail();
+            String subject = String.format("Nieuwe PALGA-aanvraag aan u voorgelegd, aanvraagnummer: %s", request.getRequestNumber());
+            String requestLink = getLink("/#/request/view/" + request.getProcessInstanceId());
+            String content = String.format(scientificCouncilNotificationTemplate, requestLink);
+            sendEmail(to, subject, content);
         }
     }
 
@@ -217,6 +236,7 @@ public class MailService {
           + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
           ;
 
+    @Async
     public void notifyLab(@NotNull LabRequestRepresentation labRequest) {
         log.info("Notify lab for lab request " + labRequest.getId() + ".");
 
@@ -227,32 +247,18 @@ public class MailService {
         }
         String recipients = String.join(", ", lab.getEmailAddresses());
         log.info("Sending notification to " + recipients);
-        try {
-            MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-            for (String email: lab.getEmailAddresses()) {
-                message.addTo(email);
-            }
-            message.setFrom(getFrom(), fromName);
-            message.setReplyTo(replyAddress, replyName);
-            message.setSubject(String.format("PALGA-verzoek aan laboratorium, aanvraagnummer: %s", labRequest.getLabRequestCode()));
-            String labRequestLink = getLink("/#/lab-request/view/" + labRequest.getId());
-            String body = String.format(labNotificationTemplate,
-                    labRequestLink, // %1
-                    labRequest.getLabRequestCode(), // %2
-                    labRequest.getRequest().getTitle(), // %3
-                    labRequest.getRequesterName(), // %4
-                    labRequest.getRequest().getPathologistName() == null ? "" : labRequest.getRequest().getPathologistName(), // %5
-                    labRequest.getRequesterLab().getName() // %6
-                    );
-            message.setText(body);
-            mailSender.send(message.getMimeMessage());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        }
+        Collection<String> to = lab.getEmailAddresses();
+        String subject = String.format("PALGA-verzoek aan laboratorium, aanvraagnummer: %s", labRequest.getLabRequestCode());
+        String labRequestLink = getLink("/#/lab-request/view/" + labRequest.getId());
+        String body = String.format(labNotificationTemplate,
+                labRequestLink, // %1
+                labRequest.getLabRequestCode(), // %2
+                labRequest.getRequest().getTitle(), // %3
+                labRequest.getRequesterName(), // %4
+                labRequest.getRequest().getPathologistName() == null ? "" : labRequest.getRequest().getPathologistName(), // %5
+                labRequest.getRequesterLab().getName() // %6
+                );
+        sendEmail(to, subject, body);
     }
 
     static final String hubUserNotificationTemplate =
@@ -283,6 +289,7 @@ public class MailService {
           + "Instituut:\t%8$d %9$s\n"
           ;
 
+    @Async
     public void notifyHubuser(User hubUser, List<LabRequestRepresentation> labRequests) {
         if (!hubUser.isHubUser()) {
             log.warn("The user is no hub user: " + hubUser.getUsername());
@@ -317,22 +324,10 @@ public class MailService {
             return;
         }
         log.info("Sending notification to " + hubUser.getContactData().getEmail());
-        try {
-            MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-            message.setTo(hubUser.getContactData().getEmail());
-            message.setFrom(getFrom(), fromName);
-            message.setReplyTo(replyAddress, replyName);
-            message.setSubject(String.format("PALGA-verzoek aan laboratoria, aanvraagnummers: %s", labRequestCodes));
-            String body = String.format(hubUserNotificationTemplate, labRequestSnippets /* %1 */);
-            message.setText(body);
-            mailSender.send(message.getMimeMessage());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        }
+        String to = hubUser.getContactData().getEmail();
+        String subject = String.format("PALGA-verzoek aan laboratoria, aanvraagnummers: %s", labRequestCodes);
+        String body = String.format(hubUserNotificationTemplate, labRequestSnippets /* %1 */);
+        sendEmail(to, subject, body);
     }
 
     static final String activationEmailTemplate =
@@ -367,27 +362,16 @@ public class MailService {
             + "If you have any questions, please send an email to aanvraag@palga.nl.\n"
             ;
 
+    public static final String activationSubject = "PALGA-account activeren / Activate PALGA account";
+
+    @Async
     public void sendActivationEmail(@NotNull ActivationLink link) {
         // Send email to user
-        try {
-            MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-            String recipient = link.getUser().getUsername();
-            message.setTo(recipient);
-            message.setFrom(getFrom(), fromName);
-            message.setReplyTo(replyAddress, replyName);
-            message.setSubject("PALGA-account activeren / Activate PALGA account");
-            String activationLink = getLink("/#/activate/" + link.getToken());
-            message.setText(String.format(activationEmailTemplate, activationLink));
-            mailSender.send(message.getMimeMessage());
-            log.info("Activation link token generated for " + recipient +
-                    ": " + link.getToken());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        }
+        String recipient = link.getUser().getUsername();
+        String activationLink = getLink("/#/activate/" + link.getToken());
+        String content = String.format(activationEmailTemplate, activationLink);
+        sendEmail(recipient, activationSubject, content);
+        log.info("Activation link token generated for {}: {}", recipient, link.getToken());
     }
 
     static final String passwordRecoveryTemplate = 
@@ -420,27 +404,52 @@ public class MailService {
 
     public static final String passwordRecoverySubject = "Nieuw PALGA-wachtwoord instellen / Create new PALGA password";
 
+    @Async
     public void sendPasswordRecoveryToken(NewPasswordRequest npr) {
+        String recipient = npr.getUser().getContactData().getEmail();
+        String passwordRecoveryLink = getLink("/#/login/reset-password/" + npr.getToken());
+        String content = String.format(passwordRecoveryTemplate, passwordRecoveryLink);
+        log.info("Sending password recovery token to {}.", recipient);
+        sendEmail(recipient, passwordRecoverySubject, content);
+    }
+
+    public static final String accountAlreadyExistsSubject = "Account is al geregistreerd / Account already exists";
+
+    @Async
+    public void sendAccountAlreadyExists(User existingUser) {
         try {
-            MimeMessageHelper message = new MimeMessageHelper(mailSender.createMimeMessage());
-            String recipient = npr.getUser().getContactData().getEmail();
-            message.setTo(recipient);
-            message.setFrom(getFrom(), fromName);
-            message.setReplyTo(replyAddress, replyName);
-            message.setSubject(passwordRecoverySubject);
-            String passwordRecoveryLink = getLink("/#/login/reset-password/" + npr.getToken());
-            message.setText(String.format(passwordRecoveryTemplate, passwordRecoveryLink));
-            log.info("Sending password recovery token to " + recipient + ".");
-            mailSender.send(message.getMimeMessage());
-        } catch(MessagingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
-        } catch(UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            throw new EmailError("Email error: " + e.getMessage());
+            String recipient = existingUser.getContactData().getEmail();
+            log.info("Sending account already exists email to '{}'", recipient);
+            String passwordResetLink = getLink("/#/login/forgot-password");
+            Template template = freemarkerConfiguration.getTemplate("accountAlreadyExistsEmail.ftl");
+            Map<String, Object> params = new HashMap<>();
+            params.put("link", passwordResetLink);
+            CharArrayWriter writer = new CharArrayWriter(1000);
+            template.process(params, writer);
+            sendEmail(recipient, accountAlreadyExistsSubject, writer.toString());
+        } catch (IOException | TemplateException e) {
+            log.error("Error creating the mail message.", e);
         }
     }
-    
+
+    public static final String passwordRecoveryUserUnknownSubject = "Account niet bekend / User account unknown";
+
+    @Async
+    public void sendPasswordRecoveryUserUnknown(String email) {
+        try {
+            log.info("Sending password reset, user unknown email to '{}'", email);
+            String registrationLink = getLink("/#/register");
+            Template template = freemarkerConfiguration.getTemplate("passwordResetNoUserEmail.ftl");
+            Map<String, Object> params = new HashMap<>();
+            params.put("link", registrationLink);
+            CharArrayWriter writer = new CharArrayWriter(1000);
+            template.process(params, writer);
+            sendEmail(email, passwordRecoveryUserUnknownSubject, writer.toString());
+        } catch (IOException | TemplateException e) {
+            log.error("Error creating the mail message.", e);
+        }
+    }
+
     public boolean checkMailSender() {
         if (mailSender == null) {
             return false;

@@ -106,7 +106,8 @@ module.exports = function () {
             var matches = lines[i].match(regex);
             var id = matches[1];
             var content = matches[2];
-            promises.push(element(by.id(id)).sendKeys(content));
+            promises.push(enterText(element(by.id(id)), content));
+
         }
 
         // Resolve all promises and call next at the end
@@ -115,6 +116,13 @@ module.exports = function () {
         });
     });
 
+    function enterText(field, text){
+        return Promise.all([
+            field.clear(),
+            field.sendKeys(text)
+        ])
+    }
+    
     this.When(/^I click on the following objects\w*$/, function (fields, next) {
         var lines = fields.split('\n');
 

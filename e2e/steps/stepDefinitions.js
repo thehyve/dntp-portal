@@ -304,9 +304,16 @@ module.exports = function () {
     });
 
     this.Then(/^I close the print window$/, function (next) {
-        browser.sleep(3000).then(function(){
-		browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(next, next);	
-		},next)
+        browser.getAllWindowHandles().then(function (handles) {
+            var newWindowHandle = handles[1]; // this is your new window
+            browser.switchTo().window(newWindowHandle).then(function () {
+                browser.sleep(5000).then(function () {
+                    browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(function () {
+                        next();
+                    });
+                });
+            });
+        });
     });
 
     this.Then(/^I should see (\d+) lab requests in the list$/, function (amount, next) {
@@ -413,5 +420,14 @@ module.exports = function () {
                 }, next);
             });
         });
+    });
+
+    this.Then(/^I close the tab$/, function (next) {
+        browser.getAllWindowHandles().then(function (handles) {
+            browser.driver.switchTo().window(handles[1]);
+            browser.driver.close();
+            browser.driver.switchTo().window(handles[0]);
+            next();
+        }, next);
     });
 };

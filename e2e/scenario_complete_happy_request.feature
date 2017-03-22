@@ -49,6 +49,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     materialsRequest
     linkageWithPersonalDataYes
     informedConsentNo
+    germlinemutationYes
     """
     And I fill the form with the following data
     """

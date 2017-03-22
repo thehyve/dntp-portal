@@ -228,7 +228,7 @@
     <div class="row">
         <label class="control-label col-xs-4 col-md-2">{{ 'Germline mutation analysis' | translate }}</label>
         <p class="col-xs-8 col-md-10">
-            {{labRequest.request.germlineMutation}}
+            {{labRequest.request.germlineMutation ? 'Yes' : 'No' | translate}}
         </p>
     </div>
 

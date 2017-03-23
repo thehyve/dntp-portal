@@ -254,11 +254,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
 	And the static form contains
     """
     Biobank request number: bio_request_123
-    #Address pathology lab. requester: 
-	#Billing address: dreef 1234
-	#Return address: 
-	"""
-	
+    """
+	And I close the tab
 	
 	
   Scenario: 14 lab user can register which samples will be sent

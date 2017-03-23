@@ -30,6 +30,7 @@ module.exports = function () {
     });
 
     this.Given('I am logged out', function (next) {
+		browser.ignoreSynchronization = false;
         util.logout().then(function () {
             next();
         });
@@ -309,8 +310,8 @@ module.exports = function () {
             var newWindowHandle = handles[1]; // this is your new window
             browser.switchTo().window(newWindowHandle).then(function () {
                 browser.sleep(5000).then(function () {
+					browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
                     browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(function () {
-                        browser.ignoreSynchronization = false;
                         next();
                     });
                 });

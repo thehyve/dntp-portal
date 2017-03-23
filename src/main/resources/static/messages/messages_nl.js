@@ -599,6 +599,7 @@
         '(Other)':'(Overig)',
         '(Please select a specialism)' : '(Kies een specialisme)',
 
+        'mail_recall': '?subject=Met betrekking tot {{labRequest.labRequestCode}}, terugroepen sample {{pathology.paNumber}} &body=Beste onderzoeker,%0D%0DZou je het volgende PA-nummer z.s.m willen terugsturen. Deze hebben wij nodig voor de patiëntenzorg.%0D%0DAanvraag {{pathology.labRequestCode}}%0DPA nummer: {{pathology.paNumber}}; {{pathology.palgaPatientNr}}%0D%0DAlvast bedankt.',
         null: null
     };
 

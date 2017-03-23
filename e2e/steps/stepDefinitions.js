@@ -304,11 +304,13 @@ module.exports = function () {
     });
 
     this.Then(/^I close the print window$/, function (next) {
+        browser.ignoreSynchronization = true;
         browser.getAllWindowHandles().then(function (handles) {
             var newWindowHandle = handles[1]; // this is your new window
             browser.switchTo().window(newWindowHandle).then(function () {
                 browser.sleep(5000).then(function () {
                     browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(function () {
+                        browser.ignoreSynchronization = false;
                         next();
                     });
                 });
@@ -427,7 +429,8 @@ module.exports = function () {
             browser.driver.switchTo().window(handles[1]);
             browser.driver.close();
             browser.driver.switchTo().window(handles[0]);
+        }).then(function () {
             next();
-        }, next);
+        });
     });
 };

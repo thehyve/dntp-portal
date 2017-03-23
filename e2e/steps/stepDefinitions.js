@@ -312,7 +312,6 @@ module.exports = function () {
                 browser.sleep(5000).then(function () {
 					browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
                     browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(function () {
-                        browser.ignoreSynchronization = false;
                         next();
                     });
                 });

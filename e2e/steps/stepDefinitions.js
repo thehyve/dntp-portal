@@ -311,6 +311,7 @@ module.exports = function () {
             browser.switchTo().window(newWindowHandle).then(function () {
                 browser.sleep(5000).then(function () {
                     browser.actions().sendKeys(protractor.Key.ESCAPE).perform().then(function () {
+                        browser.ignoreSynchronization = false;
                         next();
                     });
                 });

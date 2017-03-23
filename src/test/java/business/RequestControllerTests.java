@@ -196,7 +196,7 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
         SecurityContextHolder.clearContext();
     }
 
-    private void submitRequestForApproval() {
+    private void submitRequestForApproval() throws InterruptedException {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -226,6 +226,9 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
         representation = requestController.submitReview(palga, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
         assertEquals(RequestStatus.APPROVAL, representation.getStatus());
+
+        // Mail sending is asynchronous. Sleep for 1 second.
+        Thread.sleep(1 * 1000);
 
         assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender) mailSender).getMessages();
@@ -302,7 +305,7 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void testApproveRequest() {
+    public void testApproveRequest() throws InterruptedException {
         createRequest();
         submitRequest();
         submitRequestForApproval();
@@ -320,7 +323,7 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
         SecurityContextHolder.clearContext();
     }
 
-    private void skipApproval() {
+    private void skipApproval() throws InterruptedException {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -354,6 +357,9 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
         log.info("Status: " + representation.getStatus());
         assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
 
+        // Mail sending is asynchronous. Sleep for 1 second.
+        Thread.sleep(1 * 1000);
+
         assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
         assertEquals(0, emails.size());
@@ -362,7 +368,7 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void testSkipApproval() {
+    public void testSkipApproval() throws InterruptedException {
         createRequest();
         submitRequest();
         skipApproval();

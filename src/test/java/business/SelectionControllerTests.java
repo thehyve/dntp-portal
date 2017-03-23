@@ -128,7 +128,7 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     
 
     @Test(groups = "request", dependsOnMethods = "submitRequest")
-    public void submitRequestForApproval() {
+    public void submitRequestForApproval() throws Exception {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -158,6 +158,9 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         representation = requestController.submitReview(palga, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());
         assertEquals(RequestStatus.APPROVAL, representation.getStatus());
+
+        // Mail sending is asynchronous. Sleep for 1 second.
+        Thread.sleep(1 * 1000);
 
         assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
@@ -194,3 +197,4 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
     public abstract void selectExcerpts();
 
 }
+

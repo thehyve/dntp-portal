@@ -78,9 +78,7 @@ public class UploadTests extends AbstractTestNGSpringContextTests {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
 
-        RequestRepresentation representation = new RequestRepresentation();
-        representation.setTitle("Test request");
-        representation = requestController.start(requester, representation);
+        RequestRepresentation representation = requestController.start(requester);
         log.info("Started request " + representation.getProcessInstanceId());
         log.info("Status: " + representation.getStatus());
         log.info("Assignee: " + representation.getAssignee());

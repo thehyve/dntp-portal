@@ -95,18 +95,16 @@ public abstract class SelectionControllerTests extends AbstractTestNGSpringConte
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
         
-        RequestRepresentation representation = new RequestRepresentation();
-        representation = requestController.start(requester, representation);
+        RequestRepresentation representation = requestController.start(requester);
         log.info("Started request " + representation.getProcessInstanceId());
         log.info("Status: " + representation.getStatus());
         log.info("Assignee: " + representation.getAssignee());
         assertEquals(RequestStatus.OPEN, representation.getStatus());
         processInstanceId = representation.getProcessInstanceId();
-        
-        //testController.clearAll();
-        //List<RequestListRepresentation> requestList = requestController.getRequestList(requester);
-        //assertEquals(0, requestList.size());
-        
+
+        RequestControllerTests.setTestData(representation);
+        requestController.update(requester, representation.getProcessInstanceId(), representation);
+
         SecurityContextHolder.clearContext();
     }
     

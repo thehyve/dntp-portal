@@ -15,9 +15,11 @@ import business.models.Lab;
 import business.models.RequestProperties.ReviewStatus;
 import business.validation.RequiredField;
 import business.validation.ValidAddress;
+import business.validation.InformedConsentFormPresentIfRequired;
 
 import javax.validation.constraints.NotNull;
 
+@InformedConsentFormPresentIfRequired
 public class RequestRepresentation implements RequestListElement {
 
     private String processInstanceId;

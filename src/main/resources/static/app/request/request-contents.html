@@ -190,6 +190,16 @@
         </p>
     </div>
 
+    <!-- Germline mutation -->
+    <div class="row" >
+        <label class="control-label col-xs-4 col-sm-4">
+            {{'Germline mutation analysis'|translate}}
+        </label>
+        <div class="col-xs-6 col-sm-6">
+            {{request.germlineMutation ? 'Yes' : 'No' | translate}}
+        </div>
+    </div>
+    
     <!-- Request Type -->
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Request type' | translate }}</label>
@@ -239,16 +249,6 @@
         </label>
         <div class="col-xs-6 col-sm-6">
             {{request.biobankRequestNumber }}
-        </div>
-    </div>
-
-    <!-- Germline mutation -->
-    <div class="row" >
-        <label class="control-label col-xs-4 col-sm-4">
-            {{'Germline mutation analysis'|translate}}
-        </label>
-        <div class="col-xs-6 col-sm-6">
-            {{request.germlineMutation ? 'Yes' : 'No' | translate}}
         </div>
     </div>
 

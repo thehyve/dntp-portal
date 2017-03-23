@@ -18,7 +18,7 @@ public class ValidAddressValidator implements ConstraintValidator<ValidAddress, 
 
     @Override
     public boolean isValid(ContactData contactData, ConstraintValidatorContext constraintValidatorContext) {
-        if (contactData != null) return false;
+        if (contactData == null) return false;
         if (isEmpty(contactData.getAddress1())) {
             return false;
         }

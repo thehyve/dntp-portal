@@ -214,9 +214,7 @@ public class RequestController {
 
     @PreAuthorize("isAuthenticated() and hasRole('requester')")
     @RequestMapping(value = "/requests", method = RequestMethod.POST)
-    public RequestRepresentation start(
-            UserAuthenticationToken user,
-            @RequestBody RequestRepresentation req) {
+    public RequestRepresentation start(UserAuthenticationToken user) {
         String userId = user.getId().toString();
         log.info(
                 "POST /requests (initiator: " + userId + ")");

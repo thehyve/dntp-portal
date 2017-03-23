@@ -219,7 +219,7 @@ Feature: scenario additional request
 	
   Scenario: 9b attach excerpt list for additional request
     Given I am logged in as the palga user
-    When I click on the request with title 'Request 1a'
+    When I click on the request with title 'Test_HP1'
     And I click on the 'Edit' button
     And I click on the following objects
       """
@@ -232,11 +232,11 @@ Feature: scenario additional request
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And testing is paused to wait a bit
     And I go to the 'requests' page
-    Then request 'Request 1a' should have status 'Data delivered, select excerpts'
+    Then request 'Test_HP1' should have status 'Data delivered, select excerpts'
 
   Scenario: 9c Select PA numbers for additional request
    Given I am logged in as the palga user
-   When I click on the request with title 'Request 1a'
+   When I click on the request with title 'Test_HP1'
    And I scroll to the bottom of the page
    And testing is paused to wait a bit
    And I click on the object with id 'select_all_excerpts'
@@ -245,7 +245,7 @@ Feature: scenario additional request
   Scenario: 9d Palga approves selection for additional request
    Given I am logged in as the palga user
    # And I am on the requests page
-   When I click on the request with title 'Request 1a'
+   When I click on the request with title 'Test_HP1'
    And I scroll to the bottom of the page
    And I click on the 'Approve selection' button
    And I click on the 'OK' button

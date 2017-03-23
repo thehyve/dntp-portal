@@ -959,7 +959,13 @@
                     <button id="submit-new-request" class="btn btn-warning req-edit-button" type="button"
                         ng-if="request.status=='Open'"
                         ng-click="submitRequest(request)"
-                        ng-disabled="requestEditForm.$invalid || !isValidRequestType(request) || dataLoading">
+                        ng-disabled="requestEditForm.$invalid
+                            || !isValidRequestType(request)
+                            || (!request.statisticsRequest
+                                && request.linkageWithPersonalData
+                                && request.informedConsent
+                                && request.informedConsentFormAttachments.length < 1)
+                            || dataLoading">
                         {{'Submit'|translate}}
                     </button>
                     <button class="btn btn-warning req-edit-button" type="button"

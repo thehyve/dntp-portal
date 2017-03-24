@@ -214,9 +214,7 @@ public class RequestController {
 
     @PreAuthorize("isAuthenticated() and hasRole('requester')")
     @RequestMapping(value = "/requests", method = RequestMethod.POST)
-    public RequestRepresentation start(
-            UserAuthenticationToken user,
-            @RequestBody RequestRepresentation req) {
+    public RequestRepresentation start(UserAuthenticationToken user) {
         String userId = user.getId().toString();
         log.info(
                 "POST /requests (initiator: " + userId + ")");
@@ -701,8 +699,85 @@ public class RequestController {
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
         return request;
-    }    
-    
+    }
+
+    @PreAuthorize("isAuthenticated() "
+            + " and ("
+            + "     hasPermission(#id, 'isRequester') "
+            + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
+            + ")")
+    @RequestMapping(value = "/requests/{id}/informedConsentFormFiles", method = RequestMethod.POST)
+    public RequestRepresentation uploadInformedConsentFormAttachment(
+            UserAuthenticationToken user,
+            @PathVariable String id,
+            @RequestParam("flowFilename") String name,
+            @RequestParam("flowTotalChunks") Integer chunks,
+            @RequestParam("flowChunkNumber") Integer chunk,
+            @RequestParam("flowIdentifier") String flowIdentifier,
+            @RequestParam("file") MultipartFile file) {
+        log.info("POST /requests/" + id + "/informedConsentFormFiles: chunk " + chunk + " / " + chunks);
+        // check if there is an active task where modifying the informed consent form is allowed.
+        if (user.getUser().isRequester()) {
+            requestService.getTaskByRequestId(id, "request_form");
+        } else if (user.getUser().isPalga()) {
+            Task task = requestService.findTaskByRequestId(id, "palga_request_review");
+            if (task == null) {
+                task = requestService.getTaskByRequestId(id, "request_approval");
+            }
+        }
+
+        File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.INFORMED_CONSENT_FORM, file, chunk, chunks, flowIdentifier);
+        if (attachment != null) {
+            // add attachment id to the set of ids of the informed consent form attachments.
+            requestPropertiesService.addInformedConsentFormAttachment(id, attachment);
+        }
+
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+        return request;
+    }
+
+    @PreAuthorize("isAuthenticated() "
+            + " and ("
+            + "     hasPermission(#id, 'isRequester') "
+            + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
+            + ")")
+
+    @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.GET)
+    public HttpEntity<InputStreamResource> getICFile(UserAuthenticationToken user, @PathVariable String id,
+                                                   @PathVariable Long attachmentId) {
+        log.info("GET /requests/" + id + "/informedConsentFormFiles/" + attachmentId);
+        HttpEntity<InputStreamResource> file = requestPropertiesService.getFile(user.getUser(), id, attachmentId);
+        return file;
+    }
+
+
+    @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.DELETE)
+    public RequestRepresentation removeInformedConsentFormAttachment(UserAuthenticationToken user, @PathVariable String id,
+                                                           @PathVariable Long attachmentId) {
+        log.info("DELETE /requests/" + id + "/informedConsentFormFiles/" + attachmentId);
+        // check if there is an active task where modifying the informed consent form is allowed.
+        if (user.getUser().isRequester()) {
+            requestService.getTaskByRequestId(id, "request_form");
+        } else if (user.getUser().isPalga()) {
+            Task task = requestService.findTaskByRequestId(id, "palga_request_review");
+            if (task == null) {
+                task = requestService.getTaskByRequestId(id, "request_approval");
+            }
+        }
+
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
+
+        // remove existing agreement attachment.
+        requestPropertiesService.removeInformedConsentFormAttachment(id, attachmentId);
+
+        instance = requestService.getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+        return request;
+    }
+
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/agreementFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadAgreementAttachment(

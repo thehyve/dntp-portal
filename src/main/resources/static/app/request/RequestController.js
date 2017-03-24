@@ -328,6 +328,22 @@ angular.module('ProcessApp.controllers')
             });
         };
 
+        $scope.removeInformedConsentFormFile = function(f) {
+            bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
+                if (result) {
+                    var attachment = new RequestAttachment();
+                    attachment.requestId = $scope.request.processInstanceId;
+                    attachment.id = f.id;
+                    attachment.$removeInformedConsentFormFile(function() {
+                        $scope.request.informedConsentFormAttachments.splice($scope.request.informedConsentFormAttachments.indexOf(f), 1);
+                        bootbox.alert('File ' + f.name + ' deleted.');
+                    }, function(response) {
+                        $rootScope.logErrorResponse(response);
+                    });
+                }
+            });
+        };
+
         $scope.removeAgreementFile = function(f) {
             bootbox.confirm($rootScope.translate('Are you sure you want to delete file ?', {name: f.name}), function(result) {
                 if (result) {

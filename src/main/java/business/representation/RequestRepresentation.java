@@ -13,7 +13,13 @@ import java.util.Set;
 import business.models.ContactData;
 import business.models.Lab;
 import business.models.RequestProperties.ReviewStatus;
+import business.validation.RequiredField;
+import business.validation.ValidAddress;
+import business.validation.InformedConsentFormPresentIfRequired;
 
+import javax.validation.constraints.NotNull;
+
+@InformedConsentFormPresentIfRequired
 public class RequestRepresentation implements RequestListElement {
 
     private String processInstanceId;
@@ -37,23 +43,37 @@ public class RequestRepresentation implements RequestListElement {
 
     private ReviewStatus reviewStatus;
 
+    @RequiredField
     private String title;
+    @RequiredField
     private String background;
+    @RequiredField
     private String researchQuestion;
+    @RequiredField
     private String hypothesis;
+    @RequiredField
     private String methods;
 
+    @RequiredField
     private String searchCriteria;
+    @RequiredField
     private String studyPeriod;
+    @RequiredField
     private String laboratoryTechniques;
 
+    @RequiredField
     private String pathologistName;
+    @RequiredField
     private String pathologistEmail;
     private boolean previousContact;
     private String previousContactDescription;
-    
+
+    @NotNull
+    @ValidAddress
     private ContactData billingAddress;
+    @RequiredField
     private String chargeNumber;
+    @RequiredField
     private String grantProvider;
     private String researchNumber;
     private String biobankRequestNumber;
@@ -72,10 +92,13 @@ public class RequestRepresentation implements RequestListElement {
     private String reasonUsingPersonalData;
 
     private Date returnDate;
+    @RequiredField
     private String contactPersonName;
+    @RequiredField
     private String contactPersonEmail;
 
     private List<FileRepresentation> attachments;
+    private List<FileRepresentation> informedConsentFormAttachments;
     private List<FileRepresentation> agreementAttachments;
     private List<FileRepresentation> dataAttachments;
     private List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments;
@@ -455,6 +478,14 @@ public class RequestRepresentation implements RequestListElement {
 
     public void setAttachments(List<FileRepresentation> attachments) {
         this.attachments = attachments;
+    }
+
+    public List<FileRepresentation> getInformedConsentFormAttachments() {
+        return informedConsentFormAttachments;
+    }
+
+    public void setInformedConsentFormAttachments(List<FileRepresentation> informedConsentFormAttachments) {
+        this.informedConsentFormAttachments = informedConsentFormAttachments;
     }
 
     public List<FileRepresentation> getAgreementAttachments() {

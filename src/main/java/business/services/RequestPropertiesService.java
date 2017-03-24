@@ -177,6 +177,31 @@ public class RequestPropertiesService {
     }
 
     @Transactional
+    public void addInformedConsentFormAttachment(String processInstanceId, File attachment) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        properties.getInformedConsentFormAttachments().add(attachment);
+        save(properties);
+    }
+
+    @Transactional
+    public void removeInformedConsentFormAttachment(String processInstanceId, Long attachmentId) {
+        RequestProperties properties = findByProcessInstanceId(processInstanceId);
+        File toBeRemoved = null;
+        for (File file: properties.getInformedConsentFormAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                toBeRemoved = file;
+                break;
+            }
+        }
+        if (toBeRemoved == null) {
+            throw new AttachmentNotFound();
+        }
+        properties.getInformedConsentFormAttachments().remove(toBeRemoved);
+        save(properties);
+        fileService.removeAttachment(toBeRemoved);
+    }
+
+    @Transactional
     public void addAgreementAttachment(String processInstanceId, File attachment) {
         RequestProperties properties = findByProcessInstanceId(processInstanceId);
         properties.getAgreementAttachments().add(attachment);
@@ -222,6 +247,11 @@ public class RequestPropertiesService {
             }
         }
         for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                return fileService.download(file.getId());
+            }
+        }
+        for (File file: properties.getInformedConsentFormAttachments()) {
             if (file.getId().equals(attachmentId)) {
                 return fileService.download(file.getId());
             }

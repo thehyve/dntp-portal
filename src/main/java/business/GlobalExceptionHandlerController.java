@@ -5,10 +5,14 @@
  */
 package business;
 
+import business.exceptions.InvalidRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +20,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import business.exceptions.ExcerptListUploadError;
 import business.exceptions.ExcerptSelectionUploadError;
+
+import javax.validation.ConstraintViolation;
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandlerController {
@@ -36,6 +44,19 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity<String> handleExcerptListUploadError(ExcerptSelectionUploadError e) {
         log.error("ExcerptSelectionUploadError: " + e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidRequest.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<Object> handleInvalidRequest(InvalidRequest e) {
+        log.error("InvalidRequest: " + e.getMessage());
+        List<String> errors = new ArrayList<>(e.getConstraintViolations().size());
+        for (ConstraintViolation violation : e.getConstraintViolations()) {
+            errors.add(violation.getMessage());
+        }
+        ErrorMessage errorMessage = new ErrorMessage(errors);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
 }

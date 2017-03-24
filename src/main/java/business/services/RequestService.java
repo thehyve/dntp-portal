@@ -25,7 +25,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
+import business.exceptions.*;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -47,12 +52,6 @@ import org.springframework.stereotype.Service;
 
 import com.opencsv.CSVWriter;
 
-import business.exceptions.EmailError;
-import business.exceptions.FileDownloadError;
-import business.exceptions.InvalidActionInStatus;
-import business.exceptions.RequestNotFound;
-import business.exceptions.TaskNotFound;
-import business.exceptions.UserUnauthorised;
 import business.models.File;
 import business.models.RequestProperties;
 import business.models.User;
@@ -60,6 +59,7 @@ import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
+
 
 @Service
 public class RequestService {
@@ -359,6 +359,22 @@ public class RequestService {
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
 
         Task task = getTaskByRequestId(id, "request_form");
+
+        // validate form data
+        {
+            HistoricProcessInstance instance = getProcessInstance(id);
+            RequestRepresentation request = new RequestRepresentation();
+            requestFormService.transferData(instance, request, requester);
+
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+
+            Set<ConstraintViolation<RequestRepresentation>> requestConstraintViolations = validator.validate(request);
+            if (!requestConstraintViolations.isEmpty()) {
+                throw new InvalidRequest("Invalid request", requestConstraintViolations);
+            }
+        }
+
         if (task.getDelegationState()==DelegationState.PENDING) {
             taskService.resolveTask(task.getId());
         }

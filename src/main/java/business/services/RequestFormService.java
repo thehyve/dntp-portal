@@ -441,6 +441,12 @@ public class RequestFormService {
             }
             request.setAttachments(requestAttachments);
 
+            List<FileRepresentation> informedConsentFormAttachments = new ArrayList<FileRepresentation>();
+            for(File file: properties.getInformedConsentFormAttachments()) {
+                informedConsentFormAttachments.add(new FileRepresentation(file));
+            }
+            request.setInformedConsentFormAttachments(informedConsentFormAttachments);
+
             request.setPrivacyCommitteeRationale(properties.getPrivacyCommitteeRationale());
             request.setPrivacyCommitteeOutcome(properties.getPrivacyCommitteeOutcome());
             request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());

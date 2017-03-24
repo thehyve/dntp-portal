@@ -88,6 +88,9 @@ public class RequestProperties {
     private List<File> requestAttachments = new ArrayList<File>();
 
     @OneToMany
+    private List<File> informedConsentFormAttachments = new ArrayList<File>();
+
+    @OneToMany
     private List<File> agreementAttachments = new ArrayList<File>();
 
     @OneToMany
@@ -234,6 +237,14 @@ public class RequestProperties {
 
     public void setRequestAttachments(List<File> requestAttachments) {
         this.requestAttachments = requestAttachments;
+    }
+
+    public List<File> getInformedConsentFormAttachments() {
+        return informedConsentFormAttachments;
+    }
+
+    public void setInformedConsentFormAttachments(List<File> informedConsentFormAttachments) {
+        this.informedConsentFormAttachments = informedConsentFormAttachments;
     }
 
     public List<File> getAgreementAttachments() {

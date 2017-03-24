@@ -21,7 +21,7 @@ public class ContactData {
     private String telephone;
     @Column(nullable = true)
     private String email;
-    
+
     @Column(nullable = true)
     private String address1;
     @Column(nullable = true)

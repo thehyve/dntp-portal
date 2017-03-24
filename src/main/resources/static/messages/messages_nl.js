@@ -122,6 +122,7 @@
         'Upload file': 'Upload bestand(en)',
         'drag and drop your file here': 'sleep bestanden hierheen',
         'No attachments uploaded.': 'Nog geen attachments geüpload.',
+        'No forms uploaded.': 'Nog geen formulieren geüpload.',
         'Letter of medical research ethics committee': 'Brief van medisch-ethische toetsingscommissie',
         'Upload letter': 'Upload brief',
         'Submit': 'Indienen',

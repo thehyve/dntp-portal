@@ -26,6 +26,12 @@ This file is distributed under the GNU Affero General Public License
             <hr>
             <!--Tool bar-->
             <ul class="nav nav-pills" >
+                <li role="presentation" title="{{'Reset filters'|translate}}">
+                    <button class="btn btn-default" ng-click="resetFilters('requests')" id="reset-filters">
+                        <span><i class="mdi mdi-filter-remove-outline"></i></span>
+                        {{'Reset filters'|translate}}
+                    </button>
+                </li>
                 <li role="presentation" title="{{'Create a new request'|translate}}" ng-if="isRequester()">
                     <button class="btn btn-default"  ng-click="start()" id="new-request">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
@@ -38,13 +44,8 @@ This file is distributed under the GNU Affero General Public License
                         {{'Print selected'|translate}}
                     </button>
                 </li>
-                <li role="presentation" title="{{'Reset filters'|translate}}">
-                    <button class="btn btn-default" ng-click="resetFilters('requests')" id="reset-filters">
-                        <span><i class="mdi mdi-filter-remove-outline"></i></span>
-                        {{'Reset filters'|translate}}
-                    </button>
-                </li>
             </ul>
+            
             <div ng-controller="LoadTestController">
             <ul class="nav nav-pills" ng-if="loadTestEnabled()">
                 <li ng-if="!isPalga()">

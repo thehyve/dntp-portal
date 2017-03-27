@@ -114,9 +114,7 @@ This file is distributed under the GNU Affero General Public License
                         <span class="pull-right">
                         <span class="btn-group btn-group-sm">
                         <a ng-if="pathology.status=='Received' || pathology.status=='Sending'"
-                           href="mailto:{{pathology.email
-                            }}?subject=Regarding request {{pathology.labRequestCode}}, recall sample {{pathology.paNumber
-                            }}&amp;body=Please return sample {{pathology.paNumber}} a.s.a.p."
+                           href="mailto:{{pathology.email}}{{'mail_recall' | translate: {labRequest:labRequest, pathology: pathology} }}"
                            class="btn btn-default" role="button" title="{{'Compose recall mail' | translate}}">
                             <span><i class="glyphicon glyphicon-envelope"></i></span>
                             {{'Recall' | translate}}

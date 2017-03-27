@@ -229,9 +229,13 @@ public class LabRequestController {
         }
         labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
 
-        LabRequestRepresentation representation = new LabRequestRepresentation(
-                labRequest);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation, false);
+        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), "Unapproved previously approved lab Request");
+        comment = commentRepository.save(comment);
+        labRequest.addComment(comment);
+        labRequestService.save(labRequest);
+
         return representation;
     }
 

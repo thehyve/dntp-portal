@@ -171,7 +171,7 @@
         '(Other)':'(Other)',
         '(Please select a specialism)' : '(Please select a specialism)',
 
-        'mail_recall': '?subject=Regarding request {{labRequest.labRequestCode}}, recall sample {{pathology.paNumber}}&body=Dear researcher,%0DPlease return the following PA-number asap. We need this for further patient diagnostic.%0D%0DPALGA aanvraag {{pathology.labRequestCode}}%0D%0DPA number {{pathology.paNumber}}; {{pathology.palgaPatientNr}}%0D%0DBest regards.',
+        'mail_recall': '?subject=Regarding request {{labRequest.labRequestCode}}, recall sample {{pathology.paNumber}}&body=Dear researcher,%0D%0DPlease return the following PA-number asap. We need this for further patient diagnostic.%0D%0DPALGA aanvraag {{pathology.labRequestCode}}%0D%0DPA number {{pathology.paNumber}}; {{pathology.palgaPatientNr}}%0D%0DBest regards.',
         null: null
     };
 

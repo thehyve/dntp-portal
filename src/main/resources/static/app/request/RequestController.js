@@ -247,6 +247,7 @@ angular.module('ProcessApp.controllers')
             request.dataAttachments = result.dataAttachments;
             request.dataAttachmentCount = result.dataAttachments.length;
             request.medicalEthicalCommitteeApprovalAttachments = result.medicalEthicalCommitteeApprovalAttachments;
+            request.informedConsentFormAttachments = result.informedConsentFormAttachments;
         };
 
         $scope.EXCERPT_SELECTION_LIMIT = 1000;

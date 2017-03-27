@@ -41,14 +41,14 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-comment"></i></span>
                     {{'Notes' | translate}}
                 </button>
-                 <span ng-if="labRequest.status != 'Rejected' &&
+                <span ng-if="labRequest.status != 'Rejected' &&
                      !(labRequest.status == 'Waiting for lab approval' && isRequester()) &&
                      (isRequester() || isLabOrHubUser())">
                    <a class="btn btn-default" ng-href="/labrequests/{{labRequest.id}}/panumbers/csv">
                        <span><i class="glyphicon glyphicon-download-alt"></i></span>
                        {{'Download PA numbers' |translate}}
                    </a>
-                 </span>
+                </span>
                 <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected,
                 request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject
                 reason: {{labRequest.rejectReason}}" ng-if="labRequest.status=='Rejected' && isLabOrHubUser()">
@@ -72,14 +72,19 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-eye-close"></i></span>
                     {{'Unclaim' | translate}}
                 </button>
-                <button
-                        class="btn btn-default" type="button"
+                <button class="btn btn-default" type="button"
                         ng-click="printPreview();"
                         title="{{'Print preview' | translate}}"
                         ng-if="isLabOrHubUser() || (labRequest.status != 'Rejected' &&
                         labRequest.status != 'Waiting for lab approval')">
                     <span><i class="glyphicon glyphicon-print"></i></span>
                     {{'Packing list' | translate}}
+                </button>
+                <button class="btn btn-warning pull-right" type="button" title="{{'Unapprove' | translate}}"
+                        ng-click="rejectApprovedLabRequest(labRequest)"
+                        ng-if="labRequest.status=='Approved' || labRequest.status=='Sending'">
+                    <span><i class="glyphicon glyphicon-remove"></i></span>
+                    {{'Unapprove' | translate}}
                 </button>
             </div>
 

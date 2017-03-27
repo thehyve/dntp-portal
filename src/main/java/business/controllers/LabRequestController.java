@@ -206,6 +206,35 @@ public class LabRequestController {
         return representation;
     }
 
+    /**
+     * Unapprove a previously approved lab request. Action only allowed for lab users.
+     *
+     * @param user the authorised user.
+     * @param id the lab request id.
+     * @return a representation of the approved lab request.
+     */
+    @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser') and "
+            + "hasPermission(#id, 'isLabRequestLabuser')")
+    @RequestMapping(value = "/labrequests/{id}/unapprove", method = RequestMethod.PUT)
+    public LabRequestRepresentation unapprove(UserAuthenticationToken user,
+                                                @PathVariable Long id,
+                                                @RequestBody LabRequestRepresentation body) {
+        log.info("PUT /labrequests/" + id + "/unapprove");
+
+        LabRequest labRequest = labRequestService.findOne(id);
+        Status status = labRequest.getStatus();
+        if (!(status == Status.APPROVED || status == Status.SENDING)) {
+            log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
+            throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
+        }
+        labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(
+                labRequest);
+        labRequestService.transferLabRequestData(representation, false);
+        return representation;
+    }
+
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
     @RequestMapping(value = "/labrequests/{id}/sending", method = RequestMethod.PUT)
     public LabRequestRepresentation sending(UserAuthenticationToken user,

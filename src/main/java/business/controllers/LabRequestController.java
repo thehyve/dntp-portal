@@ -231,6 +231,8 @@ public class LabRequestController {
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation, false);
+
+        //Add comment explaining what happened.
         Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), "Unapproved previously approved lab Request");
         comment = commentRepository.save(comment);
         labRequest.addComment(comment);

@@ -974,6 +974,7 @@
                             || !request.contactPersonAllowed
                             || !request.requesterLabValid
                             || dataLoading
+                            || (request.informedConsent && request.informedConsentFormAttachments.length < 1)
                         ">
                             {{'Submit to scientific council'|translate}}
                     </button>
@@ -988,6 +989,7 @@
                             || !request.contactPersonAllowed
                             || !request.requesterLabValid
                             || dataLoading
+                            || (request.informedConsent && request.informedConsentFormAttachments.length < 1)
                         ">
                         {{'Finish submission process, skip scientific council'|translate}}
                     </button>

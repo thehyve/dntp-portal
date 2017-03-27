@@ -81,7 +81,6 @@ angular.module('ProcessApp.controllers')
                         }
                     }
                 }
-                //$scope.paNumbersDisplayedCollection = [].concat($scope.samples);
             };
 
             /* from: http://lorenzofox3.github.io/smart-table-website/ */
@@ -788,6 +787,26 @@ angular.module('ProcessApp.controllers')
                 return defer.promise;
 
             };
-        }
 
-        ]);
+            $scope.rejectApprovedLabRequest = function(labRequest) {
+                $scope.dataLoading = true;
+                bootbox.confirm(
+                    $rootScope.translate('Are you sure you want to unapprove this previously approved lab request? '),
+                    function (confirmed) {
+                        if (confirmed) {
+                            labRequest.unapproveRequest = true;
+                            labRequest.customPUT(labRequest, 'unapprove').then(function () {
+                                _loadData();
+                            }, function (err) {
+                                $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                            });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
+                        }
+                    }
+                );
+            };
+        }
+    ]
+);

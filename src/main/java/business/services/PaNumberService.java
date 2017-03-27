@@ -37,6 +37,7 @@ public class PaNumberService {
     static final String[] FILE_HEADER = {
     		"LAB_NO",
     		"PA_NUMBER",
+            "PALGA_PATIENT_NR",
     		"EXTRA",
     		"SAMPLES",
     		"NOTES"
@@ -56,6 +57,7 @@ public class PaNumberService {
             String[] toppings = {
             		labNumber.toString(),
             		item.getPaNumber(),
+                    item.getPalgaPatientNr(),
             		item.getRemark(),
             		"",
             		""

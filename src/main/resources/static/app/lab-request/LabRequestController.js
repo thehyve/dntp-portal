@@ -400,11 +400,11 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-            $scope.sending = function (labRequest) {
+            $scope.sending = function (labRequest, returnDate) {
                 bootbox.confirm($rootScope.translate('Have you sent the material to the requester?'),
                         function (result) {
                     if (result) {
-                        labRequest.customPUT({}, 'sending').then(function () {
+                        labRequest.customPUT({'returnDate': returnDate.date}, 'sending').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }

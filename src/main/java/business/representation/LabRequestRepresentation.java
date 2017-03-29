@@ -65,7 +65,7 @@ public class LabRequestRepresentation {
     
     private Date sendDate;
 
-    private Date returnByDate;
+    private Date returnDate;
 
     private Boolean isPaReportsSent;
 
@@ -95,7 +95,7 @@ public class LabRequestRepresentation {
         this.setHubAssistanceRequested(labRequest.isHubAssistanceRequested());
         this.setPaReportsSent(labRequest.isPaReportsSent());
         this.setClinicalDataSent(labRequest.IsClinicalDataSent());
-        this.setReturnByDate(labRequest.getReturnByDate());
+        this.setReturnDate(labRequest.getReturnDate());
     }
 
     public void setLabRequestCode() {
@@ -348,11 +348,11 @@ public class LabRequestRepresentation {
         this.sendDate = sendDate;
     }
 
-    public Date getReturnByDate() {
-        return returnByDate;
+    public Date getReturnDate() {
+        return returnDate;
     }
 
-    public void setReturnByDate(Date returnByDate) {
-        this.returnByDate = returnByDate;
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
     }
 }

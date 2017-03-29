@@ -5,6 +5,7 @@
  */
 package business.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import business.controllers.LabRequestComparator;
@@ -464,6 +466,31 @@ public class LabRequestService {
             commentList.add(new CommentRepresentation(comment));
         }
         representation.setComments(commentList);
+    }
+
+    @Scheduled(fixedRate=24*60*60*1000)
+    @Transactional
+    private void sendReturnEmails(){
+        Date now = new Date();
+        List<LabRequest> labRequests = labRequestRepository.findAllUnsentByReturnDate(now);
+        log.info("Sending reminder emails, labRequests found: " + labRequests.size());
+
+        for(LabRequest request: labRequests){
+            LabRequestRepresentation representation = new LabRequestRepresentation(request);
+            this.transferLabRequestData(representation, false);
+
+            if(request.getStatus() != Status.COMPLETED){
+                Collection<String> emails = request.getLab().getEmailAddresses();
+                mailService.sendReturnDateEmails(emails,
+                                                 representation.getLabRequestCode(),
+                                                 representation.getRequester().getUsername(),
+                                                 representation.getRequesterName(),
+                                                 representation.getRequesterEmail());
+                // Store the fact that we sent an email to these people.
+                request.setSentReturnEmail(Boolean.TRUE);
+                this.save(request);
+            }
+        }
     }
 
 }

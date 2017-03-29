@@ -115,7 +115,10 @@ public class LabRequest {
     
     private Date sendDate;
 
-    private Date returnByDate;
+    @Column
+    private Date returnDate;
+    @Column
+    private Boolean sentReturnEmail;
 
     @OrderBy("timeCreated DESC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -252,11 +255,19 @@ public class LabRequest {
         this.result = result;
     }
 
-    public Date getReturnByDate() {
-        return returnByDate;
+    public Date getReturnDate() {
+        return returnDate;
     }
 
-    public void setReturnByDate(Date returnByDate) {
-        this.returnByDate = returnByDate;
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public Boolean getSentReturnEmail() {
+        return sentReturnEmail;
+    }
+
+    public void setSentReturnEmail(Boolean sentReturnEmail) {
+        this.sentReturnEmail = sentReturnEmail;
     }
 }

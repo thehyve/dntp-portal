@@ -6,6 +6,7 @@
 package business.models;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,12 @@ public interface LabRequestRepository extends JpaRepository<LabRequest, Long> {
     List<LabRequest> findAllByLabIn(Collection<Lab> labs);
 
     List<LabRequest> findAllByLabIn(Collection<Lab> labs, Sort sort);
+
+    /* Since sent_return_email was added later, not all labrequests have it set. Using COALESE means all items that are
+     * null will get evaluated as being FALSE */
+    @Query(value  = "SELECT * FROM lab_request lr WHERE lr.return_date < to_timestamp(:now, 'YYYY-MM-DD HH24:MI:SS.US') "+
+                    "AND COALESCE(lr.sent_return_email, FALSE) = FALSE;", nativeQuery = true)
+    List<LabRequest> findAllUnsentByReturnDate(@Param("now") Date now);
 
     Long countByProcessInstanceIdAndLab(String processInstanceId, Lab lab);
 

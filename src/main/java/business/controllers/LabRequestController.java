@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.activiti.engine.TaskService;
@@ -271,7 +269,7 @@ public class LabRequestController {
         DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
         try {
             Date returnDate = format.parse(returnText);
-            labRequest.setReturnByDate(returnDate);
+            labRequest.setReturnDate(returnDate);
         }
         catch(Exception e) {
             log.error("Can't parse +" + returnText);

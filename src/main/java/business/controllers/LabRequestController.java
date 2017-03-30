@@ -227,7 +227,10 @@ public class LabRequestController {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
+        // Reset Values
         labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
+        labRequest.setPaReportsSent(Boolean.FALSE);
+        labRequest.setClinicalDataSent(Boolean.FALSE);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation, false);

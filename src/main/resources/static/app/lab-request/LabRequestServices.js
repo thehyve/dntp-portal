@@ -55,8 +55,8 @@
                 url : '/labrequests/:id/unclaim',
                 method : 'PUT'
             },
-            unapprove : {
-                url : '/labrequests/:id/unapprove',
+            undoapprove : {
+                url : '/labrequests/:id/undoapprove',
                 method : 'PUT'
             },
         });

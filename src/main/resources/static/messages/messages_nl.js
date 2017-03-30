@@ -575,9 +575,9 @@
         'Email addresses': 'Emailadressen',
         'Update hub assistance': 'Inzet hubmedewerker aanpassen',
         'Actions in status': 'Acties in status',
-        'Unapprove': 'Goedkeuring annuleren',
-
-        /* ===================== */
+        'Undo Approval': 'Goedkeuring annuleren',
+        'Are you sure you want to undo approval for this previously approved lab request?': 'Weet u zeker dat u de goedkeuring wilt annuleren?',
+            /* ===================== */
         /* Specialism */
         /* ===================== */
         'Maag-darm-lever-ziekten':'Maag-darm-lever-ziekten',

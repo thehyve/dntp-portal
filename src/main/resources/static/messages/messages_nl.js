@@ -574,6 +574,7 @@
         'Email addresses': 'Emailadressen',
         'Update hub assistance': 'Inzet hubmedewerker aanpassen',
         'Actions in status': 'Acties in status',
+        'Return date': 'Datum retour',
 
         /* ===================== */
         /* Specialism */

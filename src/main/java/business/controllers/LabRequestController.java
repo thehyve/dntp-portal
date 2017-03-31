@@ -12,9 +12,9 @@ import java.util.*;
 
 import javax.validation.Valid;
 
+import business.representation.ReturnDateRepresentation;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.impl.util.json.JSONObject;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
 import org.apache.commons.logging.Log;
@@ -243,7 +243,7 @@ public class LabRequestController {
     @RequestMapping(value = "/labrequests/{id}/sending", method = RequestMethod.PUT, consumes = {"application/json"})
     public LabRequestRepresentation sending(UserAuthenticationToken user,
             @PathVariable Long id,
-            @RequestBody String body) {
+            @RequestBody ReturnDateRepresentation body) {
         log.info("PUT /labrequests/" + id + "/sending");
         LabRequest labRequest = labRequestService.findOne(id);
 
@@ -262,19 +262,7 @@ public class LabRequestController {
 
         labRequestService.updateStatus(labRequest, Status.SENDING);
         labRequest.setSendDate(new Date());
-
-        JSONObject jObject = new JSONObject(body);
-        String returnText = (String) jObject.get("returnDate");
-
-        DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-        try {
-            Date returnDate = format.parse(returnText);
-            labRequest.setReturnDate(returnDate);
-        }
-        catch(Exception e) {
-            log.error("Can't parse +" + returnText);
-        }
-
+        labRequest.setReturnDate(body.getReturnDate());
         labRequest = labRequestService.save(labRequest);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);

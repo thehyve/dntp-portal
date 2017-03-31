@@ -4,22 +4,33 @@
  * (see accompanying file LICENSE).
  */
 angular.module('ProcessApp.controllers')
-    .controller('LabRequestCommentController',['$rootScope', '$scope', '$modal', '$location', '$route',
+    .controller('LabRequestCommentController',['$rootScope', '$scope', '$modal', '$location', '$route', '$window',
         'LabRequest', 'LabRequestComment',
 
-    function ($rootScope, $scope, $modal, $location, $route,
+    function ($rootScope, $scope, $modal, $location, $route, $window,
               LabRequest, LabRequestComment) {
         'use strict';
 
         $scope.commentEditVisibility = {};
-        //$scope.editComment = {};
-        
+
+        $scope.sendMail = function(addresses, subject, message){
+            $window.open("mailto:"+ addresses + "?subject=" + subject+"&body="+message);
+        };
+
         $scope.addComment = function(labRequest, body) {
             var comment = new LabRequestComment(body);
             comment.labRequestId = labRequest.id;
             comment.$save(function(result) {
                 labRequest.comments.push(result);
                 $scope.editComment = {};
+                console.log('Added comment, Sending email');
+                var addresses = "";
+                if($scope.isRequester()){
+                    addresses = labRequest.lab.contactData.email;
+                } else {
+                    addresses = labRequest.requesterEmail;
+                }
+                $scope.sendMail(addresses, $rootScope.translate("New note added"), $rootScope.translate("Dear user,\n\nYou will find a note in the portal at request") + ' ' + labRequest.id);
             }, function(response) {
                 $scope.error = response.statusText;
             });
@@ -30,7 +41,6 @@ angular.module('ProcessApp.controllers')
             comment.labRequestId = labRequest.id;
             comment.$update(function(result) {
                 var index = $scope.labRequest.comments.indexOf(body);
-                //console.log('Updating comment at index ' + index);
                 $scope.labRequest.comments[index] = result;
                 $scope.commentEditVisibility[comment.id] = 0;
             }, function(response) {

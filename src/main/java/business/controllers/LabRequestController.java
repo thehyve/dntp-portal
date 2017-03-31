@@ -245,6 +245,7 @@ public class LabRequestController {
             @PathVariable Long id,
             @RequestBody ReturnDateRepresentation body) {
         log.info("PUT /labrequests/" + id + "/sending");
+
         LabRequest labRequest = labRequestService.findOne(id);
 
         if (labRequest.getStatus() != Status.APPROVED) {

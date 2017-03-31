@@ -458,28 +458,30 @@ public class MailService {
         return true;
     }
 
-    static final String returnDateText = "Beste lezer,\n\n" +
-                                         "Voor PALGA aanvraag %1$s is de uitleentermijn verstreken.\n" +
-                                         "De aanvrager betreft: %2$s\n"+
-                                         "Naam onderzoeker: %3$s\n"+
-                                         "Email onderzoeker: %4$s\n"+
-                                         "Let op er wordt geen automatische e-mail gestuurd naar de onderzoeker. \n"+
-                                         "U dient zelf contact op te nemen met de onderzoeker\n"+
-                                         "--------------------\n"+
-                                         "Dear user,\n\n"+
-                                         "The loan period of PALGA request %1$s is expired.\n"+
-                                         "The requester is: %2$s\n"+
-                                         "Requester name: %3$s\n"+
-                                         "Requester email: %4$s\n"+
-                                         "Note: no automatic email will be sent to the requester.\n"+
-                                         "You have to mail de requester by yourself.\n";
+    public static final String returnDateReminderSubject = "Herinnering uitleentermijn / Loan period reminder";
     //, String requester, String requesterName, String requesterEmail
     @Async
     public void sendReturnDateEmails(Collection<String> labEmails, String labRequestID, String requester, String requester_name, String requester_email) {
-        String content = String.format(returnDateText, labRequestID, requester, requester_name, requester_email);
-        log.info("Sending reminder email to: {}.", labEmails);
-        log.info("Email text:\n" + content);
-        sendEmail(labEmails, passwordRecoverySubject, content);
+        try {
+            log.info("Sending reminder email to: {}.", labEmails);
+
+            Template template = freemarkerConfiguration.getTemplate("returnReminderEmail.ftl");
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("request", labRequestID);
+            params.put("requester", requester);
+            params.put("requester_name", requester_name);
+            params.put("requester_email", requester_email);
+
+            CharArrayWriter writer = new CharArrayWriter(1000);
+            template.process(params, writer);
+            String content = writer.toString();
+
+            log.info("Email text:\n" + content);
+            sendEmail(labEmails, returnDateReminderSubject, content);
+        } catch (IOException | TemplateException e) {
+            log.error("Error creating the mail message.", e);
+        }
     }
 
 }

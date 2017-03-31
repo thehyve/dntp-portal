@@ -268,6 +268,10 @@
                     return isMyReq;
                 };
 
+                $rootScope.isLabOrHubUser = function() {
+                    return $rootScope.isLabUser() || $rootScope.isHubUser();
+                };
+
                 $rootScope.isLabUser = function() {
                     return $rootScope.hasRole('lab_user');
                 };
@@ -307,8 +311,20 @@
                       $location.path('/login');
                   }
                 });
-            }]);
-
+            }])
+        .filter("statusTextFilter", function ($filter) {
+            return function(input, predicate){
+                // Strict search only for the statusText column, because values can be substrings of other values causing them both to show up.
+                if (predicate.hasOwnProperty('statusText')){
+                    // First filter for items with the relevant statusText, then apply other search criteria. 
+                    var status_filtered = $filter('filter')(input, {'statusText': predicate['statusText']}, true);
+                    delete predicate['statusText'];
+                    return $filter('filter')(status_filtered, predicate, false);
+                } else {
+                    return $filter('filter')(input, predicate, false);
+                }
+            }
+        });
 
     // Checks if `string` starts with `start`
     function startsWith(string, start) {

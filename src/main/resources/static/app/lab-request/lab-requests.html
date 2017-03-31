@@ -24,20 +24,26 @@ This file is distributed under the GNU Affero General Public License
 
             <h1>{{ 'Lab requests' | translate }}</h1>
             <hr>
-            <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser() || isPalga()">
-            <li ng-if="isLabUser() || isHubUser()"
-                role="presentation" title="{{'Print selected'|translate}}">
-                <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
-                    <span><i class="glyphicon glyphicon-print"></i></span>
-                    {{'Print selected'|translate}}
-                </button>
-            </li>
-            <li role="presentation">
-            <span><a class="btn btn-default" role="button" ng-href="/labrequests/panumbers/csv">
-                <span><i class="glyphicon glyphicon-download-alt"></i></span>
-                {{'Download PA numbers'|translate}}
-            </a></span>
-            </li>
+            <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser() || isPalga() || isRequester()">
+                <li role="presentation" title="{{'Reset filters'|translate}}">
+                    <button class="btn btn-default" ng-click="resetFilters('labrequests')" id="reset-filters">
+                        <span><i class="mdi mdi-filter-remove-outline"></i></span>
+                        {{'Reset filters'|translate}}
+                    </button>
+                </li>
+                <li ng-if="isLabUser() || isHubUser()"
+                    role="presentation" title="{{'Print selected'|translate}}">
+                    <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
+                        <span><i class="glyphicon glyphicon-print"></i></span>
+                        {{'Print selected'|translate}}
+                    </button>
+                </li>
+                <li role="presentation" ng-if="isLabUser() || isHubUser() || isPalga()">
+                <span><a class="btn btn-default" role="button" ng-href="/labrequests/panumbers/csv">
+                    <span><i class="glyphicon glyphicon-download-alt"></i></span>
+                    {{'Download PA numbers'|translate}}
+                </a></span>
+                </li>
             </ul>
 
             <!-- Alert -->
@@ -48,7 +54,7 @@ This file is distributed under the GNU Affero General Public License
                 {{alert.msg | translate}}
             </div>
                 <table ng-if="labRequests" st-table="displayedLabRequests" st-safe-src="labRequests"  class="table"
-                       st-export-filtered="filteredCollection" st-persist="labRequests">
+                       st-export-filtered="filteredCollection" st-persist="labrequests">
                     <thead>
                         <tr>
                             <th class="no-print">
@@ -74,32 +80,32 @@ This file is distributed under the GNU Affero General Public License
                         </tr>
                         <tr class="no-print">
                             <th class="no-print">&nbsp;</th>
-                            <th><input st-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th><input st-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th ng-if="isLabUser()"><input st-search="requesterLab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
-                            <th ng-if="!isLabUser()"><input st-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="request.title" placeholder="{{'Filter by request title'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th ng-if="isLabUser()"><input st-persisted-search="requesterLab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th ng-if="!isLabUser()"><input st-persisted-search="lab.name" placeholder="{{'Filter by lab'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th></th>
-                            <th><select st-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <th><select st-persisted-search="hubAssistanceRequested" placeholder="{{'Filter by hub assistance'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by hub assistance'|translate}}</option>
                                     <option value="true" ng-selected="activeSidebar === 'hub_assistance_requested'">{{ 'Yes' | translate}}</option>
                                     <option value="false">{{ 'No' | translate}}</option>
                                 </select></th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
-                            <th><select st-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <th><select st-persisted-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
                                     <option value="">{{'Filter by status' | translate}}</option>
                                     <option ng-repeat="status in statuses"
-                                        ng-selected="tableFilterStatus === status"
+                                        ng-selected="activeSidebar === status"
                                         value="{{status}}">{{ status | translate}}</option>
                                 </select>
                             </th>
-                            <th><input st-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
+                            <th><input st-persisted-search="assigneeName" placeholder="{{'Filter by assignee'|translate}}" class="input-sm form-control" type="search"/></th>
                             <th class="no-print">&nbsp;</th>
                         </tr>
                         <tr class="no-print">
                             <th class="no-print">&nbsp;</th>
-                            <th colspan="10"><input id="lab-request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
+                            <th colspan="10"><input id="lab-request-persisted-search" st-persisted-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>

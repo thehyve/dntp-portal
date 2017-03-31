@@ -67,10 +67,11 @@ angular.module('ProcessApp.services')
                     };
                 case 'Data delivered':
                     return function(request) {
-                    return request.status == 'DataDelivery' &&
-                        (request.statisticsRequest && request.dataAttachmentCount > 0) ||
-                        (request.excerptListUploaded &&
-                        !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest));
+                        var result = request.status == 'DataDelivery' &&
+                            ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
+                            (request.excerptListUploaded &&
+                            !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)));
+                        return result;
                     };
                 case 'Data delivered, select excerpts':
                     return function(request) {
@@ -125,7 +126,7 @@ angular.module('ProcessApp.services')
                 return _.chain(requests)
                     .filter(_.matches({hubAssistanceRequested: true}))
                     .value();
-            }
+            };
 
             filterService.selectByStatus = function (status) {
                 return function (requests) {
@@ -136,5 +137,25 @@ angular.module('ProcessApp.services')
             };
 
             return filterService;
-    }]);
+    }])
+    .factory('requestStrictFilter', function($filter){
+        return function(input, predicate){
+            if( 'statusText' in predicate){
+                var temp_predicate = {'statusText': predicate['statusText']};
+                var temp_results   = $filter('filter')(input, temp_predicate, true);
+
+                var status_filter = predicate['statusText'];
+                delete predicate['statusText'];
+
+                var final_results = $filter('filter')(temp_results, predicate);
+
+                predicate['statusText'] = status_filter;
+                return final_results;
+            } else {
+                return $filter('filter')(input, predicate, false);
+            }
+
+        }
+
+    });
 })(console, _, angular);

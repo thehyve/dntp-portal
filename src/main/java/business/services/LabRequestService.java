@@ -19,6 +19,7 @@ import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;

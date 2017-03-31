@@ -100,6 +100,8 @@ public class RequestRepresentation implements RequestListElement {
 
     private boolean reopenRequest;
 
+    private boolean skipStatusApproval;
+
     private boolean scientificCouncilApproved;
     private boolean privacyCommitteeApproved;
 
@@ -732,6 +734,13 @@ public class RequestRepresentation implements RequestListElement {
 
     public void setResearchNumber(String researchNumber) {
         this.researchNumber = researchNumber;
-    } 
-    
+    }
+
+    public void setSkipStatusApproval(boolean skipStatusApproval) {
+        this.skipStatusApproval = skipStatusApproval;
+    }
+
+    public boolean isSkipStatusApproval() {
+        return skipStatusApproval;
+    }
 }

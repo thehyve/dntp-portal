@@ -162,8 +162,8 @@ angular.module('ProcessApp.controllers')
             var getHTMLAddress = function (contactData, noEmail) {
 
                 var _createEmailTmp = function (email) {
-                    return '<span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' +
-                        email + '">' + email + '</a>';
+                    return '<span class="no-print"><span><i class="glyphicon glyphicon-envelope"></i></span> <a href="mailto:' +
+                        email + '">' + email + '</a></span>';
                 };
 
                 var _createPhoneTmp = function (phone) {
@@ -208,13 +208,18 @@ angular.module('ProcessApp.controllers')
                 }
 
                 restInstance.get().then(function (result) {
-                    //result.request.type = Request.convertRequestOptsToType(result.request);
-                    $scope.labRequest = result;
-                    $scope.labRequest.htmlRequesterAddress = getHTMLAddress($scope.labRequest.requester.contactData);
-                    $scope.labRequest.htmlRequesterLabAddress = getHTMLAddressForLab($scope.labRequest.requesterLab);
-                    $scope.labRequest.htmlRequesterLabAddressPrint = getHTMLAddressForLab($scope.labRequest.requesterLab, true);
-                    $scope.labRequest.htmlLabAddress = getHTMLAddressForLab($scope.labRequest.lab);
-                    deferred.resolve($scope.labRequest);
+                    $scope.labRequest= result;
+                    $scope.getRequestByLabRequest($scope.labRequest).then(function(){
+                        //result.request.type = Request.convertRequestOptsToType(result.request);
+                        $scope.labRequest.htmlBillingAddress = getHTMLAddress($scope.request.billingAddress, true);
+                        $scope.labRequest.htmlRequesterAddress = getHTMLAddress($scope.labRequest.requester.contactData);
+                        $scope.labRequest.htmlRequesterLabAddress = getHTMLAddressForLab($scope.labRequest.requesterLab);
+                        $scope.labRequest.htmlRequesterLabAddressPrint = getHTMLAddressForLab($scope.labRequest.requesterLab, true);
+                        $scope.labRequest.htmlLabAddress = getHTMLAddressForLab($scope.labRequest.lab);
+                        deferred.resolve($scope.labRequest);
+                    });
+
+
                 }, function (err) {
                     var errMsg = 'Error : ' + err.data.status + ' - ' + err.data.error;
                     $scope.alerts.push({type: 'danger', msg: errMsg});
@@ -233,6 +238,8 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = LabRequestFilter.selectByStatus(status);
             });
 
+            $scope.persistKey = 'labrequests'
+
 	        $scope.checkTableFilterStatus = function() {
 		        // Table filter status
 		        var tfs = $scope.activeSidebar;
@@ -244,6 +251,11 @@ angular.module('ProcessApp.controllers')
 		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
 		        $scope.$apply();
 	        };
+
+            $scope.resetFilters = function(key) {
+                localStorage.setItem(key, JSON.stringify({}));
+                $route.reload();
+            };
 
             $scope.showSelection = function(labRequests) {
                 var selection = $scope.activeSidebar;
@@ -761,4 +773,21 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
-        }]);
+            $scope.getRequestByLabRequest = function(labRequest) {
+                var defer = $q.defer();
+                Request.get({id:labRequest.processInstanceId}, function (req) {
+                    var now = new Date();
+                    req.date = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
+                    $scope.request = req;
+                    $rootScope.tempRequest = jQuery.extend( true, {}, req ); // deep copy
+                    defer.resolve(req);
+                }, function(response) {
+                    $rootScope.logErrorResponse(response);
+                    defer.reject(response);
+                });
+                return defer.promise;
+
+            };
+        }
+
+        ]);

@@ -1,4 +1,4 @@
-#Complete process for request for excerpts, PA reports and materials
+# Process where the scientific council is skipped
 
 Feature: scenario request Request for excerpts + PA reports + materials
   Background:
@@ -82,7 +82,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     When I click on the request with title 'Request 1'
     Then the current request should have 'Received by PALGA advisor' status
 
-  Scenario: 2. Claim and send requests to Scientific council
+  Scenario: 2. Claim and skip Scientific council
     Given I am logged in as the palga user
     # And I am on the requests page
     When I claim the request with title 'Request 1'
@@ -96,37 +96,20 @@ Feature: scenario request Request for excerpts + PA reports + materials
       contactPersonAllowed
       agreementReached
       """
-    And I click on the 'Submit to scientific council' button
+    # I click on the 'Finish submission process, skip scientific council' button
+    And I click on the object with id 'button-skip-approval'
     And I click on the 'OK' button
     And I go to the 'requests' page
-    Then request 'Request 1' should have status 'Waiting for approval'
-    # And email is send to scientific council, check manually!
+    Then request 'Request 1' should have status 'Approved, waiting for data'
 
-  Scenario: 3b vote for request
-    Given I am logged in as the scientific council user
-    # And I am on the requests page
+  Scenario: 3. Check for scientific council not involved notice
+    Given I am logged in as the palga user
     When I click on the request with title 'Request 1'
-    And I fill the form with the following data
-      """
-      commentText: ok
-      """
-    And I click on the 'Add comment' button
-    And I click on the object with id 'vote-accepted'
-    And I go to the 'requests' page
-    Then request 'Request 1' should have vote 'Accepted'
+    Then the page should contain the text 'The scientific council and privacy committee have not been involved in this request.'
 
   Scenario: 4a attach excerpt list
     Given I am logged in as the palga user
     When I click on the request with title 'Request 1'
-    And I click on the 'Edit' button
-    And I click on the following objects
-      """
-      radio-ppc_handled_according_mandate
-      scientificCouncilApproved
-      privacyCommitteeApproved
-      """
-    And I click on the 'Finish submission process' button
-    And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
     And I go to the 'requests' page
     Then request 'Request 1' should have status 'Data delivered, select excerpts'

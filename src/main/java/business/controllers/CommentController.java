@@ -201,8 +201,6 @@ public class CommentController {
             if (!labRequest.getComments().contains(comment)) {
                 throw new UpdateNotAllowed();
             }
-            labRequest.getComments().remove(comment);
-            labRequestRepository.save(labRequest);
             comment.setContents(body.getContents());
             comment.setTimeEdited(new Date());
             comment = commentRepository.save(comment);

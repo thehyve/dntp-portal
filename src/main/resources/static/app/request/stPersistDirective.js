@@ -9,26 +9,31 @@ angular.module('ProcessApp.directives')
             require: '^stTable',
             link: function (scope, element, attr, ctrl) {
                 var nameSpace = attr.stPersist;
+                scope.persistKey = nameSpace;
+                var ready = false;
 
                 //save the table state every time it changes
                 scope.$watch(function () {
                     return ctrl.tableState();
                 }, function (newValue, oldValue) {
-                    if (newValue !== oldValue) {
+                    if (ready) {
+                        console.log('Persisting table ' + nameSpace+ ' state = ' + JSON.stringify(newValue));
                         localStorage.setItem(nameSpace, JSON.stringify(newValue));
                     }
                 }, true);
 
-                //fetch the table state when the directive is loaded
-                if (localStorage.getItem(nameSpace)) {
-                    var savedState = JSON.parse(localStorage.getItem(nameSpace));
-                    var tableState = ctrl.tableState();
+                setTimeout(function(){
+                    //fetch the table state when the directive is loaded
+                    if (localStorage.getItem(nameSpace)) {
+                        console.log('Loading table ' + nameSpace+ ' state = ' + localStorage.getItem(nameSpace));
+                        var savedState = JSON.parse(localStorage.getItem(nameSpace));
+                        var tableState = ctrl.tableState();
 
-                    angular.extend(tableState, savedState);
-                    ctrl.pipe();
-
-                }
-
+                        angular.extend(tableState, savedState);
+                        ctrl.pipe();
+                    }
+                    ready = true;
+                }, 0);
             }
         };
     });

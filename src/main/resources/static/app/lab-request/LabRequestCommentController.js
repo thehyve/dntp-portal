@@ -30,7 +30,7 @@ angular.module('ProcessApp.controllers')
                 } else {
                     addresses = labRequest.requesterEmail;
                 }
-                $scope.sendMail(addresses, $rootScope.translate("New note added"), $rootScope.translate("Dear user,\n\nYou will find a note in the portal at request") + ' ' + labRequest.id);
+                $scope.sendMail(addresses, $rootScope.translate("New note added"), $rootScope.translate("Dear user,%0A%0AYou will find a note in the portal at labrequest") + ' ' + labRequest.labRequestCode);
             }, function(response) {
                 $scope.error = response.statusText;
             });

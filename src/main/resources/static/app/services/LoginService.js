@@ -62,9 +62,9 @@
                             $rootScope.authenticated = false;
                             deferred.reject();
                         }
-                    }).error(function() {
+                    }).error(function(response) {
                         $rootScope.authenticated = false;
-                        deferred.reject();
+                        deferred.reject(response);
                     });
                     return deferred.promise;
                 };
@@ -75,6 +75,9 @@
 
                 var _error = function(response) {
                     var message = _.get(response, 'data.message', '');
+                    if(message == ''){
+                        message = _.get(response, 'message', '');
+                    }
                     $rootScope.error = true;
                     $rootScope.authenticated = false;
                     $rootScope.errormessage = message;
@@ -89,19 +92,23 @@
                                 'content-type' : 'application/x-www-form-urlencoded'
                             }
                         }).success(function() {
-                            authenticate().then(function() {
-                                if ($rootScope.authenticated) {
-                                    $rootScope.error = false;
-                                    $rootScope.errormessage = '';
-                                    deferred.resolve();
-                                } else {
-                                    _error();
+                            authenticate().then(
+                                //Success
+                                function() {
+                                    if ($rootScope.authenticated) {
+                                        $rootScope.error = false;
+                                        $rootScope.errormessage = '';
+                                        deferred.resolve();
+                                    } else {
+                                        _error();
+                                        deferred.reject();
+                                    }
+                                },
+                                // Error
+                                function(response) {
+                                    _error(response);
                                     deferred.reject();
-                                }
-                            }, function() {
-                                _error();
-                                deferred.reject();
-                            });
+                                });
                         }).error(function(response) {
                             _error(response);
                             deferred.reject(response);

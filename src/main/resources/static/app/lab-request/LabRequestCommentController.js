@@ -23,14 +23,16 @@ angular.module('ProcessApp.controllers')
             comment.$save(function(result) {
                 labRequest.comments.push(result);
                 $scope.editComment = {};
-                console.log('Added comment, Sending email');
                 var addresses = "";
                 if($scope.isRequester()){
                     addresses = labRequest.lab.contactData.email;
                 } else {
                     addresses = labRequest.requesterEmail;
                 }
-                $scope.sendMail(addresses, $rootScope.translate("New note added"), $rootScope.translate("Dear user,%0A%0AYou will find a note in the portal at labrequest") + ' ' + labRequest.labRequestCode);
+                $scope.sendMail(addresses,
+                    $rootScope.translate("New note added"),
+                    $rootScope.translate("Dear user,%0A%0AYou will find a note in the portal at labrequest") + ' ' + labRequest.labRequestCode
+                );
             }, function(response) {
                 $scope.error = response.statusText;
             });

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @Entity
 public class LabRequest {
 
+
     public enum Status {
         WAITING_FOR_LAB_APPROVAL ("Waiting for lab approval"),
         APPROVED ("Approved"),
@@ -113,6 +114,11 @@ public class LabRequest {
     private Date rejectDate;
     
     private Date sendDate;
+
+    @Column
+    private Date returnDate;
+    @Column
+    private Boolean sentReturnEmail;
 
     @OrderBy("timeCreated DESC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -249,4 +255,19 @@ public class LabRequest {
         this.result = result;
     }
 
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public Boolean getSentReturnEmail() {
+        return sentReturnEmail;
+    }
+
+    public void setSentReturnEmail(Boolean sentReturnEmail) {
+        this.sentReturnEmail = sentReturnEmail;
+    }
 }

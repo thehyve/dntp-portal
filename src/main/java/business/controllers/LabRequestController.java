@@ -6,15 +6,13 @@
 package business.controllers;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import business.representation.ReturnDateRepresentation;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.DelegationState;
@@ -245,10 +243,10 @@ public class LabRequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
-    @RequestMapping(value = "/labrequests/{id}/sending", method = RequestMethod.PUT)
+    @RequestMapping(value = "/labrequests/{id}/sending", method = RequestMethod.PUT, consumes = {"application/json"})
     public LabRequestRepresentation sending(UserAuthenticationToken user,
             @PathVariable Long id,
-            @RequestBody LabRequestRepresentation body) {
+            @RequestBody ReturnDateRepresentation body) {
         log.info("PUT /labrequests/" + id + "/sending");
 
         LabRequest labRequest = labRequestService.findOne(id);
@@ -267,8 +265,8 @@ public class LabRequestController {
         }
 
         labRequestService.updateStatus(labRequest, Status.SENDING);
-
         labRequest.setSendDate(new Date());
+        labRequest.setReturnDate(body.getReturnDate());
         labRequest = labRequestService.save(labRequest);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);

@@ -473,6 +473,7 @@
         'Name': 'Naam',
         'Email': 'E-mail',
         'Email address': 'E-mailadres',
+        'Email format is invalid': 'E-mailadres heeft niet het juiste formaat',
         'Role': 'Rol',
         'Created': 'Aangemaakt op',
         'Activate': 'Activeer',

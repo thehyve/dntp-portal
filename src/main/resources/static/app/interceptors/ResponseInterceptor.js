@@ -76,7 +76,7 @@ angular.module('ProcessApp.interceptors')
                     });
                     return $q.reject(response);
                 default:
-                    return response;
+                    return $q.reject(response);
                 }
             }
         };

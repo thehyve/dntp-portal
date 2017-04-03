@@ -205,7 +205,7 @@ public class LabRequestController {
     }
 
     /**
-     * Unapprove a previously approved lab request. Action only allowed for lab users.
+     * Undo approval for a previously approved lab request. Action only allowed for lab users.
      *
      * @param user the authorised user.
      * @param id the lab request id.
@@ -213,11 +213,11 @@ public class LabRequestController {
      */
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser') and "
             + "hasPermission(#id, 'isLabRequestLabuser')")
-    @RequestMapping(value = "/labrequests/{id}/unapprove", method = RequestMethod.PUT)
-    public LabRequestRepresentation unapprove(UserAuthenticationToken user,
+    @RequestMapping(value = "/labrequests/{id}/undoapprove", method = RequestMethod.PUT)
+    public LabRequestRepresentation undoapprove(UserAuthenticationToken user,
                                                 @PathVariable Long id,
                                                 @RequestBody LabRequestRepresentation body) {
-        log.info("PUT /labrequests/" + id + "/unapprove");
+        log.info("PUT /labrequests/" + id + "/undoapprove");
 
         LabRequest labRequest = labRequestService.findOne(id);
         Status status = labRequest.getStatus();
@@ -225,13 +225,16 @@ public class LabRequestController {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
+        // Reset Values
         labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
+        labRequest.setPaReportsSent(Boolean.FALSE);
+        labRequest.setClinicalDataSent(Boolean.FALSE);
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestService.transferLabRequestData(representation, false);
 
         //Add comment explaining what happened.
-        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), "Unapproved previously approved lab Request");
+        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), "Undid approval previously approved lab Request");
         comment = commentRepository.save(comment);
         labRequest.addComment(comment);
         labRequestService.save(labRequest);

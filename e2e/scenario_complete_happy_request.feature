@@ -12,7 +12,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the object with id 'select_language_en'
     Then the object with class 'selected-language-en' should be present
 
-    Scenario: 1. Create request
+        Scenario: 1. Create request
     Given there are no requests
     And I am logged in as the requester user
     When I go from the requests page to the create new request page
@@ -49,7 +49,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     materialsRequest
     linkageWithPersonalDataYes
     informedConsentNo
-    germlinemutationYes
+    germlineMutationYes
     """
     And I fill the form with the following data
     """
@@ -179,6 +179,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'OK' button
     Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
+	And the page should contain 'Undo approval' button
 
   Scenario: 8 reject request as a lab user
     Given I am logged in as the lab 104 user
@@ -246,15 +247,16 @@ Feature: scenario request Request for excerpts + PA reports + materials
 	When I click on the lab request with id 'YYYY-1-106'
 	Then the page should contain the text 'bio_request_123'
 	
-	Scenario: 13b addresses and biobanknumber on pakbon correct
+  Scenario: 13b addresses and biobanknumber on pakbon correct
     Given I am logged in as the lab 106 user
 	When I click on the lab request with id 'YYYY-1-106'
 	And I click on '[title='Print preview']'
 	And I close the print window
+	And testing is paused to wait a bit
 	And the static form contains
     """
     Biobank request number: bio_request_123
-    """
+	"""
 	And I close the tab
 	
 	
@@ -262,7 +264,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     Given I am logged in as the lab 106 user
     # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-106'
-    And testing is paused to enter the sample codes manually
+    And testing is paused to wait a bit
+	#And testing is paused to enter the sample codes manually
     Then the scenario should always succeed
 
   Scenario: 15 lab user can see which samples will be sent from the samples view
@@ -280,6 +283,17 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'OK' button
     Then the current request should have 'Materials sent' status
 
+  Scenario: 16a lab user can unapprove labrequest
+    Given I am logged in as the lab 106 user
+    When I click on the lab request with id 'YYYY-1-106'
+    And I click on the 'Unapprove' button
+    And I click on the 'OK' button
+    Then the current request should have 'Under review by lab' status
+	
+	Scenario: 16b lab user approves labrequest again
+    Given I am logged in as the lab 106 user
+    When I click on the lab request with id 'YYYY-1-106'
+    
   Scenario: 17 palga is able to see that one of the lab requests has been sent
     Given I am logged in as the palga user
     When I go from the requests page to the lab requests page

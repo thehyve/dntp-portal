@@ -13,11 +13,8 @@ angular.module('ProcessApp.controllers')
 
         $scope.commentEditVisibility = {};
 
-        $scope.sendMail = function(addresses, subject, message){
-            $window.open("mailto:"+ addresses + "?subject=" + subject+"&body="+message);
-        };
-
         $scope.addComment = function(labRequest, body) {
+            console.log('Added Comment');
             var comment = new LabRequestComment(body);
             comment.labRequestId = labRequest.id;
             comment.$save(function(result) {
@@ -29,10 +26,7 @@ angular.module('ProcessApp.controllers')
                 } else {
                     addresses = labRequest.requesterEmail;
                 }
-                $scope.sendMail(addresses,
-                    $rootScope.translate("New note added"),
-                    $rootScope.translate("Dear user,%0A%0AYou will find a note in the portal at labrequest") + ' ' + labRequest.labRequestCode
-                );
+                $scope.newNoteEmail(addresses,  labRequest.labRequestCode);
             }, function(response) {
                 $scope.error = response.statusText;
             });

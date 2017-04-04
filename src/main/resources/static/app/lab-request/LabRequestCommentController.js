@@ -4,10 +4,10 @@
  * (see accompanying file LICENSE).
  */
 angular.module('ProcessApp.controllers')
-    .controller('LabRequestCommentController',['$rootScope', '$scope', '$modal', '$location', '$route', '$window',
+    .controller('LabRequestCommentController',['$rootScope', '$scope', '$modal', '$location', '$route',
         'LabRequest', 'LabRequestComment',
 
-    function ($rootScope, $scope, $modal, $location, $route, $window,
+    function ($rootScope, $scope, $modal, $location, $route, 
               LabRequest, LabRequestComment) {
         'use strict';
 

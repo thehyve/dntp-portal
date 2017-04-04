@@ -269,7 +269,6 @@
         'Forgot password': 'Wachtwoord vergeten',
         'Create an account': 'Een account maken',
         'Bad credentials': 'Ongeldige logingegevens.',
-        'User account blocked. Please retry in 15 minutes.': 'Account geblokkeerd. Probeert u het opnieuw over 15 minuten.',
         'User account blocked because of too many failed login attempts. Please retry in an hour.': 'Account geblokeerd vanwege te veel verkeerde inlogpogingen. Probeer het aub over een uur opnieuw.',
         'Email address (lower case)': 'E-mailadres (kleine letters)',
 

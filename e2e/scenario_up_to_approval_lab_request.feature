@@ -1,6 +1,6 @@
-#Complete process for request for excerpts, PA reports and materials
+#Request for excerpts + PA reports + materials + clinical data, selection of excerpts by palga user
 
-Feature: scenario request Request for excerpts + PA reports + materials + clinical data
+Feature: Scenario up to approval lab request by lab user
   Background:
     Given I am logged out
 
@@ -106,26 +106,16 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     When I click on the request with title 'Request 2'
     Then an excerpt should be attached to the request
 
-  Scenario: 6 select PA numbers
-   Given I am logged in as the requester user
-   # And I am on the requests page
-   When I click on the request with title 'Request 2'
-   And I scroll to the bottom of the page
-   And testing is paused to wait a bit
-   And I click on the object with id 'select-pa-numbers'
-   # We should be able to do it automatically... But it doesn't work, so we do it manually
-   And testing is paused to select all PA numbers of the current request
-   And I click on the 'Submit selection' button
-   And I click on the 'OK' button
-   Then I should see 0 lab requests in the list
-
-  Scenario: 6a Palga approves selection
+  Scenario: 6 select all PA numbers by Palga user
    Given I am logged in as the palga user
    # And I am on the requests page
    When I click on the request with title 'Request 2'
    And I scroll to the bottom of the page
    And testing is paused to wait a bit
+   And I click on the object with id 'select_all_excerpts'
    And I click on the 'Approve selection' button
    And I click on the 'OK' button
    And I go to the 'lab requests' page
    Then I should see 4 lab requests in the list
+
+  

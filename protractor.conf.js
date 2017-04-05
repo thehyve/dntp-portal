@@ -4,24 +4,28 @@ var paths = require('./.yo-rc.json')['generator-gulp-angular'].props.paths;
 
 // An example configuration file.
 exports.config = {
-  // Capabilities to be passed to the webdriver instance.
-  capabilities: {
-    'browserName': 'chrome'
-  },
+    // Capabilities to be passed to the webdriver instance.
+    capabilities: {
+        'browserName': 'chrome'
+    },
 
-  // set to "custom" instead of cucumber.
-  framework: 'custom',
+    // set to "custom" instead of cucumber.
+    framework: 'custom',
 
-  // path relative to the current config file
-  frameworkPath: require.resolve('protractor-cucumber-framework'),
+    // path relative to the current config file
+    frameworkPath: require.resolve('protractor-cucumber-framework'),
 
-  // Spec patterns are relative to the current working directly when
-  // protractor is called.
-  specs: [paths.e2e + '/*.feature'],
+    // Spec patterns are relative to the current working directly when
+    // protractor is called.
+    specs: [paths.e2e + '/*.feature'],
 
-  cucumberOpts: {
-    require: paths.e2e + '/steps/*.js'
-  },
+    cucumberOpts: {
+        require: paths.e2e + '/steps/*.js'
+    },
+    onPrepare: function () {
+        // Override the timeout for webdriver.
+        browser.driver.manage().timeouts().setScriptTimeout(60000);
+    },
 
-  resultJsonOutputFile: 'test-report.json'
+    resultJsonOutputFile: 'test-report.json'
 };

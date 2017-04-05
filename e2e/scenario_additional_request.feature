@@ -1,4 +1,4 @@
-
+#additional request skips approval by scientific council
 Feature: scenario additional request
   Background:
     Given I am logged out
@@ -52,8 +52,6 @@ Feature: scenario additional request
     linkageWithPersonalDataNotes: notes
     reasonUsingPersonalData: reason
     """
-    #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment1'
-    #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment2'
     And I click on the object with id 'submit-new-request'
     And I click on the 'OK' button
     Then I should be on the requests page
@@ -62,7 +60,6 @@ Feature: scenario additional request
 
   Scenario: 2. Claim and send requests to Scientific council
     Given I am logged in as the palga user
-    # And I am on the requests page
     When I claim the request with title 'Request 1'
     And I click on the request with title 'Request 1'
     And I click on the 'Edit' button
@@ -78,8 +75,7 @@ Feature: scenario additional request
     And I click on the 'OK' button
     And I go to the 'requests' page
     Then request 'Request 1' should have status 'Waiting for approval'
-    # And email is send to scientific council, check manually!
-
+    
   Scenario: 4a attach excerpt list
     Given I am logged in as the palga user
     When I click on the request with title 'Request 1'
@@ -107,13 +103,12 @@ Feature: scenario additional request
 
   Scenario: 6a Palga approves selection
    Given I am logged in as the palga user
-   # And I am on the requests page
    When I click on the request with title 'Request 1'
    And I scroll to the bottom of the page
    And I click on the 'Approve selection' button
    And I click on the 'OK' button
    And I go to the 'lab requests' page
-   And testing is paused to wait a bit
+   #And testing is paused to wait a bit
    Then I should see 4 lab requests in the list
 
   Scenario: 7 create additional request
@@ -121,7 +116,6 @@ Feature: scenario additional request
     When I click on the request with title 'Request 1'
     And I click on the object with id 'create_additional_request'
     And I click on the 'OK' button
-    # I am now on the page of the new request
     Then I should see a link to the request with id 'YYYY-1'
 
   Scenario: 8a additional request contains link to parent
@@ -141,9 +135,7 @@ Feature: scenario additional request
 	
   Scenario: 8d additional request contains previously entered data
     Given I am logged in as the palga user
-    #When I claim the request with id 'YYYY-1-A1'
-	And I click on the request with id 'YYYY-1-A1'
-	#And I click on the 'Edit' button
+    And I click on the request with id 'YYYY-1-A1'
 	And testing is paused to wait a bit
 	And the static form contains
     """
@@ -168,14 +160,13 @@ Feature: scenario additional request
     Explanation why linkage is allowed without informed consent: reason
     """
 	
-  Scenario: 8e change all fields in additional request
+  Scenario: 8e change all fields in additional request and skip scientific council
     Given I am logged in as the palga user
 	When I claim the request with id 'YYYY-1-A1'
     And I claim the request with id 'YYYY-1-A1'
     And I click on the request with id 'YYYY-1-A1'
 	And I click on the 'Edit' button
-	And testing is paused to wait a bit
-    And I fill the form with the following data
+	And I fill the form with the following data
     """
     contactPersonName: Dr. P.I
     contactPersonEmail: test+contact@dntp.thehyve.nl
@@ -201,40 +192,15 @@ Feature: scenario additional request
 	"""
 	And I click on the object with id 'button-skip-approval'
     And I click on the 'OK' button
-    Then I should be on the requests page
-    And request 'Test_HP1' should be in the list of requests
-    #And request 'Test_HP1' should have status
-	And testing is paused to wait a bit
-
-	#Scenario: 9a. Claim and send requests to Scientific council for additional request
-    #Given I am logged in as the palga user
-    #When I claim the request with title 'Request 1a'
-    #And I click on the request with title 'Request 1a'
-    #And I click on the 'Edit' button
-    #And I click on the 'Submit to scientific council' button
-    #And I click on the 'OK' button
-    #And I go to the 'requests' page
-    #Then request 'Request 1a' should have status 'Waiting for approval'
-    #And testing is paused to check email scientific council
-	
+    
   Scenario: 9b attach excerpt list for additional request
     Given I am logged in as the palga user
     When I click on the request with title 'Test_HP1'
-    And I click on the 'Edit' button
-    And I click on the following objects
-      """
-      #radio-ppc_handled_according_mandate
-      scientificCouncilApproved
-      #privacyCommitteeApproved
-      """
-    And I click on the 'Finish submission process' button
-    And I click on the 'OK' button
     When I upload the file 'test-excerptlist.csv' to the element with id 'test-upload-excerpt-list'
-    And testing is paused to wait a bit
     And I go to the 'requests' page
     Then request 'Test_HP1' should have status 'Data delivered, select excerpts'
 
-  Scenario: 9c Select PA numbers for additional request
+ Scenario: 9c Select PA numbers for additional request
    Given I am logged in as the palga user
    When I click on the request with title 'Test_HP1'
    And I scroll to the bottom of the page
@@ -242,9 +208,8 @@ Feature: scenario additional request
    And I click on the object with id 'select_all_excerpts'
    Then the current request should have 'Selection received' status
 
-  Scenario: 9d Palga approves selection for additional request
+ Scenario: 9d Palga approves selection for additional request
    Given I am logged in as the palga user
-   # And I am on the requests page
    When I click on the request with title 'Test_HP1'
    And I scroll to the bottom of the page
    And I click on the 'Approve selection' button
@@ -252,3 +217,4 @@ Feature: scenario additional request
    And I go to the 'lab requests' page
    And testing is paused to wait a bit
    Then I should see 8 lab requests in the list
+   

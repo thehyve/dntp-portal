@@ -25,8 +25,8 @@ Feature: Log in
   Scenario: 3.Correct log in scientific council
     Given I am on the login page
     When I log in as the scientific council user
-    Then the scenarioshould always succeed'
-	#Then I should be on the requests page
+    #Then the scenarioshould always succeed'
+	Then I should be on the requests page
 
   Scenario: 4.Correct log in lab user
     Given I am on the login page

@@ -1,4 +1,4 @@
-#Entering new request form
+#Entering new request form including upload IC form and changing form by palga user
 
 Feature: scenario request Request for excerpts + PA reports + materials
   Background:
@@ -12,7 +12,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the object with id 'select_language_en'
     Then the object with class 'selected-language-en' should be present
 
-	Scenario: 1. Create request
+	Scenario: 1. Create request with IC form attached
     Given there are no requests
     And I am logged in as the requester user
     When I go from the requests page to the create new request page
@@ -22,7 +22,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     contactPersonEmail: test+contactperson@dntp.thehyve.nl
     pathologistName: Dr. A. Pathologist
     pathologistEmail: test+pathologist@dntp.thehyve.nl
-    requestTitle: Request 1
+    requestTitle: Request 1 IC
     background: None
     researchQuestion: test
     hypothesis: theory
@@ -54,23 +54,26 @@ Feature: scenario request Request for excerpts + PA reports + materials
     previousContactDescription: none
     linkageWithPersonalDataNotes: notes
     """
-	And testing is paused to wait a bit
 	And I click on the following objects
 	"""
 	informedConsentYes
 	germlineMutationYes
 	"""
-	And testing is paused to wait a bit
-	And I upload the file 'test-attachment.txt' to the element with id 'button_upload_informed_consent_form'
-	#And I fill the form with the following data
-    #"""
-    #previousContactDescription: none
-    #"""
-    #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment2'
-    And testing is paused to wait a bit
+	And I upload the file 'test-attachment.txt' to the element with id 'test-upload-informed-consent-form'
 	And I click on the object with id 'submit-new-request'
     And I click on the 'OK' button
     Then I should be on the requests page
-    And request 'Request 1' should be in the list of requests
-    And request 'Request 1' should have status 'Received by PALGA advisor'
+    And request 'Request 1 IC' should be in the list of requests
+    And request 'Request 1 IC' should have status 'Received by PALGA advisor'
 	
+  Scenario: 2.change IC form by palga user	
+	Given I am logged in as the palga user
+	When I claim the request with title 'Request 1 IC'
+    And I click on the request with title 'Request 1 IC'
+    And I click on the 'Edit' button
+	And the page should contain the text 'test-attachment.txt'
+	And testing is paused to remove previously uploaded IC form
+	And I upload the file 'IC_form.txt' to the element with id 'test-upload-informed-consent-form'
+	Then the page should contain the text 'IC_form.txt'
+	And the page should not contain the text 'test-attachment.txt'
+  

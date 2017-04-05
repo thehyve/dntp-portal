@@ -152,6 +152,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     And I click on the 'OK' button
     Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
+	And the page should contain the button 'undo approval'
 
   Scenario: 8 hub user can comment on lab request and see its status
     Given I am logged in as the hub user
@@ -167,6 +168,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     Then I should see 2 lab requests in the list
     And the page should contain the text 'Approved'
     And the page should contain the text 'Under review by lab'
+	And the page should not contain the button 'undo approval'
 
   Scenario: 9 hub user can mark PA reports as sent
     Given I am logged in as the hub user

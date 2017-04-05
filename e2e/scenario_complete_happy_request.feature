@@ -253,9 +253,10 @@ Feature: scenario request Request for excerpts + PA reports + materials
 	And I click on '[title='Print preview']'
 	And I close the print window
 	And testing is paused to wait a bit
-	And the static form contains
+	And the static form in a new tab contains
     """
     Biobank request number: bio_request_123
+	Billing address: dreef
 	"""
 	And I close the tab
 	
@@ -279,6 +280,10 @@ Feature: scenario request Request for excerpts + PA reports + materials
     # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-106'
     And I click on the 'Actions' button
+	And I fill the form with the following data
+	"""
+	Return date: 10/10/18
+	"""
     And I click on the 'Send materials' button
     And I click on the 'OK' button
     Then the current request should have 'Materials sent' status
@@ -290,10 +295,39 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'OK' button
     Then the current request should have 'Under review by lab' status
 	
-	Scenario: 16b lab user approves labrequest again
+  Scenario: 16b samples status has changed to 'under review by lab'
+    Given I am logged in as the lab 106 user
+	And I am on the samples page
+	And testing is paused to check whether samples for the lab request are on status under review by lab
+	Then the page contains the text 'Under review by lab'
+  
+  Scenario: 16c lab user approves labrequest again
     Given I am logged in as the lab 106 user
     When I click on the lab request with id 'YYYY-1-106'
-    
+	And I click on the 'Actions' button
+    And I click on the 'Approve' button
+    And I click on the 'OK' button
+    Then the current request should have 'Approved' status
+    Then the page should contain the text 'PA reports have NOT been sent to the requester.'
+	
+  Scenario: 16d lab user marks PA numbers as sent for re-approved request
+    Given I am logged in as the lab 106 user
+    When I click on the lab request with id 'YYYY-1-106'
+    And I click on the 'Actions' button
+    And I click on the object with id 'paReportsSent'
+    And I click on the 'Update PA reports status' button
+    Then the page should contain the text 'Approved'
+    And the page should contain the text 'PA reports have been sent to the requester.' 
+  
+  Scenario: 16e lab user can register that samples have been sent, leave return date empty
+    Given I am logged in as the lab 106 user
+    # And I am on the lab requests page
+    When I click on the lab request with id 'YYYY-1-106'
+    And I click on the 'Actions' button
+    And I click on the 'Send materials' button
+    And I click on the 'OK' button
+    Then the current request should have 'Materials sent' status
+  
   Scenario: 17 palga is able to see that one of the lab requests has been sent
     Given I am logged in as the palga user
     When I go from the requests page to the lab requests page

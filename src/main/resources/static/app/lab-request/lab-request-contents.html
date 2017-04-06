@@ -232,12 +232,18 @@
         </p>
     </div>
 
+    <!-- Return Date -->
+    <div class="row">
+        <label class="control-label col-xs-4 col-md-2">{{ 'Return date' | translate }}</label>
+        <p class="col-xs-8 col-md-10">
+            {{labRequest.returnDate == null ? 'Not set' : labRequest.returnDate | date }}
+        </p>
+    </div>
+
     <!-- Request Type -->
     <div class="row">
         <label class="control-label col-xs-4 col-md-2">{{ 'Request type' | translate }}</label>
         <div class="col-xs-8 col-md-10">
-            <!--<div ng-if="labRequest.request.statisticsRequest">{{'Numbers only, exploratory request'|translate}}<br /></div>-->
-            <!--<div ng-if="labRequest.request.excerptsRequest">{{'Excerpts'|translate}}<br /></div>-->
             <div ng-if="labRequest.request.paReportRequest">{{'PA reports'|translate}}<br /></div>
             <div ng-if="labRequest.request.materialsRequest">{{'PA material'|translate}}<br /></div>
             <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data from practitioner'|translate}}<br /></div>

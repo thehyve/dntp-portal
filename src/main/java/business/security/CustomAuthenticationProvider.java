@@ -116,7 +116,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             super(message);
         }
         public UserAccountBlocked() {
-            super("User account blocked. Please retry in an hour.");
+            super("User account blocked because of too many failed login attempts. Please retry in an hour.");
         }
     }
 }

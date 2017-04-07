@@ -972,7 +972,8 @@
                 </div> <!--end modal-body-->
 
                 <div class="modal-footer">
-                    <button id="cancel-new-request" class="btn btn-default pull-left req-edit-button" tabindex="-1" ng-click="cancel(request);">
+                    <button id="cancel-new-request" class="btn btn-default pull-left req-edit-button" type="button"
+                            tabindex="-1" ng-click="cancel(request);">
                         {{'Cancel'|translate}}
                     </button>
                     <button id="submit-new-request" class="btn btn-warning req-edit-button" type="button"
@@ -1043,7 +1044,7 @@
                         ng-disabled="dataLoading">
                             {{'Reopen'|translate}}
                     </button>
-                    <button class="btn btn-info req-edit-button" id="button-save-request" type="submit" ng-click="update(request);"
+                    <button class="btn btn-info req-edit-button" id="button-save-request" type="button" ng-click="update(request);"
                             ng-disabled="dataLoading || requestEditForm.$error.maxlength">{{'Save'|translate}}
                     </button>
                 </div>

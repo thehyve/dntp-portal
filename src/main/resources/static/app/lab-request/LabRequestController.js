@@ -404,7 +404,11 @@ angular.module('ProcessApp.controllers')
                 bootbox.confirm($rootScope.translate('Have you sent the material to the requester?'),
                         function (result) {
                     if (result) {
-                        labRequest.customPUT({'returnDate': returnDate.date}, 'sending').then(function () {
+                        var final_data = {};
+                        if (returnDate){
+                            final_data = {'returnDate': returnDate.date};
+                        }
+                        labRequest.customPUT(final_data, 'sending').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();
                             }

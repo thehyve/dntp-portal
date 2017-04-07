@@ -311,6 +311,10 @@
                       $location.path('/login');
                   }
                 });
+
+                $rootScope.getDatetime = function() {
+                    return Date.now();
+                };
             }])
         .filter("statusTextFilter", function ($filter) {
             return function(input, predicate){

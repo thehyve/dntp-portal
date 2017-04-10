@@ -119,6 +119,33 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
+### 0.0.80
+```sql
+alter table lab_request add column return_date timestamp without time zone;
+alter table lab_request add column sent_return_email boolean;
+
+alter table request_properties add column biobank_request_number character varying(255);
+alter table request_properties add column germline_mutation boolean;
+
+CREATE TABLE request_properties_informed_consent_form_attachments (
+    request_properties_id bigint NOT NULL,
+    informed_consent_form_attachments_id bigint NOT NULL
+);
+ALTER TABLE request_properties_informed_consent_form_attachments OWNER TO thehyve;
+
+
+ALTER TABLE ONLY request_properties_informed_consent_form_attachments
+    ADD CONSTRAINT uk_46tqt7cfxfkb9p4coyjq4q6s4 UNIQUE (informed_consent_form_attachments_id);
+
+
+ALTER TABLE ONLY request_properties_informed_consent_form_attachments
+    ADD CONSTRAINT fk_46tqt7cfxfkb9p4coyjq4q6s4 FOREIGN KEY (informed_consent_form_attachments_id) REFERENCES file(id);
+
+ALTER TABLE ONLY request_properties_informed_consent_form_attachments
+    ADD CONSTRAINT fk_8i21ti5yf37152ttn4vljo275 FOREIGN KEY (request_properties_id) REFERENCES request_properties(id);
+```
+
+
 ### 0.0.65
 ```sql
 alter table lab_request alter reject_reason type varchar(10000);

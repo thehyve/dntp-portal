@@ -36,8 +36,8 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.datetime.DateFormatter;
@@ -66,7 +66,7 @@ public class RequestService {
 
     public static final String CSV_CHARACTER_ENCODING = "UTF-8";
 
-    Log log = LogFactory.getLog(getClass());
+    Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private TaskService taskService;
@@ -255,9 +255,10 @@ public class RequestService {
         List<HistoricProcessInstance> processInstances;
 
         if (user == null) {
-            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstances = new ArrayList<>();
         } else if (user.isPalga()) {
-            processInstances = new ArrayList<HistoricProcessInstance>();
+            Date start = new Date();
+            processInstances = new ArrayList<>();
             processInstances.addAll(
                     historyService
                     .createHistoricProcessInstanceQuery()
@@ -266,6 +267,7 @@ public class RequestService {
                     .variableValueEquals("status", "Open")
                     .variableValueEquals("reopen_request", Boolean.TRUE)
                     .list());
+            Date t1 = new Date();
             processInstances.addAll(
                     historyService
                     .createHistoricProcessInstanceQuery()
@@ -273,6 +275,11 @@ public class RequestService {
                     .includeProcessVariables()
                     .variableValueNotEquals("status", "Open")
                     .list());
+            Date t2 = new Date();
+            log.info("Query for Palga user took {} ms ({} + {}).",
+                    (t2.getTime() - start.getTime()),
+                    (t1.getTime() - start.getTime()),
+                    (t2.getTime() - t1.getTime()));
         } else if (user.isScientificCouncilMember()) {
             Date start = new Date();
             List<HistoricTaskInstance> approvalTasks = historyService
@@ -290,11 +297,12 @@ public class RequestService {
                     .processInstanceIds(processInstanceIds)
                     .list();
             Date end = new Date();
-            log.info("GET: query took " + (end.getTime() - start.getTime()) + " ms.");
+            log.info("Query for council member took " + (end.getTime() - start.getTime()) + " ms.");
         } else if (user.isLabUser() || user.isHubUser()) {
+            Date start = new Date();
             List<LabRequestRepresentation> labRequests =
                     labRequestService.findLabRequestsForLabUserOrHubUser(user, false);
-            Set<String> processInstanceIds = new HashSet<String>();
+            Set<String> processInstanceIds = new HashSet<>();
             for (LabRequestRepresentation labRequest: labRequests) {
                 processInstanceIds.add(labRequest.getProcessInstanceId());
             }
@@ -306,12 +314,15 @@ public class RequestService {
                         .processInstanceIds(processInstanceIds)
                         .list();
             } else {
-                processInstances = new ArrayList<HistoricProcessInstance>();
+                processInstances = new ArrayList<>();
             }
+            Date end = new Date();
+            log.info("Query for lab or hub user took " + (end.getTime() - start.getTime()) + " ms.");
         } else {
+            Date start = new Date();
             String userEmail = user.getUsername();
             log.info("Fetching requester requests for user:" + userEmail);
-            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstances = new ArrayList<>();
             for (HistoricProcessInstance instance: historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
@@ -348,6 +359,8 @@ public class RequestService {
                     .filter(i -> !idSet2.contains(i.getId()))
                     .collect(Collectors.toList())
                     );
+            Date end = new Date();
+            log.info("Query for requester took " + (end.getTime() - start.getTime()) + " ms.");
         }
         return processInstances;
     }

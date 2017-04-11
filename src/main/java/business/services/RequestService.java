@@ -26,6 +26,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import business.models.*;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -53,9 +54,6 @@ import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
-import business.models.File;
-import business.models.RequestProperties;
-import business.models.User;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
@@ -93,6 +91,12 @@ public class RequestService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ApprovalVoteRepository approvalVoteRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -561,6 +565,57 @@ public class RequestService {
             throw new FileDownloadError();
         }
 
+    }
+
+    public RequestListRepresentation getRequestData(HistoricProcessInstance instance, User currentUser) {
+        RequestListRepresentation request = requestFormService.getRequestListDataCached(instance.getId());
+        Task task = null;
+        switch(request.getStatus()) {
+            case REVIEW:
+                task = findTaskByRequestId(instance.getId(), "palga_request_review");
+                break;
+            case APPROVAL:
+                task = findTaskByRequestId(instance.getId(), "request_approval");
+                request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
+                break;
+            case DATA_DELIVERY:
+                task = findTaskByRequestId(instance.getId(), "data_delivery");
+                break;
+            case SELECTION_REVIEW:
+                task = findTaskByRequestId(instance.getId(), "selection_review");
+                break;
+            default:
+                break;
+        }
+        if (task != null) {
+            request.setAssignee(task.getAssignee());
+            if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
+                Long assigneeId = null;
+                try {
+                    assigneeId = Long.valueOf(task.getAssignee());
+                } catch (NumberFormatException e) {
+                }
+                if (assigneeId != null) {
+                    User assignee = userService.findOneCached(assigneeId);
+                    if (assignee != null) {
+                        request.setAssigneeName(RequestFormService.getName(assignee));
+                    }
+                }
+            }
+        }
+
+        if (currentUser.isPalga()) {
+            request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(instance.getId()));
+        } else if (currentUser.isScientificCouncilMember()) {
+            // fetch my vote
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                    instance.getId());
+            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+            if (votes.containsKey(currentUser.getId())) {
+                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+            }
+        }
+        return request;
     }
 
 }

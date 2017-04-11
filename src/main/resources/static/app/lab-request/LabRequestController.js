@@ -420,6 +420,17 @@ angular.module('ProcessApp.controllers')
                 });
             };
 
+            $scope.sendMail = function(addresses, subject, message){
+                $window.open("mailto:"+ addresses + "?subject=" + subject+"&body="+message);
+            };
+
+            $scope.newNoteEmail = function(addresses, lab_code) {
+                $scope.sendMail(addresses,
+                    $rootScope.translate("New note added"),
+                    $rootScope.translate("Dear user,%0A%0AYou will find a note in the portal at labrequest") + ' ' + lab_code
+                );
+            };
+
             $scope.received = function (labRequest) {
                 bootbox.confirm($rootScope.translate('Did you receive the material?'),
                         function (result) {
@@ -427,6 +438,10 @@ angular.module('ProcessApp.controllers')
                         var obj = { id: labRequest.id,
                             samplesMissing: labRequest.samplesMissing,
                             missingSamples: labRequest.missingSamples};
+
+                        if(labRequest.missingSamples && labRequest.missingSamples != '') {
+                            $scope.newNoteEmail(labRequest.lab.contactData.email, labRequest.labRequestCode);
+                        }
 
                         labRequest.customPUT(obj, 'received').then(function () {
                             if ($scope.labReqModal) {
@@ -463,6 +478,11 @@ angular.module('ProcessApp.controllers')
                         var obj = { id: labRequest.id,
                             samplesMissing: labRequest.samplesMissing,
                             missingSamples: labRequest.missingSamples};
+
+                        if(labRequest.missingSamples && labRequest.missingSamples != '') {
+                            $scope.newNoteEmail(labRequest.requesterEmail, labRequest.labRequestCode);
+                        }
+
                         labRequest.customPUT(obj, 'completereturned').then(function () {
                             if ($scope.labReqModal) {
                                 $scope.labReqModal.hide();

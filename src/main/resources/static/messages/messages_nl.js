@@ -465,6 +465,9 @@
         'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
         'Return address': 'Retouradres',
         'Hospital': 'Ziekenhuis',
+        'Dear user,%0A%0AYou will find a note in the portal at request': "Beste lezer,%0A%0AEr is een notitie gezet in de portal bij aanvraag",
+        "Dear user,%0A%0AYou will find a note in the portal at labrequest": "Beste lezer,%0A%0AEr is een notitie gezet in de portal bij labverzoek",
+        'New note added': 'Nieuwe notitie toegevoegd',
 
         /* ===================== */
         /* User overview */

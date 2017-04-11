@@ -7,19 +7,26 @@ angular.module('ProcessApp.controllers')
     .controller('LabRequestCommentController',['$rootScope', '$scope', '$modal', '$location', '$route',
         'LabRequest', 'LabRequestComment',
 
-    function ($rootScope, $scope, $modal, $location, $route,
+    function ($rootScope, $scope, $modal, $location, $route, 
               LabRequest, LabRequestComment) {
         'use strict';
 
         $scope.commentEditVisibility = {};
-        //$scope.editComment = {};
-        
+
         $scope.addComment = function(labRequest, body) {
+            console.log('Added Comment');
             var comment = new LabRequestComment(body);
             comment.labRequestId = labRequest.id;
             comment.$save(function(result) {
                 labRequest.comments.push(result);
                 $scope.editComment = {};
+                var addresses = "";
+                if($scope.isRequester()){
+                    addresses = labRequest.lab.contactData.email;
+                } else {
+                    addresses = labRequest.requesterEmail;
+                }
+                $scope.newNoteEmail(addresses,  labRequest.labRequestCode);
             }, function(response) {
                 $scope.error = response.statusText;
             });
@@ -30,7 +37,6 @@ angular.module('ProcessApp.controllers')
             comment.labRequestId = labRequest.id;
             comment.$update(function(result) {
                 var index = $scope.labRequest.comments.indexOf(body);
-                //console.log('Updating comment at index ' + index);
                 $scope.labRequest.comments[index] = result;
                 $scope.commentEditVisibility[comment.id] = 0;
             }, function(response) {

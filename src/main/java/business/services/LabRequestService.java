@@ -99,6 +99,9 @@ public class LabRequestService {
     @Autowired
     private LabRequestListService labRequestListService;
 
+    @Autowired
+    private RequestQueryService requestQueryService;
+
     @Transactional
     @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
     public LabRequest save(LabRequest labRequest) {
@@ -412,21 +415,12 @@ public class LabRequestService {
             representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
         } else {
             // fetch requests in status "LabRequest" for requester
-            List<HistoricProcessInstance> historicInstances = new ArrayList<>();
-            for (HistoricProcessInstance instance: requestService.getProcessInstancesForUser(user)) {
-                String statusText = (String)instance.getProcessVariables().get("status");
-                if (statusText != null) {
-                    RequestStatus status = RequestStatus.forDescription(statusText);
-                    if (status == RequestStatus.LAB_REQUEST) {
-                        historicInstances.add(instance);
-                    }
-                }
-            }
-            log.info("#instances: " + historicInstances.size());
+            List<String> requestIds = requestQueryService.getRequestsForRequesterByStatus(user, RequestStatus.LAB_REQUEST);
+            log.info("#instances: " + requestIds.size());
             representations = new ArrayList<>();
             // find associated lab requests
-            for (HistoricProcessInstance instance : historicInstances) {
-                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
+            for (String id: requestIds) {
+                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(id, sortByIdDesc());
                 representations.addAll(convertLabRequestsToRepresentations(labRequests, fetchDetails));
             }
         }

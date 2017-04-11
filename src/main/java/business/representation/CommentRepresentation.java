@@ -24,6 +24,8 @@ public class CommentRepresentation {
     
     private String contents;
 
+    private Boolean internalNote = Boolean.FALSE;
+
     public CommentRepresentation() {
         
     }
@@ -84,5 +86,12 @@ public class CommentRepresentation {
     public void setContents(String contents) {
         this.contents = contents;
     }
-    
+
+    public Boolean getInternalNote() {
+        return internalNote;
+    }
+
+    public void setInternalNote(Boolean internalNote) {
+        this.internalNote = internalNote;
+    }
 }

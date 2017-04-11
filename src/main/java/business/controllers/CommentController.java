@@ -6,9 +6,14 @@
 package business.controllers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import business.models.*;
+import business.representation.LabRequestRepresentation;
+import business.services.LabRequestService;
+import business.services.MailService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import business.exceptions.UpdateNotAllowed;
-import business.models.Comment;
-import business.models.CommentRepository;
-import business.models.LabRequest;
-import business.models.LabRequestRepository;
-import business.models.RequestProperties;
 import business.representation.CommentRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.RequestPropertiesService;
@@ -42,6 +42,12 @@ public class CommentController {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private LabRequestService labRequestService;
+
+    @Autowired
+    private MailService mailService;
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
     @RequestMapping(value = "/requests/{id}/comments", method = RequestMethod.GET)
@@ -80,7 +86,7 @@ public class CommentController {
             @RequestBody CommentRepresentation body) {
         log.info("POST /requests/" + id + "/comments");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        Comment comment = new Comment(id, user.getUser(), body.getContents());
+        Comment comment = new Comment(id, user.getUser(), body.getContents(), body.getInternalNote());
         comment = commentRepository.save(comment);
         properties.addComment(comment);
         requestPropertiesService.save(properties);
@@ -97,7 +103,7 @@ public class CommentController {
             @RequestBody CommentRepresentation body) {
         log.info("POST /requests/" + id + "/comments");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        Comment comment = new Comment(id, user.getUser(), body.getContents());
+        Comment comment = new Comment(id, user.getUser(), body.getContents(), body.getInternalNote());
         comment = commentRepository.save(comment);
         properties.addApprovalComment(comment);
         requestPropertiesService.save(properties);
@@ -171,10 +177,24 @@ public class CommentController {
             @RequestBody CommentRepresentation body) {
         log.info("POST /lab-requests/" + id + "/comments");
         LabRequest labRequest = labRequestRepository.findOne(id);
-        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getContents());
+        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getContents(), body.getInternalNote());
         comment = commentRepository.save(comment);
         labRequest.addComment(comment);
         labRequestRepository.save(labRequest);
+
+        if(!comment.getInternalNote()){
+            LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+            labRequestService.transferLabRequestData(representation, false);
+
+            Collection<String> emails = new ArrayList<>();
+
+            if(representation.getRequesterId() == user.getUser().getId()){
+                emails.add(user.getUser().getContactData().getEmail());
+            } else {
+                emails = representation.getLab().getEmailAddresses();
+            }
+            mailService.sendNewLabRequestNoteNotification(emails, representation.getLabRequestCode());
+        }
 
         return new CommentRepresentation(comment);
     }

@@ -450,6 +450,25 @@ public class MailService {
         }
     }
 
+    public static final String newCommentLabRequestNotification = "Nieuwe notitie aan labverzoek toegevoegd / New Note added to LabRequest";
+
+    @Async
+    public void sendNewLabRequestNoteNotification(Collection<String> emails, String id){
+        try {
+            log.info("Sending new comment notification to '{}'", emails);
+            Template template = freemarkerConfiguration.getTemplate("newLabRequestNoteEmail.ftl");
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", id);
+            CharArrayWriter writer = new CharArrayWriter(1000);
+            template.process(params, writer);
+            String emailTest = writer.toString();
+            sendEmail(emails, newCommentLabRequestNotification, emailTest);
+            log.info("Email text: {}", emailTest);
+        } catch (IOException | TemplateException e) {
+            log.error("Error creating the mail message.", e);
+        }
+    }
+
     public boolean checkMailSender() {
         if (mailSender == null) {
             return false;

@@ -56,21 +56,23 @@ This file is distributed under the GNU Affero General Public License
 
     <!-- Add comment -->
     <div class="no-print">
-    <input type="hidden" ng-model="editComment.processInstanceId" value="{{request.processInstanceId}}">
-    <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
-              ng-model="editComment.contents">
-                    </textarea>
-    <br>
-    <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
-            ng-click="addComment(labRequest, editComment)"
-            ng-if="!editComment.id">
-        {{'Add note'|translate}}
-    </button>
-    <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
-            ng-click="updateComment(labRequest, editComment)"
-            ng-if="editComment.id">
-        {{'Update note'|translate}}
-    </button>
+        <input type="hidden" ng-model="editComment.processInstanceId" value="{{request.processInstanceId}}">
+        <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
+                  ng-model="editComment.contents">
+                        </textarea>
+        <br>
+        <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
+                ng-click="addComment(labRequest, editComment)"
+                ng-if="!editComment.id">
+            {{'Add note'|translate}}
+        </button>
+        <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
+                ng-click="updateComment(labRequest, editComment)"
+                ng-if="editComment.id">
+            {{'Update note'|translate}}
+        </button>
+        <input type="checkbox" ng-model="editComment.internalNote" placeholder="false" id="internal-comment-input">
+        <span><i>Internal Note</i></span>
     </div>
 </div>
 

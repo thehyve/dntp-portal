@@ -10,13 +10,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import business.representation.ReturnDateRepresentation;
+import business.services.*;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +79,9 @@ public class LabRequestController {
 
     @Autowired
     private RequestFormService requestFormService;
+
+    @Autowired
+    private MailService mailService;
 
     @PreAuthorize("isAuthenticated() and (hasRole('requester') or hasRole('palga') or "
             + "hasRole('lab_user') or hasRole('hub_user') )")
@@ -234,7 +240,7 @@ public class LabRequestController {
         labRequestService.transferLabRequestData(representation, false);
 
         //Add comment explaining what happened.
-        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), "Undid approval previously approved lab Request");
+        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), "Undid approval previously approved lab Request", Boolean.FALSE);
         comment = commentRepository.save(comment);
         labRequest.addComment(comment);
         labRequestService.save(labRequest);
@@ -264,6 +270,7 @@ public class LabRequestController {
         }
 
         labRequestService.updateStatus(labRequest, Status.SENDING);
+
         labRequest.setSendDate(new Date());
         labRequest.setReturnDate(body.getReturnDate());
         labRequest = labRequestService.save(labRequest);
@@ -294,15 +301,19 @@ public class LabRequestController {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'. Not a materials request.");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
-        
+
         if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
             if (body.getMissingSamples() == null || body.getMissingSamples().getContents().trim().isEmpty()) {
                 throw new EmptyInput("Empty field 'missing samples'");
             }
-            Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getMissingSamples().getContents());
+            Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getMissingSamples().getContents(), Boolean.FALSE);
             comment = commentRepository.save(comment);
             labRequest.addComment(comment);
             labRequest = labRequestService.save(labRequest);
+            LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+            labRequestService.transferLabRequestData(representation, false);
+
+            mailService.sendNewLabRequestNoteNotification(representation.getLab().getEmailAddresses(), representation.getLabRequestCode());
         }
 
         labRequest = labRequestService.updateStatus(labRequest, Status.RECEIVED);
@@ -374,10 +385,17 @@ public class LabRequestController {
                 log.error("Empty field 'missing samples'");
                 throw new EmptyInput("Empty field 'missing samples'");
             }
-            Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getMissingSamples().getContents());
+            Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getMissingSamples().getContents(), Boolean.FALSE);
             comment = commentRepository.save(comment);
             labRequest.addComment(comment);
             labRequest = labRequestService.save(labRequest);
+
+            LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+            labRequestService.transferLabRequestData(representation, false);
+
+            ArrayList<String> emails = new ArrayList<String>();
+            emails.add(representation.getRequesterEmail());
+            mailService.sendNewLabRequestNoteNotification(emails, representation.getLabRequestCode());
         }
 
         labRequest = labRequestService.updateStatus(labRequest, Status.COMPLETED, Result.RETURNED);

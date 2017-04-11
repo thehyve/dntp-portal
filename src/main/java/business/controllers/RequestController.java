@@ -19,7 +19,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -91,9 +90,6 @@ public class RequestController {
     private TaskService taskService;
 
     @Autowired
-    private HistoryService historyService;
-
-    @Autowired
     private RequestPropertiesService requestPropertiesService;
 
     @Autowired
@@ -119,8 +115,7 @@ public class RequestController {
         Date start = new Date();
         List<HistoricProcessInstance> processInstances = requestService.getProcessInstancesForUser(user.getUser());
         for (HistoricProcessInstance instance : processInstances) {
-            RequestListRepresentation request = new RequestListRepresentation();
-            requestFormService.transferData(instance, request, user.getUser());
+            RequestListRepresentation request = requestService.getRequestData(instance, user.getUser());
             result.add(request);
         }
         Date endQ = new Date();
@@ -271,6 +266,7 @@ public class RequestController {
 
         requestPropertiesService.suspendRequest(id);
 
+        requestFormService.invalidateCacheEntry(id);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
@@ -286,6 +282,7 @@ public class RequestController {
 
         requestPropertiesService.resumeRequest(id);
 
+        requestFormService.invalidateCacheEntry(id);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
@@ -587,9 +584,8 @@ public class RequestController {
             variables.put("assigned_date", new Date());
         }
         runtimeService.setVariables(instance.getId(), variables);
+        requestFormService.invalidateCacheEntry(id);
         instance = requestService.getProcessInstance(id);
-        HistoricProcessInstance singleResult = historyService.createHistoricProcessInstanceQuery().processInstanceId(id).singleResult();
-        //singleResult.
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
@@ -605,6 +601,7 @@ public class RequestController {
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Task task = requestService.getCurrentPalgaTaskByRequestId(id);
         taskService.unclaim(task.getId());
+        requestFormService.invalidateCacheEntry(id);
         instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
@@ -631,6 +628,7 @@ public class RequestController {
         }
 
         log.info("deleting process instance " + id);
+        requestFormService.invalidateCacheEntry(id);
         runtimeService.deleteProcessInstance(id, "Removed by user: " + user.getName());
         log.info("process instance " + id + " deleted.");
     }
@@ -921,6 +919,7 @@ public class RequestController {
             requestPropertiesService.save(properties);
         }
 
+        requestFormService.invalidateCacheEntry(id);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -951,6 +950,7 @@ public class RequestController {
             fileService.removeAttachment(toBeRemoved);
         }
 
+        requestFormService.invalidateCacheEntry(id);
         instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -1009,6 +1009,7 @@ public class RequestController {
             Long excerptListId = excerptListService.replaceExcerptList(id, attachment);
             excerptCount = excerptListService.countEntriesByExcerptListId(excerptListId);
         }
+        requestFormService.invalidateCacheEntry(id);
 
         return excerptCount;
     }

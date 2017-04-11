@@ -21,9 +21,10 @@ import javax.transaction.Transactional;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ import business.representation.RequestStatus;
 @Service
 public class RequestFormService {
 
-    Log log = LogFactory.getLog(getClass());
+    Logger log = LoggerFactory.getLogger(getClass());
     
     @Autowired
     private UserService userService;
@@ -64,7 +65,7 @@ public class RequestFormService {
     private ApprovalVoteRepository approvalVoteRepository;
     
     @Autowired
-    private RequestService requestService;
+    public RequestService requestService;
 
     @Autowired
     private ContactDataRepository contactDataRepository;
@@ -102,6 +103,7 @@ public class RequestFormService {
     }
 
     public RequestListRepresentation getRequestListData(String processInstanceId) {
+        log.info("Getting request list data for {}", processInstanceId);
         HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
         // copy request list representation data
         RequestListRepresentation request = new RequestListRepresentation();
@@ -220,56 +222,6 @@ public class RequestFormService {
         request.setMedicalEthicalCommitteeApprovalAttachments(medicalEthicalCommitteeApprovalAttachments);
     }
 
-    public void transferData(HistoricProcessInstance instance, RequestListRepresentation request, User currentUser) {
-        transferBasicData(instance, request);
-        Task task = null;
-        switch(request.getStatus()) {
-            case REVIEW:
-                task = requestService.findTaskByRequestId(instance.getId(), "palga_request_review");
-                break;
-            case APPROVAL:
-                task = requestService.findTaskByRequestId(instance.getId(), "request_approval");
-                request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
-                break;
-            case DATA_DELIVERY:
-                task = requestService.findTaskByRequestId(instance.getId(), "data_delivery"); 
-                break;
-            case SELECTION_REVIEW:
-                task = requestService.findTaskByRequestId(instance.getId(), "selection_review"); 
-                break;
-            default:
-                break;
-        }
-        if (task != null) {
-            request.setAssignee(task.getAssignee());
-            if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
-                Long assigneeId = null;
-                try {
-                    assigneeId = Long.valueOf(task.getAssignee());
-                } catch (NumberFormatException e) {
-                }
-                if (assigneeId != null) {
-                    User assignee = userService.findOneCached(assigneeId);
-                    if (assignee != null) {
-                        request.setAssigneeName(getName(assignee));
-                    }
-                }
-            }
-        }
-
-        if (currentUser.isPalga()) {
-            request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(instance.getId()));
-        } else if (currentUser.isScientificCouncilMember()) {
-            // fetch my vote
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                    instance.getId());
-            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
-            if (votes.containsKey(currentUser.getId())) {
-                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
-            }
-        }
-    }
-    
     private static Set<RequestStatus> excerptListStatuses = new HashSet<>();
     {
         excerptListStatuses.add(RequestStatus.DATA_DELIVERY);
@@ -551,6 +503,7 @@ public class RequestFormService {
      * @param user the current user.
      * @return the updated variable map of the Activiti process instance.
      */
+    @CacheEvict(value = "requestlistdata", key = "#instance.processInstanceId")
     public Map<String, Object> transferFormData(RequestRepresentation request, HistoricProcessInstance instance, User user) {
         request.setProcessInstanceId(instance.getId());
         Map<String, Object> variables = instance.getProcessVariables();
@@ -652,6 +605,11 @@ public class RequestFormService {
         }
         requestPropertiesService.save(properties);
         return variables;
+    }
+
+    @CacheEvict(value = "requestlistdata", key = "#id")
+    public void invalidateCacheEntry(String id) {
+        log.info("Invalidating request list cache for request {}", id);
     }
 
 }

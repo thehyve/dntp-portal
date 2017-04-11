@@ -59,6 +59,7 @@ import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -99,6 +100,9 @@ public class RequestService {
 
     @Autowired
     private ApprovalVoteRepository approvalVoteRepository;
+
+    @Autowired
+    private RequestQueryService requestQueryService;
 
     @PersistenceContext
     private EntityManager em;
@@ -252,79 +256,41 @@ public class RequestService {
      * @param user
      * @return
      */
-    public List<HistoricProcessInstance> getProcessInstancesForUser(
-            User user) {
-        List<HistoricProcessInstance> processInstances;
+    @Transactional(readOnly = true)
+    public List<String> getProcessInstanceIdsForUser(User user) {
+        List<String> processInstanceIds;
 
         if (user == null) {
-            processInstances = new ArrayList<>();
+            processInstanceIds = new ArrayList<>();
         } else if (user.isPalga()) {
-            Date start = new Date();
-            processInstances = new ArrayList<>();
-            processInstances.addAll(
-                    historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("status", "Open")
-                    .variableValueEquals("reopen_request", Boolean.TRUE)
-                    .list());
-            Date t1 = new Date();
-            processInstances.addAll(
-                    historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueNotEquals("status", "Open")
-                    .list());
-            Date t2 = new Date();
-            log.info("Query for Palga user took {} ms ({} + {}).",
-                    (t2.getTime() - start.getTime()),
-                    (t1.getTime() - start.getTime()),
-                    (t2.getTime() - t1.getTime()));
+            processInstanceIds = requestQueryService.getPalgaRequests();
         } else if (user.isScientificCouncilMember()) {
             Date start = new Date();
             List<HistoricTaskInstance> approvalTasks = historyService
                     .createHistoricTaskInstanceQuery()
                     .taskDefinitionKey("scientific_council_approval")
                     .list();
-            Set<String> processInstanceIds = new HashSet<>();
+            processInstanceIds = new ArrayList<>();
             for (HistoricTaskInstance task: approvalTasks) {
                 processInstanceIds.add(task.getProcessInstanceId());
             }
-            processInstances = historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .processInstanceIds(processInstanceIds)
-                    .list();
             Date end = new Date();
-            log.info("Query for council member took " + (end.getTime() - start.getTime()) + " ms.");
+            log.info("Query for council member took {} ms.", (end.getTime() - start.getTime()));
         } else if (user.isLabUser() || user.isHubUser()) {
             Date start = new Date();
             List<LabRequestRepresentation> labRequests =
                     labRequestService.findLabRequestsForLabUserOrHubUser(user, false);
-            Set<String> processInstanceIds = new HashSet<>();
+            processInstanceIds = new ArrayList<>();
             for (LabRequestRepresentation labRequest: labRequests) {
                 processInstanceIds.add(labRequest.getProcessInstanceId());
             }
-            if (!processInstanceIds.isEmpty()) {
-                processInstances = historyService
-                        .createHistoricProcessInstanceQuery()
-                        .notDeleted()
-                        .includeProcessVariables()
-                        .processInstanceIds(processInstanceIds)
-                        .list();
-            } else {
-                processInstances = new ArrayList<>();
-            }
             Date end = new Date();
-            log.info("Query for lab or hub user took " + (end.getTime() - start.getTime()) + " ms.");
+            log.info("Query for lab or hub user took {} ms.", (end.getTime() - start.getTime()));
         } else {
             Date start = new Date();
             String userEmail = user.getUsername();
             log.info("Fetching requester requests for user:" + userEmail);
-            processInstances = new ArrayList<>();
+            List<HistoricProcessInstance> processInstances = new ArrayList<>();
             for (HistoricProcessInstance instance: historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
@@ -362,9 +328,12 @@ public class RequestService {
                     .collect(Collectors.toList())
                     );
             Date end = new Date();
-            log.info("Query for requester took " + (end.getTime() - start.getTime()) + " ms.");
+            log.info("Query for requester took {} ms.", (end.getTime() - start.getTime()));
+            processInstanceIds = processInstances.stream()
+                    .map(HistoricProcessInstance::getId)
+                    .collect(Collectors.toList());
         }
-        return processInstances;
+        return processInstanceIds;
     }
 
     /**
@@ -587,33 +556,32 @@ public class RequestService {
                     ".csv";
             headers.set("Content-Disposition",
                        "attachment; filename=" + filename);
-            HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
-            log.info("Returning reponse.");
+            HttpEntity<InputStreamResource> response =  new HttpEntity<>(resource, headers);
+            log.info("Returning response.");
             return response;
         } catch (IOException e) {
-            log.error(e.getStackTrace());
-            log.error(e.getMessage());
+            log.error("Error writing to CSV.", e);
             throw new FileDownloadError();
         }
 
     }
 
-    public RequestListRepresentation getRequestData(HistoricProcessInstance instance, User currentUser) {
-        RequestListRepresentation request = requestFormService.getRequestListDataCached(instance.getId());
+    public RequestListRepresentation getRequestData(String processInstanceId, User currentUser) {
+        RequestListRepresentation request = requestFormService.getRequestListDataCached(processInstanceId);
         Task task = null;
         switch(request.getStatus()) {
             case REVIEW:
-                task = findTaskByRequestId(instance.getId(), "palga_request_review");
+                task = findTaskByRequestId(processInstanceId, "palga_request_review");
                 break;
             case APPROVAL:
-                task = findTaskByRequestId(instance.getId(), "request_approval");
-                request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(instance.getId()));
+                task = findTaskByRequestId(processInstanceId, "request_approval");
+                request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(processInstanceId));
                 break;
             case DATA_DELIVERY:
-                task = findTaskByRequestId(instance.getId(), "data_delivery");
+                task = findTaskByRequestId(processInstanceId, "data_delivery");
                 break;
             case SELECTION_REVIEW:
-                task = findTaskByRequestId(instance.getId(), "selection_review");
+                task = findTaskByRequestId(processInstanceId, "selection_review");
                 break;
             default:
                 break;
@@ -636,11 +604,11 @@ public class RequestService {
         }
 
         if (currentUser.isPalga()) {
-            request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(instance.getId()));
+            request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(processInstanceId));
         } else if (currentUser.isScientificCouncilMember()) {
             // fetch my vote
             RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                    instance.getId());
+                    processInstanceId);
             Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
             if (votes.containsKey(currentUser.getId())) {
                 request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());

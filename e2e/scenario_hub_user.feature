@@ -150,7 +150,8 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     And I click on the 'Actions' button
     And I click on the 'Approve' button
     And I click on the 'OK' button
-    Then the current request should have 'Approved' status
+    And I click on the 'Save' button
+	Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
 	And the page should contain the button 'undo approval'
 

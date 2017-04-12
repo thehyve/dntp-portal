@@ -177,6 +177,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     And I click on the 'Actions' button
     And I click on the 'Approve' button
     And I click on the 'OK' button
+	And testing is paused to wait a bit
+	And I click on the 'Save' button
     Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
 	And the page should contain 'Undo approval' button
@@ -225,7 +227,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-106'
     And I click on the 'Actions' button
-    And I click on the object with id 'paReportsSent'
+    And testing is paused to wait a bit
+	And I click on the object with id 'paReportsSent'
     And I click on the 'Update PA reports status' button
     Then the page should contain the text 'Approved'
     And the page should contain the text 'PA reports have been sent to the requester.'
@@ -280,6 +283,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-106'
     And I click on the 'Actions' button
+	And testing is paused to wait a bit
 	And I fill the form with the following data
 	"""
 	Return date: 10/10/18

@@ -239,17 +239,17 @@ angular.module('ProcessApp.controllers')
 
             $scope.persistKey = 'labrequests'
 
-	        $scope.checkTableFilterStatus = function() {
-		        // Table filter status
-		        var tfs = $scope.activeSidebar;
-		        $scope.tableFilterStatus = tfs;
+            $scope.checkTableFilterStatus = function() {
+                // Table filter status
+                var tfs = $scope.activeSidebar;
+                $scope.tableFilterStatus = tfs;
 
-		        if(!tfs in $scope.selections) {
-			        $scope.tableFilterStatus = "";
-		        }
-		        // Apply the scope to trigger correct initialization of persisted local storage for smart table
-		        $scope.$apply();
-	        };
+                if(!(tfs in $scope.selections)) {
+                    $scope.tableFilterStatus = "";
+                }
+                // Apply the scope to trigger correct initialization of persisted local storage for smart table
+                $scope.$apply();
+            };
 
             $scope.resetFilters = function(key) {
                 localStorage.setItem(key, JSON.stringify({}));
@@ -269,9 +269,9 @@ angular.module('ProcessApp.controllers')
             $scope.$watch('allLabRequests', function(newValue) {
                 if (newValue) {
                     $scope.showSelection(newValue);
-	                $timeout( function() {
-		                $scope.checkTableFilterStatus();
-	                },10);
+                    $timeout( function() {
+                        $scope.checkTableFilterStatus();
+                    },10);
                 }
             });
 

@@ -87,7 +87,7 @@
         'popover: Methods': 'De onderzoeksmethode die u gaat gebruiken zoals trial, prospectief/retrospectief cohort, patiëntcontrole onderzoek etc, de uitkomstmaat en beoogde data-analyses. Wat is het minimaal aantal patiënten dat nodig is om deze vraag te kunnen beantwoorden?',
         'Search criteria': 'Zoekcriteria',
         'popover: Search criteria': 'Mocht u al een idee hebben voor de gewenste zoekcriteria, zoals soort onderzoek of specifieke PALGA-termen, dan kunt u die hier noteren. U kunt ook de algemene medische termen noteren, dan overleggen wij later met u over de exacte zoekcriteria.',
-	    'popover: Biobank request': 'Vraag na bij uw Biobank / Pathologie afdeling of er een Biobank aanvraagnummer vereist is',
+        'popover: Biobank request': 'Vraag na bij uw Biobank / Pathologie afdeling of er een Biobank aanvraagnummer vereist is',
         'Study period': 'Studieperiode',
         'Laboratory techniques': 'Laboratoriumtechnieken',
         'popover: Laboratory techniques': 'Indien van toepassing: welke labtechnieken (bijv. kiembaanmutatieanalyse/moleculaire technieken, immuunhistochemie, tissue micro array etc.) worden gebruikt?',

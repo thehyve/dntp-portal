@@ -12,14 +12,20 @@ angular.module('ProcessApp.controllers')
         'use strict';
 
         $scope.commentEditVisibility = {};
-        //$scope.editComment = {};
+
+        var clearEditComment = function() {
+            $scope.editComment = {
+                notificationRequested: true
+            };
+        };
+        clearEditComment();
         
         $scope.addComment = function(labRequest, body) {
             var comment = new LabRequestComment(body);
             comment.labRequestId = labRequest.id;
             comment.$save(function(result) {
                 labRequest.comments.push(result);
-                $scope.editComment = {};
+                clearEditComment();
             }, function(response) {
                 $scope.error = response.statusText;
             });

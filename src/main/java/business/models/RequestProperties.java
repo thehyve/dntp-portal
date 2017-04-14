@@ -103,17 +103,21 @@ public class RequestProperties {
     private File excerptListAttachment;
 
     @OrderBy("timeCreated")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @OrderColumn
-    private List<Comment> comments = new ArrayList<Comment>();
+    @BatchSize(size = 1000)
+    private List<Comment> comments = new ArrayList<>();
 
     @OrderBy("timeCreated")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @OrderColumn
-    private List<Comment> approvalComments = new ArrayList<Comment>();
+    @BatchSize(size = 1000)
+    private List<Comment> approvalComments = new ArrayList<>();
 
+    @Fetch(FetchMode.JOIN)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Map<Long, ApprovalVote> approvalVotes = new HashMap<Long, ApprovalVote>();
+    @BatchSize(size = 1000)
+    private Map<Long, ApprovalVote> approvalVotes = new HashMap<>();
 
     @Deprecated
     @Column

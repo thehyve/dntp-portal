@@ -1,6 +1,7 @@
 Geachte heer/mevrouw,
 
-Er is een notitie gezet in de portal bij labaanvraag ${id}
+Er is een notitie gezet in de portal bij labverzoek ${labRequestCode}:
+  ${link}
 
 Met vriendelijke groet,
 Stichting PALGA
@@ -14,7 +15,8 @@ Heeft u vragen, stuur dan een mail naar aanvraag@palga.nl.
 
 Dear Sir/Madam,
 
-You will find a new note in the portal at labrequest ${id}
+You will find a new note in the portal for lab request ${labRequestCode}:
+  ${link}
 
 With kind regards,
 Stichting PALGA

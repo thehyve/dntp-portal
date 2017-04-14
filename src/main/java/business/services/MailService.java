@@ -15,6 +15,7 @@ import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
+import business.representation.CommentRepresentation;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -82,7 +83,7 @@ public class MailService {
     }
 
     @Async
-    public void sendEmail(Collection<String> to, String subject, String content) {
+    public void sendEmail(Collection<String> to, Collection<String> cc, String subject, String content) {
         log.debug("Send e-mail to '{}' with subject '{}' and content={}", String.join(",", to), subject, content);
 
         if (to.isEmpty()) {
@@ -92,8 +93,11 @@ public class MailService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, CharEncoding.UTF_8);
-            for(String email: to) {
+            for (String email: to) {
                 message.addTo(email);
+            }
+            for (String email: cc) {
+                message.addCc(email);
             }
             message.setFrom(getFrom(), fromName);
             message.setReplyTo(replyAddress, replyName);
@@ -109,7 +113,7 @@ public class MailService {
 
     @Async
     public void sendEmail(String to, String subject, String content) {
-        sendEmail(Collections.singleton(to), subject, content);
+        sendEmail(Collections.singleton(to), Collections.emptyList(), subject, content);
     }
 
     static final String requesterAgreementFormLinkTemplate = 
@@ -258,7 +262,7 @@ public class MailService {
                 labRequest.getRequest().getPathologistName() == null ? "" : labRequest.getRequest().getPathologistName(), // %5
                 labRequest.getRequesterLab().getName() // %6
                 );
-        sendEmail(to, subject, body);
+        sendEmail(to, Collections.emptyList(), subject, body);
     }
 
     static final String hubUserNotificationTemplate =
@@ -450,19 +454,25 @@ public class MailService {
         }
     }
 
-    public static final String newCommentLabRequestNotification = "Nieuwe notitie aan labverzoek toegevoegd / New Note added to LabRequest";
+    public static final String newLabRequestCommentNotificationSubject = "Nieuwe notitie aan labverzoek toegevoegd / New note added to lab request";
 
     @Async
-    public void sendNewLabRequestNoteNotification(Collection<String> emails, String id){
+    public void sendNewLabRequestCommentNotification(
+            LabRequestRepresentation labRequest,
+            CommentRepresentation comment,
+            Collection<String> recipients, Collection<String> copyRecipients){
         try {
-            log.info("Sending new comment notification to '{}'", emails);
-            Template template = freemarkerConfiguration.getTemplate("newLabRequestNoteEmail.ftl");
+            log.info("Sending new comment notification to: {}, cc: {}", recipients, copyRecipients);
+            Template template = freemarkerConfiguration.getTemplate("newLabRequestCommentEmail.ftl");
             Map<String, Object> params = new HashMap<>();
-            params.put("id", id);
+            params.put("labRequestCode", labRequest.getLabRequestCode());
+            params.put("commentId", comment.getId());
+            String labRequestLink = getLink("/#/lab-request/view/" + labRequest.getId().toString());
+            params.put("link", labRequestLink);
             CharArrayWriter writer = new CharArrayWriter(1000);
             template.process(params, writer);
             String emailTest = writer.toString();
-            sendEmail(emails, newCommentLabRequestNotification, emailTest);
+            sendEmail(recipients, copyRecipients, newLabRequestCommentNotificationSubject, emailTest);
             log.info("Email text: {}", emailTest);
         } catch (IOException | TemplateException e) {
             log.error("Error creating the mail message.", e);
@@ -497,7 +507,7 @@ public class MailService {
             String content = writer.toString();
 
             log.info("Email text:\n" + content);
-            sendEmail(labEmails, returnDateReminderSubject, content);
+            sendEmail(labEmails, Collections.emptyList(), returnDateReminderSubject, content);
         } catch (IOException | TemplateException e) {
             log.error("Error creating the mail message.", e);
         }

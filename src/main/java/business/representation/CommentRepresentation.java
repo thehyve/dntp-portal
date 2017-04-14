@@ -24,7 +24,9 @@ public class CommentRepresentation {
     
     private String contents;
 
-    private Boolean internalNote = Boolean.FALSE;
+    private Boolean notificationRequested = Boolean.FALSE;
+
+    private Boolean notificationSent;
 
     public CommentRepresentation() {
         
@@ -37,6 +39,7 @@ public class CommentRepresentation {
         this.timeCreated = comment.getTimeCreated();
         this.timeEdited = comment.getTimeEdited();
         this.contents = comment.getContents();
+        this.notificationSent = comment.isNotificationSent();
     }
 
     public Long getId() {
@@ -87,11 +90,19 @@ public class CommentRepresentation {
         this.contents = contents;
     }
 
-    public Boolean getInternalNote() {
-        return internalNote;
+    public boolean isNotificationRequested() {
+        return notificationRequested == Boolean.TRUE;
     }
 
-    public void setInternalNote(Boolean internalNote) {
-        this.internalNote = internalNote;
+    public void setNotificationRequested(Boolean notificationRequested) {
+        this.notificationRequested = notificationRequested;
+    }
+
+    public boolean isNotificationSent() {
+        return notificationSent == Boolean.TRUE;
+    }
+
+    public void setNotificationSent(Boolean notificationSent) {
+        this.notificationSent = notificationSent;
     }
 }

@@ -219,6 +219,8 @@
         'Discussion': 'Discussie',
         'Update comment': 'Opmerking bewerken',
         'Add comment': 'Opmerking plaatsen',
+        'Send notification to requester and hub users.': 'Notificatie versturen naar aanvrager en hubmedewerkers.',
+        'Notification sent.': 'Notificatie verstuurd.',
         'popover: Upload file': 'Upload alle relevante bijlagen.',
         'popover: Upload medical ethical committee approval': 'Upload brief van medisch-ethische toetsingscommissie.',
         'Close request': 'Aanvraag afsluiten',

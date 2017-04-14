@@ -32,7 +32,7 @@ public class Comment implements Serializable {
     
     private Date timeEdited = timeCreated;
 
-    private Boolean internalNote;
+    private Boolean notificationSent;
 
     @Column(columnDefinition="TEXT")
     private String contents;
@@ -41,11 +41,10 @@ public class Comment implements Serializable {
         
     }
     
-    public Comment(String processInstanceId, User creator, String contents, Boolean internalNote) {
+    public Comment(String processInstanceId, User creator, String contents) {
         this.processInstanceId = processInstanceId;
         this.creator = creator;
         this.contents = contents;
-        this.internalNote = internalNote;
     }
     
     public Long getId() {
@@ -96,11 +95,11 @@ public class Comment implements Serializable {
         this.contents = contents;
     }
 
-    public Boolean getInternalNote() {
-        return internalNote;
+    public Boolean isNotificationSent() {
+        return notificationSent == Boolean.TRUE;
     }
 
-    public void setInternalNote(Boolean internalNote) {
-        this.internalNote = internalNote;
+    public void setNotificationSent(Boolean notificationSent) {
+        this.notificationSent = notificationSent;
     }
 }

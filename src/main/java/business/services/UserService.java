@@ -74,7 +74,7 @@ public class UserService {
     ActivationLinkRepository activationLinkRepository;
 
     @Transactional
-    @CacheEvict(value = "users", key = "#id")
+    @CacheEvict(value="users", key="#user?.id")
     public User save(User user) throws EmailAddressNotAvailable {
         assert(user.getRoles().size() == 1);
         synchronized (lock) {
@@ -263,7 +263,7 @@ public class UserService {
         }
     }
 
-    @Cacheable("users")
+    @Cacheable(value="users", key="#userId")
     public User findOneCached(Long userId) {
         return findOne(userId);
     }

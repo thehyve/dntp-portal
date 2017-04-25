@@ -312,8 +312,17 @@
                   }
                 });
 
+                $rootScope.timeCache = 0;
+
                 $rootScope.getDatetime = function() {
-                    return Date.now();
+                    var now = Date.now();
+                    var diff = Math.abs(now - $rootScope.timeCache);
+                    if (diff > 100){
+                        $rootScope.timeCache = now;
+                        return now;
+                    } else {
+                        return $rootScope.timeCache;
+                    }
                 };
             }])
         .filter("statusTextFilter", function ($filter) {

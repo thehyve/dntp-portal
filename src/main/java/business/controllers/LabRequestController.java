@@ -226,6 +226,7 @@ public class LabRequestController {
         labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
         labRequest.setPaReportsSent(Boolean.FALSE);
         labRequest.setClinicalDataSent(Boolean.FALSE);
+        labRequest.setReturnDate(null);
         labRequestService.save(labRequest);
 
         //Add comment explaining what happened.

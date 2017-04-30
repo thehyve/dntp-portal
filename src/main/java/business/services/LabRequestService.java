@@ -20,6 +20,7 @@ import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
+import business.security.UserAuthenticationToken;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -495,4 +496,30 @@ public class LabRequestService {
         }
     }
 
+    @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
+    public LabRequestRepresentation claim(LabRequest labRequest, UserAuthenticationToken user) {
+        Task task = this.getTask(labRequest.getTaskId(), "lab_request");
+
+        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
+            taskService.claim(task.getId(), user.getId().toString());
+        } else {
+            taskService.delegateTask(task.getId(), user.getId().toString());
+        }
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(
+                labRequest);
+        this.transferLabRequestData(representation, false);
+        return representation;
+    }
+
+    @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
+    public LabRequestRepresentation unclaim(LabRequest labRequest, UserAuthenticationToken user) {
+        Task task = this.getTask(labRequest.getTaskId(),"lab_request");
+
+        taskService.unclaim(task.getId());
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        this.transferLabRequestData(representation, false);
+        return representation;
+    }
 }

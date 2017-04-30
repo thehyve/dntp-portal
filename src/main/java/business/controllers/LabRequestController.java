@@ -473,18 +473,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/claim");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
-
-        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-            taskService.claim(task.getId(), user.getId().toString());
-        } else {
-            taskService.delegateTask(task.getId(), user.getId().toString());
-        }
-
-        LabRequestRepresentation representation = new LabRequestRepresentation(
-                labRequest);
-        labRequestService.transferLabRequestData(representation, false);
+        LabRequestRepresentation representation = labRequestService.claim(labRequest, user);
         return representation;
     }
 
@@ -493,18 +482,11 @@ public class LabRequestController {
     @RequestMapping(value = "/labrequests/{id}/unclaim", method = RequestMethod.PUT)
     public LabRequestRepresentation unclaim(UserAuthenticationToken user,
             @PathVariable Long id) {
-      log.info("PUT /labrequests/" + id + "/unclaim for userId " + user.getId());
+        log.info("PUT /labrequests/" + id + "/unclaim for userId " + user.getId());
 
-      LabRequest labRequest = labRequestService.findOne(id);
-      Task task = labRequestService.getTask(labRequest.getTaskId(),
-        "lab_request");
-
-      taskService.unclaim(task.getId());
-
-      LabRequestRepresentation representation = new LabRequestRepresentation(
-        labRequest);
-      labRequestService.transferLabRequestData(representation, false);
-      return representation;
+        LabRequest labRequest = labRequestService.findOne(id);
+        LabRequestRepresentation representation = labRequestService.unclaim(labRequest, user);
+        return representation;
     }
 
     static Set<Status> paNumberDownloadStatuses;

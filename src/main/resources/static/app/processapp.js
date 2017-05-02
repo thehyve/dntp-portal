@@ -333,6 +333,7 @@
                     } else {
                         now = $rootScope.timeCache;
                     }
+                    // Add 1.5 years to the current time.
                     return now + (1.5 * 365 * 24 * 60 * 60 * 1000)
                 };
             }])

@@ -611,7 +611,7 @@
                                 ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"
                                 ng-maxlength="2000"
                                 data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: Reason using personal data'|translate}}" data-trigger="focus" bs-popover
-                                ng-required="(request.type != 1 && request.linkageWithPersonalData && !request.informedConsent)"></textarea>
+                                ng-required="(request.linkageWithPersonalData && !request.informedConsent)"></textarea>
                             <!-- errors -->
                             <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.required">
                                 {{ 'Required field' | translate }}

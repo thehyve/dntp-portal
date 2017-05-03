@@ -150,8 +150,9 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     And I click on the 'Actions' button
     And I click on the 'Approve' button
     And I click on the 'OK' button
-    And I click on the object with id 'hub-modal-save-button'
-    Then the current request should have 'Approved' status
+    And testing is paused to manually click on save
+	#And I click on the 'Save' button
+	Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
 	And the page should contain the button 'undo approval'
 
@@ -171,24 +172,26 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     And the page should contain the text 'Under review by lab'
 	And the page should not contain the button 'undo approval'
 
-  Scenario: 9 hub user can mark PA reports as sent
+  Scenario: 9a hub user can mark PA reports as sent
     Given I am logged in as the hub user
     # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-104'
     And I claim the current request
     And I click on the 'Actions' button
-    And I click on the object with id 'paReportsSent'
-    And I click on the 'Update PA reports status' button
+    And testing is paused to select pa reports and send them
+	#And I click on the object with id 'paReportsSent'
+    #And I click on the 'Update PA reports status' button
     Then the page should contain the text 'Approved'
     And the page should contain the text 'PA reports have been sent to the requester.'
 
-  Scenario: 9 hub user can mark clinical data as sent
+  Scenario: 9b hub user can mark clinical data as sent
     Given I am logged in as the hub user
     # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-104'
     And I click on the 'Actions' button
-    And I click on the object with id 'clinicalDataSent'
-    And I click on the 'Update clinical data status' button
+    And testing is paused to select clinical data and send them
+	#And I click on the object with id 'clinicalDataSent'
+    #And I click on the 'Update clinical data status' button
     Then the page should contain the text 'Approved'
     And the page should contain the text 'Desired information for retrieving clinical data from treating physician was sent to the requester.'
 
@@ -202,7 +205,8 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-104'
     And I click on the 'Actions' button
-    And I click on the 'Send materials' button
+    And testing is paused to wait a bit
+	And I click on the 'Send materials' button
     And I click on the 'OK' button
     Then the current request should have 'Materials sent' status
 

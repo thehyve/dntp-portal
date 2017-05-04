@@ -6,13 +6,12 @@
 package business.controllers;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.validation.Valid;
 
-import business.representation.ReturnDateRepresentation;
+import business.representation.*;
+import business.services.*;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.DelegationState;
@@ -33,17 +32,12 @@ import business.exceptions.EmptyInput;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.PaNumbersDownloadError;
 import business.exceptions.PathologyNotFound;
-import business.models.Comment;
-import business.models.CommentRepository;
 import business.models.LabRequest;
 import business.models.LabRequest.Result;
 import business.models.LabRequest.Status;
 import business.models.PathologyItem;
 import business.models.PathologyItemRepository;
 import business.models.User;
-import business.representation.LabRequestRepresentation;
-import business.representation.PathologyRepresentation;
-import business.representation.RequestRepresentation;
 import business.security.UserAuthenticationToken;
 import business.services.LabRequestService;
 import business.services.PaNumberService;
@@ -69,13 +63,16 @@ public class LabRequestController {
     private TaskService taskService;
 
     @Autowired
-    private CommentRepository commentRepository;
-    
-    @Autowired
     private RequestService requestService;
 
     @Autowired
     private RequestFormService requestFormService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private CommentService commentService;
 
     @PreAuthorize("isAuthenticated() and (hasRole('requester') or hasRole('palga') or "
             + "hasRole('lab_user') or hasRole('hub_user') )")
@@ -229,16 +226,17 @@ public class LabRequestController {
         labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
         labRequest.setPaReportsSent(Boolean.FALSE);
         labRequest.setClinicalDataSent(Boolean.FALSE);
-
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation, false);
-
-        //Add comment explaining what happened.
-        Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), "Undid approval previously approved lab Request");
-        comment = commentRepository.save(comment);
-        labRequest.addComment(comment);
+        labRequest.setReturnDate(null);
         labRequestService.save(labRequest);
 
+        //Add comment explaining what happened.
+        CommentRepresentation comment = new CommentRepresentation();
+        comment.setContents("Undid approval previously approved lab request");
+        commentService.addLabRequestComment(user.getUser(), id, comment);
+
+        labRequest = labRequestService.findOne(id);
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestData(representation, false);
         return representation;
     }
 
@@ -265,6 +263,7 @@ public class LabRequestController {
         }
 
         labRequestService.updateStatus(labRequest, Status.SENDING);
+
         labRequest.setSendDate(new Date());
         labRequest.setReturnDate(body.getReturnDate());
         labRequest = labRequestService.save(labRequest);
@@ -295,15 +294,15 @@ public class LabRequestController {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'. Not a materials request.");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
-        
+
         if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
             if (body.getMissingSamples() == null || body.getMissingSamples().getContents().trim().isEmpty()) {
                 throw new EmptyInput("Empty field 'missing samples'");
             }
-            Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getMissingSamples().getContents());
-            comment = commentRepository.save(comment);
-            labRequest.addComment(comment);
-            labRequest = labRequestService.save(labRequest);
+            CommentRepresentation comment = new CommentRepresentation();
+            comment.setContents(body.getMissingSamples().getContents());
+            commentService.addLabRequestComment(user.getUser(), id, comment);
+            labRequest = labRequestService.findOne(id);
         }
 
         labRequest = labRequestService.updateStatus(labRequest, Status.RECEIVED);
@@ -375,10 +374,10 @@ public class LabRequestController {
                 log.error("Empty field 'missing samples'");
                 throw new EmptyInput("Empty field 'missing samples'");
             }
-            Comment comment = new Comment(labRequest.getProcessInstanceId(), user.getUser(), body.getMissingSamples().getContents());
-            comment = commentRepository.save(comment);
-            labRequest.addComment(comment);
-            labRequest = labRequestService.save(labRequest);
+            CommentRepresentation comment = new CommentRepresentation();
+            comment.setContents(body.getMissingSamples().getContents());
+            commentService.addLabRequestComment(user.getUser(), id, comment);
+            labRequest = labRequestService.findOne(id);
         }
 
         labRequest = labRequestService.updateStatus(labRequest, Status.COMPLETED, Result.RETURNED);
@@ -474,18 +473,7 @@ public class LabRequestController {
         log.info("PUT /labrequests/" + id + "/claim");
 
         LabRequest labRequest = labRequestService.findOne(id);
-        Task task = labRequestService.getTask(labRequest.getTaskId(),
-                "lab_request");
-
-        if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
-            taskService.claim(task.getId(), user.getId().toString());
-        } else {
-            taskService.delegateTask(task.getId(), user.getId().toString());
-        }
-
-        LabRequestRepresentation representation = new LabRequestRepresentation(
-                labRequest);
-        labRequestService.transferLabRequestData(representation, false);
+        LabRequestRepresentation representation = labRequestService.claim(labRequest, user);
         return representation;
     }
 
@@ -494,18 +482,11 @@ public class LabRequestController {
     @RequestMapping(value = "/labrequests/{id}/unclaim", method = RequestMethod.PUT)
     public LabRequestRepresentation unclaim(UserAuthenticationToken user,
             @PathVariable Long id) {
-      log.info("PUT /labrequests/" + id + "/unclaim for userId " + user.getId());
+        log.info("PUT /labrequests/" + id + "/unclaim for userId " + user.getId());
 
-      LabRequest labRequest = labRequestService.findOne(id);
-      Task task = labRequestService.getTask(labRequest.getTaskId(),
-        "lab_request");
-
-      taskService.unclaim(task.getId());
-
-      LabRequestRepresentation representation = new LabRequestRepresentation(
-        labRequest);
-      labRequestService.transferLabRequestData(representation, false);
-      return representation;
+        LabRequest labRequest = labRequestService.findOne(id);
+        LabRequestRepresentation representation = labRequestService.unclaim(labRequest, user);
+        return representation;
     }
 
     static Set<Status> paNumberDownloadStatuses;

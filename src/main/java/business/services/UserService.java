@@ -16,7 +16,10 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +48,7 @@ public class UserService {
         NONE
     }
 
-    Log log = LogFactory.getLog(getClass());
+    Logger log = LoggerFactory.getLogger(getClass());
 
     private Object lock = new Object();
 
@@ -71,6 +74,7 @@ public class UserService {
     ActivationLinkRepository activationLinkRepository;
 
     @Transactional
+    @CacheEvict(value="users", key="#user?.id")
     public User save(User user) throws EmailAddressNotAvailable {
         assert(user.getRoles().size() == 1);
         synchronized (lock) {
@@ -259,7 +263,7 @@ public class UserService {
         }
     }
 
-    @Cacheable("users")
+    @Cacheable(value="users", key="#userId")
     public User findOneCached(Long userId) {
         return findOne(userId);
     }

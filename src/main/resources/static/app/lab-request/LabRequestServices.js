@@ -58,7 +58,7 @@
             undoapprove : {
                 url : '/labrequests/:id/undoapprove',
                 method : 'PUT'
-            },
+            }
         });
 
         _labRequestFactory.statuses = [

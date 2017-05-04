@@ -48,6 +48,7 @@ This file is distributed under the GNU Affero General Public License
                         <span><i class="glyphicon glyphicon-time"></i></span>
                         <span>{{comment.timeCreated | date: 'EEE dd MMMM yyyy  HH:mm'}}</span>
                         <span ng-if="comment.timeEdited != comment.timeCreated">(Last edited: {{comment.timeEdited | date: 'EEE dd MMMM yyyy  HH:mm'}})</span>
+                        <span ng-if="comment.notificationSent" title="{{'Notification sent.'}}"><i class="mdi mdi-check"></i></span>
                     </small>
                 </p>
             </li>
@@ -56,21 +57,25 @@ This file is distributed under the GNU Affero General Public License
 
     <!-- Add comment -->
     <div class="no-print">
-    <input type="hidden" ng-model="editComment.processInstanceId" value="{{request.processInstanceId}}">
-    <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
-              ng-model="editComment.contents">
-                    </textarea>
-    <br>
-    <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
-            ng-click="addComment(labRequest, editComment)"
-            ng-if="!editComment.id">
-        {{'Add note'|translate}}
-    </button>
-    <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
-            ng-click="updateComment(labRequest, editComment)"
-            ng-if="editComment.id">
-        {{'Update note'|translate}}
-    </button>
+        <input type="hidden" ng-model="editComment.processInstanceId" value="{{request.processInstanceId}}">
+        <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
+                  ng-model="editComment.contents">
+                        </textarea>
+        <br>
+        <button class="btn btn-default" type="button" title="{{'Add note'|translate}}"
+                ng-click="addComment(labRequest, editComment)"
+                ng-if="!editComment.id">
+            {{'Add note'|translate}}
+        </button>
+        <button class="btn btn-default" type="button" title="{{'Update note'|translate}}"
+                ng-click="updateComment(labRequest, editComment)"
+                ng-if="editComment.id">
+            {{'Update note'|translate}}
+        </button>
+        <div ng-if="isLabUser()">
+        <input type="checkbox" ng-model="editComment.notificationRequested" placeholder="false" id="internal-comment-input">
+        <span><i>{{'Send notification to requester and hub users.' | translate}}</i></span>
+        </div>
     </div>
 </div>
 

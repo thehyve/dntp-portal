@@ -31,7 +31,9 @@ public class Comment implements Serializable {
     private Date timeCreated = new Date();
     
     private Date timeEdited = timeCreated;
-    
+
+    private Boolean notificationSent;
+
     @Column(columnDefinition="TEXT")
     private String contents;
 
@@ -92,5 +94,12 @@ public class Comment implements Serializable {
     public void setContents(String contents) {
         this.contents = contents;
     }
-    
+
+    public Boolean isNotificationSent() {
+        return notificationSent == Boolean.TRUE;
+    }
+
+    public void setNotificationSent(Boolean notificationSent) {
+        this.notificationSent = notificationSent;
+    }
 }

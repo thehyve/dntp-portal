@@ -3,7 +3,7 @@ Geachte heer/mevrouw,
 Een wachtwoordreset is aangevraagd voor uw emailadres, maar dit account is niet geregistreerd in de PALGA aanvraagportal.
 
 Als u een account wilt aanmaken, klik dan op de volgende link:
-${link}
+  ${link}
 
 Als u geen wachtwoordreset heeft aangevraagd kunt u dit bericht negeren.
 

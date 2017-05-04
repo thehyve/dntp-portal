@@ -24,6 +24,10 @@ public class CommentRepresentation {
     
     private String contents;
 
+    private Boolean notificationRequested = Boolean.FALSE;
+
+    private Boolean notificationSent;
+
     public CommentRepresentation() {
         
     }
@@ -35,6 +39,7 @@ public class CommentRepresentation {
         this.timeCreated = comment.getTimeCreated();
         this.timeEdited = comment.getTimeEdited();
         this.contents = comment.getContents();
+        this.notificationSent = comment.isNotificationSent();
     }
 
     public Long getId() {
@@ -84,5 +89,20 @@ public class CommentRepresentation {
     public void setContents(String contents) {
         this.contents = contents;
     }
-    
+
+    public boolean isNotificationRequested() {
+        return notificationRequested == Boolean.TRUE;
+    }
+
+    public void setNotificationRequested(Boolean notificationRequested) {
+        this.notificationRequested = notificationRequested;
+    }
+
+    public boolean isNotificationSent() {
+        return notificationSent == Boolean.TRUE;
+    }
+
+    public void setNotificationSent(Boolean notificationSent) {
+        this.notificationSent = notificationSent;
+    }
 }

@@ -33,7 +33,7 @@
                ng-model="hubAssistanceRequest.hubAssistanceRequested" ng-value="false" ng-checked="!hubAssistanceRequest.hubAssistanceRequested">
            <label class="normal" for="hubAssistanceRequestedNo">{{'No' | translate}}</label>
 
-           <span class="help-block" ng-show="!hubAssistanceRequest.lab.hubAssistanceEnabled">
+           <span class="help-block" ng-if="!hubAssistanceRequest.lab.hubAssistanceEnabled">
                 {{ 'Option not available because hub assistance is not enabled by your lab.' | translate }}
            </span>
         </div>
@@ -47,7 +47,7 @@
             <a class="btn btn-default" ng-click="cancelHubAssistance();">{{'Cancel'|translate}}</a>
         </span>
         <span class="pull-right">
-            <button class="btn btn-default btn-primary"
+            <button class="btn btn-default btn-primary" id="hub-modal-save-button"
                 ng-click="update(hubAssistanceRequest);">{{'Save'|translate}}</button>
         </span>
       </div>

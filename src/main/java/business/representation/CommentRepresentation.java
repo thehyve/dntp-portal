@@ -24,7 +24,7 @@ public class CommentRepresentation {
     
     private String contents;
 
-    private Boolean notificationRequested = Boolean.FALSE;
+    private Boolean notificationRequested = Boolean.TRUE;
 
     private Boolean notificationSent;
 

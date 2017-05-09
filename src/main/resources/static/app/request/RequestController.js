@@ -472,6 +472,7 @@ angular.module('ProcessApp.controllers')
                             $scope.editRequestModal.hide();
                         }, function(response) {
                             $rootScope.logErrorResponse(response);
+                            $scope.dataLoading = false;
                         });
                     } else {
                         $scope.dataLoading = false;
@@ -499,6 +500,7 @@ angular.module('ProcessApp.controllers')
                             $scope.view(result);
                         }, function(response) {
                             $rootScope.logErrorResponse(response);
+                            $scope.dataLoading = false;
                         });
                     } else {
                         $scope.dataLoading = false;
@@ -519,6 +521,7 @@ angular.module('ProcessApp.controllers')
                             $scope.refresh(request, result);
                             $scope.editRequestModal.hide();
                         }, function(response) {
+                            $scope.dataLoading = false;
                             $rootScope.logErrorResponse(response);
                         });
                     } else {
@@ -539,6 +542,7 @@ angular.module('ProcessApp.controllers')
                             $scope.editRequestModal.hide();
                         }, function(response) {
                             $rootScope.logErrorResponse(response);
+                            $scope.dataLoading = false;
                         });
                     } else {
                         $scope.dataLoading = false;
@@ -564,6 +568,7 @@ angular.module('ProcessApp.controllers')
                             $scope.editRequestModal.hide();
                         }, function(response) {
                             $rootScope.logErrorResponse(response);
+                            $scope.dataLoading = false;
                         });
                     } else {
                         $scope.dataLoading = false;
@@ -584,6 +589,7 @@ angular.module('ProcessApp.controllers')
                             $scope.dataLoading = false;
                         }, function(response) {
                             $rootScope.logErrorResponse(response);
+                            $scope.dataLoading = false;
                         });
                     } else {
                         $scope.dataLoading = false;
@@ -603,6 +609,7 @@ angular.module('ProcessApp.controllers')
                             $scope.refresh(request, result);
                             //$scope.editRequestModal.hide();
                         }, function(response) {
+                            $scope.dataLoading = false;
                             $rootScope.logErrorResponse(response);
                         });
                     } else {

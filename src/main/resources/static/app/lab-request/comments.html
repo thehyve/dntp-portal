@@ -72,9 +72,13 @@ This file is distributed under the GNU Affero General Public License
                 ng-if="editComment.id">
             {{'Update note'|translate}}
         </button>
-        <div ng-if="isLabUser()">
-        <input type="checkbox" ng-model="editComment.notificationRequested" placeholder="false" id="internal-comment-input">
-        <span><i>{{'Send notification to requester and hub users.' | translate}}</i></span>
+        <div>
+            <input type="checkbox" ng-model="editComment.notificationRequested" placeholder="true" id="internal-comment-input">
+            <span ng-if="isLabUser()"><i>{{'Send notification to requester and hub users.' | translate}}</i></span>
+
+            <span ng-if="isHubUser()"><i>{{'Send notification to the requester.' | translate}}</i></span>
+
+            <span ng-if="isRequester()"><i>{{'Send notification to the lab and hub users.' | translate}}</i></span>
         </div>
     </div>
 </div>

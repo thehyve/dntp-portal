@@ -161,32 +161,34 @@ public class CommentService {
         labRequestService.transferLabRequestData(labRequestRepresentation, false);
         Lab lab = labRequest.getLab();
         List<String> hubUserEmailAddresses = new ArrayList<>();
-        if (lab.isHubAssistanceEnabled()) {
+        if (lab.isHubAssistanceEnabled() && labRequest.isHubAssistanceRequested()) {
             for (User hubUser: userService.findHubUsersForLab(lab)) {
                 hubUserEmailAddresses.add(hubUser.getContactData().getEmail());
             }
         }
-        if (user.isLabUser() && body.isNotificationRequested()) {
-            // if lab user: to requester, cc hub users
-            String requesterEmail = labRequestRepresentation.getRequesterEmail();
-            mailService.sendNewLabRequestCommentNotification(labRequestRepresentation, new CommentRepresentation(comment),
-                    Collections.singleton(requesterEmail), hubUserEmailAddresses);
-            comment.setNotificationSent(true);
-            comment = commentRepository.save(comment);
-        } else if (user.isHubUser()) {
-            // if hub user: to requester only
-            String requesterEmail = labRequestRepresentation.getRequesterEmail();
-            mailService.sendNewLabRequestCommentNotification(labRequestRepresentation, new CommentRepresentation(comment),
-                    Collections.singleton(requesterEmail), Collections.emptyList());
-            comment.setNotificationSent(true);
-            comment = commentRepository.save(comment);
-        } else if (user.isRequester()) {
-            // if requester: to lab, cc hub users
-            Collection<String> labEmailAddresses = labRequestRepresentation.getLab().getEmailAddresses();
-            mailService.sendNewLabRequestCommentNotification(labRequestRepresentation, new CommentRepresentation(comment),
-                    labEmailAddresses, hubUserEmailAddresses);
-            comment.setNotificationSent(true);
-            comment = commentRepository.save(comment);
+        if (body.isNotificationRequested()){
+            if (user.isLabUser()) {
+                // if lab user: to requester, cc hub users
+                String requesterEmail = labRequestRepresentation.getRequesterEmail();
+                mailService.sendNewLabRequestCommentNotification(labRequestRepresentation, new CommentRepresentation(comment),
+                        Collections.singleton(requesterEmail), hubUserEmailAddresses);
+                comment.setNotificationSent(true);
+                comment = commentRepository.save(comment);
+            } else if (user.isHubUser()) {
+                // if hub user: to requester only
+                String requesterEmail = labRequestRepresentation.getRequesterEmail();
+                mailService.sendNewLabRequestCommentNotification(labRequestRepresentation, new CommentRepresentation(comment),
+                        Collections.singleton(requesterEmail), Collections.emptyList());
+                comment.setNotificationSent(true);
+                comment = commentRepository.save(comment);
+            } else if (user.isRequester()) {
+                // if requester: to lab, cc hub users
+                Collection<String> labEmailAddresses = labRequestRepresentation.getLab().getEmailAddresses();
+                mailService.sendNewLabRequestCommentNotification(labRequestRepresentation, new CommentRepresentation(comment),
+                        labEmailAddresses, hubUserEmailAddresses);
+                comment.setNotificationSent(true);
+                comment = commentRepository.save(comment);
+            }
         }
         return new CommentRepresentation(comment);
 

@@ -143,7 +143,12 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     And I click on the 'Actions' button
     And I click on the 'Approve' button
     And I click on the 'OK' button
+<<<<<<< HEAD
     And I click on the 'Save' button
+=======
+    And testing is paused to manually click on save
+	  And I click on the 'Save' button
+>>>>>>> 576ea297f49393ac05081a35f63ba64d4e2b3fa5
 	Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
 	

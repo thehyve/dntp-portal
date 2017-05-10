@@ -181,7 +181,6 @@ Feature: scenario request Request for excerpts + PA reports + materials
 	And I click on the 'Save' button
     Then the current request should have 'Approved' status
     Then the page should contain the text 'PA reports have NOT been sent to the requester.'
-	And the page should contain 'Undo approval' button
 
   Scenario: 8 reject request as a lab user
     Given I am logged in as the lab 104 user
@@ -264,13 +263,24 @@ Feature: scenario request Request for excerpts + PA reports + materials
 	And I close the tab
 
 
-  Scenario: 14 lab user can register which samples will be sent
+  Scenario: 14 Lab user gets the right notification for sending notes
     Given I am logged in as the lab 106 user
-    # And I am on the lab requests page
     When I click on the lab request with id 'YYYY-1-106'
     And testing is paused to wait a bit
-	#And testing is paused to enter the sample codes manually
-    Then the scenario should always succeed
+    Then the page should contain the text 'Send notification to requester and hub users'
+
+  Scenario: 14b Requester gets the right notification for sending notes
+    Given I am logged in as the requester user
+    When I go from the requests page to the lab requests page
+    When I click on the lab request with id 'YYYY-1-106'
+    And testing is paused to wait a bit
+    Then the page should contain the text 'Send notification to the lab and hub users'
+
+  Scenario: 14c Hub user gets the right notification for sending notes
+    Given I am logged in as the hub user
+    When I click on the lab request with id 'YYYY-1-104'
+    And testing is paused to wait a bit
+    Then the page should contain the text 'Send notification to the requester'
 
   Scenario: 15 lab user can see which samples will be sent from the samples view
     Given I am logged in as the lab 106 user
@@ -286,8 +296,9 @@ Feature: scenario request Request for excerpts + PA reports + materials
 	And testing is paused to wait a bit
 	And I fill the form with the following data
 	"""
-	Return date: 10/10/18
+	return-date: 10/10/18
 	"""
+    And I click on the object with id 'return-date-label'
     And I click on the 'Send materials' button
     And I click on the 'OK' button
     Then the current request should have 'Materials sent' status
@@ -295,7 +306,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
   Scenario: 16a lab user can unapprove labrequest
     Given I am logged in as the lab 106 user
     When I click on the lab request with id 'YYYY-1-106'
-    And I click on the 'Unapprove' button
+    And I click on the 'Actions' button
+    And I click on the 'Undo approval' button
     And I click on the 'OK' button
     Then the current request should have 'Under review by lab' status
 

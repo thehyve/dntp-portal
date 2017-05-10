@@ -250,6 +250,15 @@ module.exports = function () {
         });
     });
 
+    this.When(/^I press the '(.*)'$ key/, function (text, next) {
+        browser.sleep(500);
+        browser.driver.switchTo().activeElement().then(function (element) {
+            element.sendKeys(Keys.ESCAPE).then(function () {
+                next();
+            });
+        });
+    });
+
     this.When(/^I enter the text '(.*)'$/, function (text, next) {
         browser.sleep(500);
         browser.driver.switchTo().activeElement().then(function (element) {
@@ -420,32 +429,6 @@ module.exports = function () {
                         next()
                     }
                 }, next);
-            });
-        });
-    });
-
-    this.Then(/^the static form in a new tab contains\w*$/, function (fields, next) {
-        var regex = /^(.+): (.+)\s*$/;
-
-        var lines = fields.split('\n');
-
-        browser.getAllWindowHandles().then(function (handles) {
-            var newWindowHandle = handles[1]; // this is your new window
-            browser.switchTo().window(newWindowHandle).then(function () {
-                lines.forEach(function (line) {
-                    var matches = line.match(regex);
-                    var label = matches[1];
-                    var content = matches[2];
-
-                    Promise.resolve(element(by.cssContainingText('label.ng-binding', label)).element(by.xpath('..')).$$('.ng-binding')).then(function (el) {
-                        expect(el[1].getText()).to.eventually.contain(content).then(function (value) {
-                            console.log(value);
-                            if (value.includes(lines[lines.length - 1].match(regex)[2])) { //hack to wait for last check to be done.
-                                next()
-                            }
-                        }, next);
-                    });
-                });
             });
         });
     });

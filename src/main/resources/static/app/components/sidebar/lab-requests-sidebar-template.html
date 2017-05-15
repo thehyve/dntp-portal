@@ -6,7 +6,7 @@ This file is distributed under the GNU Affero General Public License
 <script>
     function changeFilterStatus(status) {
         var cur_filter = JSON.parse(localStorage.getItem('labrequests'));
-//        console.log('Filter old ' + JSON.stringify(cur_filter));
+        console.log('Filter old ' + JSON.stringify(cur_filter));
         if ('search' in cur_filter){
             if('predicateObject' in cur_filter['search']){
                 if ('status' in cur_filter['search']['predicateObject']){
@@ -15,7 +15,7 @@ This file is distributed under the GNU Affero General Public License
             }
         }
         localStorage.setItem('labrequests', JSON.stringify(cur_filter));
-//        console.log('Filter new ' + JSON.stringify(cur_filter));
+        console.log('Filter new ' + JSON.stringify(cur_filter));
     }
 
 </script>

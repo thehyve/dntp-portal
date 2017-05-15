@@ -74,11 +74,11 @@ This file is distributed under the GNU Affero General Public License
         </button>
         <div>
             <input type="checkbox" ng-model="editComment.notificationRequested" placeholder="true" id="internal-comment-input">
-            <span ng-if="isLabUser()"><i>{{'Send notification to requester and hub users.' | translate}}</i></span>
+            <span ng-if="isLabUser()"><i>{{'Send notification to the requester (CC hub users, if applicable).' | translate}}</i></span>
 
             <span ng-if="isHubUser()"><i>{{'Send notification to the requester.' | translate}}</i></span>
 
-            <span ng-if="isRequester()"><i>{{'Send notification to the lab and hub users.' | translate}}</i></span>
+            <span ng-if="isRequester()"><i>{{'Send notification to the lab (CC hub users, if applicable).' | translate}}</i></span>
         </div>
     </div>
 </div>

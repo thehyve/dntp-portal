@@ -324,18 +324,6 @@
                         return $rootScope.timeCache;
                     }
                 };
-
-                $rootScope.getDatetimeOneHalfYear = function() {
-                    var now = Date.now();
-                    var diff = Math.abs(now - $rootScope.timeCache);
-                    if (diff > 100){
-                        $rootScope.timeCache = now;
-                    } else {
-                        now = $rootScope.timeCache;
-                    }
-                    // Add 1.5 years to the current time.
-                    return now + (1.5 * 365 * 24 * 60 * 60 * 1000)
-                };
             }])
         .filter("statusTextFilter", function ($filter) {
             return function(input, predicate){

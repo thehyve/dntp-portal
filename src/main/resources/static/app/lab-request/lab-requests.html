@@ -93,7 +93,7 @@ This file is distributed under the GNU Affero General Public License
                                 </select></th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
-                            <th><select st-persisted-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <th><select st-persisted-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change" ng-disabled="isStatusPage()">
                                     <option value="">{{'Filter by status' | translate}}</option>
                                     <option ng-repeat="status in statuses"
                                         ng-selected="activeSidebar === status"

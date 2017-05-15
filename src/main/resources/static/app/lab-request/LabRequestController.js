@@ -788,6 +788,10 @@ angular.module('ProcessApp.controllers')
                 return defer.promise;
 
             };
+
+            $scope.isStatusPage = function() {
+                return _.includes(LabRequest.statuses, $scope.activeSidebar);
+            };
         }
 
         ]);

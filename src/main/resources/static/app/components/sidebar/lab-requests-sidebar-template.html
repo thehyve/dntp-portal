@@ -3,30 +3,46 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
+<script>
+    function changeFilterStatus(status) {
+        var cur_filter = JSON.parse(localStorage.getItem('labrequests'));
+//        console.log('Filter old ' + JSON.stringify(cur_filter));
+        if ('search' in cur_filter){
+            if('predicateObject' in cur_filter['search']){
+                if ('status' in cur_filter['search']['predicateObject']){
+                    delete cur_filter['search']['predicateObject']['status']
+                }
+            }
+        }
+        localStorage.setItem('labrequests', JSON.stringify(cur_filter));
+//        console.log('Filter new ' + JSON.stringify(cur_filter));
+    }
+
+</script>
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        <li ng-class="{active: activeSidebar === 'overview'}" onclick="localStorage.setItem('labrequests', JSON.stringify({}))">
+        <li ng-class="{active: activeSidebar === 'overview'}" onclick="changeFilterStatus('overview')">
             <a ng-href="/#/lab-requests/overview">{{'All lab requests'|translate}}
             <span class="badge pull-right">{{allLabRequests.length}}</span></a>
         </li>
         <hr />
-        <li ng-if="isHubUser()"
+        <li ng-if="isHubUser()" onclick="changeFilterStatus('hub_assistance_requested')"
             ng-class="{active: activeSidebar === 'hub_assistance_requested'}">
             <a ng-href="/#/lab-requests/hub_assistance_requested">{{'Hub assistance requested'|translate}}
             <span class="badge pull-right">{{requestsHubAssistanceRequested.length}}</span></a>
         </li>
-        <li ng-if="isLabUser() || isHubUser()"
+        <li ng-if="isLabUser() || isHubUser()" onclick="changeFilterStatus('claimed')"
             ng-class="{active: activeSidebar === 'claimed'}">
             <a ng-href="/#/lab-requests/claimed">{{'Lab requests claimed by me'|translate}}
             <span class="badge pull-right">{{claimedReqs.length}}</span></a>
         </li>
-        <li ng-if="isLabUser() || isHubUser()"
+        <li ng-if="isLabUser() || isHubUser()" onclick="changeFilterStatus('unclaimed')"
             ng-class="{active: activeSidebar === 'unclaimed'}">
             <a ng-href="/#/lab-requests/unclaimed">{{'Unclaimed lab requests'|translate}}
             <span class="badge pull-right">{{unclaimedReqs.length}}</span></a>
         </li>
         <hr ng-if="isLabUser() || isHubUser()" />
-        <li ng-repeat="status in statusesForRole"
+        <li ng-repeat="status in statusesForRole" onclick="changeFilterStatus(status)"
             ng-class="{active: activeSidebar === status}">
             <a ng-href="/#/lab-requests/{{status}}">{{status|translate}}
             <span class="badge pull-right">{{requestsByStatus[status].length}}</span></a>

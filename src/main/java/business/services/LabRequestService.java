@@ -17,9 +17,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
@@ -28,9 +26,10 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -54,11 +53,12 @@ import business.representation.PathologyRepresentation;
 import business.representation.ProfileRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LabRequestService {
 
-    Log log = LogFactory.getLog(getClass());
+    Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UserService userService;
@@ -96,12 +96,19 @@ public class LabRequestService {
     @Autowired
     private LabRequestComparator labRequestComparator;
 
+    @Autowired
+    private LabRequestListService labRequestListService;
+
+    @Autowired
+    private RequestQueryService requestQueryService;
+
     @Transactional
+    @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
     public LabRequest save(LabRequest labRequest) {
         return this.labRequestRepository.save(labRequest);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public LabRequest findOne(Long id) {
         return this.labRequestRepository.findOne(id);
     }
@@ -169,7 +176,7 @@ public class LabRequestService {
                 pathologyItemService.getPathologyCountCached(labRequestRepresentation.getId()));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void transferExcerptListData(@NotNull LabRequestRepresentation labRequestRepresentation) {
         // set excerpt list data
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(labRequestRepresentation.getProcessInstanceId());
@@ -180,6 +187,7 @@ public class LabRequestService {
     }
 
     public void transferLabRequestData(@NotNull LabRequestRepresentation labRequestRepresentation, boolean cached) {
+        log.debug("Fetching data for lab request {}", labRequestRepresentation.getId());
         Date start = new Date();
 
         // get task data
@@ -241,6 +249,7 @@ public class LabRequestService {
     }
 
     @Transactional
+    @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
     public LabRequest updateStatus(LabRequest labRequest, Status status) {
         taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", status);
         labRequest.setStatus(status);
@@ -248,6 +257,7 @@ public class LabRequestService {
     }
 
     @Transactional
+    @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
     public LabRequest updateStatus(LabRequest labRequest, Status status, Result result) {
         taskService.setVariableLocal(labRequest.getTaskId(), "labrequest_status", status);
         labRequest.setStatus(status);
@@ -352,25 +362,26 @@ public class LabRequestService {
         }
     }
 
-    private Sort sortByIdDesc() {
+    private static Sort sortByIdDesc() {
         return new Sort(Sort.Direction.DESC, "id");
     }
 
     private List<LabRequestRepresentation> convertLabRequestsToRepresentations(List<LabRequest> labRequests,
                                                                                boolean fetchDetails) {
-        List<LabRequestRepresentation> representations = new ArrayList<LabRequestRepresentation>();
+        List<LabRequestRepresentation> representations = new ArrayList<>();
         for (LabRequest labRequest : labRequests) {
-            LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-                transferLabRequestData(representation, true);
+            LabRequestRepresentation representation;
             if (fetchDetails) {
-                transferLabRequestDetails(representation, labRequest, true);
+                representation = labRequestListService.getDetailedLabRequestCached(labRequest);
+            } else {
+                representation = labRequestListService.getLabRequestCached(labRequest);
             }
             representations.add(representation);
         }
         return representations;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LabRequestRepresentation> findLabRequestsForLabUserOrHubUser(User user, boolean fetchDetails) {
         List<LabRequestRepresentation> representations = null;
         List<LabRequest> labRequests;
@@ -393,7 +404,7 @@ public class LabRequestService {
         return representations;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LabRequestRepresentation> findLabRequestsForUser(User user, boolean fetchDetails) {
         List<LabRequestRepresentation> representations = null;
         if (user.isLabUser() || user.isHubUser()) {
@@ -404,21 +415,12 @@ public class LabRequestService {
             representations = convertLabRequestsToRepresentations(labRequests, fetchDetails);
         } else {
             // fetch requests in status "LabRequest" for requester
-            List<HistoricProcessInstance> historicInstances = new ArrayList<>();
-            for (HistoricProcessInstance instance: requestService.getProcessInstancesForUser(user)) {
-                String statusText = (String)instance.getProcessVariables().get("status");
-                if (statusText != null) {
-                    RequestStatus status = RequestStatus.forDescription(statusText);
-                    if (status == RequestStatus.LAB_REQUEST) {
-                        historicInstances.add(instance);
-                    }
-                }
-            }
-            log.info("#instances: " + historicInstances.size());
+            List<String> requestIds = requestQueryService.getRequestsForRequesterByStatus(user, RequestStatus.LAB_REQUEST);
+            log.info("#instances: " + requestIds.size());
             representations = new ArrayList<>();
             // find associated lab requests
-            for (HistoricProcessInstance instance : historicInstances) {
-                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(instance.getId(), sortByIdDesc());
+            for (String id: requestIds) {
+                List<LabRequest> labRequests = labRequestRepository.findAllByProcessInstanceId(id, sortByIdDesc());
                 representations.addAll(convertLabRequestsToRepresentations(labRequests, fetchDetails));
             }
         }
@@ -442,13 +444,13 @@ public class LabRequestService {
         return task;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void transferLabRequestDetails(LabRequestRepresentation representation, boolean fetchSamples) {
         LabRequest labRequest = labRequestRepository.findOne(representation.getId());
         transferLabRequestDetails(representation, labRequest, fetchSamples);
     }
     
-    private void transferLabRequestDetails(LabRequestRepresentation representation, LabRequest labRequest, boolean fetchSamples) {
+    protected void transferLabRequestDetails(LabRequestRepresentation representation, LabRequest labRequest, boolean fetchSamples) {
         List<PathologyRepresentation> pathologyList = new ArrayList<PathologyRepresentation>();
         for (PathologyItem item : labRequest.getPathologyList()) {
             PathologyRepresentation pathology = new PathologyRepresentation(item);

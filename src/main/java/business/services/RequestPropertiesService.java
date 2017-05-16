@@ -43,7 +43,7 @@ public class RequestPropertiesService {
     FileService fileService;
 
 
-    @CacheEvict(value = "dataattachmentcount", key = "#properties.processInstanceId")
+    @CacheEvict(value = {"requestlistdata", "dataattachmentcount"}, key = "#properties.processInstanceId")
     @Transactional
     public RequestProperties save(RequestProperties properties) {
         return requestPropertiesRepository.save(properties);

@@ -1,6 +1,6 @@
 {
   "name": "dntp_portal",
-  "version": "0.0.78",
+  "version": "0.0.85",
   "dependencies": {},
   "scripts": {
     "test": "gulp test"

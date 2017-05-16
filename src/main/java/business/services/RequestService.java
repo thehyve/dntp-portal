@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
+import business.models.*;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -35,8 +35,8 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.datetime.DateFormatter;
@@ -53,13 +53,11 @@ import business.exceptions.InvalidActionInStatus;
 import business.exceptions.RequestNotFound;
 import business.exceptions.TaskNotFound;
 import business.exceptions.UserUnauthorised;
-import business.models.File;
-import business.models.RequestProperties;
-import business.models.User;
 import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RequestService {
@@ -68,7 +66,7 @@ public class RequestService {
 
     public static final String CSV_CHARACTER_ENCODING = "UTF-8";
 
-    Log log = LogFactory.getLog(getClass());
+    Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private TaskService taskService;
@@ -93,6 +91,15 @@ public class RequestService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ApprovalVoteRepository approvalVoteRepository;
+
+    @Autowired
+    private RequestQueryService requestQueryService;
 
     @PersistenceContext
     private EntityManager em;
@@ -246,68 +253,41 @@ public class RequestService {
      * @param user
      * @return
      */
-    public List<HistoricProcessInstance> getProcessInstancesForUser(
-            User user) {
-        List<HistoricProcessInstance> processInstances;
+    @Transactional(readOnly = true)
+    public List<String> getProcessInstanceIdsForUser(User user) {
+        List<String> processInstanceIds;
 
         if (user == null) {
-            processInstances = new ArrayList<HistoricProcessInstance>();
+            processInstanceIds = new ArrayList<>();
         } else if (user.isPalga()) {
-            processInstances = new ArrayList<HistoricProcessInstance>();
-            processInstances.addAll(
-                    historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("status", "Open")
-                    .variableValueEquals("reopen_request", Boolean.TRUE)
-                    .list());
-            processInstances.addAll(
-                    historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueNotEquals("status", "Open")
-                    .list());
+            processInstanceIds = requestQueryService.getPalgaRequests();
         } else if (user.isScientificCouncilMember()) {
             Date start = new Date();
             List<HistoricTaskInstance> approvalTasks = historyService
                     .createHistoricTaskInstanceQuery()
                     .taskDefinitionKey("scientific_council_approval")
                     .list();
-            Set<String> processInstanceIds = new HashSet<>();
+            processInstanceIds = new ArrayList<>();
             for (HistoricTaskInstance task: approvalTasks) {
                 processInstanceIds.add(task.getProcessInstanceId());
             }
-            processInstances = historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .processInstanceIds(processInstanceIds)
-                    .list();
             Date end = new Date();
-            log.info("GET: query took " + (end.getTime() - start.getTime()) + " ms.");
+            log.info("Query for council member took {} ms.", (end.getTime() - start.getTime()));
         } else if (user.isLabUser() || user.isHubUser()) {
+            Date start = new Date();
             List<LabRequestRepresentation> labRequests =
                     labRequestService.findLabRequestsForLabUserOrHubUser(user, false);
-            Set<String> processInstanceIds = new HashSet<String>();
+            processInstanceIds = new ArrayList<>();
             for (LabRequestRepresentation labRequest: labRequests) {
                 processInstanceIds.add(labRequest.getProcessInstanceId());
             }
-            if (!processInstanceIds.isEmpty()) {
-                processInstances = historyService
-                        .createHistoricProcessInstanceQuery()
-                        .notDeleted()
-                        .includeProcessVariables()
-                        .processInstanceIds(processInstanceIds)
-                        .list();
-            } else {
-                processInstances = new ArrayList<HistoricProcessInstance>();
-            }
+            Date end = new Date();
+            log.info("Query for lab or hub user took {} ms.", (end.getTime() - start.getTime()));
         } else {
+            Date start = new Date();
             String userEmail = user.getUsername();
             log.info("Fetching requester requests for user:" + userEmail);
-            processInstances = new ArrayList<HistoricProcessInstance>();
+            List<HistoricProcessInstance> processInstances = new ArrayList<>();
             for (HistoricProcessInstance instance: historyService
                     .createHistoricProcessInstanceQuery()
                     .notDeleted()
@@ -344,8 +324,13 @@ public class RequestService {
                     .filter(i -> !idSet2.contains(i.getId()))
                     .collect(Collectors.toList())
                     );
+            Date end = new Date();
+            log.info("Query for requester took {} ms.", (end.getTime() - start.getTime()));
+            processInstanceIds = processInstances.stream()
+                    .map(HistoricProcessInstance::getId)
+                    .collect(Collectors.toList());
         }
-        return processInstances;
+        return processInstanceIds;
     }
 
     /**
@@ -552,15 +537,65 @@ public class RequestService {
                     ".csv";
             headers.set("Content-Disposition",
                        "attachment; filename=" + filename);
-            HttpEntity<InputStreamResource> response =  new HttpEntity<InputStreamResource>(resource, headers);
-            log.info("Returning reponse.");
+            HttpEntity<InputStreamResource> response =  new HttpEntity<>(resource, headers);
+            log.info("Returning response.");
             return response;
         } catch (IOException e) {
-            log.error(e.getStackTrace());
-            log.error(e.getMessage());
+            log.error("Error writing to CSV.", e);
             throw new FileDownloadError();
         }
 
+    }
+
+    public RequestListRepresentation getRequestData(String processInstanceId, User currentUser) {
+        RequestListRepresentation request = requestFormService.getRequestListDataCached(processInstanceId);
+        Task task = null;
+        switch(request.getStatus()) {
+            case REVIEW:
+                task = findTaskByRequestId(processInstanceId, "palga_request_review");
+                break;
+            case APPROVAL:
+                task = findTaskByRequestId(processInstanceId, "request_approval");
+                request.setNumberOfApprovalVotes(approvalVoteRepository.countByProcessInstanceId(processInstanceId));
+                break;
+            case DATA_DELIVERY:
+                task = findTaskByRequestId(processInstanceId, "data_delivery");
+                break;
+            case SELECTION_REVIEW:
+                task = findTaskByRequestId(processInstanceId, "selection_review");
+                break;
+            default:
+                break;
+        }
+        if (task != null) {
+            request.setAssignee(task.getAssignee());
+            if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
+                Long assigneeId = null;
+                try {
+                    assigneeId = Long.valueOf(task.getAssignee());
+                } catch (NumberFormatException e) {
+                }
+                if (assigneeId != null) {
+                    User assignee = userService.findOneCached(assigneeId);
+                    if (assignee != null) {
+                        request.setAssigneeName(RequestFormService.getName(assignee));
+                    }
+                }
+            }
+        }
+
+        if (currentUser.isPalga()) {
+            request.setReviewStatus(requestPropertiesService.getRequestReviewStatus(processInstanceId));
+        } else if (currentUser.isScientificCouncilMember()) {
+            // fetch my vote
+            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
+                    processInstanceId);
+            Map<Long, ApprovalVote> votes = properties.getApprovalVotes();
+            if (votes.containsKey(currentUser.getId())) {
+                request.setApprovalVote(votes.get(currentUser.getId()).getValue().name());
+            }
+        }
+        return request;
     }
 
 }

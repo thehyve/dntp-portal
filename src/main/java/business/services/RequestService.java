@@ -14,7 +14,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -57,8 +55,6 @@ import business.representation.LabRequestRepresentation;
 import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service

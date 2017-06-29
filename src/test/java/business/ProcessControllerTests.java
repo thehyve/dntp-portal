@@ -5,6 +5,7 @@
  */
 package business;
 
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.BufferedReader;
@@ -18,8 +19,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
@@ -29,8 +28,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultHandler;
@@ -45,31 +44,30 @@ import business.security.UserAuthenticationToken;
 import business.services.LabService;
 import business.services.PasswordService;
 import business.services.UserService;
+import org.springframework.web.context.WebApplicationContext;
 
 @Profile("dev")
 @ContextConfiguration
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@WebAppConfiguration
 public class ProcessControllerTests {
 
     Log log = LogFactory.getLog(this.getClass());
 
-    @Autowired UserRepository userRepository;
+    UserRepository userRepository = mock(UserRepository.class);
 
-    @Autowired PasswordService passwordService;
+    PasswordService passwordService = mock(PasswordService.class);
 
-    @Autowired UserService userService;
+    UserService userService = mock(UserService.class);
 
-    @Autowired LabService labService;
+    LabService labService = mock(LabService.class);
 
-    @Autowired
-    private EmbeddedWebApplicationContext webApplicationContext;
+    WebApplicationContext webApplicationContext = mock(WebApplicationContext.class);
+    AuthenticationProvider authenticationProvider = mock(AuthenticationProvider.class);
 
-    @Autowired
-    AuthenticationProvider authenticationProvider;
 
-    @Autowired
-    private Filter springSecurityFilterChain;
+    private Filter springSecurityFilterChain = mock(Filter.class);
 
     private MockMvc mockMvc;
 

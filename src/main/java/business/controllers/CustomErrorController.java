@@ -8,6 +8,7 @@ package business.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.BasicErrorController;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
+import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,11 @@ public class CustomErrorController implements ErrorController {
 
     @Autowired
     ErrorAttributes errorAttributes;
+    ErrorProperties errorProperties;
 
     @RequestMapping(value = PATH)
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
-        BasicErrorController errorController = new BasicErrorController(errorAttributes);
+        BasicErrorController errorController = new BasicErrorController(errorAttributes, errorProperties);
         return errorController.error(request);
     }
 

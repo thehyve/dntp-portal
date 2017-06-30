@@ -24,7 +24,13 @@ public class CustomErrorController implements ErrorController {
 
     @Autowired
     ErrorAttributes errorAttributes;
+
     ErrorProperties errorProperties;
+
+    CustomErrorController() {
+        this.errorProperties = new ErrorProperties();
+        this.errorProperties.setPath(PATH);
+    }
 
     @RequestMapping(value = PATH)
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
@@ -36,4 +42,5 @@ public class CustomErrorController implements ErrorController {
     public String getErrorPath() {
         return PATH;
     }
+
 }

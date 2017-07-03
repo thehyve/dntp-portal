@@ -3,7 +3,9 @@ package business.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import business.representation.LabRepresentation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,10 @@ public class LabService {
     }
 
     @Transactional(readOnly = true)
-    public List<Lab> findAllActive() {
-        return labRepository.findAllByActiveTrueOrderByNumberAsc();
+    public List<LabRepresentation> findAllActive() {
+        return labRepository.findAllByActiveTrueOrderByNumberAsc().stream()
+                .map(LabRepresentation::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -45,8 +49,8 @@ public class LabService {
         return labRepository.findOne(id);
     }
 
-    public Lab findOneActive(long id) {
-        return labRepository.findOneByActiveTrue(id);
+    public LabRepresentation findOneActive(long id) {
+        return new LabRepresentation(labRepository.findOneByActiveTrue(id));
     }
 
     public Lab findByNumber(Integer labNumber) {

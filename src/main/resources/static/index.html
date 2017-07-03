@@ -47,19 +47,18 @@ This file is distributed under the GNU Affero General Public License
   <body ng-app="ProcessApp" ng-csp="no-unsafe-eval"> <!-- flow-prevent-drop -->
 
   <!--Header Logo-->
-  <div class=" col-sm-3 col-md-2 floating-header-logo no-print" ng-if="authenticated">
+  <div class=" col-sm-3 col-md-2 floating-header-logo no-print" ng-if="showNavbar()">
     <img src="images/login-palga-logo.png" width="150px">
   </div>
 
   <!-- Navigator -->
-  <div ng-include="'app/components/navbar/navbar.html'" ng-if="authenticated"></div>
-  <div ng-include="'app/components/navbar/navbar-login.html'" ng-if="!authenticated"></div>
+  <div ng-include="'app/components/navbar/navbar.html'" ng-if="showNavbar()"></div>
+  <div ng-include="'app/components/navbar/navbar-login.html'" ng-if="showLoginHeader()"></div>
 
   <div ng-view></div>
 
   <!-- Footer -->
-  <div ng-include="'app/components/footer/footer.html'" ng-if="authenticated"></div>
-  <div ng-include="'app/components/footer/footer-login.html'" ng-if="!authenticated"></div>
+  <div ng-include="'app/components/footer/footer.html'"></div>
 
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.min.js"></script>

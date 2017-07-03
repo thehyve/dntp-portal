@@ -236,6 +236,25 @@
                     jQuery(el).focus();
                 };
 
+                $rootScope.isPublicPage = function() {
+                    return _.includes([
+                            '/login',
+                            '/register',
+                            '/register/success',
+                            '/login/forgot-password',
+                        ], $location.path()) ||
+                        startsWith($location.path(), '/login/reset-password') ||
+                        startsWith($location.path(), '/activate/');
+                }
+
+                $rootScope.showNavbar = function() {
+                    return !$rootScope.isPublicPage();
+                };
+
+                $rootScope.showLoginHeader = function() {
+                    return $rootScope.isPublicPage();
+                };
+
                 $rootScope.translate = function(key, params) {
                     return $translate.instant(key, params);
                 };
@@ -299,14 +318,7 @@
 
                 $rootScope.$on('$locationChangeStart', function () {
                     // redirect to login page if not logged in
-                  if (($location.path() !== '/login' &&
-                    $location.path() !== '/register' &&
-                    $location.path() !== '/register/success' &&
-                    $location.path() !== '/login/forgot-password' &&
-                    !startsWith($location.path(), '/login/reset-password') &&
-                    !startsWith($location.path(), '/activate/')
-                    ) &&
-                    !$rootScope.globals.currentUser) {
+                  if (!$rootScope.isPublicPage() && !$rootScope.globals.currentUser) {
                       $rootScope.redirectUrl = $location.path();
                       $location.path('/login');
                   }

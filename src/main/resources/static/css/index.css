@@ -1,31 +1,68 @@
 .container { padding-top: 10px; margin-bottom: 30px;}
-.login-container, .forgot-password-container,  .registration-container, .thank-you-container, .reset-password-container {
+
+.public-container {
     padding-top: 180px;
-    position: relative;
+    padding-bottom: 30px;
 }
 .thank-you-container > .front-panel {
     font-weight: 600;
 }
 
-.registration-container {margin-bottom: 150px;}
-.solid-footer, .solid-footer-login { background-color: #b4effc; padding-top: 10px; }
-.solid-footer-login {padding-bottom: 10px;}
-.navbar-fixed-top .container-fluid { padding-left: 0}
+.solid-footer, .solid-footer-login {
+    background-color: #e2efff;
+    padding-top: 10px;
+}
+.solid-footer-login {
+    padding-bottom: 10px;
+}
+.footer-text, .footer-text > a {
+    color: #337ab7;
+}
+.navbar-fixed-top .container-fluid {
+    padding-left: 0
+}
 .navbar-login {
-    height: 302px;
     background-image: url(../images/login-bg-loop.jpg);
+    background-repeat: repeat-x;
     z-index: 1;
 }
-.login-navbar{margin-bottom:35px;}
-.navbar-login-menu{text-align: right; padding: 15px;}
-.navbar-header {margin-left: 2px !important; background-color: #0074D9}
-.navbar-default {background-color: #b4effc;}
-.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus,
-.navbar-default .navbar-nav>.active>a:hover
-{
-    background-color: #76dcf3;
+.login-navbar{
+    margin-bottom:35px;
 }
-#nav_login {margin-right: 15px;}
+.navbar-login-menu{
+    text-align: right;
+    padding: 15px;
+}
+.navbar-header {
+    margin-left: 2px !important;
+    background-color: #afd3ff
+}
+.navbar-default .navbar-nav > li > a {
+    color: #444;
+}
+.navbar-default {
+    background-color: #e2efff;
+}
+.navbar-default .navbar-toggle {
+    border-color: #aaa;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active>a:focus,
+.navbar-default .navbar-nav > .active > a:hover
+{
+    color: #002454;
+    background-color: #afd3ff;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open>a:focus,
+.navbar-default .navbar-nav > .open > a:hover
+{
+    color: #444;
+    background-color: #afd3ff;
+}
+#nav_login {
+    margin-right: 15px;
+}
 
 .badge { background-color: #00285f; }
 
@@ -97,6 +134,20 @@ h2, .h2, h3, .h3, h4, .h4 {
     text-decoration: none;
 }
 
+.floating-header-logo {
+    height: 100px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1035;
+    background-image: url(../images/login-bg-loop.jpg);
+    background-repeat: repeat-x;
+    padding: 10px;
+}
+.floating-header-logo img {
+    height: 80px
+}
+
 /*
  * Sidebar
  */
@@ -105,9 +156,10 @@ h2, .h2, h3, .h3, h4, .h4 {
 .sidebar {
     display: block;
     top: 100px;
+    margin-bottom: 100px;
 }
 
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
     .sidebar {
         position: fixed;
         top: 100px;
@@ -116,7 +168,7 @@ h2, .h2, h3, .h3, h4, .h4 {
         z-index: 1000;
         display: block;
         padding: 20px;
-        margin-bottom: 36px;
+        margin-bottom: 35px;
         overflow-x: hidden;
         overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
         background-color: aliceblue;
@@ -334,8 +386,9 @@ address {margin-bottom: 0px;}
     padding-left: 3em;
 }
 .logo-header {
-    text-align: right;
+    padding-left: 3em;
     padding-top: 20px;
+    padding-bottom: 20px;
 }
 .bigskip {
     margin-top: 10em;
@@ -376,9 +429,13 @@ address {margin-bottom: 0px;}
     font-size: .9em;
 }
 
-.help-block, .navbar-fixed-bottom {
+.help-block {
     font-size: .85em;
     color: indianred;
+}
+
+.navbar-fixed-bottom {
+    font-size: .85em;
 }
 
 .h4, .h3 {
@@ -436,22 +493,6 @@ input.request-selection {
 .span-login {margin-left: 20px;}
 .login-title-div {min-height: 300px; position: relative;}
 .activation-div {margin-top: 300px;}
-.floating-title {
-    margin-bottom: 2em;
-    position: fixed;
-    top: inherit;
-    z-index: 100;
-}
-.floating-header-logo {
-    height:100px;
-    float:left;
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:1035;
-    background-image: url(../images/login-bg-loop.jpg);
-}
-.floating-header-logo img {margin-top: 10px;}
 .login-icon {
     width: 110px;
     height: 110px;
@@ -479,7 +520,7 @@ input.request-selection {
     color: #FFF;
 }
 .front-panel {
-    margin-top: 8em;
+    /*margin-top: 2em;*/
 }
 .login-button-group {margin-top: 2em}
 .print-pa-id-col { width: 10em; }
@@ -524,39 +565,31 @@ input.request-selection {
     padding: 6px;
 }
 
-@media (max-width: 480px) {
-    .navbar-login {
-        height: 120px;
+@media screen and (max-width: 768px) {
+    .floating-header-logo {
+        height: 50px;
+        padding: 0 20px;
     }
-    .navbar-login-menu {
-        text-align: right;
-        padding: 15px;
-        position: fixed;
-        top: 0;
+    .floating-header-logo img {
+        max-height: 48px;
+        width: auto;
     }
     .palga-home-logo {
-        width:50%;
+        height: 50px;
     }
-    .floating-title {
-        margin-bottom: 1em;
-        position: inherit;
-        top: inherit;
-        z-index: 0;
+    .logo-header {
+        padding-left: 1em;
+        padding-top: 5px;
+        padding-bottom: 5px;
     }
-    .login-container, .forgot-password-container, .registration-container, .thank-you-container, .reset-password-container {
-        padding-top: 70px;
-        position: relative;
-    }
-    .front-panel {
-        margin-top: 0;
-    }
-    .navbar-fixed-bottom {
+    .navbar-login {
         position: inherit;
     }
     .registration-container {
         margin-bottom: 0px;
     }
     body {
+        padding-top: 0;
         padding-bottom: 0;
     }
 }

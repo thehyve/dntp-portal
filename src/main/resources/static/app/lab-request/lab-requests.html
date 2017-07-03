@@ -7,13 +7,9 @@ This file is distributed under the GNU Affero General Public License
     <div class="row">
 
         <!--Side Bar-->
-        <div class="col-sm-3 col-md-2 sidebar">
-            <div>
-                <lab-requests-sidebar all-lab-requests="allLabRequests" active-sidebar="activeSidebar"/>
-            </div>
-        </div>
+        <lab-requests-sidebar all-lab-requests="allLabRequests" active-sidebar="activeSidebar"/>
 
-        <div ng-if="!authenticated">
+        <div ng-if="!authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="alert alert-danger" role="alert">
                 {{ 'Not logged in' | translate }}
             </div>

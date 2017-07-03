@@ -3,11 +3,11 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-<div ng-controller="RegistrationController" ng-init="enablePopovers();">
-    <div class="col-sm-4">&nbsp;</div>
-    <div class="col-sm-4 registration-container">
+<div ng-controller="RegistrationController" ng-init="enablePopovers();" class="public-container row">
+    <div class="col-xs-2 col-sm-3 col-lg-4">&nbsp;</div>
+    <div class="col-xs-8 col-sm-6 col-lg-4">
 
-        <h2 class="floating-title">{{ 'Registration' | translate }}</h2>
+        <h2>{{ 'Registration' | translate }}</h2>
 
         <div class="panel panel-default front-panel">
             <form class="form-horizontal panel-body" role="form" name="registrationForm" ng-submit="submit(user)"
@@ -220,5 +220,5 @@ This file is distributed under the GNU Affero General Public License
 
 
     </div>
-    <div class="col-sm-4">&nbsp;</div>
+    <div class="col-xs-2 col-sm-3 col-lg-4">&nbsp;</div>
 </div>

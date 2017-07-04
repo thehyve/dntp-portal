@@ -11,10 +11,11 @@ import java.util.Calendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,8 +25,8 @@ import business.models.RequestNumberRepository;
 import business.services.RequestNumberService;
 
 @Profile("dev")
-@SpringApplicationConfiguration(classes = {Application.class})
-@WebIntegrationTest("server.port = 8093")
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class RequestNumberServiceTests extends AbstractTestNGSpringContextTests {
 
     Log log = LogFactory.getLog(this.getClass());

@@ -6,15 +6,12 @@ This file is distributed under the GNU Affero General Public License
 <nav class="navbar navbar-default navbar-fixed-top navbar-login" ng-controller="NavigationController">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-4 logo-header">
+            <div class="col-xs-8 col-sm-8 logo-header">
                 <a ng-href="#/">
-                    <img src="images/login-palga-logo.png" alt="PALGA LOGO" class="palga-home-logo">
+                    <img src="images/login-palga-logo.png" alt="PALGA logo" class="palga-home-logo">
                 </a>
             </div>
-            <div class="col-sm-4 login-title-div">
-               &nbsp;
-            </div>
-            <div class="col-sm-4 navbar-login-menu">
+            <div class="col-xs-4 col-sm-4 navbar-login-menu">
                 <li class="dropdown">
                     <a id="language_selection"
                        ng-class="{
@@ -26,7 +23,7 @@ This file is distributed under the GNU Affero General Public License
 	                    <span ng-if="currentLanguage == 'nl'"><img src="images/nl.png" alt="{{ 'Dutch' | translate }}"></span>
                         <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu" role="menu">
+                    <ul class="dropdown-menu pull-right" role="menu">
                         <li id="select_language_en"><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
                             <img src="images/en.png" alt="{{ 'English' | translate }}"> {{ 'English' | translate }} (en)
                         </a></li>
@@ -34,25 +31,6 @@ This file is distributed under the GNU Affero General Public License
                             <img src="images/nl.png" alt="{{ 'Dutch' | translate }} (nl)"> {{ 'Dutch' | translate }} (nl)
                         </a></li>
                     </ul>
-                </li>
-
-
-                <!--<span class="span-lang">
-                    <a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
-                        <img src="images/en.png" alt="{{ 'English' | translate }}">
-                    </a>
-                </span>
-                <span class="span-lang">
-                    <a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
-                        <img src="images/nl.png" alt="{{ 'Dutch' | translate }} (nl)">
-                    </a>
-                </span>-->
-                <li>
-					<span class="span-login">
-						<a href="" ng-click="login()" id="login"><span class="glyphicon glyphicon-log-in"></span>
-							{{'Login'|translate}}
-						</a>
-					</span>
                 </li>
 
             </div>

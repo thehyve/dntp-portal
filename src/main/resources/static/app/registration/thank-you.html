@@ -3,14 +3,14 @@ Copyright (C) 2016  Stichting PALGA
 This file is distributed under the GNU Affero General Public License
 (see accompanying file LICENSE).
 -->
-<div>
-    <div class="col-sm-4">&nbsp;</div>
-    <div class="col-sm-4 container thank-you-container" ng-controller="RegistrationController">
-        <h2 class="floating-title">{{ 'Thank you' | translate }}!</h2>
+<div class="public-container row">
+    <div class="col-xs-2 col-sm-4">&nbsp;</div>
+    <div class="col-xs-8 col-sm-4" ng-controller="RegistrationController">
+        <h2>{{ 'Thank you' | translate }}!</h2>
         <div class="front-panel">
             {{ 'Registration completed. An email with an activation link was sent to ?.' | translate: {email: registrant.contactData.email} }}
         </div>
     </div>
-    <div class="col-sm-4">&nbsp;</div>
+    <div class="col-xs-2 col-sm-4">&nbsp;</div>
 </div>
 

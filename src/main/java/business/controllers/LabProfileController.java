@@ -6,6 +6,7 @@
 package business.controllers;
 
 import business.models.Lab;
+import business.representation.LabRepresentation;
 import business.services.LabService;
 
 import org.apache.commons.logging.Log;
@@ -24,13 +25,13 @@ public class LabProfileController {
     LabService labService;
 
     @RequestMapping(value = "/public/labs", method = RequestMethod.GET)
-    public List<Lab> get() {
+    public List<LabRepresentation> get() {
         LogFactory.getLog(getClass()).info("GET /labs/ for anonymous user");
         return labService.findAllActive();
     }
 
     @RequestMapping(value = "/public/labs/{id}", method = RequestMethod.GET)
-    public Lab get(@PathVariable("id") long id) {
+    public LabRepresentation get(@PathVariable("id") long id) {
         LogFactory.getLog(getClass()).info("GET /labs/" + id + " for anonymous user");
         return labService.findOneActive(id);
     }

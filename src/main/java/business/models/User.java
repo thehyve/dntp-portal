@@ -10,15 +10,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.BatchSize;
 
@@ -55,6 +47,9 @@ public class User implements Serializable {
      */
     @BatchSize(size = 1000)
     @ManyToMany(fetch = FetchType.EAGER, targetEntity=Lab.class)
+    @JoinTable(name = "app_user_hub_labs",
+            joinColumns = @JoinColumn(name="app_user_id", referencedColumnName="id"),
+            inverseJoinColumns = @JoinColumn(name="hub_labs_id", referencedColumnName="id"))
     private Set<Lab> hubLabs;
 
     @OneToOne(optional = true, cascade = CascadeType.ALL)

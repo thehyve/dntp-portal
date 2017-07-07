@@ -8,10 +8,8 @@ package business.services;
 import java.util.Date;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -27,29 +25,30 @@ import business.models.RequestProperties.ReviewStatus;
 import business.representation.RequestListRepresentation;
 import business.models.RequestPropertiesRepository;
 import business.models.User;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class RequestPropertiesService {
 
-    Log log = LogFactory.getLog(getClass());
+    private final Logger log = LoggerFactory.getLogger(RequestPropertiesService.class);
 
     @Autowired
-    RequestPropertiesRepository requestPropertiesRepository;
+    private RequestPropertiesRepository requestPropertiesRepository;
 
     @Autowired
-    RequestNumberService requestNumberService;
+    private RequestNumberService requestNumberService;
 
     @Autowired
-    FileService fileService;
+    private FileService fileService;
 
 
     @CacheEvict(value = {"requestlistdata", "dataattachmentcount"}, key = "#properties.processInstanceId")
-    @Transactional
     public RequestProperties save(RequestProperties properties) {
         return requestPropertiesRepository.save(properties);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public RequestProperties findByProcessInstanceId(String processInstanceId) {
         Date start = new Date();
         RequestProperties properties = requestPropertiesRepository.findByProcessInstanceId(processInstanceId);
@@ -95,16 +94,19 @@ public class RequestPropertiesService {
     }
 
     @Cacheable("dataattachmentcount")
+    @Transactional(readOnly = true)
     public Long getDataAttachmentCount(String processInstanceId) {
         return requestPropertiesRepository.countDataAttachmentsByProcessInstanceId(processInstanceId);
     }
 
     @Cacheable("requestnumber")
+    @Transactional(readOnly = true)
     public String getRequestNumber(String processInstanceId) {
         return requestPropertiesRepository.getRequestNumberByProcessInstanceId(processInstanceId);
     }
 
     @Cacheable("datesubmitted")
+    @Transactional(readOnly = true)
     public Date getDateSubmitted(String processInstanceId) {
         return requestPropertiesRepository.getDateSubmittedByProcessInstanceId(processInstanceId);
     }
@@ -119,7 +121,6 @@ public class RequestPropertiesService {
      */
     @CachePut(value = "requestnumber", key = "#properties.processInstanceId")
     @CacheEvict(value = "datesubmitted", key = "#properties.processInstanceId")
-    @Transactional
     public String getNewRequestNumber(RequestProperties properties) {
         if (properties.getRequestNumber() == null || properties.getRequestNumber().isEmpty()) {
             // The request is a new request and needs to have a new number assigned.
@@ -132,6 +133,7 @@ public class RequestPropertiesService {
     }
 
     @Cacheable("parentlistrepresentation")
+    @Transactional(readOnly = true)
     public RequestListRepresentation getParentListRepresentation(String processInstanceId) {
         RequestProperties parentProperties = requestPropertiesRepository.getParentByProcessInstanceId(processInstanceId);
         if (parentProperties == null) {
@@ -143,22 +145,22 @@ public class RequestPropertiesService {
         return parent;
     }
 
+    @Transactional(readOnly = true)
     public ReviewStatus getRequestReviewStatus(String processInstanceId) {
         return requestPropertiesRepository.getRequestReviewStatusByProcessInstanceId(processInstanceId);
     }
 
+    @Transactional(readOnly = true)
     public Set<String> getProcessInstanceIdsByReviewStatus(ReviewStatus reviewStatus) {
         return requestPropertiesRepository.getProcessInstanceIdsByReviewStatus(reviewStatus);
     }
 
-    @Transactional
     public void addRequestAttachment(String processInstanceId, File attachment) {
         RequestProperties properties = findByProcessInstanceId(processInstanceId);
         properties.getRequestAttachments().add(attachment);
         properties = save(properties);
     }
 
-    @Transactional
     public void removeRequestAttachment(String processInstanceId, Long attachmentId) {
         RequestProperties properties = findByProcessInstanceId(processInstanceId);
         File toBeRemoved = null;
@@ -176,14 +178,12 @@ public class RequestPropertiesService {
         fileService.removeAttachment(toBeRemoved);
     }
 
-    @Transactional
     public void addInformedConsentFormAttachment(String processInstanceId, File attachment) {
         RequestProperties properties = findByProcessInstanceId(processInstanceId);
         properties.getInformedConsentFormAttachments().add(attachment);
         save(properties);
     }
 
-    @Transactional
     public void removeInformedConsentFormAttachment(String processInstanceId, Long attachmentId) {
         RequestProperties properties = findByProcessInstanceId(processInstanceId);
         File toBeRemoved = null;
@@ -201,14 +201,12 @@ public class RequestPropertiesService {
         fileService.removeAttachment(toBeRemoved);
     }
 
-    @Transactional
     public void addAgreementAttachment(String processInstanceId, File attachment) {
         RequestProperties properties = findByProcessInstanceId(processInstanceId);
         properties.getAgreementAttachments().add(attachment);
         properties = save(properties);
     }
 
-    @Transactional
     public void removeAgreementAttachment(String processInstanceId, Long attachmentId) {
         RequestProperties properties = findByProcessInstanceId(processInstanceId);
         File toBeRemoved = null;
@@ -226,7 +224,7 @@ public class RequestPropertiesService {
         fileService.removeAttachment(toBeRemoved);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public HttpEntity<InputStreamResource> getFile(User user, String id, Long attachmentId) {
         RequestProperties properties = findByProcessInstanceId(id);
         for (File file: properties.getRequestAttachments()) {
@@ -257,6 +255,15 @@ public class RequestPropertiesService {
             }
         }
         throw new AttachmentNotFound();
+    }
+
+    public void delete(String id) {
+        RequestProperties requestProperties = requestPropertiesRepository.findByProcessInstanceId(id);
+        if (requestProperties == null) {
+            log.warn("No request properties found with process instance id {}", id);
+        } else {
+            requestPropertiesRepository.delete(requestProperties);
+        }
     }
 
 }

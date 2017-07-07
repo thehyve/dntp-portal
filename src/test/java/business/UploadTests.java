@@ -10,13 +10,14 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import business.services.TestService;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
@@ -28,11 +29,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.web.multipart.MultipartFile;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import business.controllers.RequestController;
 import business.models.User;
@@ -42,39 +41,42 @@ import business.representation.RequestStatus;
 import business.security.UserAuthenticationToken;
 import business.services.UserService;
 
+
 @Profile("dev")
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class UploadTests extends AbstractTestNGSpringContextTests {
+@SpringBootTest(classes = Application.class)
+@ContextConfiguration
+public class UploadTests {
 
-    Log log = LogFactory.getLog(this.getClass());
-
-    FileSystem fileSystem = FileSystems.getDefault();
-
-    @Autowired
-    UserService userService;
+    private final Logger log = LoggerFactory.getLogger(UploadTests.class);
 
     @Autowired
-    RequestController requestController;
+    private UserService userService;
 
     @Autowired
-    AuthenticationProvider authenticationProvider;
+    private TestService testService;
 
-    protected String processInstanceId;
+    @Autowired
+    private RequestController requestController;
 
-    protected UserAuthenticationToken getRequester() {
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
+    private String processInstanceId;
+
+    @Before
+    public void setup() {
+        log.info("Clearing database before test ...");
+        testService.clearDatabase();
+    }
+
+    private UserAuthenticationToken getRequester() {
         User user = userService.findByUsername("test+requester@dntp.thehyve.nl");
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");
         return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
     }
 
-    @BeforeClass
-    public void setUp() throws Exception {
-        log.info("TEST  Test: " + this.getClass().toString());
-    }
-
-    @Test(groups = "request")
-    public void createRequest() {
+    private void createRequest() {
         UserAuthenticationToken requester = getRequester();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
@@ -89,19 +91,18 @@ public class UploadTests extends AbstractTestNGSpringContextTests {
         SecurityContextHolder.clearContext();
     }
 
-    protected void printFile(FileRepresentation f) {
+    private void printFile(FileRepresentation f) {
         log.info(String.format("id: %d, mimetype: [%s], type: [%s], name: %s",
                 f.getId(), f.getMimeType(), f.getType(), f.getName()));
     }
 
-    protected void printFiles(List<FileRepresentation> files) {
-        files.forEach(f -> {
-            printFile(f);
-        });
+    private void printFiles(List<FileRepresentation> files) {
+        files.forEach(this::printFile);
     }
 
-    @Test(groups = "upload", dependsOnMethods = "createRequest")
     public void uploadFileNoMimetype() throws IOException {
+        createRequest();
+
         UserAuthenticationToken requester = getRequester();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
@@ -136,8 +137,9 @@ public class UploadTests extends AbstractTestNGSpringContextTests {
         SecurityContextHolder.clearContext();
     }
 
-    @Test(groups = "upload", dependsOnMethods = "createRequest")
     public void uploadFileInvalidMimetype() throws IOException {
+        createRequest();
+
         UserAuthenticationToken requester = getRequester();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
@@ -171,8 +173,10 @@ public class UploadTests extends AbstractTestNGSpringContextTests {
         SecurityContextHolder.clearContext();
     }
 
-    @Test(groups = "upload", dependsOnMethods = "createRequest")
+    @Test
     public void uploadFileSuccess() throws IOException {
+        createRequest();
+
         UserAuthenticationToken requester = getRequester();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);
@@ -206,8 +210,10 @@ public class UploadTests extends AbstractTestNGSpringContextTests {
         SecurityContextHolder.clearContext();
     }
 
-    @Test(groups = "download", dependsOnGroups = "upload")
+    @Test
     public void downloadFiles() throws IOException {
+        createRequest();
+
         UserAuthenticationToken requester = getRequester();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(requester);

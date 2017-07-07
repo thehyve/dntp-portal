@@ -5,300 +5,51 @@
  */
 package business;
 
-import business.controllers.RequestController;
-import business.controllers.SelectionController;
 import business.exceptions.InvalidRequest;
-import business.models.ContactData;
-import business.models.PathologyItemRepository;
-import business.models.User;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
 import business.security.MockConfiguration.MockMailSender;
 import business.security.UserAuthenticationToken;
-import business.services.LabRequestService;
-import business.services.UserService;
-import org.activiti.engine.TaskService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
-import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
 
 @Profile("dev")
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Transactional
-public class RequestControllerTests extends AbstractTestNGSpringContextTests {
+@SpringBootTest(classes = Application.class)
+@ContextConfiguration
+public class RequestControllerTests extends AbstractSelectionControllerTests {
 
-    Log log = LogFactory.getLog(this.getClass());
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    SelectionController selectionController;
-
-    @Autowired
-    RequestController requestController;
-
-    @Autowired
-    TaskService taskService;
-
-    @Autowired
-    LabRequestService labRequestService;
-
-    @Autowired
-    PathologyItemRepository pathologyItemRepository;
-
-    @Autowired
-    JavaMailSender mailSender;
-
-    @Autowired
-    AuthenticationProvider authenticationProvider;
-
-    protected String processInstanceId;
-
-    protected UserAuthenticationToken getRequester() {
-        User user = userService.findByUsername("test+requester@dntp.thehyve.nl");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");
-        return (UserAuthenticationToken) authenticationProvider.authenticate(authentication);
-    }
-
-    protected UserAuthenticationToken getPalga() {
-        User user = userService.findByUsername("test+palga@dntp.thehyve.nl");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, "palga"); // because of password tests
-        return (UserAuthenticationToken) authenticationProvider.authenticate(authentication);
-    }
-
-    @BeforeClass
-    public void setUp() throws Exception {
+    @Before
+    public void setup() throws Exception {
         ((MockMailSender) this.mailSender).clear();
         log.info("TEST  Test: " + this.getClass().toString());
     }
 
-    private void createRequest() {
-        UserAuthenticationToken requester = getRequester();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(requester);
-
-        RequestRepresentation representation = requestController.start(requester);
-        log.info("Started request " + representation.getProcessInstanceId());
-        log.info("Status: " + representation.getStatus());
-        log.info("Assignee: " + representation.getAssignee());
-        assertEquals(RequestStatus.OPEN, representation.getStatus());
-        processInstanceId = representation.getProcessInstanceId();
-
-        setTestData(representation);
-        representation = requestController.update(requester, representation.getProcessInstanceId(), representation);
-        assertNotNull(representation.getContactPersonName());
-
-        SecurityContextHolder.clearContext();
-    }
-
-    public static void setTestData(RequestRepresentation representation) {
-        representation.setTitle("Test title");
-        representation.setBackground("Test background.");
-        representation.setResearchQuestion("Q");
-        representation.setHypothesis("H");
-        representation.setMethods("Trial and error");
-        representation.setSearchCriteria("q");
-        representation.setStudyPeriod("2017");
-        representation.setLaboratoryTechniques("Pipeteren");
-        representation.setPathologistName("P.A. Thologist");
-        representation.setPathologistEmail("pathologist@local");
-        ContactData billingAddress = new ContactData();
-        billingAddress.setAddress1("Test street 123");
-        billingAddress.setPostalCode("1234 AB");
-        billingAddress.setCity("Nowhere");
-        representation.setBillingAddress(billingAddress);
-        representation.setChargeNumber("1234567");
-        representation.setGrantProvider("Test foundation");
-        representation.setContactPersonName("Principal Investigator");
-        representation.setContactPersonEmail("pi@local");
-    }
-
-    private void createRequestResearchQuestionMissing() {
-        UserAuthenticationToken requester = getRequester();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(requester);
-
-        RequestRepresentation representation = requestController.start(requester);
-        log.info("Started request " + representation.getProcessInstanceId());
-        log.info("Status: " + representation.getStatus());
-        log.info("Assignee: " + representation.getAssignee());
-        assertEquals(RequestStatus.OPEN, representation.getStatus());
-        processInstanceId = representation.getProcessInstanceId();
-
-        setTestData(representation);
-        representation.setResearchQuestion(null); // Validation should reject
-        requestController.update(requester, representation.getProcessInstanceId(), representation);
-
-        SecurityContextHolder.clearContext();
-    }
-
-    private void createRequestWithInformedConsent() {
-        UserAuthenticationToken requester = getRequester();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(requester);
-
-        RequestRepresentation representation = requestController.start(requester);
-        log.info("Started request " + representation.getProcessInstanceId());
-        log.info("Status: " + representation.getStatus());
-        log.info("Assignee: " + representation.getAssignee());
-        assertEquals(RequestStatus.OPEN, representation.getStatus());
-        processInstanceId = representation.getProcessInstanceId();
-
-        // Validation should fail as IC form upload is missing.
-        setTestData(representation);
-        representation.setLinkageWithPersonalData(true);
-        representation.setInformedConsent(true);
-        requestController.update(requester, representation.getProcessInstanceId(), representation);
-
-        SecurityContextHolder.clearContext();
-    }
-
-    private void submitRequest() {
-        UserAuthenticationToken requester = getRequester();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(requester);
-
-        RequestRepresentation representation =
-                requestController.getRequestById(requester, processInstanceId);
-        log.info("Status: " + representation.getStatus());
-        representation.setTitle("Test request");
-        representation.setPathologistEmail("test+pathologist@dntp.thehyve.nl");
-        representation = requestController.submit(requester, processInstanceId, representation);
-        log.info("Status: " + representation.getStatus());
-        assertEquals(RequestStatus.REVIEW, representation.getStatus());
-
-        SecurityContextHolder.clearContext();
-    }
-
-    private void submitRequestForApproval() throws InterruptedException {
-        UserAuthenticationToken palga = getPalga();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(palga);
-
-        RequestRepresentation representation =
-                requestController.getRequestById(palga, processInstanceId);
-        log.info("Status: " + representation.getStatus());
-
-        representation = requestController.claim(palga, processInstanceId, representation);
-
-        ((MockMailSender) mailSender).clear();
-
-        // only enforced in front end, not in back end
-        representation.setBackground("Background is testing.");
-        representation.setHypothesis("Tests will pass");
-        representation.setMethods("JUnit");
-        // request type
-        representation.setMaterialsRequest(true);
-        representation.setPaReportRequest(true);
-        // required checks
-        representation.setRequesterValid(true);
-        representation.setRequesterAllowed(true);
-        representation.setContactPersonAllowed(true);
-        representation.setRequesterLabValid(true);
-        representation.setAgreementReached(true);
-
-        representation = requestController.submitReview(palga, processInstanceId, representation);
-        log.info("Status: " + representation.getStatus());
-        assertEquals(RequestStatus.APPROVAL, representation.getStatus());
-
-        // Mail sending is asynchronous. Sleep for 1 second.
-        Thread.sleep(1 * 1000);
-
-        assertEquals(mailSender.getClass(), MockMailSender.class);
-        List<MimeMessage> emails = ((MockMailSender) mailSender).getMessages();
-        assertEquals(1, emails.size());
-
-        SecurityContextHolder.clearContext();
-    }
-
-    private void approveRequest() {
-        UserAuthenticationToken palga = getPalga();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(palga);
-
-        RequestRepresentation representation =
-                requestController.getRequestById(palga, processInstanceId);
-        log.info("Status: " + representation.getStatus());
-
-        representation = requestController.claim(palga, processInstanceId, representation);
-
-        representation.setPrivacyCommitteeRationale("ppc_approved_written_procedure");
-        representation.setScientificCouncilApproved(true);
-        representation.setPrivacyCommitteeApproved(true);
-
-        representation = requestController.finalise(palga, processInstanceId, representation);
-        log.info("Status: " + representation.getStatus());
-        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
-
-        SecurityContextHolder.clearContext();
-    }
-
-    @Test(expectedExceptions = {InvalidRequest.class})
+    @Test(expected = InvalidRequest.class)
     public void testRequestFieldMissing() {
         createRequestResearchQuestionMissing();
         submitRequest();
     }
 
-    @Test(expectedExceptions = {InvalidRequest.class})
+    @Test(expected = InvalidRequest.class)
     public void testRequestRejectedICFormMissing() {
         createRequestWithInformedConsent();
         submitRequest();
     }
 
-    private void uploadInformedConsentForm() throws IOException {
-        UserAuthenticationToken requester = getRequester();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(requester);
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("test/Utrecht_Oude_Gracht_Hamburgerbrug_(LOC).jpg");
-        InputStream input = resource.openStream();
-        MultipartFile file = new MockMultipartFile(resource.getFile(), resource.getFile().toString(), "image/jpeg", input);
-
-        Integer flowTotalChunks = 1;
-        Integer flowChunkNumber = 1;
-        String flowIdentifier = "flow";
-
-        requestController.uploadInformedConsentFormAttachment(
-            requester,
-            processInstanceId,
-            resource.getFile(),
-            flowTotalChunks,
-            flowChunkNumber,
-            flowIdentifier,
-            file);
-
-        SecurityContextHolder.clearContext();
-    }
-
-    @Test(dependsOnMethods = "testRequestRejectedICFormMissing")
+    @Test
     public void testRequestWithInformedConsent() throws IOException {
         createRequestWithInformedConsent();
         uploadInformedConsentForm();
@@ -306,7 +57,7 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void testApproveRequest() throws InterruptedException {
+    public void testApproveRequest() throws Exception {
         createRequest();
         submitRequest();
         submitRequestForApproval();
@@ -320,50 +71,6 @@ public class RequestControllerTests extends AbstractTestNGSpringContextTests {
                 requestController.getRequestById(palga, processInstanceId);
         log.info("Status: " + representation.getStatus());
         assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
-
-        SecurityContextHolder.clearContext();
-    }
-
-    private void skipApproval() throws InterruptedException {
-        UserAuthenticationToken palga = getPalga();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(palga);
-
-        RequestRepresentation representation =
-                requestController.getRequestById(palga, processInstanceId);
-        log.info("Status: " + representation.getStatus());
-
-        representation = requestController.claim(palga, processInstanceId, representation);
-
-        ((MockMailSender)mailSender).clear();
-
-        // Set the variable to skip the approval status
-        representation.setSkipStatusApproval(true);
-
-        // only enforced in front end, not in back end
-        representation.setBackground("Background is testing.");
-        representation.setHypothesis("Tests will pass");
-        representation.setMethods("JUnit");
-        // request type
-        representation.setMaterialsRequest(true);
-        representation.setPaReportRequest(true);
-        // required checks
-        representation.setRequesterValid(true);
-        representation.setRequesterAllowed(true);
-        representation.setContactPersonAllowed(true);
-        representation.setRequesterLabValid(true);
-        representation.setAgreementReached(true);
-
-        representation = requestController.submitReview(palga, processInstanceId, representation);
-        log.info("Status: " + representation.getStatus());
-        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
-
-        // Mail sending is asynchronous. Sleep for 1 second.
-        Thread.sleep(1 * 1000);
-
-        assertEquals(mailSender.getClass(), MockMailSender.class);
-        List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
-        assertEquals(0, emails.size());
 
         SecurityContextHolder.clearContext();
     }

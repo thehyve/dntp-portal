@@ -40,10 +40,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>business.Application</start-class>
         <java.version>1.8</java.version>
+        <maven.version>3.1</maven.version>
+        <frontend-maven-plugin.version>1.4</frontend-maven-plugin.version>
+        <node.version>v7.10.0</node.version>
+        <npm.version>4.2.0</npm.version>
+        <activiti.version>5.22.0</activiti.version>
+        <opencsv.version>3.9</opencsv.version>
     </properties>
 
     <prerequisites>
-        <maven>3.0</maven>
+        <maven>${maven.version}</maven>
     </prerequisites>
 
     <dependencies>
@@ -91,10 +97,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.11</version>
-            <scope>test</scope>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -130,7 +134,7 @@
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-spring-boot-starter-basic</artifactId>
-            <version>5.22.0</version>
+            <version>${activiti.version}</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -140,12 +144,12 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.4.12</version>
+            <version>${groovy.version}</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>3.9</version>
+            <version>${opencsv.version}</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
@@ -154,7 +158,6 @@
         </dependency>
     </dependencies>
 
-
     <build>
         <plugins>
             <plugin>
@@ -162,9 +165,27 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/Abstract*.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- Force alphabetical order to have a reproducible build -->
+                    <runOrder>alphabetical</runOrder>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.4</version>
+                <version>${frontend-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>install node and npm</id>
@@ -219,8 +240,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nodeVersion>v7.10.0</nodeVersion>
-                    <npmVersion>4.2.0</npmVersion>
+                    <nodeVersion>${node.version}</nodeVersion>
+                    <npmVersion>${npm.version}</npmVersion>
                 </configuration>
             </plugin>
             <plugin>

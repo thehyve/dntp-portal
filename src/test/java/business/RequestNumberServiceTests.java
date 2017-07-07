@@ -9,16 +9,15 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.util.Calendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import business.models.RequestNumber;
 import business.models.RequestNumberRepository;
@@ -26,18 +25,15 @@ import business.services.RequestNumberService;
 
 @Profile("dev")
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class RequestNumberServiceTests extends AbstractTestNGSpringContextTests {
+@SpringBootTest(classes = Application.class)
+@ContextConfiguration
+public class RequestNumberServiceTests {
 
-    Log log = LogFactory.getLog(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(RequestNumberServiceTests.class);
 
     @Autowired RequestNumberService requestNumberService;
 
     @Autowired RequestNumberRepository requestNumberRepository;
-
-    @BeforeClass
-    public void setUp() throws Exception {
-    }
 
     @Test
     public void incrementRequestNumber() {

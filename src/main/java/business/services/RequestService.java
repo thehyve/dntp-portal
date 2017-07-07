@@ -30,6 +30,7 @@ import javax.validation.ValidatorFactory;
 
 import business.exceptions.*;
 import business.models.*;
+import business.security.UserAuthenticationToken;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -58,6 +59,7 @@ import business.representation.RequestStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class RequestService {
 
     public static final String CURRENT_PROCESS_VERSION = "dntp_request_005";
@@ -108,6 +110,7 @@ public class RequestService {
      * @return the task if it exists.
      * @throws business.exceptions.TaskNotFound
      */
+    @Transactional(readOnly = true)
     public HistoricTaskInstance getTask(String taskId, String taskDefinition) {
         HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
                 .taskId(taskId)
@@ -125,6 +128,7 @@ public class RequestService {
      * @param requestId
      * @return the task if it exists; null otherwise.
      */
+    @Transactional(readOnly = true)
     public HistoricTaskInstance findHistoricTaskByRequestId(String requestId, String taskDefinition) {
         HistoricTaskInstance task = historyService.createHistoricTaskInstanceQuery()
                 .processInstanceId(requestId)
@@ -139,6 +143,7 @@ public class RequestService {
      * @return the current task if it exists.
      * @throws business.exceptions.TaskNotFound
      */
+    @Transactional(readOnly = true)
     public Task getTaskByRequestId(String requestId, String taskDefinition) {
         Task task = taskService.createTaskQuery().processInstanceId(requestId)
                 .active()
@@ -155,6 +160,7 @@ public class RequestService {
      * @param requestId
      * @return the current task if it exists, null otherwise.
      */
+    @Transactional(readOnly = true)
     public Task findTaskByRequestId(String requestId, String taskDefinition) {
         Task task = taskService.createTaskQuery().processInstanceId(requestId)
                 .active()
@@ -169,6 +175,7 @@ public class RequestService {
      * @return the current task if it exists.
      * @throws business.exceptions.TaskNotFound
      */
+    @Transactional(readOnly = true)
     public Task getCurrentPalgaTaskByRequestId(String requestId) {
         Task task = findCurrentPalgaTaskByRequestId(requestId);
         if (task == null) {
@@ -182,6 +189,7 @@ public class RequestService {
      * @param requestId
      * @return the current task if it exists, null otherwise.
      */
+    @Transactional(readOnly = true)
     public Task findCurrentPalgaTaskByRequestId(String requestId) {
         Task task = findTaskByRequestId(requestId, "palga_request_review");
         if (task == null) {
@@ -219,6 +227,7 @@ public class RequestService {
      * @param processInstanceId
      * @return the current request if it exists; null otherwise.
      */
+    @Transactional(readOnly = true)
     public HistoricProcessInstance findProcessInstance(String processInstanceId) {
         HistoricProcessInstance instance = historyService
                 .createHistoricProcessInstanceQuery()
@@ -234,6 +243,7 @@ public class RequestService {
      * @return the current request if it exists.
      * @throws
      */
+    @Transactional(readOnly = true)
     public HistoricProcessInstance getProcessInstance(String processInstanceId) {
         HistoricProcessInstance instance = historyService
                 .createHistoricProcessInstanceQuery()
@@ -337,7 +347,6 @@ public class RequestService {
      * for the request with processInstanceId <code>id</code>.
      * @param id the processInstanceId of the request.
      */
-    @Transactional
     public RequestProperties submitRequest(User requester, String id) {
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
 
@@ -392,7 +401,6 @@ public class RequestService {
     /**
      * 
      */
-    @Transactional
     public RequestRepresentation forkRequest(User user, String parentId) {
         HistoricProcessInstance parentInstance = getProcessInstance(parentId);
         RequestRepresentation parentRequest = new RequestRepresentation();
@@ -501,15 +509,16 @@ public class RequestService {
 
     final static DateFormatter DATE_FORMATTER = new DateFormatter("yyyy-MM-dd");
 
-    final static String booleanToString(Boolean value) {
+    static String booleanToString(Boolean value) {
         if (value == null) return "";
-        if (value.booleanValue()) {
+        if (value) {
             return "Yes";
         } else {
             return "No";
         }
     }
 
+    @Transactional(readOnly = true)
     public HttpEntity<InputStreamResource> writeRequestListCsv(List<RequestRepresentation> requests) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -566,6 +575,7 @@ public class RequestService {
 
     }
 
+    @Transactional(readOnly = true)
     public RequestListRepresentation getRequestData(String processInstanceId, User currentUser) {
         RequestListRepresentation request = requestFormService.getRequestListDataCached(processInstanceId);
         Task task = null;
@@ -615,6 +625,33 @@ public class RequestService {
             }
         }
         return request;
+    }
+
+    public void delete(String username, String id) {
+        log.info("Deleting process instance " + id);
+        requestFormService.invalidateCacheEntry(id);
+        if (runtimeService.createProcessInstanceQuery().processInstanceId(id).active().count() == 0) {
+            log.warn("No process instance with id {}", id);
+        } else {
+            runtimeService.deleteProcessInstance(id, "Removed by user: " + username);
+        }
+        requestPropertiesService.delete(id);
+    }
+
+    public void deleteRequest(UserAuthenticationToken user, String id) {
+        HistoricProcessInstance instance = this.getProcessInstance(id);
+        RequestRepresentation request = new RequestRepresentation();
+        requestFormService.transferData(instance, request, user.getUser());
+        if (!request.getRequesterId().equals(user.getUser().getId().toString())) {
+            throw new RequestNotFound();
+        }
+        if (request.getStatus() != RequestStatus.OPEN){
+            throw new InvalidActionInStatus();
+        }
+        if (request.isReopenRequest()) {
+            throw new InvalidActionInStatus("Removing not allowed for reopened requests.");
+        }
+        delete(user.getName(), id);
     }
 
 }

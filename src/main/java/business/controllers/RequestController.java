@@ -48,7 +48,6 @@ import business.exceptions.InvalidActionInStatus;
 import business.exceptions.NotLoggedInException;
 import business.exceptions.RequestNotAdmissible;
 import business.exceptions.RequestNotApproved;
-import business.exceptions.RequestNotFound;
 import business.exceptions.UpdateNotAllowed;
 import business.models.File;
 import business.models.RequestProperties;
@@ -614,22 +613,7 @@ public class RequestController {
             UserAuthenticationToken user,
             @PathVariable String id) {
         log.info("DELETE /requests/" + id);
-        HistoricProcessInstance instance = requestService.getProcessInstance(id);
-        RequestRepresentation request = new RequestRepresentation();
-        requestFormService.transferData(instance, request, user.getUser());
-        if (!request.getRequesterId().equals(user.getUser().getId().toString())) {
-            throw new RequestNotFound();
-        }
-        if (request.getStatus() != RequestStatus.OPEN){
-            throw new InvalidActionInStatus();
-        }
-        if (request.isReopenRequest()) {
-            throw new InvalidActionInStatus("Removing not allowed for reopened requests.");
-        }
-
-        log.info("deleting process instance " + id);
-        requestFormService.invalidateCacheEntry(id);
-        runtimeService.deleteProcessInstance(id, "Removed by user: " + user.getName());
+        requestService.deleteRequest(user, id);
         log.info("process instance " + id + " deleted.");
     }
 

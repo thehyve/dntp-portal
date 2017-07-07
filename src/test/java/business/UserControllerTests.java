@@ -10,6 +10,9 @@ import business.security.UserAuthenticationToken;
 import business.services.LabService;
 import business.services.MailService;
 import business.services.UserService;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +24,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -35,42 +36,30 @@ import static org.junit.Assert.*;
 
 @Profile("dev")
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class UserControllerTests extends AbstractTestNGSpringContextTests {
+@SpringBootTest(classes = Application.class)
+@ContextConfiguration
+public class UserControllerTests {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    UserService userService;
+    private final Logger log = LoggerFactory.getLogger(UserControllerTests.class);
 
     @Autowired
-    LabService labService;
+    private UserService userService;
 
     @Autowired
-    UserController userController;
+    private LabService labService;
 
     @Autowired
-    JavaMailSender mailSender;
+    private UserController userController;
 
     @Autowired
-    AuthenticationProvider authenticationProvider;
+    private JavaMailSender mailSender;
 
-    protected UserAuthenticationToken getRequester() {
-        User user = userService.findByUsername("test+requester@dntp.thehyve.nl");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, "requester");
-        return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
-    }
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
 
-    protected UserAuthenticationToken getPalga() {
-        User user = userService.findByUsername("test+palga@dntp.thehyve.nl");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, "palga"); // because of password tests
-        return (UserAuthenticationToken)authenticationProvider.authenticate(authentication);
-    }
-
-    @BeforeClass
-    public void setUp() throws Exception {
+    @Before
+    public void setup() throws Exception {
         ((MockConfiguration.MockMailSender)this.mailSender).clear();
-        log.info("TEST  Test: " + this.getClass().toString());
     }
 
     @Test

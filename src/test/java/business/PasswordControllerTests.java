@@ -13,24 +13,22 @@ import java.util.regex.Pattern;
 
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -44,16 +42,18 @@ import business.security.MockConfiguration.MockMailSender;
 import business.services.MailService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.context.WebApplicationContext;
 
 @Profile("dev")
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = Application.class)
+@ContextConfiguration
 public class PasswordControllerTests {
-    
-    Log log = LogFactory.getLog(this.getClass());
-    
+
+    private final Logger log = LoggerFactory.getLogger(PasswordControllerTests.class);
+
     @Autowired
-    private EmbeddedWebApplicationContext webApplicationContext;
+    private WebApplicationContext context;
 
     @Autowired
     private NewPasswordRequestRepository passwordRequestRepository;
@@ -64,36 +64,35 @@ public class PasswordControllerTests {
     private MockMvc mockMvc;
 
     @Autowired
-    JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     
     @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    public void setup() {
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .build();
     }
+
+    static final String PASSWORD_TEST_ACCOUNT = "test+lab_user99@dntp.thehyve.nl";
 
     @Test
     public void requestNewPasswordSendsCorrectEmail() throws Exception {
         ((MockMailSender)this.mailSender).clear();
 
-        EmailRepresentation emailForm = new EmailRepresentation("test+palga@dntp.thehyve.nl");
+        EmailRepresentation emailForm = new EmailRepresentation(PASSWORD_TEST_ACCOUNT);
 
         // Perform the request and ensure we get a correct result status
         mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
                 .content(new ObjectMapper().writeValueAsString(emailForm))
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(new ResultHandler() {
-                    @Override
-                    public void handle(MvcResult result) throws Exception {
-                        log.info("TEST: requestNewPassword()\n" +
-                                result.getResponse().getStatus() +
-                                "\n" +
-                                result.getResponse().getContentAsString());
-                    }
-                })
+                .andDo(result -> log.info("TEST: requestNewPassword()\n" +
+                        result.getResponse().getStatus() +
+                        "\n" +
+                        result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
 
         // Mail sending is asynchronous. Sleep for 1 second.
@@ -132,15 +131,10 @@ public class PasswordControllerTests {
                 .content(new ObjectMapper().writeValueAsString(emailForm))
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(new ResultHandler() {
-                    @Override
-                    public void handle(MvcResult result) throws Exception {
-                        log.info("TEST: requestNewPassword()\n" +
-                                result.getResponse().getStatus() +
-                                "\n" +
-                                result.getResponse().getContentAsString());
-                    }
-                })
+                .andDo(result -> log.info("TEST: requestNewPassword()\n" +
+                        result.getResponse().getStatus() +
+                        "\n" +
+                        result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
 
         // Mail sending is asynchronous. Sleep for 1 second.
@@ -156,7 +150,7 @@ public class PasswordControllerTests {
     @Test
     public void resetPassword() throws Exception {
         // Insert a password reset request in the database
-        User user = userRepository.findByUsername("test+palga@dntp.thehyve.nl");
+        User user = userRepository.findByUsername(PASSWORD_TEST_ACCOUNT);
         NewPasswordRequest npr = new NewPasswordRequest(user);
         passwordRequestRepository.saveAndFlush(npr);
         
@@ -168,15 +162,10 @@ public class PasswordControllerTests {
                 .content(new ObjectMapper().writeValueAsString(npRepr))
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(new ResultHandler() {
-                    @Override
-                    public void handle(MvcResult result) throws Exception {
-                        log.info("TEST: setPassword()\n" +
-                                result.getResponse().getStatus() +
-                                "\n" +
-                                result.getResponse().getContentAsString());
-                    }
-                })
+                .andDo(result -> log.info("TEST: setPassword()\n" +
+                        result.getResponse().getStatus() +
+                        "\n" +
+                        result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
 
         // Check that the password has been changed
@@ -186,4 +175,5 @@ public class PasswordControllerTests {
         // Check that the reset link doesn't exist anymore
         Assert.assertNull(passwordRequestRepository.findByToken(npr.getToken()));
     }
+
 }

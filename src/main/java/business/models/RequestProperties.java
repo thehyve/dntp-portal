@@ -11,19 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
@@ -97,6 +85,9 @@ public class RequestProperties {
     private List<File> dataAttachments = new ArrayList<File>();
 
     @OneToMany
+    @JoinTable(name = "request_properties_medical_ethical_commitee_approval_attachment",
+            joinColumns = @JoinColumn(name="request_properties_id", referencedColumnName="id"),
+            inverseJoinColumns = @JoinColumn(name="medical_ethical_commitee_approval_attachments_id", referencedColumnName="id"))
     private List<File> medicalEthicalCommiteeApprovalAttachments = new ArrayList<File>();
 
     @OneToOne

@@ -236,7 +236,9 @@ public class SelectionController {
         if (palgaUser != null) {
             requestService.claimCurrentPalgaTask(id, palgaUser);
         }
-        
+
+        requestFormService.invalidateCacheEntry(id);
+
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
@@ -254,6 +256,8 @@ public class SelectionController {
         log.info("PUT /requests/" + id + "/excerptSelectionApproval");
         
         excerptListService.setExcerptSelectionApproval(id, body);
+
+        requestFormService.invalidateCacheEntry(id);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
@@ -290,6 +294,8 @@ public class SelectionController {
             taskService.complete(task.getId());
 
             requestService.claimCurrentPalgaTask(id, user.getUser());
+
+            requestFormService.invalidateCacheEntry(id);
 
             instance = requestService.getProcessInstance(id);
             request = new RequestRepresentation();

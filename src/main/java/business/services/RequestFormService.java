@@ -116,17 +116,6 @@ public class RequestFormService {
         return getRequestListData(processInstanceId);
     }
 
-    // TODO:: DEPRECATED?
-    @Cacheable("requestlistattachmentsdata")
-    public RequestListRepresentation getRequestListDataWithAttachmentsCached(String processInstanceId) {
-        HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
-        // copy request list representation data
-        RequestListRepresentation request = new RequestListRepresentation();
-        transferBasicData(instance, request);
-        transferAttachmentData(instance, request);
-        return request;
-    }
-
     public void transferBasicData(HistoricProcessInstance instance, RequestListRepresentation request) {
         request.setProcessInstanceId(instance.getId());
         request.setProcessId(instance.getProcessDefinitionId());

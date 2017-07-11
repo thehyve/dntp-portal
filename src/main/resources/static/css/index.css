@@ -530,9 +530,31 @@ input.request-selection {
 .print-pa-total-col { width: 5em; }
 
 .req-edit-button{
-    height: 75px;
     max-width: 220px;
     white-space: normal !important;
+    vertical-align: top;
+}
+
+.btn-outline {
+    background: white;
+}
+.btn-outline:hover,
+.btn-primary.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: white;
+}
+.btn-primary.btn-outline {
+    border: 1px solid #0099cc;
+    color: #0099cc;
+}
+.btn-warning.btn-outline {
+    border: 1px solid #f0ad4e;
+    color: #f0ad4e;
+}
+.btn-danger.btn-outline {
+    border: 1px solid #d9534f;
+    color: #d9534f;
 }
 
 /* DatePicker CSS */

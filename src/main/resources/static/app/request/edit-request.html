@@ -1004,7 +1004,7 @@
                         ">
                             {{'Submit to scientific council'|translate}}
                     </button>
-                    <button id="button-skip-approval" class="btn btn-warning req-edit-button" type="button"
+                    <button id="button-skip-approval" class="btn btn-warning btn-outline req-edit-button" type="button"
                             ng-if="request.status=='Review' && isPalga() && isSkipApprovalEnabled(request)"
                             ng-click="submitReviewAndSkipApproval(request)"
                             ng-disabled="requestEditForm.$invalid
@@ -1030,14 +1030,14 @@
                         ">
                             {{'Finish submission process'|translate}}
                     </button>
-                    <button class="btn btn-danger req-edit-button" type="button"
+                    <button class="btn btn-danger btn-outline req-edit-button" type="button"
                             id="button-reject-request"
                         ng-if="(request.status=='Review' || request.status=='Approval') && isPalga()"
                         ng-click="reject(request)"
                         ng-disabled="requestEditForm.$invalid || dataLoading">
                             {{'Reject'|translate}}
                     </button>
-                    <button class="btn btn-warning req-edit-button" type="button"
+                    <button class="btn btn-warning btn-outline req-edit-button" type="button"
                             id="button-reopen-request"
                         ng-if="(request.status=='Review' || request.status=='Approval') && isPalga() && isReopenEnabled(request)"
                         ng-click="reopen(request)"

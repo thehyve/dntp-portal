@@ -20,13 +20,6 @@
         <eh:heap unit="entries">10000</eh:heap>
     </eh:cache>
 
-    <eh:cache alias="requestlistattachmentsdata">
-        <eh:key-type>java.lang.String</eh:key-type>
-        <eh:value-type>business.representation.RequestListRepresentation</eh:value-type>
-        <eh:expiry><eh:ttl unit="days">1</eh:ttl></eh:expiry>
-        <eh:heap unit="entries">1000</eh:heap>
-    </eh:cache>
-
     <eh:cache alias="requestnumber">
         <eh:key-type>java.lang.String</eh:key-type>
         <eh:value-type>java.lang.String</eh:value-type>

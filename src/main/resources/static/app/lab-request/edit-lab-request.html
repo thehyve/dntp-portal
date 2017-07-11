@@ -339,19 +339,18 @@
                                         {{'PA material returned'|translate}}
                                     </button>
                                 </span>
-
-                                <button class="btn btn-default pull-right" type="button" title="{{'Undo approval' | translate}}"
-                                        ng-click="rejectApprovedLabRequest(labRequest)"
-                                        ng-if="isLabUser() && (labRequest.status=='Approved' || labRequest.status=='Sending')">
-                                    <span><i class="glyphicon glyphicon-remove"></i></span>
-                                    {{'Undo approval' | translate}}
-                                </button>
                             </span>
                         </div>
                     </div>
                 </div>
                 <!--FOOTER-->
                 <div class="modal-footer">
+                    <button class="btn btn-default" type="button" title="{{'Undo approval' | translate}}"
+                            ng-click="rejectApprovedLabRequest(labRequest)"
+                            ng-if="isLabUser() && (labRequest.status=='Approved' || labRequest.status=='Sending')">
+                        <span><i class="glyphicon glyphicon-remove"></i></span>
+                        {{'Undo approval' | translate}}
+                    </button>
                     <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
                 </div>
 

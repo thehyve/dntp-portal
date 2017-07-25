@@ -16,7 +16,7 @@ This file is distributed under the GNU Affero General Public License
         </span>
         <ul class="list-group">
             <li class="list-group-item" ng-repeat="comment in labRequest.comments">
-                <p><div ng-if="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
+                <p><div ng-if="!commentEditVisibility[comment.id]">{{comment.contents|translate}}</div>
                 <div ng-if="commentEditVisibility[comment.id]">
                                    <textarea id="editCommentText" name="editCommentText" placeholder="{{'Add note'|translate}}"
                                              ng-model="comment.contents">

@@ -260,6 +260,9 @@ h2, .h2, h3, .h3, h4, .h4 {
     background-color: #FFFFFF;
 }
 
+.modal-footer > button {
+    height: 70px;
+}
 
 .smart-table-selected {
     background-color: #e8f7cd; /*#c8e5bc;*/

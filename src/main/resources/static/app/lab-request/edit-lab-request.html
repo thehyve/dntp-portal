@@ -42,9 +42,8 @@
                                 {{labRequest.rejectReason}}
                                 <br>
                                 <br>
-                                <a href="mailto:{{ labRequest.requesterEmail
-                                }}?subject=Lab request rejected, request number {{ labRequest.labRequestCode
-                                }}&amp;body=Lab request rejected.%0AReject reason: {{ labRequest.rejectReason }}">
+
+                                <a href="getRejectEmail(labRequest)">
                                     <button
                                             class="btn btn-sm btn-default" type="button"
                                             title="{{'Compose rejection mail' | translate}}">

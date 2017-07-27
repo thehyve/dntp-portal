@@ -57,9 +57,7 @@
                 <p class="form-control-static">
                     {{labRequest.rejectReason}}
                     <br><br>
-                    <a href="mailto:{{ labRequest.requesterEmail
-                    }}?subject=Lab request rejected, request number {{ labRequest.labRequestCode
-                    }}&amp;body=Lab request rejected.%0AReject reason: {{ labRequest.rejectReason }}"
+                    <a href={{getRejectEmail(labRequest)}}
                         class="no-print">
                         <button
                                 class="btn btn-sm btn-default" type="button"

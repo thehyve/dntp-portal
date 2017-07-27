@@ -471,8 +471,8 @@
         'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
         'Return address': 'Retouradres',
         'Hospital': 'Ziekenhuis',
-        'Lab request rejected, request number ': 'Labverzoek afgewezen, aanvraagnummer ',
-        'Lab request rejected.%0AReject reason: ': 'Labverzoek afgewezen.%0AReden voor afwijzing: ',
+        'Lab request rejected, request number': 'Labverzoek afgewezen, aanvraagnummer',
+        'Lab request rejected.%0AReject reason:': 'Labverzoek afgewezen.%0AReden voor afwijzing:',
 
         /* ===================== */
         /* User overview */

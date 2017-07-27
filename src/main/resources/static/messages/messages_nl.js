@@ -554,6 +554,7 @@
         'filetype_excerpt list': 'Excerptlijst',
         'filetype_excerpt selection': 'Excerptselectie',
         'filetype_data': 'Databestand',
+        'Undid rejection previously rejected lab request': 'Afwijzing geannuleerd voor eerder afgewezen labverzoek',
 
         /* ===================== */
         /* Agreement overview */

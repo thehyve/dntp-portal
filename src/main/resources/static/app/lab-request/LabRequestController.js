@@ -814,6 +814,12 @@ angular.module('ProcessApp.controllers')
                     }
                 );
             };
+
+            $scope.getRejectEmail = function(labRequest) {
+                return 'mailto:' +labRequest.requesterEmail + '?subject=' +
+                    $rootScope.translate('Lab request rejected, request number ') + labRequest.labRequestCode +
+                    '&body=' + $rootScope.translate('Lab request rejected.%0AReject reason: ') + labRequest.rejectReason;
+            }
         }
     ]
 );

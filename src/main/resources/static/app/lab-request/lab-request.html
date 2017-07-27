@@ -49,9 +49,7 @@ This file is distributed under the GNU Affero General Public License
                        {{'Download PA numbers' |translate}}
                    </a>
                 </span>
-                <a href="mailto:{{labRequest.requesterEmail}}?subject=Lab request rejected,
-                request number {{labRequest.labRequestCode}}&amp;body=Lab request rejected.%0AReject
-                reason: {{labRequest.rejectReason}}" ng-if="labRequest.status=='Rejected' && isLabOrHubUser()">
+                <a href={{getRejectEmail(labRequest)}} ng-if="labRequest.status=='Rejected' && isLabOrHubUser()">
                     <button
                             class="btn btn-default" type="button" title="{{'Compose rejection mail' | translate}}">
                         <span><i class="glyphicon glyphicon-envelope"></i></span>

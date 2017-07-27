@@ -229,6 +229,8 @@
         'Compose mail to members': 'Schrijf e-mail aan leden',
         'Compose mail to requester': 'E-mail aanvrager',
         'Compose reopen email': 'Meld heropenen aanvraag',
+        'Compose rejection mail': 'Opstellen afwijzings-mail',
+        
         'Finish submission process, skip scientific council': 'Aanvraagprocedure afronden, sla wetenschappelijke raad over',
         'The scientific council and privacy committee have not been involved in this request.': 'De wetenschappelijke raad en PPC zijn niet betrokken bij deze aanvraag.',
         'Are you sure you want to finish the submission process and skip the scientific council for this request?': 'Weet u zeker dat u de aanvraagprocedure wilt afronden en dit verzoek niet naar de wetenschappelijk raad en PPC wilt sturen?',
@@ -555,6 +557,7 @@
         'filetype_excerpt selection': 'Excerptselectie',
         'filetype_data': 'Databestand',
         'Undid approval previously approved lab request': 'Goedkeuring geannuleerd voor eerder goedgekeurd labverzoek',
+        'Undid rejection previously rejected lab request': 'Afwijzing geannuleerd voor eerder afgewezen labverzoek',
 
         /* ===================== */
         /* Agreement overview */

@@ -167,6 +167,11 @@ public class LabRequestController {
 
         labRequest = labRequestService.updateStatus(labRequest, Status.WAITING_FOR_LAB_APPROVAL);
 
+        //Add comment explaining what happened.
+        CommentRepresentation comment = new CommentRepresentation();
+        comment.setContents("Undid rejection previously rejected lab request");
+        commentService.addLabRequestComment(user.getUser(), id, comment);
+
         LabRequestRepresentation representation = new LabRequestRepresentation(
                 labRequest);
         labRequestService.transferLabRequestData(representation, false);

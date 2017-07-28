@@ -471,6 +471,7 @@
         'Address pathology lab. requester': 'Adres pathologie lab. aanvrager',
         'Return address': 'Retouradres',
         'Hospital': 'Ziekenhuis',
+        'Keep under review by lab': 'Blijf op beoordeling door lab',
 
         /* ===================== */
         /* User overview */

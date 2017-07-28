@@ -367,9 +367,6 @@ angular.module('ProcessApp.controllers')
                         function (result) {
                     if (result) {
                         labRequest.customPUT(labRequest, 'undoreject').then(function () {
-                            if ($scope.labReqModal) {
-                                $scope.labReqModal.hide();
-                            }
                             _loadData();
                         }, function (err) {
                             $scope.alerts.push({type: 'danger', msg: _flattenError(err)});

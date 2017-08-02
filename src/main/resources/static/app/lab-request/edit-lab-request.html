@@ -172,7 +172,7 @@
 
                     <!-- Approval -->
                     <div class="panel panel-default"
-                         ng-if="isLabUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
+                         ng-if="isLabOrHubUser() && labRequest.status == 'Waiting for lab approval' && isCurrentUser(labRequest.assignee)">
 
                         <div class="panel-heading">
                             <h4>{{'Lab request status'|translate}}: {{labRequest.status|translate}}</h4>
@@ -195,6 +195,7 @@
                                 <button class="btn btn-default btn-warning"
                                         ng-click="reject(labRequest);">{{'Reject'|translate}}
                                 </button>
+                                <button class="btn btn-default" ng-click="cancel();">{{'Under review by lab'|translate}}</button>
                             </span>
                         </div>
                     </div>
@@ -249,10 +250,7 @@
                                     ng-if="isPalga()"
                                     ng-click="completeRejected(labRequest);">{{'Complete'|translate}}
                                 </button>
-                                <button class="btn btn-default btn-primary"
-                                    ng-if="isLabUser() || isHubUser()"
-                                    ng-click="undoReject(labRequest);">{{'Undo rejection'|translate}}
-                                </button>
+
                             </span>
                         </div>
                     </div>
@@ -347,9 +345,15 @@
                 <div class="modal-footer">
                     <button class="btn btn-default" type="button" title="{{'Undo approval' | translate}}"
                             ng-click="rejectApprovedLabRequest(labRequest)"
-                            ng-if="isLabUser() && (labRequest.status=='Approved' || labRequest.status=='Sending')">
+                            ng-if="isLabOrHubUser() && (labRequest.status=='Approved' || labRequest.status=='Sending')">
                         <span><i class="glyphicon glyphicon-remove"></i></span>
                         {{'Undo approval' | translate}}
+                    </button>
+                    <button class="btn btn-default" type="button"
+                            ng-if="isLabOrHubUser() && labRequest.status=='Rejected'"
+                            ng-click="undoReject(labRequest);">
+                        <span><i class="glyphicon glyphicon-remove"></i></span>
+                        {{'Undo rejection'|translate}}
                     </button>
                     <a class="btn btn-default" ng-click="cancel();">{{'Cancel'|translate}}</a>
                 </div>

@@ -550,7 +550,7 @@ angular.module('ProcessApp.controllers')
 
             $scope.isPalgaStatus = function (status) {
                 return $rootScope.isPalga() && status == 'Rejected';
-            }
+            };
 
             $scope.requester_statuses = [
                 'Sending',
@@ -796,7 +796,7 @@ angular.module('ProcessApp.controllers')
             $scope.rejectApprovedLabRequest = function(labRequest) {
                 $scope.dataLoading = true;
                 bootbox.confirm(
-                    $rootScope.translate('Are you sure you want to undo approval for this previously approved lab request?'),
+                    $rootScope.translate('Return this lab request to status \'Under review by lab\'?'),
                     function (confirmed) {
                         if (confirmed) {
                             labRequest.customPUT(labRequest, 'undoapprove').then(function () {

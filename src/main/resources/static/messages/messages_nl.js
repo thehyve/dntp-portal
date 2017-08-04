@@ -559,8 +559,8 @@
         'filetype_excerpt list': 'Excerptlijst',
         'filetype_excerpt selection': 'Excerptselectie',
         'filetype_data': 'Databestand',
-        'Undid approval previously approved lab request': 'Goedkeuring geannuleerd voor eerder goedgekeurd labverzoek',
-        'Undid rejection previously rejected lab request': 'Afwijzing geannuleerd voor eerder afgewezen labverzoek',
+        'Undid approval previously approved lab request': 'Goedkeuring ongedaan gemaakt voor eerder goedgekeurd labverzoek',
+        'Undid rejection previously rejected lab request': 'Afwijzing ongedaan gemaakt voor eerder afgewezen labverzoek',
 
         /* ===================== */
         /* Agreement overview */
@@ -587,7 +587,7 @@
         'Update hub assistance': 'Inzet hubmedewerker aanpassen',
         'Actions in status': 'Acties in status',
         'Return date': 'Datum retour',
-        'Undo approval': 'Goedkeuring annuleren',
+        'Undo approval': 'Goedkeuring ongedaan maken',
 
         /* ===================== */
         /* Specialism */

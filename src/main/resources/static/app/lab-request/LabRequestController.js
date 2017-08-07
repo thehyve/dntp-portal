@@ -367,12 +367,39 @@ angular.module('ProcessApp.controllers')
                         function (result) {
                     if (result) {
                         labRequest.customPUT(labRequest, 'undoreject').then(function () {
+                            if ($scope.labReqModal) {
+                                $scope.labReqModal.hide();
+                            }
                             _loadData();
+                            $scope.edit(labRequest);
                         }, function (err) {
                             $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
                         });
                     }
                 });
+            };
+
+            $scope.rejectApprovedLabRequest = function(labRequest) {
+                $scope.dataLoading = true;
+                bootbox.confirm(
+                    $rootScope.translate('Return this lab request to status \'Under review by lab\'?'),
+                    function (confirmed) {
+                        if (confirmed) {
+                            labRequest.customPUT(labRequest, 'undoapprove').then(function () {
+                                if ($scope.labReqModal) {
+                                    $scope.labReqModal.hide();
+                                }
+                                _loadData();
+                                $scope.edit(labRequest);
+                            }, function (err) {
+                                $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
+                            });
+                        } else {
+                            $scope.dataLoading = false;
+                            $scope.$apply();
+                        }
+                    }
+                );
             };
 
             $scope.approve = function (labRequest) {
@@ -791,25 +818,6 @@ angular.module('ProcessApp.controllers')
 
             $scope.isStatusPage = function() {
                 return _.includes(LabRequest.statuses, $scope.activeSidebar);
-            };
-
-            $scope.rejectApprovedLabRequest = function(labRequest) {
-                $scope.dataLoading = true;
-                bootbox.confirm(
-                    $rootScope.translate('Return this lab request to status \'Under review by lab\'?'),
-                    function (confirmed) {
-                        if (confirmed) {
-                            labRequest.customPUT(labRequest, 'undoapprove').then(function () {
-                                _loadData();
-                            }, function (err) {
-                                $scope.alerts.push({type: 'danger', msg: _flattenError(err)});
-                            });
-                        } else {
-                            $scope.dataLoading = false;
-                            $scope.$apply();
-                        }
-                    }
-                );
             };
 
             $scope.getRejectEmail = function(labRequest) {

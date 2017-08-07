@@ -453,6 +453,8 @@
         'The lab request has been approved.': 'Het labverzoek is goedgekeurd.',
         'Your laboratory is asked for PA reports, PA material and/or clinical data from the treating physician.' : 'Een onderzoeker vraagt uw laboratorium om PA-verslagen, PA-materiaal en/of klinische gegevens via de behandelaar.',
         'Select ‘Approve’ to accept or ‘Reject’ to decline this request.' : 'Als u instemt met het verzoek, kies dan ‘Goedkeuren’ anders ‘Afwijzen.’',
+        'With ‘cancel’ the status of the request will remain ‘under review by lab’': 'Bij ‘Annuleren’ blijft het verzoek staan op ‘beoordeling door lab’',
+
         'Send materials': 'Materiaal versturen',
         'Materials are missing.': 'Materiaal ontbreekt.',
         'PA material returned': 'PA-materiaal retour ontvangen',
@@ -559,8 +561,8 @@
         'filetype_excerpt list': 'Excerptlijst',
         'filetype_excerpt selection': 'Excerptselectie',
         'filetype_data': 'Databestand',
-        'Undid approval previously approved lab request': 'Goedkeuring geannuleerd voor eerder goedgekeurd labverzoek',
-        'Undid rejection previously rejected lab request': 'Afwijzing geannuleerd voor eerder afgewezen labverzoek',
+        'Undid approval previously approved lab request': 'Goedkeuring ongedaan gemaakt voor eerder goedgekeurd labverzoek',
+        'Undid rejection previously rejected lab request': 'Afwijzing ongedaan gemaakt voor eerder afgewezen labverzoek',
 
         /* ===================== */
         /* Agreement overview */
@@ -587,7 +589,7 @@
         'Update hub assistance': 'Inzet hubmedewerker aanpassen',
         'Actions in status': 'Acties in status',
         'Return date': 'Datum retour',
-        'Undo approval': 'Goedkeuring annuleren',
+        'Undo approval': 'Goedkeuring ongedaan maken',
 
         /* ===================== */
         /* Specialism */

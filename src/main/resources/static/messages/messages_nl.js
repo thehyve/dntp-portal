@@ -453,6 +453,8 @@
         'The lab request has been approved.': 'Het labverzoek is goedgekeurd.',
         'Your laboratory is asked for PA reports, PA material and/or clinical data from the treating physician.' : 'Een onderzoeker vraagt uw laboratorium om PA-verslagen, PA-materiaal en/of klinische gegevens via de behandelaar.',
         'Select ‘Approve’ to accept or ‘Reject’ to decline this request.' : 'Als u instemt met het verzoek, kies dan ‘Goedkeuren’ anders ‘Afwijzen.’',
+        'With ‘cancel’ the status of the request will remain ‘under review by lab’': 'Bij ‘Annuleren’ blijft het verzoek staan op ‘beoordeling door lab’',
+
         'Send materials': 'Materiaal versturen',
         'Materials are missing.': 'Materiaal ontbreekt.',
         'PA material returned': 'PA-materiaal retour ontvangen',

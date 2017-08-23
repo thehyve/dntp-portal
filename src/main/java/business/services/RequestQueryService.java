@@ -28,12 +28,12 @@ public class RequestQueryService {
         params.put("user_id", requester.getId().toString());
 
         List<String> requestsIds = template.queryForList(
-                "select p.id_" +
+                "select distinct p.id_" +
                         " from act_hi_procinst p" +
                         " inner join act_hi_varinst v on p.id_ = v.execution_id_ " +
                         " inner join act_hi_identitylink id on p.id_ = id.proc_inst_id_ " +
                         " where v.name_ = 'status' and v.text_ = :status" +
-                        " and id.type_ = 'starter' and id.user_id_ = :user_id",
+                        " and id.user_id_ = :user_id",
                 params,
                 String.class
         );

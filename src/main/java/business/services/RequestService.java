@@ -292,51 +292,7 @@ public class RequestService {
             Date end = new Date();
             log.info("Query for lab or hub user took {} ms.", (end.getTime() - start.getTime()));
         } else {
-            Date start = new Date();
-            String userEmail = user.getUsername();
-            log.info("Fetching requester requests for user:" + userEmail);
-            List<HistoricProcessInstance> processInstances = new ArrayList<>();
-            for (HistoricProcessInstance instance: historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .involvedUser(user.getId().toString())
-                    .list()) {
-                Map<String, Object> variables = instance.getProcessVariables();
-                String pathologistEmail = (String)variables.get("pathologist_email");
-                String contactPersonEmail = (String)variables.get("contact_person_email");
-                if ((pathologistEmail == null || !pathologistEmail.equals(userEmail)) &&
-                        (contactPersonEmail == null || !contactPersonEmail.equals(userEmail))) {
-                    processInstances.add(instance);
-                }
-            }
-            final Set<String> idSet1 = processInstances.stream().map(i -> i.getId()).collect(Collectors.toSet());
-            processInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("pathologist_email", user.getUsername())
-                    .list()
-                    .stream()
-                    .filter(i -> !idSet1.contains(i.getId()))
-                    .collect(Collectors.toList())
-                    );
-            final Set<String> idSet2 = processInstances.stream().map(i -> i.getId()).collect(Collectors.toSet());
-            processInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("contact_person_email", user.getUsername())
-                    .list()
-                    .stream()
-                    .filter(i -> !idSet2.contains(i.getId()))
-                    .collect(Collectors.toList())
-                    );
-            Date end = new Date();
-            log.info("Query for requester took {} ms.", (end.getTime() - start.getTime()));
-            processInstanceIds = processInstances.stream()
-                    .map(HistoricProcessInstance::getId)
-                    .collect(Collectors.toList());
+            processInstanceIds = requestQueryService.getRequestsForRequesterByStatus(user, null);
         }
         return processInstanceIds;
     }

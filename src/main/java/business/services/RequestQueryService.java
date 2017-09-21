@@ -20,20 +20,48 @@ public class RequestQueryService {
     @Autowired
     NamedParameterJdbcTemplate template;
 
-    public List<String> getRequestsForRequesterByStatus(User requester, RequestStatus status) {
+    /**
+     * Fetches all process instance ids of requests of which the user is the requester (creator)
+     * or for which the user is the associated principal investigator or pathologist.
+     * Optionally, a request status can be specified to filter on.
+     *
+     * For the requester, the requests are fetch through an identity link: such link is established when creating or
+     * processing a request. Because users only have a single role in the system and for requesters such links
+     * are only established at request creation, this effectively fetches all requests for which the user is the requester.
+     *
+     * For principal investigators and pathologists, their email address is matches with the 'pathologist_email' and
+     * 'contact_person_email' variables of the process.
+     *
+     * @param user The user with role requester to fetch the requests for.
+     * @param status The request status to filter on. If null, the requests are not filtered on status.
+     * @return the list of process instance ids.
+     */
+    public List<String> getRequestsForRequesterByStatus(User user, RequestStatus status) {
         Date start = new Date();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("status", status.toString());
-        params.put("user_id", requester.getId().toString());
+        if (status != null) {
+            params.put("status", status.toString());
+        }
+        params.put("user_id", user.getId().toString());
+        params.put("user_email", user.getUsername());
 
         List<String> requestsIds = template.queryForList(
-                "select distinct p.id_" +
+                "(select distinct p.id_" +
                         " from act_hi_procinst p" +
-                        " inner join act_hi_varinst v on p.id_ = v.execution_id_ " +
+                        (status == null ? "" : " inner join act_hi_varinst status_var on p.id_ = status_var.execution_id_ ") +
                         " inner join act_hi_identitylink id on p.id_ = id.proc_inst_id_ " +
-                        " where v.name_ = 'status' and v.text_ = :status" +
-                        " and id.user_id_ = :user_id",
+                        " where id.user_id_ = :user_id" +
+                        (status == null ? "" : " and status_var.name_ = 'status' and status_var.text_ = :status") +
+                        ")" +
+                    " union (select distinct p.id_" +
+                        " from act_hi_procinst p" +
+                        (status == null ? "" : " inner join act_hi_varinst status_var on p.id_ = status_var.execution_id_ ") +
+                        " inner join act_hi_varinst email_var on p.id_ = email_var.execution_id_ " +
+                        " where (email_var.name_ = 'pathologist_email' or email_var.name_ = 'contact_person_email')" +
+                        " and email_var.text_ = :user_email" +
+                        (status == null ? "" : " and status_var.name_ = 'status' and status_var.text_ = :status") +
+                        ")",
                 params,
                 String.class
         );
@@ -45,6 +73,13 @@ public class RequestQueryService {
         return requestsIds;
     }
 
+    /**
+     * Fetches all process instance ids of requests for a Palga user.
+     * This included all requests that are already passed the status 'Open' and reopened requests
+     * that are in status 'Open'.
+     *
+     * @return the list of process instance ids.
+     */
     public List<String> getPalgaRequests() {
         List<String> result = new ArrayList<>();
         Date start = new Date();

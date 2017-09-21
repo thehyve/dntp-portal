@@ -257,9 +257,18 @@ public class RequestService {
     }
 
     /**
-     * 
-     * @param user
-     * @return
+     * Fetches the process instance ids of the requests that the user is allowed to see.
+     * The query is based on the role of the user:
+     * - palga: fetch all requests that are passed status 'Open' and reopened requests;
+     * - scientific_council: fetch all requests that have council approval data associated with them
+     *   (and hence, are currently in approval status or have been in such status);
+     * - lab user, hub user: fetch all requests that have associated lab requests for labs that the user
+     *   is associated with;
+     * - requester: fetch all requests for which the user is the requester or is linked as pathologist
+     *   or principal investigator.
+     *
+     * @param user the current user.
+     * @return the list of process instance ids.
      */
     @Transactional(readOnly = true)
     public List<String> getProcessInstanceIdsForUser(User user) {
@@ -292,51 +301,7 @@ public class RequestService {
             Date end = new Date();
             log.info("Query for lab or hub user took {} ms.", (end.getTime() - start.getTime()));
         } else {
-            Date start = new Date();
-            String userEmail = user.getUsername();
-            log.info("Fetching requester requests for user:" + userEmail);
-            List<HistoricProcessInstance> processInstances = new ArrayList<>();
-            for (HistoricProcessInstance instance: historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .involvedUser(user.getId().toString())
-                    .list()) {
-                Map<String, Object> variables = instance.getProcessVariables();
-                String pathologistEmail = (String)variables.get("pathologist_email");
-                String contactPersonEmail = (String)variables.get("contact_person_email");
-                if ((pathologistEmail == null || !pathologistEmail.equals(userEmail)) &&
-                        (contactPersonEmail == null || !contactPersonEmail.equals(userEmail))) {
-                    processInstances.add(instance);
-                }
-            }
-            final Set<String> idSet1 = processInstances.stream().map(i -> i.getId()).collect(Collectors.toSet());
-            processInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("pathologist_email", user.getUsername())
-                    .list()
-                    .stream()
-                    .filter(i -> !idSet1.contains(i.getId()))
-                    .collect(Collectors.toList())
-                    );
-            final Set<String> idSet2 = processInstances.stream().map(i -> i.getId()).collect(Collectors.toSet());
-            processInstances.addAll(historyService
-                    .createHistoricProcessInstanceQuery()
-                    .notDeleted()
-                    .includeProcessVariables()
-                    .variableValueEquals("contact_person_email", user.getUsername())
-                    .list()
-                    .stream()
-                    .filter(i -> !idSet2.contains(i.getId()))
-                    .collect(Collectors.toList())
-                    );
-            Date end = new Date();
-            log.info("Query for requester took {} ms.", (end.getTime() - start.getTime()));
-            processInstanceIds = processInstances.stream()
-                    .map(HistoricProcessInstance::getId)
-                    .collect(Collectors.toList());
+            processInstanceIds = requestQueryService.getRequestsForRequesterByStatus(user, null);
         }
         return processInstanceIds;
     }
@@ -399,9 +364,23 @@ public class RequestService {
     }
 
     /**
-     * 
+     * Creates a clone of a request: a new request with a new process, based on the request properties
+     * of the parent request. Also the attached files will be copied.
+     * The action is only enabled in statuses {@link RequestStatus#LAB_REQUEST} and {@link RequestStatus#CLOSED}.
+     * The cloned request will fast forward to status {@link RequestStatus#APPROVAL} with the approval variables
+     * unchecked.
+     *
+     * The cloned request will be added to the list of 'additional requests' of the parent request.
+     * The request number of the cloned request will be the request number of the parent with a suffix '-A<var>n</var>'
+     * appended, where <var>n</var> is the index of the clone in the list of additional requests of the parent.
+     *
+     * @param user The current user that requests the clone (should be a Palga user).
+     * @param parentId the process instance id of the parent request to clone.
+     * @return a representation of the resulting clone request.
+     * @throws InvalidActionInStatus iff the parent request is not in status {@link RequestStatus#LAB_REQUEST} or
+     * {@link RequestStatus#CLOSED}.
      */
-    public RequestRepresentation forkRequest(User user, String parentId) {
+    public RequestRepresentation forkRequest(User user, String parentId) throws InvalidActionInStatus {
         HistoricProcessInstance parentInstance = getProcessInstance(parentId);
         RequestRepresentation parentRequest = new RequestRepresentation();
         requestFormService.transferData(parentInstance, parentRequest, user);
@@ -415,7 +394,7 @@ public class RequestService {
                 parentRequest.getRequesterEmail() + ")");
 
         // start new process instance
-        Map<String, Object> values = new HashMap<String, Object>();
+        Map<String, Object> values = new HashMap<>();
         values.put("initiator", parentRequest.getRequesterId());
         values.put("jump_to_review", Boolean.TRUE);
 

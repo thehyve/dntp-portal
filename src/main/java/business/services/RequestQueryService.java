@@ -51,14 +51,16 @@ public class RequestQueryService {
                         " from act_hi_procinst p" +
                         (status == null ? "" : " inner join act_hi_varinst status_var on p.id_ = status_var.execution_id_ ") +
                         " inner join act_hi_identitylink id on p.id_ = id.proc_inst_id_ " +
-                        " where id.user_id_ = :user_id" +
+                        " where p.delete_reason_ is null" +
+                        " and id.user_id_ = :user_id" +
                         (status == null ? "" : " and status_var.name_ = 'status' and status_var.text_ = :status") +
                         ")" +
                     " union (select distinct p.id_" +
                         " from act_hi_procinst p" +
                         (status == null ? "" : " inner join act_hi_varinst status_var on p.id_ = status_var.execution_id_ ") +
                         " inner join act_hi_varinst email_var on p.id_ = email_var.execution_id_ " +
-                        " where (email_var.name_ = 'pathologist_email' or email_var.name_ = 'contact_person_email')" +
+                        " where p.delete_reason_ is null" +
+                        " and (email_var.name_ = 'pathologist_email' or email_var.name_ = 'contact_person_email')" +
                         " and email_var.text_ = :user_email" +
                         (status == null ? "" : " and status_var.name_ = 'status' and status_var.text_ = :status") +
                         ")",
@@ -92,7 +94,8 @@ public class RequestQueryService {
                         " from act_hi_procinst p" +
                         " inner join act_hi_varinst v1 on p.id_ = v1.execution_id_ " +
                         " inner join act_hi_varinst v2 on p.id_ = v2.execution_id_ " +
-                        " where v1.name_ = 'status' and v1.text_ = :status" +
+                        " where p.delete_reason_ is null" +
+                        " and v1.name_ = 'status' and v1.text_ = :status" +
                         " and v2.name_ = 'reopen_request' and v2.long_ = 1",
                 params,
                 String.class
@@ -105,7 +108,8 @@ public class RequestQueryService {
                 "select p.id_" +
                         " from act_hi_procinst p" +
                         " inner join act_hi_varinst v1 on p.id_ = v1.execution_id_ " +
-                        " where v1.name_ = 'status' and not v1.text_ = :status",
+                        " where p.delete_reason_ is null" +
+                        " and v1.name_ = 'status' and not v1.text_ = :status",
                 params,
                 String.class
         );

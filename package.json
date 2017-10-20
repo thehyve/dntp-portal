@@ -1,6 +1,7 @@
 {
   "name": "dntp_portal",
   "version": "0.0.95",
+  "license": "AGPL-3.0",
   "dependencies": {},
   "scripts": {
     "test": "gulp test"

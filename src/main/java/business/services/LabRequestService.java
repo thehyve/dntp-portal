@@ -193,7 +193,6 @@ public class LabRequestService {
         log.debug("Fetching data for lab request {}", labRequestRepresentation.getId());
         Date start = new Date();
 
-        // get task data
         HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request");
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setEndDate(task.getEndTime());
@@ -498,7 +497,15 @@ public class LabRequestService {
 
     @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
     public LabRequestRepresentation claim(LabRequest labRequest, UserAuthenticationToken user) {
-        Task task = this.getTask(labRequest.getTaskId(), "lab_request");
+        Task task;
+
+        try {
+            task = this.getTask(labRequest.getTaskId(), "lab_request");
+        } catch (TaskNotFound e){
+            task = taskService.newTask();
+            labRequest.setTaskId(task.getId());
+            labRequestRepository.save(labRequest);
+        }
 
         if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
             taskService.claim(task.getId(), user.getId().toString());

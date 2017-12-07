@@ -20,6 +20,7 @@ import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
+import business.exceptions.*;
 import business.security.UserAuthenticationToken;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
@@ -27,6 +28,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +39,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import business.controllers.LabRequestComparator;
-import business.exceptions.EmailError;
-import business.exceptions.RequestNotFound;
-import business.exceptions.TaskNotFound;
 import business.models.Comment;
 import business.models.ExcerptEntry;
 import business.models.ExcerptList;
@@ -104,6 +103,9 @@ public class LabRequestService {
 
     @Autowired
     private RequestQueryService requestQueryService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Transactional
     @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
@@ -193,6 +195,7 @@ public class LabRequestService {
         log.debug("Fetching data for lab request {}", labRequestRepresentation.getId());
         Date start = new Date();
 
+        // get task data
         HistoricTaskInstance task = requestService.getTask(labRequestRepresentation.getTaskId(), "lab_request");
         labRequestRepresentation.setDateCreated(task.getCreateTime());
         labRequestRepresentation.setEndDate(task.getEndTime());
@@ -497,15 +500,7 @@ public class LabRequestService {
 
     @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
     public LabRequestRepresentation claim(LabRequest labRequest, UserAuthenticationToken user) {
-        Task task;
-
-        try {
-            task = this.getTask(labRequest.getTaskId(), "lab_request");
-        } catch (TaskNotFound e){
-            task = taskService.newTask();
-            labRequest.setTaskId(task.getId());
-            labRequestRepository.save(labRequest);
-        }
+        Task task = this.getTask(labRequest.getTaskId(), "lab_request");
 
         if (task.getAssignee() == null || task.getAssignee().isEmpty()) {
             taskService.claim(task.getId(), user.getId().toString());
@@ -527,6 +522,38 @@ public class LabRequestService {
 
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         this.transferLabRequestData(representation, false);
+        return representation;
+    }
+
+    @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
+    @Transactional
+    public LabRequestRepresentation completeReturned(LabRequest labRequest,
+                                                     LabRequestRepresentation body,
+                                                     UserAuthenticationToken user){
+
+        if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
+            if (body.getMissingSamples() == null || body.getMissingSamples().getContents().trim().isEmpty()) {
+                log.error("Empty field 'missing samples'");
+                throw new EmptyInput("Empty field 'missing samples'");
+            }
+            CommentRepresentation comment = new CommentRepresentation();
+            comment.setContents(body.getMissingSamples().getContents());
+            commentService.addLabRequestComment(user.getUser(), labRequest.getId(), comment);
+            labRequest = this.findOne(labRequest.getId());
+        }
+
+        labRequest = this.updateStatus(labRequest, Status.COMPLETED, Result.RETURNED);
+
+        Task task = this.getTask(labRequest.getTaskId(),"lab_request");
+        // complete task
+        if (task.getDelegationState() == DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        this.transferLabRequestData(representation, false);
+
         return representation;
     }
 }

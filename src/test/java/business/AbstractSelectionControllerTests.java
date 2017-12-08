@@ -17,6 +17,7 @@ import javax.mail.internet.MimeMessage;
 import business.models.ContactData;
 import business.models.LabRequest;
 import business.representation.*;
+import business.services.LabRequestQueryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.junit.Before;
@@ -60,6 +61,9 @@ public abstract class AbstractSelectionControllerTests {
 
     @Autowired
     LabRequestService labRequestService;
+
+    @Autowired
+    LabRequestQueryService labRequestQueryService;
 
     @Autowired
     PathologyItemRepository pathologyItemRepository;
@@ -407,16 +411,16 @@ public abstract class AbstractSelectionControllerTests {
 
         assertEquals(RequestStatus.LAB_REQUEST, representation.getStatus());
 
-        List<LabRequest> labRequests = labRequestService.findAllByProcessInstanceId(processInstanceId);
+        List<LabRequest> labRequests = labRequestQueryService.findAllByProcessInstanceId(processInstanceId);
         assertEquals(2, labRequests.size());
 
         int pathologyCount = 0;
         for (LabRequest labRequest: labRequests) {
             LabRequestRepresentation labRequestRepresentation =
                     new LabRequestRepresentation(labRequest);
-            labRequestService.transferLabRequestData(labRequestRepresentation, false);
-            labRequestService.transferExcerptListData(labRequestRepresentation);
-            labRequestService.transferLabRequestDetails(labRequestRepresentation, false);
+            labRequestQueryService.transferLabRequestData(labRequestRepresentation, false);
+            labRequestQueryService.transferExcerptListData(labRequestRepresentation);
+            labRequestQueryService.transferLabRequestDetails(labRequestRepresentation, false);
             pathologyCount += labRequestRepresentation.getPathologyCount();
         }
 

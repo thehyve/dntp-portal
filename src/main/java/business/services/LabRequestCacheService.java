@@ -11,18 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class LabRequestListService {
+public class LabRequestCacheService {
 
-    private Logger log = LoggerFactory.getLogger(LabRequestListService.class);
+    private Logger log = LoggerFactory.getLogger(LabRequestCacheService.class);
 
     @Autowired
-    private LabRequestService labRequestService;
+    private LabRequestQueryService labRequestQueryService;
 
     @Cacheable(value = "labrequestdata", key = "#labRequest.id")
     public LabRequestRepresentation getLabRequestCached(LabRequest labRequest) {
         log.debug("Fetch data for lab request {}", labRequest.getId());
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation, true);
+        labRequestQueryService.transferLabRequestData(representation, true);
         return representation;
     }
 
@@ -30,9 +30,9 @@ public class LabRequestListService {
     public LabRequestRepresentation getDetailedLabRequestCached(LabRequest labRequest) {
         log.debug("Fetch detailed data for lab request {}", labRequest.getId());
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(representation, true);
-        labRequestService.transferLabRequestDetails(representation, labRequest, true);
+        labRequestQueryService.transferLabRequestData(representation, true);
+        labRequestQueryService.transferLabRequestDetails(representation, labRequest, true);
         return representation;
-
     }
+
 }

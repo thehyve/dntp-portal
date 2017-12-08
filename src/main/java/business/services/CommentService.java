@@ -26,6 +26,9 @@ public class CommentService {
     private LabRequestService labRequestService;
 
     @Autowired
+    private LabRequestQueryService labRequestQueryService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -73,7 +76,7 @@ public class CommentService {
      */
     @Transactional(readOnly = true)
     public CommentRepresentation findLabRequestComment(Long labRequestId, Long commentId) {
-        LabRequest labRequest = labRequestService.findOne(labRequestId);
+        LabRequest labRequest = labRequestQueryService.findOne(labRequestId);
         Comment comment = commentRepository.findOne(commentId);
         if (labRequest == null || comment == null) {
             throw new CommentNotFound();
@@ -151,14 +154,14 @@ public class CommentService {
     }
 
     public CommentRepresentation addLabRequestComment(User user, Long id, CommentRepresentation body) {
-        LabRequest labRequest = labRequestService.findOne(id);
+        LabRequest labRequest = labRequestQueryService.findOne(id);
         Comment comment = new Comment(labRequest.getProcessInstanceId(), user, body.getContents());
         comment = commentRepository.save(comment);
         labRequest.addComment(comment);
         labRequestService.save(labRequest);
 
         LabRequestRepresentation labRequestRepresentation = new LabRequestRepresentation(labRequest);
-        labRequestService.transferLabRequestData(labRequestRepresentation, false);
+        labRequestQueryService.transferLabRequestData(labRequestRepresentation, false);
         Lab lab = labRequest.getLab();
         List<String> hubUserEmailAddresses = new ArrayList<>();
         if (lab.isHubAssistanceEnabled() && labRequest.isHubAssistanceRequested()) {
@@ -195,7 +198,7 @@ public class CommentService {
     }
 
     public void removeLabRequestComment(UserAuthenticationToken user, Long id, Long commentId) {
-        LabRequest labRequest = labRequestService.findOne(id);
+        LabRequest labRequest = labRequestQueryService.findOne(id);
         Comment comment = commentRepository.findOne(commentId);
         if (labRequest != null && comment != null) {
             if (!comment.getCreator().getId().equals(user.getUser().getId())) {

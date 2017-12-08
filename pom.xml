@@ -32,7 +32,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.7.RELEASE</version>
+        <version>1.5.9.RELEASE</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -41,12 +41,12 @@
         <start-class>business.Application</start-class>
         <java.version>1.8</java.version>
         <maven.version>3.1</maven.version>
-        <frontend-maven-plugin.version>1.4</frontend-maven-plugin.version>
+        <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
         <node.version>v7.10.0</node.version>
         <npm.version>4.2.0</npm.version>
         <activiti.version>5.22.0</activiti.version>
-        <opencsv.version>3.10</opencsv.version>
-        <groovy.version>2.4.12</groovy.version>
+        <opencsv.version>4.1</opencsv.version>
+        <groovy.version>2.4.13</groovy.version>
     </properties>
 
     <prerequisites>

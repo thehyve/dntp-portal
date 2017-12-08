@@ -12,6 +12,7 @@ angular.module('ProcessApp.directives')
                 scope.persistKey = nameSpace;
                 var ready = false;
 
+                /*eslint-disable no-unused-vars*/
                 //save the table state every time it changes
                 scope.$watch(function () {
                     return ctrl.tableState();
@@ -21,6 +22,7 @@ angular.module('ProcessApp.directives')
                         localStorage.setItem(nameSpace, JSON.stringify(newValue));
                     }
                 }, true);
+                /*eslint-enable no-unused-vars*/
 
                 setTimeout(function(){
                     //fetch the table state when the directive is loaded

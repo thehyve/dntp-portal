@@ -372,8 +372,31 @@ public class LabRequestController {
             log.error("Action not allowed in status '" + labRequest.getStatus() + "'");
             throw new InvalidActionInStatus("Action not allowed in status '" + labRequest.getStatus() + "'");
         }
+        
+        if (body.isSamplesMissing() != null && body.isSamplesMissing()) {
+            if (body.getMissingSamples() == null || body.getMissingSamples().getContents().trim().isEmpty()) {
+                log.error("Empty field 'missing samples'");
+                throw new EmptyInput("Empty field 'missing samples'");
+            }
+            CommentRepresentation comment = new CommentRepresentation();
+            comment.setContents(body.getMissingSamples().getContents());
+            commentService.addLabRequestComment(user.getUser(), id, comment);
+            labRequest = labRequestService.findOne(id);
+        }
 
-        return labRequestService.completeReturned(labRequest, body, user);
+        labRequest = labRequestService.updateStatus(labRequest, Status.COMPLETED, Result.RETURNED);
+
+        Task task = labRequestService.getTask(labRequest.getTaskId(),
+                "lab_request");
+        // complete task
+        if (task.getDelegationState() == DelegationState.PENDING) {
+            taskService.resolveTask(task.getId());
+        }
+        taskService.complete(task.getId());
+
+        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
+        labRequestService.transferLabRequestData(representation, false);
+        return representation;
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")

@@ -34,6 +34,7 @@ angular.module('ProcessApp.directives')
                 });
 
                 //table state -> view
+                /*eslint-disable no-unused-vars*/
                 scope.$watch(function () {
                     return ctrl.tableState();
                 }, function (newValue, oldValue) {
@@ -42,6 +43,7 @@ angular.module('ProcessApp.directives')
                         element[0].value = $parse(predicateExpression)(newValue.predicateObject) || '';
                     }
                 }, true);
+                /*eslint-enable no-unused-vars*/
 
                 // view -> table state
                 element.bind(event, function (evt) {

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -79,6 +78,9 @@ public class RequestService {
 
     @Autowired
     private LabRequestService labRequestService;
+
+    @Autowired
+    private LabRequestQueryService labRequestQueryService;
 
     @Autowired
     private RequestFormService requestFormService;
@@ -293,7 +295,7 @@ public class RequestService {
         } else if (user.isLabUser() || user.isHubUser()) {
             Date start = new Date();
             List<LabRequestRepresentation> labRequests =
-                    labRequestService.findLabRequestsForLabUserOrHubUser(user, false);
+                    labRequestQueryService.findLabRequestsForLabUserOrHubUser(user, false);
             processInstanceIds = new ArrayList<>();
             for (LabRequestRepresentation labRequest: labRequests) {
                 processInstanceIds.add(labRequest.getProcessInstanceId());
@@ -524,7 +526,7 @@ public class RequestService {
                         request.getLab().getNumber().toString() + ". " + request.getLab().getName()
                         );
                 values.add(request.getRequester() == null ? "" : request.getRequester().getSpecialism());
-                values.add(labRequestService.countHubAssistanceLabRequestsForRequest(
+                values.add(labRequestQueryService.countHubAssistanceLabRequestsForRequest(
                         request.getProcessInstanceId()).toString());
                 values.add(request.getPathologistName());
                 csvwriter.writeNext(values.toArray(new String[]{}));

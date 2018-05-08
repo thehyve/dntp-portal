@@ -241,11 +241,11 @@
                             '/login',
                             '/register',
                             '/register/success',
-                            '/login/forgot-password',
+                            '/login/forgot-password'
                         ], $location.path()) ||
                         startsWith($location.path(), '/login/reset-password') ||
                         startsWith($location.path(), '/activate/');
-                }
+                };
 
                 $rootScope.showNavbar = function() {
                     return !$rootScope.isPublicPage();

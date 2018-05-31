@@ -338,7 +338,7 @@ public class MailService {
               "Geachte heer/mevrouw,\n"
             + "\n"
             + "U heeft een account aangemaakt bij Stichting PALGA. Voordat u uw aanvraag bij PALGA in kunt dienen moet dit account nog geactiveerd worden.\n"
-            + "Uw account gegevens zoals: naam, e-mailadres, telefoonnr, worden in de PALGA portal bewaard."
+            + "Uw account gegevens zoals: naam, e-mailadres, telefoonnr, worden in de PALGA portal bewaard.\n"
             + "Met activeren van uw account gaat u akkoord met de verwerking (en opslag) van de door u verstrekte gegevens conform het privacyregelement van PALGA.\n\n"
             + "Indien u uw account niet activeert, worden uw gegevens na 3 maanden verwijderd. Voor evt. klachten kunt u contact opnemen met dpo@palga.nl\n"
             + "Via deze link activeert u uw account: %1$s.\n"

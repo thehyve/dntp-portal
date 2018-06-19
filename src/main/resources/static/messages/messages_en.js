@@ -59,7 +59,7 @@
         'popover: Informed consent': 'Upload patient information and blank informed consent form.',
         'popover: Pathology laboratory': 'Select the pathology laboratory where you work or with which you collaborate.',
 
-        'PA reports': "<u>Anonymous</u> PA reports",
+        'PA reports': "<em>Anonymous</em> PA reports",
         'Additional request for request ?': 'Additional request for {{requestNumber}}',
         'Are you sure you want to delete file ?' : 'Are you sure you want to delete file {{name}}?',
         'Maximum file size ? MB.': 'Maximum file size {{mb_max}} MB.',

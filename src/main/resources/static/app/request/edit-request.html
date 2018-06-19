@@ -626,7 +626,7 @@
 
                     <div class="form-group" ng-show="(!request.statisticsRequest && request.linkageWithPersonalData && request.informedConsent)"
                          ng-class="{ 'has-error' : request.informedConsentFormAttachments.length < 1 }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Upload informed consent form' | translate }}</label>
+                        <label class="control-label col-sm-3" for="requestTitle" data-ng-bind-html="'info: informed consent upload' | translate"></label>
                         <div class="col-sm-8">
                             <p ng-show="request.informedConsentFormAttachments.length < 1"><em>{{'No informed consent form uploaded.' | translate}}</em></p>
 

@@ -93,7 +93,8 @@
         'popover: Laboratory techniques': 'Indien van toepassing: welke labtechnieken (bijv. kiembaanmutatieanalyse/moleculaire technieken, immuunhistochemie, tissue micro array etc.) worden gebruikt?',
         'Request type': 'Benodigde data en/of materialen',
         'popover: Request type': 'Benodigde data en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" tabindex="-1" href="http://www.palga.nl/gegevensaanvragen/zoekvragen.html">www.palga.nl/gegevensaanvragen/zoekvragen.html</a>.',
-
+        'No informed consent form uploaded.': 'Geen informed consent form geupload',
+        
         'Numbers only, exploratory request': 'Alleen aantallen; oriënterende zoekvraag',
         'Excerpts only': 'Alleen excerpten',
         'Excerpts and full PA reports': 'Excerpten en complete PA-verslagen',
@@ -181,6 +182,8 @@
         'popover: Notes for linkage with personal data':  'Bijvoorbeeld naam en website van uw eigen cohort of naam van de registratie (NKR, DICA, PHARMO, etc.).',
         'Explanation why linkage is allowed without informed consent': 'Toelichting gebruik persoonsgegevens zonder toestemming (informed consent)',
         'popover: Reason using personal data': 'Geef aan waarom u denkt dat informed consent niet nodig is.',
+        'info: informed consent upload': 'Upload <u>blanco</u> informed consent form',
+
         'Notes': 'Notities',
         'Add note': 'Notitie toevoegen',
         'Please add a note.': 'Voeg een notitie toe.',

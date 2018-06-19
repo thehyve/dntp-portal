@@ -93,7 +93,7 @@
         'popover: Laboratory techniques': 'Indien van toepassing: welke labtechnieken (bijv. kiembaanmutatieanalyse/moleculaire technieken, immuunhistochemie, tissue micro array etc.) worden gebruikt?',
         'Request type': 'Benodigde data en/of materialen',
         'popover: Request type': 'Benodigde data en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" tabindex="-1" href="http://www.palga.nl/gegevensaanvragen/zoekvragen.html">www.palga.nl/gegevensaanvragen/zoekvragen.html</a>.',
-        'No informed consent form uploaded.': 'Geen informed consent form geupload',
+        'No informed consent form uploaded.': 'Geen informed consent formulier geüpload.',
         
         'Numbers only, exploratory request': 'Alleen aantallen; oriënterende zoekvraag',
         'Excerpts only': 'Alleen excerpten',

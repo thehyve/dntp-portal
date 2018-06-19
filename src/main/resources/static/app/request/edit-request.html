@@ -360,7 +360,7 @@
                                         <input type="checkbox" id="paReportRequest" name="paReportRequest" value="1"
                                                ng-disabled="request.statisticsRequest"
                                                ng-model="request.paReportRequest"> &nbsp;
-                                        <label class="normal radio-label" for="paReportRequest">{{ 'PA reports' | translate }}</label>
+                                        <label class="normal radio-label" for="paReportRequest" data-ng-bind-html="'PA reports' | translate"></label>
                                     </div>
 
                                     <div class="checkbox">

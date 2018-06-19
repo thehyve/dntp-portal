@@ -103,7 +103,7 @@
         'PA material only': 'Alleen PA-materiaal',
         'Excerpts, reports, material and/or clinical data': 'Excerpten, PA-verslagen, PA-materiaal en/of klinische gegevens',
         'Excerpts': 'Excerpten',
-        'PA reports': 'Complete PA-verslagen',
+        'PA reports': 'Complete <u>anonieme</u> PA-verslagen',
         'PA material': 'PA-materiaal',
         'Clinical data': 'Klinische gegevens',
         'Clinical data from practitioner': 'Klinische gegevens via behandelaar',

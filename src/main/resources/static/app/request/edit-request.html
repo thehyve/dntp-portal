@@ -583,15 +583,12 @@
                     </div>
 
                     <!-- Informed Consent  -->
-                    <div class="form-group" ng-class="" ng-show="!request.statisticsRequest && request.linkageWithPersonalData"
-                            ng-mouseenter="showPopover('informedConsentPopover')" ng-mouseleave="hidePopover('informedConsentPopover')">
+                    <div class="form-group" ng-class="" ng-show="!request.statisticsRequest && request.linkageWithPersonalData">
                         <label class="control-label col-sm-3">
                             {{'Informed consent (IC)' | translate}}
                         </label>
                         <div class="col-sm-6"
-                            id="informedConsentPopover"
-                            title="{{'Informed consent (IC)' | translate}}"
-                            data-placement="top-left" data-animation="am-flip-x" data-content="{{'popover: Informed consent'|translate}}" data-trigger="manual" bs-show="popover.informedConsent" bs-popover>
+                            id="informedConsentPopover">
                             <input type="radio" id="informedConsentYes" name="informedConsent"
                                     ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);">
                             <label class="normal" for="informedConsentYes">{{'Yes' | translate}}</label><br>
@@ -626,7 +623,7 @@
 
                     <div class="form-group" ng-show="(!request.statisticsRequest && request.linkageWithPersonalData && request.informedConsent)"
                          ng-class="{ 'has-error' : request.informedConsentFormAttachments.length < 1 }">
-                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Upload informed consent form' | translate }}</label>
+                        <label class="control-label col-sm-3" for="requestTitle" data-ng-bind-html="'info: informed consent upload' | translate"></label>
                         <div class="col-sm-8">
                             <p ng-show="request.informedConsentFormAttachments.length < 1"><em>{{'No informed consent form uploaded.' | translate}}</em></p>
 
@@ -675,7 +672,7 @@
                                 </div>
                                 <div id="uploadInformedConsentFormPopover"
                                      bs-popover
-                                     title="{{'Upload letter'|translate}}"
+                                     title="{{'Informed Consent (IC)'|translate}}"
                                      data-placement="top-right" data-animation="am-flip-x"
                                      data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
                                      data-trigger="manual">

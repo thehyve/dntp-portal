@@ -133,7 +133,7 @@ This file is distributed under the GNU Affero General Public License
                             <span ng-if="!isLabUser()">{{labRequest.lab.name}}</span>
                         </td>
                         <td>
-                            <div ng-if="labRequest.request.paReportRequest">{{'PA reports'|translate}}<br /></div>
+                            <div ng-if="labRequest.request.paReportRequest" data-ng-bind-html="'PA reports' | translate"><br /></div>
                             <div ng-if="labRequest.request.materialsRequest">{{'PA material'|translate}}<br /></div>
                             <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
                         </td>

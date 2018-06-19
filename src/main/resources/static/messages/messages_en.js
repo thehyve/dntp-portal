@@ -61,6 +61,7 @@
         'info: informed consent upload': 'Upload <em>blank</em> informed consent form',
         'No informed consent form uploaded.': 'No informed consent form uploaded.',
 
+        'PA reports': "<em>Anonymous</em> PA reports",
         'Additional request for request ?': 'Additional request for {{requestNumber}}',
         'Are you sure you want to delete file ?' : 'Are you sure you want to delete file {{name}}?',
         'Maximum file size ? MB.': 'Maximum file size {{mb_max}} MB.',

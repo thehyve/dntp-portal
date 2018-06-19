@@ -182,7 +182,7 @@
         'popover: Notes for linkage with personal data':  'Bijvoorbeeld naam en website van uw eigen cohort of naam van de registratie (NKR, DICA, PHARMO, etc.).',
         'Explanation why linkage is allowed without informed consent': 'Toelichting gebruik persoonsgegevens zonder toestemming (informed consent)',
         'popover: Reason using personal data': 'Geef aan waarom u denkt dat informed consent niet nodig is.',
-        'info: informed consent upload': 'Upload <u>blanco</u> informed consent form',
+        'info: informed consent upload': 'Upload <em>blanco</em> informed consent form',
 
         'Notes': 'Notities',
         'Add note': 'Notitie toevoegen',

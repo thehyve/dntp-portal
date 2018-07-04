@@ -314,6 +314,7 @@ public class LabRequestService {
         return labRequest;
     }
 
+    @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#id")
     public LabRequestRepresentation update(Long id, LabRequestRepresentation body, UserAuthenticationToken user) {
         LabRequest labRequest = labRequestQueryService.findOne(id);
 

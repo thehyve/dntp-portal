@@ -723,7 +723,7 @@ public class RequestController {
     @PreAuthorize("isAuthenticated() "
             + " and ("
             + "     hasPermission(#id, 'isRequester') "
-            + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
+            + "     or (hasRole('palga'))"
             + ")")
 
     @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.GET)

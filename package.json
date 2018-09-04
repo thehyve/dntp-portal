@@ -51,7 +51,7 @@
     "karma-phantomjs-shim": "~1.2.0",
     "karma-coverage": "~0.5.2",
     "karma-ng-html2js-preprocessor": "~0.2.0",
-    "lodash": "~4.17.4",
+    "lodash": "~4.17.10",
     "main-bower-files": "~2.9.0",
     "phantomjs-prebuilt": "~2.1.14",
     "protractor": "^3.0.0",

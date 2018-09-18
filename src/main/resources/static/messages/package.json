@@ -7,10 +7,10 @@
   "scripts": {
   },
   "devDependencies": {
-    "lodash": "~4.6.1"
+    "lodash": "~4.17.10"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=7.0.0"
   }
 }
 

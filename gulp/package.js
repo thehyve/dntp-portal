@@ -21,13 +21,15 @@ gulp.task('clean-dist', function (done) {
     return del([conf.paths.dist + '/'], done);
 });
 
-gulp.task('copy-static', gulp.series('clean-dist', function() {
+gulp.task('copy-files', function() {
     return gulp.src([conf.paths.src+'/**/*', '!'+conf.paths.src+'/index.html'])
         .pipe(gulp.dest(conf.paths.dist))
         ;
-}));
+});
 
-gulp.task('js-css-combine-revision', gulp.series('copy-static', function() {
+gulp.task('copy-static', gulp.series('clean-dist', 'copy-files'));
+
+gulp.task('transform-files', function() {
     var jsFilter = filter('**/*.js', {restore: true});
     var cssFilter = filter('**/*.css', {restore: true});
 
@@ -48,7 +50,9 @@ gulp.task('js-css-combine-revision', gulp.series('copy-static', function() {
         .pipe(rev.manifest())       // Write substitutions to manifest file
         .pipe(gulp.dest(conf.paths.dist))
         ;
-}));
+});
+
+gulp.task('js-css-combine-revision', gulp.series('copy-static', 'transform-files'));
 
 gulp.task('index', gulp.series('js-css-combine-revision', function() {
     var manifest = gulp.src(conf.paths.dist+'/rev-manifest.json');

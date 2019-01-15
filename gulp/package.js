@@ -7,8 +7,6 @@
 
 var gulp = require('gulp');
 var conf = require('./conf');
-var htmlmin = require('gulp-htmlmin');
-var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
@@ -17,16 +15,21 @@ var filter = require('gulp-filter');
 var ngAnnotate = require('gulp-ng-annotate');
 var uglify = require('gulp-uglify');
 var csso = require('gulp-csso');
-var gzip = require('gulp-gzip');
 var del = require('del');
 
-gulp.task('copy-static', ['clean-dist'], function() {
+gulp.task('clean-dist', function (done) {
+    return del([conf.paths.dist + '/'], done);
+});
+
+gulp.task('copy-files', function() {
     return gulp.src([conf.paths.src+'/**/*', '!'+conf.paths.src+'/index.html'])
         .pipe(gulp.dest(conf.paths.dist))
         ;
 });
 
-gulp.task('js-css-combine-revision', ['copy-static'], function() {
+gulp.task('copy-static', gulp.series('clean-dist', 'copy-files'));
+
+gulp.task('transform-files', function() {
     var jsFilter = filter('**/*.js', {restore: true});
     var cssFilter = filter('**/*.css', {restore: true});
 
@@ -36,12 +39,10 @@ gulp.task('js-css-combine-revision', ['copy-static'], function() {
         .pipe(jsFilter)
         .pipe(ngAnnotate())
         .pipe(uglify({mangle: false}))             // Minify any javascript sources
-        //.pipe(gzip())
         .pipe(rev())                // Rename the concatenated files
         .pipe(jsFilter.restore)
         .pipe(cssFilter)
         .pipe(csso())               // Minify any CSS sources
-        //.pipe(gzip())
         .pipe(rev())                // Rename the concatenated files
         .pipe(cssFilter.restore)
         .pipe(sourcemaps.write())
@@ -51,17 +52,15 @@ gulp.task('js-css-combine-revision', ['copy-static'], function() {
         ;
 });
 
-gulp.task('index', ['js-css-combine-revision'], function() {
+gulp.task('js-css-combine-revision', gulp.series('copy-static', 'transform-files'));
+
+gulp.task('index', gulp.series('js-css-combine-revision', function() {
     var manifest = gulp.src(conf.paths.dist+'/rev-manifest.json');
 
     return gulp.src(conf.paths.dist+'/index.html')
         .pipe(revReplace({manifest: manifest}))
         .pipe(gulp.dest(conf.paths.dist))
         ;
-});
+}));
 
-gulp.task('clean-dist', function (done) {
-    return del([conf.paths.dist + '/'], done);
-});
-
-gulp.task('package', ['index']);
+gulp.task('package', gulp.series('index'));

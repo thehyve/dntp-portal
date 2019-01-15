@@ -61,10 +61,8 @@ angular.module('ProcessApp.interceptors')
                         $rootScope.showLoginModal(method === 'GET');
                         return $q.reject(response);
                     });
-                case 400:
-                    // bad request
-                case 500:
-                    // internal server error
+                case 400: // bad request
+                case 500: // internal server error
                     $rootScope.logErrorResponse(response);
                     $rootScope.alert({
                         title : _.get(response, 'data.error', 'Error'),

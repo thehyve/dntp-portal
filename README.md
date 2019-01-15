@@ -84,11 +84,15 @@ Running front-end unit testing and e2e testing:
 [Get `nodejs`](https://nodejs.org/en/download/).
 ```bash
 # install dependencies
-sudo npm install -g gulp protractor
-# run unit testings
-gulp test
+npm install
+# run unit tests
+npx gulp test
+# prepare webdriver for e2e tests
+npx webdriver-manager update
 # run e2e tests
-protractor
+npx protractor
+# run only a selected feature
+npx protractor --specs=e2e/scenario_complete_happy_request.feature
 ```
 
 ### Deployment

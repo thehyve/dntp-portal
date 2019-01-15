@@ -107,4 +107,4 @@ module.exports = {
     fatalError: function(message) {
         throw 'Fatal error: the specification is incorrectly expressed! ' + message;
     }
-}
+};

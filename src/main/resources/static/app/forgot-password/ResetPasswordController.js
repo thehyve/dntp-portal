@@ -25,6 +25,7 @@ angular.module('ProcessApp.controllers')
             $scope.submitted = false;
             $scope.done = false;
 
+            /*global Uint8Array*/
             $scope.generateRandomPassword = function() {
                 var buffer = new Uint8Array(32);
                 asmCrypto.getRandomValues(buffer);

@@ -33,7 +33,7 @@ import business.models.UserRepository;
 import business.services.LabService;
 import business.services.UserService;
 
-@Profile({"default", "dev", "test"})
+@Profile({"dev", "test"})
 @Service
 public class DefaultRolesUsersLabs {
 

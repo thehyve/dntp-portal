@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+import business.controllers.RequestFileController;
 import business.services.TestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +59,9 @@ public class UploadTests {
 
     @Autowired
     private RequestController requestController;
+
+    @Autowired
+    private RequestFileController requestFileController;
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
@@ -122,7 +126,7 @@ public class UploadTests {
         Integer flowChunkNumber = 1;
         String flowIdentifier = "flow";
 
-        representation = requestController.uploadRequestAttachment(
+        representation = requestFileController.uploadRequestAttachment(
                 requester,
                 processInstanceId,
                 resource.getFile(),
@@ -158,7 +162,7 @@ public class UploadTests {
         Integer flowChunkNumber = 1;
         String flowIdentifier = "flow";
 
-        representation = requestController.uploadRequestAttachment(
+        representation = requestFileController.uploadRequestAttachment(
                 requester,
                 processInstanceId,
                 resource.getFile(),
@@ -195,7 +199,7 @@ public class UploadTests {
         Integer flowChunkNumber = 1;
         String flowIdentifier = "flow";
 
-        representation = requestController.uploadRequestAttachment(
+        representation = requestFileController.uploadRequestAttachment(
                 requester,
                 processInstanceId,
                 resource.getFile(),
@@ -224,7 +228,7 @@ public class UploadTests {
         log.info("Downloading...");
         representation.getAttachments().forEach(f -> {
             printFile(f);
-            HttpEntity<InputStreamResource> response = requestController.getFile(
+            HttpEntity<InputStreamResource> response = requestFileController.getFile(
                     requester, representation.getProcessInstanceId(), f.getId());
             log.info(String.format("Response: contenttype: [%s]",
                     response.getHeaders().getContentType() == null ?

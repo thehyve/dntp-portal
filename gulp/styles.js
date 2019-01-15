@@ -11,15 +11,6 @@ var $ = require('gulp-load-plugins')();
 var wiredep = require('wiredep').stream;
 var _ = require('lodash');
 
-gulp.task('styles-reload', ['styles'], function () {
-    return buildStyles()
-        .pipe(browserSync.stream());
-});
-
-gulp.task('styles', function () {
-    return buildStyles();
-});
-
 var buildStyles = function () {
     var lessOptions = {
         paths: [
@@ -46,8 +37,8 @@ var buildStyles = function () {
 
 
     return gulp.src([
-            path.join(conf.paths.src, '/app/index.less')
-        ])
+        path.join(conf.paths.src, '/app/index.less')
+    ])
         .pipe($.inject(injectFiles, injectOptions))
         .pipe(wiredep(_.extend({}, conf.wiredep)))
         .pipe($.sourcemaps.init())
@@ -56,3 +47,12 @@ var buildStyles = function () {
         .pipe($.sourcemaps.write())
         .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app/')));
 };
+
+gulp.task('styles', function () {
+    return buildStyles();
+});
+
+gulp.task('styles-reload', gulp.series('styles', function () {
+    return buildStyles()
+        .pipe(browserSync.stream());
+}));

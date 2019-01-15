@@ -85,7 +85,7 @@ Running front-end unit testing and e2e testing:
 ```bash
 # install dependencies
 sudo npm install -g gulp protractor
-# run unit testings
+# run unit tests
 gulp test
 # run e2e tests
 protractor

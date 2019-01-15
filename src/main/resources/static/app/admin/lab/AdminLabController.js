@@ -26,7 +26,7 @@ angular.module('ProcessApp.controllers')
              * From AngularJS v1.5.3, http://angularjs.org
              */
             var EMAIL_REGEXP
-                = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+                = /^[a-z0-9!#$%&'*+\\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 
             $scope.validateEmail = function(obj) {
                 var email = obj.text;

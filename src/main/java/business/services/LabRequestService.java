@@ -1,25 +1,21 @@
-/**
+/*
  * Copyright (C) 2016  Stichting PALGA
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file <a href="{@docRoot}/LICENSE">LICENSE</a>).
  */
 package business.services;
 
-import java.io.IOException;
 import java.util.*;
 
 import business.exceptions.*;
 import business.representation.*;
 import business.security.UserAuthenticationToken;
-import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -68,9 +64,6 @@ public class LabRequestService {
 
     @Autowired
     private LabRequestStatusService labRequestStatusService;
-
-    @Autowired
-    private PaNumberService paNumberService;
 
 
     @CacheEvict(value = {"labrequestdata", "detailedlabrequestdata"}, key = "#labRequest.id")
@@ -323,50 +316,6 @@ public class LabRequestService {
         LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
         labRequestQueryService.transferLabRequestData(representation, false);
         return representation;
-    }
-
-    private static Set<Status> paNumberDownloadStatuses = new HashSet<>(Arrays.asList(
-            Status.WAITING_FOR_LAB_APPROVAL,
-            Status.APPROVED,
-            Status.COMPLETED,
-            Status.SENDING,
-            Status.RECEIVED,
-            Status.RETURNING));
-
-    public HttpEntity<InputStreamResource> downloadPANumbers(Long id, UserAuthenticationToken user) {
-        LabRequest labRequest = labRequestQueryService.findOne(id);
-        if (!paNumberDownloadStatuses.contains(labRequest.getStatus()) ||
-                (user.getUser().isRequester() && labRequest.getStatus() == Status.WAITING_FOR_LAB_APPROVAL)) {
-            log.error("Download not allowed in status '" + labRequest.getStatus() + "'");
-            throw new InvalidActionInStatus("Download not allowed in status '" + labRequest.getStatus() + "'");
-        }
-        LabRequestRepresentation representation = new LabRequestRepresentation(labRequest);
-        labRequestQueryService.transferLabRequestData(representation, false);
-
-        HttpEntity<InputStreamResource> file;
-
-        try {
-            file =  paNumberService.writePaNumbers(
-                    labRequest.getPathologyList(),
-                    representation.getLab().getNumber(),
-                    representation.getLabRequestCode());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new PaNumbersDownloadError();
-        }
-        return file;
-    }
-
-    public HttpEntity<InputStreamResource> downloadAllPANumbers(UserAuthenticationToken user) {
-        List<LabRequestRepresentation> labRequests = labRequestQueryService.findLabRequestsForUser(user.getUser(), true);
-
-        try {
-            return paNumberService.writeAllPaNumbers(labRequests);
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-            throw new PaNumbersDownloadError();
-        }
     }
 
 }

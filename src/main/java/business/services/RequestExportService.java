@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static business.services.ExportFormatHelper.*;
+
 @Service
 @Transactional
 public class RequestExportService {
@@ -58,19 +60,6 @@ public class RequestExportService {
             "Pathologist"
     };
 
-    private final static Locale LOCALE = Locale.getDefault();
-
-    private final static DateFormatter DATE_FORMATTER = new DateFormatter("yyyy-MM-dd");
-
-    static String booleanToString(Boolean value) {
-        if (value == null) return "";
-        if (value) {
-            return "Yes";
-        } else {
-            return "No";
-        }
-    }
-
     Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -90,10 +79,10 @@ public class RequestExportService {
             for (RequestRepresentation request: requests) {
                 List<String> values = new ArrayList<>();
                 values.add(request.getRequestNumber());
-                values.add(DATE_FORMATTER.print(request.getDateCreated(), LOCALE));
-                values.add(DATE_FORMATTER.print(request.getDateSubmitted(), LOCALE));
+                values.add(dateToString(request.getDateCreated()));
+                values.add(dateToString(request.getDateSubmitted()));
                 values.add(request.getExcerptListAttachment() != null ?
-                    DATE_FORMATTER.print(request.getExcerptListAttachment().getDate(), LOCALE) : "");
+                        dateToString(request.getExcerptListAttachment().getDate()) : "");
                 values.add(request.getTitle());
                 values.add(request.getStatus().toString());
                 values.add(booleanToString(request.isLinkageWithPersonalData()));

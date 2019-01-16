@@ -35,11 +35,11 @@ public class User implements Serializable {
     
     private String firstName = "";
     private String lastName = "";
-    boolean isPathologist = false;
+    private boolean isPathologist = false;
     private String institute;
     private String specialism;
 
-    @ManyToOne(optional = true)
+    @ManyToOne
     private Lab lab;
 
     /**
@@ -52,11 +52,11 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name="hub_labs_id", referencedColumnName="id"))
     private Set<Lab> hubLabs;
 
-    @OneToOne(optional = true, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private ContactData contactData;
 
     @ManyToMany(fetch = FetchType.EAGER, targetEntity=Role.class)
-    private Set<Role> roles = new HashSet<Role>();
+    private Set<Role> roles = new HashSet<>();
 
     private Date created = new Date();
 

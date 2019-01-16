@@ -43,7 +43,7 @@ public class RequestProperties {
     @Column(unique = true)
     private String processInstanceId;
 
-    @Column(unique = true, nullable = true)
+    @Column(unique = true)
     private String requestNumber;
 
     private ReviewStatus reviewStatus;
@@ -73,22 +73,22 @@ public class RequestProperties {
     private Date dateSubmitted;
 
     @OneToMany
-    private List<File> requestAttachments = new ArrayList<File>();
+    private List<File> requestAttachments = new ArrayList<>();
 
     @OneToMany
-    private List<File> informedConsentFormAttachments = new ArrayList<File>();
+    private List<File> informedConsentFormAttachments = new ArrayList<>();
 
     @OneToMany
-    private List<File> agreementAttachments = new ArrayList<File>();
+    private List<File> agreementAttachments = new ArrayList<>();
 
     @OneToMany
-    private List<File> dataAttachments = new ArrayList<File>();
+    private List<File> dataAttachments = new ArrayList<>();
 
     @OneToMany
     @JoinTable(name = "request_properties_medical_ethical_commitee_approval_attachment",
             joinColumns = @JoinColumn(name="request_properties_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name="medical_ethical_commitee_approval_attachments_id", referencedColumnName="id"))
-    private List<File> medicalEthicalCommiteeApprovalAttachments = new ArrayList<File>();
+    private List<File> medicalEthicalCommiteeApprovalAttachments = new ArrayList<>();
 
     @OneToOne
     private File excerptListAttachment;

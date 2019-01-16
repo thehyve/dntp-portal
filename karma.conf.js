@@ -7,7 +7,7 @@ var _ = require('lodash');
 var wiredep = require('wiredep');
 
 var pathSrcHtml = [
-  path.join(conf.paths.src, '/**/*.html')
+  path.join(conf.paths.src, 'app/**/*.html')
 ];
 
 function listFiles() {

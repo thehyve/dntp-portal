@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 
+import business.controllers.RequestFileController;
 import business.models.ContactData;
 import business.models.LabRequest;
 import business.representation.*;
@@ -55,6 +56,9 @@ public abstract class AbstractSelectionControllerTests {
 
     @Autowired
     RequestController requestController;
+
+    @Autowired
+    RequestFileController requestFileController;
 
     @Autowired
     TaskService taskService;
@@ -268,7 +272,7 @@ public abstract class AbstractSelectionControllerTests {
         Integer flowChunkNumber = 1;
         String flowIdentifier = "flow";
 
-        requestController.uploadInformedConsentFormAttachment(
+        requestFileController.uploadInformedConsentFormAttachment(
                 requester,
                 processInstanceId,
                 resource.getFile(),
@@ -354,7 +358,7 @@ public abstract class AbstractSelectionControllerTests {
         Integer flowChunkNumber = 1;
         String flowIdentifier = "flow";
 
-        int entryCount = requestController.uploadExcerptList(
+        int entryCount = requestFileController.uploadExcerptList(
                 palga,
                 processInstanceId,
                 resource.getFile(),
@@ -378,7 +382,7 @@ public abstract class AbstractSelectionControllerTests {
         log.info("Status: " + representation.getStatus());
 
         ExcerptListRepresentation excerptList =
-                requestController.getExcerptList(requester, processInstanceId);
+                requestFileController.getExcerptList(requester, processInstanceId);
         for(ExcerptEntryRepresentation entry: excerptList.getEntries()) {
             entry.setSelected(true);
         }

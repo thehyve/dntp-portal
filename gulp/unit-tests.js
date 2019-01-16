@@ -8,18 +8,18 @@
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
-
+var del = require('del');
 var karma = require('karma');
 
 var pathSrcHtml = [
-  path.join(conf.paths.src, '/**/*.html')
+  path.join(conf.paths.src, 'app/**/*.html')
 ];
 
 var pathSrcJs = [
   path.join(conf.paths.src, '/**/!(*.spec).js')
 ];
 
-function runTests (singleRun, done) {
+gulp.task('run-tests', function(done) {
   var reporters = ['progress'];
   var preprocessors = {};
 
@@ -27,17 +27,15 @@ function runTests (singleRun, done) {
     preprocessors[path] = ['ng-html2js'];
   });
 
-  if (singleRun) {
-    pathSrcJs.forEach(function(path) {
-      preprocessors[path] = ['coverage'];
-    });
-    reporters.push('coverage')
-  }
+  pathSrcJs.forEach(function(path) {
+    preprocessors[path] = ['coverage'];
+  });
+  reporters.push('coverage');
 
   var localConfig = {
     configFile: path.join(__dirname, '/../karma.conf.js'),
-    singleRun: singleRun,
-    autoWatch: !singleRun,
+    singleRun: true,
+    autoWatch: false,
     reporters: reporters,
     preprocessors: preprocessors
   };
@@ -46,8 +44,10 @@ function runTests (singleRun, done) {
     done(failCount ? new Error("Failed " + failCount + " tests.") : null);
   });
   server.start();
-}
+});
 
-gulp.task('test', gulp.series('scripts', function(done) {
-  runTests(true, done);
-}));
+gulp.task('test', gulp.series('scripts', 'run-tests'));
+
+gulp.task('clean-tests', function(done) {
+  return del([conf.paths.coverage + '/'], done);
+});

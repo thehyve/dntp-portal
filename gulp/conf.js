@@ -15,7 +15,8 @@ exports.paths = {
   src: 'src/main/resources/static',
   dist: 'dist',
   tmp: '.tmp',
-  e2e: 'e2e'
+  e2e: 'e2e',
+  coverage: 'coverage'
 };
 
 /**

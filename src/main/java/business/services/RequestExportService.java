@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2016  Stichting PALGA
+ * This file is distributed under the GNU Affero General Public License
+ * (see accompanying file <a href="{@docRoot}/LICENSE">LICENSE</a>).
+ */
 package business.services;
 
 import business.exceptions.FileDownloadError;
@@ -25,11 +30,13 @@ import java.util.Locale;
 @Transactional
 public class RequestExportService {
 
-    public static final String CSV_CHARACTER_ENCODING = "UTF-8";
+    private static final String CSV_CHARACTER_ENCODING = "UTF-8";
 
-    final static String[] CSV_COLUMN_NAMES = {
+    private static final String[] CSV_COLUMN_NAMES = {
             "Request number",
             "Date created",
+            "Date submitted",
+            "Date delivered",
             "Title",
             "Status",
             "Linkage",
@@ -42,13 +49,18 @@ public class RequestExportService {
             "Requester name",
             "Requester lab",
             "Specialism",
+            "Grant provider",
+            "Review PPC",
+            "Review result",
+            "Explanation for PPC",
+            "Summary review process",
             "# Hub assistance lab requests",
             "Pathologist"
     };
 
-    final static Locale LOCALE = Locale.getDefault();
+    private final static Locale LOCALE = Locale.getDefault();
 
-    final static DateFormatter DATE_FORMATTER = new DateFormatter("yyyy-MM-dd");
+    private final static DateFormatter DATE_FORMATTER = new DateFormatter("yyyy-MM-dd");
 
     static String booleanToString(Boolean value) {
         if (value == null) return "";
@@ -79,6 +91,9 @@ public class RequestExportService {
                 List<String> values = new ArrayList<>();
                 values.add(request.getRequestNumber());
                 values.add(DATE_FORMATTER.print(request.getDateCreated(), LOCALE));
+                values.add(DATE_FORMATTER.print(request.getDateSubmitted(), LOCALE));
+                values.add(request.getExcerptListAttachment() != null ?
+                    DATE_FORMATTER.print(request.getExcerptListAttachment().getDate(), LOCALE) : "");
                 values.add(request.getTitle());
                 values.add(request.getStatus().toString());
                 values.add(booleanToString(request.isLinkageWithPersonalData()));
@@ -89,11 +104,14 @@ public class RequestExportService {
                 values.add(booleanToString(request.isMaterialsRequest()));
                 values.add(booleanToString(request.isClinicalDataRequest()));
                 values.add(request.getRequesterName());
-                values.add(request.getLab() == null ?
-                        "" :
-                        request.getLab().getNumber().toString() + ". " + request.getLab().getName()
-                );
-                values.add(request.getRequester() == null ? "" : request.getRequester().getSpecialism());
+                values.add(request.getLab() != null ?
+                        request.getLab().getNumber().toString() + ". " + request.getLab().getName() : "");
+                values.add(request.getRequester() != null ? request.getRequester().getSpecialism() : "");
+                values.add(request.getGrantProvider());
+                values.add(request.getPrivacyCommitteeRationale());
+                values.add(request.getPrivacyCommitteeOutcome());
+                values.add(request.getPrivacyCommitteeOutcomeRef());
+                values.add(request.getPrivacyCommitteeEmails());
                 values.add(labRequestQueryService.countHubAssistanceLabRequestsForRequest(
                         request.getProcessInstanceId()).toString());
                 values.add(request.getPathologistName());

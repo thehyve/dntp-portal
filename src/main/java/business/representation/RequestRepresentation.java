@@ -107,10 +107,10 @@ public class RequestRepresentation implements RequestListElement {
     private List<CommentRepresentation> approvalComments;
     private Map<Long, ApprovalVoteRepresentation> approvalVotes;
 
-    private boolean excerptListUploaded;
-
     private Long dataAttachmentCount;
 
+    private boolean excerptListUploaded;
+    private FileRepresentation excerptListAttachment;
     private ExcerptListRepresentation excerptList;
 
     private Set<Integer> selectedLabs;
@@ -585,6 +585,14 @@ public class RequestRepresentation implements RequestListElement {
         this.privacyCommitteeOutcome = privacyCommitteeOutcome;
     }
 
+    public Long getDataAttachmentCount() {
+        return dataAttachmentCount;
+    }
+
+    public void setDataAttachmentCount(Long dataAttachmentCount) {
+        this.dataAttachmentCount = dataAttachmentCount;
+    }
+
     public boolean isExcerptListUploaded() {
         return excerptListUploaded;
     }
@@ -593,12 +601,12 @@ public class RequestRepresentation implements RequestListElement {
         this.excerptListUploaded = excerptListUploaded;
     }
 
-    public Long getDataAttachmentCount() {
-        return dataAttachmentCount;
+    public FileRepresentation getExcerptListAttachment() {
+        return excerptListAttachment;
     }
 
-    public void setDataAttachmentCount(Long dataAttachmentCount) {
-        this.dataAttachmentCount = dataAttachmentCount;
+    public void setExcerptListAttachment(FileRepresentation excerptListAttachment) {
+        this.excerptListAttachment = excerptListAttachment;
     }
 
     public ExcerptListRepresentation getExcerptList() {

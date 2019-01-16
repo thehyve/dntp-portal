@@ -9,22 +9,29 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 
+import business.controllers.RequestExportController;
 import business.controllers.RequestFileController;
 import business.models.ContactData;
 import business.models.LabRequest;
 import business.representation.*;
 import business.services.LabRequestQueryService;
+import com.opencsv.*;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -61,6 +68,9 @@ public abstract class AbstractSelectionControllerTests {
     RequestFileController requestFileController;
 
     @Autowired
+    RequestExportController requestExportController;
+
+    @Autowired
     TaskService taskService;
 
     @Autowired
@@ -93,7 +103,7 @@ public abstract class AbstractSelectionControllerTests {
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         ((MockMailSender)this.mailSender).clear();
         log.info("TEST  Test: " + this.getClass().toString());
     }
@@ -347,7 +357,7 @@ public abstract class AbstractSelectionControllerTests {
 
         log.info("uploadExcerptList: processInstanceId = " + processInstanceId);
 
-        representation = requestController.claim(palga, processInstanceId, representation);
+        requestController.claim(palga, processInstanceId, representation);
 
         ClassLoader classLoader = getClass().getClassLoader();
         URL resource = classLoader.getResource("test/" + filename);
@@ -431,6 +441,25 @@ public abstract class AbstractSelectionControllerTests {
         SecurityContextHolder.clearContext();
 
         return pathologyCount;
+    }
+
+    List<List<String>> downloadRequestsExport() throws IOException {
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        List<List<String>> result = new ArrayList<>();
+
+        HttpEntity<InputStreamResource> response = requestExportController.downloadRequestList(palga);
+        ICSVParser parser = new CSVParserBuilder().withSeparator(';').withQuoteChar('"').build();
+        CSVReader reader = new CSVReaderBuilder(new InputStreamReader(response.getBody().getInputStream()))
+                .withCSVParser(parser)
+                .build();
+        String[] line;
+        while ((line = reader.readNext()) != null) {
+            result.add(Arrays.asList(line));
+        }
+        return result;
     }
 
 }

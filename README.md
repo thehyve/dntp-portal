@@ -1,6 +1,7 @@
 # Request portal for Dutch pathology labs
 
 [![Build Status](https://travis-ci.org/thehyve/dntp-portal.svg?branch=dev)](https://travis-ci.org/thehyve/dntp-portal/branches)
+[![codecov](https://codecov.io/gh/thehyve/dntp-portal/branch/dev/graph/badge.svg)](https://codecov.io/gh/thehyve/dntp-portal)
 
 This repository hosts the code of a request portal, built for the
 [Dutch National Tissuebank Portal](http://www.dntp.nl) project.

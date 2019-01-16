@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import business.exceptions.UpdateNotAllowed;
 import business.models.ApprovalVote;
-import business.models.ApprovalVoteRepository;
 import business.models.Comment;
 import business.models.ContactData;
 import business.models.ContactDataRepository;
@@ -61,9 +60,6 @@ public class RequestFormService {
     @Autowired
     private ExcerptListService excerptListService;
   
-    @Autowired
-    private ApprovalVoteRepository approvalVoteRepository;
-    
     @Autowired
     public RequestService requestService;
 
@@ -160,8 +156,11 @@ public class RequestFormService {
             request.setDateCreated((Date)variables.get("date_created"));
             String requesterId = variables.get("requester_id") == null ? "" : variables.get("requester_id").toString();
             Long userId = null;
-            try { userId = Long.valueOf(requesterId); }
-            catch(NumberFormatException e) {}
+            try {
+                userId = Long.valueOf(requesterId);
+            } catch(NumberFormatException e) {
+                // ignore
+            }
             if (userId != null) {
                 User user = userService.findOneCached(userId);
                 if (user != null) {
@@ -195,24 +194,8 @@ public class RequestFormService {
         request.setLaboratoryTechniques(properties.getLaboratoryTechniques());
     }
 
-    public void transferAttachmentData(HistoricProcessInstance instance, RequestListRepresentation request) {
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(
-                instance.getId());
-        List<FileRepresentation> requestAttachments = new ArrayList<FileRepresentation>();
-        for(File file: properties.getRequestAttachments()) {
-            requestAttachments.add(new FileRepresentation(file));
-        }
-        request.setAttachments(requestAttachments);
-
-        List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments = new ArrayList<FileRepresentation>();
-        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
-            medicalEthicalCommitteeApprovalAttachments.add(new FileRepresentation(file));
-        }
-        request.setMedicalEthicalCommitteeApprovalAttachments(medicalEthicalCommitteeApprovalAttachments);
-    }
-
     private static Set<RequestStatus> excerptListStatuses = new HashSet<>();
-    {
+    static {
         excerptListStatuses.add(RequestStatus.DATA_DELIVERY);
         excerptListStatuses.add(RequestStatus.SELECTION_REVIEW);
         excerptListStatuses.add(RequestStatus.LAB_REQUEST);
@@ -229,8 +212,8 @@ public class RequestFormService {
      */
     @Transactional
     public void transferData(HistoricProcessInstance instance, RequestRepresentation request, User currentUser) {
-        boolean is_palga = currentUser == null ? false : currentUser.isPalga();
-        boolean is_scientific_council = currentUser == null ? false : currentUser.isScientificCouncilMember();
+        boolean isPalga = currentUser == null ? false : currentUser.isPalga();
+        boolean isScientificCouncil = currentUser == null ? false : currentUser.isScientificCouncilMember();
         request.setProcessInstanceId(instance.getId());
         request.setProcessId(instance.getProcessDefinitionId());
         //request.setActivityId(instance.getActivityId()); // fetch from runtimeService?
@@ -376,13 +359,13 @@ public class RequestFormService {
                 request.setChildren(children);
             }
 
-            List<FileRepresentation> requestAttachments = new ArrayList<FileRepresentation>();
+            List<FileRepresentation> requestAttachments = new ArrayList<>();
             for(File file: properties.getRequestAttachments()) {
                 requestAttachments.add(new FileRepresentation(file));
             }
             request.setAttachments(requestAttachments);
 
-            List<FileRepresentation> informedConsentFormAttachments = new ArrayList<FileRepresentation>();
+            List<FileRepresentation> informedConsentFormAttachments = new ArrayList<>();
             for(File file: properties.getInformedConsentFormAttachments()) {
                 informedConsentFormAttachments.add(new FileRepresentation(file));
             }
@@ -393,35 +376,35 @@ public class RequestFormService {
             request.setPrivacyCommitteeOutcomeRef(properties.getPrivacyCommitteeOutcomeRef());
             request.setPrivacyCommitteeEmails(properties.getPrivacyCommitteeEmails());
 
-            if (is_palga) {
-                List<FileRepresentation> agreementAttachments = new ArrayList<FileRepresentation>();
+            if (isPalga) {
+                List<FileRepresentation> agreementAttachments = new ArrayList<>();
                 for(File file: properties.getAgreementAttachments()) {
                     agreementAttachments.add(new FileRepresentation(file));
                 }
                 request.setAgreementAttachments(agreementAttachments);
             }
 
-            if (is_palga || is_scientific_council) {
-                List<CommentRepresentation> comments = new ArrayList<CommentRepresentation>();
+            if (isPalga || isScientificCouncil) {
+                List<CommentRepresentation> comments = new ArrayList<>();
                 for (Comment comment: properties.getComments()) {
                     comments.add(new CommentRepresentation(comment));
                 }
                 request.setComments(comments);
 
-                List<CommentRepresentation> approvalComments = new ArrayList<CommentRepresentation>();
+                List<CommentRepresentation> approvalComments = new ArrayList<>();
                 for (Comment comment: properties.getApprovalComments()) {
                     approvalComments.add(new CommentRepresentation(comment));
                 }
                 request.setApprovalComments(approvalComments);
 
-                Map<Long, ApprovalVoteRepresentation> approvalVotes = new HashMap<Long, ApprovalVoteRepresentation>();
+                Map<Long, ApprovalVoteRepresentation> approvalVotes = new HashMap<>();
                 for (Entry<Long, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
                     approvalVotes.put(entry.getKey(), new ApprovalVoteRepresentation(entry.getValue()));
                 }
                 request.setApprovalVotes(approvalVotes);
             }
 
-            if (is_palga) {
+            if (isPalga) {
                 request.setRequesterValid(fetchBooleanVariable("requester_is_valid", variables));
                 request.setRequesterAllowed(fetchBooleanVariable("requester_is_allowed", variables));
                 request.setContactPersonAllowed(fetchBooleanVariable("contact_person_is_allowed", variables));
@@ -438,14 +421,14 @@ public class RequestFormService {
                 request.setRejectDate((Date)variables.get("reject_date"));
             }
 
-            List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments = new ArrayList<FileRepresentation>();
+            List<FileRepresentation> medicalEthicalCommitteeApprovalAttachments = new ArrayList<>();
             for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
                 medicalEthicalCommitteeApprovalAttachments.add(new FileRepresentation(file));
             }
             request.setMedicalEthicalCommitteeApprovalAttachments(medicalEthicalCommitteeApprovalAttachments);
 
-            if (!is_scientific_council) {
-                List<FileRepresentation> dataAttachments = new ArrayList<FileRepresentation>();
+            if (!isScientificCouncil) {
+                List<FileRepresentation> dataAttachments = new ArrayList<>();
                 for(File file: properties.getDataAttachments()) {
                     dataAttachments.add(new FileRepresentation(file));
                 }
@@ -456,10 +439,9 @@ public class RequestFormService {
                     ExcerptList excerptList = excerptListService.findByProcessInstanceId(instance.getId());
                     if (excerptList != null) {
                         log.info("Set excerpt list info.");
+                        request.setExcerptListAttachment(new FileRepresentation(properties.getExcerptListAttachment()));
                         ExcerptListRepresentation excerptListRepresentation
                             = new ExcerptListRepresentation(excerptList);
-                        //List<ExcerptEntry> list = excerptList.getEntries();
-                        //excerptListRepresentation.setEntryList(list);
                         Integer entryCount = excerptListService.countEntriesByExcerptListId(excerptList.getId());
                         excerptListRepresentation.setEntryCount(entryCount);
                         Integer selectedCount = excerptListService.countSelectedEntriesByExcerptListId(excerptList.getId());
@@ -467,9 +449,9 @@ public class RequestFormService {
                         request.setExcerptList(excerptListRepresentation);
                         @SuppressWarnings("unchecked")
                         Collection<Integer> selectedLabs = (Collection<Integer>)variables.get("lab_request_labs");
-                        Set<Integer> selectedLabSet = new TreeSet<Integer>();
+                        Set<Integer> selectedLabSet = new TreeSet<>();
                         if (selectedLabs != null) {
-                            for (Integer labNumber: selectedLabs) { selectedLabSet.add(labNumber); }
+                            selectedLabSet.addAll(selectedLabs);
                         }
                         request.setSelectedLabs(selectedLabSet);
                         request.setExcerptListRemark(excerptList.getRemark());
@@ -497,7 +479,7 @@ public class RequestFormService {
         request.setProcessInstanceId(instance.getId());
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables == null) {
-            return variables;
+            return null;
         }
 
         if (user.isRequester()) {
@@ -519,20 +501,20 @@ public class RequestFormService {
         variables.put("hypothesis", request.getHypothesis());
         variables.put("methods", request.getMethods());
 
-        variables.put("is_statistics_request", (Boolean)request.isStatisticsRequest());
-        variables.put("is_excerpts_request", (Boolean)request.isExcerptsRequest());
-        variables.put("is_pa_report_request", (Boolean)request.isPaReportRequest());
-        variables.put("is_materials_request", (Boolean)request.isMaterialsRequest());
-        variables.put("is_clinical_data_request", (Boolean)request.isClinicalDataRequest());
+        variables.put("is_statistics_request", request.isStatisticsRequest());
+        variables.put("is_excerpts_request", request.isExcerptsRequest());
+        variables.put("is_pa_report_request", request.isPaReportRequest());
+        variables.put("is_materials_request", request.isMaterialsRequest());
+        variables.put("is_clinical_data_request", request.isClinicalDataRequest());
 
         variables.put("pathologist_name", request.getPathologistName());
         variables.put("pathologist_email", request.getPathologistEmail());
-        variables.put("previous_contact",(Boolean) request.isPreviousContact());
+        variables.put("previous_contact", request.isPreviousContact());
         variables.put("previous_contact_description", request.getPreviousContactDescription());
 
-        variables.put("is_linkage_with_personal_data", (Boolean)request.isLinkageWithPersonalData());
+        variables.put("is_linkage_with_personal_data", request.isLinkageWithPersonalData());
         variables.put("linkage_with_personal_data_notes", request.getLinkageWithPersonalDataNotes());
-        variables.put("is_informed_consent", (Boolean)request.isInformedConsent());
+        variables.put("is_informed_consent", request.isInformedConsent());
         variables.put("reason_using_personal_data", request.getReasonUsingPersonalData());
 
         variables.put("return_date", request.getReturnDate());
@@ -560,22 +542,22 @@ public class RequestFormService {
         properties.setBillingAddress(billingAddress);
 
         if (user.isPalga()) {
-            variables.put("requester_is_valid", (Boolean)request.isRequesterValid());
-            variables.put("requester_is_allowed", (Boolean)request.isRequesterAllowed());
-            variables.put("contact_person_is_allowed", (Boolean)request.isContactPersonAllowed());
-            variables.put("requester_lab_is_valid", (Boolean)request.isRequesterLabValid());
-            variables.put("agreement_reached", (Boolean)request.isAgreementReached());
+            variables.put("requester_is_valid", request.isRequesterValid());
+            variables.put("requester_is_allowed", request.isRequesterAllowed());
+            variables.put("contact_person_is_allowed", request.isContactPersonAllowed());
+            variables.put("requester_lab_is_valid", request.isRequesterLabValid());
+            variables.put("agreement_reached", request.isAgreementReached());
 
-            variables.put("request_is_admissible", (Boolean)request.isRequestAdmissible());
+            variables.put("request_is_admissible", request.isRequestAdmissible());
 
-            variables.put("reopen_request", (Boolean)request.isReopenRequest());
+            variables.put("reopen_request", request.isReopenRequest());
 
-            variables.put("skip_status_approval", (Boolean)request.isSkipStatusApproval());
+            variables.put("skip_status_approval", request.isSkipStatusApproval());
 
-            variables.put("scientific_council_approved", (Boolean)request.isScientificCouncilApproved());
-            variables.put("privacy_committee_approved", (Boolean)request.isPrivacyCommitteeApproved());
+            variables.put("scientific_council_approved", request.isScientificCouncilApproved());
+            variables.put("privacy_committee_approved", request.isPrivacyCommitteeApproved());
 
-            variables.put("request_approved", (Boolean)request.isRequestApproved());
+            variables.put("request_approved", request.isRequestApproved());
             variables.put("reject_reason", request.getRejectReason());
             variables.put("reject_date", request.getRejectDate());
 

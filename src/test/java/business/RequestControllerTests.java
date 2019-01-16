@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 public class RequestControllerTests extends AbstractSelectionControllerTests {
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         ((MockMailSender) this.mailSender).clear();
         log.info("TEST  Test: " + this.getClass().toString());
     }

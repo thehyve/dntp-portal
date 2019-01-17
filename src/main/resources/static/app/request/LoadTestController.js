@@ -106,7 +106,7 @@ angular.module('ProcessApp.controllers')
                 return $q(function(resolve, reject) {
                     //console.log('Considering request ' + req.requestNumber);
                     if ($rootScope.isCurrentUser(req.assignee)) {
-                        if (req.status == 'Review') {
+                        if (req.status === 'Review') {
                             req.requesterLabValid = true;
                             req.requesterValid = true;
                             req.requesterAllowed = true;
@@ -120,7 +120,7 @@ angular.module('ProcessApp.controllers')
                                 reject(err);
                             });
                         }
-                        else if (req.status == 'Approval') {
+                        else if (req.status === 'Approval') {
                             req.scientificCouncilApproved = true;
                             req.privacyCommitteeApproved = true;
                             req.$finalise(function(result) {
@@ -129,7 +129,7 @@ angular.module('ProcessApp.controllers')
                             }, function(err) {
                                 reject(err);
                             });
-                        } else if (req.status == 'DataDelivery') {
+                        } else if (req.status === 'DataDelivery') {
                             req.$get(function(res) {
                                 if (res.excerptList === null) {
                                     res.$useExampleExcerptList(function(result) {
@@ -149,7 +149,7 @@ angular.module('ProcessApp.controllers')
                             }, function(err) {
                                 reject(err);
                             });
-                        } else if (req.status == 'SelectionReview') {
+                        } else if (req.status === 'SelectionReview') {
                             req.selectionApproved = true;
                             req.$updateExcerptSelectionApproval(function(result) {
                                 console.log('Excerpt selection approved for: ' + result.requestNumber);

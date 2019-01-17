@@ -448,7 +448,6 @@ public class RequestService {
         return childRequest;
     }
 
-
     @Transactional(readOnly = true)
     public RequestListRepresentation getRequestData(String processInstanceId, User currentUser) {
         RequestListRepresentation request = requestFormService.getRequestListDataCached(processInstanceId);

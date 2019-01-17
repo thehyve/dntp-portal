@@ -17,12 +17,12 @@ import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 
-import business.controllers.RequestExportController;
-import business.controllers.RequestFileController;
+import business.controllers.*;
 import business.models.ContactData;
 import business.models.LabRequest;
 import business.representation.*;
 import business.services.LabRequestQueryService;
+import business.services.TestService;
 import com.opencsv.*;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
@@ -40,8 +40,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import business.controllers.RequestController;
-import business.controllers.SelectionController;
 import business.models.PathologyItemRepository;
 import business.models.User;
 import business.security.MockConfiguration.MockMailSender;
@@ -59,6 +57,9 @@ public abstract class AbstractSelectionControllerTests {
     UserService userService;
 
     @Autowired
+    TestService testService;
+
+    @Autowired
     SelectionController selectionController;
 
     @Autowired
@@ -69,6 +70,9 @@ public abstract class AbstractSelectionControllerTests {
 
     @Autowired
     RequestExportController requestExportController;
+
+    @Autowired
+    LabRequestExportController labRequestExportController;
 
     @Autowired
     TaskService taskService;
@@ -143,7 +147,7 @@ public abstract class AbstractSelectionControllerTests {
         SecurityContextHolder.clearContext();
     }
 
-    void submitRequestForApproval() throws Exception {
+    void submitRequestForApproval() throws InterruptedException {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -175,7 +179,7 @@ public abstract class AbstractSelectionControllerTests {
         assertEquals(RequestStatus.APPROVAL, representation.getStatus());
 
         // Mail sending is asynchronous. Sleep for 1 second.
-        Thread.sleep(1 * 1000);
+        Thread.sleep(1000);
 
         assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
@@ -443,16 +447,10 @@ public abstract class AbstractSelectionControllerTests {
         return pathologyCount;
     }
 
-    List<List<String>> downloadRequestsExport() throws IOException {
-        UserAuthenticationToken palga = getPalga();
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(palga);
-
+    private List<List<String>> parseDelimiterSeparatedExport(char separator, InputStream inputStream) throws IOException {
         List<List<String>> result = new ArrayList<>();
-
-        HttpEntity<InputStreamResource> response = requestExportController.downloadRequestList(palga);
-        ICSVParser parser = new CSVParserBuilder().withSeparator(';').withQuoteChar('"').build();
-        CSVReader reader = new CSVReaderBuilder(new InputStreamReader(response.getBody().getInputStream()))
+        ICSVParser parser = new CSVParserBuilder().withSeparator(separator).withQuoteChar('"').build();
+        CSVReader reader = new CSVReaderBuilder(new InputStreamReader(inputStream))
                 .withCSVParser(parser)
                 .build();
         String[] line;
@@ -460,6 +458,24 @@ public abstract class AbstractSelectionControllerTests {
             result.add(Arrays.asList(line));
         }
         return result;
+    }
+
+    List<List<String>> downloadRequestsExport() throws IOException {
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        HttpEntity<InputStreamResource> response = requestExportController.downloadRequestList(palga);
+        return parseDelimiterSeparatedExport(';', response.getBody().getInputStream());
+    }
+
+    List<List<String>> downloadLabRequestsExport() throws IOException {
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        HttpEntity<InputStreamResource> response = labRequestExportController.downloadAllPANumbers(palga);
+        return parseDelimiterSeparatedExport(',', response.getBody().getInputStream());
     }
 
 }

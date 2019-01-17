@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016  Stichting PALGA
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file <a href="{@docRoot}/LICENSE">LICENSE</a>).
@@ -14,17 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
-import business.exceptions.AttachmentNotFound;
-import business.models.File;
 import business.models.RequestProperties;
 import business.models.RequestProperties.ReviewStatus;
 import business.representation.RequestListRepresentation;
 import business.models.RequestPropertiesRepository;
-import business.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -38,9 +33,6 @@ public class RequestPropertiesService {
 
     @Autowired
     private RequestNumberService requestNumberService;
-
-    @Autowired
-    private FileService fileService;
 
 
     @CacheEvict(value = {"requestlistdata", "dataattachmentcount"}, key = "#properties.processInstanceId")
@@ -153,108 +145,6 @@ public class RequestPropertiesService {
     @Transactional(readOnly = true)
     public Set<String> getProcessInstanceIdsByReviewStatus(ReviewStatus reviewStatus) {
         return requestPropertiesRepository.getProcessInstanceIdsByReviewStatus(reviewStatus);
-    }
-
-    public void addRequestAttachment(String processInstanceId, File attachment) {
-        RequestProperties properties = findByProcessInstanceId(processInstanceId);
-        properties.getRequestAttachments().add(attachment);
-        properties = save(properties);
-    }
-
-    public void removeRequestAttachment(String processInstanceId, Long attachmentId) {
-        RequestProperties properties = findByProcessInstanceId(processInstanceId);
-        File toBeRemoved = null;
-        for (File file: properties.getRequestAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                toBeRemoved = file;
-                break;
-            }
-        }
-        if (toBeRemoved == null) {
-            throw new AttachmentNotFound();
-        }
-        properties.getRequestAttachments().remove(toBeRemoved);
-        save(properties);
-        fileService.removeAttachment(toBeRemoved);
-    }
-
-    public void addInformedConsentFormAttachment(String processInstanceId, File attachment) {
-        RequestProperties properties = findByProcessInstanceId(processInstanceId);
-        properties.getInformedConsentFormAttachments().add(attachment);
-        save(properties);
-    }
-
-    public void removeInformedConsentFormAttachment(String processInstanceId, Long attachmentId) {
-        RequestProperties properties = findByProcessInstanceId(processInstanceId);
-        File toBeRemoved = null;
-        for (File file: properties.getInformedConsentFormAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                toBeRemoved = file;
-                break;
-            }
-        }
-        if (toBeRemoved == null) {
-            throw new AttachmentNotFound();
-        }
-        properties.getInformedConsentFormAttachments().remove(toBeRemoved);
-        save(properties);
-        fileService.removeAttachment(toBeRemoved);
-    }
-
-    public void addAgreementAttachment(String processInstanceId, File attachment) {
-        RequestProperties properties = findByProcessInstanceId(processInstanceId);
-        properties.getAgreementAttachments().add(attachment);
-        properties = save(properties);
-    }
-
-    public void removeAgreementAttachment(String processInstanceId, Long attachmentId) {
-        RequestProperties properties = findByProcessInstanceId(processInstanceId);
-        File toBeRemoved = null;
-        for (File file: properties.getAgreementAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                toBeRemoved = file;
-                break;
-            }
-        }
-        if (toBeRemoved == null) {
-            throw new AttachmentNotFound();
-        }
-        properties.getAgreementAttachments().remove(toBeRemoved);
-        save(properties);
-        fileService.removeAttachment(toBeRemoved);
-    }
-
-    @Transactional(readOnly = true)
-    public HttpEntity<InputStreamResource> getFile(User user, String id, Long attachmentId) {
-        RequestProperties properties = findByProcessInstanceId(id);
-        for (File file: properties.getRequestAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
-            }
-        }
-        for (File file: properties.getAgreementAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
-            }
-        }
-        if (!user.isScientificCouncilMember()) {
-            for (File file: properties.getDataAttachments()) {
-                if (file.getId().equals(attachmentId)) {
-                    return fileService.download(file.getId());
-                }
-            }
-        }
-        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
-            }
-        }
-        for (File file: properties.getInformedConsentFormAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                return fileService.download(file.getId());
-            }
-        }
-        throw new AttachmentNotFound();
     }
 
     public void delete(String id) {

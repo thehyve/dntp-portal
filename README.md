@@ -237,7 +237,7 @@ alter table excerpt_entry add selected boolean;
 ```
 
 ## License
-Copyright &copy; 2016  Stichting PALGA
+Copyright &copy; 2016&ndash;2019  Stichting PALGA
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as

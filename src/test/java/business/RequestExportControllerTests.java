@@ -1,9 +1,7 @@
 package business;
 
 import business.representation.RequestStatus;
-import business.security.MockConfiguration;
 import business.services.RequestPropertiesService;
-import business.services.TestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,16 +24,11 @@ import static org.junit.Assert.assertNotEquals;
 public class RequestExportControllerTests extends AbstractSelectionControllerTests {
 
     @Autowired
-    TestService testService;
-
-    @Autowired
     RequestPropertiesService requestPropertiesService;
 
     @Before
     public void setup() {
-        ((MockConfiguration.MockMailSender) this.mailSender).clear();
         testService.clearDatabase();
-        log.info("TEST  Test: " + this.getClass().toString());
     }
 
     @Test

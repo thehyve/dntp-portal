@@ -10,7 +10,6 @@ import business.exceptions.FileUploadError;
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.UpdateNotAllowed;
 import business.models.File;
-import business.models.RequestProperties;
 import business.representation.ExcerptListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
@@ -46,9 +45,6 @@ public class RequestFileController {
 
     @Autowired
     private RequestFormService requestFormService;
-
-    @Autowired
-    private RequestPropertiesService requestPropertiesService;
 
     @Autowired
     private RequestFileService requestFileService;
@@ -93,6 +89,9 @@ public class RequestFileController {
             @RequestParam("file") MultipartFile file) {
         log.info("POST /requests/" + id + "/files: chunk " + chunk + " / " + chunks);
 
+        // Check if request exists
+        requestService.getProcessInstance(id);
+
         checkAttachmentTaskExists(user, id);
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.REQUEST, file, chunk, chunks, flowIdentifier);
@@ -115,6 +114,9 @@ public class RequestFileController {
     public RequestRepresentation deleteRequestAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                          @PathVariable Long attachmentId) {
         log.info("DELETE /requests/" + id + "/files/" + attachmentId);
+
+        // Check if request exists
+        requestService.getProcessInstance(id);
 
         checkAttachmentTaskExists(user, id);
 
@@ -171,15 +173,17 @@ public class RequestFileController {
     }
 
 
+    @PreAuthorize("isAuthenticated() "
+            + " and ("
+            + "     hasPermission(#id, 'isRequester') "
+            + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
+            + ")")
     @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeInformedConsentFormAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                                      @PathVariable Long attachmentId) {
         log.info("DELETE /requests/" + id + "/informedConsentFormFiles/" + attachmentId);
 
         checkAttachmentTaskExists(user, id);
-
-        // Check access
-        requestService.getProcessInstance(id);
 
         // remove existing agreement attachment.
         requestFileService.removeInformedConsentFormAttachment(id, attachmentId);
@@ -201,7 +205,10 @@ public class RequestFileController {
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
         log.info("POST /requests/" + id + "/agreementFiles: chunk " + chunk + " / " + chunks);
-        // Check access
+
+        // Check if request exists
+        requestService.getProcessInstance(id);
+        // Check status
         requestService.getTaskByRequestId(id, "palga_request_review");
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.AGREEMENT, file, chunk, chunks, flowIdentifier);
@@ -221,9 +228,11 @@ public class RequestFileController {
     public RequestRepresentation removeAgreementAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                            @PathVariable Long attachmentId) {
         log.info("DELETE /requests/" + id + "/agreementFiles/" + attachmentId);
-        // Check access
-        requestService.getTaskByRequestId(id, "palga_request_review");
+
+        // Check if request exists
         requestService.getProcessInstance(id);
+        // Check status
+        requestService.getTaskByRequestId(id, "palga_request_review");
 
         // remove existing agreement attachment.
         requestFileService.removeAgreementAttachment(id, attachmentId);
@@ -234,7 +243,6 @@ public class RequestFileController {
         return request;
     }
 
-    // FIXME: refactor
     @PreAuthorize("isAuthenticated() "
             + " and ("
             + "     hasPermission(#id, 'isRequester') "
@@ -251,19 +259,17 @@ public class RequestFileController {
             @RequestParam("file") MultipartFile file) {
         log.info("POST /requests/" + id + "/mecFiles: chunk " + chunk + " / " + chunks);
 
+        // Check if request exists
+        requestService.getProcessInstance(id);
         if (user.getUser().isRequester()) {
-            Task task = requestService.getTaskByRequestId(id, "request_form");
-            if (task == null) {
-                throw new UpdateNotAllowed();
-            }
+            // Check status
+            requestService.getTaskByRequestId(id, "request_form");
         }
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.MEDICAL_ETHICAL_COMMITEE_APPROVAL, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
             // add attachment id to the set of ids of the agreement attachments.
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-            properties.getMedicalEthicalCommiteeApprovalAttachments().add(attachment);
-            requestPropertiesService.save(properties);
+            requestFileService.addMECAttachment(id, attachment);
         }
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
@@ -272,7 +278,6 @@ public class RequestFileController {
         return request;
     }
 
-    // FIXME: refactor
     @PreAuthorize("isAuthenticated() "
             + " and ("
             + "     hasPermission(#id, 'isRequester') "
@@ -283,27 +288,15 @@ public class RequestFileController {
                                                      @PathVariable Long attachmentId) {
         log.info("DELETE /requests/" + id + "/mecFiles/" + attachmentId);
 
+        // Check if request exists
+        requestService.getProcessInstance(id);
         if (user.getUser().isRequester()) {
-            Task task = requestService.getTaskByRequestId(id, "request_form");
-            if (task == null) {
-                throw new UpdateNotAllowed();
-            }
+            // Check status
+            requestService.getTaskByRequestId(id, "request_form");
         }
 
         // remove existing agreement attachment.
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        File toBeRemoved = null;
-        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                toBeRemoved = file;
-                break;
-            }
-        }
-        if (toBeRemoved != null) {
-            properties.getMedicalEthicalCommiteeApprovalAttachments().remove(toBeRemoved);
-            requestPropertiesService.save(properties);
-            fileService.removeAttachment(toBeRemoved);
-        }
+        requestFileService.removeMECAttachment(id, attachmentId);
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
@@ -311,7 +304,6 @@ public class RequestFileController {
         return request;
     }
 
-    // FIXME: refactor
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadDataAttachment(
@@ -324,15 +316,15 @@ public class RequestFileController {
             @RequestParam("file") MultipartFile file) {
         log.info("POST /requests/" + id + "/dataFiles: chunk " + chunk + " / " + chunks);
 
-        // Check access
+        // Check if request exists
+        requestService.getProcessInstance(id);
+        // Check status
         requestService.getTaskByRequestId(id, "data_delivery");
 
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.DATA, file, chunk, chunks, flowIdentifier);
         if (attachment != null) {
             // add attachment id to the set of ids of the agreement attachments.
-            RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-            properties.getDataAttachments().add(attachment);
-            requestPropertiesService.save(properties);
+            requestFileService.addDataAttachment(id, attachment);
         }
 
         requestFormService.invalidateCacheEntry(id);
@@ -342,30 +334,17 @@ public class RequestFileController {
         return request;
     }
 
-    // FIXME: refactor
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
     @RequestMapping(value = "/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeDataAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                       @PathVariable Long attachmentId) {
         log.info("DELETE /requests/" + id + "/dataFiles/" + attachmentId);
 
-        // Check access
+        // Check if request exists
         requestService.getProcessInstance(id);
 
         // remove existing data attachment.
-        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
-        File toBeRemoved = null;
-        for (File file: properties.getDataAttachments()) {
-            if (file.getId().equals(attachmentId)) {
-                toBeRemoved = file;
-                break;
-            }
-        }
-        if (toBeRemoved != null) {
-            properties.getDataAttachments().remove(toBeRemoved);
-            requestPropertiesService.save(properties);
-            fileService.removeAttachment(toBeRemoved);
-        }
+        requestFileService.removeDataAttachment(id, attachmentId);
 
         requestFormService.invalidateCacheEntry(id);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
@@ -421,7 +400,10 @@ public class RequestFileController {
             @RequestParam("file") MultipartFile file) {
         log.info("POST /requests/" + id + "/excerptList: chunk " + chunk + " / " + chunks);
 
-        Task task = requestService.getTaskByRequestId(id, "data_delivery");
+        // Check if request exists
+        requestService.getProcessInstance(id);
+        // Check status
+        requestService.getTaskByRequestId(id, "data_delivery");
 
         Integer excerptCount = 0;
         File attachment = fileService.uploadPart(user.getUser(), name, File.AttachmentType.EXCERPT_LIST, file, chunk, chunks, flowIdentifier);
@@ -438,7 +420,10 @@ public class RequestFileController {
     @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.GET)
     public ExcerptListRepresentation getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
         log.info("GET /requests/" + id + "/excerptList");
-        // Check access
+
+        // Check if request exists
+        requestService.getProcessInstance(id);
+        // Check status
         requestService.getTaskByRequestId(id, "data_delivery");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
@@ -453,7 +438,7 @@ public class RequestFileController {
     }
 
     private static final Set<RequestStatus> excerptListStatuses = new HashSet<>();
-    {
+    static {
         excerptListStatuses.add(RequestStatus.DATA_DELIVERY);
         excerptListStatuses.add(RequestStatus.SELECTION_REVIEW);
         excerptListStatuses.add(RequestStatus.LAB_REQUEST);

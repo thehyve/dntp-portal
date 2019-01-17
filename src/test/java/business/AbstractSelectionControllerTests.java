@@ -22,6 +22,7 @@ import business.models.ContactData;
 import business.models.LabRequest;
 import business.representation.*;
 import business.services.LabRequestQueryService;
+import business.services.TestService;
 import com.opencsv.*;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
@@ -54,6 +55,9 @@ public abstract class AbstractSelectionControllerTests {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TestService testService;
 
     @Autowired
     SelectionController selectionController;
@@ -143,7 +147,7 @@ public abstract class AbstractSelectionControllerTests {
         SecurityContextHolder.clearContext();
     }
 
-    void submitRequestForApproval() throws Exception {
+    void submitRequestForApproval() throws InterruptedException {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -175,7 +179,7 @@ public abstract class AbstractSelectionControllerTests {
         assertEquals(RequestStatus.APPROVAL, representation.getStatus());
 
         // Mail sending is asynchronous. Sleep for 1 second.
-        Thread.sleep(1 * 1000);
+        Thread.sleep(1000);
 
         assertEquals(mailSender.getClass(), MockMailSender.class);
         List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();

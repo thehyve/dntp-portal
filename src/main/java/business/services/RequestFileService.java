@@ -95,6 +95,52 @@ public class RequestFileService {
         fileService.removeAttachment(toBeRemoved);
     }
 
+    public void addMECAttachment(String processInstanceId, File attachment) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(processInstanceId);
+        properties.getMedicalEthicalCommiteeApprovalAttachments().add(attachment);
+        requestPropertiesService.save(properties);
+    }
+
+    public void removeMECAttachment(String processInstanceId, Long attachmentId) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(processInstanceId);
+        File toBeRemoved = null;
+        for (File file: properties.getMedicalEthicalCommiteeApprovalAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                toBeRemoved = file;
+                break;
+            }
+        }
+        if (toBeRemoved == null) {
+            throw new AttachmentNotFound();
+        }
+        properties.getMedicalEthicalCommiteeApprovalAttachments().remove(toBeRemoved);
+        requestPropertiesService.save(properties);
+        fileService.removeAttachment(toBeRemoved);
+    }
+
+    public void addDataAttachment(String processInstanceId, File attachment) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(processInstanceId);
+        properties.getDataAttachments().add(attachment);
+        requestPropertiesService.save(properties);
+    }
+
+    public void removeDataAttachment(String processInstanceId, Long attachmentId) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(processInstanceId);
+        File toBeRemoved = null;
+        for (File file: properties.getDataAttachments()) {
+            if (file.getId().equals(attachmentId)) {
+                toBeRemoved = file;
+                break;
+            }
+        }
+        if (toBeRemoved == null) {
+            throw new AttachmentNotFound();
+        }
+        properties.getDataAttachments().remove(toBeRemoved);
+        requestPropertiesService.save(properties);
+        fileService.removeAttachment(toBeRemoved);
+    }
+
     @Transactional(readOnly = true)
     public HttpEntity<InputStreamResource> getFile(User user, String id, Long attachmentId) {
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);

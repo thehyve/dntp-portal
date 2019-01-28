@@ -127,8 +127,8 @@ module.exports = function() {
     });
 
     this.When(/^I click on the object with id '(.+)'$/, function(id, next) {
-        if (id == 'submit-new-request') { //this is a hack to prevent failure on some screens. should be fixed in a page object.
-            browser.executeScript("angular.element($('#uploadFilePopover')).scope().hidePopover('uploadFilePopover')");
+        if (id === 'submit-new-request') { //this is a hack to prevent failure on some screens. should be fixed in a page object.
+            // browser.executeScript("angular.element($('#uploadFilePopover')).scope().hidePopover('uploadFilePopover')");
         }
         element(by.id(id)).click().then(next,next);
     });

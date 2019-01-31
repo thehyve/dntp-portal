@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.PaNumbersDownloadError;
@@ -40,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static business.services.ExportFormatHelper.booleanToString;
 import static business.services.ExportFormatHelper.dateToString;
+import static business.util.ExportUtils.replaceSpacesWithUnderscores;
 
 
 @Service
@@ -170,10 +172,10 @@ public class LabRequestExportService {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Writer writer = new OutputStreamWriter(out, PA_NUMBERS_DOWNLOAD_CHARACTER_ENCODING);
         ICSVWriter csvwriter = new CSVWriterBuilder(writer)
-                .withSeparator(',')
+                .withSeparator(';')
                 .withQuoteChar('"')
                 .build();
-        csvwriter.writeNext(PA_NUMBERS_HEADER);
+        csvwriter.writeNext(replaceSpacesWithUnderscores(PA_NUMBERS_HEADER));
         for (LabRequestRepresentation labRequest: labRequests) {
             RequestListRepresentation request = requestService.getRequestData(labRequest.getProcessInstanceId(), user);
             String labRequestCode = labRequest.getLabRequestCode();

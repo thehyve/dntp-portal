@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static business.services.ExportFormatHelper.*;
+import static business.util.ExportUtils.replaceSpacesWithUnderscores;
 
 @Service
 @Transactional
@@ -74,7 +75,7 @@ public class RequestExportService {
                     .withSeparator(';')
                     .withQuoteChar('"')
                     .build();
-            csvwriter.writeNext(CSV_COLUMN_NAMES);
+            csvwriter.writeNext(replaceSpacesWithUnderscores(CSV_COLUMN_NAMES));
 
             for (RequestRepresentation request: requests) {
                 List<String> values = new ArrayList<>();

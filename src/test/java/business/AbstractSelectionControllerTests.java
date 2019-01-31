@@ -475,7 +475,7 @@ public abstract class AbstractSelectionControllerTests {
         securityContext.setAuthentication(palga);
 
         HttpEntity<InputStreamResource> response = labRequestExportController.downloadAllPANumbers(palga);
-        return parseDelimiterSeparatedExport(',', response.getBody().getInputStream());
+        return parseDelimiterSeparatedExport(';', response.getBody().getInputStream());
     }
 
 }

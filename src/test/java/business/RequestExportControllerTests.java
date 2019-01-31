@@ -62,10 +62,10 @@ public class RequestExportControllerTests extends AbstractSelectionControllerTes
         // Expect a header row and three requests
         assertEquals(4, exportData.size());
         List<String> exportDataHeader = exportData.get(0);
-        assertEquals("Request number", exportDataHeader.get(0));
-        assertEquals("Date created", exportDataHeader.get(1));
-        assertEquals("Date submitted", exportDataHeader.get(2));
-        assertEquals("Date delivered", exportDataHeader.get(3));
+        assertEquals("Request_number", exportDataHeader.get(0));
+        assertEquals("Date_created", exportDataHeader.get(1));
+        assertEquals("Date_submitted", exportDataHeader.get(2));
+        assertEquals("Date_delivered", exportDataHeader.get(3));
         assertEquals("Status", exportDataHeader.get(5));
 
         // Expect all request, except the one with status Open, to be in the export

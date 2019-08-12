@@ -56,7 +56,7 @@ public class ExcerptEntry {
     @CollectionTable(indexes = @Index(columnList="excerpt_entry_id"))
     @OrderColumn
     @BatchSize(size = 10000)
-    private List<String> values = new ArrayList<String>();
+    private List<String> values = new ArrayList<>();
 
     public ExcerptEntry() {
 
@@ -125,7 +125,7 @@ public class ExcerptEntry {
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
-    
+
     public boolean isSelected() {
         return (selected != null && selected.booleanValue());
     }

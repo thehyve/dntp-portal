@@ -73,13 +73,13 @@ This file is distributed under the GNU Affero General Public License
       {{pathology.remark}}
     </td>
     <td class="print-pa-samples-col">
-      <tags-input 
+      <tags-input
         on-tag-added="updatePathology(labRequest, pathology)"
         on-tag-removed="updatePathology(labRequest, pathology)"
         replace-spaces-with-dashes="false"
-        ng-model="pathology.samples" 
+        ng-model="pathology.samples"
         placeholder="{{'Enter sample codes'|translate}}"
-        add-on-enter="true"clear
+        add-on-enter="true"
         add-on-blur="true"
         add-on-paste="true"
         min-length="1"
@@ -111,7 +111,7 @@ This file is distributed under the GNU Affero General Public License
                     <span><i class="glyphicon glyphicon-trash"></i></span>
                 </a>
                 <a ng-if="labRequest.status=='Received' || labRequest.status=='Sending'"
-                   href="mailto:{{getRecallMailRecipients(labRequest)}}{{'mail_recall' | translate: {labRequest:labRequest, pathology: pathology} }}"
+                   ng-click="sendRecallEmail(pathology, labRequest)"
                    class="btn btn-default" role="button" title="{{'Compose recall mail' | translate}}">
                     <span><i class="glyphicon glyphicon-envelope"></i></span>
                     {{'Recall' | translate}}

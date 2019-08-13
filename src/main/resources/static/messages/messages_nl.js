@@ -94,7 +94,7 @@
         'Request type': 'Benodigde data en/of materialen',
         'popover: Request type': 'Benodigde data en/of materialen. Voor uitleg over PALGA-gegevens, bijv. welke gegevens een excerpt bevat, zie <a target="_blank" tabindex="-1" href="http://www.palga.nl/gegevensaanvragen/zoekvragen.html">www.palga.nl/gegevensaanvragen/zoekvragen.html</a>.',
         'No informed consent form uploaded.': 'Geen informed consent formulier geüpload.',
-        
+
         'Numbers only, exploratory request': 'Alleen aantallen; oriënterende zoekvraag',
         'Excerpts only': 'Alleen excerpten',
         'Excerpts and full PA reports': 'Excerpten en complete PA-verslagen',
@@ -142,7 +142,7 @@
         'Are you sure you want to close the request?<br>After closing, no data files can be added.': 'Weet je zeker dat je de aanvraag wilt afsluiten?<br>Na het sluiten kunnen geen bestanden meer worden toegevoegd.',
         'Are you sure you want to reject the request?': 'Weet je zeker dat je de aanvraag wilt afwijzen?',
         'Please enter the reason for rejection.': 'Vul de reden van afwijzing in.',
-        'Please enter the reason for rejection (max. 2000 characters).': 'Vul de reden van afwijzing in (max. 2000 tekens).', 
+        'Please enter the reason for rejection (max. 2000 characters).': 'Vul de reden van afwijzing in (max. 2000 tekens).',
         'Are you sure you want to reject the selection?<br>After rejecting, the status will return to \'Approved, waiting for data.\'' :
             'Weet je zeker dat je de selectie wilt afwijzen?<br>' +
             'Na afwijzing wordt de status veranderd naar \'Goedgekeurd, wachten op data.\'',
@@ -233,7 +233,7 @@
         'Compose mail to requester': 'E-mail aanvrager',
         'Compose reopen email': 'Meld heropenen aanvraag',
         'Compose rejection mail': 'Opstellen afwijzings-mail',
-        
+
         'Finish submission process, skip scientific council': 'Aanvraagprocedure afronden, sla wetenschappelijke raad over',
         'The scientific council and privacy committee have not been involved in this request.': 'De wetenschappelijke raad en PPC zijn niet betrokken bij deze aanvraag.',
         'Are you sure you want to finish the submission process and skip the scientific council for this request?': 'Weet u zeker dat u de aanvraagprocedure wilt afronden en dit verzoek niet naar de wetenschappelijk raad en PPC wilt sturen?',
@@ -270,7 +270,7 @@
         /* ========= */
         /* Login */
         /* ========= */
-    
+
         // Username: 'Gebruikersnaam',
         Login: 'Aanmelden',
         login: 'aanmelden',
@@ -284,7 +284,7 @@
         /* ========= */
         /* Main page */
         /* ========= */
-    
+
         Language: 'Taal',
         English: 'Engels',
         Dutch: 'Nederlands',
@@ -325,27 +325,27 @@
         /* ================= */
         /* Email validation */
         /* ================= */
-    
+
         'Account activation': 'Account activeren',
         'Your account has been successfully activated.': 'Uw account is succesvol geactiveerd.',
         'This link is not valid.': 'Deze link is niet geldig.',
-    
+
         /* ================= */
         /* Profile */
         /* ================= */
-    
+
         'Profile': 'Profiel',
         'Update profile': 'Profiel bijwerken',
         'Change password': 'Wachtwoord wijzigen',
         'Update': 'Bijwerken',
-        'You are only allowed to edit your telephone number and specialism. If you would like to change other information please contact PALGA.': 
+        'You are only allowed to edit your telephone number and specialism. If you would like to change other information please contact PALGA.':
             'U kunt alleen uw telefoonnummer en uw specialisme aanpassen. Indien u andere informatie wilt wijzigen, neem dan contact op met PALGA.',
         'Your profile has been updated': 'Uw profiel is bijgewerkt',
-    
+
         /* ===================== */
         /* Change/reset password */
         /* ===================== */
-    
+
         'Old password': 'Oud wachtwoord',
         'New password': 'Nieuw wachtwoord',
         'Repeat new password': 'Herhaal nieuw wachtwoord',
@@ -361,7 +361,7 @@
         'If an account with email address ? exists, an email with instructions on how to reset your password has been sent.': 'Als een gebruiker bestaat met emailadres {{email}}, dan hebben we een email gestuurd met instructies om uw wachtwoord te resetten.',
         'Do not forget to store the password in a secure location. It is advised to use the password manager of your browser.': 'Vergeet niet het wachtwoord op een veilige locatie te bewaren. Het wordt aangeraden om de password manager van uw browser te gebruiken.',
         'Generate password': 'Genereer een wachtwoord',
-    
+
         /* ===================== */
         /* Request Overview */
         /* ===================== */
@@ -477,7 +477,7 @@
         'Return address': 'Retouradres',
         'Hospital': 'Ziekenhuis',
         'Lab request rejected, request number': 'Labverzoek afgewezen, aanvraagnummer',
-        'Lab request rejected.%0AReject reason:': 'Labverzoek afgewezen.%0AReden voor afwijzing:',
+        'Lab request rejected.\nReject reason:': 'Labverzoek afgewezen.\nReden voor afwijzing:',
         'Keep under review by lab': 'Blijf op beoordeling door lab',
 
         /* ===================== */
@@ -618,7 +618,8 @@
         '(Other)':'(Overig)',
         '(Please select a specialism)' : '(Kies een specialisme)',
 
-        'mail_recall': '?subject=Met betrekking tot {{labRequest.labRequestCode}}, terugroepen sample {{pathology.paNumber}} &body=Beste onderzoeker,%0D%0DZou je het volgende PA-nummer z.s.m willen terugsturen. Deze hebben wij nodig voor de patiëntenzorg.%0D%0DAanvraag {{pathology.labRequestCode}}%0DPA nummer: {{pathology.paNumber}}; {{pathology.palgaPatientNr}}%0D%0DAlvast bedankt.',
+        'mail_recall_subject': 'Met betrekking tot {{labRequest.labRequestCode}}, terugroepen sample {{pathology.paNumber}}',
+        'mail_recall_body': 'Beste onderzoeker,\n\nZou je het volgende PA-nummer z.s.m willen terugsturen. Deze hebben wij nodig voor de patiëntenzorg.\n\nAanvraag {{pathology.labRequestCode}}\nPA nummer: {{pathology.paNumber}}; {{pathology.palgaPatientNr}}\n\nAlvast bedankt.',
         null: null
     };
 

@@ -9,13 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
 
-
-/**
- * From http://www.jayway.com/2012/09/16/improve-your-spring-rest-api-part-i/
- */
-@XmlRootElement
 public class ErrorMessage {
 
     private List<String> errors;

@@ -11,13 +11,15 @@ angular.module('ProcessApp.controllers')
         '$location', '$route', '$routeParams', '$window',
         '$filter',
         'Request', 'LabRequest', 'Restangular', 'LabRequestFilter',
+        '$translate',
         function (
                 $q, $rootScope, $scope, $modal,
                 $templateCache, $http,
                 $timeout,
                 $location, $route, $routeParams, $window,
                 $filter,
-                Request, LabRequest, Restangular, LabRequestFilter) {
+                Request, LabRequest, Restangular, LabRequestFilter,
+                $translate) {
 
             'use strict';
 
@@ -46,7 +48,6 @@ angular.module('ProcessApp.controllers')
             });
 
             $scope.alerts = [];
-            //$scope.labRequest = {};
             $scope.itemsPerPage = 20;
 
             var _getRecallMailRecipients = function(labRequest) {
@@ -61,7 +62,23 @@ angular.module('ProcessApp.controllers')
                 return recipients.join(', ');
             };
 
-            $scope.getRecallMailRecipients = _getRecallMailRecipients;
+            $scope.sendRecallEmail = function(pathology, labRequest) {
+                if (labRequest !== null) {
+                    if (!pathology.hasOwnProperty('email')) {
+                        pathology.email = _getRecallMailRecipients(labRequest);
+                    }
+                    if (!pathology.hasOwnProperty('labRequestCode')) {
+                        pathology.labRequestCode = labRequest.labRequestCode;
+                    }
+                }
+                var fetchMailRecallSubject = $translate('mail_recall_subject', {pathology: pathology});
+                var fetchMailRecallBody = $translate('mail_recall_body', {pathology: pathology});
+                Promise.all([fetchMailRecallSubject, fetchMailRecallBody]).then(function(values) {
+                    window.location.href = 'mailto:' + encodeURIComponent(pathology.email) +
+                        '?subject=' + encodeURIComponent(values[0]) +
+                        '&body=' + encodeURIComponent(values[1]);
+                });
+            };
 
             var _createSampleList = function (labRequests) {
                 $scope.samples = [];
@@ -122,7 +139,7 @@ angular.module('ProcessApp.controllers')
             $scope.getSequenceNumberForPaNumber = function (labRequest, paNumber) {
                 for (var i in labRequest.excerptList.entries) {
                     var entry = labRequest.excerptList.entries[i];
-                    if (entry.paNumber == paNumber) {
+                    if (entry.paNumber === paNumber) {
                         return entry.sequenceNumber;
                         //return entry.values[seqNrColumn];
                     }
@@ -183,7 +200,7 @@ angular.module('ProcessApp.controllers')
 
             /**
              * Get address in html format
-             * @param contactData
+             * @param lab
              * @param noEmail
              * @returns {string}
              */
@@ -207,7 +224,7 @@ angular.module('ProcessApp.controllers')
                 }
 
                 restInstance.get().then(function (result) {
-                    $scope.labRequest= result;
+                    $scope.labRequest = result;
                     $scope.getRequestByLabRequest($scope.labRequest).then(function(){
                         //result.request.type = Request.convertRequestOptsToType(result.request);
                         $scope.labRequest.htmlBillingAddress = getHTMLAddress($scope.request.billingAddress, true);
@@ -237,7 +254,7 @@ angular.module('ProcessApp.controllers')
                 $scope.selections[status] = LabRequestFilter.selectByStatus(status);
             });
 
-            $scope.persistKey = 'labrequests'
+            $scope.persistKey = 'labrequests';
 
             $scope.checkTableFilterStatus = function() {
                 // Table filter status
@@ -576,7 +593,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.isPalgaStatus = function (status) {
-                return $rootScope.isPalga() && status == 'Rejected';
+                return $rootScope.isPalga() && status === 'Rejected';
             };
 
             $scope.requester_statuses = [
@@ -821,9 +838,13 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.getRejectEmail = function(labRequest) {
-                return 'mailto:' +labRequest.requesterEmail + '?subject=' +
-                    $rootScope.translate('Lab request rejected, request number') + ' ' + labRequest.labRequestCode +
-                    '&body=' + $rootScope.translate('Lab request rejected.%0AReject reason:') +' '+ labRequest.rejectReason;
+                return 'mailto:' + encodeURIComponent(labRequest.requesterEmail) +
+                    '?subject=' + encodeURIComponent(
+                        $rootScope.translate('Lab request rejected, request number') + ' '
+                        + labRequest.labRequestCode) +
+                    '&body=' + encodeURIComponent(
+                        $rootScope.translate('Lab request rejected.\nReject reason:') + ' '
+                        + labRequest.rejectReason);
             }
         }
     ]

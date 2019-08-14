@@ -15,6 +15,7 @@
     "jQuery":true,
     "_":true,
     "asmCrypto":true,
-    "bootbox":true
+    "bootbox":true,
+    "Promise": true
   }
 }

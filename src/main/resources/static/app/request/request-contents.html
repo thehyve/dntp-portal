@@ -182,6 +182,16 @@
         </p>
     </div>
 
+    <!-- Biobank Request Number -->
+    <div class="row" >
+        <label class="control-label col-xs-4 col-sm-4">
+            {{'Biobank request number'|translate}}
+        </label>
+        <div class="col-xs-6 col-sm-6">
+            {{request.biobankRequestNumber }}
+        </div>
+    </div>
+
     <!-- Laboratory techniques -->
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Laboratory techniques' | translate }}</label>
@@ -212,7 +222,70 @@
         </div>
     </div>
 
-    <!-- Billing address -->
+
+    <!-- Data Linkage -->
+    <div class="row" ng-if="request.type != '1'">
+        <label class="control-label col-xs-4 col-sm-4">
+            {{'Data linkage'|translate}}
+        </label>
+        <div class="col-xs-6 col-sm-6">
+            {{request.linkageWithPersonalData ? 'Linkage with own patients or cohort or linkage between registries.' :
+            'No data linkage required.' | translate }}
+        </div>
+    </div>
+
+    <div ng-if="request.type != '1' && request.linkageWithPersonalData">
+        <div class="row" ng-if="request.linkageWithPersonalDataNotes">
+            <label class="control-label col-xs-4 col-sm-4">
+                {{ 'Data linkage information' | translate }}
+            </label>
+            <div class="col-xs-6 col-sm-6">
+                {{request.linkageWithPersonalDataNotes}}
+            </div>
+        </div>
+
+        <!-- Informed Consent -->
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">
+                {{ 'Informed consent (IC)' | translate }}
+            </label>
+            <div class="col-xs-6 col-sm-6">
+                {{request.informedConsent ? 'Yes' : 'No' | translate}}
+            </div>
+        </div>
+
+        <!-- Reason Using Personal Data -->
+        <div class="row" ng-if="request.reasonUsingPersonalData">
+            <label class="control-label col-xs-4 col-sm-4">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
+            <p class="col-xs-6 col-sm-6">
+                {{request.reasonUsingPersonalData}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Informed Consent Attachments -->
+    <h4 class="h4">
+        {{ 'Informed consent (IC) forms' | translate }}
+    </h4>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6">
+            <div ng-if="request.informedConsentFormAttachments.length == 0"><p><i>{{'No forms uploaded.' | translate}}</i></p></div>
+            <div class="list-group files" id="icforms">
+                <a ng-repeat="file in request.informedConsentFormAttachments"
+                   ng-href="/requests/{{request.processInstanceId}}/informedConsentFormFiles/{{file.id}}"
+                   class="list-group-item">
+                    <span><i class="glyphicon glyphicon-file"></i></span>
+                    {{file.name}}
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Billing details -->
+    <h4 class="h4">
+        {{ 'Billing details' | translate }}
+    </h4>
     <div class="row">
         <label class="control-label col-xs-4 col-sm-4">{{ 'Billing address' | translate }}</label>
         <contact-data-address contact-data="request.billingAddress" class="col-xs-6 col-sm-6"></contact-data-address>
@@ -240,76 +313,6 @@
         <p class="col-xs-6 col-sm-6">
             {{request.researchNumber}}
         </p>
-    </div>
-
-    <!-- Biobank Request Number -->
-    <div class="row" >
-        <label class="control-label col-xs-4 col-sm-4">
-            {{'Biobank request number'|translate}}
-        </label>
-        <div class="col-xs-6 col-sm-6">
-            {{request.biobankRequestNumber }}
-        </div>
-    </div>
-
-    <!-- Data Linkage -->
-    <div class="row" ng-if="request.type != '1'">
-        <label class="control-label col-xs-4 col-sm-4">
-            {{'Data linkage'|translate}}
-        </label>
-        <div class="col-xs-6 col-sm-6">
-            {{request.linkageWithPersonalData ? 'Linkage with own patients or cohort or linkage between registries.' :
-              'No data linkage required.' | translate }}
-        </div>
-    </div>
-
-    <div ng-if="request.type != '1' && request.linkageWithPersonalData">
-        <div class="row" ng-if="request.linkageWithPersonalDataNotes">
-            <label class="control-label col-xs-4 col-sm-4">
-                {{ 'Data linkage information' | translate }}
-            </label>
-            <div class="col-xs-6 col-sm-6">
-                {{request.linkageWithPersonalDataNotes}}
-            </div>
-        </div>
-
-        <!-- Informed Consent -->
-        <div class="row">
-            <label class="control-label col-xs-4 col-sm-4">
-                {{ 'Informed consent (IC)' | translate }}
-            </label>
-            <div class="col-xs-6 col-sm-6">
-                {{request.informedConsent ? 'Yes' : 'No' | translate}}
-            </div>
-        </div>
-
-
-
-        <!-- Reason Using Personal Data -->
-        <div class="row" ng-if="request.reasonUsingPersonalData">
-            <label class="control-label col-xs-4 col-sm-4">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
-            <p class="col-xs-6 col-sm-6">
-                {{request.reasonUsingPersonalData}}
-            </p>
-        </div>
-    </div>
-
-    <!-- Informed Consent Attachments -->
-    <h4 class="h4">
-        {{ 'Informed consent (IC) forms' | translate }}
-    </h4>
-    <div class="row">
-        <div class="col-xs-6 col-sm-6">
-            <div ng-if="request.informedConsentFormAttachments.length == 0"><p><i>{{'No forms uploaded.' | translate}}</i></p></div>
-            <div class="list-group files" id="icforms">
-                <a ng-repeat="file in request.informedConsentFormAttachments"
-                   ng-href="/requests/{{request.processInstanceId}}/informedConsentFormFiles/{{file.id}}"
-                   class="list-group-item">
-                    <span><i class="glyphicon glyphicon-file"></i></span>
-                    {{file.name}}
-                </a>
-            </div>
-        </div>
     </div>
 
 

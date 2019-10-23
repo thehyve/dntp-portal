@@ -60,7 +60,22 @@ Feature: scenario additional request
     And request 'Request 1' should be in the list of requests
     And request 'Request 1' should have status 'Received by PALGA advisor'
 
-  Scenario: 2. Claim and send requests to Scientific council
+  Scenario: 2. Claim request
+    Given I am logged in as the palga2 user
+    # And I am on the requests page
+    When I claim the request with title 'Request 1'
+    Then request 'Request 1' should have Palga advisor 'palga2'
+    When I unclaim the request with title 'Request 1'
+    Then request 'Request 1' should have Palga advisor '–\nLast advisor: palga2'
+
+    Given I am logged out
+    And I am logged in as the palga user
+    When I claim the request with title 'Request 1'
+    Then request 'Request 1' should have Palga advisor 'palga'
+    And I unclaim the request with title 'Request 1'
+    Then request 'Request 1' should have Palga advisor '–\nLast advisor: palga'
+
+  Scenario: 3. Send requests to Scientific council
     Given I am logged in as the palga user
     # And I am on the requests page
     When I claim the request with title 'Request 1'

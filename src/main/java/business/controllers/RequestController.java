@@ -547,6 +547,9 @@ public class RequestController {
         instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
+        if (updatedRequest.getAssigneeName() != null) {
+            requestFormService.updateLastAssignee(instance.getId(), updatedRequest.getAssigneeName());
+        }
         return updatedRequest;
     }
 
@@ -557,11 +560,10 @@ public class RequestController {
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
         log.info("PUT /requests/" + id + "/unclaim");
-        HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Task task = requestService.getCurrentPalgaTaskByRequestId(id);
         taskService.unclaim(task.getId());
         requestFormService.invalidateCacheEntry(id);
-        instance = requestService.getProcessInstance(id);
+        HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;

@@ -141,6 +141,14 @@ module.exports = function() {
         });
     });
 
+    this.When(/^I unclaim the request with title '(.+)'$/, function(reqName, next) {
+        // We assume that we are on the requests page
+        var req = pages.requests.getRequestWithTitle(reqName);
+        req.unclaimButton.click().then(function() {
+            next();
+        });
+    });
+
     this.When('I claim the current request', function(next) {
         pages.request.claimButton.click().then(function() {
             next();
@@ -315,6 +323,12 @@ module.exports = function() {
         // We assume that we are on the requests page
         var req = pages.requests.getRequestWithTitle(reqName);
         expect(req.vote.getText()).to.eventually.equal(vote).and.notify(next);
+    });
+
+    this.Then(/^request '(.+)' should have Palga advisor '(.+)'$/, function(reqName, advisor, next) {
+        // We assume that we are on the requests page
+        var req = pages.requests.getRequestWithTitle(reqName);
+        expect(req.assignee.getText()).to.eventually.equal(advisor).and.notify(next);
     });
 
     this.Then(/^the current request should have '(.+)' status$/, function(status, next) {

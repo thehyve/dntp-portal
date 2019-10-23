@@ -103,6 +103,13 @@ public class RequestPropertiesService {
         return requestPropertiesRepository.getDateSubmittedByProcessInstanceId(processInstanceId);
     }
 
+    @Cacheable("lastassignee")
+    @Transactional(readOnly = true)
+    public String getLastAssignee(String processInstanceId) {
+        return requestPropertiesRepository.getLastAssigneeByProcessInstanceId(processInstanceId);
+    }
+
+
     /**
      * Retrieves the request number of a request if it exists or generates a new one.
      * The request number cache is updated as a result of this action.

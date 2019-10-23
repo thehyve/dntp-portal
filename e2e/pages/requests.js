@@ -41,8 +41,10 @@ var RequestsPage = function() {
         return {
             title: titleElem,
             claimButton: rowLocator.element(by.css('[title=Claim]')),
+            unclaimButton: rowLocator.element(by.css('[title=Unclaim]')),
             status: rowLocator.element(by.css('td.request-status')),
-            vote: rowLocator.element(by.css('td.request-vote'))
+            vote: rowLocator.element(by.css('td.request-vote')),
+            assignee: rowLocator.element(by.css('td.request-assignee'))
         };
     };
 };

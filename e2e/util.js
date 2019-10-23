@@ -46,6 +46,7 @@ module.exports = {
     },
     users: {
         'palga': { username: 'test+palga@dntp.thehyve.nl', password: 'palga' },
+        'palga2': { username: 'test+palga2@dntp.thehyve.nl', password: 'palga' },
         'requester': { username: 'test+requester@dntp.thehyve.nl', password: 'requester' },
         'pathologist': { username: 'test+pathologist@dntp.thehyve.nl', password: 'requester' },
         'principal_investigator': { username: 'test+contactperson@dntp.thehyve.nl', password: 'requester' },
@@ -67,11 +68,13 @@ module.exports = {
     login: function(user) {
         var userObj;
 
-        // Special case for lab users
+        // Special case for lab users and palga2
         var matches = user.match(/^lab (\d+)$/);
         if (matches !== null) {
             var labId = matches[1];
-            userObj = { username: 'test+lab_user' + labId + '@dntp.thehyve.nl', password: 'lab_user' };
+            userObj = {username: 'test+lab_user' + labId + '@dntp.thehyve.nl', password: 'lab_user'};
+        } else if (user === 'palga2') {
+            userObj = {username: 'test+palga2@dntp.thehyve.nl', password: 'palga'};
         } else {
             userObj = this.users[user];
         }

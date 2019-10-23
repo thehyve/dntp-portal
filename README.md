@@ -124,6 +124,11 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
+### 0.0.107
+```sql
+alter table request_properties add column last_assignee character varying(255);
+```
+
 ### 0.0.80
 ```sql
 alter table lab_request add column return_date timestamp without time zone;

@@ -374,6 +374,7 @@
         'Assignee': 'Gevolmachtigde',
         'Claimed by': 'Geclaimd door',
         'PALGA advisor': 'PALGA-adviseur',
+        'Last advisor': 'Laatste adviseur',
         'Actions': 'Acties',
         'Details': 'Details',
         'Claim': 'Claim',

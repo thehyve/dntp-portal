@@ -65,6 +65,8 @@ public class RequestProperties {
     private String biobankRequestNumber;
     private String reseachNumber;
 
+    private String lastAssignee;
+
     @Column
     private Boolean germlineMutation;
     /**
@@ -379,6 +381,14 @@ public class RequestProperties {
 
     public void setReseachNumber(String reseachNumber) {
         this.reseachNumber = reseachNumber;
+    }
+
+    public String getLastAssignee() {
+        return lastAssignee;
+    }
+
+    public void setLastAssignee(String lastAssignee) {
+        this.lastAssignee = lastAssignee;
     }
 
     public boolean getGermlineMutation() {

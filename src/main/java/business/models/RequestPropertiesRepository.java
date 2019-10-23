@@ -39,4 +39,7 @@ public interface RequestPropertiesRepository extends JpaRepository<RequestProper
     @Query("SELECT p.dateSubmitted FROM RequestProperties p WHERE processInstanceId = :processInstanceId")
     Date getDateSubmittedByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
 
+    @Query("SELECT p.lastAssignee FROM RequestProperties p WHERE processInstanceId = :processInstanceId")
+    String getLastAssigneeByProcessInstanceId(@Param("processInstanceId") String processInstanceId);
+
 }

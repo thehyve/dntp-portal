@@ -117,6 +117,7 @@ public class RequestFormService {
         request.setProcessId(instance.getProcessDefinitionId());
         request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
         request.setDateSubmitted(requestPropertiesService.getDateSubmitted(instance.getId()));
+        request.setLastAssignee(requestPropertiesService.getLastAssignee(instance.getId()));
         request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
         request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
         {
@@ -576,6 +577,19 @@ public class RequestFormService {
         }
         requestPropertiesService.save(properties);
         return variables;
+    }
+
+    /**
+     * Update the value of last request assignee
+     * @param instanceId the Activiti process instance ID.
+     * @param lastAssignee last assignee that claimed the request
+     */
+    @Transactional
+    @CacheEvict(value = "lastassignee", key = "#instanceId")
+    public void updateLastAssignee(String instanceId, String lastAssignee) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instanceId);
+        properties.setLastAssignee(lastAssignee);
+        requestPropertiesService.save(properties);
     }
 
     @CacheEvict(value = "requestlistdata", key = "#id")

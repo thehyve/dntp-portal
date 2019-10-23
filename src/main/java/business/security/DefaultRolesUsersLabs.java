@@ -179,6 +179,15 @@ public class DefaultRolesUsersLabs {
                 user = userService.save(user);
             }
         }
+        // Create special palga2 user
+        String palga2Username = "palga2";
+        User palga2User = userService.findByUsername(getEmailAddress(palga2Username));
+        if (palga2User == null) {
+            palga2User = createUser(palga2Username, roleRepository.findByName("palga"));
+            palga2User.setLab(defaultLab);
+            palga2User = userService.save(palga2User);
+        }
+
         // Create default lab users for each lab (if they don't exist)
         for (Lab lab: labService.findAll()) {
             String labNumber = lab.getNumber().toString();

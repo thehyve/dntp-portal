@@ -1,0 +1,141 @@
+<!--
+Copyright (C) 2016  Stichting PALGA
+This file is distributed under the GNU Affero General Public License
+(see accompanying file LICENSE).
+-->
+<div class="container-fluid" ng-controller="LabRequestController">
+    <div class="row">
+
+        <div ng-if="!authenticated">
+            <div class="alert alert-danger" role="alert">
+                {{ 'Not logged in' | translate }}
+            </div>
+        </div>
+
+        <div ng-if="authenticated && error">
+            <div class="alert alert-danger" role="alert">
+                {{ error | translate }}
+            </div>
+        </div>
+
+        <!--Main-->
+        <div ng-if="authenticated && samples" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+        <h1>{{ 'PA numbers' | translate}}</h1>
+        <hr>
+
+        <ul class="nav nav-pills" ng-if="isLabUser() || isHubUser() || isPalga()">
+            <li role="presentation" title="{{'Reset filters'|translate}}">
+                <button class="btn btn-default" ng-click="resetFilters('samples')" id="reset-filters">
+                    <span><i class="mdi mdi-filter-remove-outline"></i></span>
+                    {{'Reset filters'|translate}}
+                </button>
+            </li>
+            <li role="presentation">
+                <span><a class="btn btn-default" role="button" ng-href="/api/labrequests/panumbers/csv">
+                    <span><i class="glyphicon glyphicon-download-alt"></i></span>
+                    {{'Download PA numbers'|translate}}
+                </a></span>
+            </li>
+        </ul>
+
+        <table st-table="paNumbersDisplayedCollection"
+        st-pipe="updateSampleTable"
+        st-safe-src="samples"
+        class="table table-striped"
+        st-persist="samples">
+            <thead>
+                <tr>
+                    <th st-sort="labRequestCode" class="sortable">{{'Lab request' | translate}}</th>
+                    <th st-sort="sequenceNumber" class="sortable">{{'Sequence number' | translate}}</th>
+                    <th st-sort="palgaPatientNr" class="sortable">{{'PALGA patiëntnr' | translate}}</th>
+                    <th st-sort="palgaExcerptNr" class="sortable">{{'PALGA excerptnr' | translate}}</th>
+                    <th st-sort="palgaExcerptId" class="sortable">{{'PALGA excerptid' | translate}}</th>
+                    <th st-sort="paNumber" class="sortable">{{'PA number' | translate}}</th>
+                    <th>{{'Extra' | translate}}</th>
+                    <th>{{'Samples' | translate}}</th>
+                    <th st-sort="status" class="sortable">{{'Status' | translate}}</th>
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">
+                        {{'Actions' | translate}}
+                    </th>
+                </tr>
+                <tr class="no-print">
+                    <th><input st-persisted-search="labRequestCode" placeholder="{{'Filter by id'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="sequenceNumber" placeholder="{{'Filter by sequence number'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="palgaPatientNr" placeholder="{{'Filter by PALGA patiëntnr'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="palgaExcerptNr" placeholder="{{'Filter by PALGA excerptnr'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="palgaExcerptId" placeholder="{{'Filter by PALGA excerptid'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="paNumber" placeholder="{{'Filter by PA number'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="remark" placeholder="{{'Filter by extra'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><input st-persisted-search="samples" placeholder="{{'Filter by samples'|translate}}" class="input-sm form-control" type="search"/></th>
+                    <th><select st-persisted-search="status" placeholder="{{'Filter by status'|translate}}" class="input-sm form-control" type="search" st-input-event="change">
+                            <option value="">{{'Filter by status' | translate}}</option>
+                            <option ng-repeat="status in statuses"
+                                ng-selected="activeSidebar === status"
+                                value="{{status}}">{{ status | translate}}</option>
+                        </select>
+                    </th>
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
+                </tr>
+                <tr class="no-print">
+                    <th colspan="9"><input id="request-persisted-search"
+                        st-persisted-search="" class="form-control"
+                        placeholder="{{'Search'|translate}} ..." type="text" /></th>
+                    <th class="no-print" ng-if="isLabUser() || isHubUser()">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="pathology in paNumbersDisplayedCollection track by pathology.id">
+                    <td>
+                        <a ng-href="/#/lab-request/view/{{pathology.labRequestId}}">{{pathology.labRequestCode}}</a>
+                    </td>
+                    <td class="numeric">{{pathology.sequenceNumber}}</td>
+                    <td>{{pathology.palgaPatientNr}}</td>
+                    <td class="numeric">{{pathology.palgaExcerptNr}}</td>
+                    <td class="numeric">{{pathology.palgaExcerptId}}</td>
+                    <td>{{pathology.paNumber}}</td>
+                    <td>{{pathology.remark}}</td>
+                    <td><span
+                        ng-if="!isCurrentUser(labRequest.assignee)">
+                            <span
+                            ng-repeat="sample in pathology.samples">
+                                <label class="label label-primary">{{sample}}</label>
+                        </span>
+                    </span></td>
+                    <td>{{pathology.status | translate}}</td>
+                    <td class="no-print" ng-if="isLabUser() || isHubUser()">
+                        <span class="pull-right">
+                        <span class="btn-group btn-group-sm">
+                        <a ng-if="pathology.status=='Received' || pathology.status=='Sending'"
+                           ng-click="sendRecallEmail(pathology)"
+                           class="btn btn-default" role="button" title="{{'Compose recall mail' | translate}}">
+                            <span><i class="glyphicon glyphicon-envelope"></i></span>
+                            {{'Recall' | translate}}
+                        </a>
+                        </span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="10" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        </div> <!-- end of main -->
+
+        <!--Side Bar-->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar" ng-if="authenticated && samples">
+                <li class="active"><a href="/#/samples">{{'Overview'|translate}} <span class="badge pull-right">{{samples.length}}</span></a></li>
+            </ul>
+        </div>
+
+    </div> <!--end row-->
+</div> <!--end container-->
+<br>
+<br>

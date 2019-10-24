@@ -28,31 +28,31 @@ public class PasswordController {
 
     @Autowired
     UserService userService;
-    
+
     @Autowired
     MailService mailService;
-    
+
     @Autowired
     PasswordService passwordService;
 
-    @RequestMapping(value = "/password/request-new", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/password/request-new", method = RequestMethod.PUT)
     public void requestNewPassword(@RequestBody EmailRepresentation body) {
         String email = body.getEmail() == null ? "" : body.getEmail().trim().toLowerCase();
-        log.info("PUT /password/request-new/" + email);
+        log.info("PUT /api/password/request-new/" + email);
 
         passwordService.requestNewPassword(email);
     }
 
-    @RequestMapping(value = "/password/reset", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/password/reset", method = RequestMethod.POST)
     public void setPassword(@RequestBody NewPasswordRepresentation body) {
-        log.info("POST /password/reset");
+        log.info("POST /api/password/reset");
 
         passwordService.resetPassword(body);
     }
 
-    @RequestMapping(value = "/password/change", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/password/change", method = RequestMethod.POST)
     public void changePassword(UserAuthenticationToken user, @RequestBody PasswordChangeRepresentation body) {
-        log.info("POST /password/change");
+        log.info("POST /api/password/change");
 
         passwordService.updatePassword(user.getUser(), body);
     }

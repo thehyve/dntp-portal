@@ -1,0 +1,2 @@
+require('./ForgotPasswordController');
+require('./ResetPasswordController');

@@ -24,15 +24,15 @@ public class RoleController {
 
     @Autowired
     RoleRepository roleRepository;
-    
-    @RequestMapping(value = "/admin/roles", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/api/admin/roles", method = RequestMethod.GET)
     public List<RoleRepresentation> getAll(Principal principal) {
-        LogFactory.getLog(getClass()).info("GET /admin/roles (for user: " + principal.getName() + ")");
+        LogFactory.getLog(getClass()).info("GET /api/admin/roles (for user: " + principal.getName() + ")");
         List<RoleRepresentation> roles = new ArrayList<RoleRepresentation>();
         for (Role role: roleRepository.findAll()) {
             roles.add(new RoleRepresentation(role));
         }
         return roles;
     }
-    
+
 }

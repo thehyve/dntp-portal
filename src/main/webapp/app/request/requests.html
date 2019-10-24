@@ -1,0 +1,241 @@
+<!--
+Copyright (C) 2016  Stichting PALGA
+This file is distributed under the GNU Affero General Public License
+(see accompanying file LICENSE).
+-->
+<div class="container-fluid">
+    <div class="row" ng-controller="RequestController">
+
+        <div ng-if="!authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="alert alert-danger" role="alert">
+                {{ 'Not logged in' | translate }}
+            </div>
+        </div>
+
+        <!--Main Content-->
+        <div ng-if="authenticated" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <h1>{{ 'Requests' | translate }}</h1>
+            <hr>
+            <!--Tool bar-->
+            <ul class="nav nav-pills" >
+                <li role="presentation" title="{{'Reset filters'|translate}}">
+                    <button class="btn btn-default" ng-click="resetFilters('requests')" id="reset-filters">
+                        <span><i class="mdi mdi-filter-remove-outline"></i></span>
+                        {{'Reset filters'|translate}}
+                    </button>
+                </li>
+                <li role="presentation" title="{{'Create a new request'|translate}}" ng-if="isRequester()">
+                    <button class="btn btn-default"  ng-click="start()" id="new-request">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        {{'Create new request'|translate}}
+                    </button>
+                </li>
+                <li role="presentation" title="{{'Print selected'|translate}}" ng-if="isPalga()">
+                    <button class="btn btn-default" ng-click="printSelected()" id="print-selection">
+                        <span><i class="glyphicon glyphicon-print"></i></span>
+                        {{'Print selected'|translate}}
+                    </button>
+                </li>
+            </ul>
+
+            <!--List of request-->
+            <div class="table-responsive" ng-if="authenticated">
+                <table ng-if="requests" st-table="displayedCollection" st-persist="requests" st-safe-src="requests"
+                       class="table" st-export-filtered="filteredCollection" st-set-filter="requestStrict">
+                    <thead>
+                    <tr>
+                        <th class="no-print">
+                            <a role="button"
+                                ng-if="isPalga()"
+                                ng-click="toggleSelect(filteredCollection)"
+                                title="{{'Select all'|translate}}">
+                                <i class="mdi mdi-check-all"></i>
+                            </a>
+                        </th>
+                        <th st-sort="number" style="width: 9em" class="sortable">#</th>
+                        <th st-sort="title" class="sortable">{{'Title'|translate}}</th>
+                        <th st-sort="status" class="sortable">{{'Status'|translate}}</th>
+                        <th></th>
+                        <th>{{'Required data and/or materials'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="linkageWithPersonalData" class="sortable">{{'Data linkage'|translate}}</th>
+                        <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Creation date'|translate}}</th>
+                        <th ng-if="isScientificCouncil()" st-sort="approvalVote" class="sortable">{{'My review'|translate}}</th>
+                        <th st-sort="requesterName" class="sortable">{{'Requester'|translate}}</th>
+                        <th st-sort="pathologistName" class="sortable">{{'Pathologist'|translate}}</th>
+                        <th ng-if="isPalga()" st-sort="assigneeName" class="sortable">{{'PALGA advisor'|translate}}</th>
+                        <th ng-if="isRequester()" st-sort="dateCreated" class="sortable">{{'Date created'|translate}}</th>
+                        <th ng-if="!isRequester()" st-sort="dateSubmitted" class="sortable">{{'Date submitted'|translate}}</th>
+                        <th class="no-print" style="width: 14em">{{'Actions'|translate}}</th>
+                    </tr>
+                    <tr class="no-print">
+                        <th class="no-print">&nbsp;</th>
+                        <th><input st-persisted-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><select st-persisted-search="statusText" class="input-sm form-control" type="search" st-input-event="change" ng-disabled="isStatusPage()">
+                                <option value="">{{'Filter by status' | translate}}</option>
+                                <option ng-repeat="status in displayStatuses"
+                                    ng-selected="status === activeSidebar"
+                                    value="{{status}}">{{ status | translate}}</option>
+                            </select>
+                        </th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th ng-if="isPalga()"><select st-persisted-search="linkageWithPersonalData" class="input-sm form-control" type="search" st-input-event="change">
+                                <option value="">{{'Filter by linkage' | translate}}</option>
+                                <option value="true">{{ 'Yes' | translate}}</option>
+                                <option value="false">{{ 'No' | translate}}</option>
+                            </select>
+                        </th>
+                        <th ng-if="isRequester()">&nbsp;</th>
+                        <th ng-if="isScientificCouncil()" class="request-vote"><select st-persisted-search="approvalVote" class="input-sm form-control" type="search" st-input-event="change">
+                                <option value="">{{'Filter by review' | translate}}</option>
+                                <option value="ACCEPTED">{{ 'Accepted' | translate}}</option>
+                                <option value="REJECTED">{{ 'Rejected' | translate}}</option>
+                            </select>
+                        </th>
+                        <th><input st-persisted-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="isPalga()"><input st-persisted-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th>&nbsp;</th>
+                        <th class="no-print">&nbsp;</th>
+                    </tr>
+                    <tr class="no-print">
+                        <th class="no-print">&nbsp;</th>
+                        <th colspan="{{isPalga() ? 10 : (isScientificCouncil() || isRequester() ? 9 : 8)}}">
+                            <input id="request-persisted-search" st-persisted-search class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
+                        </th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="req in displayedCollection" id="request_{{req.id}}" ng-class="{'smart-table-selected': isCurrentUser(req.assignee)}">
+                        <td class="no-print">
+                            <input class="input-sm form-control request-selection"
+                                ng-if="isPalga()"
+                                type="checkbox" value="1"
+                                ng-model="selected_requests[req.processInstanceId]" />
+                        </td>
+                        <td>
+                            <a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.requestNumber}}</a>
+                            <span ng-if="req.parent" class="pull-right"><a
+                                    title="{{'Additional request for request ?' | translate: {requestNumber: req.parent.requestNumber} }}"
+                                    ng-href="/#/request/view/{{req.parent.processInstanceId}}">
+                                <small><i class="glyphicon glyphicon-duplicate"></i></small></a>
+                            </span>
+                        </td>
+                        <td><a ng-href="/#/request/view/{{req.processInstanceId}}">{{req.title}}</a></td>
+                        <td class="request-status">
+                            {{ getStatusText(req) | translate}}
+                            <span class="badge" ng-if="req.status=='Approval' && isPalga()" >
+                            {{req.numberOfApprovalVotes ? req.numberOfApprovalVotes : 0 }}
+                            </span>
+                        </td>
+                        <td>
+                        <span ng-if="(req.statisticsRequest && req.dataAttachmentCount > 0) || req.excerptListUploaded"
+                            title="{{'The file with PALGA data is ready for download.'|translate}}"
+                            ><i class="glyphicon glyphicon-paperclip"></i></span>
+                        </td>
+                        <td>
+                            <div ng-if="req.statisticsRequest">{{'Numbers only, exploratory request'|translate}}<br /></div>
+                            <div ng-if="req.excerptsRequest">{{'Excerpts'|translate}}<br /></div>
+                            <div ng-if="req.paReportRequest" data-ng-bind-html="'PA reports' | translate"><br /></div>
+                            <div ng-if="req.materialsRequest">{{'PA material'|translate}}<br /></div>
+                            <div ng-if="req.clinicalDataRequest">{{'Clinical data from practitioner'|translate}}<br /></div>
+                        </td>
+                        <td class="centertext" ng-if="isPalga()">
+                            {{req.linkageWithPersonalData ? 'Yes' :
+                            (req.linkageWithPersonalData == false ? 'No' : '&ndash;') |translate }}
+                        </td>
+                        <td ng-if="isRequester()"><small>{{req.dateCreated | date: 'EEE dd MMMM yyyy'}}</small></td>
+                        <td ng-if="isScientificCouncil()" class="request-vote">
+                            {{req.approvalVote | translate}}
+                        </td>
+                        <td><span ng-if="!isMyRequest(req)">{{req.requesterName}}</span></td>
+                        <td><a href="mailto:{{req.pathologistName}} &lt;{{req.pathologistEmail}}&gt;">{{req.pathologistName}}</a></td>
+
+                        <td class="request-assignee">
+                            <div ng-if="isPalga() && (req.assigneeName != null || req.assignee != null)">
+                                {{req.assigneeName == null ? req.assignee : req.assigneeName}}</div>
+                            <div ng-if="isPalga() && req.assigneeName == null && req.assignee == null">
+                                &ndash;<br />
+                                <small ng-if="req.lastAssignee != null"><i>{{'Last advisor'|translate}}: {{req.lastAssignee}}</i></small>
+                            </div>
+                        </td>
+
+                        <td>
+                            <small ng-if="isRequester()">{{(req.dateCreated | date: 'dd-MM-yyyy H:mm') || '&ndash;'}}</small>
+                            <small ng-if="!isRequester()">{{(req.dateSubmitted | date: 'dd-MM-yyyy H:mm') || '&ndash;'}}</small>
+                        </td>
+                        <td class="no-print">
+                        <span class="pull-left">
+                        <span class="btn-group btn-group-sm">
+                            <button
+                                 ng-if="isMyRequest(req) && req.status == 'Open' && !req.reopenRequest"
+                                 class="btn btn-default" type="button" title="{{'Delete'|translate}}" ng-click="remove(req)">
+                                <span><i class="glyphicon glyphicon-trash"></i></span>
+                            </button>
+                        </span>
+                        </span>
+                        <span class="pull-right">
+                        <span class="btn-group btn-group-sm">
+                            <button
+                                ng-if="isMyRequest(req) || (isPalga() && req.status != 'Open')"
+                                 ng-disabled="(isRequester() && req.status != 'Open')
+                                    || !(req.status == 'Open' || req.status == 'Review' || req.status == 'Approval')
+                                    || (isPalga() && !isCurrentUser(req.assignee))"
+                                 class="btn btn-default" type="button" title="{{'Edit'|translate}}" ng-click="edit(req)">
+                                <span><i class="glyphicon glyphicon-pencil"></i></span>
+                            </button>
+                            <button ng-if="isPalga() && req.status != 'Open'"
+                                ng-disabled="isCurrentUser(req.assignee) || !isClaimable(req.status)"
+                                 class="btn btn-default" type="button" title="{{'Claim'|translate}}" ng-click="claim(req)">
+                                <span><i class="glyphicon glyphicon-eye-open"></i></span>
+                            </button>
+                            <button ng-if="isPalga() && req.status != 'Open'"
+                                ng-disabled="!isCurrentUser(req.assignee) || !isClaimable(req.status)"
+                                 class="btn btn-default" type="button" title="{{'Unclaim'|translate}}" ng-click="unclaim(req)">
+                                <span><i class="glyphicon glyphicon-eye-close"></i></span>
+                            </button>
+                            <button
+                                 ng-if="isPalga() && req.status != 'Open' && req.reviewStatus != 'SUSPENDED'"
+                                 ng-disabled="!isCurrentUser(req.assignee)"
+                                 class="btn btn-default" type="button" title="{{'Suspend'|translate}}" ng-click="suspend(req)">
+                                <span><i class="glyphicon glyphicon-pause"></i></span>
+                            </button>
+                            <button
+                                 ng-if="isPalga() && req.status != 'Open' && req.reviewStatus == 'SUSPENDED'"
+                                 ng-disabled="!isCurrentUser(req.assignee)"
+                                 class="btn btn-default" type="button" title="{{'Resume'|translate}}" ng-click="resume(req)">
+                                <span><i class="glyphicon glyphicon-play"></i></span>
+                            </button>
+                        </span>
+                        </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="{{isPalga() ? 12 : (isScientificCouncil() || isRequester() ? 11 : 10)}}" class="text-center">
+                                <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10" st-template="app/components/smart-table/pagination.html"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!--=====================================================-->
+            <!--TODO: To reuse table just change the result instance -->
+            <!--=====================================================-->
+
+        </div> <!--end Main Content-->
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+            <div class="print-only" ng-include="'app/request/print-requests.html'" id="printcontents"></div>
+        </div>
+
+        <!--Side Bar-->
+        <dntp-sidebar all-requests="allRequests" active-sidebar="activeSidebar"/>
+
+    </div>
+</div>

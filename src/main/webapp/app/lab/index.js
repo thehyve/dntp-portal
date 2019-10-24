@@ -1,0 +1,2 @@
+require('./HubLabsController');
+require('./MyLabController');

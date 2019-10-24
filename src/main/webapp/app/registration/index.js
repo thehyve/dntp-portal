@@ -1,0 +1,2 @@
+require('./RegistrationDirectives');
+require('./RegistrationController');

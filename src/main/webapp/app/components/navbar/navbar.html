@@ -1,0 +1,111 @@
+<!--
+Copyright (C) 2016  Stichting PALGA
+This file is distributed under the GNU Affero General Public License
+(see accompanying file LICENSE).
+-->
+<nav class="navbar navbar-default navbar-fixed-top " ng-controller="NavigationController">
+    <div class="container-fluid">
+        <div class="navbar-header col-sm-3 col-md-2 " ng-if="authenticated">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">{{'Toggle navigation'|translate}}</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ng-href="#/"><img src="../../../images/palga_app.png" alt="{{'DNTP' | translate}}"/></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+
+            <ul ng-if="authenticated" class="nav navbar-nav">
+                <li id="nav_requests" ng-show="isViewRequestsAllowed();" class="{{isRequestsPage() ? 'active': ''}}">
+                    <a href="#/">{{'Requests'|translate}}</a>
+                </li>
+                <li id="nav_lab-requests" ng-show="isViewLabRequestsAllowed();" class="{{isLabRequestsPage() ? 'active': ''}}">
+                    <a href="#/lab-requests">{{'Lab requests'|translate}}</a>
+                </li>
+                <li id="nav_samples" ng-show="isViewSamplesAllowed();"
+                    class="{{isSamplesPage() ? 'active': ''}}">
+                    <a href="#/samples">{{'Samples'|translate}}</a>
+                </li>
+                <li class="dropdown {{isManagementPage() ? 'active':''}}">
+                    <a class="dropdown-toggle"
+                        ng-show="isViewManagementAllowed();"
+                        role="button" data-toggle="dropdown" id="management_menu">
+                        {{ 'Management' | translate }} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li id="nav_users" ng-show="isViewUsersAllowed();">
+                            <a href="#/users">{{'User management'|translate}}</a>
+                        </li>
+                        <li id="nav_labs" ng-show="isViewLabsAllowed();">
+                            <a href="#/labs">{{'Laboratory management'|translate}}</a>
+                        </li>
+                        <li id="nav_download_requests">
+                            <a href="/api/requests/csv">{{'Export requests'|translate}}</a>
+                        </li>
+                        <li id="nav_agreementformtemplate" ng-show="isEditAgreementFormTemplateAllowed();">
+                            <a href="#/agreementformtemplate">{{'Edit form'|translate}}</a>
+                        </li>
+                        <li id="nav_accesslogs" ng-show="isViewAccessLogsAllowed();">
+                            <a href="#/accesslogs">{{'Access logs'|translate}}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li id="nav_my-lab" ng-show="isViewOwnLabAllowed();"
+                    class="{{isMyLabPage() ? 'active': ''}}">
+                    <a href="#/my-lab">{{'My lab'|translate}}</a>
+                </li>
+                <li id="nav_hub-labs" ng-show="isViewHubLabsAllowed();"
+                    class="{{isHubLabsPage() ? 'active': ''}}">
+                    <a href="#/hub-labs">{{'Hub labs'|translate}}</a>
+                </li>
+            </ul>
+
+            <ul ng-if="!authenticated" class="nav navbar-nav navbar-right">
+                <li id="nav_login"><a href="" ng-click="login()" id="login"><span class="glyphicon glyphicon-log-in"></span>
+                    {{'Login'|translate}}
+                </a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a id="language_selection"
+                       ng-class="{
+                        'selected-language-en': currentLanguage == 'en',
+                        'selected-language-nl': currentLanguage == 'nl',
+                       }"
+                       class="dropdown-toggle" role="button" data-toggle="dropdown">
+                        <span ng-if="currentLanguage == 'en'"><img src="../../../images/en.png" alt="{{ 'English' | translate }}"></span>
+                        <span ng-if="currentLanguage == 'nl'"><img src="../../../images/nl.png" alt="{{ 'Dutch' | translate }}"></span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li id="select_language_en"><a ng-click="changeLanguage('en')" ng-disabled="{{currentLanguage=='en'}}">
+                            <img src="../../../images/en.png" alt="{{ 'English' | translate }}"> {{ 'English' | translate }} (en)
+                        </a></li>
+                        <li id="select_language_nl"><a ng-click="changeLanguage('nl')" ng-disabled="{{currentLanguage=='nl'}}">
+                            <img src="../../../images/nl.png" alt="{{ 'Dutch' | translate }} (nl)"> {{ 'Dutch' | translate }} (nl)
+                        </a></li>
+                    </ul>
+                </li>
+                <li ng-if="authenticated" class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" id="profile_menu"><span
+                            class="glyphicon glyphicon-user"></span> {{currentUsername}} <small>({{rolesText()}})</small>
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a href="#/profile">{{ 'Update profile' | translate }}</a></li>
+                        <li><a href="#/profile/password">{{ 'Change password' | translate }}</a></li>
+                        <li>
+                            <a href="" ng-click="logout()" id="logout">
+                                <span class="glyphicon glyphicon-log-out"></span> {{'Logout'|translate}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            &nbsp;
+        </div>
+    </div>
+</nav>
+

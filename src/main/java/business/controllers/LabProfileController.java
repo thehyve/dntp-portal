@@ -5,7 +5,6 @@
  */
 package business.controllers;
 
-import business.models.Lab;
 import business.representation.LabRepresentation;
 import business.services.LabService;
 
@@ -24,15 +23,15 @@ public class LabProfileController {
     @Autowired
     LabService labService;
 
-    @RequestMapping(value = "/public/labs", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/public/labs", method = RequestMethod.GET)
     public List<LabRepresentation> get() {
-        LogFactory.getLog(getClass()).info("GET /labs/ for anonymous user");
+        log.info("GET /api/public/labs/ for anonymous user");
         return labService.findAllActive();
     }
 
-    @RequestMapping(value = "/public/labs/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/public/labs/{id}", method = RequestMethod.GET)
     public LabRepresentation get(@PathVariable("id") long id) {
-        LogFactory.getLog(getClass()).info("GET /labs/" + id + " for anonymous user");
+        log.info("GET /api/public/labs/" + id + " for anonymous user");
         return labService.findOneActive(id);
     }
 

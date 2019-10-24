@@ -1,0 +1,9 @@
+require('./AgreementFormService');
+require('./FilterService');
+require('./LabRequestServices');
+require('./LoginService');
+require('./PopoverService');
+require('./RequestServices');
+require('./RequestTypeService');
+require('./SpecialismService');
+require('./UploadService');

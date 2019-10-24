@@ -6,7 +6,6 @@
 package business.controllers;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,18 +29,18 @@ public class AgreementFormTemplateController {
     @Autowired
     private AgreementFormTemplateService agreementFormTemplateService;
 
-    @RequestMapping(value = "/public/agreementFormTemplate", method = RequestMethod.GET,
+    @RequestMapping(value = "/api/public/agreementFormTemplate", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementFormTemplateRepresentation getTemplate(UserAuthenticationToken user) {
-        log.info("GET /public/agreementFormTemplate");
+        log.info("GET /api/public/agreementFormTemplate");
 
         AgreementFormTemplate template = agreementFormTemplateService.get();
         return new AgreementFormTemplateRepresentation(template);
     }
 
-    @RequestMapping(value = "/admin/agreementFormTemplate", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/admin/agreementFormTemplate", method = RequestMethod.PUT)
     public AgreementFormTemplateRepresentation saveTemplate(UserAuthenticationToken user, @RequestBody AgreementFormTemplateRepresentation body) {
-        log.info("PUT /admin/agreementFormTemplate");
+        log.info("PUT /api/admin/agreementFormTemplate");
 
         AgreementFormTemplate template = agreementFormTemplateService.get();
         template.setContents(body.getContents());

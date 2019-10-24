@@ -328,7 +328,9 @@ module.exports = function() {
     this.Then(/^request '(.+)' should have Palga advisor '(.+)'$/, function(reqName, advisor, next) {
         // We assume that we are on the requests page
         var req = pages.requests.getRequestWithTitle(reqName);
-        expect(req.assignee.getText()).to.eventually.equal(advisor).and.notify(next);
+        advisor.split('\\').forEach(function(element) {
+            expect(req.assignee.getText()).to.eventually.contain(element).and.notify(next);
+        });
     });
 
     this.Then(/^the current request should have '(.+)' status$/, function(status, next) {

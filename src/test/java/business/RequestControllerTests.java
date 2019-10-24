@@ -6,6 +6,7 @@
 package business;
 
 import business.exceptions.InvalidRequest;
+import business.representation.RequestListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
 import business.security.MockConfiguration.MockMailSender;
@@ -21,8 +22,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 @Profile("dev")
@@ -89,6 +91,34 @@ public class RequestControllerTests extends AbstractSelectionControllerTests {
                 requestController.getRequestById(palga, processInstanceId);
         log.info("Status: " + representation.getStatus());
         assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
+
+        SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    public void testLastAssignee() {
+        createRequest();
+        submitRequest();
+
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        RequestRepresentation claimedRepresentation = requestController.claim(palga, processInstanceId, representation);
+        RequestListRepresentation requestListRepresentation = requestService.getRequestData(processInstanceId,
+                palga.getUser());
+        assertEquals("palga", requestListRepresentation.getAssigneeName());
+        assertEquals("palga", requestListRepresentation.getLastAssignee());
+
+        RequestRepresentation unclaimedRepresentation = requestController.unclaim(palga, processInstanceId,
+                claimedRepresentation);
+        requestListRepresentation =  requestService.getRequestData(processInstanceId, palga.getUser());
+        assertNotNull(requestListRepresentation);
+        assertNull(requestListRepresentation.getAssignee());
+        assertNull(requestListRepresentation.getAssigneeName());
+        assertEquals("palga", requestListRepresentation.getLastAssignee());
 
         SecurityContextHolder.clearContext();
     }

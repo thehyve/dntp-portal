@@ -167,7 +167,16 @@ This file is distributed under the GNU Affero General Public License
                         </td>
                         <td><span ng-if="!isMyRequest(req)">{{req.requesterName}}</span></td>
                         <td><a href="mailto:{{req.pathologistName}} &lt;{{req.pathologistEmail}}&gt;">{{req.pathologistName}}</a></td>
-                        <td ng-if="isPalga()">{{req.assigneeName == '' ? req.assignee : req.assigneeName}}</td>
+
+                        <td class="request-assignee">
+                            <div ng-if="isPalga() && (req.assigneeName != null || req.assignee != null)">
+                                {{req.assigneeName == null ? req.assignee : req.assigneeName}}</div>
+                            <div ng-if="isPalga() && req.assigneeName == null && req.assignee == null">
+                                &ndash;<br />
+                                <small ng-if="req.lastAssignee != null"><i>{{'Last advisor'|translate}}: {{req.lastAssignee}}</i></small>
+                            </div>
+                        </td>
+
                         <td>
                             <small ng-if="isRequester()">{{(req.dateCreated | date: 'dd-MM-yyyy H:mm') || '&ndash;'}}</small>
                             <small ng-if="!isRequester()">{{(req.dateSubmitted | date: 'dd-MM-yyyy H:mm') || '&ndash;'}}</small>

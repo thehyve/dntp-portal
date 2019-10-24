@@ -21,8 +21,7 @@ import business.controllers.*;
 import business.models.ContactData;
 import business.models.LabRequest;
 import business.representation.*;
-import business.services.LabRequestQueryService;
-import business.services.TestService;
+import business.services.*;
 import com.opencsv.*;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
@@ -44,8 +43,6 @@ import business.models.PathologyItemRepository;
 import business.models.User;
 import business.security.MockConfiguration.MockMailSender;
 import business.security.UserAuthenticationToken;
-import business.services.LabRequestService;
-import business.services.UserService;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -64,6 +61,9 @@ public abstract class AbstractSelectionControllerTests {
 
     @Autowired
     RequestController requestController;
+
+    @Autowired
+    RequestService requestService;
 
     @Autowired
     RequestFileController requestFileController;

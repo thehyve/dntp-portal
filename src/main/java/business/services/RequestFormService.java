@@ -80,24 +80,6 @@ public class RequestFormService {
         return false;
     }
 
-    /**
-     * Concatenates first name and last name of the user if user is not null;
-     * returns the empty string otherwise.
-     */
-    public static String getName(User user) {
-        if (user == null) {
-            return "";
-        }
-        List<String> parts = new ArrayList<>(2);
-        if (user.getFirstName() != null && !user.getFirstName().trim().isEmpty()) {
-            parts.add(user.getFirstName().trim());
-        }
-        if (user.getLastName() != null && !user.getLastName().trim().isEmpty()) {
-            parts.add(user.getLastName().trim());
-        }
-        return String.join(" ", parts);
-    }
-
     public RequestListRepresentation getRequestListData(String processInstanceId) {
         log.info("Getting request list data for {}", processInstanceId);
         HistoricProcessInstance instance = requestService.getProcessInstance(processInstanceId);
@@ -125,6 +107,11 @@ public class RequestFormService {
                 request.setParent(parent);
             }
         }
+
+        String lastAssignee = requestPropertiesService.getLastAssignee(instance.getId());
+        String lastAssigneeName = userService.getFullNameByUserId(lastAssignee, false);
+        request.setLastAssignee(lastAssigneeName);
+
         // Set biobank request number, germline mutation and billing address from properties
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
@@ -165,7 +152,7 @@ public class RequestFormService {
                 User user = userService.findOneCached(userId);
                 if (user != null) {
                     request.setRequesterId(userId);
-                    request.setRequesterName(getName(user));
+                    request.setRequesterName(user.getFullName());
                 }
             }
             request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
@@ -270,7 +257,7 @@ public class RequestFormService {
             if (userId != null) {
                 User user = userService.findOneCached(userId);
                 if (user != null) {
-                    request.setRequesterName(getName(user));
+                    request.setRequesterName(user.getFullName());
                     if (user.getContactData() != null) {
                         request.setRequesterEmail(user.getContactData().getEmail());
                     }
@@ -296,18 +283,9 @@ public class RequestFormService {
                     break;
             }
             if (task != null) {
-                request.setAssignee(task.getAssignee());
-                if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
-                    Long assigneeId = null;
-                    try { assigneeId = Long.valueOf(task.getAssignee()); }
-                    catch(NumberFormatException e) {}
-                    if (assigneeId != null) {
-                        User assignee = userService.findOne(assigneeId);
-                        if (assignee != null) {
-                            request.setAssigneeName(getName(assignee));
-                        }
-                    }
-                }
+                String assigneeId = task.getAssignee();
+                request.setAssignee(assigneeId);
+                request.setAssigneeName(userService.getFullNameByUserId(assigneeId, false));
             }
             request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
             request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
@@ -576,6 +554,19 @@ public class RequestFormService {
         }
         requestPropertiesService.save(properties);
         return variables;
+    }
+
+    /**
+     * Update the value of last request assignee
+     * @param instanceId the Activiti process instance ID.
+     * @param lastAssigneeId id of the last assignee that claimed the request
+     */
+    @Transactional
+    @CacheEvict(value = "lastassignee", key = "#instanceId")
+    public void updateLastAssignee(String instanceId, String lastAssigneeId) {
+        RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instanceId);
+        properties.setLastAssignee(lastAssigneeId);
+        requestPropertiesService.save(properties);
     }
 
     @CacheEvict(value = "requestlistdata", key = "#id")

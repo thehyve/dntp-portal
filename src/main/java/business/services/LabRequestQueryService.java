@@ -163,23 +163,9 @@ public class LabRequestQueryService {
         labRequestRepresentation.setEndDate(task.getEndTime());
 
         if (task.getEndTime() == null && task.getAssignee() != null && !task.getAssignee().isEmpty()) {
-            labRequestRepresentation.setAssignee(task.getAssignee());
-            Long assigneeId = null;
-            try {
-                assigneeId = Long.valueOf(task.getAssignee());
-            } catch (NumberFormatException e) {
-            }
-            if (assigneeId != null) {
-                User assignee;
-                if (cached) {
-                    assignee = userService.findOneCached(assigneeId);
-                } else {
-                    assignee = userService.findOne(assigneeId);
-                }
-                if (assignee != null) {
-                    labRequestRepresentation.setAssigneeName(RequestFormService.getName(assignee));
-                }
-            }
+            String assigneeId = task.getAssignee();
+            labRequestRepresentation.setAssignee(assigneeId);
+            labRequestRepresentation.setAssigneeName(userService.getFullNameByUserId(assigneeId, cached));
         }
 
         // set request data

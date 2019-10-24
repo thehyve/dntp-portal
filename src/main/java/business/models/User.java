@@ -6,9 +6,7 @@
 package business.models;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -272,6 +270,21 @@ public class User implements Serializable {
 
     public void setAccountTemporarilyBlocked(boolean accountTemporarilyBlocked) {
         this.accountTemporarilyBlocked = accountTemporarilyBlocked;
+    }
+
+    /**
+     * Concatenates first name and last name of the user if user is not null;
+     * returns the empty string otherwise.
+     */
+    public String getFullName() {
+        List<String> parts = new ArrayList<>(2);
+        if (this.firstName != null && !this.firstName.trim().isEmpty()) {
+            parts.add(this.firstName.trim());
+        }
+        if (this.lastName != null && !this.lastName.trim().isEmpty()) {
+            parts.add(this.lastName);
+        }
+        return String.join(" ", parts);
     }
 
 }

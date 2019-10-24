@@ -547,8 +547,8 @@ public class RequestController {
         instance = requestService.getProcessInstance(id);
         RequestRepresentation updatedRequest = new RequestRepresentation();
         requestFormService.transferData(instance, updatedRequest, user.getUser());
-        if (updatedRequest.getAssigneeName() != null) {
-            requestFormService.updateLastAssignee(instance.getId(), updatedRequest.getAssigneeName());
+        if (updatedRequest.getAssignee() != null) {
+            requestFormService.updateLastAssignee(instance.getId(), updatedRequest.getAssignee());
         }
         return updatedRequest;
     }

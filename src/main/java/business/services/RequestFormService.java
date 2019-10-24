@@ -99,7 +99,6 @@ public class RequestFormService {
         request.setProcessId(instance.getProcessDefinitionId());
         request.setRequestNumber(requestPropertiesService.getRequestNumber(instance.getId()));
         request.setDateSubmitted(requestPropertiesService.getDateSubmitted(instance.getId()));
-        request.setLastAssignee(requestPropertiesService.getLastAssignee(instance.getId()));
         request.setExcerptListUploaded(excerptListService.hasExcerptList(instance.getId()));
         request.setDataAttachmentCount(requestPropertiesService.getDataAttachmentCount(instance.getId()));
         {
@@ -108,6 +107,11 @@ public class RequestFormService {
                 request.setParent(parent);
             }
         }
+
+        String lastAssignee = requestPropertiesService.getLastAssignee(instance.getId());
+        String lastAssigneeName = userService.getFullNameByUserId(lastAssignee, false);
+        request.setLastAssignee(lastAssigneeName);
+
         // Set biobank request number, germline mutation and billing address from properties
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
@@ -555,13 +559,13 @@ public class RequestFormService {
     /**
      * Update the value of last request assignee
      * @param instanceId the Activiti process instance ID.
-     * @param lastAssignee last assignee that claimed the request
+     * @param lastAssigneeId id of the last assignee that claimed the request
      */
     @Transactional
     @CacheEvict(value = "lastassignee", key = "#instanceId")
-    public void updateLastAssignee(String instanceId, String lastAssignee) {
+    public void updateLastAssignee(String instanceId, String lastAssigneeId) {
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instanceId);
-        properties.setLastAssignee(lastAssignee);
+        properties.setLastAssignee(lastAssigneeId);
         requestPropertiesService.save(properties);
     }
 

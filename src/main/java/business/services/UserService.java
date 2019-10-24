@@ -263,6 +263,26 @@ public class UserService {
         }
     }
 
+    public String getFullNameByUserId(String idString, Boolean cache) {
+        if (idString != null && !idString.isEmpty()) {
+            Long userId = null;
+            try { userId = Long.valueOf(idString); }
+            catch(NumberFormatException e) {}
+            if (userId != null) {
+                User user;
+                if (cache) {
+                    user = this.findOneCached(userId);
+                } else {
+                    user = this.findOne(userId);
+                }
+                if (user != null) {
+                    return user.getFullName();
+                }
+            }
+        }
+        return null;
+    }
+
     @Cacheable(value="users", key="#userId")
     public User findOneCached(Long userId) {
         return findOne(userId);

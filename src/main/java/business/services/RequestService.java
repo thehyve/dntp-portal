@@ -470,20 +470,9 @@ public class RequestService {
                 break;
         }
         if (task != null) {
-            request.setAssignee(task.getAssignee());
-            if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
-                Long assigneeId = null;
-                try {
-                    assigneeId = Long.valueOf(task.getAssignee());
-                } catch (NumberFormatException e) {
-                }
-                if (assigneeId != null) {
-                    User assignee = userService.findOneCached(assigneeId);
-                    if (assignee != null) {
-                        request.setAssigneeName(RequestFormService.getName(assignee));
-                    }
-                }
-            }
+            String assigneeId = task.getAssignee();
+            request.setAssignee(assigneeId);
+            request.setAssigneeName(userService.getFullNameByUserId(assigneeId, true));
         }
 
         if (currentUser.isPalga()) {

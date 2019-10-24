@@ -37,9 +37,9 @@ public class RequestExportController {
     private RequestListRepresentationComparator requestListRepresentationComparator;
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
-    @RequestMapping(value = "/requests/csv", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadRequestList(UserAuthenticationToken user) {
-        log.info("GET /requests/requests/csv");
+        log.info("GET /api/requests/requests/csv");
         List<RequestRepresentation> result = new ArrayList<>();
         List<String> processInstanceIds = requestService.getProcessInstanceIdsForUser(user.getUser());
         for (String id: processInstanceIds) {

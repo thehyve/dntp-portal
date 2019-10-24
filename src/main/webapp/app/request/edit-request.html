@@ -1,0 +1,1079 @@
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto"
+    ng-init="enablePopovers(); autofocus();"
+    ng-keypress="cancelByEscKey($event, request);">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" role="form" name="requestEditForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title" ng-if="request.status=='Open'">{{ 'New request' | translate }}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Review'">{{ 'Edit' | translate }}: {{request.requestNumber}} {{request.title}}</h3>
+                    <h3 class="modal-title" ng-if="request.status=='Approval'">{{ 'Review_short' |translate }}: {{request.requestNumber}} {{request.title}}</h3>
+                </div>
+                <div class="modal-body">
+
+                    <div class="alert alert-danger" role="alert" ng-show="error">
+                        {{ error }}
+                    </div>
+
+                    <!-- Principal Investigator -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonName.$invalid && requestEditForm.contactPersonName.$dirty }">
+                        <label class="control-label col-sm-3" for="contactPersonName">{{ 'Principal investigator' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="contactPersonName" name="contactPersonName"
+                                placeholder="{{ 'Principal investigator' | translate }}" title="{{ 'Principal investigator' | translate }}"
+                                ng-model="request.contactPersonName" ng-maxlength="100"
+                                data-placement="top" data-animation="true" data-content="{{'popover: Principal investigator'|translate}}" data-trigger="focus" bs-popover
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.contactPersonName.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Principal Investigator email -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.contactPersonEmail.$invalid && requestEditForm.contactPersonEmail.$dirty }">
+                        <label class="control-label col-sm-3" for="contactPersonEmail"></label>
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control" id="contactPersonEmail" name="contactPersonEmail"
+                                placeholder="{{ 'Principal investigator email' | translate }}" title="{{ 'Principal investigator email' | translate }}"
+                                ng-model="request.contactPersonEmail" ng-maxlength="254"
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.contactPersonEmail.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 254 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.contactPersonEmail.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.contactPersonEmail.$invalid && requestEditForm.contactPersonEmail.$dirty">
+                                {{ 'Email format is invalid' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Pathologist name -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.pathologistName.$invalid && requestEditForm.pathologistName.$dirty }">
+                        <label class="control-label col-sm-3" for="pathologistName">{{ 'Pathologist' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="pathologistName" name="pathologistName"
+                                placeholder="{{ 'Pathologist' | translate }}" title="{{ 'Pathologist' | translate }}"
+                                ng-model="request.pathologistName" ng-maxlength="100"
+                                data-placement="top" data-animation="true" data-content="{{'popover: Pathologist'|translate}}" data-trigger="focus" bs-popover
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.pathologistName.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistName.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Pathologist email -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.pathologistEmail.$invalid && requestEditForm.pathologistEmail.$dirty }">
+                        <label class="control-label col-sm-3" for="pathologistEmail"></label>
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail"
+                                placeholder="{{ 'Pathologist email' | translate }}" title="{{ 'Pathologist email' | translate }}"
+                                ng-model="request.pathologistEmail" ng-maxlength="254"
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 254 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.pathologistEmail.$invalid && requestEditForm.pathologistEmail.$dirty">
+                                {{ 'Email format is invalid' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Previous contact -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">
+                            {{'Previous contact' | translate}}
+                        </label>
+                        <div class="col-sm-6 form-control-static"
+                            title="{{'Previous contact' | translate}}"
+                            >
+                            {{'Did you contact Palga previously?' | translate}}
+                            <br/>
+                            <input type="radio" id="previousContactYes" name="previousContact" ng-model="request.previousContact" ng-value="true" ng-checked="request.previousContact">
+                            <label class="normal" for="previousContactYes">{{'Yes' | translate}}</label>
+                            &nbsp;
+                            <input type="radio" id="previousContactNo" name="previousContact" ng-model="request.previousContact" ng-value="false" ng-checked="!request.previousContact" ng-click="resetPreviousContactValues(request);">
+                            <label class="normal" for="previousContactNo">{{'No' | translate}}</label>
+                            <br>
+                        </div>
+                    </div>
+
+                    <!-- Previous contact description  -->
+                    <div class="form-group" ng-show="request.previousContact"
+                         ng-class="{ 'has-error' : requestEditForm.previousContactDescription.$invalid  && requestEditForm.previousContactDescription.$dirty }">
+                        <label class="control-label col-sm-3" for="previousContactDescription"></label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription"
+                            placeholder="{{ 'Description of previous contact.' | translate }}" title="{{ 'Description of previous contact.' | translate }}"
+                            ng-model="request.previousContactDescription"
+                            ng-maxlength="4000"
+                            ng-required="request.previousContact"
+                            data-placement="top" data-animation="true" data-content="{{'popover: Description of previous contact'|translate}}" data-trigger="focus" bs-popover
+                            ></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.previousContactDescription.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.requestTitle.$invalid || requestEditForm.requestTitle.$error.required) && requestEditForm.requestTitle.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Running title' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="requestTitle" name="requestTitle"
+                                placeholder="{{ 'Title' | translate }}" title="{{ 'Title' | translate }}"
+                                ng-model="request.title" ng-maxlength="100"
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.requestTitle.$error.maxlength">{{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Background -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.background.$invalid || requestEditForm.background.$error.required) && requestEditForm.background.$dirty }">
+                        <label class="control-label col-sm-3" for="background">{{ 'Background' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="background" name="background"
+                            placeholder="{{ 'Background' | translate }}" title="{{ 'Background' | translate }}"
+                            ng-model="request.background"
+                            ng-maxlength="4000"
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.background.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.background.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Research Question -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.researchQuestion.$invalid || requestEditForm.researchQuestion.$error.required) && requestEditForm.researchQuestion.$dirty }">
+                        <label class="control-label col-sm-3" for="researchQuestion">{{ 'Research question' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion"
+                            placeholder="{{ 'Research question' | translate }}" title="{{ 'Research question' | translate }}"
+                            ng-model="request.researchQuestion"
+                            ng-maxlength="4000"
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.researchQuestion.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Hypothesis -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.hypothesis.$invalid || requestEditForm.hypothesis.$error.required) && requestEditForm.hypothesis.$dirty }">
+                        <label class="control-label col-sm-3" for="hypothesis">{{ 'Hypothesis' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="hypothesis" name="hypothesis"
+                            placeholder="{{ 'Hypothesis' | translate }}" title="{{ 'Hypothesis' | translate }}"
+                            ng-model="request.hypothesis"
+                            ng-maxlength="2000"
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.required">{{ 'Required field' | translate }}</span>
+                            <span class="help-block" ng-show="requestEditForm.hypothesis.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Methods -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.methods.$invalid || requestEditForm.methods.$error.required) && requestEditForm.methods.$dirty }">
+                        <label class="control-label col-sm-3" for="methods">{{ 'Methods' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="methods" name="methods"
+                            placeholder="{{ 'Methods' | translate }}" title="{{ 'Methods' | translate }}"
+                            ng-model="request.methods"
+                            ng-maxlength="4000"
+                            data-placement="top" data-animation="true" data-content="{{'popover: Methods'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.methods.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.methods.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 4000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Search criteria -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.searchCriteria.$invalid || requestEditForm.searchCriteria.$error.required) && requestEditForm.searchCriteria.$dirty }">
+                        <label class="control-label col-sm-3" for="searchCriteria">{{ 'Search criteria' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="searchCriteria" name="searchCriteria"
+                            placeholder="{{ 'Search criteria' | translate }}" title="{{ 'Search criteria' | translate }}"
+                            ng-model="request.searchCriteria"
+                            ng-maxlength="2000"
+                            data-placement="top" data-animation="true" data-content="{{'popover: Search criteria'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.searchCriteria.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.searchCriteria.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Study period -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.studyPeriod.$invalid || requestEditForm.studyPeriod.$error.required) && requestEditForm.studyPeriod.$dirty }">
+                        <label class="control-label col-sm-3" for="studyPeriod">{{ 'Study period' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="studyPeriod" name="studyPeriod"
+                                placeholder="{{ 'Study period' | translate }}" title="{{ 'Study period' | translate }}"
+                                ng-model="request.studyPeriod"
+                                ng-maxlength="100"
+                            required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.studyPeriod.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.studyPeriod.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Biobank request number -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.biobankRequestNumber.$invalid || requestEditForm.biobankRequestNumber.$error.required) && requestEditForm.biobankRequestNumber.$dirty }">
+                        <label class="control-label col-sm-3" for="biobankRequestNumber">{{ 'Biobank request number' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="biobankRequestNumber" name="biobankRequestNumber"
+                                   placeholder="{{ 'Biobank request number' | translate }}" title="{{ 'Biobank request number' | translate }}"
+                                   ng-model="request.biobankRequestNumber"
+                                   data-placement="top" data-animation="true" data-content="{{'popover: Biobank request'|translate}}" data-trigger="focus" bs-popover
+                                   ng-maxlength="100"
+                                   >
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.biobankRequestNumber.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Laboratory techniques -->
+                    <div class="form-group" ng-class="{ 'has-error' : (requestEditForm.laboratoryTechniques.$invalid || requestEditForm.laboratoryTechniques.$error.required) && requestEditForm.laboratoryTechniques.$dirty }">
+                        <label class="control-label col-sm-3" for="laboratoryTechniques">{{ 'Laboratory techniques' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="laboratoryTechniques" name="laboratoryTechniques"
+                            placeholder="{{ 'Laboratory techniques' | translate }}" title="{{ 'Laboratory techniques' | translate }}"
+                            ng-model="request.laboratoryTechniques"
+                            ng-maxlength="2000"
+                            data-placement="top" data-animation="true" data-content="{{'popover: Laboratory techniques'|translate}}" data-trigger="focus" bs-popover
+                            required></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.laboratoryTechniques.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.laboratoryTechniques.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Germline Mutation -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">
+                            {{'Germline mutation analysis' | translate}}
+                        </label>
+                        <div class="col-sm-6 form-control-static"
+                             title="{{'Germline mutation analysis' | translate}}"
+                        >
+                            {{'Germline mutation analysis' | translate}}?
+                            <br/>
+                            <input type="radio" id="germlineMutationYes" name="germlineMutation" ng-model="request.germlineMutation" ng-value="true" ng-checked="request.germlineMutation">
+                            <label class="normal" for="germlineMutationYes">{{'Yes' | translate}}</label>
+                            &nbsp;
+                            <input type="radio" id="germlineMutationNo" name="germlineMutation" ng-model="request.germlineMutation" ng-value="false" ng-checked="!request.germlineMutation">
+                            <label class="normal" for="germlineMutationNo">{{'No' | translate}}</label>
+                            <br>
+                        </div>
+                    </div>
+
+                    <!-- Required data and/or materials -->
+                    <div class="form-group" ng-mouseenter="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')"
+                        ng-class="{ 'has-error' : !isValidRequestType(request) && (
+                          requestEditForm.statisticsRequest.$dirty ||
+                          requestEditForm.excerptsRequest.$dirty ||
+                          requestEditForm.paReportRequest.$dirty ||
+                          requestEditForm.blockMaterialsRequest.$dirty ||
+                          requestEditForm.heSliceMaterialsRequest.$dirty ||
+                          requestEditForm.otherMaterialsRequest.$dirty ||
+                          requestEditForm.clinicalDataRequest.$dirty )}">
+                        <div class="col-sm-3">
+                            <label class="control-label">{{'Required data and/or materials' | translate}}</label>
+                            <span class="control-label help-block" ng-show="!isValidRequestType(request)">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                        <div class="col-sm-6"
+                            id="requestTypePopover"
+                            data-placement="top" data-animation="true"
+                            data-content="{{'popover: Required data and/or materials'|translate}}" data-html="true"
+                            data-trigger="manual" bs-show="popover.requestType" bs-popover
+                            title="{{'Required data and/or materials' | translate}}">
+                            <div class="radio">
+                                <input id="statisticsRequestTrue" name="statisticsRequest" type="radio"
+                                    ng-model="request.statisticsRequest" ng-value="true" ng-checked="request.statisticsRequest"
+                                    ng-click="resetNonStatistcsRequestType(request);"> &nbsp;
+                                <label class="normal radio-label" for="statisticsRequestTrue">{{'Numbers only, exploratory request' | translate}}</label><br>
+                            </div>
+
+                            <div class="radio">
+                                <input id="statisticsRequestFalse" name="statisticsRequest" type="radio"
+                                    ng-model="request.statisticsRequest" ng-value="false" ng-checked="!request.statisticsRequest"> &nbsp;
+                                <label class="normal radio-label" for="statisticsRequestFalse">{{'Excerpts, reports, material and/or clinical data' | translate}}</label><br>
+
+                                <div style="padding-left: 45px;">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="excerptsRequest" name="excerptsRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.excerptsRequest"> &nbsp;
+                                        <label class="normal radio-label" for="excerptsRequest">{{ 'Excerpts' | translate }}</label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="paReportRequest" name="paReportRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.paReportRequest"> &nbsp;
+                                        <label class="normal radio-label" for="paReportRequest" data-ng-bind-html="'PA reports' | translate"></label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="blockMaterialsRequest" name="blockMaterialsRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.blockMaterialsRequest"> &nbsp;
+                                        <label class="normal radio-label" for="blockMaterialsRequest">{{ 'PA material Block' | translate }}</label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="heSliceMaterialsRequest" name="heSliceMaterialsRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.heSliceMaterialsRequest"> &nbsp;
+                                        <label class="normal radio-label" for="heSliceMaterialsRequest">{{ 'PA material HE slice(s)' | translate }}</label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="otherMaterialsRequestSelected" name="otherMaterialsRequestSelected" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="otherMaterialsRequestSelected"
+                                               ng-change="resetOtherMaterialsRequest(request)"> &nbsp;
+                                        <label class="normal radio-label" for="otherMaterialsRequestSelected">{{ 'PA material other' | translate }}</label>
+                                        <div ng-show="otherMaterialsRequestSelected"style="padding-left: 25px;">
+                                            <input type="text" class="form-control" id="otherMaterialsRequest" name="otherMaterialsRequest"
+                                                   placeholder="{{ 'Type of the other PA material' | translate }}" title="{{ 'Type of the other PA material' | translate }}"
+                                                   ng-model="request.otherMaterialsRequest" ng-maxlength="50"
+                                                   ng-required="otherMaterialsRequestSelected">
+                                            <!-- errors -->
+                                            <span class="help-block" ng-show="requestEditForm.otherMaterialsRequest.$error.maxlength">
+                                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
+                                            </span>
+                                            <span class="help-block" ng-show="requestEditForm.otherMaterialsRequest.$error.required">
+                                                    {{ 'Required field' | translate }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div ng-if="isClinicalDataEnabled(request)" class="checkbox">
+                                        <input type="checkbox" id="clinicalDataRequest" name="clinicalDataRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.clinicalDataRequest"> &nbsp;
+                                        <label class="normal radio-label" for="clinicalDataRequest">{{ 'Clinical data from practitioner' | translate }}</label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div ng-show="!request.statisticsRequest">
+                        <h4 class="h4">{{ 'Data linkage' | translate }}</h4>
+                        <hr>
+
+                        <!-- Data Linkage -->
+                        <div class="form-group" ng-mouseenter="showPopover('dataLinkagePopover')" ng-mouseleave="hidePopover('dataLinkagePopover')">
+                            <label class="control-label col-sm-3">
+                                {{'Data linkage' | translate}}
+                            </label>
+                            <div class="col-sm-6"
+                                 bs-popover
+                                 id="dataLinkagePopover"
+                                 title="{{'Data linkage' | translate}}"
+                                 data-placement="left" data-animation="true" data-content="{{'popover: Data linkage'|translate}}" data-trigger="manual">
+                                <input type="radio" id="linkageWithPersonalDataYes" name="linkageWithPersonalData"
+                                       ng-model="request.linkageWithPersonalData" ng-value="true" ng-checked="request.linkageWithPersonalData">
+                                <label class="normal radio-label" for="linkageWithPersonalDataYes">{{'Linkage with own patients or cohort or linkage between registries.' | translate}}</label><br>
+                                <input type="radio" id="linkageWithPersonalDataNo" name="linkageWithPersonalData"
+                                       ng-model="request.linkageWithPersonalData" ng-value="false" ng-checked="!request.linkageWithPersonalData" ng-click="resetDataLinkageValues(request);">
+                                <label class="normal radio-label" for="linkageWithPersonalDataNo">{{'No data linkage required.' | translate}}</label><br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Linkage Notes  -->
+                    <div class="form-group" ng-show="!request.statisticsRequest && request.linkageWithPersonalData"
+                         ng-class="{ 'has-error' : requestEditForm.linkageWithPersonalDataNotes.$invalid  && requestEditForm.linkageWithPersonalDataNotes.$dirty }">
+                        <label class="control-label col-sm-3" for="linkageWithPersonalDataNotes">{{ 'Data linkage information' | translate }}</label>
+                        <div class="col-sm-8">
+                        <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes"
+                                  placeholder="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}" title="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}"
+                                  ng-model="request.linkageWithPersonalDataNotes"
+                                  ng-maxlength="2000"
+                                  data-placement="top" data-animation="true" data-content="{{'popover: Notes for linkage with personal data'|translate}}" data-trigger="focus" bs-popover
+                                  ng-required="request.linkageWithPersonalData"></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.linkageWithPersonalDataNotes.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.linkageWithPersonalDataNotes.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Informed Consent  -->
+                    <div class="form-group" ng-class="" ng-show="!request.statisticsRequest && request.linkageWithPersonalData">
+                        <label class="control-label col-sm-3">
+                            {{'Informed consent (IC)' | translate}}
+                        </label>
+                        <div class="col-sm-6"
+                             id="informedConsentPopover">
+                            <input type="radio" id="informedConsentYes" name="informedConsent"
+                                   ng-model="request.informedConsent" ng-value="true" ng-checked="request.informedConsent" ng-click="resetDataLinkageValues(request, true);">
+                            <label class="normal" for="informedConsentYes">{{'Yes' | translate}}</label><br>
+                            <input type="radio" id="informedConsentNo" name="informedConsent"
+                                   ng-model="request.informedConsent" ng-value="false" ng-checked="!request.informedConsent">
+                            <label class="normal" for="informedConsentNo">{{'No' | translate}}</label>
+                        </div>
+                    </div>
+
+                    <!-- Reason Using Personal Data  -->
+                    <div class="form-group" ng-show="(!request.statisticsRequest && request.linkageWithPersonalData)"
+                         ng-class="{ 'has-error' : requestEditForm.reasonUsingPersonalData.$invalid && requestEditForm.reasonUsingPersonalData.$dirty }">
+                        <label class="control-label col-sm-3" for="requestTitle">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
+                        <div class="col-sm-8">
+                            <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData"
+                                      placeholder="{{ 'Explanation why linkage is allowed without informed consent' | translate }}" title="{{ 'Explanation why linkage is allowed without informed consent' | translate }}"
+                                      ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"
+                                      ng-maxlength="2000"
+                                      data-placement="top" data-animation="true" data-content="{{'popover: Reason using personal data'|translate}}" data-trigger="focus" bs-popover
+                                      ng-required="(request.linkageWithPersonalData && !request.informedConsent)"></textarea>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.reasonUsingPersonalData.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Informed consent form  -->
+
+                    <div class="form-group" ng-show="(!request.statisticsRequest && request.linkageWithPersonalData && request.informedConsent)"
+                         ng-class="{ 'has-error' : request.informedConsentFormAttachments.length < 1 }">
+                        <label class="control-label col-sm-3" for="requestTitle" data-ng-bind-html="'info: informed consent upload' | translate"></label>
+                        <div class="col-sm-8">
+                            <p ng-show="request.informedConsentFormAttachments.length < 1"><em>{{'No informed consent form uploaded.' | translate}}</em></p>
+
+                            <div class="list-group">
+                                <a ng-repeat="file in request.informedConsentFormAttachments"
+                                   ng-href="/requests/{{request.processInstanceId}}/informedConsentFormFiles/{{file.id}}"
+                                   class="list-group-item">
+                                    <span><i class="glyphicon glyphicon-file"></i></span>
+                                    {{file.name}}
+                                    <button class="btn btn-xs btn-default pull-right" type="button" title="{{'Delete'|translate}}"
+                                            ng-click="removeInformedConsentFormFile(file); $event.preventDefault();"
+                                    >
+                                        <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
+                                    </button>
+                                </a>
+                            </div>
+
+                            <!-- Informed consent form upload -->
+                            <div class="form-group"
+                                 flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/informedConsentFormFiles'})"
+                                 flow-name="informedConsentFormFlow"
+                                 flow-files-submitted="fileuploadsubmitted('informed_consent_form'); Upload.uploadFile($flow)"
+                                 flow-file-success="Upload.fileUploadSuccess('informed_consent_form', $message, $file); fileuploadsuccess(request, $message, 'informed_consent_form', $flow)"
+                                 flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'informed_consent_form')"
+                                 ng-mouseenter="showPopover('uploadInformedConsentFormPopover')" ng-mouseleave="hidePopover('uploadInformedConsentFormPopover')">
+                                <div class="alert alert-danger" role="alert" ng-if="upload_result['informed_consent_form'] == 'error'">
+                                    <span ng-bind-html="upload_error['informed_consent_form']"></span>
+                                </div>
+                                <div ng-repeat="file in $flow.files">
+                                <span ng-if="file.isUploading()">
+                                    {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                                </span>
+                                    <span ng-if="file.isComplete()">
+                                    {{'Done uploading file ?. The attachment has been saved.' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}})
+                                </span>
+                                    <div class="alert alert-danger" role="alert" ng-if="file.error">
+                                        {{file.error}}
+                                    </div>
+                                    <br />
+                                    <div class="progress">
+                                        <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                                             style="min-width: 2em;"
+                                             ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                                        >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                                    </div>
+                                </div>
+                                <div id="uploadInformedConsentFormPopover"
+                                     bs-popover
+                                     title="{{'Informed Consent (IC)'|translate}}"
+                                     data-placement="top-right" data-animation="am-flip-x"
+                                     data-content="{{'popover: Informed consent'|translate}}"
+                                     data-trigger="manual">
+
+                                    <input type="file" flow-btn id="test-upload-informed-consent-form" style="display:none"/>
+                                    <button class="btn btn-default" type="button"
+                                            id="button_upload_informed_consent_form"
+                                            ng-disabled="uploading"
+                                            flow-btn>{{'Upload form'|translate}}
+                                    </button>
+                                </div>
+
+                                <br>
+                                <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                                     flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                                     flow-drag-leave="style={border: '2px dashed gray'}"
+                                     ng-hide="uploading"
+                                     ng-style="style">
+                                    ({{'drag and drop your file here'|translate}})
+                                </div>
+                            </div>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="request.informedConsentFormAttachments.length < 1">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <h4 class="h4">{{'Billing address'|translate}}</h4>
+                    <hr>
+                    <!-- Address -->
+                    <div class="form-group"
+                        ng-class="{ 'has-error' : (requestEditForm.address1.$invalid && requestEditForm.address1.$dirty) ||
+                            (requestEditForm.address2.$invalid && requestEditForm.address2.$dirty) }">
+                        <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="address1" id="address1"
+                                placeholder="{{ 'Address' | translate }}" title="{{ 'Address' | translate }}"
+                                ng-model="request.billingAddress.address1"
+                                ng-maxlength="100"
+                                data-placement="top" data-animation="true" data-content="{{'popover: Address'|translate}}" data-trigger="focus" bs-popover
+                            required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.address1.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.address1.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <input type="text" class="form-control" id="address2" name="address2"
+                                ng-model="request.billingAddress.address2"
+                                ng-maxlength="100">
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.address2.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Postal code -->
+                    <div class="form-group"
+                        ng-class="{ 'has-error' : (requestEditForm.postalcode.$invalid && requestEditForm.postalcode.$dirty)
+                            || (requestEditForm.city.$invalid && requestEditForm.city.$dirty) }">
+                        <label class="control-label col-sm-3" for="postalcode">{{ 'Postal code' | translate }}, {{ 'City' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="postalcode" id="postalcode"
+                            placeholder="{{ 'Postal code' | translate }}" title="{{ 'Postal code' | translate }}"
+                            ng-maxlength="100"
+                            ng-model="request.billingAddress.postalCode" required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.postalcode.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.postalcode.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <input type="text" class="form-control" name="city" id="city"
+                                placeholder="{{ 'City' | translate }}" title="{{ 'City' | translate }}"
+                                ng-model="request.billingAddress.city"
+                                ng-maxlength="100"
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.city.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.city.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Billing E-mail -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.billingEmail.$invalid && requestEditForm.billingEmail.$dirty }">
+                        <label class="control-label col-sm-3" for="billingEmail">{{ 'Email' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control" name="billingEmail" id="billingEmail"
+                            placeholder="{{ 'Email' | translate }}" title="{{ 'Email' | translate }}"
+                            ng-model="request.billingAddress.email" ng-maxlength="254"
+                            data-placement="top" data-animation="true" data-content="{{'popover: E-mail'|translate}}" data-trigger="focus" bs-popover
+                            >
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.billingEmail.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 254 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.billingEmail.$invalid && requestEditForm.billingEmail.$dirty">
+                                {{ 'Email format is invalid' | translate }}
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <!-- Telephone -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.telephone.$invalid && requestEditForm.telephone.$dirty }">
+                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone number' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="telephone" name="telephone"
+                                placeholder="{{ 'Telephone number' | translate }}" title="{{ 'Telephone number' | translate }}"
+                                ng-model="request.billingAddress.telephone"
+                                ng-maxlength="100"
+                            >
+                            <span class="help-block" ng-show="requestEditForm.telephone.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <h4 class="h4">{{'Billing details' | translate}}</h4>
+                    <hr>
+                    <!-- Charge number -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.chargeNumber.$invalid && requestEditForm.chargeNumber.$dirty }">
+                        <label class="control-label col-sm-3" for="chargeNumber">{{ 'Charge number' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="chargeNumber" name="chargeNumber"
+                                placeholder="{{ 'Charge number' | translate }}" title="{{ 'Charge number' | translate }}"
+                                ng-model="request.chargeNumber" ng-maxlength="100"
+                                data-placement="top" data-animation="true" data-content="{{'popover: Charge number'|translate}}" data-trigger="focus" bs-popover
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.chargeNumber.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Grant provider -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.grantProvider.$invalid && requestEditForm.grantProvider.$dirty }">
+                        <label class="control-label col-sm-3" for="grantProvider">{{ 'Grant provider' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="grantProvider" name="grantProvider"
+                                placeholder="{{ 'Grant provider' | translate }}" title="{{ 'Grant provider' | translate }}"
+                                ng-model="request.grantProvider" ng-maxlength="100"
+                                data-placement="top" data-animation="true" data-content="{{'popover: Grant provider'|translate}}" data-trigger="focus" bs-popover
+                                required>
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.grantProvider.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                            <span class="help-block" ng-show="requestEditForm.grantProvider.$error.required">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Grant number -->
+                    <div class="form-group" ng-class="{ 'has-error' : requestEditForm.researchNumber.$invalid && requestEditForm.researchNumber.$dirty }">
+                        <label class="control-label col-sm-3" for="researchNumber">{{ 'Grant number' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="researchNumber" name="researchNumber"
+                                placeholder="{{ 'Grant number' | translate }}" title="{{ 'Grant number' | translate }}"
+                                ng-model="request.researchNumber" ng-maxlength="100"
+                                >
+                            <!-- errors -->
+                            <span class="help-block" ng-show="requestEditForm.researchNumber.$error.maxlength">
+                                {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <h4 class="h4">{{ 'Attachments' | translate }}</h4>
+                    <hr>
+
+                    <div class="row">
+                    <div class="col-sm-8">
+                    <p ng-show="request.attachments.length < 1"><em>{{'No attachments uploaded.' | translate}}</em></p>
+
+                    <div class="list-group">
+                        <a ng-repeat="file in request.attachments"
+                           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+                           class="list-group-item">
+                            <span><i class="glyphicon glyphicon-file"></i></span>
+                            {{file.name}}
+                            <button class="btn btn-xs btn-default pull-right" type="button" title="{{'Delete'|translate}}"
+                                    ng-click="removeFile(file); $event.preventDefault();"
+                                    >
+                                <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
+                            </button>
+                        </a>
+                    </div>
+                    </div>
+                    </div>
+                    <!-- Attachment upload -->
+                    <div class="row">
+                    <div class="col-sm-8"
+                         flow-init="Upload.flow_options({target:'/api/requests/'+request.processInstanceId+'/files'})"
+                         flow-name="attachmentFlow"
+                         flow-files-submitted="fileuploadsubmitted('attachment'); Upload.uploadFile($flow)"
+                         flow-file-success="Upload.fileUploadSuccess('attachment', $message, $file); fileuploadsuccess(request, $message, 'attachment', $flow)"
+                         flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'attachment')"
+                         ng-mouseenter="showPopover('uploadFilePopover')" ng-mouseleave="hidePopover('uploadFilePopover')">
+                        <div class="alert alert-danger" role="alert" ng-if="upload_result['attachment'] == 'error'">
+                            <span ng-bind-html="upload_error['attachment']"></span>
+                        </div>
+                        <div ng-repeat="file in $flow.files">
+                            <span ng-if="file.isUploading()">
+                                {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                            </span>
+                            <span ng-if="file.isComplete()">
+                                {{'Done uploading file ?. The attachment has been saved.' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}})
+                            </span>
+                            <div class="alert alert-danger" role="alert" ng-if="file.error">
+                                {{file.error}}
+                            </div>
+                            <br />
+                            <div class="progress">
+                                <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                                    style="min-width: 2em;"
+                                    ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                                    >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                            </div>
+                        </div>
+
+                        <div id="uploadFilePopover"
+                            bs-popover
+                            title="{{'Upload file'|translate}}"
+                            data-placement="top" data-animation="true"
+                            data-trigger="manual"
+                            data-content="{{'popover: Upload file'|translate}}">
+                            <input type="file" flow-btn id="test-upload-attachment1" style="display:none" />
+                            <button class="btn btn-default" type="button"
+                                id="button_upload_attachment"
+                                ng-disabled="uploading"
+                                flow-btn>{{'Upload file'|translate}}</button>
+                        </div>
+                        <br>
+                        <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                             flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                             flow-drag-leave="style={border: '2px dashed gray'}"
+                             ng-hide="uploading"
+                             ng-style="style">
+                            ({{'drag and drop your file here'|translate}})
+                        </div>
+                    </div>
+                    </div>
+
+                    <h4 class="h4">{{ 'Letter of medical research ethics committee' | translate }}</h4>
+                    <hr>
+
+                    <div class="row">
+                    <div class="col-sm-8">
+                    <p ng-show="request.medicalEthicalCommitteeApprovalAttachments.length < 1"><em>{{'No attachments uploaded.' | translate}}</em></p>
+
+                    <div class="list-group">
+                        <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
+                           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+                           class="list-group-item">
+                            <span><i class="glyphicon glyphicon-file"></i></span>
+                            {{file.name}}
+                            <button class="btn btn-xs btn-default pull-right" type="button" title="{{'Delete'|translate}}"
+                                    ng-click="removeMECFile(file); $event.preventDefault();"
+                                    >
+                                <i class="glyphicon glyphicon-trash"></i> {{'Delete'|translate}}
+                            </button>
+                        </a>
+                    </div>
+                    </div>
+                    </div>
+                    <!-- Medical Ethical Committee approval upload -->
+                    <div class="row">
+                    <div class="col-sm-8"
+                         flow-init="Upload.flow_options({target:'/api/requests/'+request.processInstanceId+'/mecFiles'})"
+                         flow-name="mecApprovalFlow"
+                         flow-files-submitted="fileuploadsubmitted('mec_approval'); Upload.uploadFile($flow)"
+                         flow-file-success="Upload.fileUploadSuccess('MEC approval', $message, $file); fileuploadsuccess(request, $message, 'mec_approval', $flow)"
+                         flow-file-error="fileuploaderror(Upload.fileUploadError($message, $file, $flow), 'mec_approval')"
+                         ng-mouseenter="showPopover('uploadMETCLetterPopover')" ng-mouseleave="hidePopover('uploadMETCLetterPopover')"
+                    >
+                        <div class="alert alert-danger" role="alert" ng-if="upload_result['mec_approval'] == 'error'">
+                            <span ng-bind-html="upload_error['mec_approval']"></span>
+                        </div>
+                        <div ng-repeat="file in $flow.files">
+                            <span ng-if="file.isUploading()">
+                                {{'Uploading ?' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}}) ...
+                            </span>
+                            <span ng-if="file.isComplete()">
+                                {{'Done uploading file ?. The attachment has been saved.' |translate: {filename: file.name} }} ({{Upload.readableFilesize(file.size)}})
+                            </span>
+                            <div class="alert alert-danger" role="alert" ng-if="file.error">
+                                {{file.error}}
+                            </div>
+                            <br />
+                            <div class="progress">
+                                <div class="progress-bar {{file.isComplete() ? '' : 'progress-bar-striped active'}}" role="progressbar"
+                                    style="min-width: 2em;"
+                                    ng-style="{'width' : (file.sizeUploaded() / file.size * 100) + '%'}"
+                                    >{{file.sizeUploaded() / file.size * 100 | number:0}}%</div>
+                            </div>
+                        </div>
+                        <div id="uploadMETCLetterPopover"
+                            bs-popover
+                            title="{{'Upload letter'|translate}}"
+                            data-placement="top" data-animation="true"
+                            data-content="{{'popover: Upload medical ethical committee approval'|translate}}"
+                            data-trigger="manual"
+                            >
+                            <input type="file" flow-btn id="test-upload-attachment2" style="display:none"/>
+                            <button class="btn btn-default" type="button"
+                                    id="button_upload_metc_letter"
+                                    ng-disabled="uploading"
+                                    flow-btn>{{'Upload letter'|translate}}
+                            </button>
+                        </div>
+                        <br>
+                        <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
+                             flow-drag-enter="style={border:'4px dashed lightgreen'}"
+                             flow-drag-leave="style={border: '2px dashed gray'}"
+                             ng-hide="uploading"
+                             ng-style="style">
+                            ({{'drag and drop your file here'|translate}})
+                        </div>
+                    </div>
+                    </div>
+
+
+                    <div ng-include="'app/request/request-review.html'" ng-if="request.status=='Review'"></div>
+
+                    <div ng-if="request.status=='Approval' && isPalga()">
+
+                        <h4 class="h4 h4-palga">{{'Review by PALGA privacy commitee'|translate}}</h4>
+                        <hr>
+
+                        <!-- Privacy committee result rationale -->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">{{'Review PPC' | translate}}</label>
+                            <div class="col-sm-8">
+                                <div ng-repeat="option in privacyCommitteeRationaleOptions">
+                                    <input name="privacyCommitteeRationale" type="radio" id="radio-{{option}}"
+                                        ng-model="request.privacyCommitteeRationale" value="{{option}}">
+                                    <label class="normal" for="radio-{{option}}">{{option | translate}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review result -->
+                        <div class="form-group"
+                            ng-class="{ 'has-error' : requestEditForm.privacyCommitteeOutcome.$invalid && requestEditForm.privacyCommitteeOutcome.$dirty }"
+                            >
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcome">{{ 'Review result' | translate
+                                }}</label>
+                            <div class="col-sm-8">
+                                <textarea type="text" class="form-control" id="privacyCommitteeOutcome"
+                                      name="privacyCommitteeOutcome" placeholder="{{ 'Review result' | translate }}"
+                                      ng-model="request.privacyCommitteeOutcome"
+                                      ng-maxlength="2000"
+                                      ></textarea>
+                                <span class="help-block" ng-show="requestEditForm.privacyCommitteeOutcome.$error.maxlength">
+                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Outcome Reference -->
+                        <div class="form-group"
+                            ng-class="{ 'has-error' : requestEditForm.privacyCommitteeOutcomeRef.$invalid && requestEditForm.privacyCommitteeOutcomeRef.$dirty }"
+                            >
+                            <label class="control-label col-sm-3" for="privacyCommitteeOutcomeRef">{{
+                            'Explanation for PPC' | translate }}</label>
+                            <div class="col-sm-8">
+                                <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
+                                      name="privacyCommitteeOutcomeRef"
+                                      placeholder="{{ 'Explanation for PPC' | translate }}"
+                                      ng-model="request.privacyCommitteeOutcomeRef"
+                                      ng-maxlength="2000"
+                                      ></textarea>
+                                <span class="help-block" ng-show="requestEditForm.privacyCommitteeOutcomeRef.$error.maxlength">
+                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 2000 } }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Outcome Emails -->
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="privacyCommitteeEmails">{{ 'Summary review process' |
+                                translate }}</label>
+                            <div class="col-sm-8">
+                            <textarea type="text" class="form-control" id="privacyCommitteeEmails"
+                                      name="privacyCommitteeEmails" placeholder="{{ 'Summary review process' | translate }}"
+                                      ng-model="request.privacyCommitteeEmails"></textarea>
+                            </div>
+                        </div>
+
+                    </div> <!-- endif in 'Review' status and user type 'palga' -->
+
+                    <!--Upload Files if in 'DataDelivery' status-->
+                    <div ng-include="'app/request/upload-file.html'" ng-if="request.status=='DataDelivery'"></div>
+
+                    <!--Approvals-->
+                    <div ng-include="'app/request/approvals.html'"
+                         ng-if="request.status=='Approval' && (isPalga() || isScientificCouncil())"></div>
+
+
+                    <div ng-if="request.status=='Approval' && isPalga()">
+                        <h4 class="h4 h4-palga">{{'Final checks before data delivery'|translate}}</h4>
+                        <hr>
+                        <!-- Scientific council has approved -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="scientificCouncilApproved" name="scientificCouncilApproved"
+                                       ng-model="request.scientificCouncilApproved"> &nbsp;
+                                <label class="normal" for="scientificCouncilApproved">{{
+                                'Approved by scientific council.' | translate }}</label>
+                            </div>
+                        </div>
+
+                        <!-- There are no privacy issues or the privacy committee has approved. -->
+                        <div class="form-group" ng-class="">
+                            <label class="control-label col-sm-3">
+                                &nbsp;
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="privacyCommitteeApproved" name="privacyCommitteeApproved"
+                                       ng-disabled="!request.privacyCommitteeRationale"
+                                       ng-model="request.privacyCommitteeApproved"> &nbsp;
+                                <label class="normal" for="privacyCommitteeApproved">{{
+                                'Approved by privacy committee.' | translate }}</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div> <!--end modal-body-->
+
+                <div class="modal-footer">
+                    <button id="cancel-new-request" class="btn btn-default pull-left req-edit-button" type="button"
+                            tabindex="-1" ng-click="cancel(request);">
+                        {{'Cancel'|translate}}
+                    </button>
+                    <button id="submit-new-request" class="btn btn-warning req-edit-button" type="button"
+                        ng-if="request.status=='Open'"
+                        ng-click="submitRequest(request)"
+                        ng-disabled="requestEditForm.$invalid
+                            || !isValidRequestType(request)
+                            || (!request.statisticsRequest
+                                && request.linkageWithPersonalData
+                                && request.informedConsent
+                                && request.informedConsentFormAttachments.length < 1)
+                            || dataLoading">
+                        {{'Submit'|translate}}
+                    </button>
+                    <button class="btn btn-warning req-edit-button" type="button"
+                            id="button-submit-scientific-council"
+                        ng-if="request.status=='Review' && isPalga()"
+                        ng-click="submitForApproval(request)"
+                        ng-disabled="requestEditForm.$invalid
+                            || !isValidRequestType(request)
+                            || !request.agreementReached
+                            || !request.requesterValid
+                            || !request.requesterAllowed
+                            || !request.contactPersonAllowed
+                            || !request.requesterLabValid
+                            || dataLoading
+                            || (request.informedConsent && request.informedConsentFormAttachments.length < 1)
+                        ">
+                            {{'Submit to scientific council'|translate}}
+                    </button>
+                    <button id="button-skip-approval" class="btn btn-warning btn-outline req-edit-button" type="button"
+                            ng-if="request.status=='Review' && isPalga() && isSkipApprovalEnabled(request)"
+                            ng-click="submitReviewAndSkipApproval(request)"
+                            ng-disabled="requestEditForm.$invalid
+                            || !isValidRequestType(request)
+                            || (!request.agreementReached && !request.agreementNotApplicable)
+                            || !request.requesterValid
+                            || !request.requesterAllowed
+                            || !request.contactPersonAllowed
+                            || !request.requesterLabValid
+                            || dataLoading
+                            || (request.informedConsent && request.informedConsentFormAttachments.length < 1)
+                        ">
+                        {{'Finish submission process, skip scientific council'|translate}}
+                    </button>
+                    <button class="btn btn-warning req-edit-button" type="button"
+                            id="button-finish-request"
+                        ng-if="request.status=='Approval' && isPalga()"
+                        ng-click="finalise(request)"
+                        ng-disabled="requestEditForm.$invalid
+                            || !request.scientificCouncilApproved
+                            || !request.privacyCommitteeApproved
+                            || dataLoading
+                        ">
+                            {{'Finish submission process'|translate}}
+                    </button>
+                    <button class="btn btn-danger btn-outline req-edit-button" type="button"
+                            id="button-reject-request"
+                        ng-if="(request.status=='Review' || request.status=='Approval') && isPalga()"
+                        ng-click="reject(request)"
+                        ng-disabled="requestEditForm.$invalid || dataLoading">
+                            {{'Reject'|translate}}
+                    </button>
+                    <button class="btn btn-warning btn-outline req-edit-button" type="button"
+                            id="button-reopen-request"
+                        ng-if="(request.status=='Review' || request.status=='Approval') && isPalga() && isReopenEnabled(request)"
+                        ng-click="reopen(request)"
+                        ng-disabled="dataLoading">
+                            {{'Reopen'|translate}}
+                    </button>
+                    <button class="btn btn-info req-edit-button" id="button-save-request" type="button" ng-click="update(request);"
+                            ng-disabled="dataLoading || requestEditForm.$error.maxlength">{{'Save'|translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

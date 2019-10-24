@@ -39,22 +39,22 @@ public class StatusController {
     @Autowired TaskService taskService;
 
     @Autowired RuntimeService runtimeService;
-    
+
     @Autowired FileService fileService;
-    
+
     @Autowired MailService mailService;
 
-    @RequestMapping(value = "/ping", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/ping", method = RequestMethod.GET)
     public void getPing() {
 
     }
 
-    @RequestMapping(value = "/status", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/status", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getStatus() {
-        log.info("GET /status");
-        
+        log.info("GET /api/status");
+
         boolean ok = true;
-        
+
         Map<String, Object> status = new HashMap<String, Object>();
         try {
             status.put("requests", requestPropertiesRepository.count());
@@ -94,7 +94,7 @@ public class StatusController {
         status.put("mailservice", mailServiceStatus);
 
         HttpStatus code = (ok) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
-        return new ResponseEntity<Map<String, Object>>(status, code);
+        return new ResponseEntity<>(status, code);
     }
 
 }

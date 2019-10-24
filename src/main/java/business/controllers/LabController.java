@@ -48,14 +48,14 @@ public class LabController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/admin/labs/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/labs/{id}", method = RequestMethod.GET)
     public Lab get(@PathVariable Long id) {
         return labService.findOne(id);
     }
 
-    @RequestMapping(value = "/admin/labs", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/labs", method = RequestMethod.GET)
     public List<Lab> getAll(Principal principal) {
-        log.info("GET /admin/labs (for user: " + principal.getName() + ")");
+        log.info("GET /api/admin/labs (for user: " + principal.getName() + ")");
         return labService.findAll();
     }
 
@@ -79,9 +79,9 @@ public class LabController {
         lab.setEmailAddresses(new ArrayList<>(emailAddresses));
     }
 
-    @RequestMapping(value = "/admin/labs", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/labs", method = RequestMethod.POST)
     public Lab create(Principal principal, @RequestBody Lab body) {
-        log.info("POST /admin/labs (for user: " + principal.getName() + ")");
+        log.info("POST /api/admin/labs (for user: " + principal.getName() + ")");
         Lab lab = new Lab();
         if (body.getNumber() == null || body.getNumber().intValue() <= 0) {
             throw new InvalidLabNumber();
@@ -91,10 +91,10 @@ public class LabController {
         return labService.save(lab);
     }
 
-    @RequestMapping(value = "/admin/labs/{id}", method = RequestMethod.PUT,
+    @RequestMapping(value = "/api/admin/labs/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab update(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
-        log.info("PUT /admin/labs/" + body.getNumber());
+        log.info("PUT /api/admin/labs/" + body.getNumber());
         Lab lab = labService.findOne(id);
         if (lab == null) {
             throw new LabNotFound();
@@ -104,10 +104,10 @@ public class LabController {
         return  labService.save(lab);
     }
 
-    @RequestMapping(value = "/admin/labs/{id}/activate", method = RequestMethod.PUT,
+    @RequestMapping(value = "/api/admin/labs/{id}/activate", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab activate(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
-        log.info("PUT /admin/labs/" + body.getNumber());
+        log.info("PUT /api/admin/labs/" + body.getNumber());
         Lab lab = labService.findOne(id);
         if (lab == null) {
             throw new LabNotFound();
@@ -116,10 +116,10 @@ public class LabController {
         return  labService.save(lab);
     }
 
-    @RequestMapping(value = "/admin/labs/{id}/deactivate", method = RequestMethod.PUT,
+    @RequestMapping(value = "/api/admin/labs/{id}/deactivate", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Lab deactivate(Principal principal, @PathVariable Long id, @RequestBody Lab body) {
-        log.info("PUT /admin/labs/" + body.getNumber());
+        log.info("PUT /api/admin/labs/" + body.getNumber());
         Lab lab = labService.findOne(id);
         if (lab == null) {
             throw new LabNotFound();
@@ -128,9 +128,9 @@ public class LabController {
         return  labService.save(lab);
     }
 
-    @RequestMapping(value = "/lab", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/lab", method = RequestMethod.GET)
     public Lab getLab(UserAuthenticationToken token) {
-        log.info("GET /lab");
+        log.info("GET /api/lab");
         User user = token.getUser();
         if (user == null || !user.isLabUser()) {
             throw new UserUnauthorised("User not authorised to fetch lab information.");
@@ -141,9 +141,9 @@ public class LabController {
         return labService.findOne(user.getLab().getId());
     }
 
-    @RequestMapping(value = "/lab/hubusers", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/lab/hubusers", method = RequestMethod.GET)
     public List<ProfileRepresentation> getLabHubUsers(UserAuthenticationToken token) {
-        log.info("GET /lab/hubusers");
+        log.info("GET /api/lab/hubusers");
         User user = token.getUser();
         if (user == null || !user.isLabUser()) {
             throw new UserUnauthorised("User not authorised to fetch lab information.");
@@ -160,9 +160,9 @@ public class LabController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('lab_user')")
-    @RequestMapping(value = "/lab", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/lab", method = RequestMethod.PUT)
     public Lab updateLab(UserAuthenticationToken token, @RequestBody Lab body) {
-        log.info("PUT /lab");
+        log.info("PUT /api/lab");
         User user = token.getUser();
         if (user != null && user.isLabUser()) {
             if (user.getLab() == null) {
@@ -183,9 +183,9 @@ public class LabController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
-    @RequestMapping(value = "/lab/fixLabEmailAddresses", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/lab/fixLabEmailAddresses", method = RequestMethod.PUT)
     public void fixLabEmailAddresses() {
-        log.info("PUT /lab/fixLabEmailAddresses");
+        log.info("PUT /api/lab/fixLabEmailAddresses");
         labService.fixLabEmailAddresses();
     }
 

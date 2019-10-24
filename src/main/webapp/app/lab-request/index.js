@@ -1,0 +1,2 @@
+require('./LabRequestController');
+require('./LabRequestCommentController');

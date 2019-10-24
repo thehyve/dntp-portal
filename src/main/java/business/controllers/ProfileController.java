@@ -36,7 +36,7 @@ public class ProfileController {
     @Autowired
     LabService labService;
 
-    @RequestMapping(value = "/profile", method = RequestMethod.GET,
+    @RequestMapping(value = "/api/profile", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ProfileRepresentation getOwnProfile(UserAuthenticationToken user) {
         // Query user's profile
@@ -46,7 +46,7 @@ public class ProfileController {
         return new ProfileRepresentation(userService.findOne(user.getId()));
     }
 
-    @RequestMapping(value = "/hublabs", method = RequestMethod.GET,
+    @RequestMapping(value = "/api/hublabs", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Lab> getProfileHubLabs(UserAuthenticationToken user) {
         // Query user's profile
@@ -58,7 +58,7 @@ public class ProfileController {
         return labService.findAll(profileRepresentation.getHubLabIds());
     }
 
-    @RequestMapping(value = "/profile", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/profile", method = RequestMethod.PUT)
     public void putOwnProfile(UserAuthenticationToken user, @RequestBody ProfileRepresentation form) {
         log.info("PUT profile for user with id " + user.getId());
 

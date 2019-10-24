@@ -87,13 +87,21 @@ Running front-end unit testing and e2e testing:
 # install dependencies
 npm install
 # run unit tests
-npx gulp test
+npm test (currenty failing)
 # prepare webdriver for e2e tests
 npx webdriver-manager update
 # run e2e tests
 npx protractor
 # run only a selected feature
 npx protractor --specs=e2e/scenario_complete_happy_request.feature
+```
+
+To select a particular version of the webdriver (instead of the latest), run:
+```bash
+# For chromium:
+npx webdriver-manager update --versions.chrome=$(chromium-browser --version | cut -d ' ' -f 2)
+# For Google Chrome:
+npx webdriver-manager update --versions.chrome=$(google-chrome --version | cut -d ' ' -f 3)
 ```
 
 ### Deployment

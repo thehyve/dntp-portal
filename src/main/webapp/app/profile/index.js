@@ -1,0 +1,2 @@
+require('./PasswordController');
+require('./ProfileController');

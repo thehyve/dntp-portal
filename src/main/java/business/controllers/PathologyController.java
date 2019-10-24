@@ -34,34 +34,34 @@ public class PathologyController {
     private PathologyItemRepository pathologyItemRepository;
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
-    @RequestMapping (value = "/labrequests/{id}/pathology", method = RequestMethod.POST)
+    @RequestMapping (value = "/api/labrequests/{id}/pathology", method = RequestMethod.POST)
     public PathologyRepresentation addPathology (UserAuthenticationToken user,
             @PathVariable Long id,
             @RequestBody PathologyRepresentation body) {
-        log.info("POST /labrequests/" + id + "/pathology for userId " + user.getId());
+        log.info("POST /api/labrequests/" + id + "/pathology for userId " + user.getId());
         LabRequest labRequest = labRequestQueryService.findOne(id);
-        
+
         PathologyItem pathology = new PathologyItem();
         pathology.setLabRequestId(id);
         pathology.setPaNumber(body.getPaNumber());
         pathology.setSamples(body.getSamples());
         pathology.setSamplesAvailable(body.isSamplesAvailable());
         pathology = pathologyItemRepository.save(pathology);
-        
+
         labRequest.getPathologyList().add(pathology);
         labRequestService.save(labRequest);
-        
+
         PathologyRepresentation result = new PathologyRepresentation(pathology);
         result.mapSamples(pathology);
         return result;
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
-    @RequestMapping (value = "/labrequests/{id}/pathology/{pathologyId}", method = RequestMethod.DELETE)
+    @RequestMapping (value = "/api/labrequests/{id}/pathology/{pathologyId}", method = RequestMethod.DELETE)
     public void removePathology (UserAuthenticationToken user,
             @PathVariable Long id,
             @PathVariable Long pathologyId) {
-        log.info("PUT /labrequests/" + id + "/pathology/ " + pathologyId + " for userId " + user.getId());
+        log.info("PUT /api/labrequests/" + id + "/pathology/ " + pathologyId + " for userId " + user.getId());
         LabRequest labRequest = labRequestQueryService.findOne(id);
 
         PathologyItem pathology = pathologyItemRepository.findOne(pathologyId);
@@ -77,14 +77,14 @@ public class PathologyController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'labRequestAssignedToUser')")
-    @RequestMapping (value = "/labrequests/{id}/pathology/{pathologyId}", method = RequestMethod.PUT)
+    @RequestMapping (value = "/api/labrequests/{id}/pathology/{pathologyId}", method = RequestMethod.PUT)
     public PathologyRepresentation updatePathology (UserAuthenticationToken user,
             @PathVariable Long id,
             @PathVariable Long pathologyId,
             @RequestBody PathologyRepresentation body) {
-        log.info("PUT /labrequests/" + id + "/pathology/ " + pathologyId + " for userId " + user.getId());
+        log.info("PUT /api/labrequests/" + id + "/pathology/ " + pathologyId + " for userId " + user.getId());
         LabRequest labRequest = labRequestQueryService.findOne(id);
-        
+
         PathologyItem pathology = pathologyItemRepository.findOne(pathologyId);
         if (pathology == null) {
             throw new PathologyNotFound();
@@ -95,7 +95,7 @@ public class PathologyController {
         pathology.setSamplesAvailable(Boolean.TRUE.equals(body.isSamplesAvailable()));
         pathology.setSamples(body.getSamples());
         pathology = pathologyItemRepository.save(pathology);
-        
+
         PathologyRepresentation result = new PathologyRepresentation(pathology);
         result.mapSamples(pathology);
         return result;

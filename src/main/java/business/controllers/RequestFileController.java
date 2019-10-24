@@ -78,7 +78,7 @@ public class RequestFileController {
             + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
-    @RequestMapping(value = "/requests/{id}/files", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/files", method = RequestMethod.POST)
     public RequestRepresentation uploadRequestAttachment(
             UserAuthenticationToken user,
             @PathVariable String id,
@@ -87,7 +87,7 @@ public class RequestFileController {
             @RequestParam("flowChunkNumber") Integer chunk,
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
-        log.info("POST /requests/" + id + "/files: chunk " + chunk + " / " + chunks);
+        log.info("POST /api/requests/" + id + "/files: chunk " + chunk + " / " + chunks);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -110,10 +110,10 @@ public class RequestFileController {
             + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
-    @RequestMapping(value = "/requests/{id}/files/{attachmentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/requests/{id}/files/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation deleteRequestAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                          @PathVariable Long attachmentId) {
-        log.info("DELETE /requests/" + id + "/files/" + attachmentId);
+        log.info("DELETE /api/requests/" + id + "/files/" + attachmentId);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -134,7 +134,7 @@ public class RequestFileController {
             + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
-    @RequestMapping(value = "/requests/{id}/informedConsentFormFiles", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/informedConsentFormFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadInformedConsentFormAttachment(
             UserAuthenticationToken user,
             @PathVariable String id,
@@ -143,7 +143,7 @@ public class RequestFileController {
             @RequestParam("flowChunkNumber") Integer chunk,
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
-        log.info("POST /requests/" + id + "/informedConsentFormFiles: chunk " + chunk + " / " + chunks);
+        log.info("POST /api/requests/" + id + "/informedConsentFormFiles: chunk " + chunk + " / " + chunks);
 
         checkAttachmentTaskExists(user, id);
 
@@ -165,10 +165,10 @@ public class RequestFileController {
             + "     or (hasRole('palga'))"
             + ")")
 
-    @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> getICFile(UserAuthenticationToken user, @PathVariable String id,
                                                      @PathVariable Long attachmentId) {
-        log.info("GET /requests/" + id + "/informedConsentFormFiles/" + attachmentId);
+        log.info("GET /api/requests/" + id + "/informedConsentFormFiles/" + attachmentId);
         return requestFileService.getFile(user.getUser(), id, attachmentId);
     }
 
@@ -178,10 +178,10 @@ public class RequestFileController {
             + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
-    @RequestMapping(value = "/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeInformedConsentFormAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                                      @PathVariable Long attachmentId) {
-        log.info("DELETE /requests/" + id + "/informedConsentFormFiles/" + attachmentId);
+        log.info("DELETE /api/requests/" + id + "/informedConsentFormFiles/" + attachmentId);
 
         checkAttachmentTaskExists(user, id);
 
@@ -195,7 +195,7 @@ public class RequestFileController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/agreementFiles", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/agreementFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadAgreementAttachment(
             UserAuthenticationToken user,
             @PathVariable String id,
@@ -204,7 +204,7 @@ public class RequestFileController {
             @RequestParam("flowChunkNumber") Integer chunk,
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
-        log.info("POST /requests/" + id + "/agreementFiles: chunk " + chunk + " / " + chunks);
+        log.info("POST /api/requests/" + id + "/agreementFiles: chunk " + chunk + " / " + chunks);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -224,10 +224,10 @@ public class RequestFileController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/agreementFiles/{attachmentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/requests/{id}/agreementFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeAgreementAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                            @PathVariable Long attachmentId) {
-        log.info("DELETE /requests/" + id + "/agreementFiles/" + attachmentId);
+        log.info("DELETE /api/requests/" + id + "/agreementFiles/" + attachmentId);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -248,7 +248,7 @@ public class RequestFileController {
             + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
-    @RequestMapping(value = "/requests/{id}/mecFiles", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/mecFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadMECAttachment(
             UserAuthenticationToken user,
             @PathVariable String id,
@@ -257,7 +257,7 @@ public class RequestFileController {
             @RequestParam("flowChunkNumber") Integer chunk,
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
-        log.info("POST /requests/" + id + "/mecFiles: chunk " + chunk + " / " + chunks);
+        log.info("POST /api/requests/" + id + "/mecFiles: chunk " + chunk + " / " + chunks);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -283,10 +283,10 @@ public class RequestFileController {
             + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
-    @RequestMapping(value = "/requests/{id}/mecFiles/{attachmentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/requests/{id}/mecFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeMECAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                      @PathVariable Long attachmentId) {
-        log.info("DELETE /requests/" + id + "/mecFiles/" + attachmentId);
+        log.info("DELETE /api/requests/" + id + "/mecFiles/" + attachmentId);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -305,7 +305,7 @@ public class RequestFileController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/dataFiles", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/dataFiles", method = RequestMethod.POST)
     public RequestRepresentation uploadDataAttachment(
             UserAuthenticationToken user,
             @PathVariable String id,
@@ -314,7 +314,7 @@ public class RequestFileController {
             @RequestParam("flowChunkNumber") Integer chunk,
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
-        log.info("POST /requests/" + id + "/dataFiles: chunk " + chunk + " / " + chunks);
+        log.info("POST /api/requests/" + id + "/dataFiles: chunk " + chunk + " / " + chunks);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -335,10 +335,10 @@ public class RequestFileController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/requests/{id}/dataFiles/{attachmentId}", method = RequestMethod.DELETE)
     public RequestRepresentation removeDataAttachment(UserAuthenticationToken user, @PathVariable String id,
                                                       @PathVariable Long attachmentId) {
-        log.info("DELETE /requests/" + id + "/dataFiles/" + attachmentId);
+        log.info("DELETE /api/requests/" + id + "/dataFiles/" + attachmentId);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -355,7 +355,7 @@ public class RequestFileController {
 
     @Profile("dev")
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/excerptList/useExample", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/excerptList/useExample", method = RequestMethod.POST)
     public Integer useExampleExcerptList (
             UserAuthenticationToken user,
             @PathVariable String id
@@ -389,7 +389,7 @@ public class RequestFileController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/excerptList", method = RequestMethod.POST)
     public Integer uploadExcerptList(
             UserAuthenticationToken user,
             @PathVariable String id,
@@ -398,7 +398,7 @@ public class RequestFileController {
             @RequestParam("flowChunkNumber") Integer chunk,
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
-        log.info("POST /requests/" + id + "/excerptList: chunk " + chunk + " / " + chunks);
+        log.info("POST /api/requests/" + id + "/excerptList: chunk " + chunk + " / " + chunks);
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -417,9 +417,9 @@ public class RequestFileController {
     }
 
     @PreAuthorize("isAuthenticated() and (hasRole('palga') or hasPermission(#id, 'isRequester'))")
-    @RequestMapping(value = "/requests/{id}/excerptList", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}/excerptList", method = RequestMethod.GET)
     public ExcerptListRepresentation getExcerptList(UserAuthenticationToken user, @PathVariable String id) {
-        log.info("GET /requests/" + id + "/excerptList");
+        log.info("GET /api/requests/" + id + "/excerptList");
 
         // Check if request exists
         requestService.getProcessInstance(id);
@@ -449,9 +449,9 @@ public class RequestFileController {
             + "(hasRole('palga') "
             + " or hasPermission(#id, 'isRequester') "
             + ")")
-    @RequestMapping(value = "/requests/{id}/excerptList/csv", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}/excerptList/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadExcerptList(UserAuthenticationToken user, @PathVariable String id) {
-        log.info("GET /requests/" + id + "/excerptList/csv");
+        log.info("GET /api/requests/" + id + "/excerptList/csv");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -468,10 +468,10 @@ public class RequestFileController {
             + " or hasPermission(#id, 'isLabuser') "
             + " or hasPermission(#id, 'isHubuser') "
             + ")")
-    @RequestMapping(value = "/requests/{id}/files/{attachmentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}/files/{attachmentId}", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> getFile(UserAuthenticationToken user, @PathVariable String id,
                                                    @PathVariable Long attachmentId) {
-        log.info("GET /requests/" + id + "/files/" + attachmentId);
+        log.info("GET /api/requests/" + id + "/files/" + attachmentId);
         return requestFileService.getFile(user.getUser(), id, attachmentId);
     }
 

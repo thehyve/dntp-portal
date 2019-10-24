@@ -1,0 +1,41 @@
+<!--
+Copyright (C) 2016  Stichting PALGA
+This file is distributed under the GNU Affero General Public License
+(see accompanying file LICENSE).
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>PALGA | Aanvraagsysteem</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+          display: none !important;
+        }
+    </style>
+  </head>
+  <body ng-app="ProcessApp" ng-csp="no-unsafe-eval"> <!-- flow-prevent-drop -->
+
+  <!--[if lt IE 9]>
+  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <!--Header Logo-->
+  <div class="col-sm-3 col-md-2 floating-header-logo no-print" ng-if="showNavbar()">
+    <img src="images/login-palga-logo.png" width="150px">
+  </div>
+
+  <!-- Navigator -->
+  <div ng-include="'app/components/navbar/navbar.html'" ng-if="showNavbar()"></div>
+  <div ng-include="'app/components/navbar/navbar-login.html'" ng-if="showLoginHeader()"></div>
+
+  <div ng-view></div>
+
+  <!-- Footer -->
+  <div ng-include="'app/components/footer/footer.html'"></div>
+
+  </body>
+</html>

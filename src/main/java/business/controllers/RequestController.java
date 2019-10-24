@@ -57,10 +57,10 @@ public class RequestController {
 
     @Autowired
     private RequestFormService requestFormService;
-   
+
     @Autowired
     private MailService mailService;
-    
+
     @Autowired
     private RuntimeService runtimeService;
 
@@ -80,12 +80,12 @@ public class RequestController {
     private RequestListRepresentationStartTimeComparator requestListRepresentationStartTimeComparator;
 
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "/requests", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests", method = RequestMethod.GET)
     public List<RequestListRepresentation> getRequestList(UserAuthenticationToken user) {
         log.info(
-                "GET /requests (for user: " + (user == null ? "null" : user.getId()) + ")");
+                "GET /api/requests (for user: " + (user == null ? "null" : user.getId()) + ")");
 
-        List<RequestListRepresentation> result = new ArrayList<RequestListRepresentation>();
+        List<RequestListRepresentation> result = new ArrayList<>();
 
         Date start = new Date();
         List<String> processInstanceIds = requestService.getProcessInstanceIdsForUser(user.getUser());
@@ -117,10 +117,10 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "/requests/counts", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/counts", method = RequestMethod.GET)
     public Map<String, Long> getRequestCounts(UserAuthenticationToken user) {
         log.info(
-                "GET /requests/counts (for user: " + (user == null ? "null" : user.getId()) + ")");
+                "GET /api/requests/counts (for user: " + (user == null ? "null" : user.getId()) + ")");
 
         Date start = new Date();
         Map<String, Long> counts = new HashMap<>();
@@ -150,11 +150,11 @@ public class RequestController {
             + "  or hasPermission(#id, 'isLabuser')"
             + "  or hasPermission(#id, 'isHubuser')"
             + ")")
-    @RequestMapping(value = "/requests/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}", method = RequestMethod.GET)
     public RequestRepresentation getRequestById(UserAuthenticationToken user,
                                                 @PathVariable String id) {
         log.info(
-                "GET /requests/" + id + " (for user: " + (user == null ? "null" : user.getId()) + ")");
+                "GET /api/requests/" + id + " (for user: " + (user == null ? "null" : user.getId()) + ")");
         RequestRepresentation request = new RequestRepresentation();
         if (user == null) {
             throw new NotLoggedInException();
@@ -167,11 +167,11 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('requester')")
-    @RequestMapping(value = "/requests", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests", method = RequestMethod.POST)
     public RequestRepresentation start(UserAuthenticationToken user) {
         String userId = user.getId().toString();
         log.info(
-                "POST /requests (initiator: " + userId + ")");
+                "POST /api/requests (initiator: " + userId + ")");
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("initiator", userId);
         values.put("jump_to_review", Boolean.FALSE);
@@ -188,21 +188,21 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
-    @RequestMapping(value = "/requests/{id}/forks", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/forks", method = RequestMethod.POST)
     public RequestRepresentation fork(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        log.info("POST /requests/" + id + "/forks");
+        log.info("POST /api/requests/" + id + "/forks");
         return requestService.forkRequest(user.getUser(), id);
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}", method = RequestMethod.PUT)
     public RequestRepresentation update(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id);
+        log.info("PUT /api/requests/" + id);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
 
@@ -217,11 +217,11 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/suspend", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/suspend", method = RequestMethod.PUT)
     public RequestRepresentation suspend(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        log.info("PUT /requests/" + id + "/suspend");
+        log.info("PUT /api/requests/" + id + "/suspend");
 
         requestPropertiesService.suspendRequest(id);
 
@@ -233,11 +233,11 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/resume", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/resume", method = RequestMethod.PUT)
     public RequestRepresentation resume(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        log.info("PUT /requests/" + id + "/resume");
+        log.info("PUT /api/requests/" + id + "/resume");
 
         requestPropertiesService.resumeRequest(id);
 
@@ -249,12 +249,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/submit", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/submit", method = RequestMethod.PUT)
     public RequestRepresentation submit(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id + "/submit");
+        log.info("PUT /api/requests/" + id + "/submit");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
         //FIXME: validation of the data
@@ -273,19 +273,19 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
-    @RequestMapping(value = "/requestNumbers/fix", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requestNumbers/fix", method = RequestMethod.PUT)
     public void fixRequestNumbers() {
-        log.info("PUT /requestNumbers/fix");
+        log.info("PUT /api/requestNumbers/fix");
         requestNumberService.fixRequestNumbers();
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/submitReview", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/submitReview", method = RequestMethod.PUT)
     public RequestRepresentation submitReview(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/{}/submitReview", id);
+        log.info("PUT /api/requests/{}/submitReview", id);
         request.setRequestAdmissible(true);
         request.setReopenRequest(false);
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
@@ -322,12 +322,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/finalise", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/finalise", method = RequestMethod.PUT)
     public RequestRepresentation finalise(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id + "/finalise");
+        log.info("PUT /api/requests/" + id + "/finalise");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Map<String, Object> variables = requestFormService.transferFormData(request, instance, user.getUser());
         runtimeService.setVariables(instance.getId(), variables);
@@ -375,12 +375,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/reopen", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/reopen", method = RequestMethod.PUT)
     public RequestRepresentation reopen(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id + "/reopen");
+        log.info("PUT /api/requests/" + id + "/reopen");
 
         requestPropertiesService.resumeRequest(id);
 
@@ -433,12 +433,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/reject", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/reject", method = RequestMethod.PUT)
     public RequestRepresentation reject(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation body) {
-        log.info("PUT /requests/" + id + "/reject");
+        log.info("PUT /api/requests/" + id + "/reject");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
 
         requestPropertiesService.resumeRequest(id);
@@ -495,12 +495,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/close", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/close", method = RequestMethod.PUT)
     public RequestRepresentation close(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation body) {
-        log.info("PUT /requests/" + id + "/close");
+        log.info("PUT /api/requests/" + id + "/close");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
 
         RequestRepresentation request = new RequestRepresentation();
@@ -530,12 +530,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
-    @RequestMapping(value = "/requests/{id}/claim", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/claim", method = RequestMethod.PUT)
     public RequestRepresentation claim(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id + "/claim");
+        log.info("PUT /api/requests/" + id + "/claim");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         requestService.claimCurrentPalgaTask(id, user.getUser());
         Map<String, Object> variables = instance.getProcessVariables();
@@ -554,12 +554,12 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga')")
-    @RequestMapping(value = "/requests/{id}/unclaim", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/unclaim", method = RequestMethod.PUT)
     public RequestRepresentation unclaim(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation request) {
-        log.info("PUT /requests/" + id + "/unclaim");
+        log.info("PUT /api/requests/" + id + "/unclaim");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         Task task = requestService.getCurrentPalgaTaskByRequestId(id);
         taskService.unclaim(task.getId());
@@ -571,11 +571,11 @@ public class RequestController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isRequester')")
-    @RequestMapping(value = "/requests/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/requests/{id}", method = RequestMethod.DELETE)
     public void remove(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        log.info("DELETE /requests/" + id);
+        log.info("DELETE /api/requests/" + id);
         requestService.deleteRequest(user, id);
         log.info("process instance " + id + " deleted.");
     }

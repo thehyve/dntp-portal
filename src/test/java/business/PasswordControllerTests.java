@@ -68,7 +68,7 @@ public class PasswordControllerTests {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders
@@ -85,7 +85,7 @@ public class PasswordControllerTests {
         EmailRepresentation emailForm = new EmailRepresentation(PASSWORD_TEST_ACCOUNT);
 
         // Perform the request and ensure we get a correct result status
-        mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/password/request-new")
                 .content(new ObjectMapper().writeValueAsString(emailForm))
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON))
@@ -127,7 +127,7 @@ public class PasswordControllerTests {
         EmailRepresentation emailForm = new EmailRepresentation("somebody@nowhere.com");
 
         // Perform the request and ensure we get a correct result status
-        mockMvc.perform(MockMvcRequestBuilders.put("/password/request-new")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/password/request-new")
                 .content(new ObjectMapper().writeValueAsString(emailForm))
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON))
@@ -153,12 +153,12 @@ public class PasswordControllerTests {
         User user = userRepository.findByUsername(PASSWORD_TEST_ACCOUNT);
         NewPasswordRequest npr = new NewPasswordRequest(user);
         passwordRequestRepository.saveAndFlush(npr);
-        
+
         String newPassword = "12345678%ABCdef";
-        
+
         // Call password reset with the token
         NewPasswordRepresentation npRepr = new NewPasswordRepresentation(newPassword, npr.getToken());
-        mockMvc.perform(MockMvcRequestBuilders.post("/password/reset")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/password/reset")
                 .content(new ObjectMapper().writeValueAsString(npRepr))
                 .contentType("application/json")
                 .accept(MediaType.APPLICATION_JSON))

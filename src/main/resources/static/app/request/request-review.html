@@ -121,14 +121,14 @@
     <div>
       <button title="{{'Upload signed authentificaton and agreement form' | translate}}"
         class="btn btn-default"
-        ng-disabled="uploading"
+        ng-disabled="uploading || request.agreementNotApplicable"
         flow-btn>{{'Upload form'|translate}}</button>
     </div>
     <br>
     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
          flow-drag-enter="style={border:'4px dashed lightgreen'}"
          flow-drag-leave="style={border: '2px dashed gray'}"
-         ng-hide="uploading"
+         ng-hide="uploading || request.agreementNotApplicable"
          ng-style="style">
       ({{'drag and drop your file here'|translate}})
     </div>

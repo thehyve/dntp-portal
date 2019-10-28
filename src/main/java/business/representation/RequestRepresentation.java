@@ -121,6 +121,7 @@ public class RequestRepresentation implements RequestListElement {
     private boolean contactPersonAllowed;
     private boolean requesterLabValid;
     private boolean agreementReached;
+    private boolean agreementNotApplicable;
     private boolean requestAdmissible;
 
     private boolean reopenRequest;
@@ -512,7 +513,15 @@ public class RequestRepresentation implements RequestListElement {
     public void setAgreementReached(boolean agreementReached) {
         this.agreementReached = agreementReached;
     }
-    
+
+    public void setAgreementNotApplicable(boolean agreementNotApplicable) {
+        this.agreementNotApplicable = agreementNotApplicable;
+    }
+
+    public boolean isAgreementNotApplicable() {
+        return agreementNotApplicable;
+    }
+
     public boolean isRequestAdmissible() {
         return requestAdmissible;
     }

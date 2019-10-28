@@ -94,10 +94,12 @@ Feature: scenario request Request for excerpts + PA reports + materials
       requesterLabValid
       requesterAllowed
       contactPersonAllowed
-      agreementReached
+      agreementNotApplicable
       """
+    Then the object with id 'button-submit-scientific-council' should be disabled
+    And the object with id 'button-skip-approval' should be enabled
     # I click on the 'Finish submission process, skip scientific council' button
-    And I click on the object with id 'button-skip-approval'
+    When I click on the object with id 'button-skip-approval'
     And I click on the 'OK' button
     And I go to the 'requests' page
     Then request 'Request 1' should have status 'Approved, waiting for data'

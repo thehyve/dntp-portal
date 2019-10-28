@@ -489,6 +489,10 @@ input.request-selection {
     margin: 2px 0 0;
 }
 
+input:disabled+label {
+    color: grey;
+}
+
 .span-lang {margin-top: 12px; margin-left: 5px;}
 .span-login {margin-left: 20px;}
 .login-title-div {min-height: 300px; position: relative;}

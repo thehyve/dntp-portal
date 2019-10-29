@@ -169,6 +169,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
+        representation.setRequestType("National request");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);
@@ -210,6 +211,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
+        representation.setRequestType("National request");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);
@@ -360,6 +362,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
+        representation.setRequestType("National request");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);
@@ -404,6 +407,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
+        representation.setRequestType("National request");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);

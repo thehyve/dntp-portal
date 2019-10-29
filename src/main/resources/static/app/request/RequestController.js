@@ -35,6 +35,8 @@ angular.module('ProcessApp.controllers')
 
             $scope.privacyCommitteeRationaleOptions = Request.privacyCommitteeRationaleOptions;
 
+            $scope.requestTypes = Request.requestTypes;
+
             $scope.serverurl = $location.protocol()+'://'+$location.host() +
                 (($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());
 

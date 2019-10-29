@@ -390,6 +390,8 @@ public class RequestFormService {
                 request.setAgreementReached(fetchBooleanVariable("agreement_reached", variables));
                 request.setAgreementNotApplicable(fetchBooleanVariable("agreement_not_applicable", variables));
 
+                request.setRequestType((String)variables.get("request_type"));
+
                 request.setRequestAdmissible(fetchBooleanVariable("request_is_admissible", variables));
 
                 request.setScientificCouncilApproved(fetchBooleanVariable("scientific_council_approved", variables));
@@ -528,6 +530,8 @@ public class RequestFormService {
             variables.put("agreement_reached", request.isAgreementReached());
             variables.put("agreement_not_applicable", request.isAgreementNotApplicable());
 
+            variables.put("request_type", request.getRequestType());
+
             variables.put("request_is_admissible", request.isRequestAdmissible());
 
             variables.put("reopen_request", request.isReopenRequest());
@@ -546,7 +550,8 @@ public class RequestFormService {
                     && request.isContactPersonAllowed()
                     && request.isRequesterLabValid()
                     && (request.isAgreementReached()
-                        || (request.isAgreementNotApplicable() && request.isSkipStatusApproval())))) {
+                        || (request.isAgreementNotApplicable() && request.isSkipStatusApproval()))
+                    && request.getRequestType() != null && !request.getRequestType().isEmpty())) {
                 log.info("Request not admissible");
                 variables.put("request_is_admissible", Boolean.FALSE);
             }

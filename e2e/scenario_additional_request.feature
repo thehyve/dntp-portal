@@ -81,6 +81,7 @@ Feature: scenario additional request
     When I claim the request with title 'Request 1'
     And I click on the request with title 'Request 1'
     And I click on the 'Edit' button
+    And I select dropdown option 'National request'
     And I click on the following objects
       """
       requesterValid

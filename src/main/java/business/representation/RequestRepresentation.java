@@ -124,6 +124,8 @@ public class RequestRepresentation implements RequestListElement {
     private boolean agreementNotApplicable;
     private boolean requestAdmissible;
 
+    private String requestType;
+
     private boolean reopenRequest;
 
     private boolean skipStatusApproval;
@@ -528,6 +530,14 @@ public class RequestRepresentation implements RequestListElement {
 
     public void setRequestAdmissible(boolean requestAdmissible) {
         this.requestAdmissible = requestAdmissible;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
     }
 
     public boolean isReopenRequest() {

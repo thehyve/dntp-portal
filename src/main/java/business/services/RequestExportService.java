@@ -42,6 +42,7 @@ public class RequestExportService {
             "Date delivered",
             "Title",
             "Status",
+            "Request type",
             "Linkage",
             "Linkage notes",
             "Numbers only",
@@ -86,6 +87,7 @@ public class RequestExportService {
                         dateToString(request.getExcerptListAttachment().getDate()) : "");
                 values.add(request.getTitle());
                 values.add(request.getStatus().toString());
+                values.add(request.getRequestType());
                 values.add(booleanToString(request.isLinkageWithPersonalData()));
                 values.add(request.getLinkageWithPersonalDataNotes());
                 values.add(booleanToString(request.isStatisticsRequest()));

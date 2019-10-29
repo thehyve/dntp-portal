@@ -114,6 +114,12 @@ module.exports = function() {
         });
     });
 
+    this.When(/^I select dropdown option '(.+)'$/, function(type, next) {
+        element(by.cssContainingText('option', type)).click().then(function() {
+            next();
+        });
+    });
+
     this.When(/^I click on the following objects\w*$/, function(fields, next) {
         var lines = fields.split('\n');
 

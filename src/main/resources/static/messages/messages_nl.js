@@ -164,7 +164,7 @@
         'Authentification and agreement request': 'Authentificatie en instemming aanvraag',
         'Form authentification and agreement request': 'Formulier authentificatie en instemming aanvraag',
         'Agreement has been reached.': 'Formulier ontvangen',
-        'Not applicable': 'Niet toepasbaar',
+        'Not applicable': 'Niet van toepassing',
         'Upload form': 'Upload formulier',
         'Upload signed authentificaton and agreement form': 'Upload ondertekend formulier authentificatie en instemming aanvraag',
         'No form uploaded.': 'Nog geen formulier geüpload.',

@@ -78,10 +78,47 @@ public class RequestControllerTests extends AbstractSelectionControllerTests {
     }
 
     @Test
+    public void testApproveRequestWithNonApplicableAgreement() throws Exception {
+        createRequest();
+        submitRequest();
+        submitRequestForApprovalWithNonApplicableAgreement();
+
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        log.info("Status: " + representation.getStatus());
+        assertEquals(RequestStatus.REVIEW, representation.getStatus());
+        assertFalse(representation.isRequestAdmissible());
+
+        SecurityContextHolder.clearContext();
+    }
+
+    @Test
     public void testSkipApproval() throws InterruptedException {
         createRequest();
         submitRequest();
         skipApproval();
+
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        log.info("Status: " + representation.getStatus());
+        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
+
+        SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    public void testSkipApprovalWithNonApplicableAgreement() throws InterruptedException {
+        createRequest();
+        submitRequest();
+        skipApprovalWithNonApplicableAgreement();
 
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();

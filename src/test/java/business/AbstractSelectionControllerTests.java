@@ -18,6 +18,7 @@ import java.util.List;
 import javax.mail.internet.MimeMessage;
 
 import business.controllers.*;
+import business.exceptions.RequestNotAdmissible;
 import business.models.ContactData;
 import business.models.LabRequest;
 import business.representation.*;
@@ -188,6 +189,43 @@ public abstract class AbstractSelectionControllerTests {
         SecurityContextHolder.clearContext();
     }
 
+    void submitRequestForApprovalWithNonApplicableAgreement() throws InterruptedException {
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        log.info("Status: " + representation.getStatus());
+
+        representation = requestController.claim(palga, processInstanceId, representation);
+
+        ((MockMailSender)mailSender).clear();
+
+        // only enforced in front end, not in back end
+        representation.setBackground("Background is testing.");
+        representation.setHypothesis("Tests will pass");
+        representation.setMethods("JUnit");
+        // request type
+        representation.setMaterialsRequest(true);
+        representation.setPaReportRequest(true);
+        // required checks
+        representation.setRequesterValid(true);
+        representation.setRequesterAllowed(true);
+        representation.setContactPersonAllowed(true);
+        representation.setRequesterLabValid(true);
+        representation.setAgreementReached(false);
+        representation.setAgreementNotApplicable(true);
+
+        try {
+            requestController.submitReview(palga, processInstanceId, representation);
+        } catch (RequestNotAdmissible e) {
+            log.info(e.getMessage());
+        }
+
+        SecurityContextHolder.clearContext();
+    }
+
     static void setTestData(RequestRepresentation representation) {
         representation.setTitle("Test title");
         representation.setBackground("Test background.");
@@ -327,6 +365,51 @@ public abstract class AbstractSelectionControllerTests {
         representation.setContactPersonAllowed(true);
         representation.setRequesterLabValid(true);
         representation.setAgreementReached(true);
+
+        representation = requestController.submitReview(palga, processInstanceId, representation);
+        log.info("Status: " + representation.getStatus());
+        assertEquals(RequestStatus.DATA_DELIVERY, representation.getStatus());
+
+        // Mail sending is asynchronous. Sleep for 1 second.
+        Thread.sleep(1 * 1000);
+
+        assertEquals(mailSender.getClass(), MockMailSender.class);
+        List<MimeMessage> emails = ((MockMailSender)mailSender).getMessages();
+        assertEquals(0, emails.size());
+
+        SecurityContextHolder.clearContext();
+    }
+
+    void skipApprovalWithNonApplicableAgreement() throws InterruptedException {
+        UserAuthenticationToken palga = getPalga();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(palga);
+
+        RequestRepresentation representation =
+                requestController.getRequestById(palga, processInstanceId);
+        log.info("Status: " + representation.getStatus());
+
+        representation = requestController.claim(palga, processInstanceId, representation);
+
+        ((MockMailSender)mailSender).clear();
+
+        // Set the variable to skip the approval status
+        representation.setSkipStatusApproval(true);
+
+        // only enforced in front end, not in back end
+        representation.setBackground("Background is testing.");
+        representation.setHypothesis("Tests will pass");
+        representation.setMethods("JUnit");
+        // request type
+        representation.setMaterialsRequest(true);
+        representation.setPaReportRequest(true);
+        // required checks
+        representation.setRequesterValid(true);
+        representation.setRequesterAllowed(true);
+        representation.setContactPersonAllowed(true);
+        representation.setRequesterLabValid(true);
+        representation.setAgreementReached(false);
+        representation.setAgreementNotApplicable(true);
 
         representation = requestController.submitReview(palga, processInstanceId, representation);
         log.info("Status: " + representation.getStatus());

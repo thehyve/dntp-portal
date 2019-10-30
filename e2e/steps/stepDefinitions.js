@@ -361,4 +361,12 @@ module.exports = function() {
     this.Then(/^the object with id '(.+)' should not be ticked$/, function(id, next) {
         expect(element(by.id(id)).getAttribute('class')).to.eventually.not.contain('glyphicon-check').and.notify(next);
     });
+
+    this.Then(/^the object with id '(.+)' should be enabled$/, function(id, next) {
+        expect(element(by.id(id)).getAttribute('disabled')).to.eventually.be.null.and.notify(next);
+    });
+
+    this.Then(/^the object with id '(.+)' should be disabled$/, function(id, next) {
+        expect(element(by.id(id)).getAttribute('disabled')).to.eventually.contain('true').and.notify(next);
+    });
 };

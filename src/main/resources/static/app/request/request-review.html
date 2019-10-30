@@ -55,10 +55,16 @@
 
   <!-- Agreement reached -->
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-4">
       <input type="checkbox" id="agreementReached" name="agreementReached" value="1"
-             ng-model="request.agreementReached"> &nbsp;
+             ng-model="request.agreementReached"
+             ng-disabled="request.agreementNotApplicable"> &nbsp;
       <label class="normal radio-label" for="agreementReached">{{ 'Agreement has been reached.' | translate }}</label>
+    </div>
+    <div class="col-sm-8">
+      <input type="checkbox" id="agreementNotApplicable" name="agreementNotApplicable" value="1"
+             ng-model="request.agreementNotApplicable" ng-change="disableAgreementReached(request)"> &nbsp;
+      <label class="normal radio-label" for="agreementNotApplicable">{{ 'Not applicable' | translate }}</label>
     </div>
   </div>
 
@@ -115,14 +121,14 @@
     <div>
       <button title="{{'Upload signed authentificaton and agreement form' | translate}}"
         class="btn btn-default"
-        ng-disabled="uploading"
+        ng-disabled="uploading || request.agreementNotApplicable"
         flow-btn>{{'Upload form'|translate}}</button>
     </div>
     <br>
     <div class="alert" flow-drop style="border: 2px dashed gray; text-align: center"
          flow-drag-enter="style={border:'4px dashed lightgreen'}"
          flow-drag-leave="style={border: '2px dashed gray'}"
-         ng-hide="uploading"
+         ng-hide="uploading || request.agreementNotApplicable"
          ng-style="style">
       ({{'drag and drop your file here'|translate}})
     </div>

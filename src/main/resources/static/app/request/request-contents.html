@@ -405,7 +405,8 @@
             {{ 'Agreement has been reached.' | translate }}
             </label>
             <span class="col-xs-6 col-sm-6">
-            {{request.agreementReached ? 'Yes' : '&ndash;' | translate}}
+            {{request.agreementReached ? 'Yes' : '' | translate}}
+            {{request.agreementNotApplicable ? 'Not applicable' : '' | translate}}
             </span>
         </div>
 

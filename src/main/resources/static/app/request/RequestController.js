@@ -250,6 +250,12 @@ angular.module('ProcessApp.controllers')
             request.informedConsentFormAttachments = result.informedConsentFormAttachments;
         };
 
+        $scope.disableAgreementReached = function(request) {
+            if (request.agreementNotApplicable) {
+                request.agreementReached = false;
+            }
+        };
+
         $scope.EXCERPT_SELECTION_LIMIT = 1000;
 
         $scope.excerptCountExceedsSelectionLimit = function(count) {

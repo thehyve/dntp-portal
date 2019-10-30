@@ -1004,7 +1004,7 @@
                             ng-click="submitReviewAndSkipApproval(request)"
                             ng-disabled="requestEditForm.$invalid
                             || !isValidRequestType(request)
-                            || !request.agreementReached
+                            || (!request.agreementReached && !request.agreementNotApplicable)
                             || !request.requesterValid
                             || !request.requesterAllowed
                             || !request.contactPersonAllowed

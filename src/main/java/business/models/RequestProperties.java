@@ -67,6 +67,8 @@ public class RequestProperties {
 
     private String lastAssignee;
 
+    private String requestType;
+
     @Column
     private Boolean germlineMutation;
     /**
@@ -389,6 +391,12 @@ public class RequestProperties {
 
     public void setLastAssignee(String lastAssignee) {
         this.lastAssignee = lastAssignee;
+    }
+
+    public String getRequestType() { return requestType; }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
     }
 
     public boolean getGermlineMutation() {

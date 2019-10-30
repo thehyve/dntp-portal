@@ -46,7 +46,8 @@ Feature: scenario request Request for excerpts + PA reports + materials
     statisticsRequestFalse
     excerptsRequest
     paReportRequest
-    materialsRequest
+    heSliceMaterialsRequest
+
     linkageWithPersonalDataYes
     informedConsentNo
     germlineMutationYes

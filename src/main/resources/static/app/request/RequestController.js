@@ -59,11 +59,11 @@ angular.module('ProcessApp.controllers')
             $scope.getStatusText = function(request) {
                 if (request.status == 'DataDelivery') {
                     if ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
-                        (request.excerptListUploaded &&
-                            !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest))) {
+                        (request.excerptListUploaded && !(request.paReportRequest ||
+                            Request.isMaterialsRequest(request) || request.clinicalDataRequest))) {
                         return 'Data delivered';
-                    } else if (request.excerptListUploaded &&
-                            (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)) {
+                    } else if (request.excerptListUploaded && (request.paReportRequest ||
+                        Request.isMaterialsRequest(request) || request.clinicalDataRequest)) {
                         return 'Data delivered, select excerpts';
                     } else {
                         return 'Approved, waiting for data';
@@ -200,15 +200,24 @@ angular.module('ProcessApp.controllers')
             return (request.statisticsRequest ||
                     request.excerptsRequest ||
                     request.paReportRequest ||
-                    request.materialsRequest ||
+                    Request.isMaterialsRequest(request) ||
                     request.clinicalDataRequest);
         };
 
         $scope.resetNonStatistcsRequestType = function(request) {
+            this.otherMaterialsRequestSelected = false;
             request.excerptsRequest = false;
             request.paReportRequest = false;
-            request.materialsRequest = false;
+            request.blockMaterialsRequest = false;
+            request.heSliceMaterialsRequest = false;
+            request.otherMaterialsRequest = '';
             request.clinicalDataRequest = false;
+        };
+
+        $scope.resetOtherMaterialsRequest = function(request) {
+            if (!this.otherMaterialsRequestSelected) {
+                request.otherMaterialsRequest = '';
+            }
         };
 
             $scope.upload_result = {
@@ -740,6 +749,7 @@ angular.module('ProcessApp.controllers')
                                 new ApprovalVote({value: 'NONE'});
                         }
                     }
+                    $scope.otherMaterialsRequestSelected = !!request.otherMaterialsRequest;
                     $scope.editComment = {};
                     $scope.approvalComment = {};
                     $scope.commentEditVisibility = {};
@@ -835,7 +845,8 @@ angular.module('ProcessApp.controllers')
         $scope.popoverEnablers = {
             requestTypePopover: ['statisticsRequestTrue', 'statisticsRequestFalse',
                                  'excerptsRequest', 'paReportRequest',
-                                 'materialsRequest', 'clinicalDataRequest'],
+                                 'blockMaterialsRequest', 'heSliceMaterialsRequest', 'otherMaterialsRequest',
+                                 'clinicalDataRequest'],
             dataLinkagePopover: ['linkageWithPersonalDataYes', 'linkageWithPersonalDataNo'],
             informedConsentPopover: ['informedConsentYes', 'informedConsentNo'],
             uploadFilePopover: ['button_upload_attachment'],

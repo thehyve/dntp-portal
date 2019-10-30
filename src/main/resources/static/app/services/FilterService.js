@@ -70,14 +70,14 @@ angular.module('ProcessApp.services')
                         var result = request.status == 'DataDelivery' &&
                             ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
                             (request.excerptListUploaded &&
-                            !(request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)));
+                            !(request.paReportRequest || Request.isMaterialsRequest(request) || request.clinicalDataRequest)));
                         return result;
                     };
                 case 'Data delivered, select excerpts':
                     return function(request) {
                         var result = request.status == 'DataDelivery' &&
                             request.excerptListUploaded &&
-                            (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest);
+                            (request.paReportRequest || Request.isMaterialsRequest(request) || request.clinicalDataRequest);
                         return result;
                     };
                 default:

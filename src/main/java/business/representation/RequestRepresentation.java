@@ -83,7 +83,9 @@ public class RequestRepresentation implements RequestListElement {
     private boolean statisticsRequest;
     private boolean excerptsRequest;
     private boolean paReportRequest;
-    private boolean materialsRequest;
+    private boolean blockMaterialsRequest;
+    private boolean heSliceMaterialsRequest;
+    private String otherMaterialsRequest;
     private boolean clinicalDataRequest;
 
     private boolean linkageWithPersonalData;
@@ -332,11 +334,30 @@ public class RequestRepresentation implements RequestListElement {
     }
 
     public boolean isMaterialsRequest() {
-        return materialsRequest;
+        return this.blockMaterialsRequest || this.heSliceMaterialsRequest
+                || (this.otherMaterialsRequest != null && !this.otherMaterialsRequest.isEmpty());
     }
 
-    public void setMaterialsRequest(boolean materialsRequest) {
-        this.materialsRequest = materialsRequest;
+    public boolean isBlockMaterialsRequest() {
+        return blockMaterialsRequest;
+    }
+
+    public void setBlockMaterialsRequest(boolean blockMaterialsRequest) {
+        this.blockMaterialsRequest = blockMaterialsRequest;
+    }
+
+    public boolean isHeSliceMaterialsRequest() {
+        return heSliceMaterialsRequest;
+    }
+
+    public void setHeSliceMaterialsRequest(boolean heSliceMaterialsRequest) {
+        this.heSliceMaterialsRequest = heSliceMaterialsRequest;
+    }
+
+    public String getOtherMaterialsRequest() { return otherMaterialsRequest; }
+
+    public void setOtherMaterialsRequest(String otherMaterialsRequest) {
+        this.otherMaterialsRequest = otherMaterialsRequest;
     }
 
     public boolean isClinicalDataRequest() {

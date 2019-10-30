@@ -220,11 +220,11 @@
                         <div class="panel-footer clearfix">
                             <span class="pull-right">
                                 <button class="btn btn-default btn-primary"
-                                        ng-if="labRequest.request.materialsRequest"
+                                        ng-if="Request.isMaterialsRequest(labRequest.request)"
                                         ng-click="sending(labRequest, selectedDate)">{{'Send materials'|translate}}
                                 </button>
                                 <button class="btn btn-default btn-primary"
-                                        ng-if="!labRequest.request.materialsRequest"
+                                        ng-if="!Request.isMaterialsRequest(labRequest.request)"
                                         ng-click="completeReportsOnly(labRequest);">{{'Complete'|translate}}
                                 </button>
                             </span>

@@ -45,7 +45,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     statisticsRequestFalse
     excerptsRequest
     paReportRequest
-    materialsRequest
+    blockMaterialsRequest
     clinicalDataRequest
     linkageWithPersonalDataYes
     informedConsentNo

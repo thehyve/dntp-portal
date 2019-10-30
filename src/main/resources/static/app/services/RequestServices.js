@@ -122,6 +122,12 @@
             return -1;
         };
 
+        _requestFactory.isMaterialsRequest = function (request) {
+            return request.blockMaterialsRequest ||
+                   request.heSliceMaterialsRequest ||
+                   request.otherMaterialsRequest
+        };
+
         _requestFactory.statuses = [
             'Open',
             'Review',

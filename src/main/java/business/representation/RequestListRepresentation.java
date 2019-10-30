@@ -8,7 +8,6 @@ package business.representation;
 import java.util.Date;
 import java.util.List;
 
-import business.models.ContactData;
 import business.models.RequestProperties.ReviewStatus;
 
 public class RequestListRepresentation implements RequestListElement {
@@ -49,7 +48,9 @@ public class RequestListRepresentation implements RequestListElement {
     private boolean statisticsRequest;
     private boolean excerptsRequest;
     private boolean paReportRequest;
-    private boolean materialsRequest;
+    private boolean blockMaterialsRequest;
+    private boolean heSliceMaterialsRequest;
+    private String otherMaterialsRequest;
     private boolean clinicalDataRequest;
 
     private boolean linkageWithPersonalData;
@@ -330,12 +331,28 @@ public class RequestListRepresentation implements RequestListElement {
         this.paReportRequest = paReportRequest;
     }
 
-    public boolean isMaterialsRequest() {
-        return materialsRequest;
+    public boolean isBlockMaterialsRequest() {
+        return blockMaterialsRequest;
     }
 
-    public void setMaterialsRequest(boolean materialsRequest) {
-        this.materialsRequest = materialsRequest;
+    public void setBlockMaterialsRequest(boolean blockMaterialsRequest) {
+        this.blockMaterialsRequest = blockMaterialsRequest;
+    }
+
+    public boolean isHeSliceMaterialsRequest() {
+        return heSliceMaterialsRequest;
+    }
+
+    public void setHeSliceMaterialsRequest(boolean heSliceMaterialsRequest) {
+        this.heSliceMaterialsRequest = heSliceMaterialsRequest;
+    }
+
+    public String getOtherMaterialsRequest() {
+        return otherMaterialsRequest;
+    }
+
+    public void setOtherMaterialsRequest(String otherMaterialsRequest) {
+        this.otherMaterialsRequest = otherMaterialsRequest;
     }
 
     public boolean isClinicalDataRequest() {

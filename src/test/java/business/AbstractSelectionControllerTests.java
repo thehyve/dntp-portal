@@ -166,7 +166,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setHypothesis("Tests will pass");
         representation.setMethods("JUnit");
         // request type
-        representation.setMaterialsRequest(true);
+        representation.setBlockMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
         representation.setRequestType("National request");
@@ -208,8 +208,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setHypothesis("Tests will pass");
         representation.setMethods("JUnit");
         // request type
-        representation.setMaterialsRequest(true);
-        representation.setPaReportRequest(true);
+        representation.setOtherMaterialsRequest("Some test material");
         // required checks
         representation.setRequestType("National request");
         representation.setRequesterValid(true);
@@ -359,8 +358,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setHypothesis("Tests will pass");
         representation.setMethods("JUnit");
         // request type
-        representation.setMaterialsRequest(true);
-        representation.setPaReportRequest(true);
+        representation.setHeSliceMaterialsRequest(true);
         // required checks
         representation.setRequestType("National request");
         representation.setRequesterValid(true);
@@ -404,7 +402,8 @@ public abstract class AbstractSelectionControllerTests {
         representation.setHypothesis("Tests will pass");
         representation.setMethods("JUnit");
         // request type
-        representation.setMaterialsRequest(true);
+        representation.setBlockMaterialsRequest(true);
+        representation.setHeSliceMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
         representation.setRequestType("National request");

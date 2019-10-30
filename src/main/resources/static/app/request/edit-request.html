@@ -322,7 +322,9 @@
                           requestEditForm.statisticsRequest.$dirty ||
                           requestEditForm.excerptsRequest.$dirty ||
                           requestEditForm.paReportRequest.$dirty ||
-                          requestEditForm.materialsRequest.$dirty ||
+                          requestEditForm.blockMaterialsRequest.$dirty ||
+                          requestEditForm.heSliceMaterialsRequest.$dirty ||
+                          requestEditForm.otherMaterialsRequest.$dirty ||
                           requestEditForm.clinicalDataRequest.$dirty )}">
                         <div class="col-sm-3">
                             <label class="control-label">{{'Required data and/or materials' | translate}}</label>
@@ -364,10 +366,39 @@
                                     </div>
 
                                     <div class="checkbox">
-                                        <input type="checkbox" id="materialsRequest" name="materialsRequest" value="1"
+                                        <input type="checkbox" id="blockMaterialsRequest" name="blockMaterialsRequest" value="1"
                                                ng-disabled="request.statisticsRequest"
-                                               ng-model="request.materialsRequest"> &nbsp;
-                                        <label class="normal radio-label" for="materialsRequest">{{ 'PA material' | translate }}</label>
+                                               ng-model="request.blockMaterialsRequest"> &nbsp;
+                                        <label class="normal radio-label" for="blockMaterialsRequest">{{ 'PA material Block' | translate }}</label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="heSliceMaterialsRequest" name="heSliceMaterialsRequest" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="request.heSliceMaterialsRequest"> &nbsp;
+                                        <label class="normal radio-label" for="heSliceMaterialsRequest">{{ 'PA material HE slice(s)' | translate }}</label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="otherMaterialsRequestSelected" name="otherMaterialsRequestSelected" value="1"
+                                               ng-disabled="request.statisticsRequest"
+                                               ng-model="otherMaterialsRequestSelected"
+                                               ng-change="resetOtherMaterialsRequest(request)"> &nbsp;
+                                        <label class="normal radio-label" for="otherMaterialsRequestSelected">{{ 'PA material other' | translate }}</label>
+                                        <div ng-show="otherMaterialsRequestSelected"style="padding-left: 25px;">
+                                            <input type="text" class="form-control" id="otherMaterialsRequest" name="otherMaterialsRequest"
+                                                   placeholder="{{ 'PA material other' | translate }}" title="{{ 'PA material other' | translate }}"
+                                                   ng-model="request.otherMaterialsRequest" ng-maxlength="100"
+                                                   data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: PA material other'|translate}}" data-trigger="focus" bs-popover
+                                                   ng-required="otherMaterialsRequestSelected">
+                                            <!-- errors -->
+                                            <span class="help-block" ng-show="requestEditForm.otherMaterialsRequest.$error.maxlength">
+                                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                                            </span>
+                                            <span class="help-block" ng-show="requestEditForm.otherMaterialsRequest.$error.required">
+                                                    {{ 'Required field' | translate }}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <div ng-if="isClinicalDataEnabled(request)" class="checkbox">

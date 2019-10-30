@@ -48,7 +48,9 @@ public class RequestExportService {
             "Numbers only",
             "Excerpts",
             "PA reports",
-            "PA material",
+            "PA material Block",
+            "PA material HE slice",
+            "PA material other",
             "Clinical data",
             "Requester name",
             "Requester lab",
@@ -93,7 +95,9 @@ public class RequestExportService {
                 values.add(booleanToString(request.isStatisticsRequest()));
                 values.add(booleanToString(request.isExcerptsRequest()));
                 values.add(booleanToString(request.isPaReportRequest()));
-                values.add(booleanToString(request.isMaterialsRequest()));
+                values.add(booleanToString(request.isBlockMaterialsRequest()));
+                values.add(booleanToString(request.isHeSliceMaterialsRequest()));
+                values.add(request.getOtherMaterialsRequest());
                 values.add(booleanToString(request.isClinicalDataRequest()));
                 values.add(request.getRequesterName());
                 values.add(request.getLab() != null ?

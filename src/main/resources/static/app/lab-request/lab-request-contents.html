@@ -243,7 +243,9 @@
         <label class="control-label col-xs-4 col-md-2">{{ 'Required data and/or materials' | translate }}</label>
         <div class="col-xs-8 col-md-10">
             <div ng-if="labRequest.request.paReportRequest" data-ng-bind-html="'PA reports' | translate"><br /></div>
-            <div ng-if="labRequest.request.materialsRequest">{{'PA material'|translate}}<br /></div>
+            <div ng-if="labRequest.request.blockMaterialsRequest">{{'PA material Block'|translate}}<br /></div>
+            <div ng-if="labRequest.request.heSliceMaterialsRequest">{{'PA material HE slice(s)'|translate}}<br /></div>
+            <div ng-if="labRequest.request.otherMaterialsRequest">{{'PA material other'|translate}}<br /></div>
             <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data from practitioner'|translate}}<br /></div>
         </div>
     </div>

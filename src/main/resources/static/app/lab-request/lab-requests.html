@@ -134,7 +134,9 @@ This file is distributed under the GNU Affero General Public License
                         </td>
                         <td>
                             <div ng-if="labRequest.request.paReportRequest" data-ng-bind-html="'PA reports' | translate"><br /></div>
-                            <div ng-if="labRequest.request.materialsRequest">{{'PA material'|translate}}<br /></div>
+                            <div ng-if="labRequest.request.blockMaterialsRequest">{{'PA material Block' | translate}}<br /></div>
+                            <div ng-if="labRequest.request.heSliceMaterialsRequest">{{'PA material HE slice(s)' | translate}}<br /></div>
+                            <div ng-if="labRequest.request.otherMaterialsRequest">{{labRequest.request.otherMaterialsRequest}}<br /></div>
                             <div ng-if="labRequest.request.clinicalDataRequest">{{'Clinical data'|translate}}<br /></div>
                         </td>
                         <td class="centertext">

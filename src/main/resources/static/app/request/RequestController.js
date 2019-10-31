@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Stichting PALGA
+ * Copyright (C) 2016-2019  Stichting PALGA
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
@@ -34,8 +34,6 @@ angular.module('ProcessApp.controllers')
             $scope.Upload = Upload;
 
             $scope.privacyCommitteeRationaleOptions = Request.privacyCommitteeRationaleOptions;
-
-            $scope.requestTypes = Request.requestTypes;
 
             $scope.serverurl = $location.protocol()+'://'+$location.host() +
                 (($location.port()===80 || $location.port()===443) ? '' : ':'+$location.port());

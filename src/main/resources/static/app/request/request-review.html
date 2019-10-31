@@ -2,13 +2,23 @@
   <h4 class="h4 h4-palga">{{'Request type'|translate}}</h4>
   <hr>
 
-  <div class="row">
-    <div class="col-sm-6 form-control-static" >
-      <select class="form-control" name="requestType" id="requestType"
-              ng-model="request.requestType" ng-options="type | translate for type in requestTypes"
-              ng-required="true">
-        <option value="" ng-selected="selected">&ndash; {{'Select request type' | translate}} &ndash;</option>
-      </select>
+  <!-- Request type -->
+  <div class="form-group" ng-class="{ 'has-error' : registrationForm.requestType.$invalid}">
+    <div class="col-sm-8">
+      <request-type-combo-box
+              name="requestType"
+              ng-model="request.requestType"
+              ng-maxlength="250"
+              custom-class="form-control" required>
+      </request-type-combo-box>
+      <!-- errors -->
+      <span ng-show="registrationForm.requestType.$error.required"
+            class="help-block">
+                            {{ 'Required field' | translate }}
+                    </span>
+      <span class="help-block" ng-show="registrationForm.requestType.$error.maxlength">
+                        {{ 'Input value is too long (max. ? characters)' | translate: { max: 250 } }}
+                    </span>
     </div>
   </div>
 

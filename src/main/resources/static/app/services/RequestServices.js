@@ -173,19 +173,6 @@
             return _.get(_requestFactory.statusesForRole, role, []);
         };
 
-        _requestFactory.requestTypes = [
-            'Exploratory request',
-            'National request',
-            'Local request',
-            'Cohort',
-            'National T-nr list',
-            'Local T-nr list',
-            'Intermediary procedure previous national request',
-            'Update previous national request',
-            'Update previous cohort',
-            'Other'
-        ];
-
         return _requestFactory;
     };
     RequestFactory.$inject = [ '$resource' ];

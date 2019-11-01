@@ -47,7 +47,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     excerptsRequest
     paReportRequest
     heSliceMaterialsRequest
-
+    otherMaterialsRequestSelected
     linkageWithPersonalDataYes
     informedConsentNo
     germlineMutationYes
@@ -57,6 +57,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     previousContactDescription: none
     linkageWithPersonalDataNotes: notes
     reasonUsingPersonalData: reason
+    otherMaterialsRequest: some other test material
     """
     #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment1'
     #And I upload the file 'test-attachment.txt' to the element with id 'test-upload-attachment2'

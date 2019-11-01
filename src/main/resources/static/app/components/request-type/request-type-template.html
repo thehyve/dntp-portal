@@ -1,0 +1,13 @@
+    <select ng-options="requestType.label | translate for requestType in requestTypes track by requestType.label"
+            ng-model="selectedRequestType"
+            ng-change="updateRequestTypeText(selectedRequestType)"
+            ng-class="customClass"
+    >
+    </select>
+    <input type="text"
+           ng-model="modelValue"
+           ng-class="customClass"
+           style="margin-top: .2em"
+           ng-show="selectedRequestType.value  == ''"
+    >
+

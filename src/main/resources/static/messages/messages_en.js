@@ -22,7 +22,6 @@
         'Postal code': 'Zip code',
         'Available' : 'Available',
         'Not Available' : 'Not Available',
-        'Request type': 'Required data and/or materials',
         'Input value is too long (max. ? characters)': 'Input value is too long (max. {{max}} characters)',
         'User has been added. A password reset mail has been sent to ?.':
             'User has been added. A password reset mail has been sent to {{email}}.',
@@ -50,7 +49,7 @@
         'popover: Postal code': 'Zip code.',
         'popover: City': 'City',
         'popover: Description of previous contact': 'With whom did you speak and what did you discuss?',
-        'popover: Request type': 'Required data and/or materials.',
+        'popover: Required data and/or materials': 'Required data and/or materials.',
         'popover: Data linkage' : 'Data linkage information.',
         'popover: Notes for linkage with personal data' : 'Mention the name and website of your cohort or the name of the registry you want to link to PALGA.',
         'popover: Reason using personal data': 'Explain why linkage is allowed without informed consent.',

@@ -126,6 +126,7 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ### 0.0.107
 ```sql
+alter table request_properties add column request_type character varying(255);
 alter table request_properties add column last_assignee character varying(255);
 ```
 

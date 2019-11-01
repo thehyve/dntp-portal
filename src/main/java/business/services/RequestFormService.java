@@ -383,6 +383,8 @@ public class RequestFormService {
             }
 
             if (isPalga) {
+                request.setRequestType(properties.getRequestType());
+
                 request.setRequesterValid(fetchBooleanVariable("requester_is_valid", variables));
                 request.setRequesterAllowed(fetchBooleanVariable("requester_is_allowed", variables));
                 request.setContactPersonAllowed(fetchBooleanVariable("contact_person_is_allowed", variables));
@@ -546,10 +548,12 @@ public class RequestFormService {
                     && request.isContactPersonAllowed()
                     && request.isRequesterLabValid()
                     && (request.isAgreementReached()
-                        || (request.isAgreementNotApplicable() && request.isSkipStatusApproval())))) {
+                        || (request.isAgreementNotApplicable() && request.isSkipStatusApproval()))
+                    && request.getRequestType() != null && !request.getRequestType().isEmpty())) {
                 log.info("Request not admissible");
                 variables.put("request_is_admissible", Boolean.FALSE);
             }
+            properties.setRequestType(request.getRequestType());
             properties.setPrivacyCommitteeRationale(request.getPrivacyCommitteeRationale());
             properties.setPrivacyCommitteeOutcome(request.getPrivacyCommitteeOutcome());
             properties.setPrivacyCommitteeOutcomeRef(request.getPrivacyCommitteeOutcomeRef());

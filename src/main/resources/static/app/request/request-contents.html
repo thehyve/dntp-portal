@@ -210,9 +210,9 @@
         </div>
     </div>
     
-    <!-- Request Type -->
+    <!-- Required data and/or materials -->
     <div class="row">
-        <label class="control-label col-xs-4 col-sm-4">{{ 'Request type' | translate }}</label>
+        <label class="control-label col-xs-4 col-sm-4">{{ 'Required data and/or materials' | translate }}</label>
         <div class="col-xs-6 col-sm-6">
             <div ng-if="request.statisticsRequest">{{'Numbers only, exploratory request'|translate}}<br /></div>
             <div ng-if="request.excerptsRequest">{{'Excerpts'|translate}}<br /></div>
@@ -347,6 +347,19 @@
     </div>
 
     <div ng-if="isPalga()">
+
+        <!-- Request type -->
+        <h4 class="h4 h4-palga">{{'Request type'|translate}}</h4>
+
+        <div class="row">
+            <label class="control-label col-xs-4 col-sm-4">
+                {{ 'Request type' | translate }}
+            </label>
+            <span class="col-xs-6 col-sm-6">
+            {{request.requestType ? request.requestType : '&ndash;' | translate}}
+            </span>
+        </div>
+
         <h4 class="h4 h4-palga">{{'Authentification checks by PALGA'|translate}}</h4>
 
         <!-- Requester valid -->

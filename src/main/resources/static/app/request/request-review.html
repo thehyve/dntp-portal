@@ -1,4 +1,27 @@
 <div>
+  <h4 class="h4 h4-palga">{{'Request type'|translate}}</h4>
+  <hr>
+
+  <!-- Request type -->
+  <div class="form-group" ng-class="{ 'has-error' : requestEditForm.requestType.$invalid}">
+    <div class="col-sm-8">
+      <request-type-combo-box
+              name="requestType"
+              ng-model="request.requestType"
+              ng-maxlength="250"
+              custom-class="form-control" required>
+      </request-type-combo-box>
+      <!-- errors -->
+      <span ng-show="requestEditForm.requestType.$error.required"
+            class="help-block">
+                            {{ 'Required field' | translate }}
+                    </span>
+      <span class="help-block" ng-show="requestEditForm.requestType.$error.maxlength">
+                        {{ 'Input value is too long (max. ? characters)' | translate: { max: 250 } }}
+                    </span>
+    </div>
+  </div>
+
   <h4 class="h4 h4-palga">{{'Authentification checks by PALGA'|translate}}</h4>
   <hr>
 

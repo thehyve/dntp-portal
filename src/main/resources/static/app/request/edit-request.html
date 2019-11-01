@@ -316,7 +316,7 @@
                         </div>
                     </div>
 
-                    <!--Request Type-->
+                    <!-- Required data and/or materials -->
                     <div class="form-group" ng-mouseenter="showPopover('requestTypePopover')" ng-mouseleave="hidePopover('requestTypePopover')"
                         ng-class="{ 'has-error' : !isValidRequestType(request) && (
                           requestEditForm.statisticsRequest.$dirty ||
@@ -325,7 +325,7 @@
                           requestEditForm.materialsRequest.$dirty ||
                           requestEditForm.clinicalDataRequest.$dirty )}">
                         <div class="col-sm-3">
-                            <label class="control-label">{{'Request type' | translate}}</label>
+                            <label class="control-label">{{'Required data and/or materials' | translate}}</label>
                             <span class="control-label help-block" ng-show="!isValidRequestType(request)">
                                 {{ 'Required field' | translate }}
                             </span>
@@ -333,9 +333,9 @@
                         <div class="col-sm-6"
                             id="requestTypePopover"
                             data-placement="top-right" data-animation="am-flip-x"
-                            data-content="{{'popover: Request type'|translate}}" data-html="true"
+                            data-content="{{'popover: Required data and/or materials'|translate}}" data-html="true"
                             data-trigger="manual" bs-show="popover.requestType" bs-popover
-                            title="{{'Request type' | translate}}">
+                            title="{{'Required data and/or materials' | translate}}">
                             <div class="radio">
                                 <input id="statisticsRequestTrue" name="statisticsRequest" type="radio"
                                     ng-model="request.statisticsRequest" ng-value="true" ng-checked="request.statisticsRequest"

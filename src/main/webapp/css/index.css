@@ -145,7 +145,13 @@ h2, .h2, h3, .h3, h4, .h4 {
     padding: 10px;
 }
 .floating-header-logo img {
-    height: 80px
+    height: 80px;
+    display: block;
+    margin: auto;
+}
+
+.palga-home-logo {
+    height: 135px;
 }
 
 /*
@@ -387,8 +393,8 @@ address {margin-bottom: 0px;}
 }
 .logo-header {
     padding-left: 3em;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .bigskip {
     margin-top: 10em;

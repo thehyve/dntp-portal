@@ -133,6 +133,12 @@ alter table request_properties add column request_type character varying(255);
 alter table request_properties add column block_materials_request boolean;
 alter table request_properties add column he_slice_materials_request boolean;
 alter table request_properties add column others_materials_request character varying(255);
+update request_properties
+    set block_materials_request = true, he_slice_materials_request = true
+    where process_instance_id in (
+      select proc_inst_id_ from act_ru_variable where name_ = 'is_materials_request' and long_ = 1
+    );
+
 ```
 
 ### 0.0.80

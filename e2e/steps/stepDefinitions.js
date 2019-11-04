@@ -211,6 +211,12 @@ module.exports = function() {
         });
     });
 
+    this.When(/^I fill the field with name '(.+)' with contents '(.+)'$/, function(name, text, next) {
+        element(by.name(name)).sendKeys(text).then(function() {
+            next();
+        });
+    });
+
     this.When(/^I fill the text box with the words '(.+)'$/, function(text, next) {
         element(by.css('[type=text]')).sendKeys(text).then(function() {
             next();

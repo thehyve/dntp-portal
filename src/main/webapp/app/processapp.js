@@ -19,6 +19,7 @@ require('../css/index.less');
 require('../css/index.css');
 require('../css/progressBar.css');
 
+import 'core-js/stable';
 require('bootstrap/dist/js/bootstrap');
 import angular from 'angular';
 require('@flowjs/ng-flow/dist/ng-flow');

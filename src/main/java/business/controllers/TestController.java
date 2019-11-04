@@ -52,9 +52,9 @@ public class TestController {
 
     @Autowired HistoryService historyService;
 
-    @RequestMapping(value = "/test/clear", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/test/clear", method = RequestMethod.GET)
     public void clearAll() {
-        log.warn("GET /test/clear");
+        log.warn("GET /api/test/clear");
         //pathologyItemRepository.deleteAll();
         labRequestRepository.deleteAll();
         excerptListRepository.deleteAll();

@@ -1,0 +1,226 @@
+/* Print Preview Stylings */
+
+body, table {
+    font-family: arial, sans-serif;
+    font-size: 10pt;
+}
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
+    clear: left;
+    page-break-inside: avoid;
+}
+h2, .h2, h3, .h3, h4, .h4 {
+    margin: 20px 0px 5px;
+}
+h1, .h1 {
+    font-size: 16pt;
+    margin: 5px 0px 15px;
+    float: left;
+}
+h2, .h2 {
+    font-size: 14pt;
+}
+h3, .h3 {
+    font-size: 12pt;
+}
+h4, .h4 {
+    font-size: 11pt;
+    font-style: oblique;
+}
+
+a {
+   text-decoration: none;
+   color: #000;
+}
+
+p {
+    margin-top: 0;
+}
+
+hr {
+    margin: 10px 0;
+    border-style: solid;
+}
+
+th,
+td {
+    padding: 4px 4px 4px 4px ;
+}
+
+th {
+    border-bottom: 2px solid #333333 ;
+}
+
+td {
+    border-bottom: 1px dotted #999999 ;
+}
+
+tfoot td {
+    border-bottom-width: 0px ;
+    border-top: 2px solid #333333 ;
+    padding-top: 20px ;
+}
+
+.no-print,
+.nav,
+input[type='text'] {
+    display: none !important;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+    display: none !important;
+}
+
+.table th, td { text-align: left; vertical-align: top; }
+.table th { vertical-align: bottom; }
+.table { width: 100% }
+.print-pa-id-col { min-width: 4em; }
+.print-palga-no-col { min-width: 4em; }
+.print-pa-no-col { min-width: 6em; }
+.print-pa-samples-col { min-width: 8em; }
+.print-pa-total-col { min-width: 3em; }
+
+.print-pa-samples-col ul {
+    padding: 0;
+    margin: 0;
+}
+
+li.tag-item {
+    margin-right: 1em;
+}
+
+ul li { display: inline; }
+.remove-button {display: none; }
+
+.form-group label {
+    height: 30px;
+    width: 200px;
+    margin-left: 10px;
+    text-align: right;
+    margin-right: 15px;
+    float: left;
+    font-weight: bold;
+    display: block;
+}
+
+.col-md-10 {
+    height: 30px;
+    margin-top: 0px;
+    display: inline-table;
+    float: left;
+}
+
+.form-group{
+    clear: left;
+}
+
+.print-pa-availability {display: block }
+
+address {
+    font-style: normal;
+}
+.address {
+    margin-bottom: 10pt;
+}
+
+.list-group-item {
+   display: list-item;
+   margin-left: 1.2em;
+}
+
+.comments .list-group-item, .files .list-group-item {
+    border: 0;
+    padding: 2pt 0;
+}
+
+hr.page-boundary {
+    clear: left;
+    width: 80%;
+    margin: 6em auto;
+}
+
+.printpage {
+    margin: 0 auto;
+    padding-top: 3mm;
+    page-break-after: always;
+    max-width: 80em;
+}
+@media print {
+    .printpage {
+        max-width: none;
+    }
+}
+
+.printheader {
+    position: relative;
+    display: block;
+    top: -3mm;
+}
+.printlogo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-height: 10mm;
+}
+
+.row {
+    clear: left;
+    min-height: 1.5em;
+    margin: 0;
+    padding: 2pt 0;
+}
+
+.col-xs-2, .col-xs-3, .col-xs-4, .col-xs-6, .col-xs-8, .col-xs-10 {
+    float: left;
+    margin: 0;
+}
+.col-xs-2 {
+    width: 16.6667%;
+}
+.col-xs-3 {
+    width: 25%;
+}
+.col-xs-4 {
+    width: 33.3333%;
+}
+.col-xs-6 {
+    width: 50%;
+}
+.col-xs-8 {
+    width: 66.6667%;
+}
+.col-xs-10 {
+    width: 83.3333%;
+}
+
+.control-label {
+    font-weight: bold;
+}
+
+.numeric {
+    text-align: right;
+    padding-right: 1em;
+}
+
+html {
+    margin: 0;
+}
+body {
+    margin: 2em;
+}
+@media print {
+    body {
+        margin: 0;
+    }
+
+    .print-preview-only {
+        display: none !important;
+    }
+}
+
+img {
+    float:right;
+}
+.header-div {
+    overflow: auto;
+}

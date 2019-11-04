@@ -26,23 +26,23 @@ public class AccessLogController {
 
     @Autowired FileService fileService;
 
-    @RequestMapping(value = "/admin/accesslogs", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/accesslogs", method = RequestMethod.GET)
     public List<String> getAccessLogs() {
-        log.info("GET /admin/accesslogs");
+        log.info("GET /api/admin/accesslogs");
 
         return fileService.getAccessLogFilenames();
     }
 
-    @RequestMapping(value = "/admin/accesslogs/{name:.+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/accesslogs/{name:.+}", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> getAccessLog(@PathVariable String name) {
-        log.info("GET /admin/accesslogs/" + name);
+        log.info("GET /api/admin/accesslogs/" + name);
 
         return fileService.downloadAccessLog(name, false);
     }
 
-    @RequestMapping(value = "/admin/accesslogs/{name:.+}/download", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/accesslogs/{name:.+}/download", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadAccessLog(@PathVariable String name) {
-        log.info("GET /admin/accesslogs/" + name + "/download");
+        log.info("GET /api/admin/accesslogs/" + name + "/download");
 
         return fileService.downloadAccessLog(name, true);
     }

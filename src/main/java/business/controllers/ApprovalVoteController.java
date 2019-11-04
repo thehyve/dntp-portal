@@ -44,11 +44,11 @@ public class ApprovalVoteController {
 
     @PreAuthorize("isAuthenticated() and "
             + "(hasPermission(#id, 'isPalgaUser') or hasPermission(#id, 'isScientificCouncil'))")
-    @RequestMapping(value = "/requests/{id}/approvalVotes", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}/approvalVotes", method = RequestMethod.GET)
     public Map<Long, ApprovalVoteRepresentation> getVotes(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        log.info("GET /requests/" + id + "/approvalVotes");
+        log.info("GET /api/requests/" + id + "/approvalVotes");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         Map<Long, ApprovalVoteRepresentation> votes = new HashMap<Long, ApprovalVoteRepresentation>();
         for (Entry<Long, ApprovalVote> entry: properties.getApprovalVotes().entrySet()) {
@@ -58,12 +58,12 @@ public class ApprovalVoteController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isScientificCouncil')")
-    @RequestMapping(value = "/requests/{id}/approvalVotes", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/approvalVotes", method = RequestMethod.POST)
     public ApprovalVoteRepresentation addVote(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody ApprovalVoteRepresentation body) {
-        log.info("POST /requests/" + id + "/approvalVotes");
+        log.info("POST /api/requests/" + id + "/approvalVotes");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         ApprovalVote vote = approvalVoteRepository.findOneByProcessInstanceIdAndCreator(id, user.getUser());
         if (vote != null) {
@@ -89,13 +89,13 @@ public class ApprovalVoteController {
     }
 
     @PreAuthorize("isAuthenticated() and hasPermission(#id, 'isScientificCouncil')")
-    @RequestMapping(value = "/requests/{id}/approvalVotes/{voteId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/approvalVotes/{voteId}", method = RequestMethod.PUT)
     public ApprovalVoteRepresentation updateVote(
             UserAuthenticationToken user,
             @PathVariable String id,
             @PathVariable Long voteId,
             @RequestBody ApprovalVoteRepresentation body) {
-        log.info("PUT /requests/" + id + "/approvalVotes/" + voteId);
+        log.info("PUT /api/requests/" + id + "/approvalVotes/" + voteId);
         ApprovalVote vote = approvalVoteRepository.findOne(voteId);
         if (!vote.getCreator().getId().equals(user.getUser().getId())) {
             throw new UpdateNotAllowed();

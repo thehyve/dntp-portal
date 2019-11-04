@@ -60,13 +60,13 @@ public class UserController {
     @Autowired
     ActivationLinkRepository activationLinkRepository;
 
-    @RequestMapping("/user")
+    @RequestMapping("/api/user")
     public ProfileRepresentation user(UserAuthenticationToken user) {
-        log.info("GET /user");
+        log.info("GET /api/user");
         return new ProfileRepresentation(user.getUser());
     }
 
-    @RequestMapping(value = "/register/users/activate/{token}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/register/users/activate/{token}", method = RequestMethod.GET)
     public ResponseEntity<Object> activateUser(@PathVariable String token) {
         ActivationLink link = activationLinkRepository.findByToken(token);
 
@@ -92,14 +92,14 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/admin/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/user", method = RequestMethod.GET)
     public ProfileRepresentation get(@RequestParam String username) {
         return new ProfileRepresentation(userService.findByUsername(username));
     }
 
-    @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/users", method = RequestMethod.GET)
     public List<ProfileRepresentation> getAll(Principal principal) {
-        log.info("GET /admin/users (for user: " + principal.getName() + ")");
+        log.info("GET /api/admin/users (for user: " + principal.getName() + ")");
         List<ProfileRepresentation> users = new ArrayList<ProfileRepresentation>();
         for(User user: userService.findAll()) {
             users.add(new ProfileRepresentation(user));
@@ -107,9 +107,9 @@ public class UserController {
         return users;
     }
 
-    @RequestMapping(value = "/admin/users/scientific_council", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/users/scientific_council", method = RequestMethod.GET)
     public List<ProfileRepresentation> getScientificCouncilMembers(Principal principal) {
-        log.info("GET /admin/users/scientific_council (for user: " + principal.getName() + ")");
+        log.info("GET /api/admin/users/scientific_council (for user: " + principal.getName() + ")");
         List<ProfileRepresentation> users = new ArrayList<ProfileRepresentation>();
         for(User user: userService.findScientificCouncilMembers()) {
             users.add(new ProfileRepresentation(user));
@@ -117,14 +117,14 @@ public class UserController {
         return users;
     }
 
-    @RequestMapping(value = "/admin/users", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/users", method = RequestMethod.POST)
     public ProfileRepresentation create(UserAuthenticationToken user, @RequestBody ProfileRepresentation body) {
-        log.info("POST /admin/users (for user: " + user.getName() + ")");
-        
+        log.info("POST /api/admin/users (for user: " + user.getName() + ")");
+
         /*
          * Set strong random password when a user is created by an administrator.
          * The user can set a password using the 'Forgot password' button on the
-         * login page. 
+         * login page.
          */
         String password = SecureTokenGenerator.generatePassword();
         body.setPassword1(password);
@@ -132,10 +132,10 @@ public class UserController {
         return userService.createNewUser(user.getUser(), body, NewUserLinkType.PASSWORD_RESET_LINK);
     }
 
-    @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.PUT,
+    @RequestMapping(value = "/api/admin/users/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ProfileRepresentation update(UserAuthenticationToken currentUser, @PathVariable Long id, @RequestBody ProfileRepresentation body) {
-        log.info("PUT /admin/users/" + id);
+        log.info("PUT /api/admin/users/" + id);
         User user = userService.findOne(id);
         if (user != null) {
             userService.transferUserData(currentUser.getUser(), body, user);
@@ -147,47 +147,47 @@ public class UserController {
             }
         }
         throw new UserNotFound();
-    }    
+    }
 
-    @RequestMapping(value = "/admin/users/{id}/activate", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/admin/users/{id}/activate", method = RequestMethod.PUT)
     public ProfileRepresentation activate(Principal principal, @PathVariable String id) {
-        log.info("PUT /admin/users/" + id + "/activate");
+        log.info("PUT /api/admin/users/" + id + "/activate");
         Long userId = Long.valueOf(id);
         User user = userService.getOne(userId);
         user.activate();
         return new ProfileRepresentation(userService.save(user));
     }
 
-    @RequestMapping(value = "/admin/users/{id}/deactivate", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/admin/users/{id}/deactivate", method = RequestMethod.PUT)
     public ProfileRepresentation deactivate(Principal principal, @PathVariable String id) {
-        log.info("PUT /admin/users/" + id + "/deactivate");
+        log.info("PUT /api/admin/users/" + id + "/deactivate");
         Long userId = Long.valueOf(id);
         User user = userService.getOne(userId);
         user.deactivate();
         return new ProfileRepresentation(userService.save(user));
     }
 
-    @RequestMapping(value = "/admin/users/{id}/delete", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/admin/users/{id}/delete", method = RequestMethod.PUT)
     public void delete(Principal principal, @PathVariable String id) {
-        log.info("PUT /admin/users/" + id + "/delete");
+        log.info("PUT /api/admin/users/" + id + "/delete");
         Long userId = Long.valueOf(id);
         User user = userService.getOne(userId);
         user.markDeleted();
         userService.save(user);
     }
 
-    @RequestMapping(value = "/register/users", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/register/users", method = RequestMethod.POST)
     public void register(@RequestBody ProfileRepresentation body) {
-        log.info("POST /register new user");
+        log.info("POST /api/register new user");
         userService.createNewUser(null, body, NewUserLinkType.ACTIVATION_LINK);
     }
 
     /**
      * Convert all usernames to lowercase.
      */
-    @RequestMapping(value = "/admin/userNames/fix", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/admin/userNames/fix", method = RequestMethod.PUT)
     public void fixUserNames() {
-        log.info("PUT /admin/userNames/fix");
+        log.info("PUT /api/admin/userNames/fix");
         userService.lowerCaseUsernames();
     }
 

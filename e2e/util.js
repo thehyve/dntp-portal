@@ -104,7 +104,7 @@ module.exports = {
     clearRequests: function() {
         // Get a page to have the CSRF token
         return this.getPage('login').then(function() {
-            return browser.driver.get('http://localhost:8092/test/clear');
+            return browser.driver.get('http://localhost:8092/api/test/clear');
         });
     },
     fatalError: function(message) {

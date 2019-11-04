@@ -27,18 +27,18 @@ public class LabRequestExportController {
             + " or hasPermission(#id, 'isLabRequestLabuser') "
             + " or hasPermission(#id, 'isLabRequestHubuser') "
             + ")")
-    @RequestMapping(value = "/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/labrequests/{id}/panumbers/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadPANumbers(UserAuthenticationToken user, @PathVariable Long id) {
-        log.info("GET /labrequests/" + id + "/panumbers/csv for userId " + user.getId());
+        log.info("GET /api/labrequests/" + id + "/panumbers/csv for userId " + user.getId());
 
         return labRequestExportService.downloadPANumbers(id, user);
     }
 
     @PreAuthorize("isAuthenticated() and " +
             "(hasRole('palga') or hasRole('lab_user') or hasRole('hub_user'))")
-    @RequestMapping(value = "/labrequests/panumbers/csv", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/labrequests/panumbers/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadAllPANumbers(UserAuthenticationToken user) {
-        log.info("GET /labrequests/panumbers/csv for userId " + user.getId());
+        log.info("GET /api/labrequests/panumbers/csv for userId " + user.getId());
 
         return labRequestExportService.downloadAllPANumbers(user);
     }

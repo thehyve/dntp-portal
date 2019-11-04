@@ -1,20 +1,23 @@
 {
   "rules": {
-    "no-console":0
+    "no-console": 0
   },
   "extends": "eslint:recommended",
   "plugins": [],
+  "parser": "babel-eslint",
   "env": {
     "browser": true,
-    "jasmine": true
+    "jasmine": true,
+    "node": true
   },
   "globals": {
     "angular": true,
     "module": true,
     "inject": true,
-    "jQuery":true,
-    "_":true,
-    "asmCrypto":true,
-    "bootbox":true
+    "jQuery": true,
+    "$": true,
+    "_": true,
+    "Flow": true,
+    "Promise": true
   }
 }

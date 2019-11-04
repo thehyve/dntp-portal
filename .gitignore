@@ -6,7 +6,7 @@
 /dist/
 /.tmp/
 /src/main/resources/static/bower_components/
-/src/main/resources/static/messages/node_modules/
+/src/main/webapp/messages/node_modules/
 /build/
 /classes/
 /out/

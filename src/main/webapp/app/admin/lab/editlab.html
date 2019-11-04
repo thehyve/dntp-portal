@@ -1,0 +1,132 @@
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true"
+     ng-keypress="cancelByEscKey($event);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" role="form" name="labEditForm" ng-submit="update(editlab)" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title" ng-if="!editlab.id">{{'Add lab'|translate}}</h3>
+                    <h3 class="modal-title" ng-if="editlab.id">{{'Edit lab'|translate}}</h3>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" ng-model="editlab.contactData.id"/>
+
+                    <!-- Number -->
+                    <div class="form-group" ng-class="{ 'has-error' : (labEditForm.labNumber.$invalid ||
+                         labEditForm.labNumber.$error.required) && labEditForm.labNumber.$dirty }">
+                        <label class="control-label col-sm-3" for="labNumber">{{ 'Number' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="labNumber" name="labNumber"
+                                   ng-attr-placeholder="{{ 'Number' | translate }}"
+                                   ng-model="editlab.number" ng-disabled="editlab.id"
+                                   required>
+                            <span class="help-block"
+                                  ng-show="labEditForm.labNumber.$error.required && labEditForm.labNumber.$dirty">
+                                {{ 'Required field' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : (labEditForm.labName.$invalid ||
+                         labEditForm.labName.$error.required) && labEditForm.labName.$dirty }">
+                        <label class="control-label col-sm-3" for="labName">{{ 'Name' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="labName" name="labName"
+                                   ng-attr-placeholder="{{ 'Name' | translate }}"
+                                   ng-model="editlab.name" ng-maxlength="50" required>
+                            <!-- errors -->
+                            <span class="help-block"
+                                  ng-show="labEditForm.labName.$error.required && labEditForm.labName.$dirty">
+                                {{ 'Required field' | translate }}
+                            </span>
+                            <span class="help-block" ng-show="labEditForm.labName.$error.maxlength">
+                                {{ 'Input value is too long' | translate }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="address1"
+                                   ng-attr-placeholder="{{ 'Address' | translate }}"
+                                   ng-model="editlab.contactData.address1">
+                            <input type="text" class="form-control second-input-text" id="address2"
+                                   ng-model="editlab.contactData.address2">
+                        </div>
+                    </div>
+
+                    <!-- Postal code -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="postalcode">{{ 'Postal code' | translate }}, {{
+                            'City' | translate }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="postalcode"
+                                   ng-attr-placeholder="{{ 'Postal code' | translate }}"
+                                   ng-model="editlab.contactData.postalCode">
+                            <input type="text" class="form-control second-input-text" id="city"
+                                   ng-attr-placeholder="{{ 'City' | translate }}"
+                                   ng-model="editlab.contactData.city">
+                        </div>
+                    </div>
+
+                    <!-- E-mail -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : labEditForm.email.$invalid && labEditForm.email.$dirty}">
+                        <label class="control-label col-sm-3" for="email">{{ 'Email' | translate }}</label>
+                        <div class="col-sm-8">
+                            <tags-input
+                                    on-tag-adding="validateEmail($tag)"
+                                    replace-spaces-with-dashes="false"
+                                    ng-model="editlab.emailAddressData"
+                                    ng-attr-placeholder="{{'Email addresses' | translate }}"
+                                    add-on-enter="true"
+                                    add-on-space="true"
+                                    add-on-blur="true"
+                                    add-on-paste="true"
+                                    spellcheck="false"
+                                    min-length="3"
+                            ></tags-input>
+                <span class="help-block" ng-show="labEditForm.email.$invalid && labEditForm.email.$dirty">
+                    {{ 'Email format is invalid' | translate }}
+                </span>
+                        </div>
+                    </div>
+
+                    <!-- Telephone -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="telephone">{{ 'Telephone number' | translate
+                            }}</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="telephone"
+                                   ng-attr-placeholder="{{ 'Telephone number' | translate }}"
+                                   ng-model="editlab.contactData.telephone">
+                        </div>
+                    </div>
+
+                    <!-- Hub assistance -->
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="needHubAssistance">{{ 'Hub assistance' | translate
+                            }}</label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" id="needHubAssistance" name="needHubAssistance"
+                                   ng-model="editlab.hubAssistanceEnabled">
+                            <label class="normal" for="needHubAssistance">{{ 'Enable hub assistance.' |
+                                translate}}</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default pull-left" ng-click="cancel()">{{'Cancel'|translate}}</a>
+                    <button class="btn btn-info" type="submit" ng-disabled="labEditForm.$invalid || dataLoading">
+                        {{'Save'|translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

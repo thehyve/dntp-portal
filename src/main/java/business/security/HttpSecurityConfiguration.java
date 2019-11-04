@@ -35,8 +35,8 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    Log log = LogFactory.getLog(getClass());
-    
+    private Log log = LogFactory.getLog(getClass());
+
     private AuthenticationFailureHandler authenticationFailureHandler = new AuthenticationFailureHandler() {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request,
@@ -51,46 +51,42 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-        .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
+            .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+            .csrf().csrfTokenRepository(csrfTokenRepository())
+        .and()
+            .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
         .and()
             .userDetailsService(userDetailsService())
                 .formLogin()
                 .permitAll()
                 .failureHandler(authenticationFailureHandler)
         .and()
-                .logout()
+            .logout()
                 .permitAll()
                 .logoutSuccessUrl("/#/login")
         .and()
-                .authorizeRequests()
-                .antMatchers("/admin/**").access("hasRole('palga')")
-        .and()
-                .authorizeRequests()
+            .authorizeRequests()
+                .antMatchers("/api/admin/**").access("hasRole('palga')")
                 .antMatchers(
-                        "/",
-                        "/robots.txt",
-                        "/public/labs/**",
-                        "/password/request-new",
-                        "/password/reset",
-                        "/index.html",
-                        "/bower_components/**",
-                        "/app/**",
-                        "/js/**",
-                        "/messages/**",
-                        "/css/**",
-                        "/*.ico",
-                        "/images/**"
+                    "/",
+                    "/index.html",
+                    "/*.css",
+                    "/*.js",
+                    "/*.json",
+                    "/css/**",
+                    "/content/**",
+                    "/robots.txt",
+                    "/*.ico",
+                    "/api/public/**",
+                    "/api/password/request-new",
+                    "/api/password/reset"
                 ).permitAll()
-                .antMatchers(HttpMethod.POST, "/register/users").permitAll()
-                .antMatchers(HttpMethod.POST, "/register/users/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/register/users/activate/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/status").permitAll()
-                .antMatchers(HttpMethod.GET, "/ping").permitAll()
-            .anyRequest()
-                .authenticated()
-                .and()
-                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
-                .csrf().csrfTokenRepository(csrfTokenRepository())
+                .antMatchers(HttpMethod.POST, "/api/register/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/register/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/register/users/activate/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/status").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/ping").permitAll()
+                .antMatchers("/api/**").authenticated()
         .and()
             .headers()
             .addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only", "default-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"))

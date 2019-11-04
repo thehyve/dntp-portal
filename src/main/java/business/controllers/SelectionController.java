@@ -77,11 +77,11 @@ public class SelectionController {
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('requester') and "
             + "hasPermission(#id, 'isRequester')")
-    @RequestMapping(value = "/requests/{id}/selection", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}/selection", method = RequestMethod.GET)
     public ExcerptListRepresentation getSelection(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        log.info("GET /requests/" + id + "/selection");
+        log.info("GET /api/requests/" + id + "/selection");
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
         if (excerptList == null) {
             throw new RequestNotFound();
@@ -92,12 +92,12 @@ public class SelectionController {
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('requester') and "
             + "hasPermission(#id, 'isRequester')")
-    @RequestMapping(value = "/requests/{id}/selection", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/selection", method = RequestMethod.PUT)
     public ExcerptListRepresentation updateExcerptListSelection(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody ExcerptListRepresentation body) {
-        log.info("PUT /requests/" + id + "/selection");
+        log.info("PUT /api/requests/" + id + "/selection");
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(id);
         return excerptListService.updateExcerptListSelection(id, body);
     }
@@ -105,13 +105,13 @@ public class SelectionController {
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('requester') and "
             + "hasPermission(#requestId, 'isRequester')")
-    @RequestMapping(value = "/requests/{requestId}/excerpts/{id}/selection", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{requestId}/excerpts/{id}/selection", method = RequestMethod.PUT)
     public ExcerptEntryRepresentation updateExcerptSelection(
             UserAuthenticationToken user,
             @PathVariable String requestId,
             @PathVariable String id,
             @RequestBody ExcerptEntryRepresentation body) {
-        log.info("PUT /requests/" + requestId + "/excerpts/" + id + "/selection");
+        log.info("PUT /api/requests/" + requestId + "/excerpts/" + id + "/selection");
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(requestId);
         if (excerptList == null) {
             throw new RequestNotFound();
@@ -129,20 +129,20 @@ public class SelectionController {
 
         return new ExcerptEntryRepresentation(excerptEntry);
     }
-    
+
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('requester') and "
             + "hasPermission(#id, 'isRequester')")
-    @RequestMapping(value = "/requests/{id}/selection/csv", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/requests/{id}/selection/csv", method = RequestMethod.POST)
     public Integer uploadExcerptSelection(
-            UserAuthenticationToken user, 
+            UserAuthenticationToken user,
             @PathVariable String id,
             @RequestParam("flowFilename") String name,
             @RequestParam("flowTotalChunks") Integer chunks,
             @RequestParam("flowChunkNumber") Integer chunk,
             @RequestParam("flowIdentifier") String flowIdentifier,
             @RequestParam("file") MultipartFile file) {
-        log.info("POST /requests/" + id + "/selection/csv: chunk " + chunk + " / " + chunks);
+        log.info("POST /api/requests/" + id + "/selection/csv: chunk " + chunk + " / " + chunks);
 
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
 
@@ -183,9 +183,9 @@ public class SelectionController {
             + "(hasPermission(#id, 'isPalgaUser') "
             + " or hasPermission(#id, 'isRequester') "
             + ")")
-    @RequestMapping(value = "/requests/{id}/selection/csv", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/requests/{id}/selection/csv", method = RequestMethod.GET)
     public HttpEntity<InputStreamResource> downloadExcerptSelection(UserAuthenticationToken user, @PathVariable String id) {
-        log.info("GET /requests/" + id + "/selection/csv");
+        log.info("GET /api/requests/" + id + "/selection/csv");
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();
         requestFormService.transferData(instance, request, user.getUser());
@@ -198,26 +198,26 @@ public class SelectionController {
         }
         return excerptListService.writeExcerptList(excerptList, /* selectedOnly = */ true);
     }
-    
+
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('requester') and "
             + "hasPermission(#id, 'isRequester')")
-    @RequestMapping(value = "/requests/{id}/submitExcerptSelection", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/submitExcerptSelection", method = RequestMethod.PUT)
     public RequestRepresentation submitExcerptSelection(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation body) {
         log.info("PUT /requests/" + id + "/submitExcerptSelection");
-        
+
         // FIXME: check if request type is pa reports or materials
-        
+
         ExcerptList excerptList = excerptListService.findByProcessInstanceId(id);
         if (excerptList == null) {
             throw new RequestNotFound();
         }
         excerptList.setRemark(body.getExcerptListRemark());
         excerptList = excerptListService.save(excerptList);
-        
+
         Task task = requestService.getTaskByRequestId(id, "data_delivery");
         User palgaUser = null;
         try {
@@ -226,7 +226,7 @@ public class SelectionController {
         } catch (NumberFormatException e) {
             ///
         }
-        
+
         if (task.getDelegationState()==DelegationState.PENDING) {
             taskService.resolveTask(task.getId());
         }
@@ -244,17 +244,17 @@ public class SelectionController {
         requestFormService.transferData(instance, updatedRequest, user.getUser());
         return updatedRequest;
     }
-    
+
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('palga') and "
             + "hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/excerptSelectionApproval", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/excerptSelectionApproval", method = RequestMethod.PUT)
     public RequestRepresentation setExcerptSelectionApproval(
             UserAuthenticationToken user,
             @PathVariable String id,
             @RequestBody RequestRepresentation body) {
-        log.info("PUT /requests/" + id + "/excerptSelectionApproval");
-        
+        log.info("PUT /api/requests/" + id + "/excerptSelectionApproval");
+
         excerptListService.setExcerptSelectionApproval(id, body);
 
         requestFormService.invalidateCacheEntry(id);
@@ -268,11 +268,11 @@ public class SelectionController {
     @PreAuthorize("isAuthenticated() and "
             + "hasRole('palga') and "
             + "hasPermission(#id, 'requestAssignedToUser')")
-    @RequestMapping(value = "/requests/{id}/selectAll", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/requests/{id}/selectAll", method = RequestMethod.PUT)
     public RequestRepresentation selectAll(
             UserAuthenticationToken user,
             @PathVariable String id) {
-        log.info("PUT /requests/" + id + "/selectAll");
+        log.info("PUT /api/requests/" + id + "/selectAll");
 
         HistoricProcessInstance instance = requestService.getProcessInstance(id);
         RequestRepresentation request = new RequestRepresentation();

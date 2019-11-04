@@ -51,7 +51,7 @@ This file is distributed under the GNU Affero General Public License
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="address1">{{ 'Address' | translate }}</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" id="address1" placeholder="{{ 'Address' | translate }}"
+                        <input type="text" class="form-control" id="address1" ng-attr-placeholder="{{ 'Address' | translate }}"
                                ng-model="editlab.contactData.address1" >
                     </div>
                 </div>
@@ -69,14 +69,14 @@ This file is distributed under the GNU Affero General Public License
                         {{ 'City' | translate }}</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="postalcode"
-                               placeholder="{{ 'Postal code' | translate }}"
+                               ng-attr-placeholder="{{ 'Postal code' | translate }}"
                                ng-model="editlab.contactData.postalCode" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="postalcode">&nbsp;</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" id="city" placeholder="{{ 'City' | translate }}"
+                        <input type="text" class="form-control" id="city" ng-attr-placeholder="{{ 'City' | translate }}"
                                ng-model="editlab.contactData.city" >
                     </div>
                 </div>
@@ -90,7 +90,7 @@ This file is distributed under the GNU Affero General Public License
                             on-tag-adding="validateEmail($tag)"
                             replace-spaces-with-dashes="false"
                             ng-model="editlab.emailAddressData"
-                            placeholder="{{'Email addresses' | translate }}"
+                            ng-attr-placeholder="{{'Email addresses' | translate }}"
                             add-on-enter="true"
                             add-on-space="true"
                             add-on-blur="true"
@@ -109,7 +109,7 @@ This file is distributed under the GNU Affero General Public License
                     <label class="control-label col-sm-2" for="telephone">{{ 'Telephone number' | translate }}</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="telephone"
-                               placeholder="{{ 'Telephone number' | translate }}"
+                               ng-attr-placeholder="{{ 'Telephone number' | translate }}"
                                ng-model="editlab.contactData.telephone" >
                     </div>
                 </div>

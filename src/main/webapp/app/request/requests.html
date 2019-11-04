@@ -70,8 +70,8 @@ This file is distributed under the GNU Affero General Public License
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
-                        <th><input st-persisted-search="requestNumber" placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th><input st-persisted-search="title" placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="requestNumber" ng-attr-placeholder="{{'Filter'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="title" ng-attr-placeholder="{{'Filter by title'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th><select st-persisted-search="statusText" class="input-sm form-control" type="search" st-input-event="change" ng-disabled="isStatusPage()">
                                 <option value="">{{'Filter by status' | translate}}</option>
                                 <option ng-repeat="status in displayStatuses"
@@ -94,16 +94,16 @@ This file is distributed under the GNU Affero General Public License
                                 <option value="REJECTED">{{ 'Rejected' | translate}}</option>
                             </select>
                         </th>
-                        <th><input st-persisted-search="requesterName" placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th><input st-persisted-search="pathologistName" placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
-                        <th ng-if="isPalga()"><input st-persisted-search="assigneeName" placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="requesterName" ng-attr-placeholder="{{'Filter by requester'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th><input st-persisted-search="pathologistName" ng-attr-placeholder="{{'Filter by pathologist'|translate}}" class="input-sm form-control" type="search"/></th>
+                        <th ng-if="isPalga()"><input st-persisted-search="assigneeName" ng-attr-placeholder="{{'Filter by PALGA advisor'|translate}}" class="input-sm form-control" type="search"/></th>
                         <th>&nbsp;</th>
                         <th class="no-print">&nbsp;</th>
                     </tr>
                     <tr class="no-print">
                         <th class="no-print">&nbsp;</th>
                         <th colspan="{{isPalga() ? 10 : (isScientificCouncil() || isRequester() ? 9 : 8)}}">
-                            <input id="request-persisted-search" st-persisted-search class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
+                            <input id="request-persisted-search" st-persisted-search class="form-control" ng-attr-placeholder="{{'Search'|translate}} ..." type="text"/>
                         </th>
                         <th>&nbsp;</th>
                     </tr>

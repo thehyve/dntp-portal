@@ -20,7 +20,7 @@
                         <label class="control-label col-sm-3" for="contactPersonName">{{ 'Principal investigator' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="contactPersonName" name="contactPersonName"
-                                placeholder="{{ 'Principal investigator' | translate }}" title="{{ 'Principal investigator' | translate }}"
+                                ng-attr-placeholder="{{ 'Principal investigator' | translate }}" title="{{ 'Principal investigator' | translate }}"
                                 ng-model="request.contactPersonName" ng-maxlength="100"
                                 data-placement="top" data-animation="true" data-content="{{'popover: Principal investigator'|translate}}" data-trigger="focus" bs-popover
                                 required>
@@ -39,7 +39,7 @@
                         <label class="control-label col-sm-3" for="contactPersonEmail"></label>
                         <div class="col-sm-8">
                             <input type="email" class="form-control" id="contactPersonEmail" name="contactPersonEmail"
-                                placeholder="{{ 'Principal investigator email' | translate }}" title="{{ 'Principal investigator email' | translate }}"
+                                ng-attr-placeholder="{{ 'Principal investigator email' | translate }}" title="{{ 'Principal investigator email' | translate }}"
                                 ng-model="request.contactPersonEmail" ng-maxlength="254"
                                 required>
                             <!-- errors -->
@@ -60,7 +60,7 @@
                         <label class="control-label col-sm-3" for="pathologistName">{{ 'Pathologist' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="pathologistName" name="pathologistName"
-                                placeholder="{{ 'Pathologist' | translate }}" title="{{ 'Pathologist' | translate }}"
+                                ng-attr-placeholder="{{ 'Pathologist' | translate }}" title="{{ 'Pathologist' | translate }}"
                                 ng-model="request.pathologistName" ng-maxlength="100"
                                 data-placement="top" data-animation="true" data-content="{{'popover: Pathologist'|translate}}" data-trigger="focus" bs-popover
                                 required>
@@ -79,7 +79,7 @@
                         <label class="control-label col-sm-3" for="pathologistEmail"></label>
                         <div class="col-sm-8">
                             <input type="email" class="form-control" id="pathologistEmail" name="pathologistEmail"
-                                placeholder="{{ 'Pathologist email' | translate }}" title="{{ 'Pathologist email' | translate }}"
+                                ng-attr-placeholder="{{ 'Pathologist email' | translate }}" title="{{ 'Pathologist email' | translate }}"
                                 ng-model="request.pathologistEmail" ng-maxlength="254"
                                 required>
                             <!-- errors -->
@@ -120,7 +120,7 @@
                         <label class="control-label col-sm-3" for="previousContactDescription"></label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="previousContactDescription" name="previousContactDescription"
-                            placeholder="{{ 'Description of previous contact.' | translate }}" title="{{ 'Description of previous contact.' | translate }}"
+                            ng-attr-placeholder="{{ 'Description of previous contact.' | translate }}" title="{{ 'Description of previous contact.' | translate }}"
                             ng-model="request.previousContactDescription"
                             ng-maxlength="4000"
                             ng-required="request.previousContact"
@@ -141,7 +141,7 @@
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Running title' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="requestTitle" name="requestTitle"
-                                placeholder="{{ 'Title' | translate }}" title="{{ 'Title' | translate }}"
+                                ng-attr-placeholder="{{ 'Title' | translate }}" title="{{ 'Title' | translate }}"
                                 ng-model="request.title" ng-maxlength="100"
                                 required>
                             <!-- errors -->
@@ -155,7 +155,7 @@
                         <label class="control-label col-sm-3" for="background">{{ 'Background' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="background" name="background"
-                            placeholder="{{ 'Background' | translate }}" title="{{ 'Background' | translate }}"
+                            ng-attr-placeholder="{{ 'Background' | translate }}" title="{{ 'Background' | translate }}"
                             ng-model="request.background"
                             ng-maxlength="4000"
                             required></textarea>
@@ -172,7 +172,7 @@
                         <label class="control-label col-sm-3" for="researchQuestion">{{ 'Research question' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="researchQuestion" name="researchQuestion"
-                            placeholder="{{ 'Research question' | translate }}" title="{{ 'Research question' | translate }}"
+                            ng-attr-placeholder="{{ 'Research question' | translate }}" title="{{ 'Research question' | translate }}"
                             ng-model="request.researchQuestion"
                             ng-maxlength="4000"
                             required></textarea>
@@ -189,7 +189,7 @@
                         <label class="control-label col-sm-3" for="hypothesis">{{ 'Hypothesis' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="hypothesis" name="hypothesis"
-                            placeholder="{{ 'Hypothesis' | translate }}" title="{{ 'Hypothesis' | translate }}"
+                            ng-attr-placeholder="{{ 'Hypothesis' | translate }}" title="{{ 'Hypothesis' | translate }}"
                             ng-model="request.hypothesis"
                             ng-maxlength="2000"
                             required></textarea>
@@ -206,7 +206,7 @@
                         <label class="control-label col-sm-3" for="methods">{{ 'Methods' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="methods" name="methods"
-                            placeholder="{{ 'Methods' | translate }}" title="{{ 'Methods' | translate }}"
+                            ng-attr-placeholder="{{ 'Methods' | translate }}" title="{{ 'Methods' | translate }}"
                             ng-model="request.methods"
                             ng-maxlength="4000"
                             data-placement="top" data-animation="true" data-content="{{'popover: Methods'|translate}}" data-trigger="focus" bs-popover
@@ -226,7 +226,7 @@
                         <label class="control-label col-sm-3" for="searchCriteria">{{ 'Search criteria' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="searchCriteria" name="searchCriteria"
-                            placeholder="{{ 'Search criteria' | translate }}" title="{{ 'Search criteria' | translate }}"
+                            ng-attr-placeholder="{{ 'Search criteria' | translate }}" title="{{ 'Search criteria' | translate }}"
                             ng-model="request.searchCriteria"
                             ng-maxlength="2000"
                             data-placement="top" data-animation="true" data-content="{{'popover: Search criteria'|translate}}" data-trigger="focus" bs-popover
@@ -246,7 +246,7 @@
                         <label class="control-label col-sm-3" for="studyPeriod">{{ 'Study period' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="studyPeriod" name="studyPeriod"
-                                placeholder="{{ 'Study period' | translate }}" title="{{ 'Study period' | translate }}"
+                                ng-attr-placeholder="{{ 'Study period' | translate }}" title="{{ 'Study period' | translate }}"
                                 ng-model="request.studyPeriod"
                                 ng-maxlength="100"
                             required>
@@ -265,7 +265,7 @@
                         <label class="control-label col-sm-3" for="biobankRequestNumber">{{ 'Biobank request number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="biobankRequestNumber" name="biobankRequestNumber"
-                                   placeholder="{{ 'Biobank request number' | translate }}" title="{{ 'Biobank request number' | translate }}"
+                                   ng-attr-placeholder="{{ 'Biobank request number' | translate }}" title="{{ 'Biobank request number' | translate }}"
                                    ng-model="request.biobankRequestNumber"
                                    data-placement="top" data-animation="true" data-content="{{'popover: Biobank request'|translate}}" data-trigger="focus" bs-popover
                                    ng-maxlength="100"
@@ -282,7 +282,7 @@
                         <label class="control-label col-sm-3" for="laboratoryTechniques">{{ 'Laboratory techniques' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="laboratoryTechniques" name="laboratoryTechniques"
-                            placeholder="{{ 'Laboratory techniques' | translate }}" title="{{ 'Laboratory techniques' | translate }}"
+                            ng-attr-placeholder="{{ 'Laboratory techniques' | translate }}" title="{{ 'Laboratory techniques' | translate }}"
                             ng-model="request.laboratoryTechniques"
                             ng-maxlength="2000"
                             data-placement="top" data-animation="true" data-content="{{'popover: Laboratory techniques'|translate}}" data-trigger="focus" bs-popover
@@ -387,7 +387,7 @@
                                         <label class="normal radio-label" for="otherMaterialsRequestSelected">{{ 'PA material other' | translate }}</label>
                                         <div ng-show="otherMaterialsRequestSelected"style="padding-left: 25px;">
                                             <input type="text" class="form-control" id="otherMaterialsRequest" name="otherMaterialsRequest"
-                                                   placeholder="{{ 'Type of the other PA material' | translate }}" title="{{ 'Type of the other PA material' | translate }}"
+                                                   ng-attr-placeholder="{{ 'Type of the other PA material' | translate }}" title="{{ 'Type of the other PA material' | translate }}"
                                                    ng-model="request.otherMaterialsRequest" ng-maxlength="50"
                                                    ng-required="otherMaterialsRequestSelected">
                                             <!-- errors -->
@@ -443,7 +443,7 @@
                         <label class="control-label col-sm-3" for="linkageWithPersonalDataNotes">{{ 'Data linkage information' | translate }}</label>
                         <div class="col-sm-8">
                         <textarea type="text" class="form-control" id="linkageWithPersonalDataNotes" name="linkageWithPersonalDataNotes"
-                                  placeholder="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}" title="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}"
+                                  ng-attr-placeholder="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}" title="{{ 'Which cohort or registry do you want to link to PALGA?' | translate }}"
                                   ng-model="request.linkageWithPersonalDataNotes"
                                   ng-maxlength="2000"
                                   data-placement="top" data-animation="true" data-content="{{'popover: Notes for linkage with personal data'|translate}}" data-trigger="focus" bs-popover
@@ -480,7 +480,7 @@
                         <label class="control-label col-sm-3" for="requestTitle">{{ 'Explanation why linkage is allowed without informed consent' | translate }}</label>
                         <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="reasonUsingPersonalData" name="reasonUsingPersonalData"
-                                      placeholder="{{ 'Explanation why linkage is allowed without informed consent' | translate }}" title="{{ 'Explanation why linkage is allowed without informed consent' | translate }}"
+                                      ng-attr-placeholder="{{ 'Explanation why linkage is allowed without informed consent' | translate }}" title="{{ 'Explanation why linkage is allowed without informed consent' | translate }}"
                                       ng-model="request.reasonUsingPersonalData" ng-disabled="request.informedConsent"
                                       ng-maxlength="2000"
                                       data-placement="top" data-animation="true" data-content="{{'popover: Reason using personal data'|translate}}" data-trigger="focus" bs-popover
@@ -586,7 +586,7 @@
                         <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="address1" id="address1"
-                                placeholder="{{ 'Address' | translate }}" title="{{ 'Address' | translate }}"
+                                ng-attr-placeholder="{{ 'Address' | translate }}" title="{{ 'Address' | translate }}"
                                 ng-model="request.billingAddress.address1"
                                 ng-maxlength="100"
                                 data-placement="top" data-animation="true" data-content="{{'popover: Address'|translate}}" data-trigger="focus" bs-popover
@@ -615,7 +615,7 @@
                         <label class="control-label col-sm-3" for="postalcode">{{ 'Postal code' | translate }}, {{ 'City' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="postalcode" id="postalcode"
-                            placeholder="{{ 'Postal code' | translate }}" title="{{ 'Postal code' | translate }}"
+                            ng-attr-placeholder="{{ 'Postal code' | translate }}" title="{{ 'Postal code' | translate }}"
                             ng-maxlength="100"
                             ng-model="request.billingAddress.postalCode" required>
                             <!-- errors -->
@@ -626,7 +626,7 @@
                                 {{ 'Required field' | translate }}
                             </span>
                             <input type="text" class="form-control" name="city" id="city"
-                                placeholder="{{ 'City' | translate }}" title="{{ 'City' | translate }}"
+                                ng-attr-placeholder="{{ 'City' | translate }}" title="{{ 'City' | translate }}"
                                 ng-model="request.billingAddress.city"
                                 ng-maxlength="100"
                                 required>
@@ -645,7 +645,7 @@
                         <label class="control-label col-sm-3" for="billingEmail">{{ 'Email' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="email" class="form-control" name="billingEmail" id="billingEmail"
-                            placeholder="{{ 'Email' | translate }}" title="{{ 'Email' | translate }}"
+                            ng-attr-placeholder="{{ 'Email' | translate }}" title="{{ 'Email' | translate }}"
                             ng-model="request.billingAddress.email" ng-maxlength="254"
                             data-placement="top" data-animation="true" data-content="{{'popover: E-mail'|translate}}" data-trigger="focus" bs-popover
                             >
@@ -665,7 +665,7 @@
                         <label class="control-label col-sm-3" for="telephone">{{ 'Telephone number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="telephone" name="telephone"
-                                placeholder="{{ 'Telephone number' | translate }}" title="{{ 'Telephone number' | translate }}"
+                                ng-attr-placeholder="{{ 'Telephone number' | translate }}" title="{{ 'Telephone number' | translate }}"
                                 ng-model="request.billingAddress.telephone"
                                 ng-maxlength="100"
                             >
@@ -682,7 +682,7 @@
                         <label class="control-label col-sm-3" for="chargeNumber">{{ 'Charge number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="chargeNumber" name="chargeNumber"
-                                placeholder="{{ 'Charge number' | translate }}" title="{{ 'Charge number' | translate }}"
+                                ng-attr-placeholder="{{ 'Charge number' | translate }}" title="{{ 'Charge number' | translate }}"
                                 ng-model="request.chargeNumber" ng-maxlength="100"
                                 data-placement="top" data-animation="true" data-content="{{'popover: Charge number'|translate}}" data-trigger="focus" bs-popover
                                 required>
@@ -701,7 +701,7 @@
                         <label class="control-label col-sm-3" for="grantProvider">{{ 'Grant provider' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="grantProvider" name="grantProvider"
-                                placeholder="{{ 'Grant provider' | translate }}" title="{{ 'Grant provider' | translate }}"
+                                ng-attr-placeholder="{{ 'Grant provider' | translate }}" title="{{ 'Grant provider' | translate }}"
                                 ng-model="request.grantProvider" ng-maxlength="100"
                                 data-placement="top" data-animation="true" data-content="{{'popover: Grant provider'|translate}}" data-trigger="focus" bs-popover
                                 required>
@@ -720,7 +720,7 @@
                         <label class="control-label col-sm-3" for="researchNumber">{{ 'Grant number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="researchNumber" name="researchNumber"
-                                placeholder="{{ 'Grant number' | translate }}" title="{{ 'Grant number' | translate }}"
+                                ng-attr-placeholder="{{ 'Grant number' | translate }}" title="{{ 'Grant number' | translate }}"
                                 ng-model="request.researchNumber" ng-maxlength="100"
                                 >
                             <!-- errors -->
@@ -912,7 +912,7 @@
                                 }}</label>
                             <div class="col-sm-8">
                                 <textarea type="text" class="form-control" id="privacyCommitteeOutcome"
-                                      name="privacyCommitteeOutcome" placeholder="{{ 'Review result' | translate }}"
+                                      name="privacyCommitteeOutcome" ng-attr-placeholder="{{ 'Review result' | translate }}"
                                       ng-model="request.privacyCommitteeOutcome"
                                       ng-maxlength="2000"
                                       ></textarea>
@@ -931,7 +931,7 @@
                             <div class="col-sm-8">
                                 <textarea type="text" class="form-control" id="privacyCommitteeOutcomeRef"
                                       name="privacyCommitteeOutcomeRef"
-                                      placeholder="{{ 'Explanation for PPC' | translate }}"
+                                      ng-attr-placeholder="{{ 'Explanation for PPC' | translate }}"
                                       ng-model="request.privacyCommitteeOutcomeRef"
                                       ng-maxlength="2000"
                                       ></textarea>
@@ -947,7 +947,7 @@
                                 translate }}</label>
                             <div class="col-sm-8">
                             <textarea type="text" class="form-control" id="privacyCommitteeEmails"
-                                      name="privacyCommitteeEmails" placeholder="{{ 'Summary review process' | translate }}"
+                                      name="privacyCommitteeEmails" ng-attr-placeholder="{{ 'Summary review process' | translate }}"
                                       ng-model="request.privacyCommitteeEmails"></textarea>
                             </div>
                         </div>

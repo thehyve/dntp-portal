@@ -17,7 +17,7 @@
                         <label class="control-label col-sm-3" for="labNumber">{{ 'Number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="labNumber" name="labNumber"
-                                   placeholder="{{ 'Number' | translate }}"
+                                   ng-attr-placeholder="{{ 'Number' | translate }}"
                                    ng-model="editlab.number" ng-disabled="editlab.id"
                                    required>
                             <span class="help-block"
@@ -34,7 +34,7 @@
                         <label class="control-label col-sm-3" for="labName">{{ 'Name' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="labName" name="labName"
-                                   placeholder="{{ 'Name' | translate }}"
+                                   ng-attr-placeholder="{{ 'Name' | translate }}"
                                    ng-model="editlab.name" ng-maxlength="50" required>
                             <!-- errors -->
                             <span class="help-block"
@@ -52,7 +52,7 @@
                         <label class="control-label col-sm-3" for="address1">{{ 'Address' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="address1"
-                                   placeholder="{{ 'Address' | translate }}"
+                                   ng-attr-placeholder="{{ 'Address' | translate }}"
                                    ng-model="editlab.contactData.address1">
                             <input type="text" class="form-control second-input-text" id="address2"
                                    ng-model="editlab.contactData.address2">
@@ -65,10 +65,10 @@
                             'City' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="postalcode"
-                                   placeholder="{{ 'Postal code' | translate }}"
+                                   ng-attr-placeholder="{{ 'Postal code' | translate }}"
                                    ng-model="editlab.contactData.postalCode">
                             <input type="text" class="form-control second-input-text" id="city"
-                                   placeholder="{{ 'City' | translate }}"
+                                   ng-attr-placeholder="{{ 'City' | translate }}"
                                    ng-model="editlab.contactData.city">
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                                     on-tag-adding="validateEmail($tag)"
                                     replace-spaces-with-dashes="false"
                                     ng-model="editlab.emailAddressData"
-                                    placeholder="{{'Email addresses' | translate }}"
+                                    ng-attr-placeholder="{{'Email addresses' | translate }}"
                                     add-on-enter="true"
                                     add-on-space="true"
                                     add-on-blur="true"
@@ -102,7 +102,7 @@
                             }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="telephone"
-                                   placeholder="{{ 'Telephone number' | translate }}"
+                                   ng-attr-placeholder="{{ 'Telephone number' | translate }}"
                                    ng-model="editlab.contactData.telephone">
                         </div>
                     </div>

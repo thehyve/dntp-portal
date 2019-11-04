@@ -12,7 +12,7 @@ This file is distributed under the GNU Affero General Public License
     <div class="form-group" ng-if="(isLabUser() || isHubUser()) && labRequest.status == 'Approved'">
         <div class="col-sm-8">
             <input type="text" class="form-control" id="paNumber" name="paNumber"
-                   placeholder="{{ 'PA number' | translate }}"
+                   ng-attr-placeholder="{{ 'PA number' | translate }}"
                    ng-model="editPathology.paNumber" ng-maxlength="100"
                    data-placement="bottom" data-animation="am-flip-x" required
                    ng-disabled="!isCurrentUser(labRequest.assignee)">
@@ -44,7 +44,7 @@ This file is distributed under the GNU Affero General Public License
         </th>
   </tr>
   <tr class="no-print">
-    <th colspan="7"><input id="request-search" st-search="" class="form-control" placeholder="{{'Search'|translate}} ..." type="text"/>
+    <th colspan="7"><input id="request-search" st-search="" class="form-control" ng-attr-placeholder="{{'Search'|translate}} ..." type="text"/>
     </th>
     <th></th>
     <th class="no-print" ng-if="(isLabUser() || isHubUser()) &&
@@ -78,7 +78,7 @@ This file is distributed under the GNU Affero General Public License
         on-tag-removed="updatePathology(labRequest, pathology)"
         replace-spaces-with-dashes="false"
         ng-model="pathology.samples"
-        placeholder="{{'Enter sample codes'|translate}}"
+        ng-attr-placeholder="{{'Enter sample codes'|translate}}"
         add-on-enter="true"
         add-on-blur="true"
         add-on-paste="true"

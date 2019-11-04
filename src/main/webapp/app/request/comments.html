@@ -18,7 +18,7 @@ This file is distributed under the GNU Affero General Public License
             <li class="list-group-item" ng-repeat="comment in request.comments">
                 <div ng-show="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
                 <div ng-show="commentEditVisibility[comment.id]">
-                   <textarea id="editCommentText" class="form-control no-print" name="editCommentText" placeholder="{{'Add note'|translate}}"
+                   <textarea id="editCommentText" class="form-control no-print" name="editCommentText" ng-attr-placeholder="{{'Add note'|translate}}"
                              ng-model="comment.contents">
                    </textarea>
                     <button class="btn btn-primary btn-xs no-print" type="button" title="{{'Update note'|translate}}"
@@ -55,7 +55,7 @@ This file is distributed under the GNU Affero General Public License
     <!-- Add comment -->
     <div class="no-print">
     <input type="hidden" ng-model="editComment.processInstanceId" value="{{request.processInstanceId}}">
-    <textarea class="form-control" id="noteText" name="commentText" placeholder="{{'Add note'|translate}}"
+    <textarea class="form-control" id="noteText" name="commentText" ng-attr-placeholder="{{'Add note'|translate}}"
               ng-model="editComment.contents">
                     </textarea>
     <br>

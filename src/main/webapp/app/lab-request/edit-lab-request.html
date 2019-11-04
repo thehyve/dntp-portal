@@ -312,7 +312,7 @@
                                 </label>
                                 <label ng-show="labRequest.samplesMissing" class="normal" for="missingSamples">{{'Please add a note.' | translate}}</label>
                                 <textarea class="form-control" id="missingSamples" name="missingSamples"
-                                          placeholder="{{'Add note'|translate}}"
+                                          ng-attr-placeholder="{{'Add note'|translate}}"
                                           ng-model="labRequest.missingSamples.contents"
                                           ng-required="labRequest.samplesMissing"
                                           ng-show="labRequest.samplesMissing"

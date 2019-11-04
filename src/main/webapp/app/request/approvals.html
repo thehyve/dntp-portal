@@ -74,7 +74,7 @@ This file is distributed under the GNU Affero General Public License
             <div>
             <div ng-if="!commentEditVisibility[comment.id]">{{comment.contents}}</div>
             <div ng-if="commentEditVisibility[comment.id]">
-                <textarea class="form-control" name="commentText" placeholder="{{'Add comment'|translate}}"
+                <textarea class="form-control" name="commentText" ng-attr-placeholder="{{'Add comment'|translate}}"
                           ng-model="comment.contents">
                 </textarea>
                 <button class="btn btn-primary btn-xs no-print" type="button" title="{{'Update comment'|translate}}"
@@ -114,7 +114,7 @@ This file is distributed under the GNU Affero General Public License
         <div class="col-sm-12">
             <input type="hidden" ng-model="approvalComment.processInstanceId" value="{{request.processInstanceId}}">
                 <textarea class="form-control" id="commentText" name="commentText"
-                          placeholder="{{'Add comment'|translate}}"
+                          ng-attr-placeholder="{{'Add comment'|translate}}"
                           ng-model="approvalComment.contents">
                 </textarea>
         </div>

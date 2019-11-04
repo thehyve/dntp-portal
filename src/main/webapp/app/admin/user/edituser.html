@@ -35,7 +35,7 @@
                         <label class="control-label col-sm-3" for="firstName">{{ 'First name' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="firstName" name="firstName"
-                                   placeholder="{{ 'First name' | translate }}"
+                                   ng-attr-placeholder="{{ 'First name' | translate }}"
                                    ng-model="edituser.firstName" ng-maxlength="50" required>
                             <!-- errors -->
                             <!-- errors -->
@@ -55,7 +55,7 @@
                         <label class="control-label col-sm-3" for="lastName">{{ 'Last name' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="lastName" id="lastName"
-                                   placeholder="{{ 'Last name' | translate }}"
+                                   ng-attr-placeholder="{{ 'Last name' | translate }}"
                                    ng-maxlength="50"
                                    ng-model="edituser.lastName">
                             <!-- errors -->
@@ -71,7 +71,7 @@
                         <label class="control-label col-sm-3" for="email">{{ 'Email' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="email" class="form-control" id="email" name="email"
-                                   placeholder="{{ 'Email address (lower case)' | translate }}"
+                                   ng-attr-placeholder="{{ 'Email address (lower case)' | translate }}"
                                    lowercase-only="lowercase-only"
                                    ng-maxlength="255"
                                    ng-model="edituser.contactData.email" required>
@@ -95,7 +95,7 @@
                         <label class="control-label col-sm-3" for="telephone">{{ 'Telephone number' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="telephone" id="telephone"
-                                   placeholder="{{ 'Telephone number' | translate }}"
+                                   ng-attr-placeholder="{{ 'Telephone number' | translate }}"
                                    ng-maxlength="50"
                                    ng-model="edituser.contactData.telephone">
                 <span class="help-block" ng-show="registrationForm.telephone.$error.maxlength">
@@ -110,7 +110,7 @@
                         <label class="control-label col-sm-3" for="institute">{{ 'Institute' | translate }}</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="institute" name="institute"
-                                   placeholder="{{ 'Institute' | translate }}"
+                                   ng-attr-placeholder="{{ 'Institute' | translate }}"
                                    ng-maxlength="50"
                                    ng-model="edituser.institute" required>
                             <!-- errors -->

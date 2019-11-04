@@ -387,13 +387,12 @@
                                         <label class="normal radio-label" for="otherMaterialsRequestSelected">{{ 'PA material other' | translate }}</label>
                                         <div ng-show="otherMaterialsRequestSelected"style="padding-left: 25px;">
                                             <input type="text" class="form-control" id="otherMaterialsRequest" name="otherMaterialsRequest"
-                                                   placeholder="{{ 'PA material other' | translate }}" title="{{ 'PA material other' | translate }}"
-                                                   ng-model="request.otherMaterialsRequest" ng-maxlength="100"
-                                                   data-placement="top-right" data-animation="am-flip-x" data-content="{{'popover: PA material other'|translate}}" data-trigger="focus" bs-popover
+                                                   placeholder="{{ 'Type of the other PA material' | translate }}" title="{{ 'Type of the other PA material' | translate }}"
+                                                   ng-model="request.otherMaterialsRequest" ng-maxlength="50"
                                                    ng-required="otherMaterialsRequestSelected">
                                             <!-- errors -->
                                             <span class="help-block" ng-show="requestEditForm.otherMaterialsRequest.$error.maxlength">
-                                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 100 } }}
+                                                    {{ 'Input value is too long (max. ? characters)' | translate: { max: 50 } }}
                                             </span>
                                             <span class="help-block" ng-show="requestEditForm.otherMaterialsRequest.$error.required">
                                                     {{ 'Required field' | translate }}

@@ -337,7 +337,7 @@
         'Pathology laboratory': 'Pathologielaboratorium',
         'Select laboratory': 'Selecteer laboratorium',
         'popover: Pathology laboratory': 'Selecteer het pathologielaboratorium waar u werkzaam bent of waarmee u samenwerkt.',
-        'popover: PA material other': 'Naam van het PA-materiaal overig.',
+        'Type of the other PA material': 'Type van het overig PA-materiaal',
 
         /* ================= */
         /* Email validation */

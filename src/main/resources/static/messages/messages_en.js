@@ -57,7 +57,6 @@
         'popover: Upload medical ethical committee approval' : 'Upload letter of medical research ethics committee.',
         'popover: Informed consent': 'Upload patient information and blank informed consent form.',
         'popover: Pathology laboratory': 'Select the pathology laboratory where you work or with which you collaborate.',
-        'popover: PA material other': 'Name of the other PA material.',
         'info: informed consent upload': 'Upload <em>blank</em> informed consent form',
         'No informed consent form uploaded.': 'No informed consent form uploaded.',
 

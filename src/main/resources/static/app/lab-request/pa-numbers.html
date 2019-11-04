@@ -85,7 +85,7 @@ This file is distributed under the GNU Affero General Public License
         min-length="1"
         ng-if="(isLabUser() || isHubUser()) &&
                 isCurrentUser(labRequest.assignee) &&
-                Request.isMaterialsRequest(labRequest.request) &&
+                isMaterialsRequest(labRequest.request) &&
                 (labRequest.status == 'Approved' || labRequest.status == 'Received' || labRequest.status == 'Sending') &&
                 pathology.samplesAvailable != false"
         ng-disabled="pathology.samplesAvailable == false"

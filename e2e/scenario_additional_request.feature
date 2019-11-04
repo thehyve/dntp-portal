@@ -42,7 +42,7 @@ Feature: scenario additional request
     previousContactYes
     statisticsRequestFalse
     paReportRequest
-    materialsRequest
+    blockMaterialsRequest
     linkageWithPersonalDataYes
     informedConsentNo
     """

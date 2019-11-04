@@ -69,6 +69,10 @@ public class RequestProperties {
 
     private String requestType;
 
+    private Boolean blockMaterialsRequest;
+    private Boolean heSliceMaterialsRequest;
+    private String otherMaterialsRequest;
+
     @Column
     private Boolean germlineMutation;
     /**
@@ -397,6 +401,40 @@ public class RequestProperties {
 
     public void setRequestType(String requestType) {
         this.requestType = requestType;
+    }
+
+    public boolean getBlockMaterialsRequest() {
+        if (blockMaterialsRequest == null){
+            blockMaterialsRequest = false;
+        }
+        return blockMaterialsRequest;
+    }
+
+    public void setBlockMaterialsRequest(Boolean blockMaterialsRequest) {
+        if (blockMaterialsRequest == null){
+            blockMaterialsRequest = false;
+        }
+        this.blockMaterialsRequest = blockMaterialsRequest;
+    }
+
+    public boolean getHeSliceMaterialsRequest() {
+        if (heSliceMaterialsRequest == null){
+            heSliceMaterialsRequest = false;
+        }
+        return heSliceMaterialsRequest;
+    }
+
+    public void setHeSliceMaterialsRequest(Boolean heSliceMaterialsRequest) {
+        if (heSliceMaterialsRequest == null){
+            heSliceMaterialsRequest = false;
+        }
+        this.heSliceMaterialsRequest = heSliceMaterialsRequest;
+    }
+
+    public String getOtherMaterialsRequest() { return otherMaterialsRequest; }
+
+    public void setOtherMaterialsRequest(String otherMaterialsRequest) {
+        this.otherMaterialsRequest = otherMaterialsRequest;
     }
 
     public boolean getGermlineMutation() {

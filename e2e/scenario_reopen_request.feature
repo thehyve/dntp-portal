@@ -47,7 +47,7 @@ Feature: scenario request Request for excerpts + PA reports + materials
     statisticsRequestFalse
     excerptsRequest
     paReportRequest
-    materialsRequest
+    blockMaterialsRequest
     linkageWithPersonalDataYes
     informedConsentNo
     """

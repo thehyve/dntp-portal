@@ -78,13 +78,13 @@
 
   <!-- Agreement reached -->
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-5">
       <input type="checkbox" id="agreementReached" name="agreementReached" value="1"
              ng-model="request.agreementReached"
              ng-disabled="request.agreementNotApplicable"> &nbsp;
       <label class="normal radio-label" for="agreementReached">{{ 'Agreement has been reached.' | translate }}</label>
     </div>
-    <div class="col-sm-8">
+    <div class="col-sm-7">
       <input type="checkbox" id="agreementNotApplicable" name="agreementNotApplicable" value="1"
              ng-model="request.agreementNotApplicable" ng-change="disableAgreementReached(request)"> &nbsp;
       <label class="normal radio-label" for="agreementNotApplicable">{{ 'Not applicable' | translate }}</label>

@@ -105,7 +105,9 @@
         'Excerpts, reports, material and/or clinical data': 'Excerpten, PA-verslagen, PA-materiaal en/of klinische gegevens',
         'Excerpts': 'Excerpten',
         'PA reports': 'Complete <em>anonieme</em> PA-verslagen',
-        'PA material': 'PA-materiaal',
+        'PA material Block': 'PA materiaal Blokje',
+        'PA material HE slice(s)': 'PA materiaal HE coupe(s)',
+        'PA material other': 'PA materiaal overig',
         'Clinical data': 'Klinische gegevens',
         'Clinical data from practitioner': 'Klinische gegevens via behandelaar',
         'Biobank request number': 'Biobank aanvraagnummer',
@@ -335,6 +337,7 @@
         'Pathology laboratory': 'Pathologielaboratorium',
         'Select laboratory': 'Selecteer laboratorium',
         'popover: Pathology laboratory': 'Selecteer het pathologielaboratorium waar u werkzaam bent of waarmee u samenwerkt.',
+        'Type of the other PA material': 'Type van het overig PA-materiaal',
 
         /* ================= */
         /* Email validation */

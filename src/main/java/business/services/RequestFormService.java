@@ -116,6 +116,9 @@ public class RequestFormService {
         RequestProperties properties = requestPropertiesService.findByProcessInstanceId(instance.getId());
         request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
         request.setGermlineMutation(properties.getGermlineMutation());
+        request.setBlockMaterialsRequest(properties.getBlockMaterialsRequest());
+        request.setHeSliceMaterialsRequest(properties.getHeSliceMaterialsRequest());
+        request.setOtherMaterialsRequest(properties.getOtherMaterialsRequest());
 
         Map<String, Object> variables = instance.getProcessVariables();
         if (variables != null) {
@@ -158,7 +161,6 @@ public class RequestFormService {
             request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
-            request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
             request.setClinicalDataRequest(fetchBooleanVariable("is_clinical_data_request", variables));
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
             request.setLinkageWithPersonalData(fetchBooleanVariable("is_linkage_with_personal_data", variables));
@@ -237,7 +239,6 @@ public class RequestFormService {
             request.setStatisticsRequest(fetchBooleanVariable("is_statistics_request", variables));
             request.setExcerptsRequest(fetchBooleanVariable("is_excerpts_request", variables));
             request.setPaReportRequest(fetchBooleanVariable("is_pa_report_request", variables));
-            request.setMaterialsRequest(fetchBooleanVariable("is_materials_request", variables));
             request.setClinicalDataRequest(fetchBooleanVariable("is_clinical_data_request", variables));
 
             request.setReopenRequest(fetchBooleanVariable("reopen_request", variables));
@@ -304,6 +305,9 @@ public class RequestFormService {
             request.setBiobankRequestNumber(properties.getBiobankRequestNumber());
             request.setGermlineMutation(properties.getGermlineMutation());
             request.setResearchNumber(properties.getReseachNumber());
+            request.setBlockMaterialsRequest(properties.getBlockMaterialsRequest());
+            request.setHeSliceMaterialsRequest(properties.getHeSliceMaterialsRequest());
+            request.setOtherMaterialsRequest(properties.getOtherMaterialsRequest());
 
             {
                 RequestProperties parentProperties = properties.getParent();
@@ -508,6 +512,10 @@ public class RequestFormService {
         properties.setSearchCriteria(request.getSearchCriteria());
         properties.setStudyPeriod(request.getStudyPeriod());
         properties.setLaboratoryTechniques(request.getLaboratoryTechniques());
+
+        properties.setBlockMaterialsRequest(request.isBlockMaterialsRequest());
+        properties.setHeSliceMaterialsRequest(request.isHeSliceMaterialsRequest());
+        properties.setOtherMaterialsRequest(request.getOtherMaterialsRequest());
 
         properties.setChargeNumber(request.getChargeNumber());
         properties.setGrantProvider(request.getGrantProvider());

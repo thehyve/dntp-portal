@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import business.exceptions.InvalidActionInStatus;
 import business.exceptions.PaNumbersDownloadError;
@@ -152,7 +151,9 @@ public class LabRequestExportService {
             "Date sent",
             "Status",
             "PA reports",
-            "PA material",
+            "PA material Block",
+            "PA material HE slice",
+            "PA material other",
             "Clinical data",
             "PA number count",
             "PA number",
@@ -183,7 +184,9 @@ public class LabRequestExportService {
             String dateSent = dateToString(labRequest.getSendDate());
             String status = labRequest.getStatus().toString();
             String paReports = booleanToString(request.isPaReportRequest());
-            String paMaterial = booleanToString(request.isMaterialsRequest());
+            String blockPaMaterial = booleanToString(request.isBlockMaterialsRequest());
+            String heSlicePaMaterial = booleanToString(request.isHeSliceMaterialsRequest());
+            String otherPaMaterial = request.getOtherMaterialsRequest();
             String clinicalData = booleanToString(request.isClinicalDataRequest());
             String numberOfPaNumbers = labRequest.getPathologyCount().toString();
             String labName = labRequest.getLab().getName();
@@ -198,7 +201,9 @@ public class LabRequestExportService {
                         dateSent,
                         status,
                         paReports,
-                        paMaterial,
+                        blockPaMaterial,
+                        heSlicePaMaterial,
+                        otherPaMaterial,
                         clinicalData,
                         numberOfPaNumbers,
                         item.getPaNumber(),

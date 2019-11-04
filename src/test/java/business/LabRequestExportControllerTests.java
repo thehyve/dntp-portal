@@ -54,9 +54,11 @@ public class LabRequestExportControllerTests extends AbstractSelectionController
         assertEquals("Date_sent", exportDataHeader.get(2));
         assertEquals("Status", exportDataHeader.get(3));
         assertEquals("PA_reports", exportDataHeader.get(4));
-        assertEquals("PA_material", exportDataHeader.get(5));
-        assertEquals("Clinical_data", exportDataHeader.get(6));
-        assertEquals("PA_number_count", exportDataHeader.get(7));
+        assertEquals("PA_material_Block", exportDataHeader.get(5));
+        assertEquals("PA_material_HE_slice", exportDataHeader.get(6));
+        assertEquals("PA_material_other", exportDataHeader.get(7));
+        assertEquals("Clinical_data", exportDataHeader.get(8));
+        assertEquals("PA_number_count", exportDataHeader.get(9));
     }
 
 }

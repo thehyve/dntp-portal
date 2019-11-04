@@ -47,6 +47,7 @@ angular.module('ProcessApp.controllers')
                 show: false
             });
 
+            $scope.isMaterialsRequest = Request.isMaterialsRequest;
             $scope.alerts = [];
             $scope.itemsPerPage = 20;
 

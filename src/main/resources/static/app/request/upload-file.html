@@ -71,7 +71,7 @@ This file is distributed under the GNU Affero General Public License
     </div>
 
     <div ng-if="request.excerptList && request.status == 'DataDelivery'
-        && (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)
+        && (request.paReportRequest || isMaterialsRequest(request) || request.clinicalDataRequest)
         && isPalga()"
         ng-controller="SelectionController">
         <a class="btn btn-primary" title="Select all" id="select_all_excerpts"
@@ -83,7 +83,7 @@ This file is distributed under the GNU Affero General Public License
     </div>
 
     <div ng-if="isExcerptSelectionState(request.status)
-        && (request.paReportRequest || request.materialsRequest || request.clinicalDataRequest)
+        && (request.paReportRequest || isMaterialsRequest(request) || request.clinicalDataRequest)
         && request.excerptList"
         ng-controller="SelectionController">
 
@@ -257,7 +257,7 @@ This file is distributed under the GNU Affero General Public License
   </div>
 
   <div ng-if="request.status != 'Closed'
-                && (!request.paReportRequest && !request.materialsRequest && !request.clinicalDataRequest)
+                && (!request.paReportRequest && !isMaterialsRequest(request) && !request.clinicalDataRequest)
                 && isPalga()">
     <button type="button" class="btn btn-warning"
             ng-disabled="!isCurrentUser(request.assignee) || dataLoading"

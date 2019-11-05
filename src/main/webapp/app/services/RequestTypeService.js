@@ -12,14 +12,14 @@ angular.module('ProcessApp.services')
 
             var service = {
                 requestTypes : [
-                    {label: 'Exploratory request', value: 'Exploratory request'},
-                    {label: 'National request', value: 'National request'},
+                    {label: 'Numbers only, exploratory request (OZV)', value: 'Numbers only, exploratory request (OZV)'},
+                    {label: 'National request (LZV)', value: 'National request (LZV)'},
                     {label: 'Local request', value: 'Local request'},
                     {label: 'Cohort', value: 'Cohort'},
-                    {label: 'National T-nr list', value: 'National T-nr list'},
-                    {label: 'Local T-nr list', value: 'Local T-nr list'},
-                    {label: 'Intermediary procedure previous national request', value: 'Intermediary procedure previous national request'},
-                    {label: 'Update previous national request', value: 'Update previous national request'},
+                    {label: 'T-nr list', value: 'T-nr list'},
+                    {label: 'T-nr cohort', value: 'T-nr cohort'},
+                    {label: 'Intermediary procedure previous request', value: 'Intermediary procedure previous request'},
+                    {label: 'Update previous request', value: 'Update previous request'},
                     {label: 'Update previous cohort', value: 'Update previous cohort'}
                 ]
             };

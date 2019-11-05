@@ -70,7 +70,7 @@ Feature: scenario request Request for excerpts + PA reports + materials + clinic
     When I claim the request with title 'Request 2'
     And I click on the request with title 'Request 2'
     And I click on the 'Edit' button
-    And I select dropdown option 'National request'
+    And I select dropdown option 'National request (LZV)'
     And I click on the following objects
       """
       requesterValid

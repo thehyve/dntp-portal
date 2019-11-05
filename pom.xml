@@ -41,10 +41,10 @@
         <start-class>business.Application</start-class>
         <java.version>1.8</java.version>
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
-        <node.version>v10.15.0</node.version>
-        <npm.version>6.5.0</npm.version>
-        <activiti.version>5.22.0</activiti.version>
-        <opencsv.version>4.6</opencsv.version>
+        <node.version>v10.17.0</node.version>
+        <npm.version>6.11.3</npm.version>
+        <activiti.version>5.23.0</activiti.version>
+        <opencsv.version>5.0</opencsv.version>
         <groovy.version>2.4.17</groovy.version>
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
     </properties>

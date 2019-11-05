@@ -24,6 +24,7 @@ import business.models.LabRequest;
 import business.representation.*;
 import business.services.*;
 import com.opencsv.*;
+import com.opencsv.exceptions.CsvValidationException;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.junit.Before;
@@ -533,7 +534,7 @@ public abstract class AbstractSelectionControllerTests {
         return pathologyCount;
     }
 
-    private List<List<String>> parseDelimiterSeparatedExport(char separator, InputStream inputStream) throws IOException {
+    private List<List<String>> parseDelimiterSeparatedExport(char separator, InputStream inputStream) throws IOException, CsvValidationException {
         List<List<String>> result = new ArrayList<>();
         ICSVParser parser = new CSVParserBuilder().withSeparator(separator).withQuoteChar('"').build();
         CSVReader reader = new CSVReaderBuilder(new InputStreamReader(inputStream))
@@ -546,7 +547,7 @@ public abstract class AbstractSelectionControllerTests {
         return result;
     }
 
-    List<List<String>> downloadRequestsExport() throws IOException {
+    List<List<String>> downloadRequestsExport() throws IOException, CsvValidationException {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);
@@ -555,7 +556,7 @@ public abstract class AbstractSelectionControllerTests {
         return parseDelimiterSeparatedExport(';', response.getBody().getInputStream());
     }
 
-    List<List<String>> downloadLabRequestsExport() throws IOException {
+    List<List<String>> downloadLabRequestsExport() throws IOException, CsvValidationException {
         UserAuthenticationToken palga = getPalga();
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(palga);

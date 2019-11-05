@@ -18,6 +18,8 @@ import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
+import com.opencsv.*;
+import com.opencsv.exceptions.CsvValidationException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.DelegationState;
@@ -33,8 +35,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
 import business.exceptions.ExcerptListDownloadError;
 import business.exceptions.ExcerptListNotFound;
 import business.exceptions.ExcerptListUploadError;
@@ -177,10 +177,13 @@ public class ExcerptListService {
     @CacheEvict(value = "excerptlistexists", key = "#list.processInstanceId")
     @Transactional
     public ExcerptList processExcerptList(ExcerptList list, InputStream input) {
-        Set<Integer> validLabNumbers = new TreeSet<Integer>();
+        Set<Integer> validLabNumbers = new TreeSet<>();
         log.info("Processing excerpt list");
         try {
-            CSVReader reader = new CSVReader(new InputStreamReader(input, EXCERPT_LIST_CHARACTER_ENCODING), ';', '"');
+            CSVParser parser = new CSVParserBuilder().withSeparator(';').withQuoteChar('"').build();
+            CSVReader reader = new CSVReaderBuilder(new InputStreamReader(input, EXCERPT_LIST_CHARACTER_ENCODING))
+                .withCSVParser(parser)
+                .build();
             String [] nextLine;
             log.debug("Column names.");
             if ((nextLine = reader.readNext()) != null) {
@@ -218,7 +221,7 @@ public class ExcerptListService {
             log.info("Added " + list.getEntries().size() + " entries.");
             list = excerptListRepository.save(list);
             return list;
-        } catch(IOException e) {
+        } catch (IOException | CsvValidationException e) {
             throw new FileUploadError(e.getMessage());
         }
     }
@@ -269,9 +272,10 @@ public class ExcerptListService {
     public Set<Integer> processExcerptSelection(InputStream input) {
         Set<Integer> result = new TreeSet<>();
         log.info("Processing excerpt selection");
+        CSVParser parser = new CSVParserBuilder().withSeparator(';').withQuoteChar('"').build();
         CSVReader reader = null;
         try {
-            reader = new CSVReader(new InputStreamReader(input), ';', '"');
+            reader = new CSVReaderBuilder(new InputStreamReader(input)).withCSVParser(parser).build();
             String [] nextLine;
             log.debug("Column names.");
             nextLine = reader.readNext();
@@ -286,17 +290,13 @@ public class ExcerptListService {
             int line = 2;
             while ((nextLine = reader.readNext()) != null) {
                 log.debug("Line " + line);
-                if (nextLine != null && nextLine.length > 0) {
+                if (nextLine.length > 0) {
                     try {
                         Integer selected = Integer.valueOf(nextLine[0]);
                         if (result.contains(selected)) {
                             log.warn("Number already selected before: " + selected + " (line " + line + ")");
                         }
-                        if (selected == null) {
-                            log.warn("Number null (line " + line + ")");
-                        } else {
-                            result.add(selected);
-                        }
+                        result.add(selected);
                     } catch (NumberFormatException e) {
                         log.warn("Invalid number at line " + line);
                     }
@@ -305,7 +305,7 @@ public class ExcerptListService {
             }
             log.info("Selected " + result.size() + " entries.");
             return result;
-        } catch(IOException e) {
+        } catch (IOException | CsvValidationException e) {
             throw new FileUploadError(e.getMessage());
         } finally {
             if (reader != null) {
@@ -322,14 +322,14 @@ public class ExcerptListService {
      * Write the excerpt list as a file.
      * @param list - the list
      * @param selectedOnly - writes only selected excerpts if true; all excerpts otherwise.
-     * @return the resource holding selected excerpts or all (depends on the value of {@value selected}
+     * @return the resource holding selected excerpts or all (depends on the value of {@param selectedOnly})
      * in CSV format.
      */
     public HttpEntity<InputStreamResource> writeExcerptList(ExcerptList list, boolean selectedOnly) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Writer writer = new OutputStreamWriter(out, EXCERPT_LIST_CHARACTER_ENCODING);
-            CSVWriter csvwriter = new CSVWriter(writer, ';', '"');
+            ICSVWriter csvwriter = new CSVWriterBuilder(writer).withSeparator(';').withQuoteChar('"').build();
             csvwriter.writeNext(list.getCsvColumnNames());
             for (ExcerptEntry entry: list.getEntries()) {
                 if (!selectedOnly || entry.isSelected()) {

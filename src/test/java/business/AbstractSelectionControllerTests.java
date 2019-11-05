@@ -169,7 +169,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setBlockMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
-        representation.setRequestType("National request");
+        representation.setRequestType("National request (LZV)");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);
@@ -210,7 +210,7 @@ public abstract class AbstractSelectionControllerTests {
         // request type
         representation.setOtherMaterialsRequest("Some test material");
         // required checks
-        representation.setRequestType("National request");
+        representation.setRequestType("National request (LZV)");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);
@@ -360,7 +360,7 @@ public abstract class AbstractSelectionControllerTests {
         // request type
         representation.setHeSliceMaterialsRequest(true);
         // required checks
-        representation.setRequestType("National request");
+        representation.setRequestType("National request (LZV)");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);
@@ -406,7 +406,7 @@ public abstract class AbstractSelectionControllerTests {
         representation.setHeSliceMaterialsRequest(true);
         representation.setPaReportRequest(true);
         // required checks
-        representation.setRequestType("National request");
+        representation.setRequestType("National request (LZV)");
         representation.setRequesterValid(true);
         representation.setRequesterAllowed(true);
         representation.setContactPersonAllowed(true);

@@ -53,21 +53,47 @@ create index var_task_name_index on act_hi_varinst (task_id_, name_ );
 
 Make sure you have [npm](https://docs.npmjs.com/getting-started/installing-node) and Maven installed.
 
+To run the application in production mode:
 ```bash
-# run the application
-mvn spring-boot:run
+# Start the application in production mode
+mvn -Dspring.profiles.active=prod spring-boot:run
 ```
 There should now be an application running at [http://localhost:8092/](http://localhost:8092/).
+
+Different profiles are available:
+
+| Profile | Database      | Test data
+|:------- |:------------- |:-----------------------
+| `dev`   | H2, in memory | Default users and roles
+| `test`  | PostgreSQL    | Default users and roles
+| `prod`  | PostgreSQL    | None
+
+To activate these profiles:
+
+```bash
+# Start the application with test accounts
+mvn -Dspring.profiles.active=test spring-boot:run
+# Start the application with an in-memory database
+mvn -Dspring.profiles.active=dev spring-boot:run
+```
+
+For front-end development, you can start a hot-reloading version of the front-end
+separately, after starting the application with `mvn spring-boot:run`:
+```bash
+# Start the front-end application
+npm start
+```
+This should open the default browser at [http://localhost:9000/](http://localhost:9000/).
 
 
 ### Package
 ```bash
-# create a war package
-mvn package
+# Create a war package
+mvn -Dspring.profiles.active=dev package
 ```
 There should now be a `.war`-file in `target/dntp-portal-<version>.war`.
 ```bash
-# run the packaged application
+# Run the packaged application
 java -jar target/dntp-portal-<version>.war
 ```
 
@@ -77,22 +103,24 @@ java -jar target/dntp-portal-<version>.war
 Run all tests
 
 ```bash
-# run the testNG test suite
+# Run the testNG test suite
 mvn -Dspring.profiles.active=dev test
 ```
 
 Running front-end unit testing and e2e testing:
 [Get `nodejs`](https://nodejs.org/en/download/).
 ```bash
-# install dependencies
+# Start the application (in a separate console)
+mvn -Dspring.profiles.active=dev spring-boot:run
+# Install dependencies
 npm install
-# run unit tests
+# Run unit tests
 npm test (currenty failing)
-# prepare webdriver for e2e tests
+# Prepare webdriver for e2e tests
 npx webdriver-manager update
-# run e2e tests
+# Run e2e tests
 npx protractor
-# run only a selected feature
+# Run only a selected feature
 npx protractor --specs=e2e/scenario_complete_happy_request.feature
 ```
 
@@ -132,21 +160,28 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
-### 0.0.107
+### 0.0.106
+
+New columns have been added to record the last assigned Palga adviser and
+the request type, and to distinguish between different sorts of materials requests.
+To update the database schema, run:
+
 ```sql
 alter table request_properties add column last_assignee character varying(255);
-
 alter table request_properties add column request_type character varying(255);
-
 alter table request_properties add column block_materials_request boolean;
 alter table request_properties add column he_slice_materials_request boolean;
 alter table request_properties add column others_materials_request character varying(255);
+```
+Existing materials requests should be updated to select at least one of the sorts of materials request.
+The following command selects both blocks and slides for existing materials requests: 
+```sql
+-- Update existing materials request to select blocks and slides
 update request_properties
     set block_materials_request = true, he_slice_materials_request = true
     where process_instance_id in (
       select proc_inst_id_ from act_ru_variable where name_ = 'is_materials_request' and long_ = 1
     );
-
 ```
 
 ### 0.0.80

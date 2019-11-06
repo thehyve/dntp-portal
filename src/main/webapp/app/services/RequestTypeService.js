@@ -8,7 +8,7 @@ import angular from 'angular';
 
 angular.module('ProcessApp.services')
     .factory('RequestTypeService', [ '$rootScope',
-        function ($rootScope) {
+        function () {
 
             var service = {
                 requestTypes : [
@@ -30,9 +30,6 @@ angular.module('ProcessApp.services')
              * @returns Array of ordered list
              */
             service.getRequestTypes = function() {
-                _.forEach(this.requestTypes, function(rt) {
-                    rt.label = $rootScope.translate(rt.label);
-                });
                 var sortedTypes = _.sortBy(this.requestTypes, 'label');
                 sortedTypes.unshift({label:'(Please select a request type)', value: null}); // put at beginning
                 sortedTypes.push({label:'(Other)', value: ''}); // put at end

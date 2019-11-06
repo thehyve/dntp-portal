@@ -132,20 +132,6 @@ const en = {
     'A researcher has requested data and/or materials from your lab.' : 'A researcher has requested data and/or materials from your lab.',
     'Select "Approve" to accept or "Reject" to decline this request.' : 'Select "Approve" to accept or "Reject" to decline this request',
 
-    /* ===================== */
-    /* My Lab */
-    /* ===================== */
-
-    /* ===================== */
-    /* Packing list */
-    /* ===================== */
-    'Delivery address':'Delivery address',
-    'Billing address': 'Billing address',
-    'Return address': 'Return address',
-    'Biobank request number': 'Biobank request number',
-    'PALGA request': 'PALGA request',
-    'Hospital': 'Hospital',
-    'Hereby you receive this material for a scientific study. We request you notify': 'Hereby you receive this material for a scientific study. We request you notify',
 
     /* ===================== */
     /* Specialism */
@@ -170,6 +156,7 @@ const en = {
     'Endocrinologie':'Endocrinology',
     '(Other)':'(Other)',
     '(Please select a specialism)' : '(Please select a specialism)',
+
 
     'mail_recall_subject': 'Regarding request {{pathology.labRequestCode}}, recall sample {{pathology.paNumber}}',
     'mail_recall_body': 'Dear researcher,\n\nPlease return the following PA-number asap. We need this for further patient diagnostic.\n\nPALGA aanvraag {{pathology.labRequestCode}}\nPA number {{pathology.paNumber}}; {{pathology.palgaPatientNr}}\n\nBest regards.',

@@ -27,7 +27,7 @@ angular.module('ProcessApp.interceptors')
                 switch(response.status) {
                 case 302:
                 case 403:
-                    if (url === 'user') {
+                    if (url === '/api/user') {
                         //console.log('Error fetching user data.');
                         $rootScope.logErrorResponse(response);
                         return $q.reject(response);

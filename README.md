@@ -160,6 +160,31 @@ mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepos
 
 ## Release notes
 
+### 0.0.107
+
+User specialisms have been changed to be stored and exported in English.
+
+```sql
+update app_user set specialism = 'Gastroenterology' where specialism = 'Maag-darm-lever-ziekten';
+update app_user set specialism = 'Gynaecology' where specialism = 'Gynaecologie';
+update app_user set specialism = 'Dermatology' where specialism = 'Dermatologie';
+update app_user set specialism = 'Medical Oncology' where specialism = 'Medische Oncologie';
+update app_user set specialism = 'Internal Medicine' where specialism = 'Interne geneeskunde';
+update app_user set specialism = 'Radiology' where specialism = 'Radiologie';
+update app_user set specialism = 'Radiotherapy' where specialism = 'Radiotherapie';
+update app_user set specialism = 'Haematology' where specialism = 'Hematologie';
+update app_user set specialism = 'Throat-nose-ear' where specialism = 'Keel-neus-oor';
+update app_user set specialism = 'Surgery' where specialism = 'Heelkunde';
+update app_user set specialism = 'Epidemiology' where specialism = 'Epidemiologie';
+update app_user set specialism = 'Primary care' where specialism = 'Eerstelijnsgeneeskunde';
+update app_user set specialism = 'Cardiology' where specialism = 'Cardiologie';
+update app_user set specialism = 'Pathology' where specialism = 'Pathologie';
+update app_user set specialism = 'Lung Disease' where specialism = 'Longziekten';
+update app_user set specialism = 'Urology' where specialism = 'Urologie';
+update app_user set specialism = 'Neurology' where specialism = 'Neurologie';
+update app_user set specialism = 'Endocrinology' where specialism = 'Endocrinologie';
+```
+
 ### 0.0.106
 
 New columns have been added to record the last assigned Palga adviser and

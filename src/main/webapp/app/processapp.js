@@ -67,7 +67,7 @@ const components = require('./components');
 require('./forgot-password');
 require('./lab');
 require('./lab-request');
-require('./login');
+const login = require('./login');
 require('./profile');
 require('./registration');
 require('./request');
@@ -207,6 +207,9 @@ angular.module('ProcessApp', ['flow',
             for (let template in components.templates) {
                 $templateCache.put(template, components.templates[template]);
             }
+            for (let template in login.templates) {
+                $templateCache.put(template, login.templates[template]);
+            }
 
             /**
              * To authorize feature based on role
@@ -326,7 +329,7 @@ angular.module('ProcessApp', ['flow',
             };
 
             $rootScope.heartbeat = function() {
-                return $http.get('user');
+                return $http.get('/api/user');
             };
 
             $rootScope.isCurrentUser = function(userid) {

@@ -130,10 +130,9 @@ angular.module('ProcessApp.services')
                 service.loginModal = $modal({
                     id: 'loginWindow',
                     scope: $rootScope,
-                    template: require('../login/login-modal.html'),
+                    templateUrl: 'app/login/login-modal.html',
                     backdrop: 'static'
                 });
-
             };
 
             service.hideLogin = function() {

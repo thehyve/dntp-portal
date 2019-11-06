@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 public class CustomErrorController implements ErrorController {
 
-    private static final String PATH = "/api/error";
+    private static final String PATH = "/error";
 
     @Autowired
     ErrorAttributes errorAttributes;

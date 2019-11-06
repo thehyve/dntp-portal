@@ -171,6 +171,22 @@ const en = {
     '(Other)':'(Other)',
     '(Please select a specialism)' : '(Please select a specialism)',
 
+    /* ===================== */
+    /* Request type */
+    /* ===================== */
+    'Soort aanvraag': 'Request type',
+    'Oriënterende zoekvraag (OZV)': 'Numbers only, exploratory request (OZV)',
+    'Landelijke zoekvraag (LZV)': 'National request (LZV)',
+    'Lokale zoekvraag': 'Local request',
+    'Cohort': 'Cohort',
+    'Tnr-lijst landelijk': 'T-nr list',
+    'Tnr-cohort': 'T-nr cohort',
+    'Intermediairprocedure eerdere LZV': 'Intermediary procedure previous request',
+    'Update eerdere LZV': 'Update previous request',
+    'Update eerder cohort': 'Update previous cohort',
+    '(Kies een soort aanvraag)': '(Please select a request type)',
+
+
     'mail_recall_subject': 'Regarding request {{pathology.labRequestCode}}, recall sample {{pathology.paNumber}}',
     'mail_recall_body': 'Dear researcher,\n\nPlease return the following PA-number asap. We need this for further patient diagnostic.\n\nPALGA aanvraag {{pathology.labRequestCode}}\nPA number {{pathology.paNumber}}; {{pathology.palgaPatientNr}}\n\nBest regards.',
     null: null

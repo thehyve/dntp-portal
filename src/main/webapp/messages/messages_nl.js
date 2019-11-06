@@ -157,7 +157,6 @@ const nl = {
     'No excerpt list.': 'Geen excerptlijst.',
 
     'Request type': 'Soort aanvraag',
-    'Select request type': 'Soort aanvraag selecteren',
     'Numbers only, exploratory request (OZV)':'Oriënterende zoekvraag (OZV)',
     'National request (LZV)':'Landelijke zoekvraag (LZV)',
     'Local request': 'Lokale zoekvraag',
@@ -167,7 +166,7 @@ const nl = {
     'Intermediary procedure previous request': 'Intermediairprocedure eerdere LZV',
     'Update previous request': 'Update eerdere LZV',
     'Update previous cohort': 'Update eerder cohort',
-    'Other': 'Overig',
+    '(Please select a request type)': '(Kies een soort aanvraag)',
 
     'Authentification checks by PALGA': 'Authentificatiecontroles door PALGA',
     'Requester\'s identity was established.': 'De identiteit van de aanvrager is vastgesteld/gecontroleerd.',

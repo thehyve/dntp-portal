@@ -79,7 +79,8 @@ public class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     "/*.ico",
                     "/api/public/**",
                     "/api/password/request-new",
-                    "/api/password/reset"
+                    "/api/password/reset",
+                    "/error"
                 ).permitAll()
                 .antMatchers(HttpMethod.POST, "/api/register/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/register/users/**").permitAll()

@@ -7,8 +7,8 @@
 import angular from 'angular';
 
 angular.module('ProcessApp.services')
-    .factory('RequestFilter', [
-        function() {
+    .factory('RequestFilter', ['Request',
+        function(Request) {
             var filterService = {};
 
             var _isSuspended = _.matches({reviewStatus: 'SUSPENDED'});
@@ -61,13 +61,13 @@ angular.module('ProcessApp.services')
                 switch(status) {
                 case 'Approved, waiting for data':
                     return function(request) {
-                        return request.status == 'DataDelivery' && (
-                            (request.statisticsRequest && request.dataAttachmentCount == 0) ||
+                        return request.status === 'DataDelivery' && (
+                            (request.statisticsRequest && request.dataAttachmentCount === 0) ||
                             (!request.statisticsRequest && !request.excerptListUploaded));
                     };
                 case 'Data delivered':
                     return function(request) {
-                        var result = request.status == 'DataDelivery' &&
+                        var result = request.status === 'DataDelivery' &&
                             ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
                             (request.excerptListUploaded &&
                             !(request.paReportRequest || Request.isMaterialsRequest(request) || request.clinicalDataRequest)));
@@ -75,7 +75,7 @@ angular.module('ProcessApp.services')
                     };
                 case 'Data delivered, select excerpts':
                     return function(request) {
-                        var result = request.status == 'DataDelivery' &&
+                        var result = request.status === 'DataDelivery' &&
                             request.excerptListUploaded &&
                             (request.paReportRequest || Request.isMaterialsRequest(request) || request.clinicalDataRequest);
                         return result;

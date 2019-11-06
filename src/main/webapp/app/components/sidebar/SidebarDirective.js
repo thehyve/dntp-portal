@@ -3,6 +3,9 @@
  * This file is distributed under the GNU Affero General Public License
  * (see accompanying file LICENSE).
  */
+
+import angular from 'angular';
+
 angular.module('ProcessApp.directives')
     .directive('dntpSidebar', ['Request', 'RequestFilter',
             function(Request, RequestFilter) {
@@ -20,6 +23,8 @@ angular.module('ProcessApp.directives')
 
                 $scope.isPalga = $scope.$root.isPalga;
                 $scope.isScientificCouncil = $scope.$root.isScientificCouncil;
+
+                $scope.resetFilter = () => localStorage.setItem('requests', JSON.stringify({}));
 
                 /*eslint-disable no-unused-vars*/
                 $scope.$watch('allRequests', function(newValue, oldValue) {

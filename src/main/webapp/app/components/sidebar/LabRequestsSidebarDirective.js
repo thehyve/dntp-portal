@@ -24,6 +24,18 @@ angular.module('ProcessApp.directives')
                 $scope.isLabUser = $scope.$root.isLabUser;
                 $scope.isHubUser = $scope.$root.isHubUser;
 
+                $scope.changeFilterStatus = () => {
+                    var cur_filter = JSON.parse(localStorage.getItem('labrequests'));
+                    if ('search' in cur_filter){
+                        if('predicateObject' in cur_filter['search']){
+                            if ('status' in cur_filter['search']['predicateObject']){
+                                delete cur_filter['search']['predicateObject']['status']
+                            }
+                        }
+                    }
+                    localStorage.setItem('labrequests', JSON.stringify(cur_filter));
+                };
+
                 /*eslint-disable no-unused-vars*/
                 $scope.$watch('allLabRequests', function(newValue, oldValue) {
                     if (newValue) {

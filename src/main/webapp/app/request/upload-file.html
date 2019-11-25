@@ -146,7 +146,7 @@ This file is distributed under the GNU Affero General Public License
         </div>
 
         <div ng-class="{ 'pull-right' : isRequester() && request.status=='DataDelivery' }">
-            <a class="btn btn-default" ng-href="/requests/{{request.processInstanceId}}/selection/csv"
+            <a class="btn btn-default" ng-href="/api/requests/{{request.processInstanceId}}/selection/csv"
                 id="attached-excerpt-list-2">
                 <i class="glyphicon glyphicon-download-alt"></i>
                 {{'Download selection' |translate }}
@@ -186,7 +186,7 @@ This file is distributed under the GNU Affero General Public License
   <div class="col-xs-6 col-sm-6">
   <div class="list-group">
     <a ng-repeat="file in request.dataAttachments"
-       ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+       ng-href="/api/requests/{{request.processInstanceId}}/files/{{file.id}}"
        class="list-group-item">
       <i class="glyphicon glyphicon-file"></i>
       {{file.name}}

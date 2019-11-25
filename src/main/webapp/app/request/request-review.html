@@ -96,7 +96,7 @@
   <p ng-show="request.agreementAttachments.length < 1"><em>{{'No form uploaded.' | translate}}</em></p>
   <div class="list-group">
     <a ng-repeat="file in request.agreementAttachments"
-       ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+       ng-href="/api/requests/{{request.processInstanceId}}/files/{{file.id}}"
        class="list-group-item">
       <span><i class="glyphicon glyphicon-file"></i></span>
       {{file.name}}

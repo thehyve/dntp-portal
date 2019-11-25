@@ -114,7 +114,7 @@
   <!-- Agreement file upload -->
   <div class="row">
   <div class="col-sm-8"
-       flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/agreementFiles'})"
+       flow-init="Upload.flow_options({target:'/api/requests/'+request.processInstanceId+'/agreementFiles'})"
        flow-name="agreementFlow"
        flow-files-submitted="fileuploadsubmitted('agreement'); Upload.uploadFile($flow)"
        flow-file-success="Upload.fileUploadSuccess('agreement', $message, $file); fileuploadsuccess(request, $message, 'agreement', $flow)"

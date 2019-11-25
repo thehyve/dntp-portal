@@ -86,7 +86,9 @@
     </div>
     <div class="col-sm-7">
       <input type="checkbox" id="agreementNotApplicable" name="agreementNotApplicable" value="1"
-             ng-model="request.agreementNotApplicable" ng-change="disableAgreementReached(request)"> &nbsp;
+             ng-model="request.agreementNotApplicable"
+             ng-disabled="request.agreementReached"
+             ng-change="disableAgreementReached(request)"> &nbsp;
       <label class="normal radio-label" for="agreementNotApplicable">{{ 'Not applicable' | translate }}</label>
     </div>
   </div>

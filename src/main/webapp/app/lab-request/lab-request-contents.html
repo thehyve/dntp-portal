@@ -298,7 +298,7 @@
 
         <div class="list-group files" id="attachments">
             <a ng-repeat="file in labRequest.request.attachments"
-               ng-href="/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
+               ng-href="/api/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
                class="list-group-item no-print-url">
                 <i class="glyphicon glyphicon-file"></i> {{file.name}}
             </a>
@@ -310,7 +310,7 @@
 
         <div class="list-group files" id="medicalEthicalCommitteeApprovalAttachments">
             <a ng-repeat="file in labRequest.request.medicalEthicalCommitteeApprovalAttachments"
-               ng-href="/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
+               ng-href="/api/requests/{{labRequest.request.processInstanceId}}/files/{{file.id}}"
                class="list-group-item no-print-url">
                 <i class="glyphicon glyphicon-file"></i> {{file.name}}
             </a>

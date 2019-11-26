@@ -505,7 +505,7 @@
 
                             <div class="list-group">
                                 <a ng-repeat="file in request.informedConsentFormAttachments"
-                                   ng-href="/requests/{{request.processInstanceId}}/informedConsentFormFiles/{{file.id}}"
+                                   ng-href="/api/requests/{{request.processInstanceId}}/informedConsentFormFiles/{{file.id}}"
                                    class="list-group-item">
                                     <span><i class="glyphicon glyphicon-file"></i></span>
                                     {{file.name}}
@@ -519,7 +519,7 @@
 
                             <!-- Informed consent form upload -->
                             <div class="form-group"
-                                 flow-init="Upload.flow_options({target:'/requests/'+request.processInstanceId+'/informedConsentFormFiles'})"
+                                 flow-init="Upload.flow_options({target:'/api/requests/'+request.processInstanceId+'/informedConsentFormFiles'})"
                                  flow-name="informedConsentFormFlow"
                                  flow-files-submitted="fileuploadsubmitted('informed_consent_form'); Upload.uploadFile($flow)"
                                  flow-file-success="Upload.fileUploadSuccess('informed_consent_form', $message, $file); fileuploadsuccess(request, $message, 'informed_consent_form', $flow)"
@@ -739,7 +739,7 @@
 
                     <div class="list-group">
                         <a ng-repeat="file in request.attachments"
-                           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+                           ng-href="/api/requests/{{request.processInstanceId}}/files/{{file.id}}"
                            class="list-group-item">
                             <span><i class="glyphicon glyphicon-file"></i></span>
                             {{file.name}}
@@ -815,7 +815,7 @@
 
                     <div class="list-group">
                         <a ng-repeat="file in request.medicalEthicalCommitteeApprovalAttachments"
-                           ng-href="/requests/{{request.processInstanceId}}/files/{{file.id}}"
+                           ng-href="/api/requests/{{request.processInstanceId}}/files/{{file.id}}"
                            class="list-group-item">
                             <span><i class="glyphicon glyphicon-file"></i></span>
                             {{file.name}}

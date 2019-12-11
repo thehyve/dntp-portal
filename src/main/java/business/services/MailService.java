@@ -45,7 +45,7 @@ public class MailService {
 
     @Autowired
     UserService userService;
-    
+
     @Autowired
     JavaMailSender mailSender;
 
@@ -61,12 +61,15 @@ public class MailService {
     @Value("${dntp.reply-address}")
     String replyAddress;
 
+    @Value("${dntp.from-address:}")
+    String fromAddress;
+
     static final String replyName = "Stichting PALGA";
 
     static final String fromName = "Stichting PALGA";
 
     private String getFrom() {
-        return "no-reply@" + serverName;
+        return fromAddress == null || fromAddress.isEmpty() ? "no-reply@" + serverName : fromAddress;
     }
 
     private String getLink(String relativeURI) {
@@ -78,7 +81,7 @@ public class MailService {
         } else if (serverPort.equals("80")) {
             writePort = false;
         }
-        return String.format("%s://%s%s%s", 
+        return String.format("%s://%s%s%s",
                 protocol, serverName, (writePort ? ":"+serverPort : ""), relativeURI);
     }
 
@@ -116,7 +119,7 @@ public class MailService {
         sendEmail(Collections.singleton(to), Collections.emptyList(), subject, content);
     }
 
-    static final String requesterAgreementFormLinkTemplate = 
+    static final String requesterAgreementFormLinkTemplate =
             "Geachte heer/mevrouw,\n"
           + "\n"
           + "PALGA heeft uw aanvraag ontvangen.\n"
@@ -166,7 +169,7 @@ public class MailService {
         sendEmail(email, subject, content);
     }
 
-    static final String scientificCouncilNotificationTemplate = 
+    static final String scientificCouncilNotificationTemplate =
               "Geachte leden van de wetenschappelijke raad,\n"
             + "\n"
             + "Graag uw beoordeling van de volgende aanvraag: %1$s.\n"
@@ -385,7 +388,7 @@ public class MailService {
         log.info("Activation link token generated for {}: {}", recipient, link.getToken());
     }
 
-    static final String passwordRecoveryTemplate = 
+    static final String passwordRecoveryTemplate =
               "Geachte heer/mevrouw,\n"
             + "\n"
             + "Via deze link kunt u een nieuw PALGA-wachtwoord instellen: %1$s.\n"

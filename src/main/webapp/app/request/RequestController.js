@@ -60,7 +60,7 @@ angular.module('ProcessApp.controllers')
             };
 
             $scope.getStatusText = function(request) {
-                if (request.status == 'DataDelivery') {
+                if (request.status === 'DataDelivery') {
                     if ((request.statisticsRequest && request.dataAttachmentCount > 0) ||
                         (request.excerptListUploaded && !(request.paReportRequest ||
                             Request.isMaterialsRequest(request) || request.clinicalDataRequest))) {

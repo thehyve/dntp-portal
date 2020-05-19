@@ -23,7 +23,7 @@ The requester is: ${requester}
 Requester name: ${requester_name}
 Requester email: ${requester_email}
 Note: no automatic email will be sent to the requester.
-You have to mail de requester by yourself.
+You have to mail the requester by yourself.
 
 With kind regards,
 Stichting PALGA

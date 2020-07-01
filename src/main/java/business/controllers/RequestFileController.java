@@ -8,13 +8,13 @@ package business.controllers;
 import business.exceptions.ExcerptListNotFound;
 import business.exceptions.FileUploadError;
 import business.exceptions.InvalidActionInStatus;
-import business.exceptions.UpdateNotAllowed;
 import business.models.File;
 import business.representation.ExcerptListRepresentation;
 import business.representation.RequestRepresentation;
 import business.representation.RequestStatus;
 import business.security.UserAuthenticationToken;
 import business.services.*;
+import business.testing.MockMultipartFile;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
@@ -23,13 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -366,26 +363,20 @@ public class RequestFileController {
         if (resource == null) {
             throw new FileUploadError("Empty test resource");
         }
-        try {
-            InputStream input = resource.openStream();
-            MultipartFile file = new MockMultipartFile(resource.getFile(), input);
+        MultipartFile file = new MockMultipartFile(resource);
 
-            Integer flowTotalChunks = 1;
-            Integer flowChunkNumber = 1;
-            String flowIdentifier = "flow_" + UUID.randomUUID().toString();
+        Integer flowTotalChunks = 1;
+        Integer flowChunkNumber = 1;
+        String flowIdentifier = "flow_" + UUID.randomUUID().toString();
 
-            return this.uploadExcerptList(
-                    user,
-                    id,
-                    filename,
-                    flowTotalChunks,
-                    flowChunkNumber,
-                    flowIdentifier,
-                    file);
-        } catch (IOException e) {
-            log.error("Error while uploading example file: " + e.getMessage());
-            throw new FileUploadError(e.getMessage());
-        }
+        return this.uploadExcerptList(
+                user,
+                id,
+                filename,
+                flowTotalChunks,
+                flowChunkNumber,
+                flowIdentifier,
+                file);
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('palga') and hasPermission(#id, 'requestAssignedToUser')")

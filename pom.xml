@@ -39,20 +39,40 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>business.Application</start-class>
+        <activiti.version>5.23.0</activiti.version>
+        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
+        <jackson.version>2.11.0</jackson.version>
         <java.version>1.8</java.version>
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+        <groovy.version>2.4.17</groovy.version>
+        <hibernate.version>5.1.9.Final</hibernate.version>
         <node.version>v10.17.0</node.version>
         <npm.version>6.11.3</npm.version>
-        <activiti.version>5.23.0</activiti.version>
-        <opencsv.version>5.0</opencsv.version>
-        <groovy.version>2.4.17</groovy.version>
-        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
+        <opencsv.version>5.2</opencsv.version>
+        <postgresql.version>42.2.14.jre7</postgresql.version>
+        <spring-security.version>4.2.17.RELEASE</spring-security.version>
+        <tomcat.version>8.5.56</tomcat.version>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -81,8 +101,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-websocket</artifactId>
-            <scope>provided</scope>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -96,6 +116,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -113,6 +134,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -265,7 +287,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>5.2.2</version>
+                <version>5.3.2</version>
                 <executions>
                     <execution>
                         <goals>

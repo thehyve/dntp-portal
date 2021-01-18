@@ -159,20 +159,6 @@ public class RequestFileController {
     @PreAuthorize("isAuthenticated() "
             + " and ("
             + "     hasPermission(#id, 'isRequester') "
-            + "     or (hasRole('palga'))"
-            + ")")
-
-    @RequestMapping(value = "/api/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.GET)
-    public HttpEntity<InputStreamResource> getICFile(UserAuthenticationToken user, @PathVariable String id,
-                                                     @PathVariable Long attachmentId) {
-        log.info("GET /api/requests/" + id + "/informedConsentFormFiles/" + attachmentId);
-        return requestFileService.getFile(user.getUser(), id, attachmentId);
-    }
-
-
-    @PreAuthorize("isAuthenticated() "
-            + " and ("
-            + "     hasPermission(#id, 'isRequester') "
             + "     or (hasRole('palga') and hasPermission(#id, 'requestAssignedToUser'))"
             + ")")
     @RequestMapping(value = "/api/requests/{id}/informedConsentFormFiles/{attachmentId}", method = RequestMethod.DELETE)

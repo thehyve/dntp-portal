@@ -9,8 +9,10 @@ The portal is hosted at [aanvraag.palga.nl](https://aanvraag.palga.nl).
 It allows researchers to submit requests to [PALGA](http://www.palga.nl),
 the Dutch pathology database organisation.
 
+
 ## Issues
 Project members can report issues in [JIRA](https://jira.thehyve.nl/projects/DNTPSD).
+
 
 ## Development 
 
@@ -31,7 +33,7 @@ cd dntp-portal
 ...
 ```
 
-### Configure PostgreSQL database
+### Configure PostgreSQL database for development
 ```
 sudo -u postgres psql
 ```
@@ -49,7 +51,8 @@ create index var_procinst_name_index on act_hi_varinst (proc_inst_id_, name_ );
 create index var_task_name_index on act_hi_varinst (task_id_, name_ );
 ```
 
-## Run, test, deploy
+
+## Run, test, publish
 
 Make sure you have [npm](https://docs.npmjs.com/getting-started/installing-node) and Maven installed.
 
@@ -85,7 +88,6 @@ npm start
 ```
 This should open the default browser at [http://localhost:9000/](http://localhost:9000/).
 
-
 ### Package
 ```bash
 # Create a war package
@@ -96,7 +98,6 @@ There should now be a `.war`-file in `target/dntp-portal-<version>.war`.
 # Run the packaged application
 java -jar target/dntp-portal-<version>.war
 ```
-
 
 ### Tests
 
@@ -132,8 +133,8 @@ npx webdriver-manager update --versions.chrome=$(chromium-browser --version | cu
 npx webdriver-manager update --versions.chrome=$(google-chrome --version | cut -d ' ' -f 3)
 ```
 
-### Deployment
-The project is configured to deploy to the [Nexus repository of The Hyve](https://repo.thehyve.nl/).
+### Publish
+The project is configured to publish to the [Nexus repository of The Hyve](https://repo.thehyve.nl/).
 Credentials are stored in `~/.m2/settings.xml`:
 ```
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
@@ -149,14 +150,126 @@ Credentials are stored in `~/.m2/settings.xml`:
     </servers>
 </settings>
 ```
-Deploy to the repository:
+Publish to the repository:
 ```
 mvn -Dspring.profiles.active=dev deploy
 ```
+
 ### Fetch from repository
 ```
 mvn dependency:get -Dartifact=nl.thehyve:dntp-portal:<version>:war -DremoteRepositories=https://repo.thehyve.nl/content/repositories/releases/ -Ddestination=dntpportal.jar
 ```
+
+
+## Deployment
+
+Instructions on how to set up a production instance of the application.
+
+### Dependencies
+
+- Java JRE 8
+- A PostgreSQL server (version 9.5 or newer) listening on port 5432.
+- An SMTP server, listening on port 25.
+  - The email server must be allowed to send emails on behalf
+    of the reply address in the application configuration.
+    (check the DNS records of `aanvraag.palga.nl` and `palga.nl`)
+- Package `haveged` installed.
+- User `nobody` and group `nogroup`
+
+### Setup database
+
+```
+sudo -u postgres psql
+```
+```sql
+create user thehyve with password '<strong random db password>';
+create database dntp_portal;
+grant all privileges on database dntp_portal to thehyve;
+```
+The database schema will be created at application startup.
+
+### Configure and run application
+
+- Create directory `/home/dntp` with subdirectories (owned by `nobody`):
+    - `logs`
+    - `upload`
+- Download the war file:
+    ```bash
+    curl -L -o dntp-portal.war https://repo.thehyve.nl/service/local/repositories/releases/content/nl/thehyve/dntp-portal/0.0.113/dntp-portal-0.0.113.war  
+    ```
+- Copy `dntp-portal.war` to `/home/dntp`.
+- Create configuration file `/home/dntp/dntp.properties` (owned by `nobody`)
+    ```properties
+    # Database credentials
+    spring.datasource.username=dntp_portal
+    spring.datasource.password=<strong random db password>
+    ```
+- Create service `/etc/systemd/system/dntp.service`:
+
+    ```editorconfig
+    [Unit]
+    Description=DNTP
+    After=syslog.target network.target
+    
+    [Service]
+    Type=simple
+    ExecStart=/usr/bin/java -jar -server -Xms2g -Xmx2g -XX:MaxPermSize=512m -Djava.awt.headless=true -Dserver.port=8092 -Dspring.profiles.active=prod -Dspring.datasource.url=jdbc:postgresql://localhost/dntp_portal -Djava.security.egd=file:/dev/./urandom -Ddntp.server-name=aanvraag.palga.nl -Ddntp.server-port=443 -Ddntp.reply-address=aanvraag@palga.nl -Ddntp.from-address=aanvraag@palga.nl -Dspring.config.location=/home/dntp/dntp.properties /home/dntp/dntp-portal.war
+    WorkingDirectory=/home/dntp
+    User=nobody
+    Group=nogroup
+    UMask=0000
+    Restart=always
+    StandardOutput=journal
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+- Start the application:
+    ```bash
+    systemctl start dntp.service
+    ```
+- Check the application status and logs:
+    ```bash
+    # Check status
+    systemctl status dntp.service
+    # Inspect logs
+    journalctl -u dntp.service -f
+    ```
+- Set up a reverse proxy with SSL listening on `aanvraag.palga.nl`
+  with `http://localhost:8092` as target.
+- Test that the application is available at https://aanvraag.palga.nl.
+- Check the SSL configuration using the [SSL server test](https://ssllabs.com/ssltest).
+
+#### Initial user
+Create initial lab and Palga user (after the application has started):
+
+- Create a dummy lab:
+  ```sql
+  INSERT INTO lab (id, active, name, number, hub_assistance_enabled) VALUES (1, true, 'Dummy', 0, false);
+  ```
+- Request a user account via the registration page.
+- Find id of the user account:
+  ```sql
+  SELECT * FROM app_user;
+  ```
+- Find id of Palga role:
+  ```sql
+  SELECT id FROM role WHERE name = 'palga';
+  ```
+- Grant Palga role to user:
+  ```sql
+  UPDATE app_user_roles SET roles_id = <role_id> WHERE users_id = <user_id>;
+  ```
+
+#### Configure indexes
+The following indexes are not automatically created,
+but are important for the performance.
+They can be created after the application has started.
+```sql
+create index var_procinst_name_index on act_hi_varinst (proc_inst_id_, name_ );
+create index var_task_name_index on act_hi_varinst (task_id_, name_ );
+```
+
 
 ## Release notes
 
@@ -297,7 +410,7 @@ alter table excerpt_entry add selected boolean;
 ```
 
 ## License
-Copyright &copy; 2016&ndash;2019  Stichting PALGA
+Copyright &copy; 2016&ndash;2021  Stichting PALGA
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as

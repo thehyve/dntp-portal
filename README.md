@@ -273,7 +273,7 @@ create index var_task_name_index on act_hi_varinst (task_id_, name_ );
 
 ## Release notes
 
-### 0.0.107
+### 1.0.0
 
 User specialisms have been changed to be stored and exported in English.
 

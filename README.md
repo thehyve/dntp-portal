@@ -174,7 +174,6 @@ Instructions on how to set up a production instance of the application.
     of the reply address in the application configuration.
     (check the DNS records of `aanvraag.palga.nl` and `palga.nl`)
 - Package `haveged` installed.
-- User `nobody` and group `nogroup`
 
 ### Setup database
 
@@ -190,20 +189,25 @@ The database schema will be created at application startup.
 
 ### Configure and run application
 
-- Create directory `/home/dntp` with subdirectories (owned by `nobody`):
+- Create a system user account `dntp`
+- Create directory `/home/dntp` with subdirectories (owned by `dntp`):
     - `logs`
     - `upload`
 - Download the war file:
     ```bash
-    curl -L -o dntp-portal.war https://repo.thehyve.nl/service/local/repositories/releases/content/nl/thehyve/dntp-portal/0.0.113/dntp-portal-0.0.113.war  
+    curl -L -o dntp-portal.war https://repo.thehyve.nl/service/local/repositories/releases/content/nl/thehyve/dntp-portal/1.0.0/dntp-portal-1.0.0.war
     ```
 - Copy `dntp-portal.war` to `/home/dntp`.
-- Create configuration file `/home/dntp/dntp.properties` (owned by `nobody`)
+- Create configuration file `/home/dntp/dntp.properties` (owned by `dntp`)
     ```properties
     # Database credentials
     spring.datasource.username=dntp_portal
     spring.datasource.password=<strong random db password>
+
+    spring.mail.host = localhost
+    spring.mail.port = 25
     ```
+  See this [Guide to Spring Email](https://www.baeldung.com/spring-email#2-spring-boot-mail-server-properties) for more about configuring email for Spring.
 - Create service `/etc/systemd/system/dntp.service`:
 
     ```editorconfig
@@ -215,8 +219,7 @@ The database schema will be created at application startup.
     Type=simple
     ExecStart=/usr/bin/java -jar -server -Xms2g -Xmx2g -XX:MaxPermSize=512m -Djava.awt.headless=true -Dserver.port=8092 -Dspring.profiles.active=prod -Dspring.datasource.url=jdbc:postgresql://localhost/dntp_portal -Djava.security.egd=file:/dev/./urandom -Ddntp.server-name=aanvraag.palga.nl -Ddntp.server-port=443 -Ddntp.reply-address=aanvraag@palga.nl -Ddntp.from-address=aanvraag@palga.nl -Dspring.config.location=/home/dntp/dntp.properties /home/dntp/dntp-portal.war
     WorkingDirectory=/home/dntp
-    User=nobody
-    Group=nogroup
+    User=dntp
     UMask=0000
     Restart=always
     StandardOutput=journal

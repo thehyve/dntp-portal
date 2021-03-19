@@ -51,7 +51,7 @@
         <opencsv.version>5.2</opencsv.version>
         <postgresql.version>42.2.14.jre7</postgresql.version>
         <spring-security.version>4.2.17.RELEASE</spring-security.version>
-        <tomcat.version>8.5.56</tomcat.version>
+        <tomcat.version>8.5.61</tomcat.version>
     </properties>
 
     <dependencies>
